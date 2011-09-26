@@ -1,0 +1,68 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+init () {
+  local NETWORK PREFIX
+
+  eval `ipcalc -n -p $INTIP $INTNM`
+
+  rm -f /tmp/etc/exports
+
+  for i in $NFS_EXPORTS_RO; do
+    echo "$i	$NETWORK/$PREFIX(ro,no_root_squash,sync)" >> /tmp/etc/exports
+  done
+
+  for i in $NFS_EXPORTS_RW; do
+    echo "$i        $NETWORK/$PREFIX(rw,no_root_squash,sync)" >> /tmp/etc/exports
+  done
+}
+
+start () {
+  if [ -f /etc/exports ]; then
+    portmap
+    if [ -n "$NFS_CLIENTS" ]; then
+      NFSD="$NFS_CLIENTS"
+    else
+      NFSD=4
+    fi
+    nfsd $NFSD
+    lockd
+    mountd
+    exportfs -a
+  fi
+}
+
+stop () {
+  if [ -f /etc/exports ]; then
+    killall mountd lockd nfsd portmap
+    rmmod mountd lockd nfsd sunrpc
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac

@@ -1,0 +1,55 @@
+#!/bin/sh
+
+# Misc. startup stuff goes here...
+# You probably shouldn't disable this one...
+
+. /etc/rc.conf
+
+init () {
+
+  if [ -n "$ISSUE" ]; then
+    echo "$ISSUE" > /tmp/etc/issue
+  else
+    echo "This is \n\ (\s \m \r) \t" > /tmp/etc/issue
+  fi
+
+  if [ -n "$NETISSUE" ]; then
+    echo "$NETISSUE" > /tmp/etc/issue.net
+  fi
+}
+
+start () {
+  :
+}
+
+stop () {
+  :
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+

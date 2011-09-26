@@ -1,0 +1,76 @@
+#!/bin/sh
+
+ASTURW="/oldroot/mnt/asturw"
+
+KD="mnt/kd"
+
+ASTERISK_SOUNDS="stat/var/lib/asterisk/sounds"
+ASTERISK_MOH="stat/var/lib/asterisk/moh"
+
+system()
+{
+  find $ASTURW | grep -v -e "^$ASTURW/$KD" \
+                         -e "^$ASTURW/$ASTERISK_SOUNDS" \
+                         -e "^$ASTURW/$ASTERISK_MOH"
+}
+
+kd()
+{
+  if mount | grep -q "/$KD"; then
+    echo "/$KD is not on ASTURW. /$KD is a separate partition." >&2
+  else
+    find $ASTURW/$KD
+  fi
+}
+
+asterisk_sounds()
+{
+  if [ -d $ASTURW/$ASTERISK_SOUNDS ]; then
+    find $ASTURW/$ASTERISK_SOUNDS
+  else
+    echo "No Asterisk Sounds on ASTURW." >&2
+  fi
+  if [ -d $ASTURW/$ASTERISK_MOH ]; then
+    find $ASTURW/$ASTERISK_MOH
+  else
+    echo "No Asterisk MOH Sounds on ASTURW." >&2
+  fi
+}
+
+all()
+{
+  find $ASTURW
+}
+
+# main
+
+if ! mount | grep -q "$ASTURW"; then
+  echo "Unable to find ASTURW partition." >&2
+  exit 1
+fi
+
+case $1 in
+
+system|'')
+  system
+  ;;
+
+kd)
+  kd
+  ;;
+
+asterisk_sounds)
+  asterisk_sounds
+  ;;
+
+all)
+  all
+  ;;
+
+*)
+  echo "Usage: show-union [ system kd asterisk_sounds all ]"
+  exit 1
+  ;;
+  
+esac
+

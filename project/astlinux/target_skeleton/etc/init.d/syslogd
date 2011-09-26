@@ -1,0 +1,56 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+start () {
+  local -i LOGSIZE=1 NLOGS=2
+
+  if [ "$PERSISTLOG" = "yes" ]; then
+    LOGSIZE=10
+    NLOGS=5
+  fi
+
+  let LOGSIZE*=1024
+
+  echo "Starting syslogd..."
+  if [ -n "$SYSLOGHOST" ]; then
+    /sbin/syslogd -s $LOGSIZE -m 60 -b $NLOGS -L -R "$SYSLOGHOST"
+  else
+    /sbin/syslogd -s $LOGSIZE -m 60 -b $NLOGS
+  fi
+  klogd
+}
+
+stop () {
+  if ps | grep -q -e '[ /]syslogd[ ]' -e '[ /]syslogd$'; then
+    echo "Stopping syslogd..."
+    killall syslogd >/dev/null 2>&1
+    killall klogd >/dev/null 2>&1
+  fi
+}
+
+case $1 in 
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage start|stop|restart"
+  ;;
+
+esac

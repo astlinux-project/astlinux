@@ -1,0 +1,49 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+init () {
+  # enable by adding inetd lines to /tmp/etc/inetd.conf
+  :
+}
+
+start () {
+  if [ -f /etc/inetd.conf ]; then
+    echo "Starting inetd..."
+    inetd
+  fi
+}
+
+stop () {
+  if [ -f /var/run/inetd.pid ]; then
+    echo "Stopping inetd..."
+    kill `cat /var/run/inetd.pid`
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac

@@ -1,0 +1,27 @@
+#!/bin/sh
+# kexec based quick reboot for AstLinux
+
+KERN="/boot/bzImage"
+INITRD="/oldroot/cdrom/os/initrd.img"
+
+if [ ! -f "$INITRD" -o ! -f "$KERN" ]; then
+  echo "You don't have your drives mounted - exiting"
+  exit 1
+fi
+
+if [ ! -x /sbin/kexec ]; then
+  echo "You don't have kexec-tools installed - exiting"
+  exit 1
+fi
+
+echo "Calling AstLinux Shutdown..."
+/etc/rc shutdown sreboot
+
+echo "Loading kernel..."
+/sbin/kexec -l --command-line="`cat /proc/cmdline`" --initrd="$INITRD" "$KERN"
+
+sync
+umount -a -r 2>/dev/null
+
+echo "Rebooting system..."
+/sbin/kexec -e

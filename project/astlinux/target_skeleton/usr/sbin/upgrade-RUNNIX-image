@@ -1,0 +1,389 @@
+#!/bin/sh
+# red color error message for web interface
+RED=1
+# orange color error message for web interface
+ORANGE=2
+# green color message for web interface
+GREEN=0
+#
+# Default RUNNIX Repository
+SRC_URL="http://mirror.astlinux.org/runnix"
+#
+# Default RUNNIX Version (use if no local 'ver' file)
+RUN_VER="runnix-0.2.1"
+#
+
+mount_oldroot_cdrom() {
+  if mount | grep -q "/oldroot/cdrom"; then
+    BASE="/oldroot/cdrom"
+  else
+    if [ -x /sbin/findfs ]; then
+      LABEL=$(/sbin/findfs LABEL=RUNNIX)
+      if [ -n "$LABEL" ]; then
+        mount -t vfat -o ro "$LABEL" /oldroot/cdrom
+      fi
+    fi
+    if mount | grep -q "/oldroot/cdrom"; then
+      BASE="/oldroot/cdrom"
+    else
+      return 1
+    fi
+  fi
+  return 0
+}
+
+unmount_oldroot_cdrom() {
+  mount -o ro,remount /oldroot/cdrom >/dev/null
+}
+
+mount_tmpfs_runup() {
+  mkdir /tmp/runup >/dev/null
+
+  if ! mount -t tmpfs -o size=10m none /tmp/runup >/dev/null; then
+    rmdir /tmp/runup
+    return 1
+  fi
+  return 0
+}
+
+unmount_tmpfs_runup() {
+  cd /tmp
+  umount /tmp/runup
+  rmdir /tmp/runup
+}
+
+mirror_bootonly_runnix() {
+  local action="$1"
+
+  if [ ! -x /sbin/findfs ]; then
+    return 2
+  fi
+
+  # Check if a BOOTONLY drive exists.
+  LABEL=$(/sbin/findfs LABEL=BOOTONLY 2>/dev/null)
+  if [ -n "$LABEL" ]; then
+    mkdir /tmp/bootonly >/dev/null
+    if ! mount -t vfat -o rw "$LABEL" /tmp/bootonly >/dev/null; then
+      rmdir /tmp/bootonly
+      return 1
+    fi
+  else
+    # No BOOTONLY drive
+    return 1
+  fi
+
+  # Mirror the runnix files from the RUNNIX drive to the BOOTONLY drive.
+  if [ -f /tmp/bootonly/runnix -a -f "$BASE/ver" -a -f "$BASE/runnix" -a -f "$BASE/runnix.img" ]; then
+    for install in ver runnix runnix.img; do
+      if [ -f "/tmp/bootonly/$install" ]; then
+        rm -f "/tmp/bootonly/$install"
+      fi
+      cp -a "$BASE/$install" "/tmp/bootonly/$install"
+    done
+
+    if [ "$action" = "upgrade" ]; then
+      for install in memtest boot.msg syslinux.cfg; do
+        if [ -f "$BASE/$install" ]; then
+          if [ -f "/tmp/bootonly/$install" ]; then
+            rm -f "/tmp/bootonly/$install"
+          fi
+          cp -a "$BASE/$install" "/tmp/bootonly/$install"
+        fi
+      done
+    fi
+
+    if [ -f "$BASE/Xver" -a -f "$BASE/Xrunnix" -a -f "$BASE/Xrunnix.img" ]; then
+      for install in Xver Xrunnix Xrunnix.img; do
+        if [ -f "/tmp/bootonly/$install" ]; then
+          rm -f "/tmp/bootonly/$install"
+        fi
+        cp -a "$BASE/$install" "/tmp/bootonly/$install"
+      done
+    fi
+  fi
+
+  cd /tmp
+  umount /tmp/bootonly
+  rmdir /tmp/bootonly
+  return 0
+}
+
+check() {
+  IS_SERIAL=""
+  
+  for i in $(cat /proc/cmdline); do
+    if echo $i | grep -q "astlinux="; then
+      ARCH="$(echo $i | sed -e 's/astlinux=//')"
+    elif echo $i | grep -q "console="; then
+      SERIAL="$(echo $i | sed -e 's/console=//')"
+    fi
+  done
+
+  if [ -z "$ARCH" ]; then
+    echo "Unknown run image architecture type."
+    exit $RED
+  fi
+
+  if [ "$ARCH" = "geni586" -o "$ARCH" = "via" -o "$ARCH" = "viac7" ]; then
+    if [ -n "$SERIAL" ]; then
+      IS_SERIAL="-serial"
+      ARCH="${ARCH}${IS_SERIAL}"
+    fi
+  elif [ "$ARCH" = "net5501" -o "$ARCH" = "alix" -o "$ARCH" = "net4801" -o "$ARCH" = "wrap" ]; then
+    IS_SERIAL="-serial"
+  fi
+
+  if ! mount_oldroot_cdrom; then
+    echo "Unable to find Runnix partition."
+    exit $RED
+  fi
+
+  if wget -q -c -O /tmp/runup_ver $SRC_URL/ver >/dev/null; then
+    VER=$(cat /tmp/runup_ver)
+    rm -f /tmp/runup_ver
+  else
+    rm -f /tmp/runup_ver
+    echo "No version available."
+    exit $RED
+  fi
+
+  if [ -f $BASE/ver ]; then
+    OVER=$(cat $BASE/ver)
+  else
+    OVER=$RUN_VER
+  fi
+
+  if [ -z "$OVER" ]; then
+    echo "Unknown current version."
+    exit $RED
+  fi
+
+  if [ -f $BASE/Xver ]; then
+    XVER=$(cat $BASE/Xver)
+  else
+    XVER=""
+  fi
+  
+  if [ "$VER" = "$OVER" ]; then
+    echo "You are running the newest available version: ${VER}"
+    exit $ORANGE
+  fi
+}
+
+upgrade() {
+  if ! mount -o rw,remount /oldroot/cdrom >/dev/null; then
+    echo "Unable to write to Runnix partition."
+    exit $RED
+  fi
+
+  if ! mount_tmpfs_runup; then
+    unmount_oldroot_cdrom
+    echo "Error creating temporary filesystem."
+    exit $RED
+  fi
+
+  if ! wget -q -c -O /tmp/runup/$VER.tar.gz $SRC_URL/$VER.tar.gz >/dev/null; then
+    unmount_tmpfs_runup
+    unmount_oldroot_cdrom
+    echo "Firmware download failed."
+    exit $RED
+  fi
+
+  if ! wget -q -c -O /tmp/runup/$VER.tar.gz.sha1 $SRC_URL/$VER.tar.gz.sha1 >/dev/null; then
+    unmount_tmpfs_runup
+    unmount_oldroot_cdrom
+    echo "Firmware sha1sum download failed."
+    exit $RED
+  fi
+
+  mkdir $BASE/rtmp
+  cd /tmp/runup
+
+  if sha1sum -cs $VER.tar.gz.sha1; then
+    if [ -n "$XVER" -o -f "$BASE/Xrunnix" -o -f "$BASE/Xrunnix.img" ]; then
+      rm -f $BASE/Xrunnix
+      rm -f $BASE/Xrunnix.img
+      rm -f $BASE/Xver
+    fi
+    tar -xzf /tmp/runup/$VER.tar.gz -C $BASE/rtmp/
+    TAR_ARCHIVE_RTN=$?
+    sync
+  else
+    unmount_tmpfs_runup
+    rmdir $BASE/rtmp
+    unmount_oldroot_cdrom
+    echo "Firmware verification failed."
+    exit $RED
+  fi
+
+  if [ ! -d "$BASE/rtmp/$VER/rootfs_vfat" ] || [ ! -f "$BASE/rtmp/$VER/configs/default.cfg" ]; then
+    unmount_tmpfs_runup
+    rm -r $BASE/rtmp/
+    unmount_oldroot_cdrom
+    echo "Invalid Firmware file format."
+    exit $RED
+  fi
+
+  if [ $TAR_ARCHIVE_RTN -eq 0 ]; then
+
+    # Archive using Xrunnix and Xrunnix.img
+    if [ -f "$BASE/runnix" -a -f "$BASE/runnix.img" ]; then
+      mv $BASE/runnix $BASE/Xrunnix
+      mv $BASE/runnix.img $BASE/Xrunnix.img
+      echo "$OVER" > $BASE/Xver
+    fi
+
+    # Install runnix, runnix.img, memtest, and boot.msg from downloaded image
+    for install in runnix runnix.img memtest boot.msg; do
+      if [ -f "$BASE/rtmp/$VER/rootfs_vfat/$install" ]; then
+        if [ -f "$BASE/$install" ]; then
+          rm -f "$BASE/$install"
+        fi
+        mv "$BASE/rtmp/$VER/rootfs_vfat/$install" "$BASE/$install"
+      fi
+    done
+
+    # Install syslinux.cfg
+    syslinux=""
+    if [ -f "$BASE/rtmp/$VER/configs/$ARCH.cfg" ]; then
+      syslinux="$BASE/rtmp/$VER/configs/$ARCH.cfg"
+    elif [ -f "$BASE/rtmp/$VER/configs/default${IS_SERIAL:+$IS_SERIAL}.cfg" ]; then
+      syslinux="$BASE/rtmp/$VER/configs/default${IS_SERIAL:+$IS_SERIAL}.cfg"
+    fi
+    if [ -n "$syslinux" ]; then
+      rm -f "$BASE/syslinux.cfg"
+      mv "$syslinux" "$BASE/syslinux.cfg"
+    fi
+    
+    echo "$VER" > $BASE/ver
+    rm -r $BASE/rtmp/
+    
+    mirror_bootonly_runnix upgrade
+  else
+    unmount_tmpfs_runup
+    rm -r $BASE/rtmp/
+    unmount_oldroot_cdrom
+    echo "Not enough free space for new firmware on the RUNNIX partition."
+    exit $RED
+  fi
+  
+  unmount_tmpfs_runup
+  unmount_oldroot_cdrom
+}
+
+show() {
+
+  if ! mount_oldroot_cdrom; then
+    echo "Unable to find Runnix partition."
+    exit $RED
+  fi
+
+  if [ -f $BASE/ver ]; then
+    VER=$(cat $BASE/ver)
+  else
+    VER=$RUN_VER
+  fi
+
+  if [ -z "$VER" ]; then
+    echo "Unknown current version."
+    exit $RED
+  fi
+
+  if [ -f $BASE/Xver ]; then
+    XVER=$(cat $BASE/Xver)
+  else
+    echo "Current version is: ${VER}, no previous saved version."
+    exit $GREEN
+  fi
+}
+
+revert() {
+
+  if ! mount_oldroot_cdrom; then
+    echo "Unable to find Runnix partition."
+    exit $RED
+  fi
+
+  if [ -f $BASE/Xver ]; then
+    XVER=$(cat $BASE/Xver)
+  else
+    echo "Revert failed, there is no previous saved version."
+    exit $RED
+  fi
+
+  if [ -f $BASE/ver ]; then
+    VER=$(cat $BASE/ver)
+  else
+    echo "Unable to find the current version."
+    exit $RED
+  fi
+
+  if mount -o rw,remount /oldroot/cdrom >/dev/null; then
+    # Exchange runnix* with Xrunnix*
+    mv $BASE/Xrunnix $BASE/XXrunnix
+    mv $BASE/Xrunnix.img $BASE/XXrunnix.img
+    mv $BASE/runnix $BASE/Xrunnix
+    mv $BASE/runnix.img $BASE/Xrunnix.img
+    mv $BASE/XXrunnix $BASE/runnix
+    mv $BASE/XXrunnix.img $BASE/runnix.img
+    echo $VER > $BASE/Xver
+    echo $XVER > $BASE/ver
+    mount -o ro,remount /oldroot/cdrom >/dev/null
+    
+    mirror_bootonly_runnix revert
+  else
+    echo "Revert failed, unable to exchange files."
+    exit $RED
+  fi
+}
+
+# main
+
+if [ -d /tmp/up ]; then
+  echo "Firmware Upgrade in Progress, please wait..."
+  exit $ORANGE
+elif [ -d /tmp/runup ]; then
+  echo "RUNNIX Upgrade in Progress, please wait..."
+  exit $ORANGE
+fi
+
+case $1 in
+
+check)
+  if [ -n "$2" ]; then
+    SRC_URL=$2
+  fi
+  check
+  echo "Current version is: ${OVER},  Newest available version is: ${VER}"
+  exit $GREEN
+  ;;
+  
+upgrade)
+  if [ -n "$2" ]; then
+    SRC_URL=$2
+  fi
+  check
+  upgrade
+  echo "Successful upgrade to: ${VER}"
+  exit $GREEN
+  ;;
+  
+show)
+  show
+  echo "Current version is: ${VER}, Previous saved version is: ${XVER}"
+  exit $GREEN
+  ;;
+  
+revert)
+  revert
+  echo "Current version is now: ${XVER}"
+  exit $GREEN
+  ;;
+  
+*)
+  echo "Usage: upgrade-RUNNIX-image check|upgrade|show|revert [ firmware_repository_url ]"
+  exit 1
+  ;;
+  
+esac
+

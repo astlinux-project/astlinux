@@ -1,0 +1,39 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+init () {
+}
+
+start () {
+}
+
+stop () {
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac

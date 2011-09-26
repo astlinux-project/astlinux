@@ -1,0 +1,90 @@
+#!/bin/sh
+# args: restore.tar, target_dir
+#
+# The source restore.tar (not .tar.gz) must be created with relative paths, ie.
+# tar cf restore.tar $(ls -1 /mnt/kd/) -C /mnt/kd
+#
+# The target_dir will typically be "/mnt/kd"
+#
+#
+RESTORE="$1"
+TARGET="$2"
+
+restore_dirs()
+{
+  local dir IFS
+
+  unset IFS
+  for dir in $*; do
+    if tar tf "$RESTORE" "$dir" >/dev/null 2>/dev/null; then
+      rm -rf "$TARGET/$dir/"*
+      if ! tar xf "$RESTORE" -C "$TARGET" "$dir" >/dev/null; then
+        echo "Error writing to: $TARGET/$dir"
+        return 1
+      fi
+    fi
+  done
+  
+  return 0
+}
+
+restore_files()
+{
+  local file IFS
+
+  unset IFS
+  for file in $*; do
+    if tar tf "$RESTORE" "$file" >/dev/null 2>/dev/null; then
+      if ! tar xf "$RESTORE" -C "$TARGET" "$file" >/dev/null; then
+        echo "Error writing to: $TARGET/$file"
+        return 1
+      fi
+    fi
+  done
+  
+  return 0
+}
+
+#######
+## main
+#######
+
+if [ -z "$RESTORE" ] || [ -z "$TARGET" ]; then
+  echo "Usage: restore-basic-conf restore.tar target_dir"
+  exit 1
+fi
+
+# Sanity Check, if rc.conf.d does not exist or the tar file is corrupt, stop here
+#
+if ! tar tf "$RESTORE" rc.conf.d >/dev/null; then
+  echo "Invalid Backup archive: $RESTORE, no configuration files were changed."
+  exit 1
+fi
+
+# Restore basic configuration directories, clearing target directory
+#
+if ! restore_dirs rc.conf.d ssh_keys asterisk dahdi openvpn ipsec crontabs apcupsd; then
+  exit 2
+fi
+
+# Restore basic configuration directories, overlaying target directory
+#
+if ! restore_files ssl arno-iptables-firewall/plugins; then
+  exit 2
+fi
+
+# Restore basic configuration files
+#
+if ! restore_files astdb webgui-prefs.txt blocked-hosts dnsmasq.static \
+                   ast-crash rc.local rc.elocal rc.ledcontrol hosts ethers; then
+  exit 2
+fi
+
+# Find, and restore all base *.conf files contained in the restore archive
+#
+if ! restore_files $(tar tf "$RESTORE" | sed -n -e 's/^[^/]*[.]conf$/&/p'); then
+  exit 2
+fi
+
+exit 0
+

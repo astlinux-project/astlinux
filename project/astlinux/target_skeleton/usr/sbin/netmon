@@ -1,0 +1,108 @@
+#!/bin/sh
+
+PATH=/opt/bin:/opt/sbin:/usr/sbin:/bin:/usr/bin:/sbin:/usr/bin:/bin:/usr/sbin:/sbin
+
+. /etc/rc.conf
+
+IP=`which ip`
+
+if [ ! -x $IP ]; then
+  echo "You don't have iproute2 installed" 1>&2
+  exit 1
+fi
+
+if [ -z "$NETMON" ]; then
+  exit
+fi
+
+if [ -n "$CHKMETH" ]; then
+  METHOD="$CHKMETH"
+else
+  METHOD=ICMP
+fi
+
+if [ -n "$EXTIP" ]; then
+  CONTYPE=STATIC
+else
+  CONTYPE=DHCP
+fi
+
+if [ -n "$PPPOEIF" ]; then
+  CONTYPE=PPPOE
+  #force ICMP for PPPoE
+  METHOD=ICMP
+fi
+
+#get default route
+DEFAULT="`ip route | grep default`"
+if [ -n "$DEFAULT" ]; then
+  DEST=`echo $DEFAULT | cut -d' ' -f3`
+fi
+
+if [ -n "$CHKHOST" ]; then
+  DEST="$CHKHOST"
+fi
+
+case $METHOD in
+
+ICMP)
+  ping -c 5 -q $DEST >/dev/null
+  ;;
+
+ARP)
+  arping -fq -c 5 $DEST
+  ;;
+
+esac
+
+STATUS=$?
+
+case $STATUS in
+
+0)
+  if [ -x /etc/netmon.script ]; then
+    /etc/netmon.script UP
+  fi
+
+  if [ -x /mnt/kd/netmon.script ]; then
+    /mnt/kd/netmon.script UP
+  fi
+  ;;
+
+*)
+  # restart net connection
+  logger "netmon reports connection down - restarting"
+
+  if [ -x /etc/netmon.script ]; then
+    /etc/netmon.script DOWN
+  fi
+
+  if [ -x /mnt/kd/netmon.script ]; then
+    /mnt/kd/netmon.script DOWN
+  fi
+
+  case $CONTYPE in
+
+  DHCP)
+    killall udhcpc 2>/dev/null
+    sleep 2
+    udhcpc -b -s /etc/udhcpc.script -i $EXTIF >/dev/null
+    ;;
+
+  PPPOE)
+    killall pppd 2>/dev/null
+    sleep 2
+    pppoe-start >/dev/null
+    ;;
+
+  STATIC)
+    ;;
+
+  *)
+    ;;
+
+  esac
+  ;;
+
+esac
+

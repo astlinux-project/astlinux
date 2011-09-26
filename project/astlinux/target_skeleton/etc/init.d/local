@@ -1,0 +1,50 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+init () {
+  :
+}
+
+start () {
+
+  if [ -x /stat/etc/rc.local ]; then
+    /stat/etc/rc.local
+  fi
+
+  if [ -x /mnt/kd/rc.local ]; then
+    /mnt/kd/rc.local
+  fi
+}
+
+stop () {
+  :
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+

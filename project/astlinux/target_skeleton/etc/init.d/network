@@ -1,0 +1,592 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+. /etc/init.d/functions
+
+create_nasX()
+{
+  local name list type tag value VPI VCI ATMINFO CARD IF="$1" IFS
+
+  CARD="${IF:3:1}"
+
+  if [ -n "$ATM_MODULE" ]; then
+    modprobe $ATM_MODULE
+  fi
+
+  name="ATM_PARAMS${CARD}"
+  ATM_PARAMS="${!name}"
+
+  # initialize any values
+  IFS=$'\n'
+  for list in $ATM_PARAMS; do
+    type="`nthfield list ~ 1`"
+    tag="`nthfield list ~ 2`"
+    value="`nthfield list ~ 3`"
+    case $type in
+    solos)
+      soloscli -s $CARD "$tag" "$value"
+      ;;
+    esac
+  done
+
+  name="ATM_CIRCUIT${CARD}"
+  ATMINFO="${!name}"
+
+  if [ -z "$ATMINFO" ]; then
+    echo "Need VPI/VCI information for interface $PPPOEIF ($name)." >&2
+    return 1
+  fi
+
+  VPI="$(echo $ATMINFO | cut -d. -f1)"
+  VCI="$(echo $ATMINFO | cut -d. -f2)"
+
+  br2684ctl -b -c "$CARD" -e 0 -p 1 -s 2040 -a "$CARD.$VPI.$VCI"
+
+  ifconfig "$IF" up
+
+  return 0
+}
+
+ipv6_tunnel()
+{
+  local action="$1" type local_addr remote_addr endpoint_addr
+
+  type="$(echo $IPV6_TUNNEL | cut -d'~' -f1)"
+  remote_addr="$(echo $IPV6_TUNNEL | cut -d'~' -f2)"
+  endpoint_addr="$(echo $IPV6_TUNNEL | cut -d'~' -f3)"
+
+  case $action in
+
+    start)
+      local_addr="$(find_ip_from_if "$EXTIF")"
+      if [ -z "$local_addr" ]; then
+        echo "ipv6_tunnel: Can't determine local external IPv4 address" >&2
+        return
+      elif [ -z "$remote_addr" -o -z "$endpoint_addr" ]; then
+        echo "ipv6_tunnel: Empty IPV6_TUNNEL variable field(s)" >&2
+        return
+      fi
+      case $type in
+        6in4-static)
+          ip tunnel add ip6tun mode sit remote $remote_addr local $local_addr ttl 255
+          ip link set ip6tun up
+          ip -6 addr add $endpoint_addr dev ip6tun
+          ip -6 route add ::/0 dev ip6tun metric 1
+          ;;
+        6to4-relay)
+          ip tunnel add ip6tun mode sit remote any local $local_addr ttl 255
+          ip link set ip6tun up
+          ip -6 addr add $endpoint_addr dev ip6tun
+          ip -6 route add ::/0 via ::192.88.99.1 dev ip6tun metric 1
+          ;;
+        *)
+          echo "ipv6_tunnel: Tunnel type \"$type\" is not supported." >&2
+          ;;
+      esac
+      ;;
+
+    stop)
+      case $type in
+        6in4-static|6to4-relay)
+          ip -6 route flush dev ip6tun
+          ip link set ip6tun down
+          ip tunnel del ip6tun
+          ;;
+        *)
+          echo "ipv6_tunnel: Tunnel type \"$type\" is not supported." >&2
+          ;;
+      esac
+      ;;
+
+  esac
+}
+
+init () {
+
+  if [ -n "$IFRENAME" ]; then
+
+    #clear existing iftabs
+    echo -n > /tmp/etc/iftab
+    echo -n > /tmp/etc/iftab.init
+
+    #set COUNT
+    COUNT=10
+
+    for i in $IFRENAME; do
+      IF=`echo $i | cut -d: -f1`
+      DRIVER=`echo $i | cut -d: -f2`
+      ID=`echo $i | cut -d: -f3`
+
+      COUNT=`expr $COUNT - 1`
+
+      if echo $ID | grep -q i; then
+        RID=`echo $ID | tr -d i`
+        echo "eth$COUNT driver $DRIVER interrupt $RID" >> /tmp/etc/iftab.init
+        echo "$IF driver $DRIVER interrupt $RID" >> /tmp/etc/iftab
+      fi
+
+    done
+  fi
+
+  if [ -r /etc/iftab.init ]; then
+    echo "Remapping interfaces (init)..."
+    ifrename -c /etc/iftab.init
+  fi
+
+  if [ -r /etc/iftab ]; then
+    echo "Remapping interfaces..."
+    ifrename -c /etc/iftab
+  fi
+
+  if [ -n "$PHYETH" ]; then
+    for i in $PHYETH; do
+      INT=`echo $i | cut -d: -f1`
+      SPEED=`echo $i | cut -d: -f2`
+      DUP=`echo $i | cut -d: -f3`
+
+      echo "Setting ethernet parameters for $INT..."
+      ethtool -s "$INT" speed "$SPEED" duplex "$DUP" autoneg off
+    done
+  fi
+}
+
+start () {
+  local IF
+
+  # set hostname
+  hostname "$HOSTNAME"
+
+  # IPv6
+  if [ "$IPV6" = "yes" ]; then
+    modprobe ipv6
+    
+    # Disable IPv6 Autoconf by default
+    IFS=$'\n'
+    for line in $(sysctl -a 2>/dev/null | cut -d' ' -f1 | \
+        grep -e "^net\.ipv6\.conf\..*\.autoconf$" \
+             -e "^net\.ipv6\.conf\..*\.accept_ra$"); do
+      sysctl -w "$line=0" >/dev/null
+    done
+    unset IFS
+  fi
+
+  SYS_gen_etc_hosts > /tmp/etc/hosts
+
+  echo -n "" > /tmp/etc/ethers
+
+  if [ -r /stat/etc/ethers ]; then
+    cat /stat/etc/ethers >> /tmp/etc/ethers
+  fi
+
+  if [ -r /mnt/kd/ethers ]; then
+    cat /mnt/kd/ethers >> /tmp/etc/ethers
+  fi
+
+  ifconfig lo up 127.0.0.1
+
+  # look for nas[0123] being any one of our interfaces, and create it
+  for IF in $PPPOEIF $BRIDGE0 $BRIDGE1 $BRIDGE2 $INTIF $INT2IF $INT3IF; do
+    case $IF in
+    nas[0123])
+      create_nasX $IF ;;
+    esac
+  done
+
+  # if you want to change an interface's MAC address, you must do so
+  # before marking it up or joining it to a bridge.
+  if [ -n "$EXTIF" -a -n "$EXTIFMAC" -a "$EXTIF" != "none" ]; then
+    case "$EXTIF" in
+    br[0-2])
+      ;;
+    *) 
+      ifconfig "$EXTIF" down hw ether $EXTIFMAC up
+      ;;
+    esac
+  fi
+
+  if [ -n "$EXT2IF" -a -n "$EXT2IFMAC" -a "$EXT2IF" != "none" ]; then
+    case "$EXT2IF" in
+    br[0-2])
+      ;;
+    *)
+      ifconfig "$EXT2IF" down hw ether $EXT2IFMAC up
+      ;;
+    esac
+  fi
+
+  #VLANS
+  if [ -n "$VLANS" ]; then
+    for i in $VLANS; do
+      IF=`echo $i | cut -d. -f1`
+      VID=`echo $i | cut -d. -f2`
+      modprobe 8021q
+      ifconfig $IF up
+      vconfig add $IF $VID > /dev/null
+      if [ "$VLANCOS" = "yes" ]; then
+        vconfig set_egress_map "$IF.$VID" 0 3 > /dev/null
+        vconfig set_egress_map "$IF.$VID" 1 3 > /dev/null
+        vconfig set_egress_map "$IF.$VID" 2 1 > /dev/null
+        vconfig set_egress_map "$IF.$VID" 3 1 > /dev/null
+        vconfig set_egress_map "$IF.$VID" 4 4 > /dev/null
+        vconfig set_egress_map "$IF.$VID" 5 5 > /dev/null
+        vconfig set_egress_map "$IF.$VID" 6 6 > /dev/null
+        vconfig set_egress_map "$IF.$VID" 7 7 > /dev/null
+      fi
+    done
+  fi
+
+  #BRIDGES
+  if [ -n "$BRIDGE0" ]; then
+    modprobe bridge
+    brctl addbr br0
+    brctl setfd br0 0
+    for i in $BRIDGE0; do
+      ifconfig $i up
+      brctl addif br0 $i
+    done
+  fi
+
+  if [ -n "$BRIDGE1" ]; then
+    modprobe bridge
+    brctl addbr br1
+    brctl setfd br1 0
+    for i in $BRIDGE1; do
+      ifconfig $i up
+      brctl addif br1 $i
+    done
+  fi
+
+  if [ -n "$BRIDGE2" ]; then
+    modprobe bridge
+    brctl addbr br2
+    brctl setfd br2 0
+    for i in $BRIDGE2; do
+      ifconfig $i up
+      brctl addif br2 $i
+    done
+  fi
+
+  # and now we retry applying the MAC address if it's a bridge interface.
+  if [ -n "$EXTIF" -a -n "$EXTIFMAC" -a "$EXTIF" != "none" ]; then
+    case "$EXTIF" in
+    br[0-2])
+      ifconfig "$EXTIF" down hw ether $EXTIFMAC up
+      ;;
+    esac
+  fi
+
+  if [ -n "$EXT2IF" -a -n "$EXT2IFMAC" -a "$EXT2IF" != "none" ]; then
+    case "$EXT2IF" in
+    br[0-2])
+      ifconfig "$EXT2IF" down hw ether $EXT2IFMAC up
+      ;;
+    esac
+  fi
+
+  if [ -n "$IFMTU" ]; then
+    for i in $IFMTU; do
+      IF=`echo $i | cut -d: -f1`
+      MTU=`echo $i | cut -d: -f2`
+      ifconfig $IF mtu $MTU
+    done
+  fi
+
+  if [ -n "$INTIF" -a -n "$INTIP" -a -n "$INTNM" -a "$INTIF" != "none" ]; then
+    ifconfig $INTIF $INTIP netmask $INTNM
+    route add -net 224.0.0.0 netmask 240.0.0.0 $INTIF
+    if [ "$IPV6" = "yes" -a -n "$INTIPV6" ]; then
+      ip -6 addr add $INTIPV6 dev $INTIF
+    fi
+  fi
+
+  if [ -n "$INT2IF" -a -n "$INT2IP" -a -n "$INT2NM" -a "$INT2IF" != "none" ]; then
+    ifconfig $INT2IF $INT2IP netmask $INT2NM
+    route add -net 224.0.0.0 netmask 240.0.0.0 $INT2IF
+    if [ "$IPV6" = "yes" -a -n "$INT2IPV6" ]; then
+      ip -6 addr add $INT2IPV6 dev $INT2IF
+    fi
+  fi
+
+  if [ -n "$INT3IF" -a -n "$INT3IP" -a -n "$INT3NM" -a "$INT3IF" != "none" ]; then
+    ifconfig $INT3IF $INT3IP netmask $INT3NM
+    route add -net 224.0.0.0 netmask 240.0.0.0 $INT3IF
+    if [ "$IPV6" = "yes" -a -n "$INT3IPV6" ]; then
+      ip -6 addr add $INT3IPV6 dev $INT3IF
+    fi
+  fi
+
+  if [ -n "$WANDELAY" ]; then
+    echo "Sleeping for $WANDELAY seconds before I bring up $EXTIF..."
+    sleep $WANDELAY
+  fi
+
+  # PPPoE Again!
+  if isextppp; then
+    case $PPPOEIF in
+    eth*|nas[0123])
+      ifconfig $PPPOEIF up ;;
+    br[012])
+      ifconfig $PPPOEIF up
+      # because bridging does weird and unpleasant things to PPPoE packets
+      echo "0" > /proc/sys/net/bridge/bridge-nf-call-iptables
+      echo "0" > /proc/sys/net/bridge/bridge-nf-filter-pppoe-tagged
+      ;;
+    esac
+
+    mkdir /tmp/etc/ppp
+    echo "ETH=$PPPOEIF
+USER=$PPPOEUSER
+DEMAND=no
+DNSTYPE=SERVER
+PEERDNS=yes
+DNS1=
+DEFAULTROUTE=yes
+CONNECT_TIMEOUT=30
+CONNECT_POLL=2
+ACNAME=
+SERVICENAME=
+PING=\".\"
+CONFIG=\"/etc/ppp/pppoe.conf\"
+PIDFILE=\"/var/run/pppoe.conf-adsl.pid\"
+SYNCHRONOUS=no
+CLAMPMSS=1412
+LCP_INTERVAL=20
+LCP_FAILURE=3
+PPPOE_TIMEOUT=80
+FIREWALL=NONE
+PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
+
+    PPPVER=`(pppd --version 2>&1 >/dev/null ) | awk '/^pppd version/ { print $3; }'`
+
+    if [ -n "$PPPOEKERNEL" ]; then
+      echo "LINUX_PLUGIN=\"/usr/lib/pppd/$PPPVER/rp-pppoe.so\"" >> /tmp/etc/ppp/pppoe.conf
+    else
+      echo "LINUX_PLUGIN=\"\"" >> /tmp/etc/ppp/pppoe.conf
+    fi
+
+    PPPOE_PPPD_EXTRA="persist maxfail 0"
+
+    if [ -n "$PPPOEDEBUG" ]; then
+      if [ -n "$PPPOEKERNEL" ]; then
+        PPPOE_PPPD_EXTRA="${PPPOE_PPPD_EXTRA} kdebug 1"
+      fi
+      PPPOE_PPPD_EXTRA="${PPPOE_PPPD_EXTRA} debug"
+    fi
+    echo "PPPD_EXTRA=\"${PPPOE_PPPD_EXTRA}\"" >> /tmp/etc/ppp/pppoe.conf
+
+    echo "$PPPOEUSER * $PPPOEPASS" > /tmp/etc/ppp/pap-secrets
+    echo "$PPPOEUSER * $PPPOEPASS" > /tmp/etc/ppp/chap-secrets
+    chmod 600 /tmp/etc/ppp/chap-secrets /tmp/etc/ppp/pap-secrets
+
+    echo "Attempting to bring up PPPoE on $PPPOEIF"
+    echo "This could take some time..."
+
+    if [ -x /usr/sbin/pppoe-start ]; then
+      /usr/sbin/pppoe-start
+    else
+      /usr/sbin/adsl-start
+    fi
+    sleep 5
+
+    #end PPPoE
+  else
+    rm -f /tmp/etc/ppp/pppoe.conf
+  fi
+
+  #Static IP
+  if [ -n "$EXTIP" -a -n "$EXTIF" ] && ! isextppp extif; then
+
+    case $EXTIF in
+    wp)
+      ;;
+    hdlc0|pvc0)
+      ifconfig $EXTIF $EXTIP pointopoint $EXTGW
+      ;;
+    *)
+      ifconfig $EXTIF $EXTIP netmask $EXTNM
+      if [ "$IPV6" = "yes" -a -n "$EXTIPV6" ]; then
+        ip -6 addr add $EXTIPV6 dev $EXTIF
+      fi
+      ;;
+    esac
+
+    if [ -n "$EXTGW" ]; then
+      route add -net default gw $EXTGW dev $EXTIF
+    fi
+    if [ "$IPV6" = "yes" -a -n "$EXTGWIPV6" ]; then
+      ip -6 route add ::/0 via $EXTGWIPV6 dev $EXTIF metric 1
+    fi
+    #end static IP
+  fi
+
+  #Static IP on 2nd IF
+  if [ -n "$EXT2IP" -a -n "$EXT2IF" ] && ! isextppp ext2if; then
+
+    case $EXT2IF in
+    wp)
+      ;;
+    hdlc0|pvc0)
+      ifconfig $EXT2IF $EXT2IP pointopoint $EXT2GW
+      ;;
+    *)
+      ifconfig $EXT2IF $EXT2IP netmask $EXT2NM
+      if [ "$IPV6" = "yes" -a -n "$EXT2IPV6" ]; then
+        ip -6 addr add $EXT2IPV6 dev $EXT2IF
+      fi
+      ;;
+    esac
+
+    if [ -n "$EXT2GW" ]; then
+      route add -net default gw $EXT2GW dev $EXT2IF
+    fi
+    if [ "$IPV6" = "yes" -a -n "$EXT2GWIPV6" ]; then
+      ip -6 route add ::/0 via $EXT2GWIPV6 dev $EXT2IF metric 1
+    fi
+    #end static ip on 2nd if
+  fi
+
+  if [ -n "$EXTGW" -a -n "$EXT2GW" ]; then
+    if [ -n "$FAILTIME" ]; then
+      TIME=$FAILTIME
+    else
+      TIME=10
+    fi
+    echo $TIME > /proc/sys/net/ipv4/route/gc_timeout
+  fi
+
+  #DHCP
+  if [ -n "$EXTIF" -a -z "$EXTIP" ] && ! isextppp extif; then
+    udhcpc -b -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXTIF.pid -i $EXTIF
+  fi
+
+  #DHCP
+  if [ -n "$EXT2IF" -a -z "$EXT2IP" ] && ! isextppp ext2if; then
+    udhcpc -b -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXT2IF.pid -i $EXT2IF
+  fi
+
+  ##DMZ Network
+  if [ -n "$DMZIF" -a -n "$DMZIP" -a -n "$DMZNM" -a "$DMZIF" != "none" ]; then
+    ifconfig $DMZIF $DMZIP netmask $DMZNM
+    if [ "$IPV6" = "yes" -a -n "$DMZIPV6" ]; then
+      ip -6 addr add $DMZIPV6 dev $DMZIF
+    fi
+  fi
+
+  ##IPv6 Tunnel
+  if [ "$IPV6" = "yes" -a -n "$IPV6_TUNNEL" ]; then
+    ipv6_tunnel start
+  fi
+}
+
+stop () {
+  local IF
+
+  if [ "$IPV6" = "yes" -a -n "$IPV6_TUNNEL" ]; then
+    echo "Bringing down IPv6 tunnel..."
+    ipv6_tunnel stop
+  fi
+
+  if [ -z "$EXTIP" ]; then
+    kill `cat /var/run/udhcpc-$EXTIF.pid` 2>/dev/null
+  fi
+
+  if [ -r /var/run/ppp0.pid ]; then
+    kill `cat /var/run/ppp0.pid`
+  fi
+
+  if [ -n "$EXTIF" -a "$EXTIF" != "none" ]; then
+    echo "Bringing down $EXTIF..."
+    ifconfig $EXTIF down
+  fi
+
+  if [ -n "$EXT2IF" -a "$EXT2IF" != "none" ]; then
+    echo "Bringing down $EXT2IF..."
+    ifconfig $EXT2IF down
+  fi
+
+  if [ -n "$INTIF" -a "$INTIF" != "none" ]; then
+    echo "Bringing down $INTIF..."
+    ifconfig $INTIF down
+  fi
+
+  if [ -n "$INT2IF" -a "$INT2IF" != "none" ]; then
+    echo "Bringing down $INT2IF ..."
+    ifconfig $INT2IF down
+  fi
+
+  if [ -n "$INT3IF" -a "$INT3IF" != "none" ]; then
+    echo "Bringing down $INT3IF..."
+    ifconfig $INT3IF down
+  fi
+
+  if [ -n "$DMZIF" -a "$DMZIF" != "none" ]; then
+    echo "Bringing down $DMZIF ..."
+    ifconfig $DMZIF down
+  fi
+
+  #BRIDGES
+  if [ -n "$BRIDGE0" ]; then
+    ifconfig br0 down
+    brctl delbr br0
+  fi
+
+  if [ -n "$BRIDGE1" ]; then
+    ifconfig br1 down
+    brctl delbr br1
+  fi
+
+  if [ -n "$BRIDGE2" ]; then
+    ifconfig br2 down
+    brctl delbr br2
+  fi
+
+  #VLANS
+  if [ -n "$VLANS" ]; then
+    for i in $VLANS; do
+      vconfig rem $i
+    done
+  fi
+
+  # ATM interfaces
+  for IF in $PPPOEIF $BRIDGE0 $BRIDGE1 $BRIDGE2 $INTIF $INT2IF $INT3IF; do
+    case $IF in
+    nas[0123])
+      ifconfig "$IF" down
+      killall br2684ctl
+      if [ -n "$ATM_MODULE" ]; then
+        modprobe -r $ATM_MODULE
+      fi
+      break			# only need to do this once
+      ;;
+    esac
+  done
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+

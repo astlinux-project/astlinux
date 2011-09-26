@@ -1,0 +1,27 @@
+export PATH="$PATH:/usr/bin:/bin:/usr/sbin:/sbin"
+
+# This fixes the backspace when telnetting in.
+if [ "$TERM" != "linux" ]; then
+        stty erase ^?
+fi
+
+PS1='\[\033[01;31m\]\h \[\033[01;34m\]\W \$ \[\033[00m\]'
+PS2='> '
+PS4='+ '
+
+alias ll='ls -l'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias md='mkdir'
+alias rd='rmdir'
+
+# prefer less over more
+if [ -f /usr/bin/less ]; then
+	alias more=less
+	export PAGER=less
+fi
+
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+	. ~/.bashrc
+fi

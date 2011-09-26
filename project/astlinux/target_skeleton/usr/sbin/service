@@ -1,0 +1,17 @@
+#!/bin/sh
+
+if [ -n "$1" -a -n "$2" ]; then
+  SERVICE="$(ls /etc/runlevels/default/S* 2>/dev/null | grep "S[0-9][0-9]$1$")"
+  if [ -n "$SERVICE" ]; then
+    if [ -x "$SERVICE" ]; then
+      $SERVICE $2
+    else
+      echo "service: \"$1\" is not installed"
+    fi
+  else
+    echo "service: \"$1\" is not a valid service name"
+  fi
+else
+  echo "Usage: service service_name init|start|restart|stop"
+fi
+

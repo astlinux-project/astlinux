@@ -1,0 +1,81 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+if [ "$WDMODULE" = "auto" ]; then
+  if grep -q "astlinux=net4801" /proc/cmdline; then
+    WDMODULE="scx200_wdt"
+  elif grep -q "astlinux=wrap" /proc/cmdline; then
+    WDMODULE="scx200_wdt"
+  elif grep -q "astlinux=net5501" /proc/cmdline; then
+    WDMODULE="geodewdt"
+  elif grep -q "astlinux=alix" /proc/cmdline; then
+    WDMODULE="geodewdt"
+  else
+    echo "Watchdog disabled, no 'auto' setting available for this target device."
+    WDMODULE=""
+  fi
+fi
+
+if [ -n "$WDTIME" ]; then
+  TIMEOUT=$WDTIME
+else
+  TIMEOUT=30
+fi
+
+init () {
+
+  if [ -n "$WDMODULE" ]; then
+    modprobe $WDMODULE
+  fi
+
+}
+
+start () {
+
+  if [ -n "$WDMODULE" ]; then
+    echo "Starting watchdog..."
+    echo "Watchdog module: $WDMODULE"
+    watchdog -t $TIMEOUT /dev/watchdog
+  fi
+
+}
+
+stop () {
+
+  if [ -n "$WDMODULE" ]; then
+    if ps | grep -q -e '[ /]watchdog[ ]' -e '[ /]watchdog$'; then
+      echo "Stopping watchdog...  (self-reboot within 60 seconds)"
+      killall watchdog >/dev/null 2>&1
+    fi
+  fi
+
+}
+
+case $1 in
+
+init)
+  init
+  start
+  ;;
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+

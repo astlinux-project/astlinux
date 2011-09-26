@@ -1,0 +1,5 @@
+root:x:0:
+users:x:100:
+ftp:x:21:
+sshd:x:22:
+nobody:x:65535:

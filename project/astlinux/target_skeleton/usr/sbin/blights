@@ -1,0 +1,42 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+if `grep -q "astlinux=net4801" /proc/cmdline`
+then
+LED_PATH="/sys/class/leds/net48xx:error/brightness"
+LED_NUM=1
+fi
+
+if `grep -q "astlinux=wrap" /proc/cmdline`
+if [ "$LED_NUM" = "1" ]
+then
+echo "Controlling the power led on WRAP is no longer supported"
+exit 1
+fi
+
+if [ "$LED_NUM" = "2" ]
+then
+LED_PATH="/sys/class/leds/wrap:error/brightness"
+fi
+
+if [ "$LED_NUM" = "3" ]
+then
+LED_PATH="/sys/class/leds/wrap:extra/brightness"
+fi
+
+fi
+
+if [ "$LED_NUM" -a "$LED_TIME" ]
+then
+while true
+do
+echo 1 > $LED_PATH
+sleep $LED_TIME
+echo 0 > $LED_PATH
+sleep $LED_TIME
+done
+else
+exit 1
+fi
+

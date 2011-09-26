@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# $Id: udhcpc.script 1681 2004-09-01 18:12:49Z  $
+# Modified for AstLinux
+
+[ -z "$1" ] && echo "Error: should be called from udhcpc" && exit 1
+
+. /etc/rc.conf
+
+[ -n "$broadcast" ] && BROADCAST="broadcast $broadcast"
+[ -n "$subnet" ] && NETMASK="netmask $subnet"
+
+case "$1" in
+	deconfig)
+		/sbin/ifconfig $interface 0.0.0.0
+		rm -f /tmp/mydhcpip /tmp/udhcpc-$interface.conf
+		;;
+
+	renew|bound)
+		/sbin/ifconfig $interface $ip $BROADCAST $NETMASK
+		echo $ip > /tmp/mydhcpip
+		echo -e "IP=$ip\nBCAST=$broadcast\nNETMASK=$subnet" > /tmp/udhcpc-$interface.conf
+		if [ -n "$router" ] ; then
+			echo "deleting routers"
+			while route del default gw 0.0.0.0 dev $interface 2> /dev/null > /dev/null; do
+				:
+			done
+
+			for i in $router ; do
+				route add default gw $i dev $interface
+				echo "GW=$i" >> /tmp/udhcpc-$interface.conf
+			done
+		fi
+
+		echo -n > /tmp/etc/resolv-up.conf
+		[ -n "$domain" ] && echo search $domain >> /tmp/etc/resolv-up.conf
+		for i in $dns ; do
+			echo adding dns $i
+			echo nameserver $i >> /tmp/etc/resolv-up.conf
+			echo "DNS=$i" >> /tmp/udhcpc-$interface.conf
+		done
+		;;
+esac
+
+exit 0

@@ -1,0 +1,413 @@
+#!/bin/sh
+#
+#/etc/rc
+#
+# Basic Config goes here...
+export PATH=/usr/sbin:/sbin:/usr/bin:/bin:/usr/local/sbin:/usr/local/bin
+
+# Functions
+
+ast_checkfs () {
+
+  if ! echo $1 | grep -q dev; then
+    echo "Skipping fs check on $1"
+    return 0
+  fi
+
+  echo "Checking $1"
+  e2fsck -p $1 >/dev/null
+
+  status="$?"
+
+  case $status in
+  0)
+    echo "$1 is clean."
+    return 0
+    ;;
+
+  1)
+    echo "$1 was checked and is now clean."
+    return 0
+    ;;
+
+  2)
+    echo "$1 was checked and is now clean. System should be rebooted."
+    return 0
+    ;;
+
+  4)
+    echo "$1 still has errors; run e2fsck manually."
+    return 1
+    ;;
+
+  *)
+    echo "Something else is wrong with $1; run e2fsck manually."
+    return 1
+    ;;
+  esac
+}
+
+init() {
+
+  mount -t proc none /proc
+
+  CMDLINE="`cat /proc/cmdline`"
+
+  if echo $CMDLINE | grep -q single; then
+    ASTRLEVEL=single
+  elif echo $CMDLINE | grep -q custom; then
+    ASTRLEVEL=custom
+  else
+    ASTRLEVEL=default
+  fi
+
+  for i in $CMDLINE; do
+
+    case $i in
+    root=*)
+      # could use ${i:5} in bash... sigh.
+      ROOTDEV=`echo $i | sed -e 's/root=//'`
+      ;;
+
+    astkd=*)
+      KDDEV=`echo $i | sed -e 's/astkd=//'`
+      ;;
+
+    astopt=*)
+      OPTDEV=`echo $i | sed -e 's/astopt=//'`
+      ;;
+
+    astimg=*)
+      ASTIMG=`echo $i | sed -e 's/astimg=//'`
+      if echo $ASTIMG | grep -q .run; then
+        RUNNIX=yes
+      fi
+      ;;
+
+    asturw=*)
+      ASTURW=`echo $i | sed -e 's/asturw=//'`
+      ;;
+
+    astlinux=*)
+      ASTLINUX=`echo $i | sed -e 's/astlinux=//'`
+      ;;
+    esac
+
+  done
+
+  case $KDDEV in
+
+  # valid device name -- should we test for the device being present?
+  /dev/[sh]d[a-h][0-9])
+    ;;
+
+  # not set
+  '')
+    ;;
+
+  auto)
+    if [ -x /sbin/findfs ]; then
+      KDDEV=`/sbin/findfs LABEL=ASTKD 2>/dev/null`
+    else
+      echo "Keydisk set to 'auto' but no matching disk label found." >&2
+    fi
+    ;;
+
+  # gibberish...
+  *)
+    echo "Invalid keydisk name: $KDDEV" >&2
+    exec /bin/sh
+    ;;
+  esac
+
+  mount -t tmpfs -o size=200k none /dev
+  mount -t tmpfs -o size=5000k none /var
+  mount -t tmpfs -o size=10000k none /tmp
+
+  mount -t sysfs none /sys
+
+  mkdir /dev/pts
+  mount -t devpts none /dev/pts
+
+  mkdir /dev/usb
+  mount -t usbfs usbfs /proc/bus/usb
+
+  mkdir /tmp/etc
+  mkdir /tmp/etc/modprobe.d
+  echo '## Auto-generated file, do not edit!!' >/tmp/etc/modprobe.d/alias.conf
+
+  if [ -n "$ASTURW" ]; then
+    echo "# UNIONFS" > /tmp/etc/fstab
+  else
+    echo "$ROOTDEV /             ext2    ro              0       0" > /tmp/etc/fstab
+  fi
+
+  echo "proc    /proc           proc    defaults        0       0
+none    /dev            tmpfs   size=200k       0       0
+none    /tmp            tmpfs   size=10000k     0       0
+none    /var            tmpfs   size=5000k      0       0
+" >> /tmp/etc/fstab
+
+  if [ -d /stat/dev ]; then
+    cp -a /stat/dev/. /dev/
+  fi
+
+  /sbin/udevd --daemon
+
+  case $ASTLINUX in
+
+  net4801)
+    modprobe leds_net48xx
+    echo 1 >/sys/class/leds/net48xx::error/brightness
+    ;;
+
+  wrap)
+    modprobe scx200_gpio
+    modprobe leds_wrap
+    echo 1 >/sys/class/leds/wrap::error/brightness
+    ;;
+
+  net5501)
+    modprobe cs5535_gpio
+    MAJOR=`grep cs5535_gpio /proc/devices | cut -d" " -f1`
+    mknod /dev/errorled c $MAJOR 6
+    echo 1 >/dev/errorled
+    ;;
+
+  alix)
+    modprobe leds_alix
+    echo 1 >/sys/class/leds/alix:2/brightness
+    ;;
+
+  esac
+
+  mkdir /var/spool /var/lib /var/lib/nfs
+  touch /var/lib/nfs/etab /var/lib/nfs/xtab /var/lib/nfs/rmtab
+  mkdir /var/empty /var/lock /var/db /var/run /var/racoon
+  touch /var/run/utmp
+  mkdir /var/run/screen /var/state /var/tmp /tmp/bin
+  mkdir -m 0700 /var/tmp/asterisk-gui
+
+  if echo $CMDLINE | grep -q depmod; then
+    echo "Running depmod as requested..."
+    if [ -z "$ASTURW" ]; then
+      echo "remounting as rw"
+      mount -o rw,remount /
+      depmod -a >/tmp/depmod.run 2>&1
+      mount -o ro,remount /
+    else
+      depmod -a >/tmp/depmod.run 2>&1
+    fi
+  fi
+
+  if [ -r /etc/rc.modules ]; then
+    grep -v "#" /etc/rc.modules | \
+    (while read i; do
+     if [ "$i" = "sleep" ]; then
+       sleep 2
+     else
+       modprobe "$i" 2>/dev/null
+     fi
+     done)
+    sleep 5
+  fi
+
+  #set the clock to zulu time -- but only after modules (including rtc)
+  #have been loaded above.
+  if [ -r /dev/rtc ]; then
+    hwclock -su 2>/dev/null
+  fi
+
+  #Apply IO schedulers
+  if [ -n "$IOSCHED" ]; then
+    for i in $IOSCHED; do
+      IODEV=`echo $i | cut -d: -f1`
+      IOS=`echo $i | cut -d: -f2`
+      if grep -q $IOS /sys/block/$IODEV/queue/scheduler; then
+        echo "Applying I/O scheduler $IOS to $IODEV"
+        echo $IOS > /sys/block/$IODEV/queue/scheduler
+      else
+        echo "Error: $IOS is not available on $IODEV"
+      fi
+    done
+  fi 
+
+  #Check and mount filesystems
+  if [ -z "$ASTIMG" ]; then
+    echo "Checking $ROOTDEV"
+
+    ast_checkfs $ROOTDEV
+  fi
+
+  if [ -n "$OPTDEV" ]; then
+    echo "ASTOPT IS NO LONGER SUPPORTED - $OPTDEV WILL NOT BE MOUNTED"
+  fi
+
+  if [ -n "$KDDEV" ]; then
+    echo "$KDDEV /mnt/kd ext2 noauto,noatime 0 0" >> /tmp/etc/fstab
+
+    ast_checkfs $KDDEV
+
+    mount /mnt/kd >/dev/null
+  fi
+
+  # Check for persistent /root
+  if [ -d /mnt/kd/root ]; then
+    ln -s /mnt/kd/root /tmp/root
+  else
+    mkdir /tmp/root
+  fi
+
+  if [ -n "$ASTIMG" -a -z "$ASTURW" ]; then
+    if echo $CMDLINE | grep -q noram; then
+      mount -o ro,remount /
+    else
+      umount /oldroot
+      mount -o ro,remount /
+    fi
+  fi
+
+  # Re-mount Runnix partition                                    
+  if ! mount | grep -q "/oldroot/cdrom"; then                   
+    if [ -x /sbin/findfs ]; then                         
+      LABEL=`/sbin/findfs LABEL=RUNNIX`                                 
+      if [ -n "$LABEL" ]; then                                
+        if mount -t vfat -o ro "$LABEL" /oldroot/cdrom; then
+          echo "Runnix vfat partition re-mounted read-only" 
+        fi                                                  
+      else                                                  
+        echo "Runnix vfat partition label not found, use: dosfslabel /dev/hda1 RUNNIX" 1>&2
+      fi                                                                                   
+    fi                                                                                     
+  fi                                                                                       
+
+  # Check for video (non-serial) console, and load os/console.kmap if it exists
+  if ! echo "$CMDLINE" | grep -q "console="; then
+    if [ -f /oldroot/cdrom/os/console.kmap ]; then
+      echo "Loading console keyboard map: /oldroot/cdrom/os/console.kmap"
+      loadkmap < /oldroot/cdrom/os/console.kmap
+    fi
+  fi
+
+  # Create /tmp/etc/rc.conf
+  /usr/sbin/gen-rc-conf
+  # Source rc.conf variables
+  . /etc/rc.conf
+
+  if [ "$IPV6" != "yes" ]; then
+    echo "alias net-pf-10 off" >>/tmp/etc/modprobe.d/alias.conf
+  fi
+
+  # glibc/zoneinfo style TZ support
+  if [ -n "$TIMEZONE" -a -f "/usr/share/zoneinfo/$TIMEZONE" ]; then
+    ln -sf "/usr/share/zoneinfo/$TIMEZONE" /tmp/etc/localtime
+  elif [ -f /mnt/kd/localtime ]; then
+    ln -sf /mnt/kd/localtime /tmp/etc/localtime
+  elif [ -f /stat/etc/localtime ]; then
+    ln -sf /stat/etc/localtime /tmp/etc/localtime
+  fi
+
+  #uclibc style TZ support
+  if [ -z "$TZ_TIMEZONE" -a -f /etc/localtime ]; then
+    TZ_TIMEZONE=$(tail -n1 /etc/localtime)
+  fi
+  if [ -n "$TZ_TIMEZONE" ]; then
+    echo "$TZ_TIMEZONE" > /tmp/etc/TZ
+  elif [ -f /mnt/kd/TZ ]; then
+    cp /mnt/kd/TZ /tmp/etc/TZ
+  elif [ -f /stat/etc/TZ ]; then
+    cp /stat/etc/TZ /tmp/etc/TZ
+  fi
+
+  if [ "$PERSISTLOG" = "yes" ]; then
+
+    if [ ! -d /mnt/kd/log ]; then
+      mkdir /mnt/kd/log
+      touch /var/log/wtmp
+    fi
+
+    ln -s /mnt/kd/log /var/log
+
+  else
+    mkdir /var/log
+    touch /var/log/wtmp
+  fi
+
+  #Resize filesystems if we need to...
+  if [ -n "$VAR_SIZE" ]; then
+    mount -o remount,size=$VAR_SIZE /var
+  fi
+
+  if [ -n "$TMP_SIZE" ]; then
+    mount -o remount,size=$TMP_SIZE /tmp
+  fi
+
+  if [ -n "$DMA_DEV" ]; then
+    for i in $DMA_DEV; do
+      hdparm -q -d1 $i
+    done
+  fi
+
+  ldconfig -C /tmp/etc/ld.so.cache /lib /usr/lib
+
+  dmesg > /var/run/dmesg.boot
+
+  echo "going to runlevel $ASTRLEVEL..."
+
+  SCRIPTS="`ls /etc/runlevels/$ASTRLEVEL/S* 2>/dev/null`"
+  for i in $SCRIPTS; do
+    if [ -x $i ]; then
+      $i init
+    fi
+  done
+
+}
+
+shutdown() {
+  # args: sreboot_flag
+
+  CMDLINE="`cat /proc/cmdline`"
+
+  if echo $CMDLINE | grep -q single; then
+    ASTRLEVEL=single
+  elif echo $CMDLINE | grep -q custom; then
+    ASTRLEVEL=custom
+  else
+    ASTRLEVEL=default
+  fi
+
+  SCRIPTS="`ls /etc/runlevels/$ASTRLEVEL/K* 2>/dev/null`"
+  for i in $SCRIPTS; do
+    if [ -x $i ]; then
+      $i stop
+    fi
+  done
+
+  sync
+  sleep 2
+
+  if [ -r /dev/rtc ]; then
+    hwclock -wu 2>/dev/null
+  fi
+
+  if [ "$1" = "sreboot" ]; then
+    echo "shutdown sreboot..."
+  else
+    umount -a -r 2>/dev/null
+  fi
+
+}
+
+# can't read cmdline here, because /proc isn't yet mounted
+
+case $1 in
+sysinit|default)
+  init
+  ;;
+
+shutdown)
+  shutdown "$2"
+  ;;
+
+esac
+

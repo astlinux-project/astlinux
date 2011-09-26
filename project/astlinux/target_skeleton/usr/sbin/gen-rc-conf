@@ -1,0 +1,19 @@
+#!/bin/sh
+# Generate system rc.conf configuration script
+# Strip main comments and empty lines
+#
+echo '## Auto-generated file, do not edit!!' >/tmp/etc/rc.conf
+if [ -d /mnt/kd/rc.conf.d ]; then
+  if [ -f /stat/etc/rc.conf ]; then
+    sed -e 's/^#.*//' -e '/^$/ d' /stat/etc/rc.conf >>/tmp/etc/rc.conf
+  elif [ -d /stat/etc/rc.conf.d ]; then
+    sed -e 's/^#.*//' -e '/^$/ d' /stat/etc/rc.conf.d/*.conf >>/tmp/etc/rc.conf
+  fi
+  sed -e 's/^#.*//' -e '/^$/ d' /mnt/kd/rc.conf.d/*.conf >>/tmp/etc/rc.conf
+elif [ -f /mnt/kd/rc.conf ]; then
+  sed -e 's/^#.*//' -e '/^$/ d' /mnt/kd/rc.conf >>/tmp/etc/rc.conf
+elif [ -f /stat/etc/rc.conf ]; then
+  sed -e 's/^#.*//' -e '/^$/ d' /stat/etc/rc.conf >>/tmp/etc/rc.conf
+elif [ -d /stat/etc/rc.conf.d ]; then
+  sed -e 's/^#.*//' -e '/^$/ d' /stat/etc/rc.conf.d/*.conf >>/tmp/etc/rc.conf
+fi 

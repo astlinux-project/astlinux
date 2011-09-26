@@ -1,0 +1,359 @@
+#!/bin/sh
+# red color error message for web interface
+RED=1
+# orange color error message for web interface
+ORANGE=2
+# green color message for web interface
+GREEN=0
+
+mount_oldroot_cdrom() {
+  if mount | grep -q "/oldroot/cdrom"; then
+    BASE=/oldroot/cdrom
+  else
+    if [ -x /sbin/findfs ]; then
+      LABEL=`/sbin/findfs LABEL=RUNNIX`
+      if [ -n "$LABEL" ]; then
+        mount -t vfat -o ro "$LABEL" /oldroot/cdrom
+      fi
+    fi
+    if mount | grep -q "/oldroot/cdrom"; then
+      BASE=/oldroot/cdrom
+    else
+      return 1
+    fi
+  fi
+  return 0
+}
+
+unmount_oldroot_cdrom() {
+  mount -o ro,remount /oldroot/cdrom >/dev/null
+}
+
+mount_tmpfs_up() {
+  mkdir /tmp/up >/dev/null
+
+  if ! mount -t tmpfs -o size=56m none /tmp/up >/dev/null; then
+    rmdir /tmp/up
+    return 1
+  fi
+  return 0
+}
+
+unmount_tmpfs_up() {
+  cd /tmp
+  umount /tmp/up
+  rmdir /tmp/up
+}
+
+version_from_astimg() {
+  RUN_VER=""
+  for i in `cat /proc/cmdline`; do
+    if echo $i | grep -q "astimg="; then
+      RUN_VER=`echo $i | sed -e 's/astimg=//' -e 's/\.run$//'`
+    fi
+  done
+}
+
+after_reboot() {
+  AFTER_REBOOT=""
+  if [ -n "$RUN_VER" ]; then
+    REBOOT_VER=$RUN_VER
+    if [ -f $BASE/os/ver ]; then
+      REBOOT_VER=`cat $BASE/os/ver`
+    fi
+    if [ "$REBOOT_VER" != "$RUN_VER" ]; then
+      AFTER_REBOOT=" [after reboot]"
+    fi
+  fi
+}
+
+merge_kcmd()
+{
+  local old_conf="$1" new_conf="$2" old_kcmd new_kcmd merge i IFS
+
+  if [ ! -f "$old_conf" ] || [ ! -f "$new_conf" ]; then
+    echo "Merge KCMD Skipped, file not found." >&2
+    return 1
+  fi
+
+  old_kcmd="$(sed -n -r -e 's/^KCMD="(.*)".*$/\1/p' "$old_conf")"
+
+  new_kcmd="$(sed -n -r -e 's/^KCMD="(.*)".*$/\1/p' "$new_conf")"
+
+  if [ -z "$old_kcmd" -o -z "$new_kcmd" ]; then
+    echo "Merge KCMD Skipped, KCMD not found." >&2
+    return 1
+  fi
+
+  merge=""
+  unset IFS
+  for i in $old_kcmd; do
+    case $i in
+      noram|rootdelay=*|reboot=*)
+        if ! echo " $new_kcmd " | grep -q " $i "; then
+          merge="$merge${merge:+ }$i"
+        fi
+        ;;
+    esac
+  done
+
+  if [ -n "$merge" ]; then
+    sed -i "/^KCMD=/ s/ astlive /&$merge /" "$new_conf"
+  fi
+
+  return 0
+}
+
+check() {
+  for i in `cat /proc/cmdline`; do
+    if echo $i | grep -q "astlinux="; then
+      ARCH=`echo $i | sed -e 's/astlinux=//'`
+    elif echo $i | grep -q "console="; then
+      SERIAL=`echo $i | sed -e 's/console=//'`
+    fi
+  done
+
+  if [ -z "$ARCH" ]; then
+    echo "Unknown run image architecture type."
+    exit $RED
+  fi
+
+  if [ "$ARCH" = "geni586" -o "$ARCH" = "via" -o "$ARCH" = "viac7" ]; then
+    if [ -n "$SERIAL" ]; then
+      ARCH="${ARCH}-serial"
+    fi
+  fi
+
+  URL="${SRC_URL}/${ARCH}"
+
+  version_from_astimg
+
+  if ! mount_oldroot_cdrom; then
+    echo "Unable to find Runnix partition."
+    exit $RED
+  fi
+
+  if wget -q -c -O /tmp/up_ver $URL/ver >/dev/null; then
+    VER=`cat /tmp/up_ver`
+    rm -f /tmp/up_ver
+  else
+    rm -f /tmp/up_ver
+    echo "No version available."
+    exit $RED
+  fi
+
+  if [ -f $BASE/os/ver ]; then
+    OVER=`cat $BASE/os/ver`
+  else
+    OVER=$RUN_VER
+  fi
+
+  if [ -z "$OVER" ]; then
+    echo "Unknown current version."
+    exit $RED
+  fi
+
+  if [ -f $BASE/os/Xver ]; then
+    XVER=`cat $BASE/os/Xver`
+  else
+    XVER=""
+  fi
+  
+  after_reboot
+
+  if [ "$VER" = "$OVER" ]; then
+    echo "You are running the newest available version: ${VER}${AFTER_REBOOT}"
+    exit $ORANGE
+  fi
+}
+
+upgrade() {
+  if ! mount -o rw,remount /oldroot/cdrom >/dev/null; then
+    echo "Unable to write to Runnix partition."
+    exit $RED
+  fi
+
+  if ! mount_tmpfs_up; then
+    unmount_oldroot_cdrom
+    echo "Error creating temporary filesystem."
+    exit $RED
+  fi
+
+  if ! wget -q -c -O /tmp/up/$VER.tar.gz $URL/$VER.tar.gz >/dev/null; then
+    unmount_tmpfs_up
+    unmount_oldroot_cdrom
+    echo "Firmware download failed."
+    exit $RED
+  fi
+
+  if ! wget -q -c -O /tmp/up/$VER.tar.gz.sha1 $URL/$VER.tar.gz.sha1 >/dev/null; then
+    unmount_tmpfs_up
+    unmount_oldroot_cdrom
+    echo "Firmware sha1sum download failed."
+    exit $RED
+  fi
+
+  mkdir $BASE/tmp
+  cd /tmp/up
+
+  if sha1sum -cs $VER.tar.gz.sha1; then
+    if [ -n "$XVER" ]; then
+      rm -f $BASE/os/$XVER.*
+      rm -f $BASE/os/Xver
+    fi
+    tar -xzf /tmp/up/$VER.tar.gz -C $BASE/tmp/
+    TAR_ARCHIVE_RTN=$?
+    sync
+  else
+    unmount_tmpfs_up
+    rmdir $BASE/tmp
+    unmount_oldroot_cdrom
+    echo "Firmware verification failed."
+    exit $RED
+  fi
+
+  cd $BASE/tmp/$VER
+
+  if [ $TAR_ARCHIVE_RTN -eq 0 ] && sha1sum -cs $VER.run.sha1; then
+    mv $BASE/tmp/$VER/* $BASE/os/
+    merge_kcmd "$BASE/os/$OVER.run.conf" "$BASE/os/$VER.run.conf"
+    echo "$OVER" > $BASE/os/Xver
+    echo "$VER" > $BASE/os/ver
+    rm -r $BASE/tmp/
+  else
+    unmount_tmpfs_up
+    rm -r $BASE/tmp/
+    unmount_oldroot_cdrom
+    if [ $TAR_ARCHIVE_RTN -ne 0 ]; then
+      echo "Not enough free space for new firmware on the RUNNIX partition."
+    else
+      echo "Firmware verification failed."
+    fi
+    exit $RED
+  fi
+  
+  after_reboot
+
+  unmount_tmpfs_up
+  unmount_oldroot_cdrom
+}
+
+show() {
+  version_from_astimg
+
+  if ! mount_oldroot_cdrom; then
+    echo "Unable to find Runnix partition."
+    exit $RED
+  fi
+
+  if [ -f $BASE/os/ver ]; then
+    VER=`cat $BASE/os/ver`
+  else
+    VER=$RUN_VER
+  fi
+
+  if [ -z "$VER" ]; then
+    echo "Unknown current version."
+    exit $RED
+  fi
+
+  after_reboot
+
+  if [ -f $BASE/os/Xver ]; then
+    XVER=`cat $BASE/os/Xver`
+  else
+    echo "Current version is: ${VER}${AFTER_REBOOT}, no previous saved version."
+    exit $GREEN
+  fi
+}
+
+revert() {
+  version_from_astimg
+
+  if ! mount_oldroot_cdrom; then
+    echo "Unable to find Runnix partition."
+    exit $RED
+  fi
+
+  if [ -f $BASE/os/Xver ]; then
+    XVER=`cat $BASE/os/Xver`
+  else
+    echo "Revert failed, there is no previous saved version."
+    exit $RED
+  fi
+
+  if [ -f $BASE/os/ver ]; then
+    VER=`cat $BASE/os/ver`
+  else
+    echo "Unable to find the current version."
+    exit $RED
+  fi
+
+  if mount -o rw,remount /oldroot/cdrom >/dev/null; then
+    echo $VER > $BASE/os/Xver
+    echo $XVER > $BASE/os/ver
+    mount -o ro,remount /oldroot/cdrom >/dev/null
+  else
+    echo "Revert failed, unable to change version files."
+    exit $RED
+  fi
+  
+  after_reboot
+}
+
+# main
+
+if [ -d /tmp/up ]; then
+  echo "Firmware Upgrade in Progress, please wait..."
+  exit $ORANGE
+elif [ -d /tmp/runup ]; then
+  echo "RUNNIX Upgrade in Progress, please wait..."
+  exit $ORANGE
+fi
+
+case $1 in
+
+check)
+  if [ -n "$2" ]; then
+    SRC_URL=$2
+  else
+    echo "Usage: upgrade-run-image check firmware_repository_url"
+    exit 1
+  fi
+  check
+  echo "Current version is: ${OVER}${AFTER_REBOOT},  Newest available version is: ${VER}"
+  exit $GREEN
+  ;;
+  
+upgrade)
+  if [ -n "$2" ]; then
+    SRC_URL=$2
+  else
+    echo "Usage: upgrade-run-image upgrade firmware_repository_url"
+    exit 1
+  fi
+  check
+  upgrade
+  echo "Successful upgrade to: ${VER}${AFTER_REBOOT}"
+  exit $GREEN
+  ;;
+  
+show)
+  show
+  echo "Current version is: ${VER}${AFTER_REBOOT}, Previous saved version is: ${XVER}"
+  exit $GREEN
+  ;;
+  
+revert)
+  revert
+  echo "Current version is now: ${XVER}${AFTER_REBOOT}"
+  exit $GREEN
+  ;;
+  
+*)
+  echo "Usage: upgrade-run-image check|upgrade|show|revert firmware_repository_url"
+  exit 1
+  ;;
+  
+esac
+

@@ -1,0 +1,55 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+init () {
+
+  mkdir /var/spool/cron
+  if [ -d /mnt/kd/crontabs ]; then
+    ln -snf /mnt/kd/crontabs /var/spool/cron/crontabs
+  else
+    mkdir /var/spool/cron/crontabs
+  fi
+}
+
+start () {
+
+  echo "Starting crond..."
+  crond
+}
+
+stop () {
+
+  if ps | grep -q -e '[ /]crond[ ]' -e '[ /]crond$'; then
+    echo "Stopping crond..."
+    killall crond >/dev/null 2>&1
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+

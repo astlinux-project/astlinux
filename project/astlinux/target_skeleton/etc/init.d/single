@@ -1,0 +1,20 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+case $1 in
+
+start)
+  mount -t proc none /proc
+  hostname FAILSAFE
+  /bin/sh
+  ;;
+
+stop)
+  ;;
+
+*)
+  echo "Usage: start|stop"
+  ;;
+
+esac

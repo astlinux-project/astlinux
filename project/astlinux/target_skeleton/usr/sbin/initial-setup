@@ -1,0 +1,311 @@
+#!/bin/sh
+# red color error message for web interface
+RED=1
+# orange color error message for web interface
+ORANGE=2
+# green color message for web interface
+GREEN=0
+
+find_runnix_drive() {
+
+  # Find Runnix Drive
+  DRIVE=""
+  if [ -x /sbin/findfs ]; then
+    DRIVE="`/sbin/findfs LABEL=RUNNIX | awk '{ print substr($1,1,length($1)-1); }'`"
+  fi
+  if [ -z "$DRIVE" ]; then
+    DRIVE="`mount | awk '/\/oldroot\/cdrom/ { print substr($1,1,length($1)-1); }'`"
+  fi
+  if [ -z "$DRIVE" ]; then
+    echo "Runnix Drive could not be found."
+    exit $RED
+  fi
+}
+
+is_configured() {
+
+  # Is unionfs here?
+  if mount | grep -q "/oldroot/mnt/asturw"; then
+    return 0
+  fi
+  
+  return 1
+}
+
+genunion() {
+  # Args: partition, make_kd
+  
+  if mount | grep -q "$1"; then
+    echo "Partition $1 is currently in use."
+    exit $RED
+  fi
+  # Create filesystem
+  if ! /sbin/mke2fs -q -L ASTURW $1; then
+    echo "Creating ASTURW filesystem on $1 failed."
+    exit $RED
+  fi
+  
+  if [ "$2" != 'yes' ]; then
+    return 0
+  fi
+  
+  mkdir /tmp/asturw
+  if ! mount $1 /tmp/asturw; then
+    rmdir /tmp/asturw
+    echo "Mounting ASTURW on $1 failed."
+    exit $RED
+  fi
+  mkdir -p /tmp/asturw/mnt/kd
+
+  /usr/sbin/functions gen_kd_files /tmp/asturw/mnt/kd
+
+  return 0
+}
+
+genkd() {
+  # Args: partition
+
+  if mount | grep -q "$1"; then
+    echo "Partition $1 is currently in use."
+    exit $RED
+  fi
+  # Create filesystem
+  if ! /sbin/mke2fs -q -L ASTKD $1; then
+    echo "Creating ASTKD filesystem on $1 failed."
+    exit $RED
+  fi
+
+  if ! mount -t ext2 $1 /mnt/kd; then
+    echo "Mounting ASTKD on $1 failed."
+    exit $RED
+  fi
+  
+  /usr/sbin/functions gen_kd_files /mnt/kd
+
+  return 0
+}
+
+format_separate() {
+  # Args: drive, unionfs_size
+  local part_union
+  local part_kd
+ 
+  # Find Runix Drive
+  find_runnix_drive
+  
+  # Number of partitions
+  PNUM="`/sbin/fdisk -l | grep "^$1" | wc -l`"
+
+  if [ "$DRIVE" = "$1" ]; then
+    PNUM=$((PNUM-1))
+    part_union=2
+    part_kd=3
+  else
+    part_union=1
+    part_kd=2
+  fi
+
+  if [ "$PNUM" -ne 0 ]; then
+    echo "Drive $1 currently has partitions."
+    exit $RED
+  fi
+
+  /sbin/fdisk "$1" <<EOF >/dev/null
+n
+p
+${part_union}
+
++${2}M
+n
+p
+${part_kd}
+
+
+w
+EOF
+  # Ignore fdisk result, check for success
+  PNUM="`/sbin/fdisk -l | grep "^$1" | wc -l`"
+  if [ "$DRIVE" = "$1" ]; then
+    PNUM=$((PNUM-1))
+  fi
+  if [ "$PNUM" -eq 0 ]; then
+    echo "Format of drive $1 failed, use fdisk manually."
+    exit $RED
+  fi
+}
+
+format_combined() {
+  # Args: drive
+  local part_union
+
+  # Find Runix Drive
+  find_runnix_drive
+  
+  # Number of partitions
+  PNUM="`/sbin/fdisk -l | grep "^$1" | wc -l`"
+
+  if [ "$DRIVE" = "$1" ]; then
+    PNUM=$((PNUM-1))
+    part_union=2
+  else
+    part_union=1
+  fi
+  
+  if [ "$PNUM" -ne 0 ]; then
+    echo "Drive $1 currently has partitions."
+    exit $RED
+  fi
+  
+  /sbin/fdisk "$1" <<EOF >/dev/null
+n
+p
+${part_union}
+
+
+w
+EOF
+  # Ignore fdisk result, check for success
+  PNUM="`/sbin/fdisk -l | grep "^$1" | wc -l`"
+  if [ "$DRIVE" = "$1" ]; then
+    PNUM=$((PNUM-1))
+  fi
+  if [ "$PNUM" -eq 0 ]; then
+    echo "Format of drive $1 failed, use fdisk manually."
+    exit $RED
+  fi
+}
+
+configure() {
+  # Args: drive
+  local part_union
+  local part_kd
+  
+  # Find Runix Drive
+  find_runnix_drive
+  
+  # Number of partitions
+  PNUM="`/sbin/fdisk -l | grep "^$1" | wc -l`"
+  
+  if [ "$DRIVE" = "$1" ]; then
+    PNUM=$((PNUM-1))
+    part_union=2
+    part_kd=3
+  else
+    part_union=1
+    part_kd=2
+  fi
+
+  case $PNUM in
+
+  1)
+    if is_configured; then
+      echo "Drive $1 does not require configuration."
+      exit $RED
+    fi
+    genunion "${1}${part_union}" yes
+    ;;
+    
+  2)
+    if is_configured; then
+      echo "Drive $1 does not require configuration."
+      exit $RED
+    fi
+    genunion "${1}${part_union}" no
+    genkd "${1}${part_kd}"
+    ;;
+    
+  *)
+    echo "Partition status on $1 is unknown."
+    exit $RED
+    ;;
+
+  esac
+}
+
+status() {
+
+  # Find Runix Drive
+  find_runnix_drive
+  
+  # Number of partitions
+  PNUM="`/sbin/fdisk -l | grep "^$DRIVE" | wc -l`"
+
+  case $PNUM in
+  
+  1)
+    echo "ok-format $DRIVE"
+    ;;
+    
+  [2-3])
+    if is_configured; then
+      echo "ok-unionfs $DRIVE"
+    else
+      echo "ok-configure $DRIVE"
+    fi
+    ;;
+    
+  *)
+    echo "Format unknown, use fdisk manually."
+    ;;
+    
+  esac
+}
+
+# main
+
+case $1 in
+
+format)
+  case $2 in
+  
+  separate)
+    if [ -z "$3" ]; then
+      echo "Usage: initial-setup format separate /dev/hdd [unionfs_size]"
+      exit 1
+    fi
+    SIZE="$4"
+    if [ -z "$SIZE" ]; then
+      SIZE="128"
+    fi
+    format_separate "$3" "$SIZE"
+    ;;
+    
+  combined)
+    if [ -z "$3" ]; then
+      echo "Usage: initial-setup format combined /dev/hdd"
+      exit 1
+    fi
+    format_combined "$3"
+    ;;
+  
+  *)
+    echo "Usage: initial-setup format separate|combined /dev/hdd [unionfs_size]"
+    exit 1
+    ;;
+    
+  esac
+  echo "Format successful."
+  exit $GREEN
+  ;;
+  
+configure)
+  if [ -z "$2" ]; then
+    echo "Usage: initial-setup configure /dev/hdd"
+    exit 1
+  fi
+  configure "$2"
+  echo "Configure successful."
+  exit $GREEN
+  ;;
+  
+status)
+  status
+  ;;
+  
+*)
+  echo "Usage: initial-setup format|configure|status"
+  exit 1
+  ;;
+  
+esac
+

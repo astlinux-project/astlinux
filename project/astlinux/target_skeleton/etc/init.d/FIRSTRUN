@@ -1,0 +1,93 @@
+#!/bin/sh
+
+# The first runlevel script to execute.
+# Use to upgrade the firewall and other *safe* file edits.
+
+. /etc/rc.conf
+
+init () {
+  local new old=""
+  
+  new="$(cat /etc/astlinux-release)"
+  
+  if [ -f /mnt/kd/astlinux-release ]; then
+    old="$(cat /mnt/kd/astlinux-release)"
+  fi
+
+  echo -n "FIRSTRUN..."
+  
+  if [ "$old" != "$new" ]; then
+    echo "  version change detected."
+
+    cp -p /etc/astlinux-release /mnt/kd/astlinux-release
+
+    case $new in
+
+      astlinux-0.7*)
+        if /usr/sbin/upgrade-arno-firewall checkMajor; then  # Don't auto-upgrade if a major version change
+          /usr/sbin/upgrade-arno-firewall upgrade
+        fi
+        ;;
+
+      astlinux-0.8*)
+        if /usr/sbin/upgrade-arno-firewall checkMajor; then  # Don't auto-upgrade if a major version change
+          /usr/sbin/upgrade-arno-firewall upgrade
+        fi
+        case $old in
+          astlinux-0.7*)
+            # 0.7 -> 0.8 upgrade scripts
+            ;;
+        esac
+        ;;
+
+    esac
+  else
+    echo "  no version change."
+  fi
+}
+
+start () {
+  :
+}
+
+stop () {
+  :
+}
+
+if [ "$FIRSTRUN" = "no" ]; then
+  echo "FIRSTRUN is disabled" >&2
+  exit
+fi
+
+if [ ! -d /mnt/kd/rc.conf.d -a ! -f /mnt/kd/rc.conf ]; then
+  # No config files, not installed yet
+  exit
+fi
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+

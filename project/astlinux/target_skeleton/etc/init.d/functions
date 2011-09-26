@@ -1,0 +1,280 @@
+#
+# Function include file for init.d/ 
+#
+# Convention, begin included functions with SYS_
+# SYS_function_name()
+#
+
+SYS_gen_etc_hosts() {
+  local ip hostip hostipv6 IFS
+
+  # we deliberately leave out EXTIP
+  for ip in $INTIP/$INTIPV6 $INT2IP/$INT2IPV6 $INT3IP/$INT3IPV6; do
+    hostip="$(echo $ip | cut -d'/' -f1)"
+    hostipv6="$(echo $ip | cut -d'/' -f2)"
+    if [ -n "$hostip" ]; then
+      # we only need the first non-empty one...
+      break
+    fi
+  done
+
+  echo "# Automatically generated from internal state.
+127.0.0.1	localhost${hostip:+
+$hostip	$HOSTNAME.$DOMAIN $HOSTNAME}"
+
+  if [ "$IPV6" = "yes" ]; then
+    echo "
+::1	localhost ip6-localhost ip6-loopback${hostipv6:+
+$hostipv6	$HOSTNAME.$DOMAIN $HOSTNAME}
+"
+  fi
+
+  # DDHOST may not be a pure DNS Name, purify it
+  if [ -n "$DDHOST" ]; then
+    echo "$INTIP	$(echo "$DDHOST" | sed 's/[, ].*//')"
+  fi
+
+  if [ -f /stat/etc/hosts ]; then
+    echo ""
+    cat /stat/etc/hosts
+  fi
+
+  if [ -f /mnt/kd/hosts ]; then
+    echo ""
+    cat /mnt/kd/hosts
+  fi
+
+  if [ -n "$STATICHOSTS" ]; then
+
+    echo "
+# generated from STATICHOSTS in rc.conf"
+
+    IFS=$'\n'
+    for i in $STATICHOSTS; do
+      echo "$i" | awk -F~ '{ print $2 "\t" $1 ($4 == "" ? "" : "\t# "$4); }'
+    done
+  fi
+}
+
+SYS_is_vpn_type()
+{
+  # args: vpn_type
+  local vpn IFS
+
+  unset IFS
+  for vpn in $VPN; do
+    if [ "$vpn" = "$1" ]; then
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+_inordinal()
+{
+  if [ $# -lt 1 ]; then
+    echo "_ismember: wrong number of args" >&2
+    exit 1
+  fi
+
+  local ARG="$1" ELEM
+  shift
+
+  local -i nth=1
+
+  for ELEM in "$@"; do
+    if [ "$ARG" = "$ELEM" ]; then
+      echo $nth
+      return
+    fi
+    let nth++
+  done
+
+  echo 0
+}
+
+_ismember()
+{
+  [ `_inordinal "$@"` != 0 ]
+}
+
+declare -ir UINT_MAX=4294967295
+declare -ir UCHAR_MAX=255
+
+_isnum()
+{
+  if [ $# -ne 1 ]; then
+    echo "_isnum: wrong number of args" >&2
+    exit 1
+  fi
+
+  [ $(expr "$1" : "[0-9][0-9]*$") -ne 0 ]
+}
+
+_ishexnum()
+{
+  if [ $# -ne 1 ]; then
+    echo "_isnum: wrong number of args" >&2
+    exit 1
+  fi
+
+  [ $(expr "$1" : "0x[0-9a-fA-F][0-9a-fA-F]*$") -ne 0 ]
+}
+
+_ispowerof2()
+{
+  if [ $# -ne 1 ]; then
+    echo "_ispowerof2: wrong number of args" >&2
+    exit 1
+  elif ! _isnum "$1"; then
+    echo "_ispowerof2: not an integer" >&2
+    exit 1
+  fi
+
+  local -i NUM="$1" DEC
+
+  DEC=$(($NUM - 1))
+
+  [ $(($NUM & $DEC)) -eq 0 ]
+}
+
+_isvalidmask()
+{
+  if [ $# -ne 1 ]; then
+    echo "_isvalidmask: wrong number of args" >&2
+    exit 1
+  elif ! _isnum "$1" && ! _ishexnum "$1"; then
+    echo "_isvalidmask: not an integer" >&2
+    exit 1
+  fi
+
+  # the assignment will take care of radix conversion
+  local -i NUM="$1"
+
+  # can't use ~$NUM so we XOR it with UINT_MAX
+  _ispowerof2 $((($NUM ^ $UINT_MAX) + 1))
+}
+
+_isdottedquad()
+{
+  if [ $# -ne 1 ]; then
+    echo "_isdottedquad: wrong number of args" >&2
+    exit 1
+  fi
+
+  local ARG="$1" IFS INT VAL=0
+
+  if [ $(expr "$ARG" : '[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*$') -eq 0 ]; then
+    return 1
+  fi
+
+  IFS='.'
+  for INT in $ARG; do
+    if [ "$INT" -gt $UCHAR_MAX ]; then
+      return 1
+    fi
+    VAL=$((($VAL << 8) + $INT))
+  done
+
+  # send me to /dev/null if you only want to syntax-check
+  echo $VAL
+
+  return 0
+}
+
+_mkdottedquad()
+{
+  if [ $# -ne 1 ]; then
+    echo "_mkdottedquad: wrong number of args" >&2
+    exit 1
+  elif ! _isnum "$1"; then
+    echo "_mkdottedquad: not an integer" >&2
+    exit 1
+  fi
+
+  local -i INT="$1" VAL=0 UNIT
+  local STR=
+
+  if [ $INT -gt $UINT_MAX ]; then
+    echo "_mkdottedquad: out-of-bounds" >&2
+    exit 1
+  fi
+
+  for UNIT in 16777216 65536 256 1; do
+    VAL=$(($INT / $UNIT))
+    STR="$STR${STR:+.}$VAL"
+    INT=$(($INT % $UNIT))
+  done
+
+  echo $STR
+}
+
+isextppp()
+{
+  local ext="$1"
+
+  if [ -n "$PPPOEUSER" -a -n "$PPPOEPASS" -a -n "$PPPOEIF" ]; then
+    if [ "$EXTIF" = "ppp0" -o "$EXTIF" = "$PPPOEIF" ]; then
+      if [ -z "$ext" -o "$ext" = "extif" ]; then
+        return 0
+      fi
+    elif [ "$EXT2IF" = "ppp0" -o "$EXT2IF" = "$PPPOEIF" ]; then
+      if [ -z "$ext" -o "$ext" = "ext2if" ]; then
+        return 0
+      fi
+    fi
+  fi
+
+  return 1
+}
+
+get_numeric_ip_version()
+{
+  case $1 in
+  0/0)
+    ;;
+  [0-9][0-9.][0-9.][0-9.][0-9.]*.*[0-9])
+    return 4
+    ;;
+  [0-9]*.*/*[0-9]|[0-9]/*[0-9]|[1-9][0-9]/*[0-9]|[12][0-9][0-9]/*[0-9])
+    return 4
+    ;;
+  *:*)
+    return 6
+    ;;
+  esac
+
+  return 0
+}
+
+# moved from racoon.init because they're generically useful.
+
+findintf()
+{
+  ip -o addr show to "$1" \
+    | awk '{ print $2; }'
+}
+
+findip()
+{
+  ip -o addr show to "$1" \
+    | awk '{ split($4, field, "/"); print field[1]; }'
+}
+
+find_ip_from_if()
+{
+  ip -o addr show dev "$1" \
+    | awk '$3 == "inet" { split($4, field, "/"); print field[1]; }'
+}
+
+nthfield()
+{
+  echo "${!1}" | cut "-d$2" "-f$3"
+}
+
+fields()
+{
+  echo "${!1}" | awk "-F$2" '{ print NF; }'
+}
+
