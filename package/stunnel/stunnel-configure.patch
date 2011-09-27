@@ -1,0 +1,23 @@
+--- stunnel-4.35/configure.ac.orig	2011-04-14 10:12:02.000000000 -0500
++++ stunnel-4.35/configure.ac	2011-04-14 10:17:29.000000000 -0500
+@@ -73,7 +73,8 @@
+     AC_CHECK_FILE("/dev/ptmx", AC_DEFINE(HAVE_DEV_PTMX))
+     AC_CHECK_FILE("/dev/ptc", AC_DEFINE(HAVE_DEV_PTS_AND_PTC))
+ else
+-    AC_MSG_WARN([cross-compilation: assuming /dev/ptmx and /dev/ptc are not available])
++    AC_DEFINE(HAVE_DEV_PTMX)
++    AC_MSG_WARN([cross-compilation: assuming /dev/ptmx])
+ fi
+ 
+ AC_MSG_NOTICE([**************************************** entropy sources])
+@@ -103,7 +104,9 @@
+         AC_DEFINE_UNQUOTED(RANDOM_FILE, "$RANDOM_FILE")
+     fi
+ else
+-    AC_MSG_WARN([cross-compilation: assuming entropy sources are not available])
++    RANDOM_FILE="/dev/urandom"
++    AC_DEFINE_UNQUOTED(RANDOM_FILE, "$RANDOM_FILE")
++    AC_MSG_WARN([cross-compilation: assuming entropy source /dev/urandom])
+ fi
+ 
+ AC_MSG_NOTICE([**************************************** default group])
