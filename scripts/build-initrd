@@ -3,6 +3,33 @@
 # build-initrd [ force ]
 #
 
+save_state()
+{
+  cp -p .config .config.initrd.save
+  cp -p initrd.config .config
+
+  if [ -d "output" ]; then
+    mv output output.initrd.save
+  fi
+}
+
+restore_state()
+{
+  # This may be called multiple times on a interrupt
+  # Only restore once
+  if [ -f ".config.initrd.save" ]; then
+
+    rm -rf output
+
+    if [ -d "output.initrd.save" ]; then
+      mv output.initrd.save output
+    fi
+
+    cp -p .config.initrd.save .config
+    rm -f .config.initrd.save
+  fi
+}
+
 umask 002
 
 PATH=/sbin:/usr/sbin:$PATH
@@ -17,33 +44,24 @@ if [ ! -f "initrd.config" ]; then
   exit 1
 fi
 
-# Save previous .config file
-cp -p .config .config.save
-cp -p initrd.config .config
+save_state
+
+trap 'restore_state; exit $?' INT TERM EXIT
 
 make oldconfig
 
-if [ -d "output" ]; then
-  mv output output.save
-fi
-
 time make all
+
+trap - INT TERM EXIT
 
 if [ -f "output/images/rootfs.ext2.gz" ]; then
   echo "Installing initrd.img..."
   cp "output/images/rootfs.ext2.gz" "initrd.img"
 else
-  echo "Build failed."
+  echo "Initrd build failed."
 fi
 
-rm -rf output
-
-if [ -d "output.save" ]; then
-  mv output.save output
-fi
-
-# Restore previous .config file
-cp -p .config.save .config
+restore_state
 
 make oldconfig
 
