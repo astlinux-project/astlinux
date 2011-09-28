@@ -1,0 +1,51 @@
+#!/bin/bash
+#
+# build-initrd [ force ]
+#
+
+umask 002
+
+PATH=/sbin:/usr/sbin:$PATH
+
+if [ -f "initrd.img" -a "$1" != "force" ]; then
+  echo "The initrd image (initrd.img) already exists, skipping build."
+  exit 0
+fi
+
+if [ ! -f "initrd.config" ]; then
+  echo "The initrd.config file does not exist, exiting."
+  exit 1
+fi
+
+# Save previous .config file
+cp -p .config .config.save
+cp -p initrd.config .config
+
+make oldconfig
+
+if [ -d "output" ]; then
+  mv output output.save
+fi
+
+time make all
+
+if [ -f "output/images/rootfs.ext2.gz" ]; then
+  echo "Installing initrd.img..."
+  cp "output/images/rootfs.ext2.gz" "initrd.img"
+else
+  echo "Build failed."
+fi
+
+rm -rf output
+
+if [ -d "output.save" ]; then
+  mv output.save output
+fi
+
+# Restore previous .config file
+cp -p .config.save .config
+
+make oldconfig
+
+exit 0
+
