@@ -4,8 +4,8 @@ export PATH=/usr/bin:/usr/sbin:/bin:/sbin
 PARTS="hda1 hdb1 hdc1 hdd1 hde1 hdf1 hdg1 sda1 sdb1 sdc1 sdd1"
 DRIVES="hda hdb hdc hdd hde hdf hdg sda sdb sdc sdd"
 
-# in megabytes
-IMAGEFS_SIZE=@IMAGEFS_SIZE@
+# Max image size in megabytes
+IMAGEFS_SIZE=128
 
 #functions
 geninstall () {
