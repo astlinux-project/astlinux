@@ -1,0 +1,82 @@
+#!/bin/bash
+#
+# Use BuildRoot "post-build" script to overly board specific files
+#
+
+overlay_target()
+{
+  local target_skeleton="$base/project/astlinux/board/$board/target_skeleton"
+
+  if [ ! -d "$target_skeleton" ]; then
+    exit_error "Source Directory not found: $target_skeleton"
+  fi
+
+  echo "
+##
+## Post Build Target Overlay: Board = \"$board\"
+##
+"
+
+  cp -av "$target_skeleton/etc" "$target/"
+
+  if [ -f "$target_skeleton/stat/etc/sensors.conf" ]; then
+    cp -av "$target_skeleton/stat/etc/sensors.conf" "$target/stat/etc/sensors.conf"
+  else
+    rm -f "$target/stat/etc/sensors.conf"
+  fi
+
+  echo "
+##
+## Finished Target Overlay
+##
+"
+}
+
+exit_error()
+{
+  echo "
+## ** ERROR **
+## Post Build: Board = \"$board\"
+## $1
+"
+  exit 1
+}
+
+target="$1"
+
+base="${target%/output/target}"
+
+if [ ! -f "$base/astlinux.board" ]; then
+  echo "geni586" > "$base/astlinux.board"
+fi
+
+board="$(cat "$base/astlinux.board")"
+
+case "$board" in
+
+  geni586) overlay_target ;;
+
+  geni586-serial) overlay_target ;;
+
+  net5501) overlay_target ;;
+
+  alix) overlay_target ;;
+
+  via) overlay_target ;;
+
+  via-serial) overlay_target ;;
+
+  viac7) overlay_target ;;
+
+  viac7-serial) overlay_target ;;
+
+  net4801) overlay_target ;;
+
+  wrap) overlay_target ;;
+
+  *) exit_error "Unknown Board type." ;;
+
+esac
+
+exit 0
+
