@@ -17,10 +17,12 @@ overlay_target()
 ##
 "
 
-  cp -av "$target_skeleton/etc" "$target/"
+  cp -pv "$target_skeleton/etc/inittab" "$target/etc/inittab"
+
+  cp -pv "$target_skeleton/etc/rc.modules" "$target/etc/rc.modules"
 
   if [ -f "$target_skeleton/stat/etc/sensors.conf" ]; then
-    cp -av "$target_skeleton/stat/etc/sensors.conf" "$target/stat/etc/sensors.conf"
+    cp -pv "$target_skeleton/stat/etc/sensors.conf" "$target/stat/etc/sensors.conf"
   else
     rm -f "$target/stat/etc/sensors.conf"
   fi
