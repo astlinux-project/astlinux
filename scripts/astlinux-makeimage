@@ -1,0 +1,233 @@
+#!/bin/bash
+#
+# astlinux-makeimage [imagesize in MB] [dos partition size in MB] [ASTURW partition size in MB]
+#
+# astlinux-makeimage -z 128 128 0
+#
+
+PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
+
+RUNNIX_VER="$(awk -F'=' '/^RUNNIX_VER/ { print $2; exit }' boot/runnix/runnix.mk)"
+
+RUNNIX_DIR="output/build/runnix-$RUNNIX_VER"
+
+RUNFS_DIR="output/build/runfs"
+
+make_release_version()
+{
+  ASTURL="$(LANG=C svn info | awk -F': ' '/^URL:/ { print $2 }')"
+  ASTBASE="$(basename ${ASTURL})"
+  ASTREV="$(LANG=C svn info | awk -F': ' '/^Last Changed Rev:/ { print $2 }')"
+  ASTEXTRA=""
+
+  if [ "$(cat "project/astlinux/target_skeleton/etc/astlinux-release")" = "svn" ]; then
+    ASTVER="astlinux-${ASTBASE}-${ASTREV}${ASTEXTRA}"
+  else
+    ASTVER="$(cat "project/astlinux/target_skeleton/etc/astlinux-release")${ASTEXTRA}"
+  fi
+}
+
+#
+# put whatever edits you need to make to the VFAT filesystem here.
+#
+# it will be run with that as the current working directory.
+#
+editConf()
+{
+  # stuff here... example:
+  # sed -i -r -e '/^    append /{s/,19200n8/,38400n8/}' syslinux.cfg
+
+  return 0
+}
+
+make_release_version
+
+ASTRW_FORMAT=
+BOOT_ONLY=
+DUMP_PARTITIONS=
+GZIP=
+
+while [ $# -ge 1 ]; do
+  case "$1" in
+  -A)
+    ASTRW_FORMAT=1
+    ;;
+  -B)
+    BOOT_ONLY=1
+    ;;
+  -p)
+    DUMP_PARTITIONS=1
+    ;;
+  -z)
+    GZIP=1
+    ;;
+  *)
+    break
+    ;;
+  esac
+  shift
+done
+
+if [ $# -ne 3 ]; then
+  echo "Usage: astlinux-makeimage [imagesize in MB] [dos partition size in MB] [ASTURW partition size in MB]" >&2
+  exit 1
+fi
+
+DISK_SIZE=$1
+DOS_SIZE=$2
+AST_SIZE=$3
+
+if [ $(($DOS_SIZE + $AST_SIZE)) -gt $DISK_SIZE ]; then
+  echo "astlinux-makeimage: Partition sizes exceed disk size." >&2
+  exit 1
+fi
+
+if [ ! -f output/target/etc/rc ]; then
+  echo "It doesn't look like you have built AstLinux yet.
+You need to run ./scripts/build first. For more help please visit
+
+http://www.astlinux.org
+
+" >&2
+  exit 1
+fi
+
+if [ ! -d $RUNNIX_DIR ] || [ ! -d $RUNFS_DIR ]; then
+  echo "astlinux-makeimage: This image wasn't built with RUNNIX enabled." >&2
+  exit 1
+fi
+
+if ! sudo /bin/true; then
+  echo "astlinux-makeimage: You need to be a sudo group member to run this script" >&2
+  exit 1
+fi
+
+if [ -d /dev/loop ]; then
+  LOOPD=/dev/loop/
+else
+  LOOPD=/dev/loop
+fi
+
+rm -f runnix.img bximage.out
+
+# dd if=/dev/zero of=runnix.img bs=1024 count=$(($DISK_SIZE*1024))
+
+./scripts/bximage -q -hd -mode=flat -size=$DISK_SIZE runnix.img > bximage.out
+
+sudo losetup ${LOOPD}0 runnix.img
+
+CYL=`awk -F\= '/^  cyl=/ {print $2}' bximage.out`
+HEADS=`awk -F\= '/^  heads=/ {print $2}' bximage.out`
+SECTORS=`awk -F\= '/^  sectors per track=/ {print $2}' bximage.out`
+
+rm -f bximage.out
+
+# bximage insists on H=16... but most CF is H=64/S=63
+if [ $HEADS -eq 16 ]; then
+  CYL=$(($CYL / 4))
+  HEADS=$(($HEADS * 4))
+fi
+
+if [ -z "$CYL" -o -z "$HEADS" -o -z "$SECTORS" ]; then
+  echo "Unable to parse geometry; automation failed."
+  sudo losetup -d ${LOOPD}0
+  exit 1
+fi
+
+( if [ $AST_SIZE -gt 0 ]; then
+    echo -e "n\np\n1\n\n+${DOS_SIZE}M\nt\n6\na\n1"
+    echo -e "n\np\n2\n\n+${AST_SIZE}M\nt\n2\n83"
+  elif [ $DOS_SIZE -lt $DISK_SIZE ]; then
+    echo -e "n\np\n1\n\n+${DOS_SIZE}M\nt\n6\na\n1"
+  else
+    echo -e "n\np\n1\n\n\nt\n6\na\n1"
+  fi
+  echo "w"
+) | sudo fdisk -C $CYL -H $HEADS -S $SECTORS ${LOOPD}0
+
+temp="${LOOPD}0"
+PREFIXLEN=${#temp}
+PREFIX="^${temp//\//\/}"
+
+# need to filter out bootable marker ('*') so it doesn't show up as $2
+eval $(sudo fdisk -u -l ${LOOPD}0 | tr '*' ' ' | awk "/${PREFIX}/ { printf \"%s=%s\\n\", substr(\$1, $PREFIXLEN+1), \$2; }")
+
+if [ -z "$p1" -o \( $AST_SIZE -gt 0 -a -z "$p2" \) ]; then
+  echo "Couldn't extract partition offsets." >&2
+  sudo losetup -d ${LOOPD}0
+  exit 1
+fi
+
+sudo losetup -o $(($p1*512)) ${LOOPD}1 runnix.img
+
+if [ -n "$BOOT_ONLY" ]; then
+  LABEL="BOOTONLY"
+else
+  LABEL="RUNNIX"
+fi
+sudo mkdosfs -F 16 -n $LABEL ${LOOPD}1
+
+echo "
+##
+## AstLinux Image Release: Version = \"$ASTVER\"
+##
+"
+
+# run syslinux and copy the master boot record
+(
+  cd ${RUNNIX_DIR}
+  sudo ./syslinux ${LOOPD}1
+  sudo bash -c "cat mbr.bin > ${LOOPD}0"
+)
+
+sudo mkdir -p /mnt/runnix
+sudo mount -t vfat ${LOOPD}1 /mnt/runnix
+
+if [ -n "$BOOT_ONLY" ]; then
+  for install in $(ls -1 $RUNFS_DIR | grep -v '^os$'); do
+    sudo cp -P --preserve=mode,timestamps ${RUNFS_DIR}/${install} /mnt/runnix
+  done
+else
+  sudo cp -r -P --preserve=mode,timestamps ${RUNFS_DIR}/. /mnt/runnix
+fi
+
+# run this in a subshell, since we change subdirectory
+(
+  cd /mnt/runnix
+  editConf
+)
+
+sudo umount /mnt/runnix
+sudo rmdir /mnt/runnix
+
+sudo losetup -d ${LOOPD}1
+
+# allow an argument of 0 to skip creating this partition.
+if [ $AST_SIZE -gt 0 -a -n "$ASTRW_FORMAT" ]; then
+  sudo losetup -o $(($p2*512)) ${LOOPD}2 runnix.img
+
+  sudo mkfs -t ext2 -L ASTURW ${LOOPD}2
+
+  sudo losetup -d ${LOOPD}2
+fi
+
+if [ -n "$DUMP_PARTITIONS" ]; then
+  sudo fdisk -l -u ${LOOPD}0
+fi
+
+sudo losetup -d ${LOOPD}0
+
+if [ -n "$BOOT_ONLY" ]; then
+  IMG_NAME="runnix-$RUNNIX_VER-bootonly.img"
+else
+  IMG_NAME="$ASTVER.img"
+fi
+
+mv -f runnix.img $IMG_NAME
+
+if [ -n "$GZIP" ]; then
+  gzip -f $IMG_NAME
+fi
+
+echo "Done."
+

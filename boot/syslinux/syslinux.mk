@@ -4,7 +4,7 @@
 #
 #############################################################
 
-SYSLINUX_VERSION = 3.85
+SYSLINUX_VERSION = 3.86
 SYSLINUX_SOURCE  = syslinux-$(SYSLINUX_VERSION).tar.bz2
 SYSLINUX_SITE    = $(BR2_KERNEL_MIRROR)/linux/utils/boot/syslinux/3.xx/
 
