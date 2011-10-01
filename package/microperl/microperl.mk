@@ -31,7 +31,7 @@ $(MICROPERL_DIR)/microperl: $(MICROPERL_DIR)/.patch
 
 $(TARGET_DIR)/usr/bin/microperl: $(MICROPERL_DIR)/microperl
 	install -D -m 0755 $(MICROPERL_DIR)/microperl $(TARGET_DIR)/usr/bin/microperl
-	ln -s /usr/bin/microperl $(TARGET_DIR)/usr/bin/perl
+	ln -sf /usr/bin/microperl $(TARGET_DIR)/usr/bin/perl
 	# Install very basic modules
 	for i in strict warnings Carp Exporter File/Basename Getopt/Std; do \
 	  mkdir -p $$(dirname $(MICROPERL_LIB_DIR)/$$i) ; \
