@@ -1,0 +1,161 @@
+#!/bin/bash
+#
+# build [ board ]
+#
+
+IMAGEFS_SIZE=128
+
+REQUIRED_CMDS="which zcat bzcat make gcc bison flex msgfmt makeinfo autoconf nasm wget rsync sed"
+
+ROOTFS_SQUASHFS="output/images/rootfs.squashfs"
+ROOTFS_EXT2="output/images/rootfs.ext2"
+
+RUNFS_DIR="output/build/runfs"
+
+make_release_version()
+{
+  ASTURL="$(svn info | awk -F': ' '/^URL:/ { print $2 }')"
+  ASTBASE="$(basename ${ASTURL})"
+  ASTREV="$(svn info | awk -F': ' '/^Last Changed Rev:/ { print $2 }')"
+  ASTEXTRA=""
+
+  if [ "$(cat "project/astlinux/target_skeleton/etc/astlinux-release")" = "svn" ]; then
+    ASTVER="astlinux-${ASTBASE}-${ASTREV}${ASTEXTRA}"
+  else
+    ASTVER="$(cat "project/astlinux/target_skeleton/etc/astlinux-release")${ASTEXTRA}"
+  fi
+}
+
+make_release()
+{
+  echo "
+##
+## AstLinux Release: Version = \"$ASTVER\"
+##
+"
+
+  mkdir -p ${ASTVER}
+  cp ${ROOTFS_SQUASHFS} ${ASTVER}/${ASTVER}.run
+  (
+    cd ${ASTVER}
+    sha1sum ${ASTVER}.run > ${ASTVER}.run.sha1
+  )
+  touch ${ASTVER}/astflag
+  sed -e "s/ASTVER/${ASTVER}/g" project/astlinux/board/${board}/runnix.conf > ${ASTVER}/${ASTVER}.run.conf
+  image_size=$(du -s -m "${ROOTFS_EXT2}" | awk '{ print $1 }')
+  if [ "$image_size" -gt ${IMAGEFS_SIZE} ]; then
+    echo "build: WARNING -- Image Size is larger then ${IMAGEFS_SIZE}MB, 'noram' is set"
+    sed -i 's/ astlive / astlive noram /' ${ASTVER}/${ASTVER}.run.conf
+  fi
+
+  cp initrd.img ${ASTVER}/initrd.img
+  tar -cvzf ${ASTVER}.tar.gz ${ASTVER}
+  sha1sum ${ASTVER}.tar.gz > ${ASTVER}.tar.gz.sha1
+}
+
+make_runfs()
+{
+  mkdir -p ${RUNFS_DIR}/os
+
+  cp -p project/astlinux/board/${board}/runnix-syslinux.cfg ${RUNFS_DIR}/syslinux.cfg
+
+  rm -f ${RUNFS_DIR}/os/astlinux-*
+
+  cp -p ${ASTVER}/* ${RUNFS_DIR}/os/
+  echo ${ASTVER} > ${RUNFS_DIR}/os/ver
+}
+
+exit_error()
+{
+  echo "
+## ** ERROR **
+## AstLinux Build: Board = \"$board\"
+## $1
+"
+  exit 1
+}
+
+umask 002
+
+PATH=/sbin:/usr/sbin:$PATH
+
+if [ -n "$1" ]; then
+  echo "Defining Board = \"$1\""
+  echo "$1" > "astlinux.board"
+fi
+
+if [ ! -f "astlinux.board" ]; then
+  echo "geni586" > "astlinux.board"
+fi
+
+board="$(cat "astlinux.board")"
+
+case "$board" in
+
+  geni586) ;;
+
+  geni586-serial) ;;
+
+  net5501) ;;
+
+  alix) ;;
+
+  via) ;;
+
+  via-serial) ;;
+
+  viac7) ;;
+
+  viac7-serial) ;;
+
+  net4801) ;;
+
+  wrap) ;;
+
+  *) exit_error "Unknown Board type." ;;
+
+esac
+
+error=0
+for i in $REQUIRED_CMDS; do
+  if ! which $i >/dev/null 2>&1; then
+    error=1
+    echo "build: Required command \"$i\" is missing in your build environment."
+    if [ "$i" = "which" ]; then  # no use proceeding
+      break
+    fi
+  fi
+done
+if [ $error -ne 0 ]; then
+  exit_error "Missing Required Command(s)."
+fi
+
+  echo "
+##
+## AstLinux Build: Board = \"$board\"
+##
+"
+
+if [ ! -f "initrd.img" ]; then
+  if ! ./scripts/build-initrd; then
+    exit 1
+  fi
+else
+  echo "File initrd.img exists, skipping 'scripts/build-initrd'."
+fi
+
+make oldconfig
+
+time make all
+
+if [ $? -eq 0 -a -f "$ROOTFS_SQUASHFS" -a -f "initrd.img" -a -d "$RUNFS_DIR" ]; then
+  make_release_version
+  make_release
+  make_runfs
+else
+  rm -f "$ROOTFS_SQUASHFS"
+  echo "build: Incomplete build, no AstLinux Release for you."
+fi
+
+exit 0
+

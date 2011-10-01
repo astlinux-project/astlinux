@@ -3,6 +3,20 @@
 # Use BuildRoot "post-build" script to overly board specific files
 #
 
+make_release_version()
+{
+  ASTURL="$(svn info | awk -F': ' '/^URL:/ { print $2 }')"
+  ASTBASE="$(basename ${ASTURL})"
+  ASTREV="$(svn info | awk -F': ' '/^Last Changed Rev:/ { print $2 }')"
+  ASTEXTRA=""
+
+  if [ "$(cat "project/astlinux/target_skeleton/etc/astlinux-release")" = "svn" ]; then
+    ASTVER="astlinux-${ASTBASE}-${ASTREV}${ASTEXTRA}"
+  else
+    ASTVER="$(cat "project/astlinux/target_skeleton/etc/astlinux-release")${ASTEXTRA}"
+  fi
+}
+
 overlay_target()
 {
   local target_skeleton="$base/project/astlinux/board/$board/target_skeleton"
@@ -79,6 +93,9 @@ case "$board" in
   *) exit_error "Unknown Board type." ;;
 
 esac
+
+make_release_version
+echo ${ASTVER} > "$target/etc/astlinux-release"
 
 exit 0
 
