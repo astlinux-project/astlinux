@@ -9,7 +9,7 @@ PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
 
 RUNNIX_VER="$(awk -F'=' '/^RUNNIX_VER/ { print $2; exit }' boot/runnix/runnix.mk)"
 
-RUNNIX_DIR="output/build/runnix-$RUNNIX_VER"
+RUNNIX_DIR="output/build/runnix-${RUNNIX_VER// /}"
 
 RUNFS_DIR="output/build/runfs"
 

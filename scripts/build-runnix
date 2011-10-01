@@ -1,0 +1,124 @@
+#!/bin/bash
+#
+# build-runnix
+#
+
+ROOTFS_EXT2_GZ="output/images/rootfs.ext2.gz"
+
+KERNEL="output/images/bzImage"
+
+SYSLINUX_VERSION="$(awk -F'=' '/^SYSLINUX_VERSION/ { print $2; exit }' boot/syslinux/syslinux.mk)"
+
+SYSLINUX_DIR="output/build/syslinux-${SYSLINUX_VERSION// /}"
+
+MEMTEST_VER="$(awk -F'=' '/^MEMTEST_VER/ { print $2; exit }' package/memtest/memtest.mk)"
+
+MEMTEST_DIR="output/build/memtest86+-${MEMTEST_VER// /}"
+
+make_release_version()
+{
+  RUNURL="$(LANG=C svn info | awk -F': ' '/^URL:/ { print $2 }')"
+  RUNBASE="$(basename ${RUNURL})"
+  RUNREV="$(LANG=C svn info | awk -F': ' '/^Last Changed Rev:/ { print $2 }')"
+  RUNEXTRA=""
+
+  if [ "$(cat "project/runnix/target_skeleton/etc/runnix-release")" = "svn" ]; then
+    RUNVER="runnix-${RUNBASE}-${RUNREV}${RUNEXTRA}"
+  else
+    RUNVER="$(cat "project/runnix/target_skeleton/etc/runnix-release")${RUNEXTRA}"
+  fi
+}
+
+make_release()
+{
+  echo "
+##
+## RUNNIX Release: Version = \"$RUNVER\"
+##
+"
+
+  mkdir -p ${RUNVER}
+  cp -a project/runnix/files/* ${RUNVER}/
+  find ${RUNVER} -type d -name .svn | xargs rm -rf
+  cp -p ${SYSLINUX_DIR}/mbr/mbr.bin ${RUNVER}/mbr.bin
+  cp -p ${SYSLINUX_DIR}/linux/syslinux ${RUNVER}/syslinux
+  cp -p ${KERNEL} ${RUNVER}/rootfs_vfat/runnix
+  cp -p ${ROOTFS_EXT2_GZ} ${RUNVER}/rootfs_vfat/runnix.img
+  cp -p ${MEMTEST_DIR}/memtest ${RUNVER}/rootfs_vfat/memtest
+  echo "${RUNVER}" > ${RUNVER}/rootfs_vfat/ver
+
+  tar -cvzf ${RUNVER}.tar.gz ${RUNVER}
+  sha1sum ${RUNVER}.tar.gz > ${RUNVER}.tar.gz.sha1
+}
+
+save_state()
+{
+  cp -p .config .config.runnix.save
+  cp -p runnix.config .config
+
+  if [ -d "output" ]; then
+    mv output output.runnix.save
+  fi
+}
+
+restore_state()
+{
+  # This may be called multiple times on a interrupt
+  # Only restore once
+  if [ -f ".config.runnix.save" ]; then
+
+    rm -rf output
+
+    if [ -d "output.runnix.save" ]; then
+      mv output.runnix.save output
+    fi
+
+    cp -p .config.runnix.save .config
+    rm -f .config.runnix.save
+  fi
+}
+
+umask 002
+
+PATH=/sbin:/usr/sbin:$PATH
+
+if [ ! -f "runnix.config" ]; then
+  echo "The runnix.config file does not exist, exiting."
+  exit 1
+fi
+
+# Save and Restore state if AstLinux is currently in output/
+#
+save_restore=0
+if [ -f "output/target/etc/astlinux-release" ]; then
+  save_restore=1
+fi
+
+if [ $save_restore -eq 1 ]; then
+  save_state
+
+  trap 'restore_state; exit $?' INT TERM EXIT
+fi
+
+make oldconfig
+
+time make all
+
+if [ $? -eq 0 -a -f "$ROOTFS_EXT2_GZ" -a -f "$KERNEL" -a -d "$SYSLINUX_DIR" -a -d "$MEMTEST_DIR" ]; then
+  make_release_version
+  make_release
+else
+  rm -f "$ROOTFS_EXT2_GZ"
+  echo "build: Incomplete build, no RUNNIX Release for you."
+fi
+
+if [ $save_restore -eq 1 ]; then
+  trap - INT TERM EXIT
+
+  restore_state
+
+  make oldconfig
+fi
+
+exit 0
+

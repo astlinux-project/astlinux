@@ -1,0 +1,7 @@
+config BR2_PACKAGE_MEMTEST
+	bool "memtest"
+	default n
+	help
+	  Memory diagnostics for X86 machines.
+
+	  http://www.memtest.org

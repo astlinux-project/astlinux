@@ -1,0 +1,284 @@
+#!/bin/sh
+export PATH="/usr/bin:/bin:/usr/sbin:/sbin"
+
+# BASE is where the runnix partition is mounted
+BASE=/mnt/base
+
+# ROOT is where the .run partition is mounted
+ROOT=/mnt/root
+
+RUNVER="`cat /etc/runnix-release`"
+
+DRIVES="hda hdb hdc hdd hde hdf hdg hdh sda sdb sdc sdd"
+
+setup_network () {
+
+  if [ -z "$NDEV" -a -n "$1" ]; then
+    NDEV="$1"
+  fi
+
+  #VLANS
+  for i in $VLANS; do
+    IF=`echo $i | cut -d. -f1`
+    VID=`echo $i | cut -d. -f2`
+    ifconfig $IF up
+    vconfig add $IF $VID > /dev/null
+  done
+
+  if [ -n "$NDEV" ]; then
+    ifconfig lo up 127.0.0.1
+
+    if [ -n "$MAC" ]; then
+      ifconfig "$NDEV" hw ether "$MAC"
+    fi
+
+    if [ -z "$IP" -o "$IP" = "dhcp" ]; then
+      echo "Configuring $NDEV with DHCP..."
+      udhcpc -nq -s /etc/udhcpc.script -i "$NDEV"
+    elif [ -n "$IP" -a -n "$NM" ]; then
+      ifconfig "$NDEV" "$IP" netmask "$NM"
+
+      if [ -n "$GW" ]; then
+        route add -net default gw "$GW" dev "$NDEV"
+      fi
+
+      for i in $DNS; do
+        echo "nameserver $i" >> /tmp/etc/resolv.conf
+      done
+
+    fi
+    return 0
+  fi
+
+  return 1
+}
+
+setup_ssh () {
+
+  if [ -z "$SSHPORT" -a -n "$1" ]; then
+    SSHPORT="$1"
+  fi
+
+  if [ -n "$SSHPORT" ]; then
+    mount -t devpts devpts /dev/pts
+
+    echo "Generating keys..."
+    dropbearkey -t rsa -f /tmp/rsa_key -s 1024
+    dropbearkey -t dss -f /tmp/dss_key -s 1024
+
+    touch /var/log/lastlog
+    touch /var/log/wtmp
+
+    echo "Starting SSH..."
+    dropbear -d /tmp/dss_key -r /tmp/rsa_key -E -P /tmp/dropbear.pid -p $SSHPORT
+
+    myipv4="$(ip -o addr show dev "$NDEV" 2>/dev/null | awk '$3 == "inet" { split($4, field, "/"); print field[1]; }')"
+    if [ -n "$myipv4" ]; then
+      echo "
+==================
+SSH server started.
+Example, copy a file to the RUNNIX base partition via a remote host:
+
+remote-host$ scp -P $SSHPORT filename root@$myipv4:/mnt/base/filename
+(Password: runnix)
+==================
+"
+    fi
+    return 0
+  fi
+
+  return 1
+}
+
+do_failure () {
+
+  if setup_network; then
+    setup_ssh
+  fi
+
+  do_shell
+}
+
+do_shell () {
+  echo "Dropping to shell, type 'exit' to reboot"
+
+  export PS1='runnix# '
+
+  # Check for video console, and load os/console.kmap if it exists
+  if ! echo "$CMDLINE" | grep -q "console="; then
+    if [ -f $BASE/os/console.kmap ]; then
+      echo "Loading console keyboard map: $BASE/os/console.kmap"
+      loadkmap < $BASE/os/console.kmap
+    fi
+  fi
+
+  /bin/sh -i </dev/console >/dev/console 2>/dev/console
+
+  # and reboot when done
+  reboot -f
+}
+
+echo "
+
+Runnix version '$RUNVER' starting..."
+
+mount -t proc none /proc
+mount -t tmpfs none /tmp
+mkdir /tmp/etc
+
+CMDLINE="`cat /proc/cmdline`"
+
+for x in $DRIVES; do
+  if mount -t iso9660 -o ro /dev/${x} $BASE 2>/dev/null; then
+    if [ -f $BASE/os/astflag ]; then
+      DEVICE=${x}
+      RODEV=yes
+    else
+      umount /dev/${x}
+    fi
+  fi
+done
+
+for x in $DRIVES; do
+  if mount -t vfat /dev/${x}1 $BASE 2>/dev/null; then
+    if [ -f $BASE/os/astflag ]; then
+      DEVICE=${x}
+    else
+      umount /dev/${x}1
+    fi
+  fi
+done
+
+hostname runnix
+
+# Loader not found
+if [ -z "$DEVICE" ]; then
+  echo "Runnix: AstLinux medium not found."
+  do_shell
+  # reboot
+fi
+
+# get image name
+for i in $CMDLINE; do
+  case $i in
+  runimg=*)
+    RUNIMG="`echo $i | cut -c8-`"
+    ;;
+  esac
+done
+
+if [ -f $BASE/os/default.conf ]; then
+  . $BASE/os/default.conf
+fi
+
+if echo "$CMDLINE" | grep -q doshell; then
+  if echo "$CMDLINE" | grep -q doshell_ssh; then
+    if setup_network eth0; then
+      setup_ssh 2222
+    fi
+  fi
+  do_shell
+  # reboot
+fi
+
+if [ -z "$RUNIMG" ]; then
+  RUNIMG="auto"
+fi
+
+if [ "$RUNIMG" = "auto" ]; then
+  # Get the latest good one
+  cd $BASE/os
+  RUNIMG="`ls *.run | tail -n1`"
+fi
+
+#If we have a ver file, override auto/default.conf value
+if [ -f $BASE/os/ver ]; then
+  RUNIMG="`cat $BASE/os/ver`.run"
+fi
+
+if [ "$VERIFY_LOCAL" = "yes" ]; then
+  echo "Verifying $RUNIMG..."
+
+  if sha1sum -cs $RUNIMG.sha1; then
+    echo "$RUNIMG verified"
+    IMGVER=1
+  else
+    echo "$RUNIMG not verified"
+  fi
+else
+  echo "Skip Verifying $RUNIMG"
+fi
+
+if [ -f $BASE/os/$RUNIMG.conf ]; then
+  . $BASE/os/$RUNIMG.conf
+fi
+
+if [ -z "$OFFSET" ]; then
+  losetup /dev/loop0 $BASE/os/$RUNIMG
+else
+  losetup -o "$OFFSET" /dev/loop0 $BASE/os/$RUNIMG
+fi
+
+if [ -z "$FSTYPE" ]; then
+  FSTYPE=ext2
+fi
+
+if mount -t $FSTYPE -o ro /dev/loop0 $ROOT; then
+  echo "Root mounted"
+else
+  echo "Error mounting $RUNIMG root fs"
+  do_failure
+fi
+
+if [ -n "$INITRD" ]; then
+
+  if [ -f "$INITRD" ]; then
+    echo "Custom initrd $INITRD found"
+  else
+    INITRD=$BASE/os/initrd.img
+    echo "Custom initrd not found - using $INITRD"
+  fi
+
+else
+  echo "Using default initrd"
+  INITRD=$BASE/os/initrd.img
+fi
+
+if [ -n "$KERN" ]; then
+
+  if [ -f "$KERN" ]; then
+    echo "Custom kernel $KERN found"
+  else
+    KERN=$ROOT/boot/bzImage
+    echo "Custom kernel not found - using $KERN"
+  fi
+
+else
+  echo "Using default kernel"
+  KERN=$ROOT/boot/bzImage
+fi
+
+if [ -f "$INITRD" -a -f "$KERN" ]; then
+  echo "Copying kernel and initrd to ramdisk..."
+  mount -t tmpfs none /mnt/tmp
+  cp "$INITRD" /mnt/tmp/initrd.img
+  cp "$KERN" /mnt/tmp/bzImage
+  echo "Unmounting image..."
+  umount $ROOT
+else
+  echo "I couldn't find your kernel and/or initrd"
+  do_failure
+fi
+
+if [ -z "$KCMD" ]; then
+  echo "You need to specify a kernel command line.
+I can't guess that"
+  do_failure
+fi
+
+umount /tmp
+
+echo "Trying kexec..."
+kexec --command-line="$KCMD" --initrd=/mnt/tmp/initrd.img -f /mnt/tmp/bzImage
+
+do_failure

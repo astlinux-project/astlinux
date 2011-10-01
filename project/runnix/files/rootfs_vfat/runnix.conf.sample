@@ -1,0 +1,42 @@
+# Sample runnix (http://www.runnix.org) configuration file
+# 
+# Use this as a sample for your .run images
+#
+# Variables to read (DO NOT SET THESE)
+# $BASE - The location where runnix is mounted
+# $ROOT - The location where your .run is mounted
+#
+# Variables to set
+
+# Kernel command line
+# This is the command line runnix will pass to kexec
+# for your linux kernel
+# Like GRUB or any other bootloader, it can be any
+# option that is valid for your linux kernel
+# (kernel to be booted from your .run, most likely)
+KCMD="root=/dev/ram0 rw init=/linuxrc astlinux=geni586 astimg=trunk.run astkd=/dev/sda1 astlive ide_core.nodma=0.0 quiet"
+
+# Offset for root filesystem
+# If your filesystem is a hard disk image with a full
+# partition table and traditional bootloader, you can
+# have losetup skip past the bootloader and partition
+# table to find a filesystem. "32256" will usually
+# find the beginning of the first partition.
+# If undefined, runnix will not use an offset (default)
+# OFFSET="32256"
+
+# The location of the kernel runnix will boot
+# Can be any path accesible by runnix
+# If the kernel is in the runnix partition (rare), use $BASE
+# If the kernel is inside the .run file, use $ROOT
+KERN="$ROOT/boot/bzImage"
+
+# root fs type - can be anything supported by runnix kernel
+# If undefined, runnix will try everything - NOT RECOMMENDED
+FSTYPE="ext2"
+
+# The location of the initrd runnix will use with your $KERN
+# Can be any path accesible by runnix
+# If the initrd is in the runnix partition, use $BASE
+# If the initrd is inside the .run file (rare), use $ROOT
+INITRD="$BASE/os/initrd.img"

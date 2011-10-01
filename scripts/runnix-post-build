@@ -1,0 +1,34 @@
+#!/bin/bash
+#
+# Use BuildRoot "post-build" script to overlay board specific files
+#
+
+target="$1"
+
+base="${target%/output/target}"
+
+make_release_version()
+{
+  RUNURL="$(LANG=C svn info | awk -F': ' '/^URL:/ { print $2 }')"
+  RUNBASE="$(basename ${RUNURL})"
+  RUNREV="$(LANG=C svn info | awk -F': ' '/^Last Changed Rev:/ { print $2 }')"
+  RUNEXTRA=""
+
+  if [ "$(cat "project/runnix/target_skeleton/etc/runnix-release")" = "svn" ]; then
+    RUNVER="runnix-${RUNBASE}-${RUNREV}${RUNEXTRA}"
+  else
+    RUNVER="$(cat "project/runnix/target_skeleton/etc/runnix-release")${RUNEXTRA}"
+  fi
+}
+
+make_release_version
+echo ${RUNVER} > "$target/etc/runnix-release"
+
+echo "
+##
+## RUNNIX Post Build Target Overlay: Release = \"$RUNVER\"
+##
+"
+
+exit 0
+

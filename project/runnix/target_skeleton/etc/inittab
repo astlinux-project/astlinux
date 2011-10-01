@@ -1,0 +1,4 @@
+console::sysinit:/etc/rc install
+
+::ctrlaltdel:/sbin/reboot
+::shutdown:/etc/rc shutdown
