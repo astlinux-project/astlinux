@@ -14,9 +14,9 @@ RUNFS_DIR="output/build/runfs"
 
 make_release_version()
 {
-  ASTURL="$(svn info | awk -F': ' '/^URL:/ { print $2 }')"
+  ASTURL="$(LANG=C svn info | awk -F': ' '/^URL:/ { print $2 }')"
   ASTBASE="$(basename ${ASTURL})"
-  ASTREV="$(svn info | awk -F': ' '/^Last Changed Rev:/ { print $2 }')"
+  ASTREV="$(LANG=C svn info | awk -F': ' '/^Last Changed Rev:/ { print $2 }')"
   ASTEXTRA=""
 
   if [ "$(cat "project/astlinux/target_skeleton/etc/astlinux-release")" = "svn" ]; then
