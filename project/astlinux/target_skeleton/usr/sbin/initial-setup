@@ -40,7 +40,7 @@ genunion() {
     exit $RED
   fi
   # Create filesystem
-  if ! /sbin/mke2fs -q -L ASTURW $1; then
+  if ! mke2fs -q -L ASTURW $1; then
     echo "Creating ASTURW filesystem on $1 failed."
     exit $RED
   fi
@@ -70,7 +70,7 @@ genkd() {
     exit $RED
   fi
   # Create filesystem
-  if ! /sbin/mke2fs -q -L ASTKD $1; then
+  if ! mke2fs -q -L ASTKD $1; then
     echo "Creating ASTKD filesystem on $1 failed."
     exit $RED
   fi
