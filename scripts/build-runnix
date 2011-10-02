@@ -44,7 +44,7 @@ make_release()
   cp -p ${SYSLINUX_DIR}/linux/syslinux ${RUNVER}/syslinux
   cp -p ${KERNEL} ${RUNVER}/rootfs_vfat/runnix
   cp -p ${ROOTFS_EXT2_GZ} ${RUNVER}/rootfs_vfat/runnix.img
-  cp -p ${MEMTEST_DIR}/memtest ${RUNVER}/rootfs_vfat/memtest
+  cp -p ${MEMTEST_DIR}/memtest.bin ${RUNVER}/rootfs_vfat/memtest
   echo "${RUNVER}" > ${RUNVER}/rootfs_vfat/ver
 
   tar -cvzf ${RUNVER}.tar.gz ${RUNVER}
