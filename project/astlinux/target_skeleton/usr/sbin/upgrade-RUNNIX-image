@@ -7,7 +7,7 @@ ORANGE=2
 GREEN=0
 #
 # Default RUNNIX Repository
-SRC_URL="http://mirror.astlinux.org/runnix"
+SRC_URL="http://mirror.astlinux.org/runnix4"
 #
 # Default RUNNIX Version (use if no local 'ver' file)
 RUN_VER="runnix-0.2.1"
