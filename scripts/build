@@ -10,6 +10,10 @@ REQUIRED_CMDS="which zcat bzcat make gcc bison flex msgfmt makeinfo autoconf nas
 ROOTFS_SQUASHFS="output/images/rootfs.squashfs"
 ROOTFS_EXT2="output/images/rootfs.ext2"
 
+RUNNIX_VER="$(awk -F'=' '/^RUNNIX_VER/ { print $2; exit }' boot/runnix/runnix.mk)"
+
+RUNNIX_DIR="output/build/runnix-${RUNNIX_VER// /}"
+
 RUNFS_DIR="output/build/runfs"
 
 make_release_version()
@@ -57,7 +61,16 @@ make_runfs()
 {
   mkdir -p ${RUNFS_DIR}/os
 
-  cp -p project/astlinux/board/${board}/runnix-syslinux.cfg ${RUNFS_DIR}/syslinux.cfg
+  RUNNIX_KCMD_CONSOLE="$(grep -e '^KCMD=' project/astlinux/board/${board}/runnix.conf | \
+        sed -e 's/"//g' -e 's/^KCMD=.*console=//' -e 's/ .*$//' -e 's/^KCMD=.*$//')"
+
+  if [ -f "${RUNNIX_DIR}/configs/${board}.cfg" ]; then
+    cp -p ${RUNNIX_DIR}/configs/${board}.cfg ${RUNFS_DIR}/syslinux.cfg
+  elif [ -n "${RUNNIX_KCMD_CONSOLE}" ]; then
+    cp -p ${RUNNIX_DIR}/configs/default-serial.cfg ${RUNFS_DIR}/syslinux.cfg
+  else
+    cp -p ${RUNNIX_DIR}/configs/default.cfg ${RUNFS_DIR}/syslinux.cfg
+  fi
 
   rm -f ${RUNFS_DIR}/os/astlinux-*
 
@@ -148,7 +161,7 @@ make oldconfig
 
 time make all
 
-if [ $? -eq 0 -a -f "$ROOTFS_SQUASHFS" -a -f "initrd.img" -a -d "$RUNFS_DIR" ]; then
+if [ $? -eq 0 -a -f "$ROOTFS_SQUASHFS" -a -f "initrd.img" -a -d "$RUNNIX_DIR" -a -d "$RUNFS_DIR" ]; then
   make_release_version
   make_release
   make_runfs
