@@ -1,0 +1,21 @@
+## "Additional DNS & DHCP Configuration"
+##
+## dnsmasq.static include file
+## http://thekelleys.org.uk/dnsmasq/docs/dnsmasq.conf.example
+##
+## The following, uncommented, commands will be included to the
+## automatically generated /etc/dnsmasq.conf
+##
+
+## Set netbios-over-TCP/IP nameserver(s) aka WINS server(s)
+#dhcp-option=lan,44,192.168.100.2
+#dhcp-option=lan2,44,192.168.101.2
+#dhcp-option=lan3,44,192.168.102.2
+#dhcp-option=dmz,44,192.168.200.2
+
+## Set the boot filename for netboot/PXE using internal TFTP server
+## ( files placed in /tftpboot/ )
+#dhcp-boot=pxelinux.0
+## Tell thin client where to look for the boot files using external TFTP server
+#dhcp-boot=thinstation/pxelinux.0,pbx3,192.168.100.3
+

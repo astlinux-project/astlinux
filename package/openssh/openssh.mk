@@ -4,16 +4,21 @@
 #
 #############################################################
 
-OPENSSH_VERSION = 5.8p2
+OPENSSH_VERSION = 5.9p1
 OPENSSH_SITE = http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable
 OPENSSH_CONF_ENV = LD="$(TARGET_CC)" LDFLAGS="$(TARGET_CFLAGS)"
 OPENSSH_CONF_OPT = --libexecdir=/usr/lib --disable-lastlog --disable-utmp \
-		--disable-utmpx --disable-wtmp --disable-wtmpx --disable-strip
+		--disable-utmpx --disable-wtmp --disable-wtmpx --disable-strip \
+		--sysconfdir=/etc/ssh
 
 OPENSSH_DEPENDENCIES = zlib openssl
 
+OPENSSH_INSTALL_TARGET_OPT = DESTDIR=$(TARGET_DIR) -C $(@D) install-nosysconf
+
 define OPENSSH_INSTALL_INITSCRIPT
-	$(INSTALL) -D -m 755 package/openssh/S50sshd $(TARGET_DIR)/etc/init.d/S50sshd
+	$(INSTALL) -D -m 755 package/openssh/sshd.init $(TARGET_DIR)/etc/init.d/sshd
+	#cp -a $(STAGING_DIR)/lib/libssp*.so* $(TARGET_DIR)/lib/
+	ln -snf /tmp/etc/ssh $(TARGET_DIR)/etc/ssh
 endef
 
 OPENSSH_POST_INSTALL_TARGET_HOOKS += OPENSSH_INSTALL_INITSCRIPT

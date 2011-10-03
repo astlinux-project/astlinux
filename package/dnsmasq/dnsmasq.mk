@@ -4,7 +4,7 @@
 #
 #############################################################
 
-DNSMASQ_VERSION = 2.57
+DNSMASQ_VERSION = 2.58
 DNSMASQ_SITE = http://thekelleys.org.uk/dnsmasq
 DNSMASQ_MAKE_ENV = CC="$(TARGET_CC)" LDFLAGS="$(TARGET_LDFLAGS)"
 DNSMASQ_MAKE_OPT = COPTS="$(DNSMASQ_COPTS)" PREFIX=/usr CFLAGS="$(TARGET_CFLAGS)"
@@ -57,6 +57,10 @@ endef
 
 define DNSMASQ_INSTALL_TARGET_CMDS
 	$(DNSMASQ_MAKE_ENV) $(MAKE) -C $(@D) $(DNSMASQ_MAKE_OPT) install
+	$(INSTALL) -m 0755 -D package/dnsmasq/dnsmasq.init $(TARGET_DIR)/etc/init.d/dnsmasq
+	$(INSTALL) -m 0755 -D package/dnsmasq/dnsmasq.static $(TARGET_DIR)/stat/etc/dnsmasq.static
+	ln -sf /tmp/etc/dnsmasq.conf $(TARGET_DIR)/etc/dnsmasq.conf
+	ln -sf /tmp/etc/dnsmasq.static $(TARGET_DIR)/etc/dnsmasq.static
 endef
 
 define DNSMASQ_UNINSTALL_TARGET_CMDS

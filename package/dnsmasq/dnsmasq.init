@@ -1,0 +1,303 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+. /etc/init.d/functions
+
+tftpd_check()
+{
+  if [ -f /etc/init.d/tftpd ]; then
+    # standalone tftpd package is installed ( allow 'inetd' for backward compatibility )
+    if [ "$TFTPD" = "dnsmasq" -o "$TFTPD" = "inetd" ]; then
+      return 0
+    fi
+  else
+    # no standalone tftpd package, use dnsmasq for any tftpd setting
+    if [ "$TFTPD" = "dnsmasq" -o "$TFTPD" = "tftpd" -o "$TFTPD" = "inetd" ]; then
+      return 0
+    fi
+  fi
+
+  return 1
+}
+
+isDHCPinterface()
+{
+  # args: IF
+  for intf in $NODHCP; do
+    if [ "$intf" = "$1" ]; then
+      return 1
+    fi
+  done
+
+  return 0
+}
+
+trueDNSMASQnet()
+{
+  # args: tag, IP, ip.dstart, ip.dend
+  local servername
+
+  if [ "$1" = "lan" ]; then
+    servername="$HOSTNAME.$DOMAIN"
+  else
+    servername="$2"
+  fi
+
+  echo "
+dhcp-range=$1,$3,$4,24h
+dhcp-option=$1,option:router,$2
+dhcp-option=$1,option:dns-server,$2
+dhcp-option=$1,option:tftp-server,\"$servername\"
+dhcp-option=$1,150,$2"
+
+  # ntpd starts after we do, so check if its script is installed, because
+  # the config file won't yet be present.
+  if [ -f /etc/init.d/ntpd ]; then
+    echo "dhcp-option=$1,option:ntp-server,$2"
+  fi
+}
+
+falseDNSMASQnet()
+{
+  # args: IF
+  echo "# DHCP disabled on $1
+no-dhcp-interface=$1"
+}
+
+addDNSMASQnet()
+{
+  # args: IF, IP, NM, tag
+  local ipbase dstart dend ipstart ipend NETWORK
+
+  if [ -n "$1" -a "$1" != "none" -a -n "$2" -a -n "$3" ]; then
+    if isDHCPinterface $1; then
+      eval `ipcalc -n "$2" "$3"`
+      ipbase=$(_isdottedquad $NETWORK)
+
+      if [ -n "$DHCPRANGE" ]; then
+        dstart=`echo $DHCPRANGE | cut -d: -f1`
+        dend=`echo $DHCPRANGE | cut -d: -f2`
+      else
+        dstart=100
+        dend=220
+      fi
+      ipstart=$(($ipbase + $dstart))
+      ipend=$(($ipbase + $dend))
+      trueDNSMASQnet $4 $2 $(_mkdottedquad $ipstart) $(_mkdottedquad $ipend)
+    else
+      falseDNSMASQnet $1
+    fi
+  fi
+}
+
+createDNSMASQbasic()
+{
+  # DHCP options
+  if [ "$1" = "dhcp" ]; then
+    echo "dhcp-authoritative
+read-ethers
+dhcp-leasefile=/var/db/dnsmasq.leases"
+
+    if [ -n "$NFSDROOTPATH" ]; then
+      echo "dhcp-option=lan,17,$NFSDROOTPATH"
+    fi
+
+    if [ -n "$BOOTPFILE" ]; then
+      echo "dhcp-boot=$BOOTPFILE,$HOSTNAME.$DOMAIN,$INTIP"
+    fi
+  fi
+  
+  # DNS options
+  echo "no-negcache
+domain-needed
+bogus-priv
+local=/$DOMAIN/
+expand-hosts
+domain=$DOMAIN
+resolv-file=/etc/resolv-extern.conf
+cache-size=2048"
+
+  # TFTP options
+  if tftpd_check; then
+    echo "enable-tftp
+tftp-root=/tftpboot"
+  fi
+}
+
+addDHCPhosts_options()
+{
+  local name ip mac IFS
+
+  echo "
+# because APC SmartUPS units are particular...
+dhcp-option=vendor:APC,1,\"1APC\"
+dhcp-option=vendor:APC,2,1b"
+
+  if [ -n "$STATICHOSTS" ]; then
+    echo "
+# generated from STATICHOSTS in rc.conf"
+  
+    IFS=$'\n'
+    for i in $STATICHOSTS; do              
+      # might have fqdn<space>hostname, etc.
+      name="$(echo "$i" | awk -F~ '{ print $1; }' | awk -F' ' '{ print $1; }')"
+      ip="$(echo "$i" | awk -F~ '{ print $2; }')"
+      mac="$(echo "$i" | awk -F~ '{ print $3; }')"
+      # Only allow IPv4 addresses in DHCP
+      get_numeric_ip_version "$ip"
+      if [ $? -eq 4 -a -n "$name" -a -n "$ip" -a -n "$mac" ]; then
+        echo "dhcp-host=$mac,$ip,$name"
+      fi
+    done                                                             
+  fi
+}
+
+which_extern_resolv()
+{
+  if [ -n "$DNS" ]; then
+    echo "/tmp/etc/resolv-static.conf"
+  elif isextppp; then
+    echo "/tmp/etc/ppp/resolv.conf"
+  else
+    echo "/tmp/etc/resolv-up.conf"
+  fi
+}
+
+is_DHCP_active()
+{
+
+  for intf in $INTIF $INT2IF $INT3IF $DMZIF; do
+    if [ "$intf" != "none" ] && isDHCPinterface $intf; then
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+init () {
+  if tftpd_check; then
+    if [ -d /mnt/kd/tftpboot ]; then
+      ln -snf /mnt/kd/tftpboot /tmp/tftpboot
+    else
+      mkdir /tmp/tftpboot
+    fi
+  fi
+
+  echo -n > /tmp/etc/resolv-static.conf
+  for h in $DNS; do
+    get_numeric_ip_version "$h"
+    case $? in
+      4)
+        echo "nameserver $h" >> /tmp/etc/resolv-static.conf
+        ;;
+      6)
+        if [ "$IPV6" = "yes" ]; then
+          echo "nameserver $h" >> /tmp/etc/resolv-static.conf
+        fi
+        ;;
+    esac
+  done
+
+  ext_resolv_conf=$(which_extern_resolv)
+  ln -sf $ext_resolv_conf /tmp/etc/resolv-extern.conf
+  if [ "$LOCALDNS" != "no" ]; then
+    rm -f /tmp/etc/resolv.conf
+    echo "search $DOMAIN
+nameserver 127.0.0.1" > /tmp/etc/resolv.conf
+  else
+    ln -sf $ext_resolv_conf /tmp/etc/resolv.conf
+  fi
+
+  # Regenerate /etc/hosts
+  # Allows dnsmasq to be restarted with a new STATICHOSTS
+  SYS_gen_etc_hosts > /tmp/etc/hosts
+
+  if [ -f /mnt/kd/dnsmasq.leases ]; then
+    ln -sf /mnt/kd/dnsmasq.leases /var/db/dnsmasq.leases
+  else
+    touch /var/db/dnsmasq.leases
+  fi
+
+  if [ ! -f /etc/ethers ]; then
+    touch /tmp/etc/ethers
+  fi
+
+  rm -f /tmp/etc/dnsmasq.conf
+
+  if [ -f /mnt/kd/dnsmasq.static ]; then
+    ln -sf /mnt/kd/dnsmasq.static /tmp/etc/dnsmasq.static
+  fi
+
+  if [ -f /mnt/kd/dnsmasq.conf ]; then
+    ln -sf /mnt/kd/dnsmasq.conf /tmp/etc/dnsmasq.conf
+    return
+  fi
+  
+  if is_DHCP_active; then
+    createDNSMASQbasic dhcp >> /tmp/etc/dnsmasq.conf
+
+    addDNSMASQnet "$INTIF" "$INTIP" "$INTNM" lan >> /tmp/etc/dnsmasq.conf
+
+    addDNSMASQnet "$INT2IF" "$INT2IP" "$INT2NM" lan2 >> /tmp/etc/dnsmasq.conf
+
+    addDNSMASQnet "$INT3IF" "$INT3IP" "$INT3NM" lan3 >> /tmp/etc/dnsmasq.conf
+
+    addDNSMASQnet "$DMZIF" "$DMZIP" "$DMZNM" dmz >> /tmp/etc/dnsmasq.conf
+
+    addDHCPhosts_options >> /tmp/etc/dnsmasq.conf
+  else
+    createDNSMASQbasic nodhcp >> /tmp/etc/dnsmasq.conf
+  fi
+
+  # include static mappings from a file
+  if [ -f /etc/dnsmasq.static ]; then
+    echo "
+conf-file=/etc/dnsmasq.static" >> /tmp/etc/dnsmasq.conf
+  else
+    echo "# Create /mnt/kd/dnsmasq.static to specify additional settings." >> /tmp/etc/dnsmasq.conf
+  fi
+}
+
+start () {
+  if [ -f /etc/dnsmasq.conf ]; then
+    echo "Starting dnsmasq..."
+    dnsmasq
+  fi
+}
+
+stop () {
+  if [ -f /var/run/dnsmasq.pid ]; then
+    echo "Stopping dnsmasq..."
+    kill `cat /var/run/dnsmasq.pid`
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+
