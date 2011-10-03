@@ -175,7 +175,7 @@ none    /var            tmpfs   size=5000k      0       0
     ;;
 
   alix)
-    modprobe leds_alix
+    modprobe leds_alix2
     echo 1 >/sys/class/leds/alix:2/brightness
     ;;
 
