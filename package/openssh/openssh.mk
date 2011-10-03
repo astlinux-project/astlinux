@@ -17,7 +17,6 @@ OPENSSH_INSTALL_TARGET_OPT = DESTDIR=$(TARGET_DIR) -C $(@D) install-nosysconf
 
 define OPENSSH_INSTALL_INITSCRIPT
 	$(INSTALL) -D -m 755 package/openssh/sshd.init $(TARGET_DIR)/etc/init.d/sshd
-	#cp -a $(STAGING_DIR)/lib/libssp*.so* $(TARGET_DIR)/lib/
 	ln -snf /tmp/etc/ssh $(TARGET_DIR)/etc/ssh
 endef
 
