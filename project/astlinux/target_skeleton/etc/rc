@@ -348,7 +348,8 @@ none    /var            tmpfs   size=5000k      0       0
     done
   fi
 
-  ldconfig -C /tmp/etc/ld.so.cache /lib /usr/lib
+  #  Not needed anymore ?
+  #ldconfig -C /tmp/etc/ld.so.cache /lib /usr/lib
 
   dmesg > /var/run/dmesg.boot
 
