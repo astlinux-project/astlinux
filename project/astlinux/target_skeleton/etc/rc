@@ -171,6 +171,8 @@ none    /var            tmpfs   size=5000k      0       0
   wrap)
     modprobe scx200_gpio
     modprobe leds_wrap
+    modprobe ledtrig-heartbeat
+    modprobe ledtrig-netdev
     echo 1 >/sys/class/leds/wrap::error/brightness
     ;;
 
@@ -183,6 +185,8 @@ none    /var            tmpfs   size=5000k      0       0
 
   alix)
     modprobe leds_alix2
+    modprobe ledtrig-heartbeat
+    modprobe ledtrig-netdev
     echo 1 >/sys/class/leds/alix:2/brightness
     ;;
 
