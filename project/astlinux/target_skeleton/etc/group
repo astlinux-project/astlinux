@@ -1,5 +1,15 @@
 root:x:0:
-users:x:100:
+tty:x:5:
+disk:x:6:
+lp:x:7:
+kmem:x:15:
+dialout:x:20:
 ftp:x:21:
 sshd:x:22:
+cdrom:x:24:
+floppy:x:25:
+tape:x:26:
+audio:x:29:
+video:x:44:
+users:x:100:
 nobody:x:65535:

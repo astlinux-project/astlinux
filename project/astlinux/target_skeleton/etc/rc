@@ -152,6 +152,13 @@ none    /var            tmpfs   size=5000k      0       0
     cp -a /stat/dev/. /dev/
   fi
 
+  mkdir /var/spool /var/lib /var/lib/nfs
+  touch /var/lib/nfs/etab /var/lib/nfs/xtab /var/lib/nfs/rmtab
+  mkdir /var/empty /var/lock /var/db /var/run /var/racoon
+  touch /var/run/utmp
+  mkdir /var/run/screen /var/state /var/tmp /tmp/bin
+  mkdir -m 0700 /var/tmp/asterisk-gui
+
   /sbin/udevd --daemon
 
   case $ASTLINUX in
@@ -180,13 +187,6 @@ none    /var            tmpfs   size=5000k      0       0
     ;;
 
   esac
-
-  mkdir /var/spool /var/lib /var/lib/nfs
-  touch /var/lib/nfs/etab /var/lib/nfs/xtab /var/lib/nfs/rmtab
-  mkdir /var/empty /var/lock /var/db /var/run /var/racoon
-  touch /var/run/utmp
-  mkdir /var/run/screen /var/state /var/tmp /tmp/bin
-  mkdir -m 0700 /var/tmp/asterisk-gui
 
   if echo $CMDLINE | grep -q depmod; then
     echo "Running depmod as requested..."

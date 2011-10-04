@@ -28,7 +28,7 @@ UDEV_CONF_OPT +=		\
 endif
 
 define UDEV_INSTALL_INITSCRIPT
-	$(INSTALL) -m 0755 package/udev/S10udev $(TARGET_DIR)/etc/init.d/S10udev
+	echo 'udev_run="/var/run/udev"' >> $(TARGET_DIR)/etc/udev/udev.conf
 endef
 
 UDEV_POST_INSTALL_TARGET_HOOKS += UDEV_INSTALL_INITSCRIPT
