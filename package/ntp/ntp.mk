@@ -3,7 +3,7 @@
 # ntp
 #
 #############################################################
-NTP_VERSION = 4.2.6p3
+NTP_VERSION = 4.2.4p8
 NTP_SOURCE = ntp-$(NTP_VERSION).tar.gz
 NTP_SITE = http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2
 
@@ -16,6 +16,7 @@ endif
 NTP_CONF_OPT = --with-shared \
 		--program-transform-name=s,,, \
 		--disable-tickadj \
+		--enable-ipv6=no \
 		--without-ntpsnmpd
 
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
@@ -42,11 +43,8 @@ NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_TICKADJ) += util/tickadj
 define NTP_INSTALL_TARGET_CMDS
 	$(if $(BR2_PACKAGE_NTP_NTPD), install -m 755 $(@D)/ntpd/ntpd $(TARGET_DIR)/usr/sbin/ntpd)
 	test -z "$(NTP_INSTALL_FILES_y)" || install -m 755 $(addprefix $(@D)/,$(NTP_INSTALL_FILES_y)) $(TARGET_DIR)/usr/bin/
-	$(if $(BR2_PACKAGE_NTP_NTPD), install -m 755 package/ntp/S49ntp $(TARGET_DIR)/etc/init.d/S49ntp)
-	@if [ ! -f $(TARGET_DIR)/etc/default/ntpd ]; then \
-		install -m 755 -d $(TARGET_DIR)/etc/default ; \
-		install -m 644 package/ntp/ntpd.etc.default $(TARGET_DIR)/etc/default/ntpd ; \
-	fi
+	$(if $(BR2_PACKAGE_NTP_NTPD), install -m 755 package/ntp/ntpd.init $(TARGET_DIR)/etc/init.d/ntpd)
+	ln -sf /tmp/etc/ntpd.conf $(TARGET_DIR)/etc/ntpd.conf
 endef
 
 define NTP_UNINSTALL_TARGET_CMDS

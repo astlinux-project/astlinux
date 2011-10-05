@@ -379,6 +379,7 @@ endmenu
 
 menu "Miscellaneous"
 source "package/shared-mime-info/Config.in"
+source "package/zoneinfo/Config.in"
 endmenu
 
 menu "Networking applications"
