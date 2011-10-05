@@ -37,7 +37,9 @@ start () {
       if [ -n "$EXTIF" ]; then
         echo netdev > /sys/class/leds/wrap::extra/trigger
         echo "$EXTIF" > /sys/class/leds/wrap::extra/device_name 
-        echo "link tx rx" > /sys/class/leds/wrap::extra/mode 
+        echo "enabled" > /sys/class/leds/wrap::extra/link
+        echo "enabled" > /sys/class/leds/wrap::extra/transmit
+        echo "enabled" > /sys/class/leds/wrap::extra/receive 
       fi   
     fi
     
@@ -48,7 +50,10 @@ start () {
       if [ -n "$EXTIF" ]; then
         echo netdev > /sys/class/leds/alix:3/trigger
         echo "$EXTIF" > /sys/class/leds/alix:3/device_name 
-        echo "link tx rx" > /sys/class/leds/alix:3/mode   
+        echo "enabled" > /sys/class/leds/alix:3/link
+        echo "enabled" > /sys/class/leds/alix:3/transmit
+        echo "enabled" > /sys/class/leds/alix:3/receive
+   
       fi  
     fi
   fi
