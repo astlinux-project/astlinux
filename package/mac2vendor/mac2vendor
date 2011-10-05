@@ -1,0 +1,88 @@
+#!/bin/bash
+
+MAC_VENDOR_DB="/usr/share/oui-db"
+
+# Expand an IPv6 address to 39 characters
+ipv6_expand()
+{
+  local in="$1" expand="" i colons part IFS
+  
+  i="$(echo "$in" | tr -d ':')"
+  colons=$((${#in} - ${#i}))
+  
+  while [ $colons -lt 7 ]; do
+    in="${in/::/:::}"
+    colons=$(($colons + 1))
+  done
+  
+  for i in 1 2 3 4 5 6 7 8; do
+    part="0000$(echo "$in" | cut -d':' -f$i)"
+    expand="${expand}${expand:+:}${part:(-4)}"
+  done
+  
+  echo "$expand"
+}
+
+# Extract from an IPv6 address the 48-bit IEEE 802 MAC Address
+ipv6_mac()
+{
+  local inet6
+  
+  inet6="$(echo "$1" | tr 'a-f' 'A-F')"
+  inet6="$(ipv6_expand "$inet6")"
+
+  if [ "${inet6:27:5}" != "FF:FE" ]; then
+    return 1
+  fi
+
+  # XOR byte by 0x2
+  declare -a xor2=( \
+    [0x0]=2 [0x1]=3 [0x2]=0 [0x3]=1 \
+    [0x4]=6 [0x5]=7 [0x6]=4 [0x7]=5 \
+    [0x8]=A [0x9]=B [0xA]=8 [0xB]=9 \
+    [0xC]=E [0xD]=F [0xE]=C [0xF]=D \
+  )
+  byte="0x${inet6:21:1}"
+  byte="${xor2[$byte]}"
+
+  echo "${inet6:20:1}${byte}:${inet6:22:2}:${inet6:25:2}:${inet6:32:2}:${inet6:35:2}:${inet6:37:2}"
+}
+
+if [ ! -d "$MAC_VENDOR_DB" ]; then
+  echo "mac2vendor: Data directory \"$MAC_VENDOR_DB\" not found." >&2
+  exit 1
+fi
+
+if [ -z "$1" ] || [ "$1" = "-6" -a -z "$2" ]; then
+  echo "Usage: mac2vendor xx:xx:xx:xx:xx:xx"
+  echo "Usage: mac2vendor -6 <ipv6 address>"
+  exit 1
+fi
+
+if [ "$1" = "-6" ]; then
+  INET6_CHECK="$(echo "$2" | tr -d '0-9a-fA-F:')"
+  
+  if [ -n "$INET6_CHECK" ]; then
+    echo "mac2vendor: Invalid IPv6-address \"$2\"." >&2
+    exit 1
+  fi
+  
+  MAC="$(ipv6_mac "$2")"
+  if [ -z "$MAC" ]; then
+    echo "mac2vendor: No Modified EUI-64 Interface Identifier in IPv6-address \"$2\"." >&2
+    exit 1
+  fi
+  MAC="${MAC:0:2}${MAC:3:2}${MAC:6:2}"
+else
+  MAC="$(echo "$1" | tr -d '.:-' | tr 'a-f' 'A-F')"
+  MAC="${MAC:0:6}"
+  MAC_CHECK="$(echo "$MAC" | tr -d '0-9A-F')"
+
+  if [ ${#MAC} -ne 6 -o -n "$MAC_CHECK" ]; then
+    echo "mac2vendor: Invalid MAC-address \"$1\"." >&2
+    exit 1
+  fi
+fi
+
+grep -m1 "^$MAC~" "$MAC_VENDOR_DB/xxxxx${MAC:5:1}" | cut -d'~' -f2
+

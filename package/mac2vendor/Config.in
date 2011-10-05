@@ -1,0 +1,9 @@
+config BR2_PACKAGE_MAC2VENDOR
+	bool "mac2vendor"
+	default n
+	help
+	  ORGANIZATIONALLY UNIQUE IDENTIFIER (OUI) OR 'COMPANY_ID'
+	  Script and suporting database to lookup the vendor
+	  public listing from an ethernet MAC address.
+
+	  http://standards.ieee.org/develop/regauth/oui/public.html
