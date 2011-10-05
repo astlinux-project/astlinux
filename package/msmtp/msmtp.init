@@ -1,0 +1,126 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+init () {
+
+  # Automatically create "/mnt/kd/mail" directory if it doesn't exist
+  if [ ! -d /mnt/kd/mail ]; then
+    mkdir /mnt/kd/mail 2>/dev/null     # will fail on virgin RO filesystem, ignore stderr
+  fi
+
+  if [ -d /mnt/kd/mail ]; then  # Persistent mail queue
+    ln -snf /mnt/kd/mail /var/spool/mail
+  elif [ ! -d /var/spool/mail ]; then  # Temporary mail queue
+    mkdir /var/spool/mail
+  fi
+
+  if [ -n "$SMTP_DOMAIN" ]; then
+    DOMAIN="$SMTP_DOMAIN"
+  fi
+
+  if [ -n "$SMTP_HOSTNAME" ]; then
+    HOSTNAME="$SMTP_HOSTNAME"
+  fi
+
+  PORT="${SMTP_PORT:-25}"
+
+  # MSMTP config generate...
+  if [ -n "$SMTP_SERVER" ]; then
+    echo "# Auto generated MSMTP config file
+account default
+host $SMTP_SERVER
+port $PORT
+timeout 30
+maildomain $DOMAIN" > /tmp/etc/msmtprc
+
+    if [ -n "$SMTP_FROM" ]; then
+      echo "auto_from off
+from $SMTP_FROM" >> /tmp/etc/msmtprc
+    else
+      echo "auto_from on" >> /tmp/etc/msmtprc
+    fi
+
+    if [ "$SMTP_TLS" = "yes" ]; then
+      echo "tls on" >> /tmp/etc/msmtprc
+
+      # may be 'off' or 'on'... use default if unset.
+      if [ -n "$SMTP_STARTTLS" ]; then
+        echo "tls_starttls $SMTP_STARTTLS" >> /tmp/etc/msmtprc
+      fi
+
+      if [ -n "$SMTP_CA" ]; then
+        echo "tls_trust_file $SMTP_CA" >> /tmp/etc/msmtprc
+      fi
+
+      # may be 'off' or 'on'... use default if unset.
+      if [ -n "$SMTP_CERTCHECK" ]; then
+        echo "tls_certcheck $SMTP_CERTCHECK" >> /tmp/etc/msmtprc
+      fi
+    fi
+
+    if [ -n "$SMTP_USER" -a -n "$SMTP_PASS" -a -n "$SMTP_AUTH" ]; then
+      echo "auth $SMTP_AUTH
+user $SMTP_USER
+password $SMTP_PASS" >> /tmp/etc/msmtprc
+    fi
+
+    echo "syslog LOG_MAIL" >> /tmp/etc/msmtprc
+  fi
+}
+
+start () {
+
+  if [ -f /tmp/etc/msmtprc ]; then
+
+    echo "Starting msmtp..."
+
+    # Flush mail queue in the background
+    msmtpqueue -f >/dev/null 2>&1 &
+  fi
+}
+
+stop () {
+
+  if [ -f /tmp/etc/msmtprc ]; then
+
+    echo "Stopping msmtp..."
+
+    rm -f /tmp/etc/msmtprc
+
+    # Kill any active "msmtp" process, the mail will be re-queued via msmtpqueue
+    if ps | grep -q -e '[ /]msmtp[ ]' -e '[ /]msmtp$'; then
+      killall msmtp >/dev/null 2>&1
+    fi
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  # need to reparse config files
+  init
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+

@@ -1,0 +1,7 @@
+config BR2_PACKAGE_MSMTP
+	bool "msmtp"
+	default n
+	help
+	  msmtp is an MUA/MTa like ssmtp, only better
+
+	  http://sourceforge.net/projects/msmtp/
