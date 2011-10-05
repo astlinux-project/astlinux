@@ -1,0 +1,66 @@
+#!/bin/sh
+#
+# reload-spamhaus-drop
+#
+# http://www.spamhaus.org/drop/
+#
+# Retrieve the latest spamhaus-drop file, and copy it to 'outfile'.
+# If 'infile' is specified, it is appended to 'outfile'.
+# Finally, the firewall reloads the Blocked Hosts File, presumably
+# configured to use 'outfile'.
+#
+# Cron may be used to run this script once every day.  Example:
+# 05 05 * * * reload-spamhaus-drop /mnt/kd/blocked-hosts >/dev/null 2>&1
+#
+# This script prevents the 'outfile' from being updated more often
+# than once every hour.
+#
+
+URL="http://www.spamhaus.org/drop/drop.lasso"
+
+TMPFILE="/tmp/drop.lasso"
+
+if [ -z "$1" ]; then
+  echo "Usage: reload-spamhaus-drop outfile [ infile ]"
+  exit 1
+fi
+
+if [ -f "$1" ]; then
+  if [ $(( $(date +%s) - $(date -r "$1" +%s) )) -lt 3600 ]; then
+    MESG="The file \"$1\" has been updated within the hour, no action."
+    logger -s -t reload-spamhaus-drop -p kern.info "$MESG"
+    exit 1
+  fi
+fi
+
+if ! wget -q -O $TMPFILE $URL >/dev/null; then
+  rm -f $TMPFILE
+  MESG="Retrieving Spamhaus DROP list failed, no action."
+  logger -s -t reload-spamhaus-drop -p kern.info "$MESG"
+  exit 1
+fi
+
+if grep -q -i -e '^<!DOCTYPE HTML' -e '^<HTML' $TMPFILE; then
+  rm -f $TMPFILE
+  MESG="Spamhaus DROP list format is invalid, no action."
+  logger -s -t reload-spamhaus-drop -p kern.info "$MESG"
+  exit 1
+fi
+
+cp $TMPFILE "$1"
+rm -f $TMPFILE
+
+if [ -n "$2" ] && [ -f "$2" ]; then
+  cat "$2" >> "$1"
+fi
+
+COUNT=$(cat "$1" | wc -l)
+MESG="The file \"$1\" has been updated. Contains $COUNT lines."
+logger -t reload-spamhaus-drop -p kern.info "$MESG"
+echo "$MESG"
+echo ""
+
+arno-iptables-firewall force-reload
+
+#
+

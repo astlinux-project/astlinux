@@ -1,0 +1,80 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+init () {
+
+  if [ ! -e /tmp/etc/arno-iptables-firewall ]; then
+    ln -s /mnt/kd/arno-iptables-firewall /tmp/etc/arno-iptables-firewall
+  fi
+
+}
+
+start () {
+
+  if [ "$FWVERS" = "arno" ]; then
+
+    if /usr/sbin/upgrade-arno-firewall checkMajor; then
+      /usr/sbin/arno-iptables-firewall start
+    else
+      echo "arno-iptables-firewall is not started, use \"upgrade-arno-firewall upgrade\" to upgrade necessary
+  files, and create a firewall configuration corresponding to this version of Arno's Firewall.
+  NO FIREWALL IS ACTIVE!!!"
+    fi
+
+  else
+
+    echo "Firewall is disabled."
+
+  fi
+
+}
+
+stop () {
+
+  if [ "$FWVERS" = "arno" ] || [ -z "$FWVERS" ]; then
+
+    /usr/sbin/arno-iptables-firewall stop
+
+  fi
+
+}
+
+restart () {
+
+  if [ "$FWVERS" = "arno" ]; then
+
+    /usr/sbin/arno-iptables-firewall restart
+
+  else
+
+    /usr/sbin/arno-iptables-firewall stop
+
+  fi
+
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  restart
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac

@@ -1,0 +1,282 @@
+#
+# In this shim, we're invoked after /etc/arno-iptables-firewall/firewall.conf
+# has been read.  We then read /etc/rc.conf, and paste in variables from
+# the latter file that should override whatever values were configured in
+# firewall.conf.  Reason being that it should be easy to swap between
+# arno-iptables-firewall and astfw (and back again) with fewer values to
+# reconfigure.
+#
+# You could argue that this will be confusing, and I wouldn't disagree.
+#
+# Ideally, we should have the values in /etc/rc.conf and firewall.conf
+# converge... and possibly finalize on a single firewall project for
+# AstLinux.
+#
+
+. /etc/rc.conf
+
+#
+# the attrocious logic below is to make sure that if INTIF='' and INT2IF=''
+# and INT3IF='', then INT_IF='' as well (and not a string of spaces).
+#
+# this is so that tests for [ -n "$INT_IF" ] do exactly what they should.
+#
+
+isVPNtype()
+{
+  # args: vpn_type
+  local vpn IFS
+
+  unset IFS
+  for vpn in $VPN; do
+    if [ "$vpn" = "$1" ]; then
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+isNATinterface()
+{
+  # args: IF
+  local IFS
+
+  unset IFS
+  for intf in $NONAT; do
+    if [ "$intf" = "$1" ]; then
+      return 1
+    fi
+  done
+
+  return 0
+}
+
+addINTERNALnet()
+{
+  # args: IF, IP, NM
+  if [ -n "$1" -a "$1" != "none" -a -n "$2" -a -n "$3" ]; then
+    local NETWORK PREFIX
+    eval `ipcalc -np $2 $3`
+
+    INT_IF="$INT_IF${INT_IF:+ }$1"
+    INTERNAL_NET="$INTERNAL_NET${INTERNAL_NET:+ }$NETWORK/$PREFIX"
+    if isNATinterface $1; then
+      NAT_INTERNAL_NET="$NAT_INTERNAL_NET${NAT_INTERNAL_NET:+ }$NETWORK/$PREFIX"
+      NAT=1
+    fi
+  fi
+}
+
+addNOnatINTERNALnet()
+{
+  # args: IF, IP, NM
+  if [ -n "$1" -a "$1" != "none" -a -n "$2" -a -n "$3" ]; then
+    local NETWORK PREFIX
+    eval `ipcalc -np $2 $3`
+
+    INT_IF="$INT_IF${INT_IF:+ }$1"
+    INTERNAL_NET="$INTERNAL_NET${INTERNAL_NET:+ }$NETWORK/$PREFIX"
+  fi
+}
+
+setDMZnet()
+{
+  # args: IF, IP, NM
+  if [ -n "$1" -a "$1" != "none" -a -n "$2" -a -n "$3" ]; then
+    local NETWORK PREFIX
+    eval `ipcalc -np $2 $3`
+
+    DMZ_IF="$1"
+    DMZ_NET="$NETWORK/$PREFIX"
+    if isNATinterface $1; then
+      NAT_INTERNAL_NET="$NAT_INTERNAL_NET${NAT_INTERNAL_NET:+ }$NETWORK/$PREFIX"
+      NAT=1
+    fi
+  fi
+}
+
+getLANinterface()
+{
+  local lanif=""
+  
+  case $1 in
+  INTIF)
+    lanif="$INTIF"
+    ;;
+  INT2IF)
+    lanif="$INT2IF"
+    ;;
+  INT3IF)
+    lanif="$INT3IF"
+    ;;
+  esac
+
+  if [ -z "$lanif" ]; then
+    return 1
+  fi
+  
+  echo "$lanif"
+  return 0
+}
+
+get_network_cidr()
+{
+  # args: IF
+  local cidr
+
+  # /sbin/ip must be used (not ip) since arnofw's environment is not fully defined when this script is called.
+  cidr="$(/sbin/ip -o addr show dev "$1" | awk '$3 == "inet" { print $4; exit; }')"
+
+  case "$cidr" in
+    */*) echo "$cidr" ;;
+  esac
+}
+
+## Disable TOS mangling
+MANGLE_TOS=0
+
+if [ "$IPV6" = "yes" ]; then
+  IPV6_SUPPORT=1
+fi
+
+if [ -z "$PPPOEIF" ]; then
+  EXT_IF=""
+  unset IFS
+  for intf in $EXTIF $EXT2IF; do
+    EXT_IF="$EXT_IF${EXT_IF:+ }$intf"
+  done
+else
+  EXT_IF="${PPPOE_EXTIF:-ppp+}"
+  unset IFS
+  for intf in $EXTIF $EXT2IF; do
+    case "$intf" in
+      ppp[0-9]*) ;;
+      *) EXT_IF="$EXT_IF $intf" ;;
+    esac
+  done
+fi
+
+# Add external interface 'ip6tun' if an IPv6 tunnel is defined
+if [ "$IPV6" = "yes" -a -n "$IPV6_TUNNEL" ]; then
+  EXT_IF="$EXT_IF ip6tun"
+fi
+
+if [ -z "$EXTERNAL_NET" ]; then
+  unset IFS
+  for intf in $EXTIF $EXT2IF; do
+    extCIDR="$(get_network_cidr "$intf")"
+    if [ -n "$extCIDR" ]; then
+      EXTERNAL_NET="$EXTERNAL_NET${EXTERNAL_NET:+ }$extCIDR"
+    fi
+  done
+fi
+
+INT_IF=""
+INTERNAL_NET=""
+NAT_INTERNAL_NET=""
+NAT=0
+
+addINTERNALnet "$INTIF" "$INTIP" "$INTNM"
+
+addINTERNALnet "$INT2IF" "$INT2IP" "$INT2NM"
+
+addINTERNALnet "$INT3IF" "$INT3IP" "$INT3NM"
+
+setDMZnet "$DMZIF" "$DMZIP" "$DMZNM"
+
+MODEM_IF=""
+
+EXT_IF_DHCP_IP=0
+if [ -n "$EXTIF" -a -z "$EXTIP" ] && [ "$EXTIF" != "ppp0" -o -z "$PPPOEIF" ]; then
+  EXT_IF_DHCP_IP=1
+fi
+if [ -n "$EXT2IF" -a -z "$EXT2IP" ] && [ "$EXT2IF" != "ppp0" -o -z "$PPPOEIF" ]; then
+  EXT_IF_DHCP_IP=1
+fi
+
+if isVPNtype racoon || isVPNtype ipsecmobile; then
+  RP_FILTER=0
+fi
+
+if isVPNtype openvpn; then
+  if [ -n "$OVPN_SERVER" ]; then
+    ovpnIP="`echo $OVPN_SERVER | awk '{ print $1; }'`"
+    ovpnNM="`echo $OVPN_SERVER | awk '{ print $2; }'`"
+    if [ -z "$OVPN_DEV" -o "$OVPN_DEV" = "tun" ]; then
+      ovpnIF="tun+"
+    else
+      ovpnIF="$OVPN_DEV"
+    fi
+    addINTERNALnet "$ovpnIF" "$ovpnIP" "$ovpnNM"
+    allowif="$(getLANinterface "$OVPN_ALLOWLAN")"
+    if [ $? -eq 0 ]; then
+      IFS=' ,'
+      for intf in $INT_IF; do
+        if [ "$intf" = "$allowif" ]; then
+          IF_TRUSTS="$IF_TRUSTS${IF_TRUSTS:+|}$allowif $ovpnIF"
+          break;
+        fi
+      done
+    fi
+  else
+    # Failsafe if /mnt/kd/openvpn/openvpn.conf is used
+    # and OVPN_SERVER is not defined.
+    TRUSTED_IF="tun+"
+  fi
+fi
+
+if isVPNtype openvpnclient; then
+  if [ -n "$OVPNC_SERVER" ]; then
+    ovpnIP="`echo $OVPNC_SERVER | awk '{ print $1; }'`"
+    ovpnNM="`echo $OVPNC_SERVER | awk '{ print $2; }'`"
+    if [ -z "$OVPNC_DEV" -o "$OVPNC_DEV" = "tun" ]; then
+      ovpnIF="tun+"
+    else
+      ovpnIF="$OVPNC_DEV"
+    fi
+    addNOnatINTERNALnet "$ovpnIF" "$ovpnIP" "$ovpnNM"
+    allowif="$(getLANinterface "$OVPNC_ALLOWLAN")"
+    if [ $? -eq 0 ]; then
+      IFS=' ,'
+      for intf in $INT_IF; do
+        if [ "$intf" = "$allowif" ]; then
+          IF_TRUSTS="$IF_TRUSTS${IF_TRUSTS:+|}$allowif $ovpnIF"
+          break;
+        fi
+      done
+    fi
+  else
+    # Failsafe if /mnt/kd/openvpn/openvpnconf.conf is used
+    # and OVPNC_SERVER is not defined.
+    TRUSTED_IF="tun+"
+  fi
+fi
+
+if [ -n "$ALLOWLANS" ]; then
+  IFS='~'
+  for lans in $ALLOWLANS; do
+    allowifs=""
+    count=0
+    IFS=' '
+    for lan in $lans; do
+      allowif="$(getLANinterface "$lan")"
+      if [ $? -eq 0 ]; then
+        IFS=' ,'
+        for intf in $INT_IF; do
+          if [ "$intf" = "$allowif" ]; then
+            allowifs="$allowifs${allowifs:+ }$allowif"
+            count=$((count + 1))
+            break;
+          fi
+        done
+      fi
+    done
+    if [ -n "$allowifs" ] && [ "$count" -gt 1 ]; then
+      IF_TRUSTS="$IF_TRUSTS${IF_TRUSTS:+|}$allowifs"
+    fi
+  done
+fi
+
+unset IFS
+
