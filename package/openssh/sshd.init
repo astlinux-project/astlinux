@@ -26,9 +26,8 @@ Port $PORT" >> /tmp/etc/ssh/sshd_config
 
     if [ "$IPV6" = "yes" ]; then
       echo "ListenAddress ::" >> /tmp/etc/ssh/sshd_config
-    else
-      echo "ListenAddress 0.0.0.0" >> /tmp/etc/ssh/sshd_config
     fi
+    echo "ListenAddress 0.0.0.0" >> /tmp/etc/ssh/sshd_config
 
     echo "
 PermitRootLogin $RSTAT
