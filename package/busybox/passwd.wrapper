@@ -1,0 +1,63 @@
+#!/bin/sh
+##
+## wrapper for passwd
+##
+## If the web interface passsword has not been changed from
+## the default, change it with the system 'root' password.
+##
+
+ARGS="$@"
+
+if [ $# -eq 0 ]; then
+  ARG_USER="$(id -un)"
+elif [ $# -eq 1 ]; then
+  ARG_USER="$1"
+else
+  ARG_USER=""	# force busybox handler with multiple arguments
+fi
+
+BUSYBOX="$(which busybox)"
+if [ -z "$BUSYBOX" ]; then
+  echo "Could not find busybox"
+  exit 1
+fi
+
+WEB_GUI_HTPASSWD="$(check-default-passwd admin)"
+CHECK_RESULT=$?
+
+if [ "$ARG_USER" != "root" ] || \
+   [ $CHECK_RESULT -ne 0 ]; then
+  $BUSYBOX passwd $ARGS
+  RESULT=$?
+  if [ "$ARG_USER" = "root" ]; then
+    echo "Password for Web interface 'admin' is unchanged"
+  fi
+else
+  echo "Changing password for root"
+  read -s -p "New password:" pass1
+  echo ""
+  read -s -p "Retype password:" pass2
+  echo ""
+  if [ "$pass1" != "$pass2" ]; then
+    echo "Passwords don't match"
+    echo "passwd: password for root is unchanged"
+    exit 1
+  fi
+  if [ -z "$pass1" ]; then
+    echo "Password empty"
+    echo "passwd: password for root is unchanged"
+    exit 1
+  fi
+  if echo "root:$pass1" | chpasswd -m; then
+    if echo "$pass1" | htpasswd $WEB_GUI_HTPASSWD admin >/dev/null; then
+      echo "Password for Web interface 'admin' user changed"
+    else
+      echo "Password for Web interface 'admin' is unchanged"
+    fi
+  fi
+  RESULT=$?
+  unset pass1 pass2
+fi
+
+exit $RESULT
+
