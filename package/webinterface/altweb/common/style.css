@@ -1,0 +1,376 @@
+/* AstLinux Web Interface */
+
+body {
+  color: #000000;
+  background: #F7F5F2;
+  font-weight: normal;
+  font-family: "Lucida Grande", "Bitstream Vera Sans", "Trebuchet MS", Verdana, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: normal;
+  text-decoration: none;
+  margin: 8px;
+  padding: 0;
+}
+
+pre {
+  font-weight: normal;
+  border: 2px solid #54545C;
+  background: #E7E5E2;
+  padding: 10px;
+  font-family: "Bitstream Vera Sans Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
+  font-size: 12px;
+  line-height: 125%;
+  width: inherit;
+  overflow: auto; /*--If the Code exceeds the width, a scrolling is available--*/
+}
+
+/* Defaults for all tables */
+table {
+  font-weight: normal;
+  border-color: #54545C;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+h1 {
+  font-weight: bold;
+  font-family: "Lucida Grande", "Bitstream Vera Sans", "Trebuchet MS", Verdana, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: normal;
+  margin: 0px;
+  padding: 0px 0px 0px 16px;
+  text-decoration: none;
+}
+
+h2 {
+  font-weight: bold;
+  font-family: "Lucida Grande", "Bitstream Vera Sans", "Trebuchet MS", Verdana, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 100%;
+  text-decoration: none;
+}
+
+p {
+  font-weight: normal;
+  font-family: "Lucida Grande", "Bitstream Vera Sans", "Trebuchet MS", Verdana, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: normal;
+  text-decoration: none;
+}
+
+#tabs {
+  float:left;
+  width:100%;
+  background:#E7E5E2;
+  font-weight: bold;
+  font-size:100%;
+  line-height:normal;
+  border-bottom:1px solid #54545C;
+}
+#tabs ul {
+  margin:0;
+  padding:10px 10px 0 50px;
+  list-style:none;
+}
+#tabs li {
+  display:inline;
+  margin:0;
+  padding:0;
+}
+#tabs a {
+  float:left;
+  background:url("tableft.gif") no-repeat left top;
+  margin:0;
+  padding:0 0 0 4px;
+  text-decoration:none;
+}
+#tabs a span {
+  float:left;
+  display:block;
+  background:url("tabright.gif") no-repeat right top;
+  padding:5px 15px 4px 6px;
+  color: #FFA500;
+}
+#tabs a:hover span {
+  color: #FFA500;
+  background-position:100% -42px;
+}
+#tabs a:hover {
+  background-position:0% -42px;
+}
+#tabs a:hover span {
+  background-position:100% -42px;
+}
+
+.button {
+  height: 24px;
+  margin: 0;
+  color: #FFA500;
+  font-size: 13px;
+  line-height: 100%;
+  text-decoration: none;
+  font-family: "Lucida Grande", "Bitstream Vera Sans", "Trebuchet MS", Verdana, Helvetica, sans-serif;
+  font-weight: bold;
+  text-align: center;
+  background-color: #6E6E77;
+  border: 2px #6E6E77 outset;
+  padding: 1px 7px 2px 6px;
+}
+.button:hover {
+  border-style: inset;
+  background-color: #887E77;
+  padding: 1px 6px 2px 7px;
+}
+.button:active {
+  color: black;
+}
+
+.layout {
+  border: 2px solid #54545C;
+  background: #E7E5E2;
+  text-align: left;
+}
+.layout td {
+  padding-bottom: 10px;
+}
+
+.layoutNOpad {
+  border: 2px solid #54545C;
+  background: #E7E5E2;
+  text-align: left;
+}
+
+.status {
+  font-family: "Bitstream Vera Sans Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
+  font-size: 12px;
+  line-height: 110%;
+  border: 2px solid #54545C;
+  background: #E7E5E2;
+  text-align: left;
+}
+.status td {
+  padding: 8px;
+}
+
+.stdtable {
+  font-family: "Bitstream Vera Sans Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
+  font-size: 12px;
+  line-height: 100%;
+  border: 0;
+  text-align: left;
+}
+.stdtable td {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.datatable {
+  font-family: "Bitstream Vera Sans Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
+  font-size: 12px;
+  line-height: 110%;
+  border: 0;
+  text-align: left;
+}
+.datatable td {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.headerTable {
+  font-family: "Lucida Grande", "Bitstream Vera Sans", "Trebuchet MS", Verdana, Helvetica, sans-serif;
+  font-size: 100%;
+  line-height: 100%;
+  width: 100%;
+  border: 0;
+  text-align: left;
+}
+.headerTable td {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.statusdatatable {
+  font-family: "Bitstream Vera Sans Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
+  font-size: 12px;
+  line-height: 110%;
+  border: 0;
+  text-align: left;
+}
+.statusdatatable td {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 0px;
+  padding-right: 24px;
+}
+
+.dtrow0 {
+  background: #F7F7F7;
+}
+.dtrow1 {
+  background: #EFEFE7;
+}
+
+.formbtn {
+  min-width: 120px;
+}
+
+.topicinfo {
+  border:0;
+  width:17px;
+  height:17px;
+}
+
+.actionText {
+  color: #FFA500;
+  font-weight: bold;
+  font-family: "Lucida Grande", "Bitstream Vera Sans", "Trebuchet MS", Verdana, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 100%;
+  text-decoration: none;
+  background-color: #6E6E77;
+  border: 2px #6E6E77 outset;
+  padding: 1px 4px 2px 3px;
+}
+.actionText:visited {
+  color: #FFA500;
+}
+.actionText:hover {
+  border-style: inset;
+  background-color: #887E77;
+  padding: 1px 3px 2px 4px;
+}
+.actionText:active {
+  color: black;
+}
+
+.headerText {
+  color: #FFA500;
+  font-weight: bold;
+  font-family: "Lucida Grande", "Bitstream Vera Sans", "Trebuchet MS", Verdana, Helvetica, sans-serif;
+  font-size: 12px;
+  line-height: normal;
+  text-decoration: underline;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 12px;
+}
+.headerText:visited {
+  color: #FFA500;
+}
+.headerText:hover {
+  text-decoration: none;
+}
+.headerText:active {
+  color: black;
+}
+
+.tnumText {
+  color: black;
+  font-size: 100%;
+  line-height: normal;
+  text-decoration: underline;
+}
+.tnumText:visited {
+  color: black;
+}
+.tnumText:hover {
+  text-decoration: none;
+}
+.tnumText:active {
+  color: black;
+}
+
+.dialogText {
+  font-weight: normal;
+  font-family: "Lucida Grande", "Bitstream Vera Sans", "Trebuchet MS", Verdana, Helvetica, sans-serif;
+  font-size: 12px;
+  line-height: normal;
+  text-decoration: none;
+}
+
+.editText {
+  font-family: "Bitstream Vera Sans Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
+  font-size: 12px;
+  line-height: 125%;
+  border: 1px solid #54545C;
+  margin-top: 4px;
+  margin-bottom: 0px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+  padding-right: 1px;
+}
+
+.edititemText {
+  font-family: "Lucida Grande", "Bitstream Vera Sans", "Trebuchet MS", Verdana, Helvetica, sans-serif;
+  font-size: 100%;
+  line-height: normal;
+  border: 1px solid #CCCCCC;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-left: 2px;
+  margin-right: 2px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 0px;
+  padding-right: 1px;
+}
+
+/* Pagination */
+/*Credits: Dynamic Drive CSS Library */
+/*URL: http://www.dynamicdrive.com/style/ */
+
+.pagination {
+  padding: 6px 2px;
+  font-family: "Lucida Grande", "Bitstream Vera Sans", "Trebuchet MS", Verdana, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: normal;
+}
+.pagination ul {
+  margin: 0;
+  padding: 0;
+  text-align: center; /*Set to "right" to right align pagination interface */
+}
+.pagination li {
+  list-style-type: none;
+  display: inline;
+  padding-bottom: 1px;
+}
+.pagination a, .pagination a:visited {
+  padding: 0 5px;
+  border: 1px solid #54545C;
+  text-decoration: none; 
+  color: black;
+}
+.pagination a:hover, .pagination a:active {
+  border: 1px solid #54545C;
+  color: black;
+  background-color: #FFA500;
+}
+.pagination a.currentpage {
+  background-color: #898077;
+  color: white !important;
+  border-color: #54545C;
+  font-weight: bold;
+  cursor: default;
+}
+.pagination a.disablelink, .pagination a.disablelink:hover {
+  background-color: #F5F4EA;
+  cursor: default;
+  color: #ACA899;
+  border-color: #C9C7BA;
+  font-weight: normal !important;
+}
+.pagination a.prevnext {
+  font-weight: normal;
+}
+

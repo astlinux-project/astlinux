@@ -1,0 +1,132 @@
+div.astlinux
+{
+   color: #000000;
+   font-weight: normal;
+   font-size: 12px;
+   font-family:  Verdana, Arial, Helvetica;
+   text-decoration: none;
+   letter-spacing: 0px
+}
+
+.astlinux a:link , .astlinux a:visited , .astlinux a:active
+{
+   text-decoration: none;
+   color: #0000FF;
+}
+
+.astlinux a:hover
+{
+   text-decoration: underline;
+}
+
+.astlinux a:link .directory , .astlinux a:visited .directory , .astlinux a:active .directory
+{
+   text-decoration: none;
+   color: #006600;
+}
+
+.astlinux a:hover .directory
+{
+   text-decoration: underline;
+   color: #006600;
+}
+
+.astlinux a:link .dir-view , .astlinux a:visited .dir-view , .astlinux a:active .dir-view
+{
+   color: #000000;
+}
+
+.astlinux a:hover .dir-view
+{
+   color: #009900;
+}
+
+.astlinux td.file
+{
+   padding: 1px;
+   border-bottom: 1px
+   dashed #CCCCCC;
+}
+
+.astlinux span.dir-view
+{
+   height: 18px;
+   width: 20px;
+   background-color: #99FFCC;
+   padding-left: 3px;
+   padding-right: 3px;
+   padding-top: 2px;
+   padding-bottom: 3px;
+   font-size: 10px;
+   text-decoration: none;
+}
+
+.astlinux .error_msg
+{
+   color: #FF0000;
+}
+
+.astlinux tr.header
+{
+   background-color: #EEEEEE;
+   font-weight: bold;
+}
+
+.astlinux td.file-property
+{
+   text-align: right;
+   padding-right: 5px;
+   padding: 1px;
+   border-bottom: 1px dashed #CCCCCC;
+}
+
+.astlinux td.file-options
+{
+   text-align: center;
+   padding-right: 5px;
+   padding: 1px;
+   border-bottom: 1px dashed #CCCCCC;
+   background-color: #F6F6F6;
+}
+
+input
+{
+   font-family: courier new, courier;
+   font-weight: normal;
+   font-size: 9pt;
+}
+
+pre
+{
+   border: 1px solid #435370;
+   background: #F3F3F3;
+   padding: 1em;
+   font-family: courier new, courier;
+   white-space: pre;
+   line-height: 10pt;
+   font-size: 10pt;
+}
+
+.label
+{
+   font-size: 11px;
+   font-weight: bold;
+}
+
+.button
+{
+   font-weight: bold;
+   font-size: 11px;
+}
+
+body,td
+{
+   color: #000000;
+   font-weight: normal;
+   font-size: 12px;
+   font-family:  Verdana, Arial, Helvetica;
+   text-decoration: none;
+   letter-spacing: 0px
+}
+
+

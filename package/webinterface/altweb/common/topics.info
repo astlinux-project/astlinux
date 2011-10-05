@@ -1,0 +1,286 @@
+Web Interface Information Topics
+
+
+[[followme-dialplan]]
+
+Follow-Me Tab:
+
+The Follow-Me tab uses Asterisk's internal database (astdb) to maintain a list of
+Follow-Me numbers and their state.
+
+In particular, Asterisk 1.4 supports a Follow-Me application, which makes adding this feature
+into your dialplan about as easy as it gets.
+
+Credit: Darrick Hartman
+---- /etc/asterisk/extensions.conf snippet ----
+
+[macro-local-followme] 
+exten => s,1,GotoIf($[${DB_EXISTS(followme/${ARG1})}=0]?nofollow)
+exten => s,n,GotoIf($[${DB_RESULT:0:1}=0]?nofollow:follow)
+exten => s,n(follow),Dial(SIP/${ARG1},20) 
+exten => s,n,Followme(${ARG1},san) 
+exten => s,n,Goto(s-${DIALSTATUS},1) 
+exten => s,n(nofollow),Dial(SIP/${ARG1},20) 
+exten => s,n,Goto(s-${DIALSTATUS},1) 
+exten => s-NOANSWER,1,Voicemail(${ARG1},u)  ; If unavailable, send to voicemail
+exten => s-BUSY,1,Voicemail(${ARG1},b)  ; If busy, send to voicemail w/ busy ann
+exten => _s-.,1,Goto(s-NOANSWER,1)
+
+---- /etc/asterisk/extensions.conf snippet ----
+
+Warning!  The Follow-Me tab uses the astdb database Family: "followme", be warned if you already
+use this in your dialplan!  The tab may be safely viewed, but clicking [Save Changes] will write
+to the database.
+
+The Asterisk followme.conf file is automatically edited and the Asterisk app_followme.so
+application module is automatically reloaded.  Note that the source database is astdb, so
+if you already have a followme.conf file, you will need to reenter your numbers into
+the Follow-Me tab.
+
+The Prefs tab has several options for the Follow-Me tab...
+
+=> Follow-Me Numbers Displayed: 1 - 6
+
+The number of numbers available in the Follow-Me tab, defaults to 4.
+
+=> Schedule Menu: | Never~Skip Local Dial |
+
+The Schedule menu will appear in the Follow-Me tab if this text entry is defined.  A list
+of tilde (~) seperated strings can be defined.  The result will be a menu starting with
+"Always" and then followed in the order of your defined list.  The value of "Always" is 0,
+your first string is 1, etc...  This value is easily retrieved from a dialplan, but is not
+automatically supported by the Asterisk Follow-Me application.  Another example...
+
+---- /etc/asterisk/extensions.conf snippet ----
+
+[macro-ring-inside]
+exten => s,1,GotoIf($[${DB_EXISTS(followme/${ARG1})}=0]?100)
+exten => s,n,Set(FM_OPTIONS=${CUT(DB_RESULT,~,1)})
+exten => s,n,Set(FM_COUNT=${CUT(FM_OPTIONS,:,1)})
+exten => s,n,Set(FM_SCHEDULE=${CUT(FM_OPTIONS,:,3)})
+exten => s,n,GotoIf($[${FM_SCHEDULE}=1]?100)  ; Never
+exten => s,n,GotoIf($[${FM_COUNT}=0]?100)     ; No Numbers Defined
+exten => s,n,GotoIf($[${FM_SCHEDULE}=2]?50)   ; Skip Local Dial
+; Local Dial then Follow-Me then Voicemail
+exten => s,n,Dial(SIP/${ARG1},20) 
+exten => s,n,Goto(50)
+; Follow-Me then Voicemail
+exten => s,50,Followme(${ARG1},sn) 
+exten => s,n,Voicemail(${ARG1},u)
+; Local Dial then Voicemail
+exten => s,100,Dial(SIP/${ARG1},20) 
+exten => s,n,Voicemail(${ARG1},u)
+
+---- /etc/asterisk/extensions.conf snippet ----
+
+=> Use Caller*ID Tab Number Format Rules for Follow-Me
+
+This option is checked by default, giving a sanity check to your phone number entries.  The
+administrator can define the format rule or simply uncheck to disable this feature.
+
+All three security levels are supported by the Follow-Me tab: admin, staff and 'numbered' user.
+The non-admin 'numbered' user can only edit the status of their Follow-Me numbers.
+
+Finally, it is suggested in the Prefs tab to have
+
+_X_ Use Asterisk Manager Interface for Asterisk Commands
+
+checked, since the performance of the Follow-Me tab will be greatly improved.
+
+
+[[sysdial-dialplan]]
+
+Speed Dial Tab:
+
+The Speed Dial tab adds a web dialog interface to the asterisk
+astdb database, using Family: sysdial.
+
+The Name entries are saved in the asterisk astdb database, using Family: sysdialname.
+
+If a Speed Dial entry contains a "Name", the name and and extension will automatically appear
+in the Directory tab.
+
+The example prefix is "11", but that is your choosing
+in your extensions.conf dialplan.  The Prefs tab allows this
+prefix "label" to be changed.
+
+The number of speed dial entries defaults to 50, with digits "00 to 49".
+The Prefs tab allows the user to set the digits from "00 to 09" through
+"00 to 99".  This allows the Speed Dial tab to match your
+extensions.conf dialplan logic with up to 100 speed dial entries.
+
+Below is an example extensions.conf snippet:
+
+---- /etc/asterisk/extensions.conf snippet ----
+
+exten => _11[01234]X,1,Macro(dial-sysdial,${EXTEN:2:2}) ; DB: sysdial/00-49
+
+[macro-dial-sysdial]
+exten => s,1,Answer
+exten => s,n,GotoIf($[${DB_EXISTS(sysdial/${ARG1})} = 0]?100)
+exten => s,n,Set(CALLERID(num)=${HOME_CIDNUM})
+exten => s,n,Set(CALLERID(name)=${HOME_CIDNAME})
+exten => s,n,DIAL(${DB_RESULT},${DIALOUTTIME})
+exten => s,n,Hangup
+
+exten => s,100,Playback(extras/num-not-in-db)
+exten => s,n,Hangup
+
+---- /etc/asterisk/extensions.conf snippet ----
+
+
+[[cidname-dialplan]]
+
+Caller*ID Tab:
+
+The Caller*ID tab adds a web dialog interface to the asterisk
+astdb database, using Family: cidname
+
+The Prefs tab contains some relevant options.
+The default "Number Format:"
+matches the NANPA numbering system for North America.
+
+^[2-9][0-9][0-9][2-9][0-9][0-9][0-9][0-9][0-9][0-9]$
+
+The "Number Format:" specification is very flexible, using the
+standard UNIX regular expression syntax.
+
+Another example, allow any number 0-9 with at least 6 digits and at most
+16 digits.
+
+^[0-9]{6,16}$
+
+Below is an example extensions.conf snippet:
+
+---- /etc/asterisk/extensions.conf snippet ----
+
+exten => s,100,GotoIf($[${DB_EXISTS(cidname/${CALLERID(num)})} = 0]?200)
+exten => s,n,Set(CALLERID(name)=${DB_RESULT:0:15})
+
+exten => s,200,NoOp(${CALLERID(num)})
+
+---- /etc/asterisk/extensions.conf snippet ----
+
+
+[[blacklist-dialplan]]
+
+Blacklist Tab:
+
+The Blacklist tab adds a web dialog interface to the asterisk
+astdb database, using Family: blacklist
+
+The Prefs tab contains some relevant options.
+The default "Number Format:"
+matches the NANPA numbering system for North America.
+
+^[2-9][0-9][0-9][2-9][0-9][0-9][0-9][0-9][0-9][0-9]$
+
+The "Number Format:" specification is very flexible, using the
+standard UNIX regular expression syntax.
+
+Another example, allow any number 0-9 with at least 6 digits and at most
+16 digits.
+
+^[0-9]{6,16}$
+
+Below is an example extensions.conf snippet:
+
+---- /etc/asterisk/extensions.conf snippet ----
+
+exten => s,100,GotoIf($[${DB_EXISTS(blacklist/${CALLERID(num)})} = 0]?200) ; blacklist test
+exten => s,n,GotoIf($["${DB_RESULT}" = "0"]?110)
+exten => s,n,GotoIf($["${DB_RESULT}" = "2"]?120)
+exten => s,n,Goto(blacklist,s,1)        ; "1" TN in blacklist database, answer and Zapateller
+
+exten => s,110,Goto(blacklist,no-answer,1) ; "0" TN in blacklist, don't answer
+exten => s,120,Goto(voicemail-ivr,s,1)  ; "2" TN in blacklist, direct to voicemail
+
+exten => s,200,NoOp(Valid TN:${CALLERID(num)})
+
+---- /etc/asterisk/extensions.conf snippet ----
+
+
+[[whitelist-dialplan]]
+
+Whitelist Tab:
+
+The Whitelist tab adds a web dialog interface to the asterisk
+astdb database, using Family: whitelist
+
+The Prefs tab contains some relevant options.
+The default "Number Format:"
+matches the NANPA numbering system for North America.
+
+^[2-9][0-9][0-9][2-9][0-9][0-9][0-9][0-9][0-9][0-9]$
+
+The "Number Format:" specification is very flexible, using the
+standard UNIX regular expression syntax.
+
+Another example, allow any number 0-9 with at least 6 digits and at most
+16 digits.
+
+^[0-9]{6,16}$
+
+Below is an example extensions.conf snippet:
+
+---- /etc/asterisk/extensions.conf snippet ----
+
+exten => s,100,GotoIf($[${DB_EXISTS(whitelist/${CALLERID(num)})} = 0]?200) ; whitelist test
+exten => s,n,GotoIf($["${DB_RESULT}" = "0"]?110)
+exten => s,n,GotoIf($["${DB_RESULT}" = "2"]?120)
+exten => s,n,GotoIf($["${DB_RESULT}" = "3"]?130)
+exten => s,n,GotoIf($["${DB_RESULT}" = "4"]?140)
+exten => s,n,Goto(whitelist,s,1)        ; "1" TN in whitelist database, Priority
+
+exten => s,110,Goto(voicemail-ivr,s,1)  ; "0" TN in whitelist, direct to voicemail
+exten => s,120,Goto(whitelist,standard,1)  ; "2" TN in whitelist, Standard
+exten => s,130,Goto(whitelist,followme,1)  ; "3" TN in whitelist, Follow Me
+exten => s,140,Goto(whitelist,ivr,1)  ; "4" TN in whitelist, IVR
+
+exten => s,200,NoOp(Valid TN:${CALLERID(num)})
+
+---- /etc/asterisk/extensions.conf snippet ----
+
+
+[[actionlist-dialplan]]
+
+Actionlist Tab:
+
+The Actionlist tab adds a web dialog interface to the asterisk
+astdb database, using Family: actionlist
+
+The Prefs tab contains some relevant options.
+
+The "Key Format:" specification is very flexible, using the
+standard UNIX regular expression syntax.
+
+Example, allow any alphanumeric with at least 2 characters and at most
+16 characters.
+
+^[A-Za-z0-9]{2,16}$
+
+Below is an example extensions.conf snippet:
+
+Credit: Michael Keuter
+---- /etc/asterisk/extensions.conf snippet ----
+
+; Action Menu: No Monitoring~Monitor
+;
+[default]
+exten => 100,1,Macro(monitor-gui,${CALLERID(num)})
+exten => 100,n,Dial(SIP/100,25,t)
+exten => 100,n,Hangup
+
+[macro-monitor-gui]
+exten => s,1,GotoIf($[${DB_EXISTS(actionlist/${ARG1})} = 0]?end)
+exten => s,n,GotoIf($["${DB_RESULT}" = "1"]?mon)
+exten => s,n,Goto(end)
+
+exten => s,n(mon),Set(CALLFILENAME=Mon-${STRFTIME(${EPOCH},Europe/Berlin,%Y%m%d-%H%M%S)})
+exten => s,n,Monitor(wav49,${CALLFILENAME},mb) ; record only when bridged + mix it
+
+exten => s,n(end),MacroExit()
+
+---- /etc/asterisk/extensions.conf snippet ----
+
+

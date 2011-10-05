@@ -50,6 +50,14 @@ else
 LIGHTTPD_CONF_OPT += --without-webdav-props --without-webdav-locks
 endif
 
+define LIGHTTPD_INSTALL_INITSCRIPT
+	$(INSTALL) -D -m 0644 package/lighttpd/lighttpd.conf $(TARGET_DIR)/stat/etc/lighttpd.conf
+	$(INSTALL) -D -m 0755 package/lighttpd/lighttpd.init $(TARGET_DIR)/etc/init.d/lighttpd
+	ln -sf /tmp/etc/lighttpd.conf $(TARGET_DIR)/etc/lighttpd.conf
+endef
+
+LIGHTTPD_POST_INSTALL_TARGET_HOOKS += LIGHTTPD_INSTALL_INITSCRIPT
+
 define LIGHTTPD_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/sbin/lighttpd
 	rm -f $(TARGET_DIR)/usr/sbin/lighttpd-angel

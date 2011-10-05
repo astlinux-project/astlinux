@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PHP_VERSION = 5.2.17
+PHP_VERSION = 5.3.8
 PHP_SOURCE = php-$(PHP_VERSION).tar.bz2
 PHP_SITE = http://www.php.net/distributions
 PHP_INSTALL_STAGING = YES
@@ -15,8 +15,13 @@ PHP_CONF_OPT =  --mandir=/usr/share/man \
 		--infodir=/usr/share/info \
 		--disable-all \
 		--without-pear \
+		--without-iconv \
+		--without-gd \
+		--enable-ctype \
+		--enable-hash \
+		--enable-tokenizer \
 		--with-config-file-path=/etc \
-		--localstatedir=/var \
+		--localstatedir=/var
 
 PHP_CFLAGS = $(TARGET_CFLAGS)
 
@@ -30,9 +35,6 @@ ifneq ($(BR2_PACKAGE_PHP_CGI),y)
 	PHP_CONF_OPT += --disable-cgi
 else
 	PHP_CONF_OPT += --enable-cgi
-	ifeq ($(BR2_PACKAGE_PHP_FASTCGI),y)
-		PHP_CONF_OPT += --enable-fastcgi
-	endif
 endif
 
 ### Extensions
@@ -172,11 +174,10 @@ endif
 endif
 
 define PHP_INSTALL_FIXUP
+	mv $(TARGET_DIR)/usr/bin/php-cgi $(TARGET_DIR)/usr/bin/php
 	rm -rf $(TARGET_DIR)/usr/lib/php
 	rm -f $(TARGET_DIR)/usr/bin/phpize
 	rm -f $(TARGET_DIR)/usr/bin/php-config
-	if [ ! -f $(TARGET_DIR)/etc/php.ini ]; then \
-		$(INSTALL) -m 0755 $(BR2_PACKAGE_PHP_CONFIG) $(TARGET_DIR)/etc/php.ini; fi
 endef
 
 PHP_POST_INSTALL_TARGET_HOOKS += PHP_INSTALL_FIXUP

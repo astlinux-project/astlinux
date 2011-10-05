@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# ast-vmpass
+#
+# Input Arg1: context
+# Input Arg2: mbox_number
+# Input Arg3: newpassword
+#
+# When the voicemail.conf file has "externpass=" pointed to this script,
+# Asterisk VoiceMailMain password changes will be reflected in the web interface.
+# Example: "externpass=/usr/sbin/ast-vmpass"
+#
+
+. /etc/rc.conf
+
+VM_CONF="/etc/asterisk/voicemail.conf"
+
+if [ -n "$HTTPSDIR" ]; then
+  WEB_GUI_HTPASSWD="$HTTPSDIR/admin/.htpasswd"
+else
+  WEB_GUI_HTPASSWD="/stat/var/www/admin/.htpasswd"
+fi
+
+if [ -n "$ASTERISK_WEBGUI_VM_CONTEXT" ]; then
+  CONTEXT="$ASTERISK_WEBGUI_VM_CONTEXT"
+else
+  CONTEXT="default"
+fi
+
+if [ -n "$ASTERISK_WEBGUI_VMPASS_LOG" ]; then
+  PASS_LOG_FILE="$ASTERISK_WEBGUI_VMPASS_LOG"
+else
+  PASS_LOG_FILE="/var/log/ast-vmpass.log"
+fi
+
+if [ -f "$WEB_GUI_HTPASSWD" ]; then
+
+  echo -n "$(date) - " >> $PASS_LOG_FILE
+
+  if [[ "${1}" == "${CONTEXT}" && "${2:0:1}" == [0-9] && "${3:0:1}" == [*0-9] ]]; then
+    # Edit voicemail.conf file, required for asterisk 1.4 and earlier.
+    sed -i "/^\[${CONTEXT}\]/,/^\[/ s/^${2}[ ]*[=][> ]*[*0-9]*,/${2} => ${3},/" $VM_CONF
+    # Change web-gui .htpasswd file
+    echo "$3" | htpasswd $WEB_GUI_HTPASSWD $2 >> $PASS_LOG_FILE
+  else
+    echo "Error: context=$1, mbox=$2" >> $PASS_LOG_FILE
+  fi
+else
+  echo "Error: The WEB_GUI_HTPASSWD file '$WEB_GUI_HTPASSWD' does not exist." >> $PASS_LOG_FILE
+fi
+
+exit 0
+

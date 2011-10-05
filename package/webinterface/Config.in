@@ -1,0 +1,25 @@
+config BR2_PACKAGE_WEBINTERFACE
+	bool "webinterface"
+	default n
+	depends on BR2_PACKAGE_LIGHTTPD
+	help
+		Pick a web interface for Astlinux
+choice
+        prompt "Interface Version"
+        depends on BR2_PACKAGE_WEBINTERFACE
+        default BR2_PACKAGE_WEBINTERFACE_v2
+        help
+                Select which version series to compile and install.
+
+        config BR2_PACKAGE_WEBINTERFACE_v1
+                bool "Original Astlinux Interface"
+                help
+                        Select this to install the original
+                        web interface.
+        config BR2_PACKAGE_WEBINTERFACE_v2
+                bool "Lonnie's Alternative Interface"
+                help
+                        Select this to install the new interface that Lonnie
+                        developed.
+endchoice
+
