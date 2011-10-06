@@ -3,7 +3,7 @@
 # radvd
 #
 #############################################################
-RADVD_VERSION:=1.8.1
+RADVD_VERSION:=1.8.2
 RADVD_SOURCE:=radvd-$(RADVD_VERSION).tar.gz
 RADVD_SITE:=http://www.litech.org/radvd/dist/
 RADVD_DEPENDENCIES:=flex host-flex
