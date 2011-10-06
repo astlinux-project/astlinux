@@ -4,10 +4,10 @@
 
 init () {
 
-  if [ -f /mnt/kd/sensors3.conf ]; then
-    ln -sf /mnt/kd/sensors3.conf /tmp/etc/sensors3.conf
-  elif [ -f /stat/etc/sensors3.conf ]; then
-    ln -sf /stat/etc/sensors3.conf /tmp/etc/sensors3.conf
+  if [ -f /mnt/kd/sensors.conf ]; then
+    ln -sf /mnt/kd/sensors.conf /tmp/etc/sensors3.conf
+  elif [ -f /stat/etc/sensors.conf ]; then
+    ln -sf /stat/etc/sensors.conf /tmp/etc/sensors3.conf
   fi
 }
 
