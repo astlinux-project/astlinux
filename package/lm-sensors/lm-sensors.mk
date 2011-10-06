@@ -3,7 +3,7 @@
 # lm-sensors
 #
 #############################################################
-LM_SENSORS_VERSION = 3.2.0
+LM_SENSORS_VERSION = 3.3.1
 LM_SENSORS_SOURCE = lm_sensors-$(LM_SENSORS_VERSION).tar.bz2
 LM_SENSORS_SITE = http://dl.lm-sensors.org/lm-sensors/releases
 LM_SENSORS_INSTALL_STAGING = YES
@@ -31,7 +31,11 @@ endef
 
 define LM_SENSORS_INSTALL_TARGET_CMDS
 	$(MAKE) -C $(@D) PREFIX=/usr DESTDIR=$(TARGET_DIR) install
+	$(INSTALL) -D -m 0755 package/lm-sensors/lm-sensors.init $(TARGET_DIR)/etc/init.d/lmsensors
+	mv $(TARGET_DIR)/etc/sensors3.conf $(TARGET_DIR)/stat/etc/sensors3.conf
+	ln -sf /tmp/etc/sensors3.conf $(TARGET_DIR)/etc/sensors3.conf
 	rm -f $(addprefix $(TARGET_DIR)/usr/,$(LM_SENSORS_BINS_))
+	rm -rf $(TARGET_DIR)/etc/sensors.d
 endef
 
 define LM_SENSORS_UNINSTALL_TARGET_CMDS
