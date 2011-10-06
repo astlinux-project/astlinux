@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# This shell script if placed in /etc/apcupsd
+# will be called by /etc/apcupsd/apccontrol when the    
+# UPS goes back on to the mains after a power failure.
+#
+
+APCUPSD_MSG="Power has returned"
+
+. /etc/apcupsd/astlinux.sh
+
+exit 0

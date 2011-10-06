@@ -1,0 +1,7 @@
+config BR2_PACKAGE_APCUPSD
+	bool "apcupsd"
+	default n
+	select BR2_PACKAGE_LIBUSB
+	help
+	    apcupsd is a daemon for controlling APC ups'
+	    http://www.apcupsd.org/

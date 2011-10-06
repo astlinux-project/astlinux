@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# This shell script if placed in /etc/apcupsd
+# will be called by /etc/apcupsd/apccontrol when apcupsd
+# restores contact with the UPS (i.e. the serial connection is restored).
+#
+
+APCUPSD_MSG="Communications with UPS restored"
+
+. /etc/apcupsd/astlinux.sh
+
+exit 0

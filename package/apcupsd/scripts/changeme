@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# This shell script if placed in /etc/apcupsd
+# will be called by /etc/apcupsd/apccontrol when apcupsd
+# detects that the battery should be replaced.
+#
+
+APCUPSD_MSG="UPS battery needs changing *NOW*"
+
+. /etc/apcupsd/astlinux.sh
+
+exit 0

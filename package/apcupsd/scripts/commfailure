@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# This shell script if placed in /etc/apcupsd
+# will be called by /etc/apcupsd/apccontrol when apcupsd
+# loses contact with the UPS (i.e. the serial connection is not responding).
+#
+
+APCUPSD_MSG="Communications with UPS lost"
+
+. /etc/apcupsd/astlinux.sh
+
+exit 0
