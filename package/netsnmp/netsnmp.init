@@ -1,0 +1,58 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+init () {
+
+  if [ -d /stat/etc/snmp ]; then
+    ln -snf /stat/etc/snmp /tmp/etc/snmp
+  fi
+
+  if [ -d /mnt/kd/snmp ]; then
+    ln -snf /mnt/kd/snmp /tmp/etc/snmp
+  fi
+}
+
+start () {
+
+  if [ -f /etc/snmp/snmpd.conf ]; then
+    echo "Starting snmpd..."
+    snmpd -u nobody -g nobody -p /var/run/snmpd.pid
+  fi
+}
+
+stop () {
+
+  if [ -f /var/run/snmpd.pid ]; then
+    echo "Stopping snmpd..."
+    kill $(cat /var/run/snmpd.pid)
+  fi
+}
+
+case $1 in
+
+init)
+  init
+  start
+  ;;
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+

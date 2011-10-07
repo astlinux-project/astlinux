@@ -53,8 +53,9 @@ endif
 define NETSNMP_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) \
 		DESTDIR=$(TARGET_DIR) install
-	$(INSTALL) -D -m 0755 package/netsnmp/S59snmpd \
-		$(TARGET_DIR)/etc/init.d/S59snmpd
+	$(INSTALL) -D -m 0755 package/netsnmp/netsnmp.init \
+		$(TARGET_DIR)/etc/init.d/snmpd
+	ln -snf /tmp/etc/snmp $(TARGET_DIR)/etc/snmp
 	for mib in $(NETSNMP_BLOAT_MIBS); do \
 		rm -f $(TARGET_DIR)/usr/share/snmp/mibs/$$mib-MIB.txt; \
 	done
@@ -64,7 +65,7 @@ endef
 define NETSNMP_UNINSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) \
 		DESTDIR=$(TARGET_DIR) uninstall
-	rm -f $(TARGET_DIR)/etc/init.d/S59snmpd
+	rm -f $(TARGET_DIR)/etc/init.d/snmpd
 	rm -f $(TARGET_DIR)/usr/lib/libnetsnmp*
 endef
 
