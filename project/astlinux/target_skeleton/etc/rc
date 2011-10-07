@@ -177,13 +177,20 @@ none    /var            tmpfs   size=5000k      0       0
     ;;
 
   net5501)
+    # CS5535/CS5536 high-res timer (MFGPT) events
+    modprobe cs5535-clockevt irq=6
+
     modprobe cs5535_gpio
-    MAJOR=`grep cs5535_gpio /proc/devices | cut -d" " -f1`
-    mknod /dev/errorled c $MAJOR 6
-    echo 1 >/dev/errorled
+    # broken with linux 2.6.35
+    #MAJOR=`grep cs5535_gpio /proc/devices | cut -d" " -f1`
+    #mknod /dev/errorled c $MAJOR 6
+    #echo 1 >/dev/errorled
     ;;
 
   alix)
+    # CS5535/CS5536 high-res timer (MFGPT) events
+    modprobe cs5535-clockevt irq=5
+
     modprobe leds_alix2
     modprobe ledtrig-heartbeat
     modprobe ledtrig-netdev
