@@ -3,7 +3,7 @@
 # vsftpd
 #
 #############################################################
-VSFTPD_VERSION = 2.3.2
+VSFTPD_VERSION = 2.3.4
 VSFTPD_SOURCE = vsftpd-$(VSFTPD_VERSION).tar.gz
 VSFTPD_SITE = ftp://vsftpd.beasts.org/users/cevans
 
@@ -31,20 +31,14 @@ endef
 
 define VSFTPD_INSTALL_TARGET_CMDS
 	install -D -m 755 $(@D)/vsftpd $(TARGET_DIR)/usr/sbin/vsftpd
-	install -D -m 644 $(@D)/vsftpd.8 \
-		$(TARGET_DIR)/usr/share/man/man8/vsftpd.8
-	install -D -m 644 $(@D)/vsftpd.conf.5 \
-		$(TARGET_DIR)/usr/share/man/man5/vsftpd.conf.5
-	test -f $(TARGET_DIR)/etc/init.d/S70vsftpd || \
-		$(INSTALL) -D -m 755 package/vsftpd/vsftpd-init \
-			$(TARGET_DIR)/etc/init.d/S70vsftpd
+	install -D -m 755 package/vsftpd/vsftpd.init $(TARGET_DIR)/etc/init.d/vsftpd
+	ln -sf /tmp/etc/vsftpd.conf $(TARGET_DIR)/etc/vsftpd.conf
+	mkdir -p $(TARGET_DIR)/usr/share/empty
 endef
 
 define VSFTPD_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/sbin/vsftpd
-	rm -f $(TARGET_DIR)/usr/share/man/man8/vsftpd.8
-	rm -f $(TARGET_DIR)/usr/share/man/man5/vsftpd.conf.5
-	rm -f $(TARGET_DIR)/etc/init.d/S70vsftpd
+	rm -f $(TARGET_DIR)/etc/init.d/vsftpd
 endef
 
 define VSFTPD_CLEAN_CMDS
