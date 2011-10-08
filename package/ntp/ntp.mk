@@ -15,7 +15,6 @@ endif
 
 NTP_CONF_OPT = --with-shared \
 		--program-transform-name=s,,, \
-		--disable-tickadj \
 		--enable-ipv6=no \
 		--without-ntpsnmpd
 
