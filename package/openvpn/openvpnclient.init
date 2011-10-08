@@ -1,0 +1,145 @@
+#!/bin/sh
+. /etc/rc.conf
+
+. /etc/init.d/functions
+
+# Define a few variables
+# Lockfile
+lock="/var/lock/openvpnclient.lock"
+# PID
+pid="/var/run/openvpnclient.pid"
+
+init () {
+  local IFS
+
+  if ! SYS_is_vpn_type openvpnclient; then
+    if [ -f /etc/openvpnclient.conf ]; then
+      rm -f /tmp/etc/openvpnclient.conf
+    fi
+    return
+  fi
+
+  #check for existing of tun adapter
+
+  if [ ! -x /sbin/udevd -a ! -e /dev/net/tun ]; then
+    # No tun device or udev.  We'll make one now.
+    mkdir /dev/net
+    mknod /dev/net/tun c 10 200
+    modprobe tun
+  else
+    # Looks like you have udev.  The device will be created automatically.
+    modprobe tun
+  fi
+
+  if [ -d /mnt/kd/openvpn ]; then
+    ln -snf /mnt/kd/openvpn /tmp/etc/openvpn
+  else
+    echo "No openvpn certificate directory found.
+A directory on the keydisk is required.
+Manual configuration of certificates is also required."
+    exit
+  fi
+
+  if [ -f /mnt/kd/openvpn/openvpnclient.conf ]; then
+    # Using OpenVPN Client config file from keydisk
+    ln -sf /mnt/kd/openvpn/openvpnclient.conf /tmp/etc/openvpnclient.conf
+  else
+    # Creating OpenVPN Client config files
+    echo "#openvpnclient.conf created from rc.conf settings dynamically at boot
+dev $OVPNC_DEV
+remote $OVPNC_REMOTE $OVPNC_PORT
+proto $OVPNC_PROTOCOL
+ca $OVPNC_CA
+cert $OVPNC_CERT
+key $OVPNC_KEY
+verb $OVPNC_VERBOSITY" > /tmp/etc/openvpnclient.conf
+
+    IFS=$'\n'
+    for i in $OVPNC_OTHER; do
+      echo "$i" >> /tmp/etc/openvpnclient.conf
+    done
+
+    if [ "$OVPNC_LZO" = "yes" ]; then
+      echo "comp-lzo" >> /tmp/etc/openvpnclient.conf
+    fi
+    if [ "$OVPNC_QOS" = "yes" ]; then
+      echo "passtos" >> /tmp/etc/openvpnclient.conf
+    fi
+    if [ -n "$OVPNC_CIPHER" ]; then
+      echo "cipher $OVPNC_CIPHER" >> /tmp/etc/openvpnclient.conf
+    fi
+    if [ -n "$OVPNC_NSCERTTYPE" ]; then
+      echo "ns-cert-type $OVPNC_NSCERTTYPE" >> /tmp/etc/openvpnclient.conf
+    fi
+
+    # Static settings -- fine for most users
+    echo "#static setting--modify openvpnclient init script to change
+client
+user nobody
+group nobody
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+script-security 2
+status-version 1
+status /var/log/openvpnclient-status.log
+log-append /var/log/openvpnclient.log" >> /tmp/etc/openvpnclient.conf
+  fi
+}
+
+start () {
+  if [ -f $lock ]; then
+    # we were not shut down correctly
+    kill `cat $pid` >/dev/null 2>&1
+    rm -f $pid
+    rm -f $lock
+    sleep 2
+  fi
+
+  if  [ -f /etc/openvpnclient.conf ]; then
+    echo "Starting OpenVPN Client..."
+    openvpn --daemon  --writepid $pid --config /etc/openvpnclient.conf
+    if [ $? = 0 ]; then
+      touch $lock
+    fi
+  fi
+}
+
+stop () {
+  if [ -f $pid ]; then
+    echo "Stopping OpenVPN Client..."
+    kill `cat $pid` >/dev/null 2>&1
+    rm -f $pid
+    rm -f $lock
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+
+

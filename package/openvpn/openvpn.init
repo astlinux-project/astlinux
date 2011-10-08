@@ -1,103 +1,171 @@
-#!/bin/sh -e
-#
-# Original version by Robert Leslie
-# <rob@mars.org>, edited by iwj and cs
-# Modified for openvpn by Alberto Gonzalez Iniesta <agi@agi.as>
-# Modified for restarting / starting / stopping single tunnels by Richard Mueller <mueller@teamix.net>
+#!/bin/sh
+. /etc/rc.conf
 
-test $DEBIAN_SCRIPT_DEBUG && set -v -x
+. /etc/init.d/functions
 
-DAEMON=/usr/sbin/openvpn
-CONFIG_DIR=/etc/openvpn
-test -x $DAEMON || exit 0
-test -d $CONFIG_DIR || exit 0
+# Define a few variables
+# Lockfile
+lock="/var/lock/openvpn.lock"
+# PID
+pid="/var/run/openvpn.pid"
 
-start_vpn () {
-    $DAEMON --daemon --writepid /var/run/openvpn.$NAME.pid \
-            --config $CONFIG_DIR/$NAME.conf --cd $CONFIG_DIR || echo -n " FAILED->"
-    echo -n " $NAME"
+init () {
+  local IFS
+
+  if ! SYS_is_vpn_type openvpn; then
+    if [ -f /etc/openvpn.conf ]; then
+      rm -f /tmp/etc/openvpn.conf
+    fi
+    return
+  fi
+
+  #check for existing of tun adapter
+
+  if [ ! -x /sbin/udevd -a ! -e /dev/net/tun ]; then
+    # No tun device or udev.  We'll make one now.
+    mkdir /dev/net
+    mknod /dev/net/tun c 10 200
+    modprobe tun
+  else
+    # Looks like you have udev.  The device will be created automatically.
+    modprobe tun
+  fi
+
+  if [ -d /mnt/kd/openvpn ]; then
+    ln -snf /mnt/kd/openvpn /tmp/etc/openvpn
+  else
+    echo "No openvpn certificate directory found.
+A directory on the keydisk is required.
+Manual configuration of certificates is also required."
+    exit
+  fi
+
+  if [ -f /mnt/kd/openvpn/openvpn.conf ]; then
+    # Using OpenVPN Server config file from keydisk
+    ln -sf /mnt/kd/openvpn/openvpn.conf /tmp/etc/openvpn.conf
+  else
+    # Creating OpenVPN Server config files
+    echo "#openvpn.conf created from rc.conf settings dynamically at boot
+dev $OVPN_DEV
+port $OVPN_PORT
+proto $OVPN_PROTOCOL
+ca $OVPN_CA
+cert $OVPN_CERT
+key $OVPN_KEY
+dh $OVPN_DH
+server $OVPN_SERVER
+verb $OVPN_VERBOSITY" > /tmp/etc/openvpn.conf
+    # push settings from the server to the client
+    if [ -n "$OVPN_PUSH1" ]; then
+      echo "push \"$OVPN_PUSH1\"" >> /tmp/etc/openvpn.conf
+    fi
+    if [ -n "$OVPN_PUSH2" ]; then
+      echo "push \"$OVPN_PUSH2\"" >> /tmp/etc/openvpn.conf
+    fi
+    if [ -n "$OVPN_PUSH3" ]; then
+      echo "push \"$OVPN_PUSH3\"" >> /tmp/etc/openvpn.conf
+    fi
+    if [ -n "$OVPN_PUSH4" ]; then
+    echo "push \"$OVPN_PUSH4\"" >> /tmp/etc/openvpn.conf
+    fi
+    # Deprecate OVPN_PUSH1-4 in favor of OVPN_PUSH
+    IFS=$'\n'
+    for i in $OVPN_PUSH; do
+      echo "push \"$i\"" >> /tmp/etc/openvpn.conf
+    done
+
+    if [ -n "$OVPN_OTHER1" ]; then
+      echo "$OVPN_OTHER1" >> /tmp/etc/openvpn.conf
+    fi
+    if [ -n "$OVPN_OTHER2" ]; then
+      echo "$OVPN_OTHER2" >> /tmp/etc/openvpn.conf
+    fi
+    # Deprecate OVPN_OTHER1-2 in favor of OVPN_OTHER
+    IFS=$'\n'
+    for i in $OVPN_OTHER; do
+      echo "$i" >> /tmp/etc/openvpn.conf
+    done
+
+    if [ "$OVPN_LZO" = "yes" ]; then
+      echo "comp-lzo" >> /tmp/etc/openvpn.conf
+    fi
+    if [ "$OVPN_QOS" = "yes" ]; then
+      echo "passtos" >> /tmp/etc/openvpn.conf
+    fi
+    if [ -n "$OVPN_CIPHER" ]; then
+      echo "cipher $OVPN_CIPHER" >> /tmp/etc/openvpn.conf
+    fi
+    if [ -n "$OVPN_VALIDCLIENTS" ]; then
+      echo "tls-verify /usr/sbin/openvpn-tls-verify" >> /tmp/etc/openvpn.conf
+    fi
+
+    # Static settings -- fine for most users
+    echo "#static setting--modify openvpn init script to change
+ifconfig-pool-persist /etc/openvpn/ipp.txt
+user nobody
+group nobody
+persist-key
+persist-tun
+keepalive 10 60
+script-security 2
+status-version 2
+status /var/log/openvpn-status.log
+log-append /var/log/openvpn.log" >> /tmp/etc/openvpn.conf
+  fi
 }
-stop_vpn () {
-   kill `cat $PIDFILE` || true
-  rm $PIDFILE
+
+start () {
+  if [ -f $lock ]; then
+    # we were not shut down correctly
+    kill `cat $pid` >/dev/null 2>&1
+    rm -f $pid
+    rm -f $lock
+    sleep 2
+  fi
+
+  if  [ -f /etc/openvpn.conf ]; then
+    echo "Starting OpenVPN Server..."
+    openvpn --daemon  --writepid $pid --config /etc/openvpn.conf
+    if [ $? = 0 ]; then
+      touch $lock
+    fi
+  fi
 }
 
-case "$1" in
+stop () {
+  if [ -f $pid ]; then
+    echo "Stopping OpenVPN Server..."
+    kill `cat $pid` >/dev/null 2>&1
+    rm -f $pid
+    rm -f $lock
+  fi
+}
+
+case $1 in
+
 start)
-  echo -n "Starting openvpn:"
-
-  if test -z $2 ; then
-    for CONFIG in `cd $CONFIG_DIR; ls *.conf 2> /dev/null`; do
-      NAME=${CONFIG%%.conf}
-      start_vpn
-    done
-  else
-    if test -e $CONFIG_DIR/$2.conf ; then
-      NAME=$2
-      start_vpn
-    else
-      echo -n " No such VPN: $2"
-    fi
-  fi
-  echo "."
-
+  start
   ;;
+
 stop)
-  echo -n "Stopping openvpn:"
-
-  if test -z $2 ; then
-    for PIDFILE in `ls /var/run/openvpn.*.pid 2> /dev/null`; do
-      NAME=`echo $PIDFILE | cut -c18-`
-      NAME=${NAME%%.pid}
-      stop_vpn
-      echo -n " $NAME"
-    done
-  else
-    if test -e /var/run/openvpn.$2.pid ; then
-      PIDFILE=`ls /var/run/openvpn.$2.pid 2> /dev/null`
-      NAME=`echo $PIDFILE | cut -c18-`
-      NAME=${NAME%%.pid}
-      stop_vpn
-      echo -n " $NAME"
-    else
-      echo -n " No such VPN: $2"
-    fi
-  fi
-  echo "."
+  stop
   ;;
-# We only 'reload' for running VPNs. New ones will only start with 'start' or 'restart'.
-reload|force-reload)
-  echo -n "Reloading openvpn:"
-  for PIDFILE in `ls /var/run/openvpn.*.pid 2> /dev/null`; do
-    NAME=`echo $PIDFILE | cut -c18-`
-    NAME=${NAME%%.pid}
-# If openvpn if running under a different user than root we'll need to restart
-    if egrep '^( |\t)*user' $CONFIG_DIR/$NAME.conf > /dev/null 2>&1 ; then
-      stop_vpn
-      sleep 1
-      start_vpn
-      echo -n "(restarted)"
-    else
-      kill -HUP `cat $PIDFILE` || true
-#    start-stop-daemon --stop --signal HUP --quiet --oknodo \
-#      --exec $DAEMON --pidfile $PIDFILE
-    echo -n " $NAME"
-    fi
-  done
-  echo "."
+
+init)
+  init
+  start
   ;;
 
 restart)
-  $0 stop $2
-  sleep 1
-  $0 start $2
+  stop
+  sleep 2
+  start
   ;;
+
 *)
-  echo "Usage: $0 {start|stop|reload|restart|force-reload}" >&2
-  exit 1
+  echo "Usage: start|stop|restart"
   ;;
+
 esac
 
-exit 0
 
-# vim:set ai et sts=2 sw=2 tw=0:
