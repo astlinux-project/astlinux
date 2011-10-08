@@ -1,0 +1,8 @@
+config BR2_PACKAGE_MDNSRESPONDER
+	bool "mdnsresponder"
+	default n
+	help
+		mDNSresponder - Multi platform service discovery
+
+		http://developer.apple.com/opensource/internet/bonjour.html
+

@@ -1,0 +1,69 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+. /etc/init.d/functions
+
+MDNS=/usr/sbin/mDNSProxyResponderPosix
+
+if [ ! -x $MDNS ]; then
+  exit 1
+fi
+
+if [ -n "$EXTIF" ]; then
+  IP="$(find_ip_from_if "$EXTIF")"
+fi
+
+init () {
+  :
+}
+
+start () {
+  if [ -n "$ADNAME" ]; then
+    echo "mDNS ADNAME is active."
+    $MDNS $IP $HOSTNAME "$ADNAME" _sip._udp 5060 >/dev/null 2>&1 &
+    $MDNS $IP $HOSTNAME "$ADNAME" _ssh._tcp 22 u=root >/dev/null 2>&1 &
+    $MDNS $IP $HOSTNAME "$ADNAME" _http._tcp 80 >/dev/null 2>&1 &
+    $MDNS $IP $HOSTNAME "$ADNAME" _https._tcp 443 u=admin path=/admin/index.php >/dev/null 2>&1 &
+    $MDNS $IP $HOSTNAME "$ADNAME" _iax._udp 4569 >/dev/null 2>&1 &
+    $MDNS $IP $HOSTNAME "$ADNAME" _ftp._tcp 21 >/dev/null 2>&1 &
+    $MDNS $IP $HOSTNAME "$ADNAME" _tftp._udp 69 >/dev/null 2>&1 &
+    $MDNS $IP $HOSTNAME "$ADNAME" _ntp._udp 123 >/dev/null 2>&1 &
+  fi
+
+  if [ -n "$P910ND_ADNAME0" -a -n "$INTIP" ]; then
+    $MDNS $INTIP $HOSTNAME "$P910ND_ADNAME0" _pdl-datastream._tcp 9100 &
+  fi
+}
+
+stop () {
+  if [ -n "$ADNAME" -o -n "$P910ND_ADNAME0" ]; then
+    killall mDNSProxyResponderPosix >/dev/null 2>&1
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
