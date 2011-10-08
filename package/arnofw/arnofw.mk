@@ -38,6 +38,8 @@ $(TARGET_DIR)$(ARNOFW_TARGET_BINARY): $(ARNOFW_DIR)/.patched
 	ln -sf /tmp$(ARNOFW_CONFIG_DIR) $(TARGET_DIR)$(ARNOFW_CONFIG_DIR)
 	$(INSTALL) -D -m 0755 $(ARNOFW_DIR)/bin/arno-iptables-firewall \
 		$(TARGET_DIR)$(ARNOFW_TARGET_BINARY)
+	$(SED) '1 s:^#!/bin/sh:#!/bin/ash:' \
+		$(TARGET_DIR)$(ARNOFW_TARGET_BINARY)
 	mkdir -p $(TARGET_DIR)/stat$(ARNOFW_CONFIG_DIR)
 	$(INSTALL) -m 0444 package/arnofw/arnofw.serial \
 		$(TARGET_DIR)/stat$(ARNOFW_CONFIG_SERIAL)
