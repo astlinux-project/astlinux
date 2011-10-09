@@ -1,0 +1,51 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+init () {
+  :
+}
+
+start () {
+
+  if [ -x /usr/sbin/acpid -a -f /proc/acpi/event ]; then
+    echo "Starting acpid..."
+    /usr/sbin/acpid
+  fi
+}
+
+stop () {
+
+  if ps | grep -q -e '[ /]acpid[ ]' -e '[ /]acpid$'; then
+    echo "Stopping acpid..."
+    killall acpid >/dev/null 2>&1
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+

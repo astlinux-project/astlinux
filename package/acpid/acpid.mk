@@ -14,16 +14,14 @@ endef
 define ACPID_INSTALL_TARGET_CMDS
 	install -D -m 755 $(@D)/acpid $(TARGET_DIR)/usr/sbin/acpid
 	install -D -m 755 $(@D)/acpi_listen $(TARGET_DIR)/usr/bin/acpi_listen
-	install -D -m 644 $(@D)/acpid.8 $(TARGET_DIR)/usr/share/man/man8/acpid.8
-	install -D -m 644 $(@D)/acpi_listen.8 $(TARGET_DIR)/usr/share/man/man8/acpi_listen.8
 	mkdir -p $(TARGET_DIR)/etc/acpi/events
 	/bin/echo -e "event=button[ /]power\naction=/sbin/poweroff" > $(TARGET_DIR)/etc/acpi/events/powerbtn
+	install -D -m 755 package/acpid/acpid.init $(TARGET_DIR)/etc/init.d/acpid
 endef
 
 define ACPID_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/sbin/acpid
 	rm -f $(TARGET_DIR)/usr/bin/acpi_listen
-	rm -f $(addprefix )$(TARGET_DIR)/usr/share/man/man8/,acpid.8 acpi_listen.8)
 endef
 
 define ACPID_CLEAN_CMDS
