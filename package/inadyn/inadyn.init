@@ -1,0 +1,86 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+init () {
+  local get_ip_type get_ip_interface update_period_sec ddcustom
+  
+  update_period_sec="360"
+  ddcustom=""
+
+  if [ -z "$DDGETIP" ]; then
+    get_ip_type="getip.krisk.org"
+    get_ip_interface="/"
+  elif [ "$DDGETIP" = "interface" ]; then
+    get_ip_type="interface"
+    get_ip_interface="$EXTIF"
+    update_period_sec="120"
+  else
+    get_ip_type="$DDGETIP"
+    get_ip_interface="/"
+  fi
+
+  if [ "$DDSERVICE" = "default@dnsomatic.com" ]; then
+    DDSERVICE="custom@http_svr_basic_auth"
+    ddcustom="dyndns_server_name updates.dnsomatic.com
+dyndns_server_url /nic/update?"
+  fi
+
+  rm -f /tmp/etc/inadyn.conf
+  
+  if [ -n "$DDSERVICE" -a -n "$DDUSER" -a -n "$DDPASS" -a -n "$DDHOST" ]; then
+    echo "##
+username $DDUSER
+password $DDPASS
+ip_server_name $get_ip_type $get_ip_interface
+dyndns_system ${DDSERVICE}${ddcustom:+
+$ddcustom}
+alias $DDHOST
+update_period_sec $update_period_sec
+forced_update_period 2419200
+syslog
+change_persona 65535:65535
+background" > /tmp/etc/inadyn.conf
+  fi
+}
+
+start () {
+  if [ -f /etc/inadyn.conf ]; then
+    echo "Starting dynamicdns..."
+    inadyn
+  fi
+}
+
+stop () {
+  if [ -f /etc/inadyn.conf ]; then
+    echo "Stopping dynamicdns..."
+    killall inadyn 2>/dev/null
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac

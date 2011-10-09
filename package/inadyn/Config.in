@@ -1,0 +1,9 @@
+config BR2_PACKAGE_INADYN
+	bool "inadyn"
+	default n
+	help
+		inadyn - Dynamic DNS client that supports many services
+
+
+		http://www.inatech.eu/inadyn
+

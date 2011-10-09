@@ -1,0 +1,24 @@
+--- inadyn/src/dyndns.c.orig	2011-07-07 11:11:20.000000000 -0500
++++ inadyn/src/dyndns.c	2011-07-07 11:18:26.000000000 -0500
+@@ -215,7 +215,7 @@
+ static int get_req_for_ip_server(DYN_DNS_CLIENT *p_self, void *p_specific_data)
+ {
+     return sprintf(p_self->p_req_buffer, DYNDNS_GET_MY_IP_HTTP_REQUEST,
+-        p_self->info.ip_server_name.name, p_self->info.ip_server_name.port, p_self->info.ip_server_url);
++        p_self->info.ip_server_name.name, p_self->info.ip_server_name.port, p_self->info.ip_server_url, p_self->info.ip_server_name.name);
+ }
+ 
+ /* 
+--- inadyn/src/dyndns.h.orig	2011-07-07 11:11:44.000000000 -0500
++++ inadyn/src/dyndns.h	2011-07-07 11:16:10.000000000 -0500
+@@ -73,7 +73,9 @@
+ 
+ /* Conversation with the IP server */
+ #define DYNDNS_GET_MY_IP_HTTP_REQUEST  \
+-	"GET http://%s:%d%s HTTP/1.0\r\n\r\n"
++	"GET http://%s:%d%s HTTP/1.0\r\n" \
++	"Host: %s\r\n" \
++	"User-Agent: "DYNDNS_AGENT_NAME " " DYNDNS_EMAIL_ADDR"\r\n\r\n"
+ 
+ /* dyndns.org specific update address format */	
+ #define DYNDNS_GET_MY_IP_HTTP_REQUEST_FORMAT \

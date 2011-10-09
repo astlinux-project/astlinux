@@ -1,0 +1,90 @@
+--- inadyn/src/dyndns.c.orig	2007-03-12 08:07:32.000000000 -0500
++++ inadyn/src/dyndns.c	2009-05-13 17:40:48.000000000 -0500
+@@ -35,6 +35,8 @@
+ #define MODULE_TAG      "INADYN: "  
+ #include <stdlib.h>
+ #include <string.h>
++#include <sys/ioctl.h>
++#include <net/if.h>
+ #include "dyndns.h"
+ #include "debug_if.h"
+ #include "base64.h"
+@@ -394,6 +396,7 @@
+ /**
+ 	the OK codes are:
+ 		CODE=200
++		CODE=201
+ 		CODE=707, for duplicated updates
+ */
+ BOOL is_zoneedit_server_rsp_ok( DYN_DNS_CLIENT *p_self, char*p_rsp, char* p_ok_string)
+@@ -401,6 +404,7 @@
+ 	return 
+ 	(		
+ 		(strstr(p_rsp, "CODE=\"200\"") != NULL) ||
++		(strstr(p_rsp, "CODE=\"201\"") != NULL) ||
+ 		(strstr(p_rsp, "CODE=\"707\"") != NULL)
+ 	);	
+ }
+@@ -795,6 +799,26 @@
+ 	return RC_OK;
+ }
+ 
++RC_TYPE get_interface_ip(char* if_name, char* ip)
++{
++	struct ifreq buffer;
++	struct sockaddr_in *addr;
++	int s;
++	RC_TYPE rc = RC_ERROR;
++
++	s = socket(PF_INET, SOCK_DGRAM, 0);
++	memset(&buffer, 0x00, sizeof(buffer));
++	strcpy(buffer.ifr_name, if_name);
++	if (ioctl(s, SIOCGIFADDR, &buffer) == 0) {
++		addr = (struct sockaddr_in*)(&buffer.ifr_addr);	
++		strncpy(ip, inet_ntoa(addr->sin_addr), IP_V4_MAX_LENGTH);
++		rc = RC_OK;
++	}
++	close(s);
++
++	return rc;
++}
++
+ /** the real action:
+ 	- increment the forced update times counter
+ 	- detect current IP
+@@ -807,6 +831,7 @@
+ */
+ RC_TYPE dyn_dns_update_ip(DYN_DNS_CLIENT *p_self)
+ {
++	char new_ip_str[IP_V4_MAX_LENGTH];
+ 	RC_TYPE rc;
+ 
+ 	if (p_self == NULL)
+@@ -816,6 +841,19 @@
+ 
+ 	do
+ 	{
++		if (strcmp("interface", p_self->info.ip_server_name.name) == 0)
++		{
++			/* Query the external interface to give me my IP */
++			rc = get_interface_ip(p_self->info.ip_server_url, new_ip_str);
++			if (rc != RC_OK)
++			{
++				DBG_PRINTF((LOG_WARNING,"W: DYNDNS: Error obtaining IP address for interface: %s\n",
++					p_self->info.ip_server_url));
++				break;
++			}
++			p_self->info.my_ip_has_changed = (strcmp(new_ip_str, p_self->info.my_ip_address.name) != 0);
++			strcpy(p_self->info.my_ip_address.name, new_ip_str);
++		} else {
+ 		/*ask IP server something so he will respond and give me my IP */
+ 		rc = do_ip_server_transaction(p_self);
+ 		if (rc != RC_OK)
+@@ -835,6 +873,7 @@
+ 		{	
+ 			break;
+ 		}
++		}
+ 		
+ 		if (p_self->dbg.level > 1)
+ 		{
