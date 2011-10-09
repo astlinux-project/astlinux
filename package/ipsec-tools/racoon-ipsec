@@ -1,0 +1,672 @@
+#!/bin/sh
+
+gen_dynamic_preamble()
+{
+  echo "
+timer {
+  phase1 30 secs;
+  phase2 20 secs;
+}"
+}
+
+gen_static_no_nat_preamble()
+{
+  echo "
+timer {
+  phase1 30 sec;
+  phase2 20 sec;
+}
+
+listen {
+  isakmp $1 [500];${2:+
+  isakmp $2 [500];}
+}"
+}
+
+gen_static_nat_preamble()
+{
+  echo "
+timer {
+  phase1 30 sec;
+  phase2 20 sec;
+  natt_keepalive 10 sec;
+}
+
+listen {
+  isakmp $1 [500];
+  isakmp_natt $1 [4500];${2:+
+  isakmp $2 [500];
+  isakmp_natt $2 [4500];}
+}"
+}
+
+gen_ipsec_logging()
+{
+  local logging
+
+  logging=${IPSEC_LOGLEVEL:-info}
+
+  case $logging in
+  debug|debug2|info|notify|warning|error)
+    echo ""
+    echo "log $logging;"
+    ;;
+  *)
+    bad_config "unknown logging level '$logging'."
+    ;;
+  esac
+}
+
+##
+## VPN Type: "racoon" support functions
+##
+
+gen_racoon()
+{
+  local empty="1" auth method IFS
+
+  IFS=$'\n'
+  for line in $IPSEC_PSK_ASSOCIATIONS; do
+    local="$(echo $line | cut -d'~' -f1)"
+    local_nets="$(echo $line | cut -d'~' -f2)"
+    remote="$(echo $line | cut -d'~' -f3)"
+    remote_nets="$(echo $line | cut -d'~' -f4)"
+    key="$(echo $line | cut -d'~' -f5)"
+    p1_encrypt="$(echo $line | cut -d'~' -f6)"
+    p1_hash="$(echo $line | cut -d'~' -f7)"
+    p1_dhgrp="$(echo $line | cut -d'~' -f8)"
+    p2_encrypt="$(echo $line | cut -d'~' -f9)"
+    p2_auth="$(echo $line | cut -d'~' -f10)"
+    p2_pfsgrp="$(echo $line | cut -d'~' -f11)"
+    nat_t="$(echo $line | cut -d'~' -f12)"
+    # auto establish is -f13
+    p1_lifetime="$(echo $line | cut -d'~' -f14)"
+    p2_lifetime="$(echo $line | cut -d'~' -f15)"
+    rsa_path="$(echo $line | cut -d'~' -f16)"
+    rsa_cert="$(echo $line | cut -d'~' -f17)"
+    rsa_key="$(echo $line | cut -d'~' -f18)"
+    rsa_ca="$(echo $line | cut -d'~' -f19)"
+    empty=""
+
+    IFS=' '
+    for name in local local_nets remote remote_nets p1_encrypt \
+	        p1_hash p1_dhgrp p2_encrypt p2_auth p2_pfsgrp; do
+      if [ -z "${!name}" ]; then
+        bad_config "Empty (required) field '$name' in IPsec configuration!"
+        return 1
+      fi
+    done
+
+    # If key is empty use rsa certificates
+    if [ -z "$key" ]; then
+      for name in rsa_path rsa_cert rsa_key rsa_ca; do
+        if [ -z "${!name}" ]; then
+          bad_config "Empty (required) field '$name' in IPsec configuration!"
+          return 1
+        fi
+      done
+    fi
+
+    if ! sanity_check_options; then
+      return 1
+    fi
+
+    set_special_options
+
+    if [ -n "$key" ]; then
+      method="pre_shared_key"
+      echo "$remote	$key" >> /tmp/etc/psk.txt
+      # Defaults to "my_identifier address;"
+      # Defaults to "verify_identifier off;"
+      auth=""
+    else
+      method="rsasig"
+      auth="$(get_rsa_auth_config "$rsa_path" "$rsa_cert" "$rsa_key" "$rsa_ca")"
+    fi
+
+    (remote "$remote" "$do_nat" "$p1_encrypt" "$p1_hash" "$p1_dhgrp" "$p1_lifetime" "$method" "$auth") >> /tmp/etc/racoon.conf
+
+    IFS=' ,'
+    for lnet in $local_nets; do
+      for rnet in $remote_nets; do
+        (sainfo "$lnet" "$rnet" "$p2_encrypt" "$p2_auth" "$p2_pfsgrp" "$p2_lifetime") >> /tmp/etc/racoon.conf
+        (echo "" ; spdadd $lnet $rnet out tunnel $local $remote ; \
+         echo "" ; spdadd $rnet $lnet in tunnel $remote $local ; \
+        ) >> /tmp/etc/tunnel.sh
+      done
+    done
+  done
+
+  if [ -n "$empty" ]; then
+    bad_config "IPSEC_PSK_ASSOCIATIONS is empty."
+  fi
+}
+
+gen_racoon_routes()
+{
+  local IFS
+
+  IFS=$'\n'
+  for line in $IPSEC_PSK_ASSOCIATIONS; do
+    local_nets="$(echo $line | cut -d'~' -f2)"
+    remote_nets="$(echo $line | cut -d'~' -f4)"
+
+    IFS=' ,'
+    for lnet in $local_nets; do
+      intf="$(findintf $lnet)"
+      lip="$(findip $lnet)"
+
+      if [ -z "$intf" ]; then
+        bad_config "can't find interface bound to $lnet."
+        return 1
+      fi
+
+      for rnet in $remote_nets; do
+        echo ""
+        echo "ip route add $rnet src $lip dev $intf"
+      done
+
+      # we only seed the interface corresponding to the first local network
+      # for now. things might get indeterministic with more than one.
+      #
+      # we also don't handle the case of supernetting, i.e. having networks
+      # 192.168.0.0/24, 192.168.1.0/24, 192.168.2.0/24, and 192.168.3.0/24,
+      # but exporting the subnet network 192.168.0.0/22 instead.
+      break
+    done
+  done
+}
+
+gen_racoon_establish()
+{
+  local ip IFS
+
+  IFS=$'\n'
+  for line in $IPSEC_PSK_ASSOCIATIONS; do
+    ip="$(echo $line | cut -d'~' -f13)"
+
+    if [ -n "$ip" ]; then
+      echo ""
+      get_numeric_ip_version "$ip"
+      case $? in
+      4)
+        echo "ping -c1 -w20 $ip >/dev/null 2>&1 &"
+        ;;
+      6)
+        echo "ping6 -c1 -w20 $ip >/dev/null 2>&1 &"
+        ;;
+      esac
+    fi
+  done
+}
+
+remote()
+{
+  echo "
+remote $1 {
+  exchange_mode main;${8:+
+$8}
+  nat_traversal $2;
+  passive off;
+  generate_policy off;
+  proposal_check strict;
+  dpd_delay 30;${6:+
+  lifetime time $6 sec;}
+
+  proposal {
+    encryption_algorithm $3;
+    hash_algorithm $4;
+    authentication_method $7;
+    dh_group $5;${6:+
+    lifetime time $6 sec;}
+  }
+}"
+}
+
+sainfo()
+{
+  echo "
+sainfo address $1 any address $2 any {
+  encryption_algorithm $3;
+  authentication_algorithm $4;${5:+
+  pfs_group $5;}
+  compression_algorithm deflate;
+  lifetime time $6 sec;
+}"
+}
+
+##
+## VPN Type: "ipsecmobile" support functions
+##
+
+gen_ipsecmobile()
+{
+  local auth IFS
+
+  p1_encrypt="$IPSECM_P1_CYPHER"
+  p1_hash="$IPSECM_P1_HASH"
+  p1_dhgrp="$IPSECM_P1_DHGROUP"
+  p1_lifetime="$IPSECM_P1_LIFETIME"
+  p2_encrypt="$IPSECM_P2_CYPHERS"
+  p2_auth="$IPSECM_P2_HASHES"
+  p2_pfsgrp="$IPSECM_P2_PFSGROUP"
+  p2_lifetime="$IPSECM_P2_LIFETIME"
+  nat_t="$IPSECM_NAT_TRAVERSAL"
+  rsa_path="$IPSECM_RSA_PATH"
+  rsa_cert="$IPSECM_RSA_CERT"
+  rsa_key="$IPSECM_RSA_KEY"
+  rsa_ca="$IPSECM_RSA_CA"
+
+  IFS=' '
+  for name in p1_encrypt p1_hash p1_dhgrp p2_encrypt p2_auth p2_pfsgrp \
+              rsa_path rsa_cert rsa_key rsa_ca; do
+    if [ -z "${!name}" ]; then
+      bad_config "Empty (required) field '$name' in IPsec configuration!"
+      return 1
+    fi
+  done
+
+  if ! sanity_check_options; then
+    return 1
+  fi
+
+  set_special_options
+
+  auth="$(get_rsa_auth_config "$rsa_path" "$rsa_cert" "$rsa_key" "$rsa_ca")"
+
+  (mobile_remote "$do_nat" "$p1_encrypt" "$p1_hash" "$p1_dhgrp" "$p1_lifetime" "$auth") >> /tmp/etc/racoon.conf
+
+  (mobile_sainfo "$p2_encrypt" "$p2_auth" "$p2_pfsgrp" "$p2_lifetime") >> /tmp/etc/racoon.conf
+}
+
+gen_ipsecmobile_routes()
+{
+  local pair pairs IFS
+
+  IFS=$'\n'
+  for pairs in $IPSECM_STATIC_ROUTES; do
+    lnet=""
+    rnet=""
+    IFS=' ,'
+    for pair in $pairs; do
+      if [ -z "$lnet" ]; then
+        lnet="$pair"
+      else
+        rnet="$pair"
+        break
+      fi
+    done
+    if [ -n "$lnet" -a -n "$rnet" ]; then
+      intf="$(findintf $lnet)"
+      lip="$(findip $lnet)"
+    
+      if [ -n "$intf" ]; then
+        echo ""
+        echo "ip route add $rnet src $lip dev $intf"
+      else
+        bad_config "can't find interface bound to $lnet."
+      fi
+    fi
+  done
+}
+
+mobile_remote()
+{
+  echo "
+remote anonymous {
+  exchange_mode main;${6:+
+$6}
+  nat_traversal $1;
+  passive on;
+  generate_policy on;
+  proposal_check obey;
+  dpd_delay 30;${5:+
+  lifetime time $5 sec;}
+
+  proposal {
+    encryption_algorithm $2;
+    hash_algorithm $3;
+    authentication_method rsasig;
+    dh_group $4;${5:+
+    lifetime time $5 sec;}
+  }
+}"
+}
+
+mobile_sainfo()
+{
+  echo "
+sainfo anonymous {
+  encryption_algorithm $1;
+  authentication_algorithm $2;${3:+
+  pfs_group $3;}
+  compression_algorithm deflate;
+  lifetime time $4 sec;
+}"
+}
+
+##
+## Common support functions
+##
+
+sanity_check_options()
+{
+  local keyword IFS
+
+  if ! _ismember "$p1_encrypt" des 3des blowfish cast128 \
+                               aes "aes 128" "aes 192" "aes 256" \
+                               camellia; then
+    bad_config "unknown IPsec phase 1 encryption type '$p1_encrypt'."
+    return 1
+  fi
+
+  if ! _ismember "$p1_hash" md5 sha1 sha256 sha384 sha512; then
+    bad_config "unknown IPsec phase 1 hash type '$p1_hash'."
+    return 1
+  fi
+
+  if ! _ismember "$p1_dhgrp" modp768 modp1024 modp1536 modp2048 \
+                             modp3072 modp4096 modp6144 modp8192 \
+                             1 2 5 14 15 16 17 18; then
+    bad_config "unknown IPsec phase 1 DH group type '$p1_dhgrp'."
+    return 1
+  fi
+
+  if ! _ismember "$p2_pfsgrp" none modp768 modp1024 modp1536 modp2048 \
+                              modp3072 modp4096 modp6144 modp8192 \
+                              1 2 5 14 15 16 17 18; then
+    bad_config "unknown IPsec phase 2 PFS group type '$p2_pfsgrp'."
+    return 1
+  fi
+
+  IFS=','
+  for keyword in $p2_encrypt; do
+    if ! _ismember "$keyword" des 3des des_iv64 des_iv32 rc5 rc4 idea 3idea \
+                              cast128 blowfish null_enc twofish rijndael \
+                              aes "aes 128" "aes 192" "aes 256" \
+                              camellia; then
+      bad_config "unknown IPsec phase 2 encryption type '$keyword'."
+      return 1
+    fi
+  done
+
+  IFS=','
+  for keyword in $p2_auth; do
+    if ! _ismember "$keyword" des 3des des_iv64 des_iv32 hmac_md5 hmac_sha1 \
+                              hmac_sha256 hmac_sha384 hmac_sha512 \
+                              non_auth; then
+      bad_config "unknown IPsec phase 2 authentication type '$keyword'."
+      return 1
+    fi
+  done
+
+  return 0
+}
+
+set_special_options()
+{
+  if [ "$p2_pfsgrp" = "none" ]; then
+    p2_pfsgrp=""
+  fi
+
+  if [ "$p1_lifetime" = "none" -o "$p1_lifetime" = "0" ]; then
+    p1_lifetime=""
+  fi
+
+  if [ -z "$p2_lifetime" -o "$p2_lifetime" = "none" -o "$p2_lifetime" = "0" ]; then
+    p2_lifetime="3600"
+  fi
+
+  case $nat_t in
+  nat|on)
+    do_nat="on"
+    enable_nat=$(($enable_nat+1))
+    ;;
+  force)
+    do_nat="force"
+    enable_nat=$(($enable_nat+1))
+    ;;
+  *)
+    do_nat="off"
+    ;;
+  esac
+}
+
+spdadd()
+{
+  echo "spdadd $1 $2 any -P $3 ipsec
+  esp/$4/$5-$6/require;"
+}
+
+get_rsa_auth_config()
+{
+  local path="$1" cert="$2" key="$3" ca="$4" file
+  local cert_path="/tmp/etc/certificate"
+
+  file="$path/$cert"
+  if [ -f "$file" ]; then
+    cert="$(basename $(mktemp "$cert_path/${cert}.XXXXXX"))"
+    cp "$file" "$cert_path/$cert"
+  else
+    bad_config "RSA_CERT file not found: $cert."
+    return 1
+  fi
+
+  file="$path/$key"
+  if [ -f "$file" ]; then
+    key="$(basename $(mktemp "$cert_path/${key}.XXXXXX"))"
+    cp "$file" "$cert_path/$key"
+    chmod 600 "$cert_path/$key"
+  else
+    bad_config "RSA_KEY file not found: $key."
+    return 1
+  fi
+
+  file="$path/$ca"
+  if [ -f "$file" ]; then
+    ca="$(basename $(mktemp "$cert_path/${ca}.XXXXXX"))"
+    cp "$file" "$cert_path/$ca"
+  else
+    bad_config "RSA_CA file not found: $ca."
+    return 1
+  fi
+
+  echo "
+  my_identifier asn1dn;
+  peers_identifier asn1dn;
+  verify_identifier on;
+  verify_cert on;
+  certificate_type x509 \"$cert\" \"$key\";
+  ca_type x509 \"$ca\";"
+}
+
+bad_config()
+{
+  echo "$prog: $1" 1>&2
+
+  touch /tmp/etc/racoon_bad_config
+}
+
+. /etc/rc.conf
+
+. /etc/init.d/functions
+
+prog="$(basename $0)"
+
+init()
+{
+  local IFS
+
+  # files are deposited into /tmp/etc/
+
+  if ! SYS_is_vpn_type racoon && \
+     ! SYS_is_vpn_type ipsecmobile; then
+    return
+  fi
+
+  rm -f /tmp/etc/racoon_bad_config
+
+  echo "#!/bin/sh
+
+#
+# Automatically generated by $prog; do not edit!
+#
+
+setkey -c <<__EOF__
+#
+# Flush SAD and SPD
+#
+flush;
+spdflush;" > /tmp/etc/tunnel.sh
+
+  echo "#
+# Automatically generated by $prog; do not edit!
+#
+
+# IPv4/IPv6 addresses" > /tmp/etc/psk.txt
+
+  echo "#
+# Automatically generated by $prog; do not edit!
+#
+
+path pre_shared_key \"/etc/psk.txt\";
+
+path certificate \"/tmp/etc/certificate\";" > /tmp/etc/racoon.conf
+
+  # Create a temporary certificate directory
+  mkdir /tmp/etc/certificate
+  chmod 700 /tmp/etc/certificate
+
+  enable_nat=0
+
+  gen_ipsec_logging >> /tmp/etc/racoon.conf
+
+  if SYS_is_vpn_type racoon; then
+    gen_racoon
+  fi
+
+  if SYS_is_vpn_type ipsecmobile; then
+    gen_ipsecmobile
+  fi
+
+  echo "__EOF__" >> /tmp/etc/tunnel.sh
+
+  if SYS_is_vpn_type racoon; then
+    gen_racoon_routes >> /tmp/etc/tunnel.sh
+  fi
+  
+  if SYS_is_vpn_type ipsecmobile; then
+    gen_ipsecmobile_routes >> /tmp/etc/tunnel.sh
+  fi
+
+  # Static External IP address, listen only on that address
+  # Dynamic External IP address, let racoon dynamically listen on all interfaces
+  if [ -n "$EXTIP" -a -n "$EXTIF" ]; then
+    if [ "$IPV6" = "yes" -a -n "$EXTIPV6" ]; then
+      extipv6="$(echo "$EXTIPV6" | cut -d'/' -f1)"
+    else
+      extipv6=""
+    fi
+    if [ $enable_nat -gt 0 ]; then
+      gen_static_nat_preamble "$EXTIP" "$extipv6" >> /tmp/etc/racoon.conf
+    else
+      gen_static_no_nat_preamble "$EXTIP" "$extipv6" >> /tmp/etc/racoon.conf
+    fi
+  else
+    gen_dynamic_preamble >> /tmp/etc/racoon.conf
+  fi
+
+  (echo "" ; \
+   echo "racoon -f /tmp/etc/racoon.conf" ; \
+  ) >> /tmp/etc/tunnel.sh
+
+  if SYS_is_vpn_type racoon; then
+    gen_racoon_establish >> /tmp/etc/tunnel.sh
+  fi
+
+  if [ -f /tmp/etc/racoon_bad_config ]; then
+    echo "$prog failed to start due to configuration errors." 1>&2
+
+    rm -f /tmp/etc/racoon.conf /tmp/etc/psk.txt /tmp/etc/tunnel.sh /tmp/etc/racoon_bad_config
+    rm -rf /tmp/etc/certificate
+
+    exit 1
+  fi
+
+  chmod u+x /tmp/etc/tunnel.sh
+
+  chmod 600 /tmp/etc/psk.txt
+
+  modprobe af_key
+  modprobe ah4
+  modprobe esp4
+}
+
+start()
+{
+  if [ ! -f /tmp/etc/psk.txt -o ! -f /tmp/etc/racoon.conf -o ! -f /tmp/etc/tunnel.sh ]; then
+    return
+  fi
+
+  echo "Starting racoon..."
+  /tmp/etc/tunnel.sh
+}
+
+stop()
+{
+  if [ ! -f /tmp/etc/psk.txt -o ! -f /tmp/etc/racoon.conf -o ! -f /tmp/etc/tunnel.sh ]; then
+    return
+  fi
+
+  echo "Stopping racoon..."
+
+  # delete any waiting auto-establish ping
+  grep -e '^ping[6]* ' /tmp/etc/tunnel.sh | sed -e 's/^ping[6]* //' -e 's/ >.*$//' \
+        | while read ping_args; do
+    ping_pid="$(ps | grep -e "ping[6]* $ping_args" | awk '{ print $1; nextfile; }')"
+    if [ -n "$ping_pid" ]; then
+      kill $ping_pid
+    fi
+  done
+
+  # delete the old routes
+  grep -e '^ip route add ' /tmp/etc/tunnel.sh | sed 's/\<add\>/delete/' \
+	| while read route; do
+    $route
+  done
+
+  if [ -f /var/run/racoon.pid ]; then
+    kill $(cat /var/run/racoon.pid)
+  fi
+
+  setkey -F
+  setkey -FP
+
+  rm -f /tmp/etc/psk.txt /tmp/etc/racoon.conf /tmp/etc/tunnel.sh
+  rm -rf /tmp/etc/certificate
+
+  ## Hangs with linux 2.6.35
+  #modprobe -r esp4
+  #modprobe -r ah4
+  #sleep 1
+  #modprobe -r af_key
+}
+
+case $1 in
+
+start)
+  init
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+*)
+  echo "Usage: $prog start|stop" 1>&2
+  exit 1
+  ;;
+
+esac
+

@@ -1,0 +1,62 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+. /etc/init.d/functions
+
+init()
+{
+  :
+}
+
+start()
+{
+
+  if SYS_is_vpn_type racoon || \
+     SYS_is_vpn_type ipsecmobile; then
+
+    /usr/sbin/racoon-ipsec start
+
+  fi
+
+}
+
+stop()
+{
+
+  if [ -f /tmp/etc/racoon.conf ]; then
+
+    /usr/sbin/racoon-ipsec stop
+
+  fi
+
+}
+
+case $1 in
+
+init)
+  init
+  start
+  ;;
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart" 1>&2
+  exit 1
+  ;;
+
+esac
+

@@ -18,6 +18,7 @@ IPSEC_TOOLS_CONF_OPT = \
 	  --disable-hybrid \
 	  --without-libpam \
 	  --disable-gssapi \
+	  --localstatedir=/var \
 	  --with-kernel-headers=$(STAGING_DIR)/usr/include
 
 ifeq ($(BR2_PACKAGE_IPSEC_TOOLS_ADMINPORT), y)
@@ -65,5 +66,16 @@ endif
 ifeq ($(BR2_PACKAGE_IPSEC_SECCTX_KERNEL),y)
 IPSEC_TOOLS_CONF_OPT+= --enable-security-context=kernel
 endif
+
+IPSEC_TOOLS_CONF_OPT+= --enable-dpd
+
+define IPSEC_TOOLS_INSTALL_SCRIPT
+	$(INSTALL) -D -m 755 package/ipsec-tools/racoon.init $(TARGET_DIR)/etc/init.d/racoon
+	$(INSTALL) -D -m 755 package/ipsec-tools/racoon-ipsec $(TARGET_DIR)/usr/sbin/racoon-ipsec
+	ln -sf /tmp/etc/racoon.conf $(TARGET_DIR)/etc/racoon.conf
+	ln -sf /tmp/etc/psk.txt $(TARGET_DIR)/etc/psk.txt
+endef
+
+IPSEC_TOOLS_POST_INSTALL_TARGET_HOOKS += IPSEC_TOOLS_INSTALL_SCRIPT
 
 $(eval $(call AUTOTARGETS,package,ipsec-tools))
