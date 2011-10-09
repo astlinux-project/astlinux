@@ -8,14 +8,13 @@ MSMTP_VERSION = 1.4.23
 MSMTP_SOURCE = msmtp-$(MSMTP_VERSION).tar.bz2
 MSMTP_SITE = http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/sourceforge/msmtp/
 MSMTP_DEPENDENCIES = openssl
-MSMTP_INSTALL_TARGET_OPT = DESTDIR=$(TARGET_DIR) --version
 
 MSMTP_CONF_OPT += \
 	--with-ssl=openssl \
 	--with-libssl-prefix=$(STAGING_DIR)/usr \
 	--sysconfdir=/etc
 
-define MSMTP_INSTALL_SCRIPT
+define MSMTP_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/src/msmtp $(TARGET_DIR)/usr/sbin/msmtp
 	$(INSTALL) -m 0755 -D package/msmtp/msmtp.init $(TARGET_DIR)/etc/init.d/msmtp
 	$(INSTALL) -m 0755 -D package/msmtp/msmtpqueue.sh $(TARGET_DIR)/usr/sbin/msmtpqueue
@@ -23,8 +22,6 @@ define MSMTP_INSTALL_SCRIPT
 	$(INSTALL) -m 0755 -D package/msmtp/mime-pack.sh $(TARGET_DIR)/usr/sbin/mime-pack
 	ln -sf /tmp/etc/msmtprc $(TARGET_DIR)/etc/msmtprc
 endef
-
-MSMTP_POST_INSTALL_TARGET_HOOKS += MSMTP_INSTALL_SCRIPT
 
 define MSMTP_UNINSTALL_TARGET_CMDS
         rm $(TARGET_DIR)/usr/sbin/msmtp
