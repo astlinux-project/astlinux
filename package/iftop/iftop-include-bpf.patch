@@ -1,0 +1,11 @@
+--- iftop-1.0pre1/iftop.c.orig	2011-02-14 18:01:35.000000000 -0600
++++ iftop-1.0pre1/iftop.c	2011-02-14 18:02:36.000000000 -0600
+@@ -19,7 +19,7 @@
+ #include <sys/ioctl.h>
+ #include <sys/socket.h>
+ #include <net/if.h>
+-#include <net/bpf.h>
++#include <pcap-bpf.h>
+ 
+ #include <pthread.h>
+ #include <curses.h>

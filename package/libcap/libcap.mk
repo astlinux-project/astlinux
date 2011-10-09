@@ -5,7 +5,7 @@
 #############################################################
 
 LIBCAP_VERSION = 2.20
-LIBCAP_SITE = http://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2
+LIBCAP_SITE = $(BR2_KERNEL_MIRROR)/linux/libs/security/linux-privs/libcap2
 LIBCAP_DEPENDENCIES = host-libcap
 LIBCAP_INSTALL_STAGING = YES
 

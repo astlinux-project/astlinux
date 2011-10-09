@@ -17,5 +17,6 @@ LIBPCAP_DEPENDENCIES:=zlib
 LIBPCAP_CONF_ENV:=ac_cv_linux_vers=2 \
 		  ac_cv_header_linux_wireless_h=yes # configure misdetects this
 LIBPCAP_CONF_OPT:=--disable-yydebug --with-pcap=linux
+LIBPCAP_CONF_OPT+=--enable-ipv6
 
 $(eval $(call AUTOTARGETS,package,libpcap))
