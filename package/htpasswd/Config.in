@@ -1,0 +1,8 @@
+config BR2_PACKAGE_HTPASSWD
+	bool "htpasswd"
+	default n
+	help
+	  htpasswd command from mini_httpd
+	  Note: Used in asterisk ast-vmpass script
+
+	  http://www.acme.com/software/mini_httpd/
