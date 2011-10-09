@@ -100,6 +100,7 @@ define PPPD_INSTALL_TARGET_CMDS
 		$(INSTALL) -m 644 -D $(PPPD_DIR)/$$m/$$m.8 \
 			$(TARGET_DIR)/usr/share/man/man8/$$m.8; \
 	done
+	ln -snf /tmp/etc/ppp $(TARGET_DIR)/etc/ppp
 endef
 
 $(eval $(call GENTARGETS,package,pppd))

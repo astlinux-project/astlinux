@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PPTPD
+	bool "pptpd"
+	default n
+	select BR2_PACKAGE_PPPD
+	help
+	    poptop PPTP daemon
