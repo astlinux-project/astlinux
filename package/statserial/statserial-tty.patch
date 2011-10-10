@@ -1,0 +1,11 @@
+--- statserial-1.1/statserial.c.orig	1994-12-18 03:24:30.000000000 +0100
++++ statserial-1.1/statserial.c	2011-06-13 13:22:47.000000000 +0200
+@@ -42,7 +42,7 @@
+ 
+ /* global variables */
+ char device[255];                          /* name of device to open */
+-const char *defaultDevice = "/dev/cua1";   /* default device if none specified on command line */
++const char *defaultDevice = "/dev/ttyS0";   /* default device if none specified on command line */
+ int n_option = 0;                          /* set if -n option is used */
+ int d_option = 0;                          /* set if -d option is used */
+ int x_option = 0;                          /* set if -x option is used */
