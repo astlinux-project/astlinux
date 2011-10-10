@@ -1,0 +1,78 @@
+## Asterisk syntax highlighting
+## v.03 2007-11-18
+## Comments/updates - jmcanfield@gmail.com
+
+## Modified by Johan Adler from 2007-11-17 and forward, tested using Debian and Asterisk 1.2.13
+## 2007-11-18
+## Currently optimized for dialplan (extensions.conf and any included files)
+## Application regex altered and hopefully optimized.
+## Note that the order of regex's is important
+## color is case sensitive, icolor case insensitive
+
+syntax "asterisk" "/.*/asterisk/.*\.conf$"
+## Separating characters
+color	green	"(\{|\}|\(|\)|\]|\[|`|\\|\$|<|>|!|=|&|\|)"
+
+## Labels
+color   blue   "^(\s)*exten(\s)*=>(\s)*((s|t|a|i|o|fax)|[0-9*#]+|_([XZN0-9*#]*(\[[XZN0-9*#]*\])*[XZN0-9*#]*)*(\.)?),([0-9]|n)\([A-Za-z0-9_\-]+\)"
+## Priorities
+color	green	"^(\s)*exten(\s)*=>(\s)*((s|t|a|i|o|fax)|[0-9*#]+|_([XZN0-9*#]*(\[[XZN0-9*#]*\])*[XZN0-9*#]*)*(\.)?),([0-9]|n)"
+## Comma back to black
+color	black	"^(\s)*exten(\s)*=>(\s)*((s|t|a|i|o|fax)|[0-9*#]+|_([XZN0-9*#]*(\[[XZN0-9*#]*\])*[XZN0-9*#]*)*(\.)?),"
+## Extensions
+color	red	"^(\s)*exten(\s)*=>(\s)*((s|t|a|i|o|fax)|[0-9*#]+|_([XZN0-9*#]*(\[[XZN0-9*#]*\])*[XZN0-9*#]*)*(\.)?)"
+## Word 'exten' in dialplan
+color	magenta	"^(\s)*exten(\s)*=>"
+
+## included context
+color	green	"^(\s)*include(\s)*=>(\s)*\<.+\>"
+## 'include' in dialplan
+color	magenta	"^(\s)*include(\s)*=>"
+
+## Conditionals
+color	blue	"\$\[.+\]"
+## Contexts
+color	green 	"^\[.+\]"
+## Strings
+color	magenta	""(\\.|[^"])*"" "'(\\.|[^'])*'"
+## Technologies
+color	magenta	"\<(SIP/|IAX2/|Zap/|Local/).*\>"
+## Anything following NoOp, same color as comments (will not be executed)
+## Colored before variables, since they will be substituted
+color	yellow	"\<NoOp\>.*"
+## Variables (read mode)
+## May or may not be appropriate, it is a bit too hairy at the moment
+color	red 	"\$\{?[0-9A-Za-z_!@#%,:$*?-]+(\([A-Za-z0-9_$\{\}\(\)/!@%:,#*?]+\))?\}?"
+
+## Applications
+color   cyan    "\<(A(DSIProg|gent(((Callback)?Login)|MonitorOutgoing)|GI|larmReceiver|MD|nswer|ppendCDRUserField|uthenticate))\>"
+color   cyan    "\<(B(ackground(Detect)?|usy))\>"
+color   cyan    "\<(C(han(geMonitor|IsAvail|nelRedirect|Spy)|on(gestion|t(inueWhile|rolPlayback))))\>"
+color   cyan    "\<(D(ateTime|Bdel(tree)?|eadAGI|i(al|ctate|rectory)|ISA|umpChan))\>"
+color   cyan    "\<(E(AGI|cho|ndWhile|x(ec(If|While)?)|itWhile|te(nSpy|rnalIVR)))\>"
+color   cyan    "\<(F(astAGI|estival|lash|orkCDR))\>"
+color   cyan    "\<(G(etPEID|o(sub(if)?|to(If(Time)?)?)))\>"
+color   cyan    "\<(Ha(ngup|s(New)?Voicemail))\>"
+color   cyan    "\<(I(AX2Provision|CES|mportVar))\>"
+color   cyan    "\<(Lo(g|okup(Blacklist|CIDName)))\>"
+color   cyan    "\<(M(a(cro((Ex(clusive)|it)?|(If)?)|ilboxExists)|eetMe(Admin|Count)?|illiwatt|o(nitor|rseCode)|P3Player|usicOnHold))\>"
+color   cyan    "\<(N(BScat|o(CDR|Op)))\>"
+color   cyan    "\<(P(a(ge|rk(AndAnnounce|edCall)?|use(Monitor|QueueMember))|ickUp|lay(back|tones)|r(ivacyManager|ogress)))\>"
+color   cyan    "\<(Queue(Log)?)\>"
+color   cyan    "\<(R(andom|e(a((d(File)?)lTime(Update)?)|cord|moveQueueMember|setCDR|t(ryDial|urn))|inging))\>"
+color   cyan    "\<(S(ay(Alpha|Digits|Number|Phonetic|UnixTime)|e(nd(DTMF|Image|Text|URL)|t(AMAFlags|Caller(ID|Pres)|CDRUserField|GlobalVar|MusicOnHold|TransferCapability)?)|IP(AddHeader|DtmfMode)|LA(Station|Trunk)|oftHangup|t(a(ckPop|rtMusicOnHold)|op(MixMonitor|Monitor|PlayTones|MusicOnHold))|ystem))\>"
+color   cyan    "\<(Tr(ansfer|y(Exec|System)))\>"
+color   cyan    "\<(U(npause(Monitor|QueueMember)|erEvent))\>"
+color   cyan    "\<(V(erbose|MAuthenticate|oiceMail(Main)?))\>"
+color   cyan    "\<(W(ait(Exten|For(Ring|Silence)|MusicOnHold)?|hile))\>"
+color   cyan    "\<(Zap(ateller|Barge|RAS|Scan))\>"
+
+## Functions
+## 	to be implemented
+
+## something else
+icolor	brightgreen	"^[0-9A-Z_]+\(\)"
+## color all curly braces (why?)
+##color	blue	"[\{\}]"
+## Comments
+color	yellow	";.*"
