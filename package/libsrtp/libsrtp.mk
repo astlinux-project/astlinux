@@ -10,15 +10,16 @@ LIBSRTP_INSTALL_STAGING = YES
 LIBSRTP_INSTALL_TARGET = YES
 LIBSRTP_CONF_OPT = \
 	--prefix=/usr \
-	--enable-static \
 	--disable-debug
 
+LIBSRTP_MAKE_OPT = CC='$(TARGET_CC)' LD='$(TARGET_LD)' -C $(@D) libsrtp.so
+
 define LIBSRTP_INSTALL_TARGET_CMDS
-	cp -a $(STAGING_DIR)/usr/lib/libsrtp.a $(TARGET_DIR)/usr/lib/
+	cp -a $(STAGING_DIR)/usr/lib/libsrtp.so* $(TARGET_DIR)/usr/lib/
 endef
 
 define LIBSRTP_UNINSTALL_TARGET_CMDS
-	rm -f $(TARGET_DIR)/usr/lib/libsrtp.a
+	rm -f $(TARGET_DIR)/usr/lib/libsrtp.so*
 endef
 
 $(eval $(call AUTOTARGETS,package,libsrtp))
