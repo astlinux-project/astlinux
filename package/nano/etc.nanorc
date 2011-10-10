@@ -141,6 +141,9 @@
 ## Use smooth scrolling as the default.
 # set smooth
 
+## Enable soft line wrapping (AKA full line display).
+# set softwrap
+
 ## Use this spelling checker instead of the internal one.  This option
 ## does not properly have a default value.
 ##
@@ -157,6 +160,10 @@
 
 ## Save automatically on exit, don't prompt.
 # set tempfile
+
+## Enable the new (EXPERIMENTAL) generic undo code, not just for line
+## cuts.
+# set undo
 
 ## Disallow file modification.  Why would you want this in an rcfile? ;)
 # set view
@@ -213,51 +220,97 @@
 ##
 ## All regexes should be extended regular expressions.
 
+## Key bindings
+## Please see nanorc(5) for more details on this
+##
+## Here are some samples to get you going
+##
+# bind M-W nowrap main
+# bind M-A casesens search
+# bind ^S research main
+
+## Set this if your backspace key sends delete most of the time (2.1.3+)
+# bind kdel backspace all
+
 
 ## Nanorc files
-# include "//share/nano/nanorc.nanorc"
+# include "/usr/share/nano/nanorc.nanorc"
 
 ## C/C++
-# include "//share/nano/c.nanorc"
+# include "/usr/share/nano/c.nanorc"
+
+## Makefiles
+# include "/usr/share/nano/makefile.nanorc"
+
+## Cascading Style Sheets
+# include "/usr/share/nano/css.nanorc"
+
+## Debian files
+# include "/usr/share/nano/debian.nanorc"
+
+## Gentoo files
+# include "/usr/share/nano/gentoo.nanorc"
 
 ## HTML
-# include "//share/nano/html.nanorc"
+# include "/usr/share/nano/html.nanorc"
+
+## PHP
+# include "/usr/share/nano/php.nanorc"
+
+## TCL
+# include "/usr/share/nano/tcl.nanorc"
 
 ## TeX
-# include "//share/nano/tex.nanorc"
+# include "/usr/share/nano/tex.nanorc"
 
 ## Quoted emails (under e.g. mutt)
-# include "//share/nano/mutt.nanorc"
+# include "/usr/share/nano/mutt.nanorc"
 
 ## Patch files
-# include "//share/nano/patch.nanorc"
+# include "/usr/share/nano/patch.nanorc"
 
 ## Manpages
-# include "//share/nano/man.nanorc"
+# include "/usr/share/nano/man.nanorc"
 
 ## Groff
-# include "//share/nano/groff.nanorc"
+# include "/usr/share/nano/groff.nanorc"
 
 ## Perl
-# include "//share/nano/perl.nanorc"
+# include "/usr/share/nano/perl.nanorc"
 
 ## Python
-# include "//share/nano/python.nanorc"
+# include "/usr/share/nano/python.nanorc"
 
 ## Ruby
-# include "//share/nano/ruby.nanorc"
+# include "/usr/share/nano/ruby.nanorc"
 
 ## Java
-# include "//share/nano/java.nanorc"
+# include "/usr/share/nano/java.nanorc"
+
+## Fortran
+# include "/usr/share/nano/fortran.nanorc"
+
+## Objective-C
+# include "/usr/share/nano/objc.nanorc"
+
+## OCaml
+# include "/usr/share/nano/ocaml.nanorc"
+
+## AWK
+# include "/usr/share/nano/awk.nanorc"
 
 ## Assembler
-# include "//share/nano/asm.nanorc"
+# include "/usr/share/nano/asm.nanorc"
 
 ## Bourne shell scripts
-# include "//share/nano/sh.nanorc"
+# include "/usr/share/nano/sh.nanorc"
 
 ## POV-Ray
-# include "//share/nano/pov.nanorc"
+# include "/usr/share/nano/pov.nanorc"
+
+## XML-type files
+# include "/usr/share/nano/xml.nanorc"
 
 ## ASTERISK
 include "/usr/share/nano/asterisk.nanorc"
+
