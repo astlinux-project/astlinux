@@ -1,0 +1,9 @@
+config BR2_PACKAGE_P910ND
+	bool "p910nd"
+	default n
+	help
+	  p910nd is a small printer daemon intended for diskless workstations
+	  that does not spool to disk but passes the job directly to the
+	  printer.
+
+	  http://www.etherboot.org/p910nd

@@ -1,0 +1,55 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+init ()
+{
+  if [ -n "$P910ND_DEVICE0" ]; then
+    modprobe usblp
+  fi
+}
+
+start ()
+{
+  if [ -n "$P910ND_DEVICE0" ]; then
+    echo "Starting p910d..."
+    p910nd -f $P910ND_DEVICE0 -b 0
+  fi
+}
+
+stop ()
+{
+  if [ -n "$P910ND_DEVICE0" ]; then
+    echo "Stopping p910d..."
+    killall p910nd
+  fi
+}
+
+case $1 in
+
+init)
+  init
+  start
+  ;;
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart" >&2
+  exit 1
+  ;;
+
+esac
+
