@@ -1,0 +1,9 @@
+config BR2_PACKAGE_LINUX_ATM
+	bool "linux-atm"
+	default n
+	help
+	  A collection of utilities for Linux to deal with ATM
+	  connections. This also includes support for RFC2684
+	  bridging.
+
+	  http://sourceforge.net/projects/linux-atm/
