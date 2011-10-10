@@ -6,12 +6,8 @@
 
 PCIUTILS_VERSION = 3.1.7
 PCIUTILS_SITE = ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci
-ifeq ($(BR2_PACKAGE_ZLIB),y)
-	PCIUTILS_ZLIB=yes
-	PCIUTILS_DEPENDENCIES += zlib
-else
-	PCIUTILS_ZLIB=no
-endif
+
+PCIUTILS_ZLIB=no
 PCIUTILS_DNS=no
 PCIUTILS_SHARED=yes
 
