@@ -10,6 +10,7 @@ MODULE_INIT_TOOLS_CONF_ENV = ac_cv_prog_DOCBOOKTOMAN=''
 MODULE_INIT_TOOLS_CONF_OPT = \
 	--disable-static-utils \
 	--disable-builddir \
+	--sbindir=/sbin \
 	--program-transform-name=''
 
 # module-init-tools-3.11-add-manpages-config-option.patch is modifying
