@@ -1,0 +1,16 @@
+config BR2_PACKAGE_SPANDSP
+	bool "spandsp"
+	default n
+	select BR2_PACKAGE_TIFF
+	help
+	  spandsp - spandsp library and rxfax/txfax for Asterisk  
+
+	  http://www.soft-switch.org/downloads/snapshots/spandsp/spandsp-20061116.tar.gz
+
+config BR2_PACKAGE_SPANDSP_APP_FAX
+	bool "spandsp rxfax & txfax applications"
+	default n
+	depends on BR2_PACKAGE_SPANDSP && BR2_PACKAGE_ASTERISK_v1_4
+	help
+	  Trivial application to send/receive a TIFF FAX file
+
