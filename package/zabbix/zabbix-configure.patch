@@ -1,0 +1,11 @@
+--- zabbix-1.4.5/configure	2008-03-26 03:12:39.000000000 -0500
++++ zabbix-1.4.5/configure-zab	2008-04-04 09:56:25.000000000 -0500
+@@ -4788,7 +4788,7 @@ if test "$cross_compiling" = yes; then
+ See \`config.log' for more details." >&5
+ echo "$as_me: error: cannot run test program while cross compiling
+ See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }
++   }
+ else
+   cat >conftest.$ac_ext <<_ACEOF
+ 

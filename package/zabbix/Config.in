@@ -1,0 +1,7 @@
+config BR2_PACKAGE_ZABBIX
+	bool "zabbix"
+	default n
+	help
+	  Zabbix agent to be used with Zabbix Monitoring Solution
+
+	  http://www.zabbix.com	

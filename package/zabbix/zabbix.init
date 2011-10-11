@@ -1,0 +1,58 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+init () {
+
+  if [ ! -x /usr/bin/zabbix_agentd ]; then
+    echo "zabbix_agentd not installed."
+    exit
+  fi
+
+  if [ ! -f /etc/zabbix/zabbix_agentd.conf ]; then
+    echo "No zabbix config file found."
+    echo "Please create a zabbix_agentd.conf file in /etc/zabbix."
+    exit
+  fi
+}
+
+start () {
+
+  echo "Starting Zabbix Agent Daemon..."
+  /usr/bin/zabbix_agentd
+}
+
+stop () {
+
+  echo "Stopping Zabbix Agent Daemon..."
+  killall zabbix_agentd
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+
+
