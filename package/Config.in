@@ -215,6 +215,7 @@ source "package/xfsprogs/Config.in"
 endmenu
 
 menu "Interpreter languages and scripting"
+source "package/bc/Config.in"
 source "package/haserl/Config.in"
 source "package/java/jamvm/Config.in"
 source "package/lua/Config.in"
