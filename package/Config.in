@@ -148,6 +148,7 @@ endmenu
 
 menu "Hardware handling"
 source "package/acpid/Config.in"
+source "package/bfdetect/Config.in"
 source "package/cdrkit/Config.in"
 source "package/cramfs/Config.in"
 source "package/dbus/Config.in"
