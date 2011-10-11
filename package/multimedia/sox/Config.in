@@ -1,0 +1,13 @@
+config BR2_PACKAGE_SOX
+	bool "sox"
+	default n
+	help
+		SoX - The Swiss Army Knife of sound
+
+config BR2_PACKAGE_SOX_LIBMAD
+        bool "SoX MP3 Decode Support"
+        default n
+        depends on BR2_PACKAGE_SOX
+	select BR2_PACKAGE_LIBMAD
+        help
+          Compile SoX with MP3 decoding support via libmad
