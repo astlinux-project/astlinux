@@ -1,0 +1,7 @@
+config BR2_PACKAGE_UW-IMAP
+        bool "uw-imap"
+        default n
+        help
+	    
+	IMAP (Internet Message Access Protocol) (client for Asterisk only)
+	  http://www.washington.edu/imap/
