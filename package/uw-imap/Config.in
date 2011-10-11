@@ -1,4 +1,4 @@
-config BR2_PACKAGE_UW-IMAP
+config BR2_PACKAGE_UW_IMAP
         bool "uw-imap"
         default n
         help
