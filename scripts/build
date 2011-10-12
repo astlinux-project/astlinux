@@ -34,6 +34,8 @@ make_release()
 {
   echo "
 ##
+## AstLinux Build: Board = \"$board\"
+##
 ## AstLinux Release: Version = \"$ASTVER\"
 ##
 "
