@@ -17,7 +17,7 @@ start () {
 
   if grep -q "astlinux=net5501" /proc/cmdline; then
 
-    echo 0 > /dev/errorled
+    /usr/sbin/functions errorled_net5501 off
   fi
 
   if grep -q "astlinux=alix" /proc/cmdline; then
@@ -80,7 +80,7 @@ stop () {
 
   if grep -q "astlinux=net5501" /proc/cmdline; then
     
-    echo 1 > /dev/errorled
+    /usr/sbin/functions errorled_net5501 on
   fi
 
   if grep -q "astlinux=alix" /proc/cmdline; then

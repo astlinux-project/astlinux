@@ -181,10 +181,7 @@ none    /var            tmpfs   size=5000k      0       0
     #modprobe cs5535-clockevt irq=6
 
     modprobe cs5535_gpio
-    # broken with linux 2.6.35
-    #MAJOR=`grep cs5535_gpio /proc/devices | cut -d" " -f1`
-    #mknod /dev/errorled c $MAJOR 6
-    #echo 1 >/dev/errorled
+    /usr/sbin/functions errorled_net5501 on
     ;;
 
   alix)
