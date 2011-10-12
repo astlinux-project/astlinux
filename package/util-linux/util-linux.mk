@@ -67,6 +67,13 @@ UTIL_LINUX_CONF_OPT += \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_LOGIN_UTILS),--enable-login-utils) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_WRITE),--enable-write)
 
+define UTIL_LINUX_REMOVE_EXTRA_FILES
+	rm -f $(TARGET_DIR)/usr/sbin/addpart
+	rm -f $(TARGET_DIR)/usr/sbin/delpart
+endef
+
+UTIL_LINUX_POST_INSTALL_TARGET_HOOKS += UTIL_LINUX_REMOVE_EXTRA_FILES
+
 $(eval $(call AUTOTARGETS,package,util-linux))
 
 # MKINSTALLDIRS comes from tweaked m4/nls.m4, but autoreconf uses staging
