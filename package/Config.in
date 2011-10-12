@@ -538,6 +538,7 @@ endmenu
 
 menu "Text editors and viewers"
 source "package/ed/Config.in"
+source "package/ex-vi/Config.in"
 if BR2_PACKAGE_BUSYBOX_SHOW_OTHERS
 source "package/less/Config.in"
 endif
