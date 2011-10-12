@@ -1,0 +1,8 @@
+config BR2_PACKAGE_FXLOAD
+	bool "fxload"
+	default n
+	help
+	  fxload is used to load firmware over usb
+	  specifically, we use it with Xorcom hardware
+
+	  http://sourceforge.net/projects/linux-hotplug
