@@ -1,0 +1,11 @@
+--- dahdi-linux-2.4.0/drivers/dahdi/Kbuild.orig	2011-02-08 16:34:39.000000000 -0600
++++ dahdi-linux-2.4.0/drivers/dahdi/Kbuild	2011-02-08 16:37:17.000000000 -0600
+@@ -17,6 +17,8 @@
+ obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCT1XXP)		+= wct1xxp.o
+ obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCTE11XP)		+= wcte11xp.o
+ 
++obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_ZAPHFC)		+= zaphfc/
++
+ obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCFXO)		+= wcfxo.o
+ obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_TOR2)		+= tor2.o
+ obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_PCIRADIO)		+= pciradio.o

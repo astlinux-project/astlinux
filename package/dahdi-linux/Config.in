@@ -1,0 +1,31 @@
+config BR2_PACKAGE_DAHDI_LINUX
+	bool "dahdi-linux"
+	default n
+	depends on BR2_LINUX_KERNEL
+	select BR2_PACKAGE_NEWT
+        select BR2_PACKAGE_LIBUSB
+	help
+		Dahdi - Linux drivers and utilities for Digium cards
+		for use with Asterisk:
+
+		http://www.asterisk.org
+
+config BR2_PACKAGE_DAHDI_OSLEC
+	bool "dahdi_echocan_oslec"
+	default n
+	depends on BR2_PACKAGE_DAHDI_LINUX
+	help
+		Adds modules "echo" and "dahdi_echocan_oslec"
+
+		http://www.rowetel.com/blog/?page_id=454
+
+config BR2_PACKAGE_DAHDI_ZAPHFC
+	bool "dahdi_zaphfc"
+	default n
+	depends on BR2_PACKAGE_DAHDI_LINUX
+	help
+		Adds zaphfc driver (single port HFC BRI cards)
+		Note: Requires chan_dahdi in asterisk 1.6 and newer.
+
+		http://code.google.com/p/zaphfc/
+

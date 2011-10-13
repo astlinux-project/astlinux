@@ -1,0 +1,15 @@
+--- dahdi-linux-2.4.0/drivers/dahdi/Kbuild.orig	2011-02-08 10:50:50.000000000 -0600
++++ dahdi-linux-2.4.0/drivers/dahdi/Kbuild	2011-02-08 10:52:58.000000000 -0600
+@@ -38,7 +38,11 @@
+ # A quick and dirty way to build OSLEC, if you happened to place it
+ # yourself in the dahdi source tree. This is experimental. See README
+ # regarding OSLEC.
+-#obj-m += ../staging/echo/
++ifneq (,$(wildcard $(src)/../staging/echo/echo.c))
++obj-$(DAHDI_BUILD_ALL) += ../staging/echo/echo.o
++obj-m += dahdi_echocan_oslec.o
++obj-m += ../staging/echo/
++endif
+ 
+ CFLAGS_MODULE += -I$(DAHDI_INCLUDE) -I$(src)
+ 

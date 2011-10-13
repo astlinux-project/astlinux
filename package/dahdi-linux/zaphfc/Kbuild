@@ -1,0 +1,10 @@
+obj-m += zaphfc.o
+
+EXTRA_CFLAGS := -I$(src)/.. -Wno-undef
+
+zaphfc-objs := base.o fifo.o
+
+$(obj)/base.o: $(src)/zaphfc.h
+$(obj)/fifo.o: $(src)/fifo.h
+
+

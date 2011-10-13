@@ -1,0 +1,12 @@
+config BR2_PACKAGE_DAHDI_TOOLS
+	bool "dahdi-tools"
+	default n
+	depends on BR2_LINUX_KERNEL
+	select BR2_PACKAGE_DAHDI_LINUX
+	select BR2_PACKAGE_NEWT
+	help
+		Dahdi - Linux utilities for Digium cards
+		for use with Asterisk:
+
+		http://www.asterisk.org
+

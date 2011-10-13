@@ -1,0 +1,80 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+init () {
+
+  # Manually create /dev/dahdi if no udev
+  if [ ! -d /dev/dahdi -a ! -x /sbin/udevd ]; then
+    mkdir -p /dev/dahdi
+    mknod /dev/dahdi/ctl c 196 0
+    mknod /dev/dahdi/timer c 196 253
+    mknod /dev/dahdi/channel c 196 254
+    mknod /dev/dahdi/pseudo c 196 255
+    for i in `seq 1 250`; do
+      mknod /dev/dahdi/$i c 196 $i
+    done
+  fi
+
+  if [ -d /mnt/kd/dahdi ]; then
+    ln -snf /mnt/kd/dahdi /tmp/etc/dahdi
+  fi
+}
+
+start () {
+
+  for i in dahdi $DAHDIMODS; do
+    modprobe -q $i
+  done
+
+  if [ -f /etc/dahdi/system.conf ]; then
+
+    dahdi_cfg
+
+    if [ "$EXTIF" = "hdlc0" -a -n "$EXTENC" ]; then
+      sethdlc "$EXTIF" "$EXTENC"
+    fi
+
+    if [ "$EXTIF" = "pvc0" ]; then
+      if [ "$HDLCLMI" -a "$HDLCDLCI" ]; then
+        sethdlc hdlc0 fr lmi "$HDLCLMI"
+        sethdlc hdlc0 create "$HDLCDLCI"
+        ifconfig hdlc0 up
+      fi
+    fi
+  fi
+}
+
+stop () {
+
+  for i in $DAHDIMODS dahdi; do
+    modprobe -r $i
+  done
+}
+
+case $1 in
+
+init)
+  init
+  start
+  ;;
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
