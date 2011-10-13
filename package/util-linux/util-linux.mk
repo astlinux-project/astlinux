@@ -67,12 +67,15 @@ UTIL_LINUX_CONF_OPT += \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_LOGIN_UTILS),--enable-login-utils) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_WRITE),--enable-write)
 
-define UTIL_LINUX_REMOVE_EXTRA_FILES
+define UTIL_LINUX_REMOVE_PARTX_FILES
 	rm -f $(TARGET_DIR)/usr/sbin/addpart
 	rm -f $(TARGET_DIR)/usr/sbin/delpart
+	rm -f $(TARGET_DIR)/usr/sbin/partx
 endef
 
-UTIL_LINUX_POST_INSTALL_TARGET_HOOKS += UTIL_LINUX_REMOVE_EXTRA_FILES
+ifneq ($(BR2_PACKAGE_UTIL_LINUX_PARTX),y)
+UTIL_LINUX_POST_INSTALL_TARGET_HOOKS += UTIL_LINUX_REMOVE_PARTX_FILES
+endif
 
 $(eval $(call AUTOTARGETS,package,util-linux))
 
