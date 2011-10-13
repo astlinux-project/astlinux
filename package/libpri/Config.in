@@ -1,0 +1,7 @@
+config BR2_PACKAGE_LIBPRI
+        bool "Asterisk PRI Support"
+        default n
+        depends on BR2_PACKAGE_ASTERISK
+        help
+          Compile Asterisk with PRI support - only useful with DAHDI
+
