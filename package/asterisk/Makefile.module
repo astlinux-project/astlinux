@@ -1,0 +1,43 @@
+#
+# Taken from:
+#
+# http://svncommunity.digium.com/view/tilghman/branches/1.4/Makefile?revision=11&view=markup
+#
+
+ifeq ($(origin ASTSRC),undefined)
+$(error Please set $$(ASTSRC))
+endif
+
+ifeq ($(origin LOADABLE_MODS),undefined)
+$(error Please set $$(LOADABLE_MODS))
+endif
+
+ifeq ($(origin LIBS),undefined)
+$(error Please set $$(LIBS))
+endif
+
+-include $(ASTSRC)/menuselect.makeopts $(ASTSRC)/menuselect.makedeps
+
+ASTTOPDIR=$(ASTSRC)
+INCLUDE=-I$(ASTSRC)/include -I/usr/local/include
+
+ifneq ($(wildcard $(ASTSRC)/makeopts),)
+  include $(ASTSRC)/makeopts
+endif
+
+ifeq ($(OSARCH),SunOS)
+  ASTLIBDIR=/opt/asterisk/lib
+else
+  ASTLIBDIR=$(libdir)/asterisk
+endif
+MODULES_DIR=$(ASTLIBDIR)/modules
+
+all: _all
+
+include $(ASTTOPDIR)/Makefile.moddir_rules
+
+%.so: %.o
+	$(CC) -shared $(LIBS) -o $@ $<
+
+%.o: %.c
+	$(CC) $(INCLUDE) -DAST_MODULE=\"$*\" -o $@ -c $<

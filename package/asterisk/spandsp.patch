@@ -1,0 +1,44 @@
+diff -rupN 1.4.40//build_tools/menuselect-deps.in 1.4.40-spandsp//build_tools/menuselect-deps.in
+--- 1.4.40//build_tools/menuselect-deps.in	2010-12-17 16:40:56.000000000 -0500
++++ 1.4.40-spandsp//build_tools/menuselect-deps.in	2011-04-12 21:22:24.748224002 -0400
+@@ -27,6 +27,7 @@ PGSQL=@PBX_PGSQL@
+ POPT=@PBX_POPT@
+ PRI=@PBX_PRI@
+ RADIUS=@PBX_RADIUS@
++SPANDSP=@PBX_SPANDSP@
+ SPEEX=@PBX_SPEEX@
+ SPEEXDSP=@PBX_SPEEXDSP@
+ SPEEX_PREPROCESS=@PBX_SPEEX_PREPROCESS@
+diff -rupN 1.4.40//configure.ac 1.4.40-spandsp//configure.ac
+--- 1.4.40//configure.ac	2011-01-14 15:21:00.000000000 -0500
++++ 1.4.40-spandsp//configure.ac	2011-04-12 21:37:48.378224001 -0400
+@@ -263,6 +263,7 @@ AST_EXT_LIB_SETUP_DEPENDENT([PRI_VERSION
+ AST_EXT_LIB_SETUP_DEPENDENT([PRI_INBANDDISCONNECT], [ISDN PRI set_inbanddisconnect], [PRI], [pri])
+ AST_EXT_LIB_SETUP([PWLIB], [PWlib], [pwlib])
+ AST_EXT_LIB_SETUP([RADIUS], [Radius Client], [radius])
++AST_EXT_LIB_SETUP([SPANDSP], [Spandsp Library], [spandsp])
+ AST_EXT_LIB_SETUP([SPEEX], [Speex], [speex])
+ AST_EXT_LIB_SETUP([SPEEXDSP], [Speexdsp], [speexdsp])
+ AST_EXT_LIB_SETUP_DEPENDENT([SPEEX_PREPROCESS], [speex_preprocess_ctl], [], [speex])
+@@ -1537,6 +1538,8 @@ fi
+ 
+ AST_EXT_LIB_CHECK([RADIUS], [radiusclient-ng], [rc_read_config], [radiusclient-ng.h])
+ 
++AST_EXT_LIB_CHECK([SPANDSP], [spandsp], [fax_init], [spandsp.h], [-ltiff])
++
+ AST_EXT_LIB_CHECK([SPEEX], [speex], [speex_encode], [speex/speex.h], [-lm])
+ 
+ # See if the main speex library contains the preprocess functions
+diff -rupN 1.4.40//makeopts.in 1.4.40-spandsp//makeopts.in
+--- 1.4.40//makeopts.in	2010-12-17 16:40:56.000000000 -0500
++++ 1.4.40-spandsp//makeopts.in	2011-04-12 21:17:49.388223999 -0400
+@@ -147,6 +147,9 @@ PWLIB_LIB=@PWLIB_LIB@
+ RADIUS_INCLUDE=@RADIUS_INCLUDE@
+ RADIUS_LIB=@RADIUS_LIB@
+ 
++SPANDSP_INCLUDE=@SPANDSP_INCLUDE@
++SPANDSP_LIB=@SPANDSP_LIB@
++
+ SPEEX_INCLUDE=@SPEEX_INCLUDE@
+ SPEEX_LIB=@SPEEX_LIB@
+ 

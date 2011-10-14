@@ -1,0 +1,240 @@
+#!/bin/bash
+
+##
+## asterisk-sip-monitor
+##
+## Lonnie Abelbeck
+##
+## Inspired by:
+## SIP Trunk and Peer Status Checker
+## -James Babiak
+##
+
+. /etc/rc.conf
+
+LOCKFILE="/var/lock/asterisk-sip-monitor.lock"
+
+PIDFILE="/var/run/asterisk-sip-monitor.pid"
+
+ALERT_SENT_FILE="/var/tmp/asterisk_sip_monitor_alert"
+
+# Use same email settings as with Safe Asterisk
+#
+NOTIFY="$SAFE_ASTERISK_NOTIFY"                # Who to notify with alerts, space separate
+NOTIFY_FROM="$SAFE_ASTERISK_NOTIFY_FROM"      # From email header (optional)
+
+if [ -z "$NOTIFY_FROM" -a -n "$SMTP_DOMAIN" ]; then
+  NOTIFY_FROM="asterisk@$SMTP_DOMAIN"
+fi
+
+# Example: "sip show registry"
+# chiv1.voippath.com:5060       xxxx    135 Registered      Sat, 21 May 2011 10:21:11
+# inbound18.bigtel.net:5060     xxxx     45 Registered      Sat, 21 May 2011 10:22:42
+#
+# MONITOR_ASTERISK_SIP_TRUNKS="chiv1.voippath.com inbound18.bigtel.net"
+#
+TRUNK_LIST="$MONITOR_ASTERISK_SIP_TRUNKS"
+
+# Example: "sip show peers"
+# voippath/homer-simpson    64.x.x.xx                 5060     OK (67 ms)
+# bigtel-inbound/homer1     64.x.x.xx                 5060     Unmonitored
+# bigtel-outbound/homer1    64.x.x.xx                 5060     OK (42 ms)
+#
+# MONITOR_ASTERISK_SIP_PEERS="voippath bigtel-outbound"
+#
+PEER_LIST="$MONITOR_ASTERISK_SIP_PEERS"
+
+# If "yes" enable status updates after the SIP FAILURE email
+STATUS_UPDATES="$MONITOR_ASTERISK_SIP_STATUS_UPDATES"
+
+COUNT="${MONITOR_ASTERISK_SIP_COUNT:-3}"
+COUNT_DELAY="${MONITOR_ASTERISK_SIP_COUNT_DELAY:-90}"
+
+start_run()
+{
+  
+  # Robust 'bash' method of creating/testing for a lockfile
+  if ! ( set -o noclobber; echo "$$" > "$LOCKFILE" ) 2>/dev/null; then
+    echo "asterisk-sip-monitor: already running, lockfile \"$LOCKFILE\" exists, process id: $(cat "$LOCKFILE")."
+    return 9
+  fi
+  
+  trap 'rm -f "$LOCKFILE" "$PIDFILE"; exit $?' INT TERM EXIT
+  
+  echo "$$" > "$PIDFILE"
+  
+  # Delay to allow asterisk to start
+  idle_wait 60
+  
+  while [ -f "$PIDFILE" ]; do
+
+    monitor_sip $COUNT
+  
+    # Idle - interrupted if PIDFILE is deleted
+    idle_wait 300
+  done
+  
+  rm -f "$LOCKFILE" "$PIDFILE"
+  trap - INT TERM EXIT
+  
+  return 0
+}
+
+idle_wait()
+{
+  local time="$1" cnt=0
+
+  while [ -f "$PIDFILE" -a $cnt -lt $time ]; do
+    cnt=$((cnt+1))
+    sleep 1
+  done
+}
+
+email_failure() {
+  local TO subject="$1" IFS
+
+  unset IFS
+  for TO in $NOTIFY; do
+    echo "To: ${TO}${NOTIFY_FROM:+
+From: $NOTIFY_FROM}
+Subject: $subject
+
+Warning! Your PBX '$HOSTNAME' has detected that a SIP FAILURE has occurred.
+
+$ALERTS
+
+[Generated at $(date "+%H:%M:%S on %B %d, %Y")]" | \
+    sendmail -t
+  done
+}
+
+email_status() {
+  local TO subject="$1" IFS
+
+  unset IFS
+  for TO in $NOTIFY; do
+    echo "To: ${TO}${NOTIFY_FROM:+
+From: $NOTIFY_FROM}
+Subject: $subject
+
+SIP Status Change! Your PBX '$HOSTNAME' has an updated list of SIP FAILURE's.
+
+$ALERTS
+
+[Generated at $(date "+%H:%M:%S on %B %d, %Y")]" | \
+    sendmail -t
+  done
+}
+
+email_ok() {
+  local TO subject="$1" IFS
+
+  unset IFS
+  for TO in $NOTIFY; do
+    echo "To: ${TO}${NOTIFY_FROM:+
+From: $NOTIFY_FROM}
+Subject: $subject
+
+Your PBX '$HOSTNAME' has resolved previous SIP issues.
+
+[Generated at $(date "+%H:%M:%S on %B %d, %Y")]" | \
+    sendmail -t
+  done
+}
+
+monitor_sip() {
+  local count="$1" state=0 IFS
+
+  if [ -f "$ALERT_SENT_FILE" ]; then
+    ALERT_SENT="$(cat "$ALERT_SENT_FILE")"
+  else
+    ALERT_SENT=""
+  fi
+
+  while [ $count -gt 0 -a -f "$PIDFILE" ]; do
+    count=$((count-1))
+    ALERTS=""
+    NOTES=""
+    
+    if [ -n "$TRUNK_LIST" ]; then
+      SIP_SHOW_REGISTRY="$(/usr/sbin/asterisk -rnx "sip show registry")"
+
+      unset IFS
+      for trunk in $TRUNK_LIST; do
+
+        status="$(echo "$SIP_SHOW_REGISTRY" | sed -n -r -e "s/^${trunk}[: ].*  [0-9]+ ([A-Z][a-zA-Z.]* ?[a-zA-Z.]+)  .*$/\1/p" | head -n1)"
+
+        if [ "$status" != "Registered" ]; then
+          ALERTS="${ALERTS}${ALERTS:+$'\n'}TRUNK $trunk $status"
+          NOTES="${NOTES}${NOTES:+ }TRUNK-$trunk"
+        fi
+      done
+    fi
+
+    if [ -n "$PEER_LIST" ]; then
+      SIP_SHOW_PEERS="$(/usr/sbin/asterisk -rnx "sip show peers")"
+
+      unset IFS
+      for peer in $PEER_LIST; do
+
+        if ! echo "$SIP_SHOW_PEERS" | grep "^${peer}[/ ]" | grep -q ' OK (.*) *$'; then
+          ALERTS="${ALERTS}${ALERTS:+$'\n'}PEER $peer"
+          NOTES="${NOTES}${NOTES:+ }PEER-$peer"
+        fi
+      done
+    fi
+
+    if [ $state -eq 0 -o $state -eq 1 ] && \
+       [ -n "$ALERTS" -a -z "$ALERT_SENT" ]; then
+
+      if [ $count -eq 0 ]; then
+        subject=""
+        IFS=$'\n'
+        for alert in $ALERTS; do
+          subject="${subject}${subject:+ | }${alert}"
+        done
+        subject="SIP FAILURE on '$HOSTNAME': $subject"
+        logger -s -t asterisk-sip-monitor -p kern.info "$subject"
+        email_failure "$subject"
+        echo "$NOTES" > "$ALERT_SENT_FILE"
+      else
+        state=1
+        idle_wait $COUNT_DELAY
+      fi
+    elif [ $state -eq 0 -o $state -eq 2 ] && \
+         [ "$STATUS_UPDATES" = "yes" -a -n "$ALERTS" -a "$NOTES" != "$ALERT_SENT" ]; then
+
+      if [ $count -eq 0 ]; then
+        subject=""
+        IFS=$'\n'
+        for alert in $ALERTS; do
+          subject="${subject}${subject:+ | }${alert}"
+        done
+        subject="SIP STATUS on '$HOSTNAME': $subject"
+        logger -s -t asterisk-sip-monitor -p kern.info "$subject"
+        email_status "$subject"
+        echo "$NOTES" > "$ALERT_SENT_FILE"
+      else
+        state=2
+        idle_wait $COUNT_DELAY
+      fi
+    elif [ $state -eq 0 -o $state -eq 3 ] && \
+         [ -z "$ALERTS" -a -n "$ALERT_SENT" ]; then
+
+      if [ $count -eq 0 ]; then
+        subject="SIP OK on '$HOSTNAME'"
+        logger -s -t asterisk-sip-monitor -p kern.info "$subject"
+        email_ok "$subject"
+        rm -f "$ALERT_SENT_FILE"
+      else
+        state=3
+        idle_wait $COUNT_DELAY
+      fi
+    else
+      break
+    fi
+  done
+}
+
+start_run
+

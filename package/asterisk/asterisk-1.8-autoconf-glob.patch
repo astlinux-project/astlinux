@@ -1,0 +1,13 @@
+--- asterisk-1.8.0/configure.ac.orig	2010-10-23 21:50:18.000000000 -0500
++++ asterisk-1.8.0/configure.ac	2010-10-23 21:50:35.000000000 -0500
+@@ -972,10 +972,6 @@
+ 	AC_MSG_RESULT(no)
+ )
+ 
+-AST_C_DEFINE_CHECK([GLOB_NOMAGIC], [GLOB_NOMAGIC], [glob.h])
+-
+-AST_C_DEFINE_CHECK([GLOB_BRACE], [GLOB_BRACE], [glob.h])
+-
+ AST_C_DEFINE_CHECK([IP_MTU_DISCOVER], [IP_MTU_DISCOVER], [netinet/in.h])
+ 
+ AC_CHECK_HEADER([libkern/OSAtomic.h],

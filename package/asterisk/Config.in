@@ -1,0 +1,70 @@
+config BR2_PACKAGE_ASTERISK
+	bool "asterisk"
+	default n
+	select BR2_PACKAGE_NCURSES
+	select BR2_PACKAGE_ZLIB
+	select BR2_PACKAGE_OPENSSL
+	select BR2_PACKAGE_LIBELF
+	select BR2_PACKAGE_LIBTOOL
+	help
+		Asterisk - the Open Source PBX
+
+choice
+	prompt "Asterisk Version"
+	depends on BR2_PACKAGE_ASTERISK
+	default BR2_PACKAGE_ASTERISK_v1_4
+	help
+		Select which version of Asterisk to compile and install.
+
+	config BR2_PACKAGE_ASTERISK_v1_4
+		bool "Asterisk v1.4.x"
+		help
+			Asterisk Long Term Stable Release.
+
+	config BR2_PACKAGE_ASTERISK_v1_6
+		bool "Asterisk v1.6.x"
+		help
+			Deprecated Branch
+
+	config BR2_PACKAGE_ASTERISK_v1_8
+		bool "Asterisk v1.8.x"
+		help
+			Asterisk Long Term Stable Release.
+endchoice
+
+config BR2_PACKAGE_ASTERISK_CHANMISDN
+	bool "Asterisk chan_misdn Support"
+	default n
+	depends on BR2_PACKAGE_ASTERISK
+	select BR2_PACKAGE_ASTERISK_APP_BUNDLE if BR2_PACKAGE_ASTERISK_v1_4
+	help
+	  Compile Asterisk with chan_misdn Support
+
+choice
+	prompt "mISDN/mISDNuser Version"
+	depends on BR2_PACKAGE_ASTERISK_CHANMISDN
+	default BR2_PACKAGE_MISDN_DIGIUM
+	help
+		Select which version of mISDN/mISDNuser
+
+	config BR2_PACKAGE_MISDN_DIGIUM
+		bool "misdn-digium"
+       		select BR2_PACKAGE_BC
+       		select BR2_PACKAGE_USBUTILS
+       		select BR2_PACKAGE_PCIUTILS
+		help
+			Digium supported in thirdparty repository
+                	mISDN drivers v1.x in Digium's Thirdparty Repo
+
+                	http://svn.digium.com/svn/thirdparty/mISDN/
+                	http://svn.digium.com/svn/thirdparty/mISDNuser/
+
+endchoice
+
+config BR2_PACKAGE_ASTERISK_MENUSELECT
+	bool "Asterisk custom configure"
+	default n
+	depends on BR2_PACKAGE_ASTERISK
+	help
+	  Run interactive menuselect to select custom Asterisk options
+

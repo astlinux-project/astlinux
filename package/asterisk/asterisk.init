@@ -1,0 +1,196 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+make_symlink_or_dir()
+{
+  # Args: symlink-to link-or-dir
+  
+  if [ -d "$1" ]; then
+    if [ -d "$2" ]; then
+      rm -rf "$2"
+    fi
+    ln -snf "$1" "$2"
+    return 0
+  elif [ ! -d "$2" ]; then
+    if [ -L "$2" ]; then
+      rm -f "$2"
+    fi
+    mkdir "$2"
+    return 1
+  fi
+  
+  return 2
+}
+
+init () {
+
+  mkdir -p /var/run/asterisk
+
+  if [ ! -d /var/log/asterisk ]; then
+    mkdir /var/log/asterisk
+  fi
+
+  ln -snf /stat/var/lib/asterisk /var/lib/asterisk
+
+  if [ ! -d /var/spool/asterisk ]; then
+    mkdir /var/spool/asterisk
+  else
+    if [ -L /var/spool/asterisk/voicemail ]; then
+      rm -f /var/spool/asterisk/voicemail
+    fi
+    if [ -L /var/spool/asterisk/monitor ]; then
+      rm -f /var/spool/asterisk/monitor
+    fi
+  fi
+  cp -a /stat/var/spool/asterisk/* /var/spool/asterisk/
+
+  make_symlink_or_dir "/mnt/kd/voicemail" "/var/spool/asterisk/voicemail"
+
+  make_symlink_or_dir "/mnt/kd/monitor" "/var/spool/asterisk/monitor"
+
+  make_symlink_or_dir "/mnt/kd/asterisk" "/tmp/etc/asterisk"
+  if [ $? -eq 1 ]; then
+    cp -a /stat/etc/asterisk/* /tmp/etc/asterisk/
+  fi
+
+  if [ -f /mnt/kd/astdb ]; then
+    ln -sf /mnt/kd/astdb /tmp/astdb
+  fi
+
+  make_symlink_or_dir "/mnt/kd/cdr-csv" "/var/log/asterisk/cdr-csv"
+
+  make_symlink_or_dir "/mnt/kd/cdr-custom" "/var/log/asterisk/cdr-custom"
+
+  if [ -n "$ASTMANPROXY_USER" ]; then
+    echo "; Auto generated
+host = 127.0.0.1, 5038, $ASTMANPROXY_USER, $ASTMANPROXY_PASS, on, off
+retryinterval = 2
+maxretries = 10
+listenaddress = *
+listenport = 5039
+proc_user = nobody
+proc_group = nobody
+acceptencryptedconnection = yes
+acceptunencryptedconnection = yes
+certfile = /etc/ssl/mini_httpd.pem
+authrequired = yes
+inputformat = standard
+outputformat = standard
+autofilter = off
+logfile = /dev/null" > /tmp/etc/astmanproxy.conf
+  fi
+
+}
+
+start () {
+
+  echo "Starting Asterisk..."
+  if [ -n "$ISDN_MODPROBE" -o -n "$MISDN" ]; then
+    echo "Starting mISDN"
+    if [ -f /mnt/kd/misdn-init.conf ]; then
+      ln -sf /mnt/kd/misdn-init.conf /tmp/etc/misdn-init.conf
+      echo "/mnt/kd/misdn-init.conf exists, skipping config."
+    else
+      # Make /etc/misdn-init.conf point to /mnt/kd/misdn-init.conf if configs exist
+      if [ -d /mnt/kd/rc.conf.d -o -f /mnt/kd/rc.conf ]; then
+        ln -sf /mnt/kd/misdn-init.conf /tmp/etc/misdn-init.conf
+      fi
+      /usr/sbin/misdn-init scan
+      /usr/sbin/misdn-init config
+    fi
+
+    /usr/sbin/misdn-init start
+    sleep 2
+  fi
+
+  if ! find /var/lib/asterisk/sounds -name 'vm-*' | grep -q '/vm-'; then
+    echo "
+WARNING!  No core asterisk sounds are installed.
+Core-English-ulaw Sound Package   ==>  upgrade-asterisk-sounds upgrade core en ulaw
+Music-on-Hold ulaw Sound Package  ==>  upgrade-asterisk-sounds upgrade moh en ulaw
+"
+  fi
+
+  if grep -A1 "[admin]" /etc/asterisk/manager.conf | grep -q astlinux; then
+    echo "
+WARNING WARNING WARNING
+
+YOU STILL HAVE NOT CHANGED YOUR ASTERISK MANAGER PASSWORD
+ANYONE THAT KNOWS YOU ARE USING ASTLINUX CAN DESTROY YOUR
+SYSTEM. PLEASE CHANGE THIS IN /etc/asterisk/manager.conf
+IMMEDIATELY!
+
+WARNING WARNING WARNING
+"
+  fi
+
+  if [ -f /etc/asterisk/extensions.conf ]; then
+    # Work around uclibc bug
+    ulimit -s unlimited
+    if [ "$SAFE_ASTERISK" = "yes" ]; then
+      safe_asterisk -p -I
+    else
+      asterisk -p -I
+    fi
+  fi
+
+  if [ -n "$ASTVERBOSE" ]; then
+    asterisk -rx "core set verbose $ASTVERBOSE" > /dev/null
+  fi
+
+  if [ -f /tmp/etc/astmanproxy.conf ]; then
+    echo "Starting astmanproxy..."
+    /usr/sbin/astmanproxy
+  fi
+
+  if [ -n "$MONITOR_ASTERISK_SIP_TRUNKS" -o -n "$MONITOR_ASTERISK_SIP_PEERS" ]; then
+    asterisk-sip-monitor-ctrl start
+  fi
+}
+
+stop () {
+
+  asterisk-sip-monitor-ctrl stop
+
+  if [ -f /var/run/asterisk/asterisk.pid ]; then
+    echo "Stopping Asterisk..."
+    kill $(cat /var/run/asterisk/asterisk.pid)
+
+    if [ "$SAFE_ASTERISK" = "yes" ]; then
+      sleep 1
+    fi
+  fi
+
+  if ps | grep -q -e '[ /]astmanproxy[ ]' -e '[ /]astmanproxy$'; then
+    echo "Stopping astmanproxy..."
+    killall astmanproxy >/dev/null 2>&1
+  fi
+}
+
+case $1 in
+
+init)
+  init
+  start
+  ;;
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac

@@ -1,0 +1,144 @@
+#!/bin/bash
+
+. /etc/rc.conf
+
+CLIARGS="$@"                                  # Grab any args passed to safe_asterisk
+TTY="${SAFE_ASTERISK_TTY:-7}"                 # TTY (or "none") for Asterisk to run on
+CONSOLE="yes"                                 # Whether or not you want a console
+NOTIFY="$SAFE_ASTERISK_NOTIFY"                # Who to notify about crashes
+NOTIFY_FROM="$SAFE_ASTERISK_NOTIFY_FROM"      # From email header (optional)
+EXEC="/mnt/kd/ast-crash"                      # Run this command if Asterisk crashes
+MACHINE="$(hostname)"                         # To specify which machine has crashed when getting the mail
+SLEEPSECS=4
+ASTSBINDIR=/usr/sbin
+
+if [ "$TTY" = "none" ]; then
+  TTY=""
+fi
+
+if [ -z "$NOTIFY_FROM" -a -n "$SMTP_DOMAIN" ]; then
+  NOTIFY_FROM="asterisk@$SMTP_DOMAIN"
+fi
+
+# run asterisk with this priority
+PRIORITY="${SAFE_ASTERISK_PRIORITY:-0}"
+
+# set max files open with ulimit. On linux systems, this will be automatically
+# set to the system's maximum files open divided by four, if not set here.
+if [ -n "$SAFE_ASTERISK_MAXFILES" ]; then
+  MAXFILES="$SAFE_ASTERISK_MAXFILES"
+fi
+
+# set limits for MAXFILES
+MAXFILES_MIN=1024
+MAXFILES_MAX=12794
+
+# Check if Asterisk is already running.  If it is, then bug out, because
+# starting safe_asterisk when Asterisk is running is very bad.
+if ${ASTSBINDIR}/asterisk -rnx 'core show version' | grep -q "^Asterisk "; then
+  echo "Asterisk is already running.  $0 will exit now."
+  exit 1
+fi
+
+# since we're going to change priority and open files limits, we need to be
+# root. if running asterisk as other users, pass that to asterisk on the command
+# line.
+# if we're not root, fall back to standard everything.
+if [ $EUID -ne 0 ]; then
+  echo "Oops. I'm not root. Falling back to standard prio and file max." >&2
+  PRIORITY=0
+else
+  # maximum number of open files is set to the system maximum divided by four if
+  # MAXFILES is not set.
+  if [ -z "$MAXFILES" ]; then
+    # just check if file-max is readable
+    if [ -r /proc/sys/fs/file-max ]; then
+      MAXFILES=$(( $(cat /proc/sys/fs/file-max) / 4 ))
+    else
+      MAXFILES=$MAXFILES_MAX
+    fi
+  fi
+  if [ $MAXFILES -lt $MAXFILES_MIN ]; then
+    MAXFILES=$MAXFILES_MIN
+  elif [ $MAXFILES -gt $MAXFILES_MAX ]; then
+    MAXFILES=$MAXFILES_MAX
+  fi
+  # set the process's filemax to whatever set above
+  ulimit -n $MAXFILES
+fi
+
+#
+# Don't fork when running "safely"
+#
+ASTARGS=""
+if [ -n "$TTY" ]; then
+  if [ -c /dev/tty${TTY} ]; then
+    TTY=tty${TTY}
+  else
+    echo "Cannot find your TTY (${TTY})" >&2
+    exit 1
+  fi
+  if [ "$CONSOLE" != "no" ]; then
+    ASTARGS="${ASTARGS}${ASTARGS:+ }-c"
+  fi
+fi
+
+#
+# Don't die if stdout/stderr can't be written to
+#
+trap '' PIPE
+
+run_asterisk()
+{
+  while :; do 
+
+    if [ -n "$TTY" ]; then
+      cd /root
+      stty sane </dev/${TTY}
+      nice -n $PRIORITY ${ASTSBINDIR}/asterisk -f ${CLIARGS} ${ASTARGS} </dev/${TTY} >/dev/${TTY} 2>/dev/${TTY}
+    else
+      cd /root
+      nice -n $PRIORITY ${ASTSBINDIR}/asterisk -f ${CLIARGS} ${ASTARGS}
+    fi
+    EXITSTATUS=$?
+    # wait for any asterisk segfault logs to appear
+    sleep 1
+    if [ $EXITSTATUS -eq 0 ] && tail -n3 /var/log/messages | grep -q 'asterisk.*: segfault at '; then
+      # An asterisk segfault may return a 0, report as a signal of 99
+      EXITSTATUS=227
+    fi
+    echo "Asterisk ended with exit status $EXITSTATUS"
+    if [ $EXITSTATUS -eq 0 ]; then
+      # Properly shutdown....
+      MESG="Asterisk shutdown normally."
+      logger -s -t safe_asterisk -p kern.info "$MESG"
+      exit 0
+    elif [ $EXITSTATUS -gt 128 ]; then
+      EXITSIGNAL=$(($EXITSTATUS - 128))
+      MESG="Asterisk exited on signal $EXITSIGNAL."
+      logger -s -t safe_asterisk -p kern.info "$MESG"
+      for TO in $NOTIFY; do
+        echo "To: ${TO}${NOTIFY_FROM:+
+From: $NOTIFY_FROM}
+Subject: Asterisk Crashed on '$MACHINE'
+
+Asterisk on '$MACHINE' exited on signal $EXITSIGNAL.  Restarting Asterisk...
+
+[Generated at $(date "+%H:%M:%S on %B %d, %Y")]" | \
+        sendmail -t
+      done
+      if [ -x "$EXEC" ]; then
+        $EXEC
+      fi
+    else
+      MESG="Asterisk died with code $EXITSTATUS."
+      logger -s -t safe_asterisk -p kern.info "$MESG"
+    fi
+    MESG="Automatically restarting Asterisk."
+    logger -s -t safe_asterisk -p kern.info "$MESG"
+    sleep $SLEEPSECS
+    
+  done
+}
+
+run_asterisk &

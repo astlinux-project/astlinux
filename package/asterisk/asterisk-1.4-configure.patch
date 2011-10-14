@@ -1,0 +1,11 @@
+diff -urN asterisk-1.4.1.orig/configure asterisk-1.4.1/configure
+--- asterisk-1.4.1.orig/configure	2007-03-02 23:03:01.000000000 +0000
++++ asterisk-1.4.1/configure	2007-03-14 20:42:07.000000000 +0000
+@@ -27470,7 +27470,6 @@
+       PWLIBDIR=`$PTLIB_CONFIG --prefix`
+     else
+       echo "Cannot find ptlib-config - please install and try again"
+-      exit
+     fi
+   fi
+ 
