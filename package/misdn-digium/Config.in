@@ -1,0 +1,11 @@
+config BR2_PACKAGE_MISDN_DIGIUM
+        bool "misdn-digium"
+        default n
+	select BR2_PACKAGE_BC
+	select BR2_PACKAGE_USBUTILS
+	select BR2_PACKAGE_PCIUTILS
+        help
+                mISDN drivers v1.x in Digium's Thirdparty Repo
+
+                http://svn.digium.com/svn/thirdparty/mISDN/
+		http://svn.digium.com/svn/thirdparty/mISDNuser/

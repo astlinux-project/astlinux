@@ -1,0 +1,58 @@
+--- mISDN/Makefile.orig	2009-06-16 12:44:37.000000000 +0200
++++ mISDN/Makefile	2009-06-16 12:44:48.000000000 +0200
+@@ -1,4 +1,4 @@
+-BASEDIR=$(shell pwd)
++#BASEDIR=$(shell pwd)
+ 
+ MAJOR=1
+ MINOR=1
+@@ -6,6 +6,7 @@
+ 
+ INSTALL_PREFIX := /
+ export INSTALL_PREFIX
++export INSTALL_BUILD
+ 
+ #PATH to linux source/headers
+ #LINUX=/usr/src/linux
+@@ -14,11 +15,11 @@
+ KVERS:=$(shell uname -r)
+ endif
+ 
+-MODS=/lib/modules/$(KVERS)
+-LINUX=$(MODS)/build
++#MODS=/lib/modules/$(KVERS)
++LINUX=$(MODS)/linux
+ LINUX_SOURCE=$(MODS)/source
+-UPDATE_MODULES=$(shell which update-modules)
+-MODULES_UPDATE=$(shell which modules-update)
++#UPDATE_MODULES=$(shell which update-modules)
++#MODULES_UPDATE=$(shell which modules-update)
+ DEPMOD=$(shell which depmod)
+ 
+ MISDNDIR=$(BASEDIR)
+@@ -47,20 +48,19 @@
+ 
+ MINCLUDES+=-I$(MISDNDIR)/include
+ 
+-all: VERSION test_old_misdn
++all: VERSION
+ 	cp $(MISDNDIR)/drivers/isdn/hardware/mISDN/Makefile.v2.6 $(MISDNDIR)/drivers/isdn/hardware/mISDN/Makefile
+ 	export MINCLUDES=$(MISDNDIR)/include ; export MISDNVERSION=$(MISDNVERSION); make -C $(LINUX) SUBDIRS=$(MISDN_SRC) modules $(CONFIGS)  
+ 
+ install: all modules-install misdn-init
+-	$(DEPMOD) 
+-	$(UPDATE_MODULES)
+-	$(MODULES_UPDATE)
++	$(DEPMOD) -ae -F $(MODS)/linux/System.map -b $(MODS)/root -r $(LINUX_VER)
+ 	make -C config install
+ 
+ modules-install:
+ 	cd $(LINUX) ; make INSTALL_MOD_PATH=$(INSTALL_PREFIX) SUBDIRS=$(MISDN_SRC) modules_install 
+-	mkdir -p $(INSTALL_PREFIX)/usr/include/linux/
+-	cp $(MISDNDIR)/include/linux/*.h $(INSTALL_PREFIX)/usr/include/linux/
++	cd $(LINUX) ; make INSTALL_MOD_PATH=$(MODS)/root SUBDIRS=$(MISDN_SRC) modules_install
++	mkdir -p $(INSTALL_BUILD)/usr/include/linux/
++	cp $(MISDNDIR)/include/linux/*.h $(INSTALL_BUILD)/usr/include/linux/
+ 	if [ -e $(INSTALL_PREFIX)/usr/include/linux/mISDNdsp.h ]; then rm -f $(INSTALL_PREFIX)/usr/include/linux/mISDNdsp.h; fi
+ 
+ misdn-init:

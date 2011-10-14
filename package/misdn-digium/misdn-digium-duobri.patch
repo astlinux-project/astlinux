@@ -1,0 +1,19 @@
+--- mISDN/drivers/isdn/hardware/mISDN/hfc_multi.c.orig	2008-04-25 11:51:10.000000000 +0200
++++ mISDN/drivers/isdn/hardware/mISDN/hfc_multi.c	2008-04-25 11:54:40.000000000 +0200
+@@ -240,6 +240,8 @@
+ 	 "HFC-4S OpenVox Card", 0, 4, 1, 2, 0},
+ 	{CCAG_VID, CCAG_VID, HFC4S_ID, 0xE884, VENDOR_CCD,
+ 	 "HFC-2S OpenVox Card", 0, 2, 1, 2, 0},
++	{CCAG_VID, CCAG_VID, HFC4S_ID, 0xB559, VENDOR_CCD,
++	 "DuoBRI Junghanns Card (mini PCI)", 0, 2, 1, 3, 0},
+ 	{0, 0, 0, 0, NULL, NULL, 0, 0, 0, 0},
+ };
+ 
+@@ -4421,6 +4423,7 @@
+ 	{ CCAG_VID, 0x08B4   , CCAG_VID, 0xB569, 0, 0, 0 }, //BN2S mini PCI
+ 	{ CCAG_VID, 0x08B4   , CCAG_VID, 0xB560, 0, 0, 0 }, //BN4S
+ 	{ CCAG_VID, 0x08B4   , CCAG_VID, 0xB568, 0, 0, 0 }, //BN4S mini PCI
++	{ CCAG_VID, 0x08B4   , CCAG_VID, 0xB559, 0, 0, 0 }, //junghanns DuoBRI mini PCI
+ 	{ CCAG_VID, 0x08B4   , CCAG_VID, 0x08B4, 0, 0, 0 }, //Old Eval
+ 	{ CCAG_VID, 0x08B4   , CCAG_VID, 0xB520, 0, 0, 0 }, //IOB4ST
+ 	{ CCAG_VID, 0x08B4   , CCAG_VID, 0xB620, 0, 0, 0 }, //4S

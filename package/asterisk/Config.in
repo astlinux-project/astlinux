@@ -35,6 +35,7 @@ endchoice
 config BR2_PACKAGE_ASTERISK_CHANMISDN
 	bool "Asterisk chan_misdn Support"
 	default n
+	depends on BR2_FLYING_PIGS
 	depends on BR2_PACKAGE_ASTERISK
 	select BR2_PACKAGE_ASTERISK_APP_BUNDLE if BR2_PACKAGE_ASTERISK_v1_4
 	help

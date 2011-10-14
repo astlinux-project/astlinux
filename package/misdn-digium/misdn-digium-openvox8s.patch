@@ -1,0 +1,19 @@
+--- mISDN/drivers/isdn/hardware/mISDN/hfc_multi.c.orig	2008-10-27 20:57:08.000000000 +0100
++++ mISDN/drivers/isdn/hardware/mISDN/hfc_multi.c	2008-10-27 20:59:58.000000000 +0100
+@@ -210,6 +210,8 @@
+ 	 "HFC-8S", 0, 8, 1, 0, 0},
+ 	{CCAG_VID, CCAG_VID, HFC8S_ID, 0xB622, VENDOR_CCD,
+ 	 "HFC-8S", 0, 8, 1, 0, 0},
++	{CCAG_VID, CCAG_VID, HFC8S_ID, 0xE998, VENDOR_CCD,
++	 "HFC-8S OpenVox Card ", 0, 8, 1, 8, 0},
+ 	{CCAG_VID, CCAG_VID, HFC8S_ID, 0xB562, VENDOR_CCD,
+ 	 "HFC-8S Beronet Card", 0, 8, 1, 0, 0},
+ 	{CCAG_VID, CCAG_VID, HFC8S_ID, 0xB56B, VENDOR_CCD,
+@@ -4436,6 +4438,7 @@
+ 	/** Cards with HFC-8S Chip**/
+ 	{ CCAG_VID, 0x16B8   , CCAG_VID, 0xB562, 0, 0, 0 }, //BN8S
+ 	{ CCAG_VID, 0x16B8   , CCAG_VID, 0xB56B, 0, 0, 0 }, //BN8S+
++	{ CCAG_VID, 0x16B8   , CCAG_VID, 0xE998, 0, 0, 0 }, //8S OpenVox B800P
+ 	{ CCAG_VID, 0x16B8   , CCAG_VID, 0x16B8, 0, 0, 0 }, //old Eval
+ 	{ CCAG_VID, 0x16B8   , CCAG_VID, 0xB521, 0, 0, 0 }, //IOB8ST Recording
+ 	{ CCAG_VID, 0x16B8   , CCAG_VID, 0xB522, 0, 0, 0 }, //IOB8ST 

@@ -1,0 +1,11 @@
+--- mISDN/misdn-init.orig	2009-01-22 14:36:34.000000000 +0100
++++ mISDN/misdn-init	2009-07-19 19:36:54.000000000 +0200
+@@ -96,7 +96,7 @@
+ check_cmd sed
+ 
+ function check_asterisk {
+-	if ps ax | grep -v grep | grep asterisk > /dev/null ; then asterisk -rx "stop now" ; fi
++	if ps w | grep -v grep | grep asterisk > /dev/null ; then asterisk -rx "stop now" ; fi
+ }
+ 
+ function create_card_db

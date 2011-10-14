@@ -1,0 +1,11 @@
+--- mISDNuser/i4lnet/Makefile.orig	2006-12-21 10:25:22.000000000 +0100
++++ mISDNuser/i4lnet/Makefile	2007-01-12 14:52:45.000000000 +0100
+@@ -28,7 +28,7 @@
+ 	$(RANLIB) $@
+ 
+ libisdnnet.so: $(ISDNNET_OBJ)
+-	$(CC) $(CFLAGS) -shared -Xlinker -x -o $@ $^
++	$(CC) $(CFLAGS) -shared -Xlinker -x -o $@ $^ ../lib/libmISDN.so
+ 
+ .c.o:
+ 	$(CC) $(CFLAGS) -o $@ -c $<

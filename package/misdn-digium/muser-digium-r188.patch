@@ -1,0 +1,61 @@
+--- mISDNuser/i4lnet/net_l3.c	2010/09/15 23:06:49	187
++++ mISDNuser/i4lnet/net_l3.c	2010/11/08 16:33:55	188
+@@ -1117,9 +1117,9 @@
+ 		(pc->callref << 16), sizeof(RELEASE_COMPLETE_t), msg->len, NULL);
+ 	if (!umsg)
+ 		return;
+-	relc = (RELEASE_COMPLETE_t *)(umsg->data + mISDNUSER_HEAD_SIZE);
+-	StopAllL3Timer(pc);
+ 	newl3state(pc, 0);
++	StopAllL3Timer(pc);
++	relc = (RELEASE_COMPLETE_t *)(umsg->data + mISDNUSER_HEAD_SIZE);
+ 	if (!(relc->CAUSE = l3dss1_get_cause(pc, msg, umsg))) {
+ 		if (pc->err > 0)
+ 			if (pc->l3->debug & L3_DEB_WARN)
+@@ -1510,7 +1510,7 @@
+ 		MT_RELEASE, l3dss1_release},
+ 	{SBIT(6) | SBIT(7) | SBIT(8) | SBIT(9) | SBIT(19) | SBIT(25),
+ 		MT_RELEASE, l3dss1_release_i},
+-	{SBIT(0) | SBIT(1) | SBIT(2) | SBIT(3) | SBIT(4) | SBIT(10) |
++	{SBIT(1) | SBIT(2) | SBIT(3) | SBIT(4) | SBIT(10) |
+ 	 SBIT(11) | SBIT(12) | SBIT(15) | SBIT(17) | SBIT(19) | SBIT(31),
+ 		MT_RELEASE_COMPLETE, l3dss1_release_cmpl},
+ 	{SBIT(4) | SBIT(7) | SBIT(10),
+@@ -1664,7 +1664,7 @@
+ 	{SBIT(6) | SBIT(7) | SBIT(8) | SBIT(9) | SBIT(22) | SBIT(25),
+ 		MT_RELEASE, l3dss1_release_m},
+ 	{SBIT(19),  MT_RELEASE, l3dss1_release_cmpl},
+-	{SBIT(0) | SBIT(1) | SBIT(2) | SBIT(3) | SBIT(4) | SBIT(10) |
++	{SBIT(1) | SBIT(2) | SBIT(3) | SBIT(4) | SBIT(10) |
+ 	 SBIT(11) | SBIT(12) | SBIT(15) | SBIT(17) | SBIT(19) | SBIT(31),
+ 		MT_RELEASE_COMPLETE, l3dss1_release_cmpl_mx},
+ 	{SBIT(6) | SBIT(7) | SBIT(8) | SBIT(9) | SBIT(22) | SBIT(25),
+@@ -2206,6 +2206,7 @@
+ {
+ 	RELEASE_COMPLETE_t *rcmpl = arg;
+ 
++	newl3state(pc, 0);
+ 	StopAllL3Timer(pc);
+ 	if (rcmpl) {
+ 		MsgStart(pc, MT_RELEASE_COMPLETE);
+@@ -2217,9 +2218,8 @@
+ 			AddvarIE(pc, IE_DISPLAY, rcmpl->DISPLAY);
+ 		if (rcmpl->USER_USER) 
+ 			AddvarIE(pc, IE_USER_USER, rcmpl->USER_USER);
+-		SendMsg(pc, 0);
++		SendMsg(pc, -1);
+ 	} else {
+-		newl3state(pc, 0);
+ 		l3dss1_message(pc, MT_RELEASE_COMPLETE);
+ 	}
+ 	send_proc(pc, IMSG_END_PROC_M, NULL);
+@@ -2611,7 +2611,7 @@
+ 	{SBIT(10),
+ 	 CC_SUSPEND | REQUEST, l3dss1_suspend_req},
+ #endif
+-	{ALL_STATES,
++	{ALL_STATES & ~SBIT(0) /* All states but NULL. */,
+ 		CC_RELEASE_COMPLETE | REQUEST, l3dss1_release_cmpl_req},
+ 	{SBIT(0),
+ 	 CC_SETUP | REQUEST, l3dss1_setup_req},
+

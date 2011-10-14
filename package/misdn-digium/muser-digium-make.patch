@@ -1,0 +1,50 @@
+--- mISDNuser/Makefile.orig	2006-12-21 10:25:22.000000000 +0100
++++ mISDNuser/Makefile	2007-01-12 14:46:34.000000000 +0100
+@@ -6,20 +6,20 @@
+ # Set this to your local copy of mISDN
+ #
+ # MISDNDIR is defaulted to where mISDN installs its header files
+-MISDNDIR := /usr
++#MISDNDIR := /usr/src/mqueue/mISDN
+ 
+ PWD=$(shell pwd)
+ #
+ # Change this to create an install prefix for the shared libs, programms and
+ # includes
+ #
+-INSTALL_PREFIX := /
++INSTALL_PREFIX := $(MODS)/root
+ export INSTALL_PREFIX
+ 
+ MISDNINCLUDEDIR := $(MISDNDIR)/include
+ export MISDNINCLUDEDIR
+ 
+-mISDN_DIR := $(PWD)
++mISDN_DIR := $(MISDNUSERDIR)
+ export mISDN_DIR
+ 
+ INCLUDEDIR := $(mISDN_DIR)/include
+@@ -32,17 +32,19 @@
+ CFLAGS+= -D CLOSE_REPORT=1
+ 
+ #disable this if your system does not support PIC (position independent code)
+-ifeq ($(shell uname -m),x86_64)
++#ifeq ($(shell uname -m),x86_64)
+ CFLAGS         += -fPIC
+-endif
++#endif
+ 
+ export CFLAGS
+ 
+-mISDNLIB	:= $(PWD)/lib/libmISDN.a
+-mISDNNETLIB	:= $(PWD)/i4lnet/libmisdnnet.a
++mISDNLIB	:= $(mISDN_DIR)/lib/libmISDN.a
++mISDNNETLIB	:= $(mISDN_DIR)/i4lnet/libmisdnnet.a
+ export mISDNLIB
+ export mISDNNETLIB
+ 
++export CC
++
+ SUBDIRS := lib example
+ 
+ SUBDIRS += $(shell if test -d i4lnet ; then echo i4lnet; fi)
