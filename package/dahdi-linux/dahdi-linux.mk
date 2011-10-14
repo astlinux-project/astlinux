@@ -18,7 +18,7 @@ DEPMOD := $(HOST_DIR)/usr/sbin/depmod
 $(DL_DIR)/$(DAHDI_LINUX_SOURCE):
 	$(WGET) -P $(DL_DIR) $(DAHDI_LINUX_SITE)/$(DAHDI_LINUX_SOURCE)
 
-$(DAHDI_LINUX_DIR)/.source: $(DL_DIR)/$(DAHDI_LINUX_SOURCE)
+$(DAHDI_LINUX_DIR)/.source: $(DL_DIR)/$(DAHDI_LINUX_SOURCE)  | $(DAHDI_LINUX_PREREQS)
 	zcat $(DL_DIR)/$(DAHDI_LINUX_SOURCE) | tar -C $(BUILD_DIR) $(TAR_OPTIONS) -
 ifeq ($(strip $(BR2_PACKAGE_DAHDI_OSLEC)),y)
 	mkdir -p $(DAHDI_LINUX_DIR)/drivers/staging/echo
@@ -32,7 +32,7 @@ endif
 	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ dahdi-linux\*.patch
 	touch $@
 
-$(DAHDI_LINUX_DRIVERS_DIR)/$(DAHDI_LINUX_BINARY): $(DAHDI_LINUX_DIR)/.source | $(DAHDI_LINUX_PREREQS)
+$(DAHDI_LINUX_DRIVERS_DIR)/$(DAHDI_LINUX_BINARY): $(DAHDI_LINUX_DIR)/.source
 	$(MAKE) -C $(DAHDI_LINUX_DIR) \
 		HOSTCC=gcc CC=$(TARGET_CC) ARCH=$(KERNEL_ARCH) \
 		KVERS=$(LINUX_VERSION_PROBED) KSRC=$(LINUX_DIR) PWD=$(DAHDI_LINUX_DIR)
