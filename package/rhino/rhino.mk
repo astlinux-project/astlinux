@@ -62,6 +62,8 @@ $(TARGET_DIR)/$(RHINO_TARGET_BINARY): $(RHINO_DIR)/.built
 rhino: $(TARGET_DIR)/$(RHINO_TARGET_BINARY)
 
 rhino-clean:
+	rm -rf $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/rhino
+	$(DEPMOD) -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) -r $(LINUX_VERSION_PROBED)
 	rm -f $(TARGET_DIR)/$(RHINO_TARGET_BINARY)
 	rm -f $(RHINO_DIR)/.built
 
