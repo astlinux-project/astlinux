@@ -10,7 +10,7 @@ DAHDI_TOOLS_DIR := $(BUILD_DIR)/dahdi-tools-$(DAHDI_TOOLS_VERSION)
 DAHDI_TOOLS_BINARY := dahdi_cfg
 DAHDI_TOOLS_TARGET_BINARY := usr/sbin/dahdi_cfg
 PERLLIBDIR := $(shell eval `perl -V:sitelib`; echo "$$sitelib")
-DAHDI_TOOLS_PREREQS := libusb newt
+DAHDI_TOOLS_PREREQS := libusb newt dahdi-linux
 DAHDI_TOOLS_CONFIGURE_ARGS :=
 
 $(DL_DIR)/$(DAHDI_TOOLS_SOURCE):
