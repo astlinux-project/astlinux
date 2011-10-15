@@ -1,0 +1,8 @@
+config BR2_PACKAGE_ASTERISK-AGI-AUDIOTX
+	bool "asterisk-agi-audiotx"
+	default n
+	depends on BR2_PACKAGE_ASTERISK && BR2_PACKAGE_ASTERISK_v1_4
+	help
+	  AGI Audio File Transfer Addons for Asterisk.
+
+	  http://agi-audiotx.sourceforge.net/
