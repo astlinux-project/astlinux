@@ -1,0 +1,81 @@
+diff -uNr mISDN-1_1_9_2.vanilla/drivers/isdn/hardware/mISDN/sysfs_inst.c mISDN-1_1_9_2.new/drivers/isdn/hardware/mISDN/sysfs_inst.c
+--- mISDN-1_1_9_2.vanilla/drivers/isdn/hardware/mISDN/sysfs_inst.c	2009-06-09 10:09:20.000000000 +0200
++++ mISDN-1_1_9_2.new/drivers/isdn/hardware/mISDN/sysfs_inst.c	2009-08-27 23:52:50.810176390 +0200
+@@ -82,7 +82,11 @@
+ #endif
+         if (core_debug & DEBUG_SYSFS)
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,26)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,28)
++		printk(KERN_INFO "release instance class dev %s\n", dev_name(dev));
++#else
+ 		printk(KERN_INFO "release instance class dev %s\n", dev->bus_id);
++#endif
+ #else
+                 printk(KERN_INFO "release instance class dev %s\n", dev->class_id);
+ #endif
+@@ -99,7 +103,11 @@
+ #endif
+ 	if (core_debug & DEBUG_SYSFS)
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,26)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,28)
++		printk(KERN_INFO "release instance class dev %s\n", dev_name(dev));
++#else
+ 		printk(KERN_INFO "release instance class dev %s\n", dev->bus_id);
++#endif
+ #else
+ 		printk(KERN_INFO "release instance class dev %s\n", dev->class_id);
+ #endif
+@@ -127,7 +135,11 @@
+ 
+ 	inst->class_dev.class = &inst_dev_class;
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,26)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,28)
++	dev_set_name(&inst->class_dev, "inst-%08x", inst->id);
++#else
+ 	snprintf(inst->class_dev.bus_id, BUS_ID_SIZE, "inst-%08x", inst->id);
++#endif
+ 	err = device_register(&inst->class_dev);
+ #else
+ 	snprintf(inst->class_dev.class_id, BUS_ID_SIZE, "inst-%08x", inst->id);
+diff -uNr mISDN-1_1_9_2.vanilla/drivers/isdn/hardware/mISDN/sysfs_obj.c mISDN-1_1_9_2.new/drivers/isdn/hardware/mISDN/sysfs_obj.c
+--- mISDN-1_1_9_2.vanilla/drivers/isdn/hardware/mISDN/sysfs_obj.c	2009-06-09 08:20:29.000000000 +0200
++++ mISDN-1_1_9_2.new/drivers/isdn/hardware/mISDN/sysfs_obj.c	2009-08-27 23:46:06.854963638 +0200
+@@ -136,7 +136,11 @@
+ 
+ 	obj->class_dev.class = &obj_dev_class;
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,26)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,28)
++	dev_set_name(&obj->class_dev, "obj-%d", obj->id);
++#else
+         snprintf(obj->class_dev.bus_id, BUS_ID_SIZE, "obj-%d", obj->id);
++#endif
+         err = device_register(&obj->class_dev);
+ #else
+         snprintf(obj->class_dev.class_id, BUS_ID_SIZE, "obj-%d", obj->id);
+diff -uNr mISDN-1_1_9_2.vanilla/drivers/isdn/hardware/mISDN/sysfs_st.c mISDN-1_1_9_2.new/drivers/isdn/hardware/mISDN/sysfs_st.c
+--- mISDN-1_1_9_2.vanilla/drivers/isdn/hardware/mISDN/sysfs_st.c	2009-06-09 10:10:16.000000000 +0200
++++ mISDN-1_1_9_2.new/drivers/isdn/hardware/mISDN/sysfs_st.c	2009-08-27 23:42:58.783405597 +0200
+@@ -260,11 +260,23 @@
+ 	st->class_dev.class = &stack_dev_class;
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,26)
+         if (st->id & FLG_CHILD_STACK)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,28)
++		dev_set_name(&st->class_dev, "chst-%08x", st->id);
++#else
+                 snprintf(st->class_dev.bus_id, BUS_ID_SIZE, "chst-%08x", st->id);
++#endif
+         else if (st->id & FLG_CLONE_STACK)
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,28)
++		dev_set_name(&st->class_dev, "clst-%08x", st->id);
++#else
+                 snprintf(st->class_dev.bus_id, BUS_ID_SIZE, "clst-%08x", st->id);
++#endif
+         else
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,28)
++		dev_set_name(&st->class_dev, "st-%08x", st->id);
++#else
+                 snprintf(st->class_dev.bus_id, BUS_ID_SIZE, "st-%08x", st->id);
++#endif
+         if (st->mgr)
+                 st->class_dev.parent = st->mgr->class_dev.parent;
+ 	err = device_register(&st->class_dev);

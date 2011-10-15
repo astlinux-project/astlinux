@@ -43,14 +43,14 @@
 -	$(DEPMOD) 
 -	$(UPDATE_MODULES)
 -	$(MODULES_UPDATE)
-+	$(DEPMOD) -ae -F $(MODS)/linux/System.map -b $(MODS)/root -r $(LINUX_VER)
++	$(DEPMOD) -ae -F $(MODS)/linux/System.map -b $(INSTALL_PREFIX) -r $(LINUX_VER)
  	make -C config install
  
  modules-install:
  	cd $(LINUX) ; make INSTALL_MOD_PATH=$(INSTALL_PREFIX) SUBDIRS=$(MISDN_SRC) modules_install 
 -	mkdir -p $(INSTALL_PREFIX)/usr/include/linux/
 -	cp $(MISDNDIR)/include/linux/*.h $(INSTALL_PREFIX)/usr/include/linux/
-+	cd $(LINUX) ; make INSTALL_MOD_PATH=$(MODS)/root SUBDIRS=$(MISDN_SRC) modules_install
++
 +	mkdir -p $(INSTALL_BUILD)/usr/include/linux/
 +	cp $(MISDNDIR)/include/linux/*.h $(INSTALL_BUILD)/usr/include/linux/
  	if [ -e $(INSTALL_PREFIX)/usr/include/linux/mISDNdsp.h ]; then rm -f $(INSTALL_PREFIX)/usr/include/linux/mISDNdsp.h; fi

@@ -1,0 +1,11 @@
+--- mISDN/drivers/isdn/hardware/mISDN/hfc_pci.c.orig	2011-10-14 17:51:55.000000000 -0500
++++ mISDN/drivers/isdn/hardware/mISDN/hfc_pci.c	2011-10-14 17:52:27.000000000 -0500
+@@ -1880,7 +1880,7 @@
+ 	hc->hw.cirm = 0;
+ 	hc->dch.state = 0;
+ 	while (id_list[i].vendor_id) {
+-		tmp_hfcpci = pci_find_device(id_list[i].vendor_id,
++		tmp_hfcpci = pci_get_device(id_list[i].vendor_id,
+ 				id_list[i].device_id, dev_hfcpci);
+ 		i++;
+ 		if (tmp_hfcpci) {
