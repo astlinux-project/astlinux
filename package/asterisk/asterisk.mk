@@ -110,7 +110,7 @@ ASTERISK_CONFIGURE_ARGS+= \
 			--with-suppserv="$(STAGING_DIR)/usr"
 endif
 
-ifeq ($(strip $(BR2_PACKAGE_DAHDI)),y)
+ifeq ($(strip $(BR2_PACKAGE_DAHDI_LINUX)),y)
 ASTERISK_EXTRAS+=dahdi-tools
 ASTERISK_CONFIGURE_ARGS+= \
 			--with-dahdi="$(STAGING_DIR)/usr" \
