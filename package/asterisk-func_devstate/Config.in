@@ -1,0 +1,9 @@
+config BR2_PACKAGE_ASTERISK_FUNC_DEVSTATE
+	bool "asterisk-func_devstate"
+	default n
+	depends on BR2_PACKAGE_ASTERISK && BR2_PACKAGE_ASTERISK_v1_4
+	help
+	  Backport of func_devstate from Asterisk 1.6
+
+	  See:
+	   http://www.asterisk.org/node/48360
