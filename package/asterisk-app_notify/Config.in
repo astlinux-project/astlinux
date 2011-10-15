@@ -1,0 +1,9 @@
+config BR2_PACKAGE_ASTERISK_APP_NOTIFY
+        bool "Asterisk Application Notify"
+        default n
+        depends on BR2_PACKAGE_ASTERISK
+        help
+                Network Notification Application Module for Asterisk
+
+                http://www.mezzo.net/asterisk/app_notify.html
+
