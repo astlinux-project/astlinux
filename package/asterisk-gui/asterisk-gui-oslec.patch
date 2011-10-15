@@ -1,0 +1,21 @@
+--- asterisk-gui-5154/config/hardware_dahdi.html.orig	2011-02-24 15:49:22.000000000 -0600
++++ asterisk-gui-5154/config/hardware_dahdi.html	2011-02-24 15:50:50.000000000 -0600
+@@ -200,6 +200,7 @@
+ 							<option value="2">sec</option>
+ 							<option value="3">sec2</option>
+ 							<option value="4">hpec</option>
++							<option value="5">oslec</option>
+ 						</select>
+ 					</td>
+ 				</tr>
+--- asterisk-gui-5154/config/js/hardware_dahdi.js.orig	2011-02-24 15:47:38.000000000 -0600
++++ asterisk-gui-5154/config/js/hardware_dahdi.js	2011-02-24 15:48:14.000000000 -0600
+@@ -39,7 +39,7 @@
+ 		// if the user does not have any hardware - always set parent.sessionData.REQUIRE_RESTART to false
+ var SPANCOUNT_LOCATION = {}; // this object is used to store the number of spans found in each location Ex: SPANCOUNT_LOCATION['PCI Bus 02 Slot 04'] = 4;
+ var portsSignalling = {};
+-var echocans = {'mg2':'0', 'kb1':'1', 'sec':'2', 'sec2':'3', 'hpec':'4'};
++var echocans = {'mg2':'0', 'kb1':'1', 'sec':'2', 'sec2':'3', 'hpec':'4', 'oslec':'5'};
+ 
+ var digital_miscFunctions = {
+ 	show_analog_signalling_form: function(a){ //digital_miscFunctions.show_analog_signalling_form()

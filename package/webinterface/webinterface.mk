@@ -12,7 +12,7 @@ endif
 endif
 
 ifeq ($(strip $(BR2_PACKAGE_ASTERISK)),y)
-ifeq ($(strip $(BR2_PACKAGE_ASTERISK-GUI)),y)
+ifeq ($(strip $(BR2_PACKAGE_ASTERISK_GUI)),y)
 webinterface-install: asterisk asterisk-gui
 else
 webinterface-install: asterisk

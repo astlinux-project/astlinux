@@ -1,0 +1,37 @@
+Index: asterisk-gui-4980/scripts/dldsoundpack
+===================================================================
+--- asterisk-gui-4980/scripts/dldsoundpack	(revision 4980)
++++ asterisk-gui-4980/scripts/dldsoundpack	(working copy)
+@@ -82,6 +82,6 @@
+ echo "=${SOUNDS_EXTRA_VERSION}" >>${SOUND_LOC}/cf-version.txt
+ 
+ 
+-echo "DoneDoneDone" >> /var/lib/asterisk/static-http/config/sysinfo_output.html
++echo "DoneDoneDone" >> /var/lib/asterisk/static-http/config/tmp/sysinfo_output.html
+ sync; sync; sync
+ 
+Index: asterisk-gui-4980/scripts/listfiles
+===================================================================
+--- asterisk-gui-4980/scripts/listfiles	(revision 4980)
++++ asterisk-gui-4980/scripts/listfiles	(working copy)
+@@ -1,6 +1,6 @@
+ #!/bin/sh
+ 
+-SYSINFO_OUTPUT="/var/lib/asterisk/static-http/config/sysinfo_output.html"
++SYSINFO_OUTPUT="/var/lib/asterisk/static-http/config/tmp/sysinfo_output.html"
+ 
+ #/bin/echo "<div id=list_files>" > $SYSINFO_OUTPUT
+ /bim/mkdir -p -- "$1"
+Index: asterisk-gui-4980/config/js/index.js
+===================================================================
+--- asterisk-gui-4980/config/js/index.js	(revision 4980)
++++ asterisk-gui-4980/config/js/index.js	(working copy)
+@@ -288,7 +288,7 @@
+ 		sessionData.directories.menusRecord = sessionData.directories.Sounds + 'record/' ;
+ 
+ 		sessionData.directories.scripts = sessionData.directories.astvarlibdir + 'scripts/';/* Directory for gui scripts (listfiles, for example) */	
+-		sessionData.directories.output_SysInfo = './sysinfo_output.html' ;
++		sessionData.directories.output_SysInfo = './tmp/sysinfo_output.html' ;
+ 		sessionData.directories.voicemails_dir = sessionData.directories.astspooldir + 'voicemail/default/' ;
+ 		sessionData.directories.script_takeBackup =  'sh ' + sessionData.directories.scripts + 'takebackup';
+ 		sessionData.directories.script_restoreBackup =  'sh ' + sessionData.directories.scripts + 'restorebackup';
