@@ -1,5 +1,5 @@
 config BR2_PACKAGE_ASTERISK_APP_NOTIFY
-        bool "Asterisk Application Notify"
+        bool "asterisk-app_notify"
         default n
         depends on BR2_PACKAGE_ASTERISK
         help
