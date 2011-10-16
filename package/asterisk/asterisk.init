@@ -61,26 +61,6 @@ init () {
   make_symlink_or_dir "/mnt/kd/cdr-csv" "/var/log/asterisk/cdr-csv"
 
   make_symlink_or_dir "/mnt/kd/cdr-custom" "/var/log/asterisk/cdr-custom"
-
-  if [ -n "$ASTMANPROXY_USER" ]; then
-    echo "; Auto generated
-host = 127.0.0.1, 5038, $ASTMANPROXY_USER, $ASTMANPROXY_PASS, on, off
-retryinterval = 2
-maxretries = 10
-listenaddress = *
-listenport = 5039
-proc_user = nobody
-proc_group = nobody
-acceptencryptedconnection = yes
-acceptunencryptedconnection = yes
-certfile = /etc/ssl/mini_httpd.pem
-authrequired = yes
-inputformat = standard
-outputformat = standard
-autofilter = off
-logfile = /dev/null" > /tmp/etc/astmanproxy.conf
-  fi
-
 }
 
 start () {
@@ -139,11 +119,6 @@ WARNING WARNING WARNING
     asterisk -rx "core set verbose $ASTVERBOSE" > /dev/null
   fi
 
-  if [ -f /tmp/etc/astmanproxy.conf ]; then
-    echo "Starting astmanproxy..."
-    /usr/sbin/astmanproxy
-  fi
-
   if [ -n "$MONITOR_ASTERISK_SIP_TRUNKS" -o -n "$MONITOR_ASTERISK_SIP_PEERS" ]; then
     asterisk-sip-monitor-ctrl start
   fi
@@ -160,11 +135,6 @@ stop () {
     if [ "$SAFE_ASTERISK" = "yes" ]; then
       sleep 1
     fi
-  fi
-
-  if ps | grep -q -e '[ /]astmanproxy[ ]' -e '[ /]astmanproxy$'; then
-    echo "Stopping astmanproxy..."
-    killall astmanproxy >/dev/null 2>&1
   fi
 }
 
