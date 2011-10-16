@@ -22,6 +22,12 @@ ASTERISK_CONFIGURE_ENV :=
 ASTERISK_CONFIGURE_ARGS :=
 ASTERISK_MODULE_DIR := usr/lib/asterisk/modules
 
+# $(call ndots start,end,dotted-string)
+dot:=.
+empty:=
+space:=$(empty) $(empty)
+ndots = $(subst $(space),$(dot),$(wordlist $(1),$(2),$(subst $(dot),$(space),$3)))
+##
 ASTERISK_VERSION_TUPLE := $(call ndots,1,2,$(ASTERISK_VERSION))
 ASTERISK_VERSION_TRIPLE := $(call ndots,1,3,$(ASTERISK_VERSION))
 
