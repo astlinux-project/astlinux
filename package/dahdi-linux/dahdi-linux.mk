@@ -68,7 +68,6 @@ dahdi-linux-clean:
 	rm -Rf $(STAGING_DIR)/usr/include/dahdi.h
 	rm -Rf $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/dahdi
 	$(DEPMOD) -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) -r $(LINUX_VERSION_PROBED)
-	rm -rf $(TARGET_DIR)/etc/dahdi
 	rm -f $(TARGET_DIR)/$(DAHDI_LINUX_TARGET_BINARY)
 
 dahdi-linux-dirclean:
