@@ -1,0 +1,11 @@
+config BR2_PACKAGE_WANPIPE
+	bool "wanpipe"
+	select BR2_PACKAGE_DAHDI_LINUX
+	select BR2_PACKAGE_FLEX
+	depends on BR2_LINUX_KERNEL
+	default n
+	help
+		Wanpipe - Support for Sangoma cards
+
+		http://www.sangoma.com
+

@@ -1,0 +1,13 @@
+--- wanpipe-3.5.18/util/lxdialog/Makefile.orig	2011-01-20 09:43:55.000000000 -0600
++++ wanpipe-3.5.18/util/lxdialog/Makefile	2011-01-20 09:45:04.000000000 -0600
+@@ -1,7 +1,7 @@
+-CC = gcc 
+-CPP = gcc -E
++#CC = gcc 
++#CPP = gcc -E
+ #Will be overwritten by ./Setup
+-SYSINC=/lib/modules/$(shell uname -r)/build/include
++#SYSINC=/lib/modules/$(shell uname -r)/build/include
+ 
+ CFLAGS = -D__LINUX__ -Wall -Wstrict-prototypes -I$(SYSINC) -O2 -fomit-frame-pointer -DLOCALE 
+ LDFLAGS = -s -L .

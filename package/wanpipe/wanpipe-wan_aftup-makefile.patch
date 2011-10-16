@@ -1,0 +1,35 @@
+--- wanpipe-3.5.18/util/wan_aftup/Makefile.orig	2011-01-24 10:30:16.000000000 -0600
++++ wanpipe-3.5.18/util/wan_aftup/Makefile	2011-01-24 10:35:23.000000000 -0600
+@@ -23,7 +23,7 @@
+ 
+ PROD=wan_aftup
+ 
+-WAN_VIRTUAL=
++WAN_VIRTUAL=$(INSTALLPREFIX)
+ ifndef SYSINC
+ 	SYSINC=/usr/include/wanpipe
+ endif
+@@ -39,7 +39,7 @@
+ SRCS	+= wan_usb_fwupdate.cpp mem.cpp
+ CFLAGS  = -Wall -O2 -D$(OS_TYPE) -D_DEBUG_=$(DEBUG) -lstdc++
+ CFLAGS += $(EXTRA_FLAGS)
+-CFLAGS += -I/usr/include -I$(WANINCDIR) -I$(SYSINC)
++CFLAGS += -I$(SYSINC)
+ 
+ BINS=`ls *.BIN`
+ 
+@@ -60,10 +60,10 @@
+ 	install -m755 update_aft_firm.sh $(WAN_VIRTUAL)/etc/wanpipe/util/wan_aftup/update_aft_firm.sh
+ 	install -m755 scripts/load.sh $(WAN_VIRTUAL)/etc/wanpipe/util/wan_aftup/scripts/load.sh
+ 	install -m755 scripts/unload.sh $(WAN_VIRTUAL)/etc/wanpipe/util/wan_aftup/scripts/unload.sh
+-	@if [ ! -z $(BINS) ]; then \
+-		echo "Installing fimware files in /etc/wanpipe/util/wan_aftup/"; \
+-		cp -f *.BIN $(WAN_VIRTUAL)/etc/wanpipe/util/wan_aftup/; \
+-	fi
++	#@if [ ! -z $(BINS) ]; then \
++	#	echo "Installing fimware files in /etc/wanpipe/util/wan_aftup/"; \
++	#	cp -f *.BIN $(WAN_VIRTUAL)/etc/wanpipe/util/wan_aftup/; \
++	#fi
+ 
+ uninstall:
+ 	@echo "Uninstalling WAN_AFTUP in $(WAN_VIRTUAL)/etc/wanpipe/util/wan_aftup"
