@@ -170,6 +170,7 @@ if [ $? -eq 0 -a -f "$ROOTFS_SQUASHFS" -a -f "initrd.img" -a -d "$RUNNIX_DIR" -a
 else
   rm -f "$ROOTFS_SQUASHFS"
   echo "build: Incomplete build, no AstLinux Release for you."
+  exit 1
 fi
 
 exit 0
