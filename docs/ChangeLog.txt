@@ -1,0 +1,820 @@
+=========================================================
+=== ChangeLog Information for AstLinux 1.0
+===
+===
+=== docs/ChangeLog.txt
+=========================================================
+
+Additions for AstLinux 1.0.0:
+==============================
+
+Released **TBD**
+
+** IMPORTANT NOTICE
+
+-- AstLinux 1.0 is a major upgrade from the previous 0.7 series.  Most notable much newer:
+   Linux Kernel, BusyBox and supporting packages.  In addition the C Library is generated
+   via eglibc, which is binary compatable with other glibc executables.
+
+-- Features no longer supported in AstLinux 1.0
+
+   == Native Wireless (WiFi) is no longer supported.
+
+   == mISDNv1, chan_misdn is no longer supported due to the newer kernel.
+
+   == The astmanproxy package is no longer supported.
+
+-- The RUNNIX bootloader, version 0.4 is required.  The easiest is to start fresh with an AstLinux 1.0
+   flash image, containing both the new RUNNIX bootloader and AstLinux 1.0 core.  In addition users
+   may upgrade existing systems with both runnix-0.4 and Astlinux 1.0, see documentation.
+
+-- Buildroot 2011-08 and Crosstool-NG 1.12.3 are the foundation of the AstLinux 1.0 build platform.
+
+
+** System
+
+-- Linux Kernel 2.6.35.13 (major bump)
+
+-- BusyBox version 1.18.5
+
+** Networking
+
+-- Many changes
+
+** Asterisk
+
+-- Asterisk 1.4.42 and 1.8.7.1
+
+** Web Interface
+
+-- No changes
+
+
+
+=========================================================
+=== ChangeLog Information for AstLinux 0.7
+===
+===
+=== ChangeLog.txt
+=========================================================
+
+Additions for AstLinux 0.7.10:
+==============================
+
+Released **TBD**
+
+** System
+
+-- Add "shutdown" command to call Busybox reboot and poweroff commands.
+
+-- apcupsd, version 3.14.9, a daemon for APC UPS's, supporting monitoring and powerfail shutdown.
+   USB, ethernet and serial cables are supported.  The configuration will be auto-generated using
+   the variables UPSTYPE, UPSCABLE and UPSDEVICE. If the file "/mnt/kd/apcupsd/apcupsd.conf" exists
+   it will be used as a manual configuration.  Read-only supporting scripts are localed in the
+   "/stat/etc/apcupsd/" directory, but may be superseded by custom scripts located in the
+   "/mnt/kd/apcupsd/" directory.
+
+   Email alerts will be sent if UPS_NOTIFY contains one or more email addresses. UPS_NOTIFY_FROM
+   may be optionally set to define the From: email header.
+
+-- php, major version bump to 5.3.8, including the same modules as in previous versions.
+
+-- bridge-utils, (brctl) version bump to 1.5, added hairpin support.
+
+** Networking
+
+-- AIF, core version bump to 2.0.0c
+
+-- pptpd, fix to maintain other ppp chap-secrets while starting/stopping PPTP Server.
+   This fixes an issue when enabling both PPPoE and PPTP Server.
+
+-- OpenSSH, version bump to 5.8p2, security fixes.
+
+-- sshd, fixed an issue when both a persistent /root (ie. "/mnt/kd/root/" directory exists) and
+   the "/mnt/kd/ssh_keys/" directory exists.  The "/root/.ssh/authorized_keys" file no longer gets
+   appended with the "/mnt/kd/ssh_keys/" if "/root/.ssh/authorized_keys" already exists.
+
+-- sshd, add support for root user keys, which permits publickey authentication for outbound
+   ssh sessions as user 'root'.  The directory "/mnt/kd/ssh_root_keys/" is automatically
+   created and populated with id_dsa and id_ecdsa public/private keys.  These keys are
+   automatically copied to the "/root/.ssh/" directory if they don't already exist.
+
+-- pppoe, add "/usr/sbin/pppoe-restart" script called by the web interface or manually via cron
+   if necessary.  A new variable, PPPOE_RESTART_DELAY is supported.
+
+-- OpenVPN, version bump to 2.2.1, bug fixes.
+
+-- lighttpd, version bump to 1.4.29, ssl improvements.
+
+-- curl, version bump to 7.21.7, many bug fixes and two security fixes.
+
+-- radvd, version bump to 1.8.1, bug fixes and new features.
+
+** Asterisk
+
+-- Asterisk 1.4.42 and 1.8.6.0
+
+** Web Interface
+
+-- Add support for APC UPS Monitoring and Shutdown.  The Status tab displays info and recent
+   UPS events.  The Prefs tab may hide the Status tab section if desired.  The Network tab
+   adds a "APC UPS Monitoring & Shutdown" section to configure options.  If the file
+   "/mnt/kd/apcupsd/apcupsd.conf" exists a { UPS Configuration } button will be displayed
+   instead to manually edit the configuration.
+
+   Email notifications will be sent if "Notify Email Addresses To:" is defined with one
+   or more email addresses.  "Notify Email Address From:" is optional.
+
+   Note: A USB configuration requires an empty "Device:" field.
+
+-- Network and Edit tabs, add "Restart UPS Daemon" in the Restart menu.
+
+-- Edit tab adds support for editing "/etc/asterisk/includes/*.conf" files.
+
+-- System tab, include the "/mnt/kd/ssh_keys/" directory (containing public ssh keys automatically
+   added to /root/.ssh/authorized_keys) in a Basic Configuration Backup and Restore.
+
+-- Status and Network tab, Restart PPPoE uses "/usr/sbin/pppoe-restart" if available.
+
+
+Additions for AstLinux 0.7.9:
+=============================
+
+Released 2011-07-14
+
+** System
+
+-- statserial, new command that displays a table of the signals on a standard 9-pin or 25-pin
+   serial port, and indicates the status of the handshaking lines. It can be useful for debugging
+   serial ports, for example external voicemail indicators for Asterisk.
+
+-- touch, fix an issue with the -t option.
+
+** Networking
+
+-- AIF, adaptive-ban plugin, add support for 'Dialplan Noted Suspicious IP Address' syslog
+
+-- lighttpd, add 'server.name' directive to the autogenerated lighttpd.conf so the PHP value
+   of $_SERVER['SERVER_NAME'] is properly defined.  This fixes a couple minor cosmetic issues
+   in the web inteface.
+
+-- inadyn (Dynamic DNS), added a patch to make 'getip' more compatible with various web servers.
+   Added both Host: and User-Agent: headers following the GET to obtain the public IP address.
+
+** Asterisk
+
+-- Asterisk 1.4.42 and 1.8.4.4
+
+-- Asterisk-gui, version bump to SVN 5217
+
+-- LibPRI 1.4.12 for all Asterisk versions
+
+-- asterisk-sip-monitor, new feature to optionally monitor Asterisk SIP trunks and peers.
+   Additionally, asterisk-sip-monitor-ctrl is used to start/stop asterisk-sip-monitor.
+   See: MONITOR_ASTERISK_SIP_TRUNKS and MONITOR_ASTERISK_SIP_PEERS variables in /stat/etc/rc.conf
+
+** Web Interface
+
+-- Network tab, "Safe Asterisk & SIP Monitoring" (previously "Safe Asterisk") adds the following:
+
+   Monitor SIP Trunks: |___|     Monitor SIP Peers:  |___|
+
+   A "SIP FAILURE" email will be generated when a trunk/peer goes offline and a "SIP OK" email will
+   be generated after all trunks/peers return online.
+
+   Monitor SIP Status Emails following SIP Failure Email: [ disabled/enabled ]
+
+   When enabled, any trunk/peer status change will generate an email until the "SIP OK" email.
+
+   ==
+   Example: Status tab, SIP Trunk Registrations:
+
+   chiv1.voippath.com:5060       xxxx    135 Registered      Sat, 21 May 2011 10:21:11
+   inbound18.bigtel.net:5060     xxxx     45 Registered      Sat, 21 May 2011 10:22:42
+
+   Monitor SIP Trunks: | chiv1.voippath.com inbound18.bigtel.net |
+   ==
+   Example: Status tab, SIP Peer Status:
+
+   voippath/homer-simpson    64.x.x.xx                 5060     OK (67 ms)
+   bigtel-inbound/homer1     64.x.x.xx                 5060     Unmonitored
+   bigtel-outbound/homer1    64.x.x.xx                 5060     OK (42 ms)
+
+   Monitor SIP Peers: | voippath bigtel-outbound |
+   ==
+
+   Note: Only peers with qualify=yes may be monitored.
+
+-- Users tab, honors a new Prefs tab -> Users Tab Options:
+
+     ___ Hide Passwords for Voicemail Users Mailboxes
+
+   When checked, mailbox passwords are not displayed in the Users tab list.
+
+-- System tab and Edit tab adds support for viewing/editing files in "/mnt/kd/docs/".
+   The AstLinux system does not use these files, but is intended for general and site-specific
+   documentation added by the administrator.
+
+
+Additions for AstLinux 0.7.8:
+=============================
+
+Released 2011-05-18
+
+** System
+
+-- Linux Kernel 2.6.27.57 (minor bump)
+
+-- unionfs, version bump to 2.5.9
+
+-- RUNNIX, version bump to 0.3.3, including a new "CF + USB Combo Booting" feature.
+   More info: http://doc.astlinux.org/userdoc:tt_cf_usb_combo_booting
+
+-- Upgrades performed with either the upgrade-run-image CLI command or via the web interface
+   adds a new feature of automatically propagating certain KCMD options.  In particular,
+   KCMD options: noram, rootdelay=, and reboot= are added to the new os/astlinux-xxxx.run.conf
+   file on upgrades if the option(s) existed in the previous os/astlinux-xxxx.run.conf file.
+
+-- Timezone, tzcode2011g and tzdata2011g
+
+** Networking
+
+-- Change web server to lighttpd 1.4.28 from mini_httpd. Also support fastcgi for PHP.
+
+-- dnsmasq, version bump to 2.57, IPv6 TFTP support and bug fixes.
+
+-- AIF, core version bump to 2.0.0b
+
+-- AIF, adaptive-ban plugin, add support for 'lighttpd' analysis type.
+
+-- AIF, dyndns-host-open plugin, re-written for AstLinux.  Provides EXT->Local firewall 'host-open'
+   rules using hostnames (via periodic DNS lookups) rather than static IP addresses.  Should the
+   hostname resolve to multiple IPv4 addresses, a rule for each address will be opened.  IPv4 only.
+   Note: If users had made the previous dyndns-host-open plugin work by adding a CRON, etc., there
+         is no CRON necessary with the new dyndns-host-open plugin.
+
+-- tftpd server, always use dnsmasq for the tftpd server. Backward compatibility is
+   maintained for the deprecated 'tftpd' and 'inetd' values for the TFTPD variable.
+
+-- ftpd server, always use vsftpd standalone for the ftpd server. Backward compatibility is
+   maintained for the deprecated 'inetd' value for the FTPD variable.
+
+-- vsftpd, version bump to 2.3.4, bug fixes.
+
+-- stunnel, version bump to 4.35, add IPv6 support.
+   Note: The STUNNELSERVS variable now uses a tilde (~) delimiter instead of the previous colon (:).
+
+-- OpenSSL, version bump to 0.9.8r (security fixes: CVE-2010-4252, CVE-2010-4180 and CVE-2011-0014)
+
+** Asterisk
+
+-- Asterisk 1.4.41 and 1.8.4
+   Note: A known problem exists with Cisco 79xx SIP phones not registering
+         https://issues.asterisk.org/view.php?id=18951
+
+-- DAHDI, version bump to dahdi-linux 2.4.1.1 and dahdi-tools 2.4.1
+
+-- wanpipe, version bump to 3.5.19
+
+-- wanpipe, include "wan_ec_client" utility to support hardware echo cancellation
+
+-- Asterisk 1.8 build, include ast_tls_cert script for SIP TLS configurations
+   https://wiki.asterisk.org/wiki/display/AST/Secure+Calling+Tutorial
+
+-- Asterisk-gui, version bump to SVN 5209 
+
+** Web Interface
+
+-- Internal changes to support lighttpd with fastcgi PHP.
+
+-- Network tab, add HTTP/HTTPS _x_ Allow Listing for HTTP_LISTING and HTTPS_LISTING variables.
+   Removed deprecated, mini_httpd related, HTTP/HTTPS user permissions options.
+
+-- Network tab, FTP and TFTP Servers now only have 'disabled' and 'enabled' options.
+
+-- Prefs tab, add support for HTTP-only voicemail/monitor playback while the connection is HTTPS.
+   Some devices, such as iOS, currently require media connections to be HTTP.  Additionally, with the
+   change to lighttpd in this version, any iOS device may play Voicemail and Monitor recordings
+   via the web interface.
+
+-- System tab, added support for Russian core sound files.
+
+-- Status tab, added DAHDI Status and Hardware Monitoring sections.  Enable via the Prefs tab.
+
+-- Network tab, allow passwords for PPPoE, SMTP and Dynamic DNS to contain special characters.
+
+
+Additions for AstLinux 0.7.7:
+=============================
+
+Released 2011-03-03
+
+** System
+
+-- No changes
+
+** Networking
+
+-- OpenSSH, version bump to 5.8p1.  Security fix and ECDSA key support.
+   Note: If a /mnt/kd/sshd.conf file exists to manually generate /etc/ssh/sshd_config, the previous UseQoS
+         option must be renamed to IPQoS, otherwise sshd will fail to start. Fortunately the default is to
+         automatically generate /etc/ssh/sshd_config using IPQoS.
+
+-- iftop, version bump to 1.0pre1, IPv6 support and bug fixes.
+
+-- Added pptpd, PPTP VPN support.  Added AIF pptp-vpn plugin.
+
+-- AIF, adaptive ban plugin, added 'pptpd' analysis type.
+
+-- dnsmasq, the default dynamic DHCP address range is reduced to .100-.220 in order to leave room for
+   possible PPTP VPN addresses.  As always, setting the DHCPRANGE variable overrides the default range.
+
+** Asterisk
+
+-- Asterisk 1.4.40 and 1.8.3
+
+-- Asterisk-gui, added patch to configure OSLEC echo canceler.  Thanks Rob Hillis.
+
+** Web Interface
+
+-- Added PPTP VPN sub-tab to the Network tab VPN Type.  Various other tweaks for PPTP VPN support.
+
+
+Additions for AstLinux 0.7.6:
+=============================
+
+Released 2011-02-12
+
+** System
+
+-- php5, version bump to 5.2.17
+
+-- Added mac2vendor package, providing "Vendor Name" from an ethernet MAC address or autoconf IPv6 address.
+
+-- perl (microperl) fixed to properly locate library with a few basic modules now included.
+
+** Networking
+
+-- msmtp, version bump to 1.4.23
+
+** Asterisk
+
+-- Asterisk 1.4.39.1 and 1.8.2.3
+
+-- Added optional safe_asterisk 'wrapper' customized for AstLinux. When enabled, if asterisk were
+   to crash, asterisk will be automatically restarted, optionally notifying via email.
+
+-- DAHDI, dahdi-linux 2.4.0 and dahdi-tools 2.4.0
+
+-- rhino, version bump to 0.99.4rc1 with DAHDI 2.4 compatibility
+
+-- wanpipe, version bump to 3.5.18 with DAHDI 2.4 compatibility.  Additionally, configuration utilities
+   wancfg and wancfg_dahdi are now supported.
+
+-- dahdi-linux, add dahdi_echocan_oslec support.  Enable by adding 'dahdi_echocan_oslec' to the
+   DAHDIMODS variable.
+
+-- Asterisk-gui, version bump to SVN 5154
+
+** Web Interface
+
+-- Status tab, DHCP Leases, added Vendor information derived from the MAC address if available.
+
+-- System tab, added 'RUNNIX Bootloader Upgrade' support.
+
+-- Network tab, added 'Safe Asterisk' support and email notifications on asterisk crash.
+
+-- Added search support particularly for Yealink Phones in the phone-dir.php script (thanks Rob Hillis)
+
+
+Additions for AstLinux 0.7.5:
+=============================
+
+Released 2011-01-05
+
+** System
+
+-- Added 'upgrade-RUNNIX-image' command, see ADDENDUM below
+
+-- Added support for more SATA devices, and allow booting to a SATA device, see ADDENDUM below
+
+-- Fixed a rare condition, a dirty filesystem required a reboot, but the reboot did not happen
+
+-- Added support for alternate console keyboard mappings. If the file os/console.kmap exists on the
+   vFAT boot partition and a non-serial console is used, both RUNNIX and AstLinux will use the
+   keyboard map.  For more info: http://doc.astlinux.org/userdoc:tt_console-kmap
+
+-- dosfstools, version bump to 3.0.10
+
+-- php5, version bump to 5.2.16
+
+** Networking
+
+-- IPsec, added IPsec Mobile (Road-Warrior) support, allowing remote peers
+   with dynamic IP addresses.
+
+-- IPsec, added certificate support to IPsec Peers (racoon VPN type)
+
+-- Dynamic DNS client, add support for DNS-O-Matic, use DDSERVICE="default@dnsomatic.com"
+
+-- AIF, version bump to 2.0.0a
+
+-- AIF, traffic-shaper plugin, added SHAPER_P2P_HOSTS variable to specify hosts (local or remote)
+   that all outbound traffic will be given the lowest priority.  A local file server backing up
+   remotely would be an example.
+
+-- p910nd, version bump to 0.94
+
+** Asterisk
+
+-- Asterisk 1.4.36 and 1.8.1.1
+
+-- Added 'bfdetect' CLI command that detects a Beronet Berofix card
+
+-- mISDN/mISDNuser, update to use Digium's supported version 1.1.3 in their thirdparty repository
+
+** Web Interface
+
+-- Added IPsec Mobile sub-tab accessed via the Network tab, VPN Type.
+
+-- IPsec Peers sub-tab adds certificates, Phase 1/Phase 2 lifetimes, and
+   Auto-Establish-IP options.
+
+-- Network tab, add DNS Service Type: DNS-O-Matic
+
+-- Status tab, add "Runnix Release:" information
+
+-- Added XML directory support for Yealink Phones in the phone-dir.php script (thanks Rob Hillis)
+
+
+** ADDENDUM **
+
+   The AstLinux bootloader, RUNNIX, has been updated to runnix-0.3.2, previously runnix-0.2.1. This is
+   considered an 'optional' upgrade at this time, and AstLinux 0.7.5 does not require runnix-0.3.2.
+
+   If you currently have problems booting with a SATA drive, or just want the latest features, after
+   you upgrade to 0.7.5, and with internet connectivity, you may upgrade RUNNIX from the CLI by typing:
+
+   $ upgrade-RUNNIX-image check     (if the response looks good, then type)
+
+   $ upgrade-RUNNIX-image upgrade   (patiently wait, do not interrupt)
+
+   After a reboot, you will see the text below, you have 5 seconds to type a character, otherwise the normal
+   boot will automatically proceed.
+
+      ##################################
+      #  RUNNIX - AstLinux bootloader  #
+      ##################################
+
+       runnix)  RUNNIX boot (default)
+
+        shell)  Run shell instead of booting
+
+          ssh)  Run shell and enable ssh instead of booting
+
+      xrunnix)  Use previous RUNNIX image (if any)
+
+      memtest)  Run Memtest86+ v4.10
+
+
+
+Additions for AstLinux 0.7.4:
+=============================
+
+Released 2010-11-26
+
+** System
+
+-- Compiled with gcc-4.2
+
+-- Fixed uClibc DNS resolver code that caused a segmentation fault on certain lookups
+
+-- added FIRSTRUN default runlevel to help automate version to version upgrades
+
+-- added jpeg, tiff and spandsp support for Fax2Mail functionality
+
+-- added libxml2 support for XML Documentation functionality in Asterisk 1.8
+
+-- added libsrtp support for Secure-RTP (SRTP) functionality in Asterisk 1.8
+
+-- updated zlib (libz) to version 1.2.5
+
+-- updated libpri to versions 1.4.11.5 and 1.4.12-beta3
+
+** Networking
+
+-- IPv6 support, allowing routing/firewalling for mixed IPv4/IPv6 as well as providing IPv6 services
+
+-- AIF 2.0.0 for mixed IPv4/IPv6 support and bug fixes
+
+-- IPv6 6in4-static and 6to4-relay tunnel support over IPv4
+
+-- radvd 1.6 with added init.d script support
+
+-- msmtp, added 'mime-pack' script to create MIME attachments to pass to 'sendmail -t'
+
+-- made ntpd IPv4-only to solve problems with IPv6
+
+-- mini_httpd, fix bug where the HTTPCGI variable value was ignored
+
+-- IPsec, added IPv6 support, version bump to ipsec-tools 0.7.3
+
+-- vsftpd, version bump to 2.3.2
+
+-- sshd, use rc.conf variables to automatically generate sshd_config (as previously) unless
+   /mnt/kd/sshd.conf exists, then manually generate sshd_config using that file.
+
+-- OpenVPN, version bump to 2.1.4 (bug fix)
+
+-- OpenSSL, version bump to 0.9.8p (security fix)
+
+** Asterisk
+
+-- Asterisk 1.4.36 and 1.8.0
+
+-- bump Asterisk-gui to SVN 5120
+
+-- Added support for English (Australian Accent) core sound files, en_AU.
+
+** Web Interface
+
+-- Firewall sub-tab, added IPv6 support, added new protocol support, added new rule actions.
+
+-- Network tab, added IPv6 support for External and Internal interfaces, tunnel support
+
+-- DNS Forwarder Hosts sub-tab, allow IPv6 addresses
+
+-- System tab, added support for English (Australian Accent) core sound files, english-au.
+
+-- System tab and Staff tab, Configuration/File Backup, when including unionfs files, the
+   asterisk sounds and moh files will not be included in the backup.
+
+-- Status tab, added a License: "Show Licenses" link to the new Licenses sub-tab.
+
+
+Additions for AstLinux 0.7.3:
+=============================
+
+Released 2010-09-29
+
+** System
+
+-- Linux Kernel 2.6.27.49 (minor bump)
+
+-- PHP 5.2.14 (security and bug fixes)
+
+-- p910nd mDNS support via P910ND_ADNAME0 rc.conf variable.
+
+** Networking
+
+-- DNSmasq 2.55 (bug fixes and new features)
+
+-- hostap 0.7.2
+
+-- curl 7.21.0 (bug fixes and new features)
+
+-- OpenSSH 5.6p1 (security and bug fixes)
+
+-- OpenSSL 0.9.8o (security and bug fixes)
+
+-- OpenVPN 2.1.2 (bug fixes and new features)
+
+-- msmtp 1.4.21 (minor bug fixes)
+
+-- tzdata2010l; tzcode2010l (updates)
+
+** Asterisk
+
+-- Asterisk 1.4.36 (bug fixes)
+
+-- LibPRI 1.4.11.4
+
+** Web Interface
+
+-- OpenVPN Server and OpenVPN Client adds "QoS Passthrough" support.
+
+
+Additions for AstLinux 0.7.2:
+=============================
+
+Released 2010-05-08
+
+** System
+
+-- Added persistent mail queue for msmtp, msmtpqueue.  The msmtpqueue command,
+   without arguemnts (or -p) will display the current mail queue.
+   The persistent mail directory is /mnt/kd/mail/ .
+   Mail sent via sendmail will use the queue.
+   Mail sent directly via msmtp will not use the queue.
+
+-- Added show-union command. Usage: show-union [ system kd asterisk_sounds all ]
+   Without arguments (or system) the unionfs (ASTURW partition) system files will be displayed.
+   Useful for troubleshooting and determining if base files are superseded with unionfs files.
+
+-- Fixed a configuration issue with the sftp server
+
+** Networking
+
+-- Firewall, Arno's iptables script v1.9.2k
+
+-- Firewall, Adaptive Ban Plugin is added.
+   The operation is similar to how fail2ban ( www.fail2ban.org ) functions by constantly
+   inspecting the syslog file for failed authentication attempts and remote IP address
+   for common services.  When the number of log failures exceed a preset number, the
+   IP address will be banned, and all traffic will be dropped from the banned host.
+   Supported services: sshd, asterisk and mini_httpd
+
+** Asterisk
+
+-- Asterisk 1.4.31 (Asterisk 1.6.2.7 with a custom build) (bug fixes)
+
+-- DAHDI, dahdi-linux 2.3.0 and dahdi-tools 2.3.0
+
+-- upgrade-asterisk-sounds, support Digium's new MOH file names in their repository
+
+** Web Interface
+
+-- Network tab adds SMTP Encryption support via TLS/STARTTLS and SSL/SMTP
+
+-- Network and Edit tab, the {Reboot/Restart} and {Reload/Restart} buttons have a new menu
+   item [ Restart SMTP Mail ].  When acted upon, the SMTP settings will be applied without
+   requiring a reboot.
+
+-- Prefs tab, the "Distinguished Name" section adds 'Country', 'State/Province', and
+   'Locality' Name entries.  This effects future certificates that are created.
+   If the entries are empty, default values of C=US, ST=Nebraska, L=Omaha will be used.
+
+-- Voicemail tab, if both .wav (PCM) and .WAV (GSM) voicemail files are created, the better
+   quality and more commonly supported .wav (PCM) file will be played.
+   Additionally, the Prefs tab adds support for the inline HTML5 <audio ...></audio> tag.
+
+-- Added small, transparent AstLinux logo to all pages.
+   Custom branding can be achieved by replacing the logo in common/logo-small.gif
+   which must be width="113" height="23", or it will be scaled to that.
+   Custom GIF's with white backgrounds should be made transparent for best results.
+
+-- A new Prefs tab option, under "Directory Tab Options:"
+      ___ Require Authentication for Directory Tab
+   When unchecked (the default), anyone can view the Directory tab.
+
+
+Additions for AstLinux 0.7.1:
+=============================
+
+Released 2010-03-26
+
+** System
+
+-- Linux Kernel 2.6.27.42 (minor bump)
+
+-- Timezone, tzcode2010c and tzdata2010e
+
+-- PHP 5.2.13 (security and bug fixes)
+
+-- p910nd 0.93 (improved performance over wireless)
+
+** Networking
+
+-- Firewall, Arno's iptables script v1.9.2j (upgraded traffic shaper)
+
+-- NTP 4.2.4p8 (security fix)
+
+-- OpenVPN 2.1.1 (major upgrade, backward compatible settings for the most part)
+
+-- OpenSSH 5.4p1
+
+-- DNSmasq 2.52 (bug fixes and new features)
+
+-- hostap 0.7.1
+
+** Asterisk
+
+-- Asterisk 1.4.30 (bug fixes)
+
+-- DAHDI, dahdi-linux 2.2.1 and dahdi-tools 2.2.1
+
+-- Asterisk Sounds Packages are no longer included in the base image, instead a new
+   script "upgrade-asterisk-sounds" is included to manage core, extra and moh sounds.
+
+   By default, the URL http://downloads.asterisk.org/pub/telephony/sounds is used retrieve
+   the sounds packages.  A private URL may also be used with the same file format.
+
+** Web Interface
+
+-- System tab adds the "Asterisk Sounds Packages" section where sounds and moh sound packages
+   may be upgraded/installed or removed.  The Sounds Pkg URL used to retrieve the files
+   can be defined in the Prefs tab.  The script "upgrade-asterisk-sounds" is used to do the work.
+
+
+Additions for AstLinux 0.7.0:
+=============================
+
+Released 2010-01-18
+
+** System
+
+-- Linux Kernel 2.6.27.29
+
+-- Embedded i586 support: net4801, net5501, wrap, alix, via, viac7 and generic geni586.
+
+-- TZ_TIMEZONE variable no longer needs to be defined, it is now automatically derived via
+   the TIMEZONE variable data.
+
+-- LED status light support for all applicable embedded platforms.
+
+-- Watchdog support for all applicable embedded platforms with WDMODULE="auto".
+
+-- OCF hardware acceleration for applicable embedded platforms.
+
+-- Curl is now standard, along with Asterisk func_curl().
+
+-- Many, many build environment enhancements to generate this goodness.
+
+** Networking
+
+-- Firewall (Arno's iptables script v1.9.2g):  Much improved from previous v1.8.x series.
+
+-- IPsec: Additional configuration options.  Automatic firewall integration via a plugin.
+
+-- OpenVPN: Added OpenVPN client support to the existing OpenVPN server.  Additional configuration
+   options for both client and server.  Automatic firewall integration.
+
+-- The concept of single interface PBX-only mode has been removed, the firewall and DNS
+   forwarding may now be enabled with a single (external) interface.  Dnsmasq is now always started.
+
+-- Now defaults to always using local DNS cacheing via dnsmasq.
+
+-- Dynamic-DNS now uses a patched version of inadyn, which fixes a ZoneEdit problem and adds
+   support for allowing the public IP address to be obtained from the EXTIF interface.
+
+-- astfw has been removed
+
+** Asterisk
+
+-- Asterisk 1.4.29 (Asterisk 1.6.2.1 available with custom build)
+
+-- DAHDI 2.2.0.2 replaces ZAPTEL (ZAPTEL still available with custom build)
+
+-- DEVICE_STATE Backport, http://www.asterisk.org/node/48325
+
+** Web Interface
+
+-- Many coordinated changes to Arno's Firewall and the Firewall sub-tab.
+
+-- dialproxy.php script added. The purpose is to trigger a call by first dialing a selected
+   extension, when answered, the script completes and an outgoing call is initiated to the num=
+   number. The actionlist "DIALPROXY-value" key is used to define the extension and options.
+
+   A call could be triggered by any application which can call an URL, for example:
+   $ curl --insecure "https://pbx/dialproxy.php?num=2223334444&ext=value"
+
+   The actionlist "DIALPROXY-value" key provides the security to limit access, disabled by default.
+
+-- IPsec Configuration sub-tab supports the new IPSEC_PSK_ASSOCIATIONS v2 format. The previous
+   IPSEC_PSK_ASSOCIATIONS v1 format will be automatically imported.
+
+-- Integrate the CDR Log tab to the Caller*ID tab by adding links in the CID Number column
+   to the Caller*ID tab.
+
+-- Integrate the Caller*ID tab to the Blacklist and Whitelist tabs by adding Blacklist:NUM
+   and Whitelist:NUM links to the respective tabs.
+
+-- Added Actionlist Tab. The asterisk astdb database is used with family "actionlist".
+   'admin' and 'staff' users can access the Actionlist tab. The Actionlist tab is a more
+   general variation of the Blacklist and Whitelist tabs, requiring
+   asterisk support via the extensions.conf dialplan.
+
+-- CDR Log tab has been redesigned to support multiple 'pages' that can easily be viewed.
+   The number of most recent CDR records to view and page size can be defined.
+   Currently up to 5000 records may be viewed, 5x greater than previously.
+
+-- The OpenVPN server credentials adds a README.txt file documenting the credential files.
+   The automatically generated password to the PKCS#12 file is contained in the README.txt file.
+
+-- Network tab adds support for Dynamic DNS "DNS Get IP Address". AstLinux 0.7 uses a patched
+   version of inadyn that optionally supports obtaining the public IP address from the external
+   interface. The default method remains querying getip.krisk.org .
+
+-- The "ZoneEdit [generic]" has been removed since it is no longer required to work around
+   an inadyn problem. The ZoneEdit item should work for all ZoneEdit users.
+
+-- The Edit tab now groups the editable files in three sections, System Configuration,
+   Asterisk Configuration and Firewall Plugins.  More system files are editable.
+
+-- The Network tab now supports the Arno firewall with a single, external interface. The firewall
+   can now be enabled or disabled, regardless of the number of internal interfaces.
+
+-- Network tab now supports the selection of either [DNS & DHCP] or [DNS only] for each
+   internal network. This applies to internal networks with interfaces defined.
+
+-- The System tab has a new option "Restore Basic Configuration". Any Backup download that
+   is 8 MBytes or smaller can be used to restore the configuration of basic settings.
+
+-- A new OpenVPN Client sub-tab has been added to the Network tab. Both OpenVPN client and server
+   are now fully supported in the web interface.
+
+-- General layout changes and improvements.
+
+   More web interface info at:
+   http://lonnie.abelbeck.com/astlinux/altweb-changelog.txt
+
