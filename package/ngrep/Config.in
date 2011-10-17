@@ -1,0 +1,8 @@
+config BR2_PACKAGE_NGREP
+	bool "ngrep"
+	default n
+	select BR2_PACKAGE_LIBPCAP
+	help
+	  Apply GNU grep features to the network layer
+
+	  http://ngrep.sourceforge.net/
