@@ -24,6 +24,8 @@ Released **TBD**
 
    == The astmanproxy package is no longer supported.
 
+   == The sfdisk command removed and tftpd now supported via dnsmasq.
+
 -- The RUNNIX bootloader, version 0.4 is required.  The easiest is to start fresh with an AstLinux 1.0
    flash image, containing both the new RUNNIX bootloader and AstLinux 1.0 core.  In addition users
    may upgrade existing systems with both runnix-0.4 and Astlinux 1.0, see documentation.
