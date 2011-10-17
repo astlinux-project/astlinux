@@ -1,0 +1,131 @@
+#!/bin/bash
+#
+# master-build output_path [ force ]
+#
+
+FAT_SIZE=192
+
+BOARDS="geni586 geni586-serial net5501 alix via via-serial viac7 viac7-serial net4801 wrap"
+
+RUNFS_DIR="output/build/runfs"
+
+output_path="$1"
+
+force="$2"
+
+if [ -z "$output_path" ]; then
+  echo "usage: master-build output_path [ force ]"
+  exit 1
+fi
+
+if [ -d "$output_path" ]; then
+  if [ "$force" = "force" ]; then
+    rm -rf "$output_path"
+    if ! mkdir "$output_path"; then
+      exit 1
+    fi
+  else
+    echo "master-build: directory \"$output_path\" exists, use 'force' verb to override."
+    exit 1
+  fi
+else
+  if ! mkdir "$output_path"; then
+    exit 1
+  fi
+fi
+
+echo "Regenerate the initrd"
+rm -f initrd.img
+
+#
+# Build Asterisk 1.4 AstLinux
+#
+
+echo "Cleaning out any existing builds..."
+rm -rf output
+
+cp astlinux.config .config
+
+if ! mkdir "$output_path/firmware"; then
+  exit 1
+fi
+if ! mkdir "$output_path/img"; then
+  exit 1
+fi
+
+for board in $BOARDS; do
+
+  mkdir "$output_path/firmware/$board"
+  mkdir "$output_path/img/$board"
+
+  ./scripts/build $board
+
+  if [ $? -ne 0 ]; then
+    exit 1
+  fi
+
+  ASTVER="$(cat ${RUNFS_DIR}/os/ver)"
+
+  if [ -z "$ASTVER" ]; then
+    echo "master-build: missing runfs version file."
+    exit 1
+  fi
+
+  ./scripts/astlinux-makeimage -z $FAT_SIZE $FAT_SIZE 0
+
+  mv "${ASTVER}.tar.gz" "$output_path/firmware/$board/${ASTVER}.tar.gz"
+  mv "${ASTVER}.tar.gz.sha1" "$output_path/firmware/$board/${ASTVER}.tar.gz.sha1"
+  mv "${ASTVER}.img.gz" "$output_path/img/$board/${ASTVER}.img.gz"
+
+  rm -rf "${ASTVER}"
+done
+
+#
+# Build Asterisk 1.8 AstLinux
+#
+
+echo "Cleaning out any existing builds..."
+rm -rf output
+
+cp astlinux18.config .config
+
+if ! mkdir "$output_path/ast18-firmware"; then
+  exit 1
+fi
+if ! mkdir "$output_path/ast18-img"; then
+  exit 1
+fi
+
+for board in $BOARDS; do
+
+  mkdir "$output_path/ast18-firmware/$board"
+  mkdir "$output_path/ast18-img/$board"
+
+  ./scripts/build $board
+
+  if [ $? -ne 0 ]; then
+    exit 1
+  fi
+
+  ASTVER="$(cat ${RUNFS_DIR}/os/ver)"
+
+  if [ -z "$ASTVER" ]; then
+    echo "master-build: missing runfs version file."
+    exit 1
+  fi
+
+  ./scripts/astlinux-makeimage -z $FAT_SIZE $FAT_SIZE 0
+
+  mv "${ASTVER}.tar.gz" "$output_path/ast18-firmware/$board/${ASTVER}.tar.gz"
+  mv "${ASTVER}.tar.gz.sha1" "$output_path/ast18-firmware/$board/${ASTVER}.tar.gz.sha1"
+  mv "${ASTVER}.img.gz" "$output_path/ast18-img/$board/${ASTVER}.img.gz"
+
+  rm -rf "${ASTVER}"
+done
+
+echo "
+##
+## Master Build Successful for ${ASTVER}
+##
+"
+
