@@ -27,11 +27,13 @@ define EX_VI_CONFIGURE_CMDS
 endef
 
 define EX_VI_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $(@D)/ex $(TARGET_DIR)/bin/vi
+	$(INSTALL) -m 0755 -D $(@D)/ex $(TARGET_DIR)/usr/bin/vi
+	# In case Busybox made a /bin/vi link, remove it
+	rm -f $(TARGET_DIR)/bin/vi
 endef
 
 define EX_VI_UNINSTALL_TARGET_CMDS
-	rm -f $(TARGET_DIR)/bin/vi
+	rm -f $(TARGET_DIR)/usr/bin/vi
 endef
 
 $(eval $(call GENTARGETS,package,ex-vi))
