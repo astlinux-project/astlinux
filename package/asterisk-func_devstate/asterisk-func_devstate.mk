@@ -5,7 +5,7 @@
 ##############################################################
 FUNC_DEVSTATE_DIR := $(BUILD_DIR)/func_devstate
 FUNC_DEVSTATE_BINARY := func_devstate.so
-FUNC_DEVSTATE_TARGET_BINARY = $(ASTERISK_MODULE_DIR)/$(FUNC_DEVSTATE_BINARY)
+FUNC_DEVSTATE_TARGET_BINARY = usr/lib/asterisk/modules/$(FUNC_DEVSTATE_BINARY)
 
 $(FUNC_DEVSTATE_DIR)/func_devstate.c:
 	mkdir -p $(FUNC_DEVSTATE_DIR)

@@ -5,7 +5,7 @@
 ##############################################################
 APP_WAITUNTIL_DIR := $(BUILD_DIR)/app_waituntil
 APP_WAITUNTIL_BINARY := app_waituntil.so
-APP_WAITUNTIL_TARGET_BINARY = $(ASTERISK_MODULE_DIR)/$(APP_WAITUNTIL_BINARY)
+APP_WAITUNTIL_TARGET_BINARY = usr/lib/asterisk/modules/$(APP_WAITUNTIL_BINARY)
 
 $(APP_WAITUNTIL_DIR)/app_waituntil.c:
 	mkdir -p $(APP_WAITUNTIL_DIR)

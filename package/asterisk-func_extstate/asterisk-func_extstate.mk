@@ -5,7 +5,7 @@
 ##############################################################
 FUNC_EXTSTATE_DIR := $(BUILD_DIR)/func_extstate
 FUNC_EXTSTATE_BINARY := func_extstate.so
-FUNC_EXTSTATE_TARGET_BINARY = $(ASTERISK_MODULE_DIR)/$(FUNC_EXTSTATE_BINARY)
+FUNC_EXTSTATE_TARGET_BINARY = usr/lib/asterisk/modules/$(FUNC_EXTSTATE_BINARY)
 
 $(FUNC_EXTSTATE_DIR)/func_extstate.c:
 	mkdir -p $(FUNC_EXTSTATE_DIR)
