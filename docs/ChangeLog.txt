@@ -12,9 +12,10 @@ Released **TBD**
 
 ** IMPORTANT NOTICE
 
--- AstLinux 1.0 is a major upgrade from the previous 0.7 series.  Most notable much newer:
+-- AstLinux 1.0 is a major upgrade from the previous 0.7 series.  Most notable is much newer:
    Linux Kernel, BusyBox and supporting packages.  In addition the C Library is generated
-   via eglibc, which is binary compatable with other glibc executables.
+   via eglibc, which is binary compatable with other glibc executables.  Glibc compatibility
+   adds support for binary addons, such as Digium's G.729 CODEC, among others.
 
 -- Features no longer supported in AstLinux 1.0
 
@@ -39,13 +40,51 @@ Released **TBD**
 
 -- BusyBox version 1.18.5
 
+-- ex-vi (vi) version 050325, replaces BusyBox vi
+
+-- acpid, version 2.0.7
+
+-- libpcap, version 1.1.1
+
+-- libusb, version 1.0.8
+
+-- libxml2, version 2.7.8
+
+-- module-init-tools (modprobe) version 3.12
+
+-- nano, version 2.2.6
+
+-- pciutils, version 3.1.7
+
+-- sqlite, version 3070603
+
+-- udev, version 173
+
+-- usbutils, version 003
+
 ** Networking
 
--- Many changes
+-- curl (libcurl) version 7.21.7
+
+-- iproute (ip, tc) version 2.6.39
+
+-- iptables, version 1.4.12
+
+-- msmtp, version 1.4.25
+
+-- netsnmp, version 5.6.1
+
+-- radvd, version 1.8.3
+
+-- rsync, version 3.0.8
 
 ** Asterisk
 
 -- Asterisk 1.4.42 and 1.8.7.1
+
+-- DAHDI, dahdi-linux 2.4.1.1 and dahdi-tools 2.4.1
+
+-- LibPRI 1.4.12
 
 ** Web Interface
 
