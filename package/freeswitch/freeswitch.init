@@ -1,0 +1,55 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+init () {
+  :
+}
+
+start () {
+
+  if [ -z "$FSARGS" ]; then
+    FSARGS="-nc"
+  fi
+
+  if [ -w /usr/local/freeswitch/log ]; then
+    echo "Starting freeswitch..."
+    ulimit -s unlimited
+    freeswitch "$FSARGS"
+  fi
+}
+
+stop () {
+
+  if [ -f /usr/local/freeswitch/log/freeswitch.pid ]; then
+    echo "Stopping freeswitch..."
+    freeswitch -stop
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac

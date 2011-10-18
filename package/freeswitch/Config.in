@@ -1,0 +1,18 @@
+config BR2_PACKAGE_FREESWITCH
+	bool "freeswitch"
+	default n
+	select BR2_PACKAGE_OPENSSL
+	select BR2_PACKAGE_ZLIB
+	select BR2_PACKAGE_LIBPCAP
+	help
+	  Open source telephony platform
+
+	  http://www.freeswitch.org/
+
+config BR2_PACKAGE_FREESWITCH_SOUNDS
+	bool "freeswitch sounds"
+	default n
+	depends on BR2_PACKAGE_FREESWITCH
+	help
+	  Install FreeSWITCH sounds and MOH
+
