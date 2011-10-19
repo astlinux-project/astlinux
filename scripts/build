@@ -131,6 +131,11 @@ case "$board" in
 
 esac
 
+if [ ! -d "$HOME/astlinux/x-tools" ]; then
+  cat "crosstool-ng-src/README"
+  exit_error "Toolchain not found, see instructions above."
+fi
+
 error=0
 for i in $REQUIRED_CMDS; do
   if ! which $i >/dev/null 2>&1; then

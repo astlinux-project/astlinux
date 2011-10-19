@@ -1,0 +1,24 @@
+#########################################################################
+## Crosstool-NG
+## http://crosstool-ng.org
+##
+## Building the eglibc toolchain for AstLinux 1.x using Buildroot 2011-08
+## The resulting toolchain is output to $HOME/astlinux/x-tools
+## Make sure you have a $HOME/astlinux/ directory.
+##
+# mkdir ~/source-control # used as example folder for these configs
+cd ~/source-control
+wget -O - http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.12.3.tar.bz2 | tar xj
+cd crosstool-ng-1.12.3
+./configure
+make
+sudo make install
+cd ~/source-control
+mkdir ctng
+cd ctng
+# copy the "crosstool-ng-src/ct-ng.config" file here in the SVN to "~/source-control/ctng/.config"
+ct-ng menuconfig
+# leave as configured, then
+ct-ng build
+# takes 40-60 min.
+#########################################################################
