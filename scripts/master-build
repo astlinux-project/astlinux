@@ -46,7 +46,7 @@ rm -rf output
 
 cp astlinux.config .config
 
-if ! mkdir "$output_path/firmware"; then
+if ! mkdir "$output_path/firmware-1.x"; then
   exit 1
 fi
 if ! mkdir "$output_path/img"; then
@@ -55,7 +55,7 @@ fi
 
 for board in $BOARDS; do
 
-  mkdir "$output_path/firmware/$board"
+  mkdir "$output_path/firmware-1.x/$board"
   mkdir "$output_path/img/$board"
 
   ./scripts/build $board
@@ -73,8 +73,8 @@ for board in $BOARDS; do
 
   ./scripts/astlinux-makeimage -z $FAT_SIZE $FAT_SIZE 0
 
-  mv "${ASTVER}.tar.gz" "$output_path/firmware/$board/${ASTVER}.tar.gz"
-  mv "${ASTVER}.tar.gz.sha1" "$output_path/firmware/$board/${ASTVER}.tar.gz.sha1"
+  mv "${ASTVER}.tar.gz" "$output_path/firmware-1.x/$board/${ASTVER}.tar.gz"
+  mv "${ASTVER}.tar.gz.sha1" "$output_path/firmware-1.x/$board/${ASTVER}.tar.gz.sha1"
   mv "${ASTVER}.img.gz" "$output_path/img/$board/${ASTVER}.img.gz"
 
   rm -rf "${ASTVER}"
@@ -89,7 +89,7 @@ rm -rf output
 
 cp astlinux18.config .config
 
-if ! mkdir "$output_path/ast18-firmware"; then
+if ! mkdir "$output_path/ast18-firmware-1.x"; then
   exit 1
 fi
 if ! mkdir "$output_path/ast18-img"; then
@@ -98,7 +98,7 @@ fi
 
 for board in $BOARDS; do
 
-  mkdir "$output_path/ast18-firmware/$board"
+  mkdir "$output_path/ast18-firmware-1.x/$board"
   mkdir "$output_path/ast18-img/$board"
 
   ./scripts/build $board
@@ -116,8 +116,8 @@ for board in $BOARDS; do
 
   ./scripts/astlinux-makeimage -z $FAT_SIZE $FAT_SIZE 0
 
-  mv "${ASTVER}.tar.gz" "$output_path/ast18-firmware/$board/${ASTVER}.tar.gz"
-  mv "${ASTVER}.tar.gz.sha1" "$output_path/ast18-firmware/$board/${ASTVER}.tar.gz.sha1"
+  mv "${ASTVER}.tar.gz" "$output_path/ast18-firmware-1.x/$board/${ASTVER}.tar.gz"
+  mv "${ASTVER}.tar.gz.sha1" "$output_path/ast18-firmware-1.x/$board/${ASTVER}.tar.gz.sha1"
   mv "${ASTVER}.img.gz" "$output_path/ast18-img/$board/${ASTVER}.img.gz"
 
   rm -rf "${ASTVER}"
