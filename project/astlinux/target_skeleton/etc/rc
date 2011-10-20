@@ -214,7 +214,7 @@ none    /var            tmpfs   size=5000k      0       0
      if [ "$i" = "sleep" ]; then
        sleep 2
      else
-       modprobe "$i" 2>/dev/null
+       modprobe $i 2>/dev/null
      fi
      done)
     sleep 5
