@@ -1,0 +1,13 @@
+--- zabbix-1.8.8/configure.in.orig	2011-10-21 14:29:24.000000000 -0500
++++ zabbix-1.8.8/configure.in	2011-10-21 14:30:34.000000000 -0500
+@@ -886,7 +886,9 @@
+ ],
+ AC_DEFINE(HAVE_LONG_LONG_QU, 1 ,[Define to 1 if format '%qu' exists.])
+ AC_MSG_RESULT(yes),
+-AC_MSG_RESULT(no))
++AC_MSG_RESULT(no),
++AC_DEFINE(HAVE_LONG_LONG_QU, 1 ,[Define to 1 if format '%qu' exists.])
++AC_MSG_RESULT(yes))
+ 
+ dnl option -rdynamic is needed for readable backtraces
+ AC_MSG_CHECKING(for -rdynamic linking option)
