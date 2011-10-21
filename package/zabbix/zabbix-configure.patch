@@ -1,11 +1,20 @@
---- zabbix-1.4.5/configure	2008-03-26 03:12:39.000000000 -0500
-+++ zabbix-1.4.5/configure-zab	2008-04-04 09:56:25.000000000 -0500
-@@ -4788,7 +4788,7 @@ if test "$cross_compiling" = yes; then
- See \`config.log' for more details." >&5
- echo "$as_me: error: cannot run test program while cross compiling
- See \`config.log' for more details." >&2;}
--   { (exit 1); exit 1; }; }
+*** zabbix-1.8.8/configure.orig	2011-10-21 12:40:33.840598621 -0500
+--- zabbix-1.8.8/configure	2011-10-21 12:41:11.622596475 -0500
+***************
+*** 6791,6798 ****
+  if test "$cross_compiling" = yes; then :
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+  $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+- as_fn_error $? "cannot run test program while cross compiling
+- See \`config.log' for more details" "$LINENO" 5 ; }
+  else
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+  /* end confdefs.h.  */
+--- 6791,6797 ----
+  if test "$cross_compiling" = yes; then :
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+  $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
 +   }
- else
-   cat >conftest.$ac_ext <<_ACEOF
- 
+  else
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+  /* end confdefs.h.  */
