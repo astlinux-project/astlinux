@@ -38,6 +38,8 @@ Released **TBD**
 
 -- Linux Kernel 2.6.35.13 (major bump)
 
+-- e1000 version 8.0.35 and e1000e version 1.6.3 Intel PRO/1000 Linux drivers
+
 -- BusyBox version 1.18.5
 
 -- ex-vi (vi) version 050325, replaces BusyBox vi
