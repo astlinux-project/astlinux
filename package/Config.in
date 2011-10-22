@@ -175,6 +175,8 @@ source "package/devmem2/Config.in"
 endif
 source "package/dmraid/Config.in"
 source "package/dosfstools/Config.in"
+source "package/e1000/Config.in"
+source "package/e1000e/Config.in"
 source "package/e2fsprogs/Config.in"
 source "package/eeprog/Config.in"
 source "package/fconfig/Config.in"

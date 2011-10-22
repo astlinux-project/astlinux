@@ -1,0 +1,9 @@
+config BR2_PACKAGE_E1000
+	bool "e1000"
+	depends on BR2_LINUX_KERNEL
+	default n
+	help
+	  Newer stable e1000 Intel PRO/1000 Linux driver
+
+	  http://sourceforge.net/projects/e1000/
+
