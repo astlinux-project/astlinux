@@ -41,6 +41,9 @@ rm -f initrd.img
 # Build Asterisk 1.4 AstLinux
 #
 
+ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *1.4/) {print $2; exit} }' package/asterisk/asterisk.mk)"
+ASTERISK_VERSION="asterisk-${ASTERISK_VERSION// /}"
+
 echo "Cleaning out any existing builds..."
 rm -rf output
 
@@ -75,7 +78,7 @@ for board in $BOARDS; do
 
   mv "${ASTVER}.tar.gz" "$output_path/firmware-1.x/$board/${ASTVER}.tar.gz"
   mv "${ASTVER}.tar.gz.sha1" "$output_path/firmware-1.x/$board/${ASTVER}.tar.gz.sha1"
-  mv "${ASTVER}.img.gz" "$output_path/img/$board/${ASTVER}.img.gz"
+  mv "${ASTVER}.img.gz" "$output_path/img/$board/${ASTVER}-${ASTERISK_VERSION}.img.gz"
 
   rm -rf "${ASTVER}"
 done
@@ -83,6 +86,9 @@ done
 #
 # Build Asterisk 1.8 AstLinux
 #
+
+ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *1.8/) {print $2; exit} }' package/asterisk/asterisk.mk)"
+ASTERISK_VERSION="asterisk-${ASTERISK_VERSION// /}"
 
 echo "Cleaning out any existing builds..."
 rm -rf output
@@ -118,7 +124,7 @@ for board in $BOARDS; do
 
   mv "${ASTVER}.tar.gz" "$output_path/ast18-firmware-1.x/$board/${ASTVER}.tar.gz"
   mv "${ASTVER}.tar.gz.sha1" "$output_path/ast18-firmware-1.x/$board/${ASTVER}.tar.gz.sha1"
-  mv "${ASTVER}.img.gz" "$output_path/ast18-img/$board/${ASTVER}.img.gz"
+  mv "${ASTVER}.img.gz" "$output_path/ast18-img/$board/${ASTVER}-${ASTERISK_VERSION}.img.gz"
 
   rm -rf "${ASTVER}"
 done
