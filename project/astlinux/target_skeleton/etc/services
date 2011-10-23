@@ -348,6 +348,8 @@ webcache	8080/udp			# WWW caching service
 tproxy		8081/tcp			# Transparent Proxy
 tproxy		8081/udp			# Transparent Proxy
 mandelspawn	9359/udp	mandelbrot	# network mandelbrot
+zabbix_agent    10050/tcp                       # Zabbix Agent
+zabbix_trap     10051/tcp                       # Zabbix Trap
 amanda		10080/udp			# amanda backup services
 kamanda		10081/tcp			# amanda backup services (Kerberos)
 kamanda		10081/udp			# amanda backup services (Kerberos)

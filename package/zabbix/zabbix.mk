@@ -28,10 +28,13 @@ endef
 
 define ZABBIX_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/src/zabbix_agent/zabbix_agentd $(TARGET_DIR)/usr/bin/zabbix_agentd
+        $(INSTALL) -m 0755 -D package/zabbix/zabbix.init $(TARGET_DIR)/etc/init.d/zabbix
+        ln -sf /tmp/etc/zabbix_agentd.conf $(TARGET_DIR)/etc/zabbix_agentd.conf
 endef
 
 define ZABBIX_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/bin/zabbix_agentd
+        rm -f $(TARGET_DIR)/etc/init.d/zabbix
 endef
 
 $(eval $(call AUTOTARGETS,package,zabbix))
