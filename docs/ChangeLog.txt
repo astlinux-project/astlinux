@@ -64,6 +64,9 @@ Released **TBD**
 
 -- usbutils, version 003
 
+-- zabbix, version 1.8.8, added rc.conf variable support, setting ZABBIX_SERVER will
+   enable zabbix with defaults.  See /stat/etc/rc.conf for more options.
+
 ** Networking
 
 -- curl (libcurl) version 7.21.7
