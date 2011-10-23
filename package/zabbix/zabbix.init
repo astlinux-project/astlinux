@@ -5,7 +5,7 @@
 init () {
   local server="" IFS
 
-  if [ -z "$ZABBIX_SERVER" ]; then
+  if [ -z "$ZABBIX_SERVER" ] && [ ! -f /mnt/kd/zabbix_agentd.conf ]; then
     if [ -f /tmp/etc/zabbix_agentd.conf ]; then
       rm /tmp/etc/zabbix_agentd.conf
     fi
