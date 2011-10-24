@@ -18,7 +18,9 @@ mkdir ctng
 cd ctng
 # copy the "crosstool-ng-src/ct-ng.config" file here in the SVN to "~/source-control/ctng/.config"
 ct-ng menuconfig
-# leave as configured, then
+# leave as configured, then install linux kernel for the header includes
+wget http://files.astlinux.org/linux-2.6.35.13.tar.gz
+# start the build process
 ct-ng build
 # takes 40-60 min.
 #########################################################################
