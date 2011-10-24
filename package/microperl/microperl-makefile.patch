@@ -1,0 +1,14 @@
+--- perl-5.10.0/Makefile.micro.orig	2011-10-23 19:31:04.000000000 -0500
++++ perl-5.10.0/Makefile.micro	2011-10-23 19:36:25.000000000 -0500
+@@ -177,9 +177,9 @@
+ 	$(RUN) ./generate_uudmap$(_X) >uudmap.h
+ 
+ generate_uudmap$(_O): generate_uudmap.c
+-	$(CC) $(CCFLAGS) -o $@ $(CFLAGS) generate_uudmap.c
++	$(HOSTCC) $(CCFLAGS) -o $@ $(CFLAGS) generate_uudmap.c
+ 
+ generate_uudmap$(_X): generate_uudmap$(_O)
+-	$(LD) -o generate_uudmap $(LDFLAGS) generate_uudmap$(_O) $(LIBS)
++	$(HOSTCC) -o generate_uudmap $(LDFLAGS) generate_uudmap$(_O) $(LIBS)
+ 
+ # That's it, folks!
