@@ -38,7 +38,9 @@ Released **TBD**
 
 -- Linux Kernel 2.6.35.13 (major bump)
 
--- e1000 version 8.0.35 and e1000e version 1.6.3 Intel PRO/1000 Linux drivers
+-- e1000 version 8.0.35 and e1000e version 1.6.3 Intel PRO/1000 Ethernet Linux drivers
+
+-- r8168 version 8.025.00 RealTek PCI-Express Gigabit Ethernet Linux driver
 
 -- BusyBox version 1.18.5
 
@@ -93,7 +95,7 @@ Released **TBD**
 
 ** Web Interface
 
--- No changes
+-- Edit tab, Active DNSmasq Leases file, "/mnt/kd/dnsmasq.leases" may be editied.
 
 
 
