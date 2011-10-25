@@ -372,7 +372,11 @@ require_once '../common/header.php';
   }
   if (is_writable($file = '/mnt/kd/dnsmasq.static')) {
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
-    putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - Static DNSmasq Leases</option>');
+    putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - Additional DNSmasq Config</option>');
+  }
+  if (is_writable($file = '/mnt/kd/dnsmasq.leases')) {
+    $sel = ($file === $openfile) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - Active DNSmasq Leases</option>');
   }
   if (is_writable($file = '/mnt/kd/blocked-hosts')) {
     $sel = ($file === $openfile) ? ' selected="selected"' : '';

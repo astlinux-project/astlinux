@@ -5,6 +5,7 @@
 ## 2) Automatically sorted by package name
 ## 3) Lines beginning with a '#' are treated as comments
 ##
+ex-vi~Copyright (c) Caldera International Inc. 2001-2002. All rights reserved.
 RUNNIX~Copyright (c) 2006-2011 by Kristian Kielhofner.
 libSRTP~Copyright (c) 2001-2005 Cisco Systems, Inc. All rights reserved.
 Web Interface~Copyright (c) 2008-2011 Lonnie Abelbeck.
@@ -16,7 +17,7 @@ dnsmasq~Copyright (c) 2000-2010 Simon Kelley.
 OpenSSL~Copyright (c) 1998-2010 The OpenSSL Project. All rights reserved.
 OpenSSH~Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland. All rights reserved.
 OpenVPN~Copyright (c) 2002-2010 OpenVPN Technologies, Inc. <sales@openvpn.net>
-PHP5~Copyright (c) 1999-2009 The PHP Group. All rights reserved.
+PHP~Copyright (c) 1999-2009 The PHP Group. All rights reserved.
 ntpd~Copyright (c) 1992-2009 David L. Mills.
 vsftpd~Copyright (c) 2001 Daniel Jacobowitz. <dan@debian.org>
 lighttpd~Copyright (c) 2004-2010, Jan Kneschke.
@@ -29,6 +30,6 @@ iptables~Copyright (c) 2000-2002 by the netfilter coreteam <coreteam@netfilter.o
 curl~Copyright (c) 1996-2010 Daniel Stenberg, <daniel@haxx.se>.
 mDNS~Copyright (c) 2002-2004 Apple Computer, Inc. All rights reserved.
 rp-pppoe~Copyright (c) 2001-2005 Roaring Penguin Software Inc.
-zabbix~Copyright (c) 2000-2005 SIA Zabbix.
+zabbix~Copyright (c) 2000-2011 SIA Zabbix.
 zlib~Copyright (c) 1995-2005 Jean-loup Gailly.
 MS-Win Installer~Copyright (c) 2010-2011 Tom Chadwin, Nullsoft, et al.
