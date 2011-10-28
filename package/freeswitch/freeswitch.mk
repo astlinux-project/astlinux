@@ -57,6 +57,8 @@ $(FREESWITCH_DIR)/.configured: $(FREESWITCH_DIR)/configure | libpcap openssl zli
 		ac_cv_file__dev_urandom=yes \
 		ac_cv_dev_urandom=yes \
 		ac_cv_file__dev_random=no \
+		apr_cv_process_shared_works=yes \
+		apr_cv_mutex_robust_shared=no \
 		./configure \
 		--target=$(GNU_TARGET_NAME) \
 		--host=$(GNU_TARGET_NAME) \

@@ -12,16 +12,16 @@ start () {
     FSARGS="-nc"
   fi
 
-  if [ -w /usr/local/freeswitch/log ]; then
+  if [ -d /usr/local/freeswitch/log ]; then
     echo "Starting freeswitch..."
-    ulimit -s unlimited
+    ulimit -s 240
     freeswitch "$FSARGS"
   fi
 }
 
 stop () {
 
-  if [ -f /usr/local/freeswitch/log/freeswitch.pid ]; then
+  if [ -f /usr/local/freeswitch/run/freeswitch.pid ]; then
     echo "Stopping freeswitch..."
     freeswitch -stop
   fi
