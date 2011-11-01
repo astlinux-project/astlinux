@@ -28,7 +28,7 @@ require_once '../common/functions.php';
 require_once '../common/users-password.php';
 
 if (($REPOSITORY_URL = getPREFdef($global_prefs, 'system_firmware_repository_url')) === '') {
-  $REPOSITORY_URL = 'http://mirror.astlinux.org/firmware';
+  $REPOSITORY_URL = 'http://mirror.astlinux.org/ast18-firmware-1.x';
 }
 
 if (($SOUNDS_URL = getPREFdef($global_prefs, 'system_asterisk_sounds_url')) === '') {

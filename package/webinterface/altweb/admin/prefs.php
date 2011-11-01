@@ -793,7 +793,7 @@ require_once '../common/header.php';
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">Repository URL:</td><td colspan="4">');
   if (($value = getPREFdef($global_prefs, 'system_firmware_repository_url')) === '') {
-    $value = 'http://mirror.astlinux.org/firmware';
+    $value = 'http://mirror.astlinux.org/ast18-firmware-1.x';
   }
   putHtml('<input type="text" size="48" maxlength="128" value="'.$value.'" name="repository_url" /></td></tr>');
   
