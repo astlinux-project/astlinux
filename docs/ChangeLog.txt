@@ -73,7 +73,7 @@ Released **TBD**
 
 -- curl (libcurl) version 7.21.7
 
--- iproute (ip, tc) version 2.6.39
+-- iproute2 (ip, tc) version 2.6.39
 
 -- iptables, version 1.4.12
 
@@ -96,6 +96,9 @@ Released **TBD**
 ** Web Interface
 
 -- Edit tab, Active DNSmasq Leases file, "/mnt/kd/dnsmasq.leases" may be editied.
+
+-- Prefs and System tab, make http://mirror.astlinux.org/ast18-firmware-1.x the default
+   Repository URL.
 
 
 
