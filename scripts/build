@@ -105,31 +105,9 @@ fi
 
 board="$(cat "astlinux.board")"
 
-case "$board" in
-
-  geni586) ;;
-
-  geni586-serial) ;;
-
-  net5501) ;;
-
-  alix) ;;
-
-  via) ;;
-
-  via-serial) ;;
-
-  viac7) ;;
-
-  viac7-serial) ;;
-
-  net4801) ;;
-
-  wrap) ;;
-
-  *) exit_error "Unknown Board type." ;;
-
-esac
+if [ -z "$board" ] || [ ! -d "project/astlinux/board/$board" ]; then
+  exit_error "Unknown Board type."
+fi
 
 if [ ! -d "$HOME/astlinux/x-tools" ]; then
   cat "crosstool-ng-src/README"
