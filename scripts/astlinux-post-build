@@ -68,31 +68,11 @@ fi
 
 board="$(cat "$base/astlinux.board")"
 
-case "$board" in
+if [ -z "$board" ] || [ ! -d "$base/project/astlinux/board/$board" ]; then
+  exit_error "Unknown Board type."
+fi
 
-  geni586) overlay_target ;;
-
-  geni586-serial) overlay_target ;;
-
-  net5501) overlay_target ;;
-
-  alix) overlay_target ;;
-
-  via) overlay_target ;;
-
-  via-serial) overlay_target ;;
-
-  viac7) overlay_target ;;
-
-  viac7-serial) overlay_target ;;
-
-  net4801) overlay_target ;;
-
-  wrap) overlay_target ;;
-
-  *) exit_error "Unknown Board type." ;;
-
-esac
+overlay_target
 
 make_release_version
 echo ${ASTVER} > "$target/etc/astlinux-release"
