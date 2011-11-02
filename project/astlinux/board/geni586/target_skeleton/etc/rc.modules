@@ -1,5 +1,5 @@
 # These modules get modprobe'd when the system starts up.
-#rtc
+rtc
 #Comment out the modules you don't need, and change the order to
 #move eth0 to eth1, etc.
 #Ethernet support
