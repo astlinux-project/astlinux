@@ -5,7 +5,7 @@
 
 FAT_SIZE=192
 
-BOARDS="geni586 geni586-serial net5501 alix via via-serial viac7 viac7-serial net4801 wrap"
+BOARDS="geni586 geni586-serial net6501 net5501 alix via via-serial viac7 viac7-serial net4801 wrap"
 
 RUNFS_DIR="output/build/runfs"
 
