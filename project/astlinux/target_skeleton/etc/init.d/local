@@ -18,7 +18,10 @@ start () {
 }
 
 stop () {
-  :
+
+  if [ -x /mnt/kd/rc.local.stop ]; then
+    /mnt/kd/rc.local.stop
+  fi
 }
 
 case $1 in
