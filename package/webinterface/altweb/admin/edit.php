@@ -396,11 +396,12 @@ require_once '../common/header.php';
   }
   foreach (glob('/mnt/kd/rc.*') as $globfile) {
     if ($globfile === '/mnt/kd/rc.local' ||
+        $globfile === '/mnt/kd/rc.local.stop' ||
         $globfile === '/mnt/kd/rc.elocal' ||
         $globfile === '/mnt/kd/rc.ledcontrol') {
       if (is_writable($globfile)) {
         $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
-        putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - Startup Shell Script</option>');
+        putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - Startup/Stop Shell Script</option>');
       }
     }
   }
