@@ -42,6 +42,9 @@ Released **TBD**
 
 -- r8168 version 8.025.00 RealTek PCI-Express Gigabit Ethernet Linux driver
 
+-- SMP is enabled for geni586 and geni586-serial boards, SMP is not enabled for all other boards for
+   the best performance.  Custom builds may enable/disable SMP for any board.
+
 -- BusyBox version 1.18.5
 
 -- ex-vi (vi) version 050325, replaces BusyBox vi
