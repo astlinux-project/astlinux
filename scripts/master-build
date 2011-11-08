@@ -3,15 +3,51 @@
 # master-build output_path [ force ]
 #
 
-FAT_SIZE=192
-
-BOARDS="geni586 geni586-serial net6501 net5501 alix via via-serial viac7 viac7-serial net4801 wrap"
-
-RUNFS_DIR="output/build/runfs"
-
 output_path="$1"
 
 force="$2"
+
+FAT_SIZE=192
+
+BOARDS_SMP="geni586 geni586-serial"
+
+BOARDS_NO_SMP="net6501 net5501 alix via via-serial viac7 viac7-serial net4801 wrap"
+
+RUNFS_DIR="output/build/runfs"
+
+build_board()
+{
+  local firmware="$1" img="$2"
+
+  mkdir "$output_path/$firmware/$board"
+  mkdir "$output_path/$img/$board"
+
+  ./scripts/build $board
+
+  if [ $? -ne 0 ]; then
+    exit 1
+  fi
+
+  ASTVER="$(cat ${RUNFS_DIR}/os/ver)"
+
+  if [ -z "$ASTVER" ]; then
+    echo "master-build: missing runfs version file."
+    exit 1
+  fi
+
+  ./scripts/astlinux-makeimage -z $FAT_SIZE $FAT_SIZE 0
+
+  mv "${ASTVER}.tar.gz" "$output_path/$firmware/$board/${ASTVER}.tar.gz"
+  mv "${ASTVER}.tar.gz.sha1" "$output_path/$firmware/$board/${ASTVER}.tar.gz.sha1"
+  mv "${ASTVER}.img.gz" "$output_path/$img/$board/${ASTVER}-${ASTERISK_VERSION}.img.gz"
+
+  rm -rf "${ASTVER}"
+}
+
+set_smp_kernel()
+{
+  sed -i 's:^BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="[^"]*":BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="project/astlinux/geni586/linux-smp.config":' .config
+}
 
 if [ -z "$output_path" ]; then
   echo "usage: master-build output_path [ force ]"
@@ -44,11 +80,6 @@ rm -f initrd.img
 ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *1.4/) {print $2; exit} }' package/asterisk/asterisk.mk)"
 ASTERISK_VERSION="asterisk-${ASTERISK_VERSION// /}"
 
-echo "Cleaning out any existing builds..."
-rm -rf output
-
-cp astlinux.config .config
-
 if ! mkdir "$output_path/firmware-1.x"; then
   exit 1
 fi
@@ -56,31 +87,25 @@ if ! mkdir "$output_path/img"; then
   exit 1
 fi
 
-for board in $BOARDS; do
+# Non-SMP Builds
+echo "Cleaning out any existing builds..."
+rm -rf output
 
-  mkdir "$output_path/firmware-1.x/$board"
-  mkdir "$output_path/img/$board"
+cp astlinux.config .config
 
-  ./scripts/build $board
+for board in $BOARDS_NO_SMP; do
+  build_board "firmware-1.x" "img"
+done
 
-  if [ $? -ne 0 ]; then
-    exit 1
-  fi
+# SMP Builds
+echo "Cleaning out any existing builds..."
+rm -rf output
 
-  ASTVER="$(cat ${RUNFS_DIR}/os/ver)"
+cp astlinux.config .config
+set_smp_kernel
 
-  if [ -z "$ASTVER" ]; then
-    echo "master-build: missing runfs version file."
-    exit 1
-  fi
-
-  ./scripts/astlinux-makeimage -z $FAT_SIZE $FAT_SIZE 0
-
-  mv "${ASTVER}.tar.gz" "$output_path/firmware-1.x/$board/${ASTVER}.tar.gz"
-  mv "${ASTVER}.tar.gz.sha1" "$output_path/firmware-1.x/$board/${ASTVER}.tar.gz.sha1"
-  mv "${ASTVER}.img.gz" "$output_path/img/$board/${ASTVER}-${ASTERISK_VERSION}.img.gz"
-
-  rm -rf "${ASTVER}"
+for board in $BOARDS_SMP; do
+  build_board "firmware-1.x" "img"
 done
 
 #
@@ -90,11 +115,6 @@ done
 ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *1.8/) {print $2; exit} }' package/asterisk/asterisk.mk)"
 ASTERISK_VERSION="asterisk-${ASTERISK_VERSION// /}"
 
-echo "Cleaning out any existing builds..."
-rm -rf output
-
-cp astlinux18.config .config
-
 if ! mkdir "$output_path/ast18-firmware-1.x"; then
   exit 1
 fi
@@ -102,31 +122,25 @@ if ! mkdir "$output_path/ast18-img"; then
   exit 1
 fi
 
-for board in $BOARDS; do
+# Non-SMP Builds
+echo "Cleaning out any existing builds..."
+rm -rf output
 
-  mkdir "$output_path/ast18-firmware-1.x/$board"
-  mkdir "$output_path/ast18-img/$board"
+cp astlinux18.config .config
 
-  ./scripts/build $board
+for board in $BOARDS_NO_SMP; do
+  build_board "ast18-firmware-1.x" "ast18-img"
+done
 
-  if [ $? -ne 0 ]; then
-    exit 1
-  fi
+# SMP Builds
+echo "Cleaning out any existing builds..."
+rm -rf output
 
-  ASTVER="$(cat ${RUNFS_DIR}/os/ver)"
+cp astlinux18.config .config
+set_smp_kernel
 
-  if [ -z "$ASTVER" ]; then
-    echo "master-build: missing runfs version file."
-    exit 1
-  fi
-
-  ./scripts/astlinux-makeimage -z $FAT_SIZE $FAT_SIZE 0
-
-  mv "${ASTVER}.tar.gz" "$output_path/ast18-firmware-1.x/$board/${ASTVER}.tar.gz"
-  mv "${ASTVER}.tar.gz.sha1" "$output_path/ast18-firmware-1.x/$board/${ASTVER}.tar.gz.sha1"
-  mv "${ASTVER}.img.gz" "$output_path/ast18-img/$board/${ASTVER}-${ASTERISK_VERSION}.img.gz"
-
-  rm -rf "${ASTVER}"
+for board in $BOARDS_SMP; do
+  build_board "ast18-firmware-1.x" "ast18-img"
 done
 
 echo "
