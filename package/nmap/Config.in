@@ -1,0 +1,18 @@
+config BR2_PACKAGE_NMAP
+	bool "nmap"
+	default n
+	select BR2_PACKAGE_LIBPCAP
+	select BR2_PACKAGE_OPENSSL
+	help
+	  THE security scanner
+
+	  http://nmap.org/
+
+config BR2_PACKAGE_NMAP_DB
+	depends on BR2_PACKAGE_NMAP
+	bool "nmap-db"
+	default "n"
+	help
+	  Various "DBs" for nmap:
+	  - OS Detection
+	  - OUI lookup table for MAC vendor detection
