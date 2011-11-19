@@ -30,6 +30,11 @@ choice
 		bool "Asterisk v1.8.x"
 		help
 			Asterisk Long Term Stable Release.
+
+	config BR2_PACKAGE_ASTERISK_v10_0
+		bool "Asterisk v10.0.x"
+		help
+			Asterisk Standard Release.
 endchoice
 
 config BR2_PACKAGE_ASTERISK_CHANMISDN

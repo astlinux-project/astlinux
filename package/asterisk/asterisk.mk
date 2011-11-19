@@ -9,7 +9,11 @@ else
  ifeq ($(BR2_PACKAGE_ASTERISK_v1_6),y)
 ASTERISK_VERSION := 1.6.2.20
  else
+  ifeq ($(BR2_PACKAGE_ASTERISK_v1_8),y)
 ASTERISK_VERSION := 1.8.7.1
+  else
+ASTERISK_VERSION := 10.0.0-rc2
+  endif
  endif
 endif
 ASTERISK_SOURCE := asterisk-$(ASTERISK_VERSION).tar.gz
@@ -66,10 +70,12 @@ ASTERISK_CONFIGURE_ARGS+= \
 endif
 
 ifeq ($(strip $(BR2_PACKAGE_LIBSRTP)),y)
- ifeq ($(strip $(BR2_PACKAGE_ASTERISK_v1_8)),y)
+ ifneq ($(ASTERISK_VERSION_TUPLE),1.4)
+ ifneq ($(ASTERISK_VERSION_TUPLE),1.6)
 ASTERISK_EXTRAS+=libsrtp
 ASTERISK_CONFIGURE_ARGS+= \
 			--with-srtp="$(STAGING_DIR)/usr" 
+ endif
  endif
 endif
 
@@ -246,8 +252,10 @@ endif
 	$(INSTALL) -D -m 0755 package/asterisk/safe_asterisk $(TARGET_DIR)/usr/sbin/safe_asterisk
 	$(INSTALL) -D -m 0755 package/asterisk/asterisk-sip-monitor $(TARGET_DIR)/usr/sbin/asterisk-sip-monitor
 	$(INSTALL) -D -m 0755 package/asterisk/asterisk-sip-monitor-ctrl $(TARGET_DIR)/usr/sbin/asterisk-sip-monitor-ctrl
-ifeq ($(ASTERISK_VERSION_TUPLE),1.8)
+ifneq ($(ASTERISK_VERSION_TUPLE),1.4)
+ifneq ($(ASTERISK_VERSION_TUPLE),1.6)
 	$(INSTALL) -D -m 0755 $(ASTERISK_DIR)/contrib/scripts/ast_tls_cert $(TARGET_DIR)/usr/sbin/ast_tls_cert
+endif
 endif
 	mkdir -p $(TARGET_DIR)/stat/var/lib/asterisk
 	mv $(TARGET_DIR)/var/lib/asterisk/* $(TARGET_DIR)/stat/var/lib/asterisk/
