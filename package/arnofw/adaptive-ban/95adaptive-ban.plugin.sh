@@ -2,10 +2,10 @@
 #            -= Arno's iptables firewall - Adaptive Ban plugin =-
 #
 PLUGIN_NAME="Adaptive Ban plugin"
-PLUGIN_VERSION="1.03 BETA"
+PLUGIN_VERSION="1.04 BETA"
 PLUGIN_CONF_FILE="adaptive-ban.conf"
 #
-# Last changed          : May 20, 2011
+# Last changed          : November 20, 2011
 # Requirements          : AIF 2.0.0+
 # Comments              : Parse a log file for failed access with offending IP addresses
 #                         Ban the IP address after multiple failed attempts

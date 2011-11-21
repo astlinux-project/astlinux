@@ -205,6 +205,9 @@ count_attempts_then_ban()
 {
   local count="$1" type="$2" line host IFS
 
+  # Remove possible IPv4 port numbers, IPv4:PORT -> IPv4
+  sed -i -r -e 's/^([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+):[0-9]+$/\1/' "$TEMPFILE"
+
   IFS=$'\n'
   for line in $(sort "$TEMPFILE" | uniq -c); do
     if [ "$(echo "$line" | awk '{ print $1; }')" -ge "$count" ]; then
