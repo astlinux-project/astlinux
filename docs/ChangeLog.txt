@@ -82,6 +82,8 @@ Released **TBD**
 
 -- msmtp, version 1.4.25
 
+-- ntpd/sntp, version 4.2.6p4
+
 -- netsnmp, version 5.6.1
 
 -- radvd, version 1.8.3
