@@ -3,6 +3,10 @@
 . /etc/rc.conf
 
 init () {
+
+  # So sntp doesn't complain
+  touch /var/db/ntp-kod
+
   if [ -f /mnt/kd/ntpd.conf ]; then
     ln -sf /mnt/kd/ntpd.conf /tmp/etc/ntpd.conf
   else
@@ -59,10 +63,13 @@ start () {
 
       if nslookup $first >/dev/null; then
         # Set the clock (large change) and exit
-        ntpd $NTPAF -g -q -c /etc/ntpd.conf
+        sntp $NTPAF -s -t4 $first
+        if [ $? -eq 0 -a -r /dev/rtc ]; then
+          hwclock -wu --noadjfile 2>/dev/null
+        fi
         sleep 1
         # Maintain the clock (small changes)
-        ntpd $NTPAF -c /etc/ntpd.conf
+        ntpd $NTPAF -g -c /etc/ntpd.conf
       fi
     fi
   fi

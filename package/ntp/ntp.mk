@@ -3,7 +3,7 @@
 # ntp
 #
 #############################################################
-NTP_VERSION = 4.2.4p8
+NTP_VERSION = 4.2.6p4
 NTP_SOURCE = ntp-$(NTP_VERSION).tar.gz
 NTP_SITE = http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2
 
