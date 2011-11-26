@@ -105,6 +105,12 @@ Released **TBD**
 -- Prefs and System tab, make http://mirror.astlinux.org/ast18-firmware-1.x the default
    Repository URL.
 
+-- Prefs tab, new option General Options -> External CLI Link.  When defined with a URL, typically
+   something like "ssh://root@pbx", a "CLI" link will appear at the upper-rightmost of all pages
+   with 'admin' privileges.
+
+   A special case, a host of '@localhost' will be replaced with the same host as the web interface.
+   Note: Not all browsers on all operating systems support the ssh:// URL type.
 
 
 =========================================================
