@@ -307,6 +307,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'external_url_name_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
     }
+    if (($value = trim($_POST['external_cli_link'])) !== '') {
+      $value = 'external_cli_link_cmdstr = "'.$value.'"';
+      fwrite($fp, $value."\n");
+    }
     
     if (isset($_POST['tab_directory'])) {
       $value = 'tab_directory_show = yes';
@@ -847,6 +851,9 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">External URL Name:</td><td colspan="4">');
   $value = getPREFdef($global_prefs, 'external_url_name_cmdstr');
   putHtml('<input type="text" size="48" maxlength="64" value="'.$value.'" name="external_url_name" /></td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">External CLI Link:</td><td colspan="4">');
+  $value = getPREFdef($global_prefs, 'external_cli_link_cmdstr');
+  putHtml('<input type="text" size="48" maxlength="128" value="'.$value.'" name="external_cli_link" /></td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_directory_show') === 'yes') ? ' checked="checked"' : '';

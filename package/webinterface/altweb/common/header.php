@@ -65,6 +65,21 @@ function getURLname($g_prefs) {
   return(htmlspecialchars($cmd));
 }
 
+// Function: getCLIlink
+//
+function getCLIlink($g_prefs) {
+  if (($cmd = getPREFdef($g_prefs, 'external_cli_link_cmdstr')) !== '') {
+    if (strpos($cmd, '@localhost') !== FALSE) {
+      $host = $_SERVER['HTTP_HOST'];
+      if (($pos = strpos($host, ':')) !== FALSE) {
+        $host = substr($host, 0, $pos);
+      }
+      $cmd = str_replace('@localhost', '@'.$host, $cmd);
+    }
+  }
+  return(htmlspecialchars($cmd));
+}
+
 // Function: putUSERerror
 //
 function putUSERerror($user, $tab) {
@@ -120,8 +135,17 @@ function putUSERerror($user, $tab) {
     putHtml('<table class="headerTable"><tr>');
     putHtml('<td width="140"><img src="/common/logo-small.gif" width="113" height="23" alt="AstLinux" /></td>');
     putHtml('<td><h1>'.getTITLEname($global_prefs).'</h1></td>');
-    if (($URLlink = getURLlink($global_prefs)) !== '') {
-      putHtml('<td style="text-align: right;"><a href="'.$URLlink.'" class="headerText" target="_blank">'.getURLname($global_prefs).'</a></td>');
+    $URLlink = getURLlink($global_prefs);
+    $CLIlink = getCLIlink($global_prefs);
+    if ($URLlink !== '' || ($global_admin && $CLIlink !== '')) {
+      putHtml('<td style="text-align: right;">');
+      if ($URLlink !== '') {
+        putHtml('<a href="'.$URLlink.'" class="headerText" target="_blank">'.getURLname($global_prefs).'</a>');
+      }
+      if ($global_admin && $CLIlink !== '') {
+        putHtml('<a href="'.$CLIlink.'" class="headerText">CLI</a>');
+      }
+      putHtml('</td>');
     }
     putHtml('</tr></table>');
     putHtml('<div id="tabs">');

@@ -992,7 +992,7 @@ if (is_executable('/usr/bin/sensors')) {
   
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if ($line = rtrim(fgets($ph, 1024))) {
         putText($line);
       }
     }
