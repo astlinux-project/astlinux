@@ -63,6 +63,12 @@ ASTERISK_CONFIGURE_ARGS+= \
  endif
 endif
 
+ifeq ($(strip $(BR2_PACKAGE_IKSEMEL)),y)
+ASTERISK_EXTRAS+=iksemel
+ASTERISK_CONFIGURE_ARGS+= \
+			--with-iksemel="$(STAGING_DIR)/usr" 
+endif
+
 ifeq ($(strip $(BR2_PACKAGE_LIBPRI)),y)
 ASTERISK_EXTRAS+=libpri
 ASTERISK_CONFIGURE_ARGS+= \
