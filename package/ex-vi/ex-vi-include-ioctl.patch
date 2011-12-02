@@ -1,0 +1,11 @@
+--- ex-vi-050325/ex.h.orig	2011-12-01 23:37:02.000000000 -0600
++++ ex-vi-050325/ex.h	2011-12-01 23:37:22.000000000 -0600
+@@ -144,7 +144,7 @@
+ #include <fcntl.h>
+ #include <unistd.h>
+ #include <limits.h>
+-#ifndef	TIOCGWINSZ
++#ifdef	TIOCGWINSZ
+ #include <sys/ioctl.h>
+ #endif
+ 

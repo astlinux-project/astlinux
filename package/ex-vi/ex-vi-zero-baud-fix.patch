@@ -1,0 +1,14 @@
+--- ex-vi-050325/ex_tty.c.orig	2011-12-02 00:15:11.000000000 -0600
++++ ex-vi-050325/ex_tty.c	2011-12-02 00:26:16.000000000 -0600
+@@ -100,7 +100,10 @@
+ 		ospeed = B0;
+ 		return;
+ 	}
+-	pospeed = cfgetospeed(&tty);
++	if ((pospeed = cfgetospeed(&tty)) == B0) {
++		/* Make 0 baud more reasonable */
++		pospeed = B38400;
++	}
+ 	if (ospeed != pospeed)
+ 		value(SLOWOPEN) = pospeed < B1200;
+ 	ospeed = pospeed;
