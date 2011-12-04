@@ -376,6 +376,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'tab_edit_show = no';
       fwrite($fp, $value."\n");
     }
+    if (isset($_POST['tab_cli'])) {
+      $value = 'tab_cli_show = yes';
+      fwrite($fp, $value."\n");
+    }
     if (! isset($_POST['tab_staff'])) {
       $value = 'tab_staff_disable_staff = yes';
       fwrite($fp, $value."\n");
@@ -915,6 +919,10 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_edit_show') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="tab_edit" name="tab_edit"'.$sel.' /></td><td colspan="5">Show Edit Tab</td></tr>');
+  
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'tab_cli_show') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="tab_cli" name="tab_cli"'.$sel.' /></td><td colspan="5">Show CLI Tab</td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_staff_disable_staff') !== 'yes') ? ' checked="checked"' : '';

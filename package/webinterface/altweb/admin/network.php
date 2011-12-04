@@ -28,6 +28,7 @@
 // 03-24-2011, Removed deprecated HTTPUSER and HTTPSUSER support
 // 03-24-2011, Added HTTP_LISTING and HTTPS_LISTING support
 // 05-24-2011, Added SIP Monitoring
+// 12-03-2011, Added HTTP_ACCESSLOG and HTTPS_ACCESSLOG support
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -380,6 +381,9 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $value = 'TFTPD="'.$_POST['tftp'].'"';
   fwrite($fp, "### TFTP Server\n".$value."\n");
   
+  $value = 'CLI_PROXY_SERVER="'.$_POST['cli_proxy'].'"';
+  fwrite($fp, "### CLI Proxy Server\n".$value."\n");
+  
   $value = 'HTTPDIR="'.trim($_POST['http_dir']).'"';
   fwrite($fp, "### HTTP Server Directory\n".$value."\n");
   
@@ -389,6 +393,9 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $value = isset($_POST['http_listing']) ? 'HTTP_LISTING="yes"' : 'HTTP_LISTING="no"';
   fwrite($fp, "### HTTP directory listing\n".$value."\n");
   
+  $value = isset($_POST['http_accesslog']) ? 'HTTP_ACCESSLOG="yes"' : 'HTTP_ACCESSLOG="no"';
+  fwrite($fp, "### HTTP access logging\n".$value."\n");
+  
   $value = 'HTTPSDIR="'.trim($_POST['https_dir']).'"';
   fwrite($fp, "### HTTPS Server Directory\n".$value."\n");
   
@@ -397,6 +404,9 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   
   $value = isset($_POST['https_listing']) ? 'HTTPS_LISTING="yes"' : 'HTTPS_LISTING="no"';
   fwrite($fp, "### HTTPS directory listing\n".$value."\n");
+  
+  $value = isset($_POST['https_accesslog']) ? 'HTTPS_ACCESSLOG="yes"' : 'HTTPS_ACCESSLOG="no"';
+  fwrite($fp, "### HTTPS access logging\n".$value."\n");
   
   $value = 'HTTPSCERT="'.trim($_POST['https_cert']).'"';
   if (isset($_POST['create_cert']) && is_opensslHERE()) {
@@ -1315,27 +1325,48 @@ require_once '../common/header.php';
   $sel = ($value === 'dnsmasq' || $value === 'tftpd' || $value === 'inetd') ? ' selected="selected"' : '';
   putHtml('<option value="dnsmasq"'.$sel.'>enabled</option>');
   putHtml('</select></td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml('CLI&nbsp;&nbsp;Proxy&nbsp;Server:');
+  putHtml('<select name="cli_proxy">');
+  putHtml('<option value="">disabled</option>');
+  $value = getVARdef($db, 'CLI_PROXY_SERVER', $cur_db);
+  $sel = ($value === 'shellinaboxd') ? ' selected="selected"' : '';
+  putHtml('<option value="shellinaboxd"'.$sel.'>enabled</option>');
+  putHtml('</select>');
+  putHtml('&nbsp;<i>(https://'.$_SERVER['HTTP_HOST'].'/admin/cli/ or CLI Tab)</i>');
+  putHtml('</td></tr>');
   
-  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="4">');
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   $value = getVARdef($db, 'HTTPDIR', $cur_db);
-  putHtml('HTTP&nbsp;&nbsp;Server Directory:<input type="text" size="36" maxlength="64" value="'.$value.'" name="http_dir" /></td>');
-  putHtml('<td style="text-align: left;" colspan="2">');
+  putHtml('HTTP&nbsp;&nbsp;Server Directory:<input type="text" size="45" maxlength="64" value="'.$value.'" name="http_dir" />');
+  putHtml('</td></tr>');
+  
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml('HTTP&nbsp;&nbsp;Server Options:');
   $sel = (getVARdef($db, 'HTTPCGI', $cur_db) === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="http_cgi" name="http_cgi"'.$sel.' />&nbsp;HTTP&nbsp;&nbsp;CGI&nbsp;');
   $sel = (getVARdef($db, 'HTTP_LISTING', $cur_db) === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="http_listing" name="http_listing"'.$sel.' />&nbsp;Allow Listing');
+  $sel = (getVARdef($db, 'HTTP_ACCESSLOG', $cur_db) === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="http_accesslog" name="http_accesslog"'.$sel.' />&nbsp;Access Logging');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  $value = getVARdef($db, 'HTTPSDIR', $cur_db);
+  putHtml('HTTPS&nbsp;Server Directory:<input type="text" size="45" maxlength="64" value="'.$value.'" name="https_dir" />');
   putHtml('</td></tr>');
   
-  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="4">');
-  $value = getVARdef($db, 'HTTPSDIR', $cur_db);
-  putHtml('HTTPS&nbsp;Server Directory:<input type="text" size="36" maxlength="64" value="'.$value.'" name="https_dir" /></td>');
-  putHtml('<td style="text-align: left;" colspan="2">');
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml('HTTPS&nbsp;Server Options:');
   $sel = (getVARdef($db, 'HTTPSCGI', $cur_db) === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="https_cgi" name="https_cgi"'.$sel.' />&nbsp;HTTPS&nbsp;CGI&nbsp;');
   $sel = (getVARdef($db, 'HTTPS_LISTING', $cur_db) === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="https_listing" name="https_listing"'.$sel.' />&nbsp;Allow Listing');
+  $sel = (getVARdef($db, 'HTTPS_ACCESSLOG', $cur_db) === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="https_accesslog" name="https_accesslog"'.$sel.' />&nbsp;Access Logging');
   putHtml('</td></tr>');
-  
+
   if (is_opensslHERE()) {
     putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="4">');
     $value = getVARdef($db, 'HTTPSCERT', $cur_db);

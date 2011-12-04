@@ -41,17 +41,37 @@ function getTITLEname($g_prefs) {
   return(htmlspecialchars($cmd));
 }
 
+// Function: url_localhost_handler
+//
+function url_localhost_handler($str) {
+  if (strpos($str, '://localhost') !== FALSE) {
+    $host = $_SERVER['HTTP_HOST'];
+    if (($pos = strpos($host, ':')) !== FALSE && strpos($str, '://localhost:') !== FALSE) {
+      $host = substr($host, 0, $pos);
+    }
+    $str = str_replace('://localhost', '://'.$host, $str);
+  }
+  return($str);
+}
+
+// Function: ssh_localhost_handler
+//
+function ssh_localhost_handler($str) {
+  if (strpos($str, '@localhost') !== FALSE) {
+    $host = $_SERVER['HTTP_HOST'];
+    if (($pos = strpos($host, ':')) !== FALSE) {
+      $host = substr($host, 0, $pos);
+    }
+    $str = str_replace('@localhost', '@'.$host, $str);
+  }
+  return($str);
+}
+
 // Function: getURLlink
 //
 function getURLlink($g_prefs) {
   if (($cmd = getPREFdef($g_prefs, 'external_url_link_cmdstr')) !== '') {
-    if (strpos($cmd, '://localhost') !== FALSE) {
-      $host = $_SERVER['HTTP_HOST'];
-      if (($pos = strpos($host, ':')) !== FALSE && strpos($cmd, '://localhost:') !== FALSE) {
-        $host = substr($host, 0, $pos);
-      }
-      $cmd = str_replace('://localhost', '://'.$host, $cmd);
-    }
+    $cmd = url_localhost_handler($cmd);
   }
   return(htmlspecialchars($cmd));
 }
@@ -69,12 +89,10 @@ function getURLname($g_prefs) {
 //
 function getCLIlink($g_prefs) {
   if (($cmd = getPREFdef($g_prefs, 'external_cli_link_cmdstr')) !== '') {
-    if (strpos($cmd, '@localhost') !== FALSE) {
-      $host = $_SERVER['HTTP_HOST'];
-      if (($pos = strpos($host, ':')) !== FALSE) {
-        $host = substr($host, 0, $pos);
-      }
-      $cmd = str_replace('@localhost', '@'.$host, $cmd);
+    if (strncmp($cmd, 'ssh://', 6) == 0) {
+      $cmd = ssh_localhost_handler($cmd);
+    } else {
+      $cmd = url_localhost_handler($cmd);
     }
   }
   return(htmlspecialchars($cmd));
@@ -143,7 +161,11 @@ function putUSERerror($user, $tab) {
         putHtml('<a href="'.$URLlink.'" class="headerText" target="_blank">'.getURLname($global_prefs).'</a>');
       }
       if ($global_admin && $CLIlink !== '') {
-        putHtml('<a href="'.$CLIlink.'" class="headerText">CLI</a>');
+        if (strncmp($CLIlink, 'ssh://', 6) == 0) {
+          putHtml('<a href="'.$CLIlink.'" class="headerText">CLI</a>');
+        } else {
+          putHtml('<a href="'.$CLIlink.'" class="headerText" target="_blank">CLI</a>');
+        }
       }
       putHtml('</td>');
     }
@@ -200,6 +222,9 @@ function putUSERerror($user, $tab) {
       }
       if ($global_admin && (getPREFdef($global_prefs, 'tab_edit_show') !== 'no')) {
         putHtml('<li><a href="/admin/edit.php"><span>Edit</span></a></li>');
+      }
+      if ($global_admin && (getPREFdef($global_prefs, 'tab_cli_show') === 'yes')) {
+        putHtml('<li><a href="/admin/cli.php"><span>CLI</span></a></li>');
       }
       if ($global_admin && (getPREFdef($global_prefs, 'tab_prefs_show') !== 'no')) {
         putHtml('<li><a href="/admin/prefs.php"><span>Prefs</span></a></li>');
