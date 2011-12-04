@@ -41,6 +41,16 @@ init () {
   else
     https_listing="enable"
   fi
+  if [ "$HTTP_ACCESSLOG" = "yes" ]; then
+    http_accesslog="/var/log/lighttpd/access.log"
+  else
+    http_accesslog="/dev/null"
+  fi
+  if [ "$HTTPS_ACCESSLOG" = "yes" ]; then
+    https_accesslog="/var/log/lighttpd/ssl-access.log"
+  else
+    https_accesslog="/dev/null"
+  fi
   if [ "$HTTPCGI" = "yes" ]; then
     httpcgi=""
   else
@@ -56,15 +66,23 @@ init () {
   else
     ipv6="#"
   fi
+  if [ "$CLI_PROXY_SERVER" = "shellinaboxd" ]; then
+    cli_proxy_server=""
+  else
+    cli_proxy_server="#"
+  fi
 
   sed -i -e "s|@HOSTNAME@|${HOSTNAME}|g" \
          -e "s|@HTTPDIR@|${httpdir}|g" \
          -e "s|@HTTPSCERT@|${httpscert}|g" \
          -e "s|@HTTP_LISTING@|${http_listing}|g" \
          -e "s|@HTTPS_LISTING@|${https_listing}|g" \
+         -e "s|@HTTP_ACCESSLOG@|${http_accesslog}|g" \
+         -e "s|@HTTPS_ACCESSLOG@|${https_accesslog}|g" \
          -e "s|@HTTPCGI@|${httpcgi}|g" \
          -e "s|@HTTPSCGI@|${httpscgi}|g" \
          -e "s|@IPV6@|${ipv6}|g" \
+         -e "s|@CLI_PROXY_SERVER@|${cli_proxy_server}|g" \
             /tmp/etc/lighttpd.conf
 }
 

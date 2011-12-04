@@ -1,0 +1,55 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+init () {
+  :
+}
+
+start () {
+
+  if [ "$CLI_PROXY_SERVER" = "shellinaboxd" ]; then
+    echo "Starting shellinaboxd..."
+
+    shellinaboxd -u root -g nobody --no-beep --background=/var/run/shellinaboxd.pid \
+                 --disable-ssl --localhost-only --service=/admin/cli/:nobody:nobody:/:/bin/login
+  fi
+}
+
+stop () {
+
+  if [ -f /var/run/shellinaboxd.pid ]; then
+    echo "Stopping shellinaboxd..."
+
+    kill $(cat /var/run/shellinaboxd.pid) >/dev/null 2>&1
+    rm -f /var/run/shellinaboxd.pid
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+
