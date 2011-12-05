@@ -74,6 +74,10 @@ Released **TBD**
 
 ** Networking
 
+-- shellinaboxd, revision 239, added to provide CLI (Command Line Interface) 'login'
+   via a web browser using "https://pbx/admin/cli/" and a new CLI tab in the web
+   interface.  This feature is disabled by default.
+
 -- curl (libcurl) version 7.21.7
 
 -- iproute2 (ip, tc) version 2.6.39
@@ -103,6 +107,11 @@ Released **TBD**
 
 ** Web Interface
 
+-- Added "CLI Tab", Show/Hide in Prefs tab.  Requires 'admin' permissions.  The new Network tab
+   option "CLI  Proxy Server" must be enabled for the CLI tab to function.  If it is prefered
+   to have the "shellinabox" in a new windows, use the Prefs tab "External CLI Link" option
+   and define it to 'https://localhost/admin/cli/'.
+
 -- Edit tab, Active DNSmasq Leases file, "/mnt/kd/dnsmasq.leases" may be editied.
 
 -- Prefs and System tab, make http://mirror.astlinux.org/ast18-firmware-1.x the default
@@ -126,7 +135,7 @@ Released **TBD**
 Additions for AstLinux 0.7.10:
 ==============================
 
-Released **TBD**
+Released 2011-10-23
 
 ** System
 
