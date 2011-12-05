@@ -14,6 +14,8 @@ define INADYN_CONFIGURE_CMDS
 	@echo "No configure"
 endef
 
+INADYN_MAKE_OPT = CC='$(TARGET_CC)' LD='$(TARGET_LD)' -C $(@D)
+
 define INADYN_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/bin/linux/inadyn $(TARGET_DIR)/usr/sbin/inadyn
 	$(INSTALL) -m 0755 -D package/inadyn/inadyn.init $(TARGET_DIR)/etc/init.d/dynamicdns
