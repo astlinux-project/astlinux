@@ -1,7 +1,13 @@
 #!/bin/bash
 #
-# build-runnix
+# build-runnix [ uclibc ]
 #
+
+if [ "$1" = "uclibc" ]; then
+  CONFIG="runnix-uclibc.config"
+else
+  CONFIG="runnix.config"
+fi
 
 ROOTFS_EXT2_GZ="output/images/rootfs.ext2.gz"
 
@@ -14,8 +20,6 @@ SYSLINUX_DIR="output/build/syslinux-${SYSLINUX_VERSION// /}"
 MEMTEST_VER="$(awk -F'=' '/^MEMTEST_VER/ { print $2; exit }' package/memtest/memtest.mk)"
 
 MEMTEST_DIR="output/build/memtest86+-${MEMTEST_VER// /}"
-
-CONFIG="runnix.config"
 
 make_release_version()
 {
