@@ -213,6 +213,19 @@ if [ -f $BASE/os/$RUNIMG.conf ]; then
   . $BASE/os/$RUNIMG.conf
 fi
 
+if [ "$INITRAMFS" ]; then
+  if [ "$INITRAMFS" = "YES" ]; then
+    if [ "$KCMD" ]; then
+      echo "Image is initramfs, booting now..."
+      kexec --command-line="$KCMD" -f $BASE/os/$RUNIMG
+      do_failure
+    else
+      echo "You need to specify KCMD with initramfs"
+      do_failure
+    fi
+  fi
+fi
+
 if [ -z "$OFFSET" ]; then
   losetup /dev/loop0 $BASE/os/$RUNIMG
 else
