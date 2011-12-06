@@ -213,9 +213,9 @@ if [ -f $BASE/os/$RUNIMG.conf ]; then
   . $BASE/os/$RUNIMG.conf
 fi
 
-if [ "$INITRAMFS" ]; then
-  if [ "$INITRAMFS" = "YES" ]; then
-    if [ "$KCMD" ]; then
+if [ -n "$INITRAMFS" ]; then
+  if [ "$INITRAMFS" = "yes" ]; then
+    if [ -n "$KCMD" ]; then
       echo "Image is initramfs, booting now..."
       kexec --command-line="$KCMD" -f $BASE/os/$RUNIMG
       do_failure
