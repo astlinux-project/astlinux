@@ -29,6 +29,22 @@ require_once '../common/header.php';
   putHtml('<p>&nbsp;</p>');
   putHtml("</center>");
 ?>
+  <script language="JavaScript" type="text/javascript">
+  //<![CDATA[
+
+  function setCLIheight() {
+    var winW = 840;
+    if (document.documentElement && document.documentElement.offsetWidth) {
+      winW = document.documentElement.offsetWidth;
+    }
+    if (window.innerWidth) {
+      winW = window.innerWidth;
+    }
+    document.getElementById("cli").height = winW * 11 / 20;
+    window.onresize = setCLIheight;
+  }
+  //]]>
+  </script>
   <center>
   <table class="layoutNOpad" width="100%"><tr><td><center>
   <table class="stdtable">
@@ -37,13 +53,9 @@ require_once '../common/header.php';
   </td></tr></table>
 <?php
 
-  if (($rows = getPREFdef($global_prefs, 'edit_text_rows_cmdstr')) === '') {
-    $rows = '30';
-  }
-  $height = ($rows - 1) * 20;
   putHtml('<table class="stdtable" width="100%"><tr><td style="text-align: center;">');
   if (is_file('/var/run/shellinaboxd.pid')) {
-    echo '<iframe src="/admin/cli/" frameborder="1" width="95%" height="'.$height.'">';
+    echo '<iframe id="cli" src="/admin/cli/" frameborder="1" width="100%" onload="setCLIheight();">';
     putHtml('</iframe>');
   } else {
     putHtml('<p style="color: red;">The CLI Proxy Server is not running, enable via the Network Tab.</p>');
