@@ -1,0 +1,8 @@
+config BR2_PACKAGE_BEEP
+	bool "beep"
+	default n
+	help
+	  beep allows the user to control the pc-speaker with precision, allowing
+	  different sounds to indicate different events.
+
+	  http://www.johnath.com/beep/
