@@ -72,6 +72,10 @@ Released **TBD**
 -- zabbix, version 1.8.8, added rc.conf variable support, setting ZABBIX_SERVER will
    enable zabbix with defaults.  See /stat/etc/rc.conf for more options.
 
+-- beep, version 1.3, new command that allows tone sequences to be generated on the board.
+   A new rc.conf variable, ALERT_SOUNDS allows sounds to be generated for startup and/or
+   shutdown for geni586 and geni586-serial boards.
+
 ** Networking
 
 -- shellinaboxd, revision 239, added to provide CLI (Command Line Interface) 'login'
