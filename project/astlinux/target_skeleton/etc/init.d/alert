@@ -2,6 +2,20 @@
 
 . /etc/rc.conf
 
+is_alert_sound_type()
+{
+  local sound_type="$1" sound IFS
+
+  unset IFS
+  for sound in $ALERT_SOUNDS; do
+    if [ "$sound" = "$sound_type" ]; then
+      return 0
+    fi
+  done
+
+  return 1
+}
+
 start () {
 
   # Turn OFF the errorled (after finshed booting) 
@@ -58,6 +72,13 @@ start () {
     fi
   fi
 
+  # Generate Alert Sounds (after finished booting)
+  if grep -q "astlinux=geni586" /proc/cmdline; then
+
+    if is_alert_sound_type startup; then
+      beep -f 330 -l 100 -d1 -n -f 277 -l 100 -d1 -n -f 330 -l 100 -d 1 -n -f 440 -l 330
+    fi
+  fi
 }
 
 stop () {
@@ -93,15 +114,22 @@ stop () {
     echo 0 > /sys/class/leds/alix:3/brightness
   fi
 
+  # Generate Alert Sounds (on reboot/shutdown)
+  if grep -q "astlinux=geni586" /proc/cmdline; then
+
+    if is_alert_sound_type shutdown; then
+      beep -f 988 -l 180 -d 33 -n -f 831 -l 110
+    fi
+  fi
 }
 
 case $1 in
 
-  start|off)
+  start)
     start
     ;;
 
-  stop|on)
+  stop)
     stop
     ;;
 
