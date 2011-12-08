@@ -66,23 +66,6 @@ init () {
 start () {
 
   echo "Starting Asterisk..."
-  if [ -n "$ISDN_MODPROBE" -o -n "$MISDN" ]; then
-    echo "Starting mISDN"
-    if [ -f /mnt/kd/misdn-init.conf ]; then
-      ln -sf /mnt/kd/misdn-init.conf /tmp/etc/misdn-init.conf
-      echo "/mnt/kd/misdn-init.conf exists, skipping config."
-    else
-      # Make /etc/misdn-init.conf point to /mnt/kd/misdn-init.conf if configs exist
-      if [ -d /mnt/kd/rc.conf.d -o -f /mnt/kd/rc.conf ]; then
-        ln -sf /mnt/kd/misdn-init.conf /tmp/etc/misdn-init.conf
-      fi
-      /usr/sbin/misdn-init scan
-      /usr/sbin/misdn-init config
-    fi
-
-    /usr/sbin/misdn-init start
-    sleep 2
-  fi
 
   if ! find /var/lib/asterisk/sounds -name 'vm-*' | grep -q '/vm-'; then
     echo "
