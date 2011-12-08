@@ -315,7 +315,7 @@ none    /var            tmpfs   size=5000k      0       0
     ln -sf /stat/etc/localtime /tmp/etc/localtime
   fi
 
-  #uclibc style TZ support
+  # /etc/TZ Timezone support
   if [ -z "$TZ_TIMEZONE" -a -f /etc/localtime ]; then
     TZ_TIMEZONE=$(tail -n1 /etc/localtime)
   fi
