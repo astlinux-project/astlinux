@@ -82,6 +82,10 @@ Released **TBD**
    via a web browser using "https://pbx/admin/cli/" and a new CLI tab in the web
    interface.  This feature is disabled by default.
 
+-- lighttpd, version 1.4.29, added new variables, HTTP_ACCESSLOG and HTTPS_ACCESSLOG to
+   control if http(s) access is logged or not.  By default no access logging, a change
+   from previous versions.
+
 -- curl (libcurl) version 7.21.7
 
 -- iproute2 (ip, tc) version 2.6.39
@@ -115,6 +119,8 @@ Released **TBD**
    option "CLI  Proxy Server" must be enabled for the CLI tab to function.  If it is prefered
    to have the "shellinabox" in a new windows, use the Prefs tab "External CLI Link" option
    and define it to 'https://localhost/admin/cli/'.
+
+-- Network tab, added support for HTTP_ACCESSLOG and HTTPS_ACCESSLOG variables.
 
 -- Edit tab, Active DNSmasq Leases file, "/mnt/kd/dnsmasq.leases" may be editied.
 
