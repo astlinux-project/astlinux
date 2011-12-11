@@ -32,6 +32,14 @@ require_once '../common/header.php';
   <script language="JavaScript" type="text/javascript">
   //<![CDATA[
 
+  function setOKexit() {
+    var cli = document.getElementById("cli");
+    var active = cli.contentWindow.document.getElementById("reconnect").style.visibility == 'hidden';
+    if (active) {
+      return 'CLI session is active, leaving will kill the session!';
+    }
+  }
+
   function setCLIheight() {
     var winW = 840;
     if (document.documentElement && document.documentElement.offsetWidth) {
@@ -42,6 +50,7 @@ require_once '../common/header.php';
     }
     document.getElementById("cli").height = winW * 11 / 20;
     window.onresize = setCLIheight;
+    window.onbeforeunload = setOKexit;
   }
   //]]>
   </script>
