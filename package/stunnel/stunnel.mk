@@ -4,12 +4,14 @@
 #
 #############################################################
 
-STUNNEL_VERSION = 4.36
-STUNNEL_SITE = http://ftp.nluug.nl/pub/networking/stunnel/obsolete/4.x/
+STUNNEL_VERSION = 4.44
+STUNNEL_SITE = http://ftp.nluug.nl/pub/networking/stunnel/archive/4.x
 STUNNEL_DEPENDENCIES = openssl
 
 STUNNEL_CONF_OPT += \
 	--with-ssl=$(STAGING_DIR)/usr \
+	--localstatedir=/var \
+	--disable-libwrap \
 	--with-threads=fork
 
 define STUNNEL_INSTALL_TARGET_CMDS
