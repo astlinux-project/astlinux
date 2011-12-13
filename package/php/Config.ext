@@ -36,6 +36,12 @@ config BR2_PACKAGE_PHP_EXT_OPENSSL
 	help
 	  openssl support
 
+config BR2_PACKAGE_PHP_EXT_CURL
+	bool "curl"
+	select BR2_PACKAGE_LIBCURL
+	help
+	  curl support
+
 config BR2_PACKAGE_PHP_EXT_LIBXML2
 	bool "xml2"
 	select BR2_PACKAGE_LIBXML2

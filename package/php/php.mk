@@ -59,6 +59,11 @@ ifeq ($(BR2_PACKAGE_PHP_EXT_OPENSSL),y)
 	PHP_DEPENDENCIES += openssl
 endif
 
+ifeq ($(BR2_PACKAGE_PHP_EXT_CURL),y)
+	PHP_CONF_OPT += --with-curl=$(STAGING_DIR)/usr
+	PHP_DEPENDENCIES += libcurl
+endif
+
 ifeq ($(BR2_PACKAGE_PHP_EXT_LIBXML2),y)
 	PHP_CONF_OPT += --enable-libxml \
 		--with-libxml-dir=${STAGING_DIR}/usr \
