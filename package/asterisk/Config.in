@@ -44,3 +44,12 @@ config BR2_PACKAGE_ASTERISK_MENUSELECT
 	help
 	  Run interactive menuselect to select custom Asterisk options
 
+config BR2_PACKAGE_ASTERISK_ILBC
+	bool "Asterisk iLBC CODEC"
+	default n
+	depends on BR2_PACKAGE_ASTERISK
+	help
+	  iLBC CODEC for Asterisk
+
+	  http://www.ietf.org/rfc/rfc3951.txt
+

@@ -158,6 +158,12 @@ ifeq ($(strip $(BR2_PACKAGE_SPANDSP)),y)
  endif
 endif
 
+ifeq ($(strip $(BR2_PACKAGE_ASTERISK_ILBC)),y)
+	zcat package/asterisk/ilbc-codec.tar.gz | tar -C $(ASTERISK_DIR) $(TAR_OPTIONS) -
+	$(SED) 's:<defaultenabled>no</defaultenabled>:<defaultenabled>yes</defaultenabled>:' \
+		$(ASTERISK_DIR)/codecs/codec_ilbc.c
+endif
+
 	cp -p package/asterisk/Makefile.module $(ASTERISK_DIR)/Makefile.module
 
 	touch $@
