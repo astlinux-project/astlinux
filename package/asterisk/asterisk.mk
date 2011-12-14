@@ -115,19 +115,6 @@ ifeq ($(strip $(BR2_PACKAGE_SPANDSP)),y)
 ASTERISK_EXTRAS+=spandsp
 endif
 
-ifeq ($(strip $(BR2_PACKAGE_ASTERISK_CHANMISDN)),y)
- ifeq ($(strip $(BR2_PACKAGE_MISDNV1)),y)
-ASTERISK_EXTRAS+=misdnv1
- endif
- ifeq ($(strip $(BR2_PACKAGE_MISDN_DIGIUM)),y)
-ASTERISK_EXTRAS+=misdn-digium
- endif
-ASTERISK_CONFIGURE_ARGS+= \
-			--with-misdn="$(STAGING_DIR)/usr" \
-			--with-isdnnet="$(STAGING_DIR)/usr" \
-			--with-suppserv="$(STAGING_DIR)/usr"
-endif
-
 ifeq ($(strip $(BR2_PACKAGE_DAHDI_LINUX)),y)
 ASTERISK_EXTRAS+=dahdi-tools
 ASTERISK_CONFIGURE_ARGS+= \
