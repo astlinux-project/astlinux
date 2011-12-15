@@ -1,6 +1,6 @@
 <?php session_manual_gc();
 
-// Copyright (C) 2008-2011 Lonnie Abelbeck
+// Copyright (C) 2008-2012 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -112,7 +112,7 @@ function putUSERerror($user, $tab) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<!-- Copyright (C) 2008-2011 Lonnie Abelbeck -->
+<!-- Copyright (C) 2008-2012 Lonnie Abelbeck -->
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
 <meta http-equiv="Expires" content="0" />
