@@ -5,10 +5,36 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.0.0:
-==============================
+Additions for AstLinux 1.0.1:
+=============================
 
 Released **TBD**
+
+** System
+
+-- No changes
+
+** Networking
+
+-- stunnel, version bump to 4.44, fix to generate proper default PID file
+
+-- dnsmasq, version bump to 2.59
+
+** Asterisk
+
+-- Asterisk 1.4.43 and 1.8.8.0
+
+-- Add support for the iLBC CODEC in Asterisk
+
+** Web Interface
+
+-- No changes
+
+
+Additions for AstLinux 1.0.0:
+=============================
+
+Released 2011-12-16
 
 ** IMPORTANT NOTICE
 
