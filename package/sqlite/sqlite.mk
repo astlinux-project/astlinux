@@ -4,7 +4,7 @@
 #
 #############################################################
 
-SQLITE_VERSION = 3070603
+SQLITE_VERSION = 3070900
 SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VERSION).tar.gz
 SQLITE_SITE = http://www.sqlite.org
 SQLITE_INSTALL_STAGING = YES
@@ -16,15 +16,12 @@ ifneq ($(BR2_LARGEFILE),y)
 SQLITE_CONF_ENV = CFLAGS="$(TARGET_CFLAGS) -DSQLITE_DISABLE_LFS"
 endif
 
-SQLITE_CONF_OPT =	--enable-tempstore=yes \
-			--enable-threadsafe \
-			--enable-releasemode \
-			--disable-tcl \
-			--localstatedir=/var
+SQLITE_CONF_OPT = \
+	--enable-threadsafe \
+	--localstatedir=/var
 
 ifeq ($(BR2_PACKAGE_SQLITE_READLINE),y)
 SQLITE_DEPENDENCIES += ncurses readline
-SQLITE_CONF_OPT += --with-readline-inc="-I$(STAGING_DIR)/usr/include"
 else
 SQLITE_CONF_OPT += --disable-readline
 endif
