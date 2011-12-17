@@ -139,6 +139,8 @@ Released 2011-12-16
 -- Jabber/GTalk support added, res_jabber and chan_gtalk built for Asterisk 1.4/1.8 plus
    chan_jingle for Asterisk 1.8
 
+-- Added zaphfc DAHDI driver for single port HFC ISDN cards, included in Asterisk 1.8
+
 ** Web Interface
 
 -- Added "CLI Tab", Show/Hide in Prefs tab.  Requires 'admin' permissions.  The new Network tab
