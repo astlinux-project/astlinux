@@ -12,7 +12,7 @@ Released **TBD**
 
 ** System
 
--- No changes
+-- sqlite, version bump to 3.7.9
 
 ** Networking
 
