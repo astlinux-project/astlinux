@@ -16,6 +16,12 @@ Released **TBD**
 
 ** Networking
 
+-- AIF, version bump to 2.0.1
+   Note: This version of AIF offers much better sanity checking for firewall input
+   variables, so existing configurations could possibly now display a warning when
+   the firewall is restarted.  If so, via the CLI "arno-iptables-firewall restart"
+   will now clearly show which variable is improperly formatted.
+
 -- stunnel, version bump to 4.44, fix to generate proper default PID file
 
 -- dnsmasq, version bump to 2.59
