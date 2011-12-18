@@ -2,14 +2,14 @@
 #            -= Arno's iptables firewall - DynDNS Host Open plugin =-
 #
 PLUGIN_NAME="DynDNS Host Open plugin"
-PLUGIN_VERSION="1.00-astlinux BETA"
+PLUGIN_VERSION="1.01-astlinux BETA"
 PLUGIN_CONF_FILE="dyndns-host-open.conf"
 #
-# Last changed          : April 4, 2011
-# Requirements          : kernel 2.6 + AIF 2.0.0 or better
+# Last changed          : December 18, 2011
+# Requirements          : kernel 2.6 + AIF 2.0.1 or better
 # Comments              : This implements support to open ports for DynDNS IPv4 hosts
 #
-# Author                : (C) Copyright 2008-2011 by Arno van Amersfoort & Lonnie Abelbeck
+# Author                : (C) Copyright 2008-2012 by Arno van Amersfoort & Lonnie Abelbeck
 # Homepage              : http://rocky.eld.leidenuniv.nl/
 # Freshmeat homepage    : http://freshmeat.net/projects/iptables-firewall/?topic_id=151
 # Email                 : a r n o v a AT r o c k y DOT e l d DOT l e i d e n u n i v DOT n l
@@ -42,23 +42,21 @@ generate_rules()
   ##########################################
   unset IFS
   for rule in $DYNDNS_HOST_OPEN_TCP; do
-    interfaces=$(get_ifs "$rule")
-    destips=$(get_ips "$rule")
-    hosts=$(get_hosts_ihp "$rule")
-    ports=$(get_ports_ihp "$rule")
+    if parse_rule "$rule" DYNDNS_HOST_OPEN_TCP "interfaces-destips-hosts-ports"; then
 
-    echo "${INDENT}$(show_if_ip "$interfaces" "$destips")Allowing $hosts for TCP port(s): $ports"
-    
-    IFS=','
-    for host in $hosts; do
-      for port in $ports; do
-        for destip in $destips; do
-          for interface in $interfaces; do
-            echo "-A DYNDNS_CHAIN -i $interface -s $host -d $destip -p tcp --dport $port -j ACCEPT" >> "$rules_file"
+      echo "${INDENT}$(show_if_ip "$interfaces" "$destips")Allowing $hosts for TCP port(s): $ports"
+
+      IFS=','
+      for host in $hosts; do
+        for port in $ports; do
+          for destip in $destips; do
+            for interface in $interfaces; do
+              echo "-A DYNDNS_CHAIN -i $interface -s $host -d $destip -p tcp --dport $port -j ACCEPT" >> "$rules_file"
+            done
           done
         done
       done
-    done
+    fi
   done
 
 
@@ -66,23 +64,21 @@ generate_rules()
   ##########################################
   unset IFS
   for rule in $DYNDNS_HOST_OPEN_UDP; do
-    interfaces=$(get_ifs "$rule")
-    destips=$(get_ips "$rule")
-    hosts=$(get_hosts_ihp "$rule")
-    ports=$(get_ports_ihp "$rule")
+    if parse_rule "$rule" DYNDNS_HOST_OPEN_UDP "interfaces-destips-hosts-ports"; then
 
-    echo "${INDENT}$(show_if_ip "$interfaces" "$destips")Allowing $hosts for UDP port(s): $ports"
-    
-    IFS=','
-    for host in $hosts; do
-      for port in $ports; do
-        for destip in $destips; do
-          for interface in $interfaces; do
-            echo "-A DYNDNS_CHAIN -i $interface -s $host -d $destip -p udp --dport $port -j ACCEPT" >> "$rules_file"
+      echo "${INDENT}$(show_if_ip "$interfaces" "$destips")Allowing $hosts for UDP port(s): $ports"
+
+      IFS=','
+      for host in $hosts; do
+        for port in $ports; do
+          for destip in $destips; do
+            for interface in $interfaces; do
+              echo "-A DYNDNS_CHAIN -i $interface -s $host -d $destip -p udp --dport $port -j ACCEPT" >> "$rules_file"
+            done
           done
         done
       done
-    done
+    fi
   done
 
 
@@ -90,23 +86,21 @@ generate_rules()
   #############################################
   unset IFS
   for rule in $DYNDNS_HOST_OPEN_IP; do
-    interfaces=$(get_ifs "$rule")
-    destips=$(get_ips "$rule")
-    hosts=$(get_hosts_ihp "$rule")
-    protos=$(get_ports_ihp "$rule")
+    if parse_rule "$rule" DYNDNS_HOST_OPEN_IP "interfaces-destips-hosts-protos"; then
 
-    echo "${INDENT}$(show_if_ip "$interfaces" "$destips")Allowing $hosts for IP protocol(s): $protos"
-    
-    IFS=','
-    for host in $hosts; do
-      for proto in $protos; do
-        for destip in $destips; do
-          for interface in $interfaces; do
-            echo "-A DYNDNS_CHAIN -i $interface -s $host -d $destip -p $proto -j ACCEPT" >> "$rules_file"
+      echo "${INDENT}$(show_if_ip "$interfaces" "$destips")Allowing $hosts for IP protocol(s): $protos"
+
+      IFS=','
+      for host in $hosts; do
+        for proto in $protos; do
+          for destip in $destips; do
+            for interface in $interfaces; do
+              echo "-A DYNDNS_CHAIN -i $interface -s $host -d $destip -p $proto -j ACCEPT" >> "$rules_file"
+            done
           done
         done
       done
-    done
+    fi
   done
 
 
@@ -114,20 +108,19 @@ generate_rules()
   #####################################
   unset IFS
   for rule in $DYNDNS_HOST_OPEN_ICMP; do
-    interfaces=$(get_ifs "$rule")
-    destips=$(get_ips "$rule")
-    hosts=$(get_hosts_ih "$rule")
+    if parse_rule "$rule" DYNDNS_HOST_OPEN_ICMP "interfaces-destips-hosts"; then
 
-    echo "${INDENT}$(show_if_ip "$interfaces" "$destips")Allowing $hosts for ICMP-requests(ping)"
-    
-    IFS=','
-    for host in $hosts; do
-      for destip in $destips; do
-        for interface in $interfaces; do
-          echo "-A DYNDNS_CHAIN -i $interface -s $host -d $destip -p icmp --icmp-type echo-request -j ACCEPT" >> "$rules_file"
+      echo "${INDENT}$(show_if_ip "$interfaces" "$destips")Allowing $hosts for ICMP-requests(ping)"
+
+      IFS=','
+      for host in $hosts; do
+        for destip in $destips; do
+          for interface in $interfaces; do
+            echo "-A DYNDNS_CHAIN -i $interface -s $host -d $destip -p icmp --icmp-type echo-request -j ACCEPT" >> "$rules_file"
+          done
         done
       done
-    done
+    fi
   done
 
   unset IFS
