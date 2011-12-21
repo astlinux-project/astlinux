@@ -14,6 +14,10 @@ Released **TBD**
 
 -- sqlite, version bump to 3.7.9
 
+-- ethtool, version bump to 3.0
+
+-- nano, version bump to 2.3.1
+
 ** Networking
 
 -- AIF, version bump to 2.0.1
@@ -25,6 +29,10 @@ Released **TBD**
 -- stunnel, version bump to 4.44, fix to generate proper default PID file
 
 -- dnsmasq, version bump to 2.59
+
+-- ipsec-tools, version bump to 0.8.0
+
+-- iptables, version bump to 1.4.12.1
 
 ** Asterisk
 
