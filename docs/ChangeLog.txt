@@ -26,6 +26,8 @@ Released **TBD**
    the firewall is restarted.  If so, via the CLI "arno-iptables-firewall restart"
    will now clearly show which variable is improperly formatted.
 
+-- lighttpd, version bump to 1.4.30, security fix
+
 -- stunnel, version bump to 4.44, fix to generate proper default PID file
 
 -- dnsmasq, version bump to 2.59
