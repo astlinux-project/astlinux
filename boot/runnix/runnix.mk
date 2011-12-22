@@ -3,7 +3,7 @@
 # runnix
 #
 #############################################################
-RUNNIX_VER:=0.4-5322
+RUNNIX_VER:=0.4-5329
 RUNNIX_SOURCE:=runnix-$(RUNNIX_VER).tar.gz
 #RUNNIX_SITE:=http://mirror.astlinux.org/runnix4
 RUNNIX_SITE:=http://lonnie.abelbeck.com/runnix4
