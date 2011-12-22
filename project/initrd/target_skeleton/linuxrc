@@ -1,7 +1,9 @@
 #!/bin/sh
 export PATH=/usr/bin:/usr/sbin:/bin:/sbin
 
-DRIVES="sda sdb sdc sdd sde sdf sdg sdh"
+# Must still look for /dev/hd[a-d] to be backward compatible
+# when reverted to an older version that still uses IDE
+DRIVES="hda hdb hdc hdd sda sdb sdc sdd sde sdf sdg sdh"
 
 # Max image size in megabytes
 IMAGEFS_SIZE=128
