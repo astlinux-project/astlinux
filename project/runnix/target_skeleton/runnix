@@ -9,7 +9,7 @@ ROOT=/mnt/root
 
 RUNVER="`cat /etc/runnix-release`"
 
-DRIVES="hda hdb hdc hdd hde hdf hdg hdh sda sdb sdc sdd"
+DRIVES="sda sdb sdc sdd sde sdf sdg sdh"
 
 setup_network () {
 
