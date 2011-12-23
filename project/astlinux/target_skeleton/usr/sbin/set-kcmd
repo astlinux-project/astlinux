@@ -1,0 +1,128 @@
+#!/bin/sh
+#
+# set-kcmd option
+#
+# Simple editing of the kernel command line for select options
+
+OPTION="$1"
+
+mount_oldroot_cdrom() {
+  if mount | grep -q "/oldroot/cdrom"; then
+    BASE=/oldroot/cdrom
+  else
+    if [ -x /sbin/findfs ]; then
+      LABEL=`/sbin/findfs LABEL=RUNNIX`
+      if [ -n "$LABEL" ]; then
+        mount -t vfat -o ro "$LABEL" /oldroot/cdrom
+      fi
+    fi
+    if mount | grep -q "/oldroot/cdrom"; then
+      BASE=/oldroot/cdrom
+    else
+      return 1
+    fi
+  fi
+  return 0
+}
+
+replace_kcmd()
+{
+  local type="$1" conf="$2" kcmd i IFS
+
+  if [ ! -f "$conf" ]; then
+    echo "set-kcmd: file not found." >&2
+    return 1
+  fi
+
+  kcmd="$(sed -n -r -e 's/^KCMD="(.*)".*$/\1/p' "$conf")"
+
+  if [ -z "$kcmd" ]; then
+    echo "set-kcmd: KCMD not found." >&2
+    return 1
+  fi
+
+  unset IFS
+  for i in $kcmd; do
+    case $i in
+      libata.dma=*)
+        if [ "$type" = "libata.dma" ]; then
+          sed -i "/^KCMD=/ s/$i/$OPTION/" "$conf"
+          return 0
+        fi
+        ;;
+    esac
+  done
+
+  return 1
+}
+
+set_option() {
+  local type="$1"
+
+  if ! mount_oldroot_cdrom; then
+    echo "set-kcmd: unable to find Runnix partition." >&2
+    exit 1
+  fi
+
+  if [ -f $BASE/os/ver ]; then
+    VER="$(cat $BASE/os/ver)"
+  else
+    echo "set-kcmd: unable to find AstLinux version." >&2
+    exit 1
+  fi
+
+  if ! mount -o rw,remount /oldroot/cdrom >/dev/null; then
+    echo "set-kcmd: unable to remount 'rw'." >&2
+    exit 1
+  fi
+
+  if replace_kcmd "$type" "$BASE/os/$VER.run.conf"; then
+    echo "The \"$OPTION\" change will be applied on the next reboot for \"$VER\"."
+  else
+    echo "set-kcmd: failed to set option \"$OPTION\"." >&2
+    mount -o ro,remount /oldroot/cdrom >/dev/null
+    exit 1
+  fi
+
+  mount -o ro,remount /oldroot/cdrom >/dev/null
+}
+
+usage()
+{
+  echo "
+Usage: set-kcmd option
+
+Available Options:
+
+libata.dma=   [LIBATA] DMA control
+              libata.dma=0      Disable all PATA and SATA DMA
+              libata.dma=1      PATA and SATA Disk DMA only
+              libata.dma=2      ATAPI (CDROM) DMA only
+              libata.dma=4      Compact Flash DMA only
+              Combinations also work, so libata.dma=3 enables DMA
+              for disks and CDROMs, but not CFs.
+"
+  exit 1
+}
+
+# main
+
+case $OPTION in
+
+libata.dma=[0-7])
+  set_option "libata.dma"
+  ;;
+
+'')
+  usage
+  ;;
+
+*)
+  echo "set-kcmd: invalid option \"$OPTION\""
+  usage
+  ;;
+
+esac
+
+exit 0
+

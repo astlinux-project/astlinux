@@ -85,6 +85,7 @@ merge_kcmd()
     return 1
   fi
 
+  # Merge in previously undefined options
   merge=""
   unset IFS
   for i in $old_kcmd; do
@@ -100,6 +101,18 @@ merge_kcmd()
   if [ -n "$merge" ]; then
     sed -i "/^KCMD=/ s/ astlive /&$merge /" "$new_conf"
   fi
+
+  # Replace different previously defined options
+  unset IFS
+  for i in $old_kcmd; do
+    case $i in
+      libata.dma=*)
+        if [ "$i" != "libata.dma=3" ]; then
+          sed -i "/^KCMD=/ s/libata.dma=3/$i/" "$new_conf"
+        fi
+        ;;
+    esac
+  done
 
   return 0
 }
