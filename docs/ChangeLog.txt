@@ -12,6 +12,13 @@ Released **TBD**
 
 ** System
 
+-- IDE drives are now handled via 'libata', so all drives appear as /dev/sd[a-h]
+   By default, DMA is disabled on CF drives, but enabled on disk drives.
+   It is recommended to upgrade to the latest RUNNIX which now functions the same way.
+   Note: This fixes a boot issue with HP Thin Client T5710 hardware
+
+-- RUNNIX, version bump to 0.4-5329
+
 -- sqlite, version bump to 3.7.9
 
 -- ethtool, version bump to 3.0
