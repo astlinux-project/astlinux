@@ -284,7 +284,7 @@ none    /var            tmpfs   size=5000k      0       0
           echo "Runnix vfat partition re-mounted read-only" 
         fi                                                  
       else                                                  
-        echo "Runnix vfat partition label not found, use: dosfslabel /dev/hda1 RUNNIX" 1>&2
+        echo "Runnix vfat partition label not found, use: dosfslabel /dev/sda1 RUNNIX" 1>&2
       fi                                                                                   
     fi                                                                                     
   fi                                                                                       
