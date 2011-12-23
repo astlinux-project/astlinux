@@ -47,7 +47,7 @@ start () {
     if grep -q "astlinux=wrap" /proc/cmdline; then
     
       echo heartbeat > /sys/class/leds/wrap::power/trigger
-      echo ide-disk > /sys/class/leds/wrap::error/trigger
+      # echo ide-disk > /sys/class/leds/wrap::error/trigger
       if [ -n "$EXTIF" ]; then
         echo netdev > /sys/class/leds/wrap::extra/trigger
         echo "$EXTIF" > /sys/class/leds/wrap::extra/device_name 
@@ -60,7 +60,7 @@ start () {
     if grep -q "astlinux=alix" /proc/cmdline; then
     
       echo heartbeat > /sys/class/leds/alix:1/trigger
-      echo ide-disk > /sys/class/leds/alix:2/trigger
+      # echo ide-disk > /sys/class/leds/alix:2/trigger
       if [ -n "$EXTIF" ]; then
         echo netdev > /sys/class/leds/alix:3/trigger
         echo "$EXTIF" > /sys/class/leds/alix:3/device_name 
@@ -93,7 +93,7 @@ stop () {
 
     echo none > /sys/class/leds/wrap::power/trigger
     echo 1 > /sys/class/leds/wrap::power/brightness    
-    echo none > /sys/class/leds/wrap::error/trigger
+    # echo none > /sys/class/leds/wrap::error/trigger
     echo 1 > /sys/class/leds/wrap::error/brightness
     echo none > /sys/class/leds/wrap::extra/trigger
     echo 0 > /sys/class/leds/wrap::extra/brightness
@@ -108,7 +108,7 @@ stop () {
 
     echo none > /sys/class/leds/alix:1/trigger
     echo 1 > /sys/class/leds/alix:1/brightness
-    echo none > /sys/class/leds/alix:2/trigger
+    # echo none > /sys/class/leds/alix:2/trigger
     echo 1 > /sys/class/leds/alix:2/brightness
     echo none > /sys/class/leds/alix:3/trigger
     echo 0 > /sys/class/leds/alix:3/brightness
