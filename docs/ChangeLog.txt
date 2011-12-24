@@ -19,6 +19,13 @@ Released **TBD**
 
 -- RUNNIX, version bump to 0.4-5329
 
+-- set-kcmd, new command to set libata.dma=N kernel option values, type 'set-kcmd'
+   without an argument to see the options supported.
+
+-- upgrade-run-image, now propagates the libata.dma=N kernel option on upgrades.
+
+-- Removed DMA_DEV variable support, given the new libata.dma=N kernel support.
+
 -- sqlite, version bump to 3.7.9
 
 -- ethtool, version bump to 3.0
