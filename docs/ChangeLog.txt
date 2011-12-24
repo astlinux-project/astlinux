@@ -32,6 +32,8 @@ Released **TBD**
 
 -- nano, version bump to 2.3.1
 
+-- dosfstools, version bump to 3.0.12
+
 ** Networking
 
 -- AIF, version bump to 2.0.1
