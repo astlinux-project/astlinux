@@ -350,12 +350,6 @@ none    /var            tmpfs   size=5000k      0       0
     mount -o remount,size=$TMP_SIZE /tmp
   fi
 
-  if [ -n "$DMA_DEV" ]; then
-    for i in $DMA_DEV; do
-      hdparm -q -d1 $i
-    done
-  fi
-
   #  Not needed anymore ?
   #ldconfig -C /tmp/etc/ld.so.cache /lib /usr/lib
 
