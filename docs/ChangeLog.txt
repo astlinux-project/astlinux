@@ -17,7 +17,7 @@ Released **TBD**
    It is recommended to upgrade to the latest RUNNIX which now functions the same way.
    Note: This fixes a boot issue with HP Thin Client T5710 hardware
 
--- RUNNIX, version bump to 0.4-5329
+-- RUNNIX, version bump to 0.4-5339
 
 -- set-kcmd, new command to set libata.dma=N kernel option values, type 'set-kcmd'
    without an argument to see the options supported.
