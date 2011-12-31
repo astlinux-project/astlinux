@@ -5,8 +5,7 @@
 #############################################################
 RUNNIX_VER:=0.4-5339
 RUNNIX_SOURCE:=runnix-$(RUNNIX_VER).tar.gz
-#RUNNIX_SITE:=http://mirror.astlinux.org/runnix4
-RUNNIX_SITE:=http://lonnie.abelbeck.com/runnix4
+RUNNIX_SITE:=http://mirror.astlinux.org/runnix4
 RUNNIX_DIR:=$(BUILD_DIR)/runnix-$(RUNNIX_VER)
 RUNNIX_CAT:=zcat
 RUNFS_DIR:=$(BUILD_DIR)/runfs
