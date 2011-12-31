@@ -5,7 +5,7 @@
 #############################################################
 FXLOAD_VERSION:=2008_10_13
 FXLOAD_SOURCE:=fxload-$(FXLOAD_VERSION).tar.gz
-FXLOAD_SITE:=http://$(SOURCEFORGE_MIRROR).dl.sourceforge.net/sourceforge/linux-hotplug/fxload/$(FXLOAD_VERSION)
+FXLOAD_SITE:=http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/sourceforge/linux-hotplug/fxload/$(FXLOAD_VERSION)
 FXLOAD_DIR:=$(BUILD_DIR)/fxload-$(FXLOAD_VERSION)
 FXLOAD_CAT:=zcat
 FXLOAD_BINARY:=fxload

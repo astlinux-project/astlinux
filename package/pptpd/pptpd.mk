@@ -5,7 +5,7 @@
 #############################################################
 
 PPTPD_VERSION = 1.3.4
-PPTPD_SITE = http://$(SOURCEFORGE_MIRROR).dl.sourceforge.net/sourceforge/poptop/
+PPTPD_SITE = http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/sourceforge/poptop/
 
 PPTPD_CONF_OPT += \
 	--sysconfdir=/etc
