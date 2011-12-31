@@ -34,6 +34,8 @@ Released **TBD**
 
 -- dosfstools, version bump to 3.0.12
 
+-- acpid, version bump to 2.0.14
+
 ** Networking
 
 -- AIF, version bump to 2.0.1
@@ -60,7 +62,7 @@ Released **TBD**
 
 ** Web Interface
 
--- No changes
+-- Updated AstLinux Packages License Information.
 
 
 Additions for AstLinux 1.0.0:
