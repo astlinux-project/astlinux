@@ -5,7 +5,7 @@
 ##############################################################
 MDNSRESPONDER_VERSION := 107.6
 MDNSRESPONDER_SOURCE := mDNSResponder-$(MDNSRESPONDER_VERSION).tar.gz
-MDNSRESPONDER_SITE := http://www.opensource.apple.com/tarballs
+MDNSRESPONDER_SITE := http://www.opensource.apple.com/tarballs/mDNSResponder
 MDNSRESPONDER_DIR := $(BUILD_DIR)/mDNSResponder-$(MDNSRESPONDER_VERSION)
 MDNSRESPONDER_BINARY := mDNSPosix/build/prod/mDNSProxyResponderPosix
 MDNSRESPONDER_TARGET_BINARY := usr/sbin/mDNSProxyResponderPosix

@@ -5,7 +5,7 @@
 #############################################################
 VSFTPD_VERSION = 2.3.4
 VSFTPD_SOURCE = vsftpd-$(VSFTPD_VERSION).tar.gz
-VSFTPD_SITE = ftp://vsftpd.beasts.org/users/cevans
+VSFTPD_SITE = https://security.appspot.com/downloads
 
 VSFTPD_LIBS = -lcrypt
 
