@@ -64,6 +64,8 @@ Released **TBD**
 
 ** Web Interface
 
+-- Status tab, added "Jabber Status" section.  Enabled via Prefs tab "Show Jabber Status".
+
 -- Updated AstLinux Packages License Information.
 
 
