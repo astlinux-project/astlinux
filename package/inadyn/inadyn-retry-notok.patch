@@ -1,0 +1,35 @@
+--- inadyn-1.96.2/src/dyndns.c.orig	2011-12-12 12:10:58.000000000 -0600
++++ inadyn-1.96.2/src/dyndns.c	2011-12-12 12:25:12.000000000 -0600
+@@ -911,6 +911,7 @@
+ {
+ 	RC_TYPE rc = RC_OK;
+ 	int iterations = 0;
++	int notok_iterations = 0;
+ 	BOOL os_handler_installed = FALSE;
+ 
+ 	if (p_dyndns == NULL)
+@@ -1015,13 +1016,22 @@
+ 					errorcode_get_name(rc), rc, iterations)); 
+                 if (rc == RC_DYNDNS_RSP_NOTOK)
+                 { 
+-                    DBG_PRINTF((LOG_ERR,"E: The response of DYNDNS svr was an error! Aborting.\n"));
+-                    break;              			
++			if (notok_iterations < 2)
++			{
++                    		DBG_PRINTF((LOG_WARNING,"W: The response of DYNDNS svr was an error! Trying Again...\n"));
++			   	++notok_iterations;
++			}
++			else
++			{
++                    		DBG_PRINTF((LOG_ERR,"E: The response of DYNDNS svr was an error! Aborting.\n"));
++                    		break;              			
++			}
+                 }
+ 			}
+ 			else /*count only the successful iterations */
+ 			{
+ 			   ++iterations;
++			   notok_iterations = 0;
+ 			}
+ 			
+ 			/* check if the user wants us to stop */			
