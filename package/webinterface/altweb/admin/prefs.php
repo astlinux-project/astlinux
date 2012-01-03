@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2010 Lonnie Abelbeck
+// Copyright (C) 2008-2012 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -11,6 +11,7 @@
 // 04-20-2008, Never-ending Additions
 // 08-19-2008, Added CDR Log Format Menu
 // 08-24-2008, Added /mnt/kd/ prefs file support
+// 01-02-2012, Added Show Jabber Status/Command
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -91,6 +92,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'status_dahdi_show_status = yes';
       fwrite($fp, $value."\n");
     }
+    if (isset($_POST['jabber_status'])) {
+      $value = 'status_jabber_show_status = yes';
+      fwrite($fp, $value."\n");
+    }
     if (isset($_POST['firewall_states'])) {
       $value = 'status_show_firewall_states = yes';
       fwrite($fp, $value."\n");
@@ -136,6 +141,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $value = 'status_voicemail_users_cmdstr = "'.trim($_POST['voicemail_cmd']).'"';
     fwrite($fp, $value."\n");
     $value = 'status_dahdi_status_cmdstr = "'.trim($_POST['dahdi_cmd']).'"';
+    fwrite($fp, $value."\n");
+    $value = 'status_jabber_status_cmdstr = "'.trim($_POST['jabber_cmd']).'"';
     fwrite($fp, $value."\n");
     
     $value = 'sysdial_ext_prefix_cmdstr = "'.trim($_POST['ext_prefix']).'"';
@@ -499,6 +506,15 @@ require_once '../common/header.php';
     $value = 'dahdi show status';
   }
   putHtml('<input type="text" size="28" maxlength="64" value="'.$value.'" name="dahdi_cmd" /></td></tr>');
+  
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'status_jabber_show_status') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="jabber_status" name="jabber_status"'.$sel.' /></td><td colspan="5">Show Jabber Status</td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="3">Jabber Status Command:</td><td colspan="3">');
+  if (($value = getPREFdef($global_prefs, 'status_jabber_status_cmdstr')) === '') {
+    $value = 'jabber show connections';
+  }
+  putHtml('<input type="text" size="28" maxlength="64" value="'.$value.'" name="jabber_cmd" /></td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_show_firewall_states') === 'yes') ? ' checked="checked"' : '';

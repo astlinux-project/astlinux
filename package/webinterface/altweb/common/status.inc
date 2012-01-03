@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2011 Lonnie Abelbeck
+// Copyright (C) 2008-2012 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -24,6 +24,7 @@
 // 11-06-2009, Added Reboot Scheduled notice
 // 05-05-2011, Added DAHDI Status and Hardware Monitoring sections
 // 08-10-2011, Added APC UPS Status
+// 01-02-2012, Added Jabber Status
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -874,6 +875,27 @@ if ($daemon['asterisk'] > 0) {
       $cmd = 'dahdi show status';
     }
     putHtml("<h2>DAHDI Status:</h2>");
+    putHtml("<pre>");
+    $tmpfile = tempnam("/tmp", "PHP_");
+    asteriskCMD($cmd, $tmpfile);
+    $ph = @fopen($tmpfile, "r");
+    while (! feof($ph)) {
+      if ($line = trim(fgets($ph, 1024))) {
+        if (strncasecmp($line, 'verbosity ', 10)) {
+          putText($line);
+        }
+      }
+    }
+    fclose($ph);
+    @unlink($tmpfile);
+    putHtml("</pre>");
+  }
+  
+  if ($status == 0 && getPREFdef($global_prefs, 'status_jabber_show_status') === 'yes') {
+    if (($cmd = getPREFdef($global_prefs, 'status_jabber_status_cmdstr')) === '') {
+      $cmd = 'jabber show connections';
+    }
+    putHtml("<h2>Jabber Status:</h2>");
     putHtml("<pre>");
     $tmpfile = tempnam("/tmp", "PHP_");
     asteriskCMD($cmd, $tmpfile);
