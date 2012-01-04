@@ -10,14 +10,14 @@ else
 ASTERISK_VERSION := 1.6.2.21
  else
   ifeq ($(BR2_PACKAGE_ASTERISK_v1_8),y)
-ASTERISK_VERSION := 1.8.8.0
+ASTERISK_VERSION := 1.8.8.1
   else
 ASTERISK_VERSION := 10.0.0
   endif
  endif
 endif
 ASTERISK_SOURCE := asterisk-$(ASTERISK_VERSION).tar.gz
-ASTERISK_SITE := http://downloads.digium.com/pub/asterisk/releases
+ASTERISK_SITE := http://downloads.asterisk.org/pub/telephony/asterisk/releases
 ASTERISK_DIR := $(BUILD_DIR)/asterisk-$(ASTERISK_VERSION)
 ASTERISK_BINARY := main/asterisk
 ASTERISK_TARGET_BINARY := usr/sbin/asterisk
