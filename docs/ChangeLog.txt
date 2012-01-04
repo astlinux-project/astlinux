@@ -58,7 +58,7 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.4.43 and 1.8.8.0
+-- Asterisk 1.4.43 and 1.8.8.1
 
 -- Add support for the iLBC CODEC in Asterisk
 
