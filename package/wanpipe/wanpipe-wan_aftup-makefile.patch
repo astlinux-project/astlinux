@@ -1,5 +1,5 @@
---- wanpipe-3.5.18/util/wan_aftup/Makefile.orig	2011-01-24 10:30:16.000000000 -0600
-+++ wanpipe-3.5.18/util/wan_aftup/Makefile	2011-01-24 10:35:23.000000000 -0600
+--- wanpipe-3.5.24/util/wan_aftup/Makefile.orig	2008-08-01 08:00:00.000000000 -0500
++++ wanpipe-3.5.24/util/wan_aftup/Makefile	2012-01-09 14:54:06.000000000 -0600
 @@ -23,7 +23,7 @@
  
  PROD=wan_aftup
@@ -22,11 +22,11 @@
  	install -m755 update_aft_firm.sh $(WAN_VIRTUAL)/etc/wanpipe/util/wan_aftup/update_aft_firm.sh
  	install -m755 scripts/load.sh $(WAN_VIRTUAL)/etc/wanpipe/util/wan_aftup/scripts/load.sh
  	install -m755 scripts/unload.sh $(WAN_VIRTUAL)/etc/wanpipe/util/wan_aftup/scripts/unload.sh
--	@if [ ! -z $(BINS) ]; then \
+-	@if [ ! -z "$(BINS)" ]; then \
 -		echo "Installing fimware files in /etc/wanpipe/util/wan_aftup/"; \
 -		cp -f *.BIN $(WAN_VIRTUAL)/etc/wanpipe/util/wan_aftup/; \
 -	fi
-+	#@if [ ! -z $(BINS) ]; then \
++	#@if [ ! -z "$(BINS)" ]; then \
 +	#	echo "Installing fimware files in /etc/wanpipe/util/wan_aftup/"; \
 +	#	cp -f *.BIN $(WAN_VIRTUAL)/etc/wanpipe/util/wan_aftup/; \
 +	#fi

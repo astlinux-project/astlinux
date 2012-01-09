@@ -3,7 +3,7 @@
 # wanpipe
 #
 #############################################################
-WANPIPE_VER:=3.5.19
+WANPIPE_VER:=3.5.24
 WANPIPE_SITE:= ftp://ftp.sangoma.com/linux/current_wanpipe
 WANPIPE_SOURCE:=wanpipe-$(WANPIPE_VER).tgz
 WANPIPE_DIR:=$(BUILD_DIR)/wanpipe-$(WANPIPE_VER)
@@ -29,6 +29,25 @@ $(WANPIPE_DIR)/.patched: $(WANPIPE_DIR)/.unpacked
 	touch $@
 
 $(WANPIPE_DIR)/.built: $(WANPIPE_DIR)/.patched | $(WANPIPE_PREREQS)
+	# Build and install 'libsangoma'
+	(cd $(WANPIPE_DIR)/api/libsangoma; rm -rf config.cache configure; \
+		sh ./bootstrap; \
+		$(TARGET_CONFIGURE_OPTS) \
+		./configure \
+		--target=$(GNU_TARGET_NAME) \
+		--host=$(GNU_TARGET_NAME) \
+		--build=$(GNU_HOST_NAME) \
+		--prefix=/usr \
+	)
+	$(MAKE) -C $(WANPIPE_DIR)/api/libsangoma CC=$(TARGET_CC) \
+		$(WANPIPE_CONFIGURE)
+	$(MAKE) -C $(WANPIPE_DIR)/api/libsangoma \
+		DESTDIR=$(STAGING_DIR) \
+		install
+	$(MAKE) -C $(WANPIPE_DIR)/api/libsangoma \
+		DESTDIR=$(TARGET_DIR) \
+		install
+	# Finished 'libsangoma'
 	$(MAKE) -C $(WANPIPE_DIR) \
 		HOSTCC=gcc CC=$(TARGET_CC) \
 		WARCH=$(KERNEL_ARCH) \
@@ -97,8 +116,11 @@ $(TARGET_DIR)/$(WANPIPE_TARGET_BINARY): $(WANPIPE_DIR)/.built
 	$(SED) 's:^WAN_LOCK=.*$$:WAN_LOCK=/var/lock/wanrouter:' \
 	    -e 's:^WAN_LOCK_DIR=.*$$:WAN_LOCK_DIR=/var/lock:' \
 		$(TARGET_DIR)/etc/wanpipe/wanrouter.rc
+	## Cleanup Target /etc/wanpipe
+	rm -rf $(TARGET_DIR)/etc/wanpipe/api
 	## Move to /stat/etc/wanpipe
 	mv $(TARGET_DIR)/etc/wanpipe $(TARGET_DIR)/stat/etc/
+	##
 	ln -sf /tmp/etc/wanpipe $(TARGET_DIR)/etc/wanpipe
 
 wanpipe: $(TARGET_DIR)/$(WANPIPE_TARGET_BINARY)
