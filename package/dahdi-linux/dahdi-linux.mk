@@ -3,7 +3,19 @@
 # dahdi-linux
 #
 ##############################################################
+ifeq ($(BR2_PACKAGE_RHINO),y)
 DAHDI_LINUX_VERSION := 2.4.1.1
+else
+ ifeq ($(BR2_PACKAGE_DAHDI_ZAPHFC),y)
+DAHDI_LINUX_VERSION := 2.4.1.1
+ else
+  ifeq ($(BR2_PACKAGE_WANPIPE),y)
+DAHDI_LINUX_VERSION := 2.4.1.1
+  else
+DAHDI_LINUX_VERSION := 2.6.0
+  endif
+ endif
+endif
 DAHDI_LINUX_SOURCE := dahdi-linux-$(DAHDI_LINUX_VERSION).tar.gz
 DAHDI_LINUX_SITE := http://downloads.asterisk.org/pub/telephony/dahdi-linux/releases
 DAHDI_LINUX_DIR := $(BUILD_DIR)/dahdi-linux-$(DAHDI_LINUX_VERSION)

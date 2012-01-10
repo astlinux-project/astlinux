@@ -3,7 +3,19 @@
 # dahdi-tools
 #
 ##############################################################
+ifeq ($(BR2_PACKAGE_RHINO),y)
 DAHDI_TOOLS_VERSION := 2.4.1
+else
+ ifeq ($(BR2_PACKAGE_DAHDI_ZAPHFC),y)
+DAHDI_TOOLS_VERSION := 2.4.1
+ else
+  ifeq ($(BR2_PACKAGE_WANPIPE),y)
+DAHDI_TOOLS_VERSION := 2.4.1
+  else
+DAHDI_TOOLS_VERSION := 2.6.0
+  endif
+ endif
+endif
 DAHDI_TOOLS_SOURCE := dahdi-tools-$(DAHDI_TOOLS_VERSION).tar.gz
 DAHDI_TOOLS_SITE := http://downloads.asterisk.org/pub/telephony/dahdi-tools/releases
 DAHDI_TOOLS_DIR := $(BUILD_DIR)/dahdi-tools-$(DAHDI_TOOLS_VERSION)
