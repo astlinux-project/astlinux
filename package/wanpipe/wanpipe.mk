@@ -31,7 +31,7 @@ $(WANPIPE_DIR)/.patched: $(WANPIPE_DIR)/.unpacked
 $(WANPIPE_DIR)/.built: $(WANPIPE_DIR)/.patched | $(WANPIPE_PREREQS)
 	# Build and install 'libsangoma'
 	(cd $(WANPIPE_DIR)/api/libsangoma; rm -rf config.cache configure; \
-		sh ./bootstrap; \
+		/bin/sh ./bootstrap; \
 		$(TARGET_CONFIGURE_OPTS) \
 		./configure \
 		--target=$(GNU_TARGET_NAME) \

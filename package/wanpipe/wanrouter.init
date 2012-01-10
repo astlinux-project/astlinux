@@ -9,7 +9,11 @@ init () {
 
     # Keep user's wanpipe directory current, keep added/old files
     if [ -d /stat/etc/wanpipe ]; then
-      rsync -a /stat/etc/wanpipe/ /mnt/kd/wanpipe/
+      if ls /etc/wanpipe/*.conf >/dev/null 2>/dev/null; then
+        rsync -a --exclude='wanrouter.rc' /stat/etc/wanpipe/ /mnt/kd/wanpipe/
+      else
+        rsync -a /stat/etc/wanpipe/ /mnt/kd/wanpipe/
+      fi
     fi
   fi
 }
