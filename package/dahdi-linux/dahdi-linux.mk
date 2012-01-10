@@ -29,6 +29,11 @@ ifeq ($(strip $(BR2_PACKAGE_DAHDI_ZAPHFC)),y)
 	cp -a package/dahdi-linux/zaphfc/* $(DAHDI_LINUX_DIR)/drivers/dahdi/zaphfc
 	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ zaphfc\*.patch
 endif
+ifeq ($(strip $(BR2_PACKAGE_DAHDI_HFCS)),y)
+	mkdir -p $(DAHDI_LINUX_DIR)/drivers/dahdi/hfcs
+	cp -a package/dahdi-linux/hfcs/* $(DAHDI_LINUX_DIR)/drivers/dahdi/hfcs
+	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ hfcs\*.patch
+endif
 	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ dahdi-linux\*.patch
 	touch $@
 

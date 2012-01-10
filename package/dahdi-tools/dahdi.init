@@ -50,6 +50,7 @@ stop () {
   for i in $DAHDIMODS dahdi; do
     case $i in
       zaphfc) ;;  # Some modules don't like to be removed
+      dahdi_hfcs) ;;
       *) modprobe -r $i ;;
     esac
   done
