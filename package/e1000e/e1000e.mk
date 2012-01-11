@@ -4,7 +4,7 @@
 #
 #############################################################
 
-E1000E_VERSION = 1.6.3
+E1000E_VERSION = 1.9.5
 E1000E_SOURCE:=e1000e-$(E1000E_VERSION).tar.gz
 E1000E_SITE = http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/project/e1000/e1000e%20stable/$(E1000E_VERSION)
 E1000E_DEPENDENCIES = linux
