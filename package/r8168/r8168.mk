@@ -4,21 +4,18 @@
 #
 #############################################################
 
-R8168_VERSION = 8.025.00
+R8168_VERSION = 8.027.00
 R8168_SOURCE:=r8168-$(R8168_VERSION).tar.bz2
 R8168_SITE = http://files.astlinux.org
 R8168_DEPENDENCIES = linux
-R8168_SUBDIR = src
 
 R8168_UNINSTALL_STAGING_OPT = --version
 
 R8168_MAKE_OPT += \
 	CC=$(TARGET_CC) \
 	LD=$(TARGET_LD) \
-	KVER=$(LINUX_VERSION_PROBED) \
-	KDIR=$(LINUX_DIR) \
-	PWD=$(@D) \
-	KEXT=ko \
+	BASEDIR=$(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED) \
+	KERNELDIR=$(LINUX_DIR) \
 	KFLAG=26x \
 	modules
 
