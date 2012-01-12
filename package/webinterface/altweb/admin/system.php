@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2011 Lonnie Abelbeck
+// Copyright (C) 2008-2012 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -28,7 +28,7 @@ require_once '../common/functions.php';
 require_once '../common/users-password.php';
 
 if (($REPOSITORY_URL = getPREFdef($global_prefs, 'system_firmware_repository_url')) === '') {
-  $REPOSITORY_URL = 'http://mirror.astlinux.org/ast18-firmware-1.x';
+  $REPOSITORY_URL = asteriskURLrepo();
 }
 
 if (($SOUNDS_URL = getPREFdef($global_prefs, 'system_asterisk_sounds_url')) === '') {

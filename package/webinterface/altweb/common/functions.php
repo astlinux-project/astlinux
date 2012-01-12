@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2011 Lonnie Abelbeck
+// Copyright (C) 2008-2012 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -15,6 +15,7 @@
 // 08-20-2008, Added asteriskCMD()
 // 09-06-2008, Added restartPROCESS()
 // 12-12-2009, Added systemSHUTDOWN()
+// 01-12-2012, Added asteriskURLrepo()
 //
 // System location of prefs file                                 
 $KD_PREFS_LOCATION = '/mnt/kd/webgui-prefs.txt';           
@@ -445,6 +446,20 @@ function parseRCconf($conffile) {
     }
   }
   return($db_R);
+}
+
+// Function: asteriskURLrepo
+//
+function asteriskURLrepo() {
+
+  $version = trim(shell_exec('/usr/sbin/asterisk -V'));
+
+  if (strncmp($version, 'Asterisk 1.4.', 13) == 0) {
+    $str = 'http://mirror.astlinux.org/firmware-1.x';
+  } else {
+    $str = 'http://mirror.astlinux.org/ast18-firmware-1.x';
+  }
+  return($str);
 }
 
 // Function: asteriskERROR
