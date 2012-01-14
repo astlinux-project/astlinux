@@ -4,14 +4,16 @@
 #
 #############################################################
 
-MSMTP_VERSION = 1.4.25
+MSMTP_VERSION = 1.4.27
 MSMTP_SOURCE = msmtp-$(MSMTP_VERSION).tar.bz2
 MSMTP_SITE = http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/sourceforge/msmtp/
 MSMTP_DEPENDENCIES = openssl
 
 MSMTP_CONF_OPT += \
 	--with-ssl=openssl \
-	--with-libssl-prefix=$(STAGING_DIR)/usr \
+	--without-libgsasl \
+	--without-libidn \
+	--without-gnome-keyring \
 	--sysconfdir=/etc
 
 define MSMTP_INSTALL_TARGET_CMDS
