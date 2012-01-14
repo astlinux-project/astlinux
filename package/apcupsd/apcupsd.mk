@@ -3,7 +3,7 @@
 # apcupsd
 #
 #############################################################
-APCUPSD_VERSION:=3.14.9
+APCUPSD_VERSION:=3.14.10
 APCUPSD_SOURCE:=apcupsd-$(APCUPSD_VERSION).tar.gz
 APCUPSD_SITE:=http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/sourceforge/apcupsd
 APCUPSD_DIR:=$(BUILD_DIR)/apcupsd-$(APCUPSD_VERSION)
