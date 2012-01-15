@@ -4,7 +4,7 @@
 #
 #############################################################
 
-IFTOP_VERSION = 1.0pre1
+IFTOP_VERSION = 1.0pre2
 IFTOP_SOURCE:=iftop-$(IFTOP_VERSION).tar.gz
 IFTOP_SITE = http://www.ex-parrot.com/~pdw/iftop/download
 IFTOP_DEPENDENCIES = libpcap ncurses
