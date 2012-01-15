@@ -5,10 +5,63 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.0.1:
+Additions for AstLinux 1.0.2:
 =============================
 
 Released **TBD**
+
+** System
+
+-- e1000e version bump to 1.9.5 Intel PCI-Express PRO/1000 Ethernet Linux driver
+
+-- r8168 version bump to 8.027.00 RealTek PCI-Express Gigabit Ethernet Linux driver
+
+-- ethtool, version bump to 3.1
+
+-- apcupsd, version bump to 3.14.10
+
+-- spandsp, version bump to 0.0.6pre18
+
+-- dialog, version bump to 1.1-20111020
+
+** Networking
+
+-- OpenSSL, version bump to 0.9.8s (security fixes: CVE-2011-4108, CVE-2011-4109,
+   CVE-2011-4576, CVE-2011-4577 and CVE-2011-4619)
+
+-- OpenVPN, version bump to 2.2.2
+
+-- iptables, version bump to 1.4.12.2
+
+-- msmtp, version bump to 1.4.27
+
+-- iftop, version bump to 1.0pre2
+
+-- links, version bump to 2.5
+
+** Asterisk
+
+-- Asterisk 1.4.43 and 1.8.8.1
+
+-- DAHDI, dahdi-linux 2.5.0.2 and dahdi-tools 2.5.0.2
+
+   Note: zaphfc is not supported in this release since zaphfc does not support DAHDI 2.5.x
+         an upcoming release will support dahdi_hfcs using DAHDI 2.6.x
+
+-- wanpipe, version bump to 3.5.24, build libsangoma, DAHDI 2.5.x support
+
+-- rhino, version bump to 0.99.5b1, DAHDI 2.5.x support
+
+** Web Interface
+
+-- Prefs tab and System tab, if the "Repository URL:" has not been defined (ex. initial
+   configuration), the default value will be based on the installed Asterisk version.
+
+
+Additions for AstLinux 1.0.1:
+=============================
+
+Released 2012-01-14
 
 ** System
 
