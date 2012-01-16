@@ -35,6 +35,8 @@ Released **TBD**
 
 -- msmtp, version bump to 1.4.27
 
+-- ntpd/sntp, version bump to 4.2.6p5
+
 -- iftop, version bump to 1.0pre2
 
 -- links, version bump to 2.5
