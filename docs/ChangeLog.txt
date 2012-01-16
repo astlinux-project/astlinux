@@ -12,6 +12,8 @@ Released **TBD**
 
 ** System
 
+-- php, version bump to 5.3.9 (security fixes: CVE-2011-4885, CVE-2011-4566)
+
 -- e1000e version bump to 1.9.5 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
 -- r8168 version bump to 8.027.00 RealTek PCI-Express Gigabit Ethernet Linux driver
