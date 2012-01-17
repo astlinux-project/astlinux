@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PCIUTILS_VERSION = 3.1.7
+PCIUTILS_VERSION = 3.1.9
 PCIUTILS_SITE = ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci
 
 PCIUTILS_ZLIB=no
