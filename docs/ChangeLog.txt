@@ -20,13 +20,19 @@ Released **TBD**
 
 -- unionfs, version bump to 2.5.9.2
 
--- ethtool, version bump to 3.1
+-- pciutils, version bump to 3.1.9
+
+-- usbutils, version bump to 004
+
+-- ethtool, version bump to 3.2
 
 -- apcupsd, version bump to 3.14.10
 
 -- spandsp, version bump to 0.0.6pre18
 
 -- dialog, version bump to 1.1-20111020
+
+-- tiff, version bump to 3.9.5
 
 ** Networking
 
@@ -42,6 +48,8 @@ Released **TBD**
 -- ntpd/sntp, version bump to 4.2.6p5
 
 -- iftop, version bump to 1.0pre2
+
+-- p910nd, version bump to 0.95
 
 -- links, version bump to 2.5
 
