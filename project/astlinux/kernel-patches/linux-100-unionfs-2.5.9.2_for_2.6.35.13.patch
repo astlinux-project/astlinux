@@ -532,10 +532,10 @@ index 0000000..1adde69
 +
 +For more information, see <http://unionfs.filesystems.org/>.
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 02f75fc..8c5efe7 100644
+index 696e7d2..7662b63 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -5766,6 +5766,14 @@ F:	Documentation/cdrom/
+@@ -5765,6 +5765,14 @@ F:	Documentation/cdrom/
  F:	drivers/cdrom/cdrom.c
  F:	include/linux/cdrom.h
  
@@ -587,7 +587,7 @@ index 868d0cb..b5e09e1 100644
  static inline struct dentry *
  do_revalidate(struct dentry *dentry, struct nameidata *nd)
 diff --git a/fs/splice.c b/fs/splice.c
-index efdbfec..1ff6bca 100644
+index 188f61a..b6216deb 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
 @@ -1104,8 +1104,8 @@ EXPORT_SYMBOL(generic_splice_sendpage);
@@ -647,7 +647,7 @@ index efdbfec..1ff6bca 100644
  }
  
  /**
-@@ -1380,7 +1382,7 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+@@ -1368,7 +1370,7 @@ static long do_splice(struct file *in, loff_t __user *off_in,
  		} else
  			off = &out->f_pos;
  
@@ -656,7 +656,7 @@ index efdbfec..1ff6bca 100644
  
  		if (off_out && copy_to_user(off_out, off, sizeof(loff_t)))
  			ret = -EFAULT;
-@@ -1400,7 +1402,7 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+@@ -1388,7 +1390,7 @@ static long do_splice(struct file *in, loff_t __user *off_in,
  		} else
  			off = &in->f_pos;
  
@@ -723,11 +723,11 @@ index 0000000..f3c1ac4
 +	  If you say Y here, you can turn on debugging output from Unionfs.
 diff --git a/fs/unionfs/Makefile b/fs/unionfs/Makefile
 new file mode 100644
-index 0000000..e8a8290
+index 0000000..d3d8e23
 --- /dev/null
 +++ b/fs/unionfs/Makefile
 @@ -0,0 +1,17 @@
-+UNIONFS_VERSION="2.5.9 (for 2.6.35.9)"
++UNIONFS_VERSION="2.5.9.2 (for 2.6.35.13)"
 +
 +EXTRA_CFLAGS += -DUNIONFS_VERSION=\"$(UNIONFS_VERSION)\"
 +
