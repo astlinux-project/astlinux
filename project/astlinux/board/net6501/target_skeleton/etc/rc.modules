@@ -7,11 +7,10 @@ rtc
 #3c59x
 #typhoon
 #tulip
-#eepro100
+#e100
 #natsemi
 #via-rhine
 #forcedeth
-#8139cp
 #8139too
 #pcnet32
 #acenic

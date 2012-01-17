@@ -7,10 +7,9 @@ rtc
 3c59x
 typhoon
 tulip
-eepro100
+e100
 natsemi
 forcedeth
-8139cp
 8139too
 via-rhine
 pcnet32
@@ -21,4 +20,4 @@ ns83820
 r8168
 r8169
 tg3
-sk98lin
+skge
