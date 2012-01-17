@@ -3,7 +3,7 @@
 # tiff
 #
 #############################################################
-TIFF_VERSION:=3.9.4
+TIFF_VERSION:=3.9.5
 TIFF_SITE:=ftp://ftp.remotesensing.org/pub/libtiff
 TIFF_SOURCE:=tiff-$(TIFF_VERSION).tar.gz
 TIFF_INSTALL_STAGING = YES
@@ -17,8 +17,8 @@ TIFF_DEPENDENCIES = host-pkg-config zlib jpeg
 
 define TIFF_INSTALL_TARGET_CMDS
 	cp -a $(@D)/libtiff/.libs/libtiff.so* $(TARGET_DIR)/usr/lib/
-	$(INSTALL) -D -m 0755 $(STAGING_DIR)/usr/bin/i586-linux-tiff2pdf $(TARGET_DIR)/usr/bin/tiff2pdf
-	$(INSTALL) -D -m 0755 $(STAGING_DIR)/usr/bin/i586-linux-tiffinfo $(TARGET_DIR)/usr/bin/tiffinfo
+	$(INSTALL) -D -m 0755 $(STAGING_DIR)/usr/bin/tiff2pdf $(TARGET_DIR)/usr/bin/tiff2pdf
+	$(INSTALL) -D -m 0755 $(STAGING_DIR)/usr/bin/tiffinfo $(TARGET_DIR)/usr/bin/tiffinfo
 endef
 
 define TIFF_UNINSTALL_TARGET_CMDS
