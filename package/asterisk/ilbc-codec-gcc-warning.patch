@@ -1,0 +1,24 @@
+--- asterisk-1.8.8.1/codecs/ilbc/iCBSearch.c.orig	2011-12-14 09:35:14.000000000 -0600
++++ asterisk-1.8.8.1/codecs/ilbc/iCBSearch.c	2012-01-18 17:03:30.000000000 -0600
+@@ -126,8 +126,8 @@
+ 
+                *ppe=0.0;
+                pp=buf+LPC_FILTERORDER+lMem-lTarget;
+-               for (j=0; j<lTarget; j++) {
+-                   *ppe+=(*pp)*(*pp++);
++               for (j=0; j<lTarget; j++, pp++) {
++                   *ppe+=(*pp)*(*pp);
+                }
+ 
+                if (*ppe>0.0) {
+@@ -321,8 +321,8 @@
+                *ppe=0.0;
+ 
+                pp=cbvectors+lMem-lTarget;
+-               for (j=0; j<lTarget; j++) {
+-                   *ppe+=(*pp)*(*pp++);
++               for (j=0; j<lTarget; j++, pp++) {
++                   *ppe+=(*pp)*(*pp);
+                }
+ 
+                ppi = cbvectors + lMem - 1 - lTarget;

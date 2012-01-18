@@ -160,6 +160,7 @@ endif
 
 ifeq ($(strip $(BR2_PACKAGE_ASTERISK_ILBC)),y)
 	zcat package/asterisk/ilbc-codec.tar.gz | tar -C $(ASTERISK_DIR) $(TAR_OPTIONS) -
+	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/ ilbc-codec-\*.patch
 	$(SED) 's:<defaultenabled>no</defaultenabled>:<defaultenabled>yes</defaultenabled>:' \
 		$(ASTERISK_DIR)/codecs/codec_ilbc.c
 endif
