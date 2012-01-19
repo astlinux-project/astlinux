@@ -4,11 +4,11 @@
 #
 #############################################################
 
-SAMBA_VERSION = 3.3.15
+SAMBA_VERSION = 3.5.12
 SAMBA_SOURCE = samba-$(SAMBA_VERSION).tar.gz
-SAMBA_SITE = http://samba.org/samba/ftp/stable/
+SAMBA_SITE = http://ftp.samba.org/pub/samba/stable
 
-SAMBA_SUBDIR = source
+SAMBA_SUBDIR = source3
 SAMBA_AUTORECONF = NO
 
 SAMBA_INSTALL_STAGING = YES
@@ -16,7 +16,7 @@ SAMBA_INSTALL_TARGET = YES
 
 
 SAMBA_DEPENDENCIES = \
-	$(if $(BR2_ENABLE_LOCALE),,libiconv) \
+	$(if $(BR2_ENABLE_LOCALE),libiconv,libiconv) \
 	$(if $(BR2_PACKAGE_SAMBA_RPCCLIENT),readline) \
 	$(if $(BR2_PACKAGE_SAMBA_SMBCLIENT),readline) \
 	$(if $(BR2_PACKAGE_SAMBA_AVAHI),avahi) \
@@ -174,10 +174,6 @@ endif
 endif
 
 define SAMBA_INSTALL_INITSCRIPTS_CONFIG
-	# install start/stop script
-	@if [ ! -f $(TARGET_DIR)/etc/init.d/S91smb ]; then \
-		$(INSTALL) -m 0755 -D package/samba/S91smb $(TARGET_DIR)/etc/init.d/S91smb; \
-	fi
 	# install config
 	@if [ ! -f $(TARGET_DIR)/etc/samba/smb.conf ]; then \
 		$(INSTALL) -m 0755 -D package/samba/simple.conf $(TARGET_DIR)/etc/samba/smb.conf; \
