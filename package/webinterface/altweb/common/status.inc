@@ -877,7 +877,11 @@ if ($daemon['asterisk'] > 0) {
     putHtml("<h2>DAHDI Status:</h2>");
     putHtml("<pre>");
     $tmpfile = tempnam("/tmp", "PHP_");
-    asteriskCMD($cmd, $tmpfile);
+    if ($cmd === 'wanrouter status' || $cmd === 'wanrouter summary') {
+      shell('/usr/sbin/'.$cmd.' >'.$tmpfile, $ret_status);
+    } else {
+      asteriskCMD($cmd, $tmpfile);
+    }
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
       if ($line = trim(fgets($ph, 1024))) {
