@@ -71,6 +71,9 @@ Released **TBD**
 -- Prefs tab and System tab, if the "Repository URL:" has not been defined (ex. initial
    configuration), the default value will be based on the installed Asterisk version.
 
+-- Status tab, DAHDI Status can display Sangoma status commands "wanrouter status" or
+   "wanrouter summary" if defined in Prefs tab -> DAHDI Status Command
+
 
 Additions for AstLinux 1.0.1:
 =============================
