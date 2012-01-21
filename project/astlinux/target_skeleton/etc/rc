@@ -341,7 +341,19 @@ none    /var            tmpfs   size=5000k      0       0
     touch /var/log/wtmp
   fi
 
-  #Resize filesystems if we need to...
+  # Define and export xxx_proxy environmental variables
+  # This is also done in /etc/profile for new logins
+  if [ -n "$HTTP_PROXY" ]; then
+    export http_proxy="$HTTP_PROXY"
+  fi
+  if [ -n "$HTTPS_PROXY" ]; then
+    export https_proxy="$HTTPS_PROXY"
+  fi
+  if [ -n "$FTP_PROXY" ]; then
+    export ftp_proxy="$FTP_PROXY"
+  fi
+
+  # Resize filesystems if we need to...
   if [ -n "$VAR_SIZE" ]; then
     mount -o remount,size=$VAR_SIZE /var
   fi
@@ -349,9 +361,6 @@ none    /var            tmpfs   size=5000k      0       0
   if [ -n "$TMP_SIZE" ]; then
     mount -o remount,size=$TMP_SIZE /tmp
   fi
-
-  #  Not needed anymore ?
-  #ldconfig -C /tmp/etc/ld.so.cache /lib /usr/lib
 
   dmesg > /var/run/dmesg.boot
 

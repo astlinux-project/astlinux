@@ -1,5 +1,22 @@
 export PATH="$PATH:/usr/bin:/bin:/usr/sbin:/sbin"
 
+# Define and export xxx_proxy environmental variables
+# This is also done in /etc/rc for startup services
+if [ -f /etc/rc.conf ] && grep -q '^[A-Z]*_PROXY=' /etc/rc.conf; then
+  eval $(
+    . /etc/rc.conf
+    if [ -n "$HTTP_PROXY" ]; then
+      echo "export http_proxy=\"$HTTP_PROXY\""
+    fi
+    if [ -n "$HTTPS_PROXY" ]; then
+      echo "export https_proxy=\"$HTTPS_PROXY\""
+    fi
+    if [ -n "$FTP_PROXY" ]; then
+      echo "export ftp_proxy=\"$FTP_PROXY\""
+    fi
+  )
+fi
+
 # This fixes the backspace when telnetting in.
 if [ "$TERM" != "linux" ]; then
         stty erase ^?
