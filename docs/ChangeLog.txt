@@ -28,11 +28,13 @@ Released **TBD**
 
 -- apcupsd, version bump to 3.14.10
 
--- spandsp, version bump to 0.0.6pre18
+-- spandsp, version bump to 0.0.6pre19
 
 -- dialog, version bump to 1.1-20111020
 
 -- tiff, version bump to 3.9.5
+
+-- jpeg, version bump to 8d
 
 ** Networking
 
