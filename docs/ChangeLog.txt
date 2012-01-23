@@ -36,8 +36,8 @@ Released **TBD**
 
 ** Networking
 
--- OpenSSL, version bump to 0.9.8s (security fixes: CVE-2011-4108, CVE-2011-4109,
-   CVE-2011-4576, CVE-2011-4577 and CVE-2011-4619)
+-- OpenSSL, version bump to 0.9.8t (security fixes: CVE-2012-0050/CVE-2011-4108,
+   CVE-2011-4109, CVE-2011-4576, CVE-2011-4577 and CVE-2011-4619)
 
 -- OpenVPN, version bump to 2.2.2
 
