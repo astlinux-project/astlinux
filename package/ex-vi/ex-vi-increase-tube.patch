@@ -1,0 +1,13 @@
+--- ex-vi-050325/config.h.orig	2012-01-24 20:31:22.000000000 -0600
++++ ex-vi-050325/config.h	2012-01-24 20:33:46.000000000 -0600
+@@ -95,8 +95,8 @@
+ #define TUBESIZE        6000    /* Maximum screen size for visual */
+ #else	/* VMUNIX */
+ #define TUBELINES       100
+-#define TUBECOLS        160
+-#define TUBESIZE        16000
++#define TUBECOLS        320
++#define TUBESIZE        32000
+ #endif	/* VMUNIX */
+ 
+ /*
