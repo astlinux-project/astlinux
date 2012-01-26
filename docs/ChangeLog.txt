@@ -18,6 +18,9 @@ Released **TBD**
 
 -- r8168 version bump to 8.027.00 RealTek PCI-Express Gigabit Ethernet Linux driver
 
+-- vmxnet3, VMware Ethernet Linux driver is now a kernel module that must be included
+   in /etc/rc.modules to be enabled.
+
 -- unionfs, version bump to 2.5.9.2
 
 -- pciutils, version bump to 3.1.9
@@ -35,6 +38,10 @@ Released **TBD**
 -- tiff, version bump to 3.9.5
 
 -- jpeg, version bump to 8d
+
+-- sqlite, version bump to 3.7.10
+
+-- sudo, version bump to 1.7.8p1
 
 -- ex-vi (vi), increase the maximum columns supported from 160 to 320 columns.  Also
    support Page-Up and Page-Down keyboard keys.
