@@ -1,0 +1,46 @@
+--- busybox-1.18.5/libbb/utmp.c.orig	2012-01-25 13:44:40.000000000 -0600
++++ busybox-1.18.5/libbb/utmp.c	2012-01-25 18:05:29.000000000 -0600
+@@ -9,12 +9,6 @@
+ #include "libbb.h"
+ #include <utmp.h>
+ 
+-static void touch(const char *filename)
+-{
+-	if (access(filename, R_OK | W_OK) == -1)
+-		close(open(filename, O_WRONLY | O_CREAT, 0664));
+-}
+-
+ void FAST_FUNC write_new_utmp(pid_t pid, int new_type, const char *tty_name, const char *username, const char *hostname)
+ {
+ 	struct utmp utent;
+@@ -46,12 +46,13 @@
+ 		tty_name += 3;
+ 	strncpy(id, tty_name, width);
+ 
+-	touch(_PATH_UTMP);
+-	//utmpname(_PATH_UTMP);
+-	setutent();
+-	/* Append new one (hopefully, unless we collide on ut_id) */
+-	pututline(&utent);
+-	endutent();
++	if (access(_PATH_UTMP, R_OK | W_OK) != -1) {
++		//utmpname(_PATH_UTMP);
++		setutent();
++		/* Append new one (hopefully, unless we collide on ut_id) */
++		pututline(&utent);
++		endutent();
++	}
+ 
+ #if ENABLE_FEATURE_WTMP
+ 	/* "man utmp" says wtmp file should *not* be created automagically */
+@@ -68,7 +69,9 @@
+ 	struct utmp utent;
+ 	struct utmp *utp;
+ 
+-	touch(_PATH_UTMP);
++	if (access(_PATH_UTMP, R_OK | W_OK) == -1) {
++		return;
++	}
+ 	//utmpname(_PATH_UTMP);
+ 	setutent();
+ 
