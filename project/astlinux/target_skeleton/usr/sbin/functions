@@ -13,11 +13,20 @@ gen_kd_files()
   cp -a /tmp/etc/asterisk ${1}/
   cp -a /var/spool/asterisk/voicemail ${1}/
   cp -a /tmp/tftpboot ${1}/
+
   mkdir ${1}/ssh
+  cp -a /tmp/etc/ssh/ssh_host_* ${1}/ssh/
+
   mkdir ${1}/home
   mkdir ${1}/monitor
+
   mkdir ${1}/dahdi
-  cp -a /tmp/etc/ssh/ssh_host_* ${1}/ssh/
+  if [ -f /stat/etc/dahdi/system.conf ]; then
+    cp -a /stat/etc/dahdi/system.conf ${1}/dahdi/
+  else
+    touch ${1}/dahdi/system.conf
+  fi
+
   touch ${1}/webgui-prefs.txt
 
   if [ -f /var/db/dnsmasq.leases ]; then
