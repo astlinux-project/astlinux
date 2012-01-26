@@ -12,6 +12,7 @@ natsemi
 forcedeth
 8139too
 via-rhine
+#vmxnet3
 pcnet32
 acenic
 e1000
