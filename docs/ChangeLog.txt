@@ -65,6 +65,8 @@ Released **TBD**
 
 -- links, version bump to 2.5
 
+-- tcpdump, version bump to 4.2.1
+
 -- Add support for environment variables, http_proxy, https_proxy and ftp_proxy via rc.conf
    variables using HTTP_PROXY, HTTPS_PROXY and FTP_PROXY respectively.  This effects
    commands such as curl and wget that honor these environment variables.
