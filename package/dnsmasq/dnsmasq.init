@@ -93,6 +93,8 @@ addDNSMASQnet()
 
 createDNSMASQbasic()
 {
+  local local_domain
+
   # DHCP options
   if [ "$1" = "dhcp" ]; then
     echo "dhcp-authoritative
@@ -108,11 +110,17 @@ dhcp-leasefile=/var/db/dnsmasq.leases"
     fi
   fi
   
+  if [ "$LOCALDNS_LOCAL_DOMAIN" = "no" ]; then
+    local_domain="#"
+  else
+    local_domain=""
+  fi
+
   # DNS options
   echo "no-negcache
 domain-needed
-bogus-priv
-local=/$DOMAIN/
+${local_domain}bogus-priv
+${local_domain}local=/$DOMAIN/
 expand-hosts
 domain=$DOMAIN
 resolv-file=/etc/resolv-extern.conf
