@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2011 Lonnie Abelbeck
+// Copyright (C) 2008-2012 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -29,6 +29,7 @@
 // 03-24-2011, Added HTTP_LISTING and HTTPS_LISTING support
 // 05-24-2011, Added SIP Monitoring
 // 12-03-2011, Added HTTP_ACCESSLOG and HTTPS_ACCESSLOG support
+// 01-28-2012, Added LOCALDNS_LOCAL_DOMAIN support
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -218,6 +219,9 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   
   $value = 'DOMAIN="'.trim($_POST['domain']).'"';
   fwrite($fp, "### Domain\n".$value."\n");
+  
+  $value = isset($_POST['local_domain']) ? 'LOCALDNS_LOCAL_DOMAIN="yes"' : 'LOCALDNS_LOCAL_DOMAIN="no"';
+  fwrite($fp, "### Local Domain\n".$value."\n");
   
   $value = 'DNS="'.trim($_POST['dns']).'"';
   fwrite($fp, "### DNS Servers\n".$value."\n");
@@ -996,12 +1000,16 @@ require_once '../common/header.php';
   putHtml('<option value="pppoe"'.$sel.'>PPPoE</option>');
   putHtml('</select>');
   putHtml('</td></tr>');
-  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="2">');
   $value = getVARdef($db, 'HOSTNAME', $cur_db);
   putHtml('Hostname:<input type="text" size="24" maxlength="32" value="'.$value.'" name="hostname" /></td>');
-  putHtml('<td style="text-align: right;" colspan="3">');
+  putHtml('<td style="text-align: center;" colspan="4">');
   $value = getVARdef($db, 'DOMAIN', $cur_db);
-  putHtml('Domain:<input type="text" size="36" maxlength="64" value="'.$value.'" name="domain" /></td></tr>');
+  putHtml('Domain:<input type="text" size="36" maxlength="128" value="'.$value.'" name="domain" />');
+  $sel = (getVARdef($db, 'LOCALDNS_LOCAL_DOMAIN', $cur_db) !== 'no') ? ' checked="checked"' : '';
+  putHtml('&ndash;&nbsp;<input type="checkbox" value="local_domain" name="local_domain"'.$sel.' />&nbsp;Local Domain</td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   $value = getVARdef($db, 'DNS', $cur_db);
   putHtml('DNS:<input type="text" size="72" maxlength="256" value="'.$value.'" name="dns" />&nbsp;<i>(IPv4 and/or IPv6)</i></td></tr>');
