@@ -48,6 +48,9 @@ Released **TBD**
 -- ex-vi (vi), increase the maximum columns supported from 160 to 320 columns.  Also
    support Page-Up and Page-Down keyboard keys.
 
+-- dnsmasq, added rc.conf variable LOCALDNS_LOCAL_DOMAIN to enable/disable local-only lookups
+   for DOMAIN.  See /stat/etc/rc.conf for more details.
+
 ** Networking
 
 -- OpenSSL, version bump to 0.9.8t (security fixes: CVE-2012-0050/CVE-2011-4108,
@@ -95,6 +98,8 @@ Released **TBD**
 
 -- Status tab, DAHDI Status can display Sangoma status commands "wanrouter status" or
    "wanrouter summary" if defined in Prefs tab -> DAHDI Status Command
+
+-- Network tab, added support for LOCALDNS_LOCAL_DOMAIN variable, 'Local Domain'
 
 
 Additions for AstLinux 1.0.1:
