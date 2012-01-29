@@ -48,9 +48,6 @@ Released **TBD**
 -- ex-vi (vi), increase the maximum columns supported from 160 to 320 columns.  Also
    support Page-Up and Page-Down keyboard keys.
 
--- dnsmasq, added rc.conf variable LOCALDNS_LOCAL_DOMAIN to enable/disable local-only lookups
-   for DOMAIN.  See /stat/etc/rc.conf for more details.
-
 ** Networking
 
 -- OpenSSL, version bump to 0.9.8t (security fixes: CVE-2012-0050/CVE-2011-4108,
@@ -71,6 +68,9 @@ Released **TBD**
 -- links, version bump to 2.5
 
 -- tcpdump, version bump to 4.2.1
+
+-- dnsmasq, added rc.conf variable LOCALDNS_LOCAL_DOMAIN to enable/disable local-only lookups
+   for DOMAIN.  See /stat/etc/rc.conf for more details.
 
 -- Add support for environment variables, http_proxy, https_proxy and ftp_proxy via rc.conf
    variables using HTTP_PROXY, HTTPS_PROXY and FTP_PROXY respectively.  This effects
