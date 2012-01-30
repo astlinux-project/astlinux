@@ -76,6 +76,9 @@ Released **TBD**
    variables using HTTP_PROXY, HTTPS_PROXY and FTP_PROXY respectively.  This effects
    commands such as curl and wget that honor these environment variables.
 
+-- testmail, new comand to test SMTP settings and report basic configuration.
+   Usage: testmail TO_email_address [ FROM_email_address ]
+
 ** Asterisk
 
 -- Asterisk 1.4.43 and 1.8.8.1
