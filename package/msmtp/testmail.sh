@@ -46,5 +46,5 @@ Test Email from '$HOSTNAME'
     echo "Runnix Release:   $(cat /oldroot/cdrom/ver)"
   fi
 
-) | sendmail -t
+) | msmtp -t
 
