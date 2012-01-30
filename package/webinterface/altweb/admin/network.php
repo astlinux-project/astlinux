@@ -735,6 +735,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       header('Location: /admin/edit.php?file='.$file);
       exit;
     }
+  } elseif (isset($_POST['submit_test_smtp'])) {
+    $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
+    header('Location: /admin/testmail.php');
+    exit;
   } elseif (isset($_POST['submit_dns_hosts'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/dnshosts.php');
@@ -1260,6 +1264,9 @@ require_once '../common/header.php';
   
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Outbound SMTP Mail Relay:</strong>');
+  if (is_file('/usr/sbin/testmail')) {
+    putHtml('&nbsp;<input type="submit" value="Test SMTP Mail Relay" name="submit_test_smtp" class="button" />');
+  }
   putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
   $value = getVARdef($db, 'SMTP_SERVER', $cur_db);
