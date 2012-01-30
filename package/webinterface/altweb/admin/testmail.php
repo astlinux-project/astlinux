@@ -91,6 +91,13 @@ require_once '../common/header.php';
     if (($from_email = getVARdef($db, 'SAFE_ASTERISK_NOTIFY_FROM')) === '') {
       $from_email = getVARdef($db, 'UPS_NOTIFY_FROM');
     }
+    if ($from_email !== '') {
+      if (($i = strpos($from_email, '<')) !== FALSE && ($j = strrpos($from_email, '>')) !== FALSE) {
+        if (($len = $j - $i - 1) > 0) {
+          $from_email = substr($from_email, $i + 1, $len);
+        }
+      }
+    }
   } else {
     $to_email = '';
     $from_email = '';
