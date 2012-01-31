@@ -104,6 +104,12 @@ Released **TBD**
 
 -- Network tab, added support for LOCALDNS_LOCAL_DOMAIN variable, 'Local Domain'
 
+-- Network tab, added "Test SMTP Mail Relay" sub-tab located by "Outbound SMTP Mail Relay:".
+   The "To Email:" and "From Email:" addresses may be specifed, defaulting to existing settings
+   from the Network tab.  The test email does not use the mail queue, any error results are displayed.
+   Clicking "Test SMTP Mail Relay" will automatically "Save Settings" and the msmtp settings
+   will be automatically applied when "Send Test Email" is clicked.
+
 
 Additions for AstLinux 1.0.1:
 =============================
