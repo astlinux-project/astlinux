@@ -30,6 +30,11 @@ if [ -z "$TO" ]; then
   exit 1
 fi
 
+if [ ! -f /etc/msmtprc ]; then
+  echo "testmail: The SMTP Mail Relay (msmtp) is not running. The SMTP Server must be defined." >&2
+  exit 1
+fi
+
 if [ -z "$FROM" -a -n "$SMTP_DOMAIN" ]; then
   FROM="noreply@$SMTP_DOMAIN"
 fi
