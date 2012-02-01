@@ -39,6 +39,7 @@ define PCIUTILS_INSTALL_TARGET_CMDS
 		SHARED=$(PCIUTILS_SHARED) install
 	$(MAKE) BUILDDIR=$(@D) -C $(@D) PREFIX=$(TARGET_DIR)/usr \
 		SHARED=$(PCIUTILS_SHARED) install-lib
+	chmod 755 $(TARGET_DIR)/usr/lib/libpci.so.$(PCIUTILS_VERSION) # set permissions so it is stripped
 endef
 
 $(eval $(call GENTARGETS,package,pciutils))
