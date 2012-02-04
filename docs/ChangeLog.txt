@@ -61,6 +61,8 @@ Released **TBD**
 
 -- ntpd/sntp, version bump to 4.2.6p5
 
+-- stunnel, version bump to 4.52
+
 -- iftop, version bump to 1.0pre2
 
 -- p910nd, version bump to 0.95
