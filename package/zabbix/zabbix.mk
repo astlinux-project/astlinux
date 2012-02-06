@@ -4,7 +4,7 @@
 #
 #############################################################
 
-ZABBIX_VERSION = 1.8.8
+ZABBIX_VERSION = 1.8.10
 ZABBIX_SOURCE = zabbix-$(ZABBIX_VERSION).tar.gz
 ZABBIX_SITE = http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/sourceforge/zabbix
 
