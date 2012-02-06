@@ -37,11 +37,15 @@ Released **TBD**
 
 -- dialog, version bump to 1.1-20111020
 
+-- zlib, version bump to 1.2.6
+
 -- tiff, version bump to 3.9.5
 
 -- jpeg, version bump to 8d
 
 -- sqlite, version bump to 3.7.10
+
+-- zabbix, version bump to 1.8.10
 
 -- sudo, version bump to 1.7.8p1
 
