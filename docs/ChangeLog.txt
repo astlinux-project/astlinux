@@ -12,11 +12,11 @@ Released **TBD**
 
 ** System
 
--- php, version bump to 5.3.9 (security fixes: CVE-2011-4885, CVE-2011-4566)
+-- php, version bump to 5.3.10 (security fixes: CVE-2011-4885, CVE-2011-4566, CVE-2012-0830)
 
 -- e1000e version bump to 1.9.5 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
--- r8168 version bump to 8.027.00 RealTek PCI-Express Gigabit Ethernet Linux driver
+-- r8168 version bump to 8.028.00 RealTek PCI-Express Gigabit Ethernet Linux driver
 
 -- vmxnet3, VMware Ethernet Linux driver is now a kernel module that must be included
    in /etc/rc.modules to be enabled.
@@ -33,7 +33,7 @@ Released **TBD**
 
 -- apcupsd, version bump to 3.14.10
 
--- spandsp, version bump to 0.0.6pre19
+-- spandsp, version bump to 0.0.6pre20
 
 -- dialog, version bump to 1.1-20111020
 
