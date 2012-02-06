@@ -4,7 +4,7 @@
 #
 #############################################################
 
-R8168_VERSION = 8.027.00
+R8168_VERSION = 8.028.00
 R8168_SOURCE:=r8168-$(R8168_VERSION).tar.bz2
 R8168_SITE = http://files.astlinux.org
 R8168_DEPENDENCIES = linux
