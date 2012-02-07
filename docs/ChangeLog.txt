@@ -100,8 +100,6 @@ Released **TBD**
 
 -- rhino, version bump to 0.99.5b1, DAHDI 2.5.x support
 
--- app_notify, version bump to 2.1 for Asterisk 1.8, app_notify v2.0rc1 is used for Asterisk 1.4
-
 ** Web Interface
 
 -- Prefs tab and System tab, if the "Repository URL:" has not been defined (ex. initial

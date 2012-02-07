@@ -158,15 +158,6 @@ ifeq ($(strip $(BR2_PACKAGE_SPANDSP)),y)
  endif
 endif
 
-ifeq ($(strip $(BR2_PACKAGE_ASTERISK_APP_NOTIFY)),y)
- ifneq ($(ASTERISK_VERSION_TUPLE),1.4)
- ifneq ($(ASTERISK_VERSION_TUPLE),1.6)
-	# Source: http://www.mezzo.net/asterisk/app_notify.html
-	cp -p package/asterisk/app_notify-2-1.c $(ASTERISK_DIR)/apps/app_notify.c
- endif
- endif
-endif
-
 ifeq ($(strip $(BR2_PACKAGE_ASTERISK_ILBC)),y)
 	zcat package/asterisk/ilbc-codec.tar.gz | tar -C $(ASTERISK_DIR) $(TAR_OPTIONS) -
 	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/ ilbc-codec-\*.patch

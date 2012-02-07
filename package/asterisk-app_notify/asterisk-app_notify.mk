@@ -55,12 +55,6 @@ asterisk-app_notify-dirclean:
 #
 #############################################################
 ifeq ($(strip $(BR2_PACKAGE_ASTERISK_APP_NOTIFY)),y)
- ifeq ($(BR2_PACKAGE_ASTERISK_v1_4),y)
 TARGETS+=asterisk-app_notify
- else
-  ifeq ($(BR2_PACKAGE_ASTERISK_v1_6),y)
-TARGETS+=asterisk-app_notify
-  endif
- endif
 endif
 
