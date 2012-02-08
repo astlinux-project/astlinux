@@ -75,6 +75,8 @@ Released **TBD**
 
 -- tcpdump, version bump to 4.2.1
 
+-- nc, enable netcat 1.10 compatibility, see Asterisk app_notify below for more info.
+
 -- dnsmasq, added rc.conf variable LOCALDNS_LOCAL_DOMAIN to enable/disable local-only lookups
    for DOMAIN.  See /stat/etc/rc.conf for more details.
 
@@ -99,6 +101,15 @@ Released **TBD**
    The Sangoma BRI/Hybrid cards A500 + B700 are now supported via DAHDI
 
 -- rhino, version bump to 0.99.5b1, DAHDI 2.5.x support
+
+-- app_notify, mark as deprecated, offer replacement code, to be removed in AstLinux 1.1.x or so
+
+   Example Dialplan Code to replace Notify() application: (AstLinux 1.0.2 and later)
+
+     [macro-notify]
+     exten => s,1,System(/bin/echo -ne "${ARG1}|${ARG2}|${ARG3}\\x00" | /usr/bin/nc -u -w1 ${ARG4} 40000 &)
+     ...
+     exten => 3,1,Macro(notify,${CALLERID(name)},${CALLERID(num)},${EXTEN},192.168.101.13)
 
 ** Web Interface
 
