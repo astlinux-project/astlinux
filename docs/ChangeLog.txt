@@ -89,7 +89,7 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.4.43 and 1.8.9.0
+-- Asterisk 1.4.43 and 1.8.9.1
 
 -- DAHDI, dahdi-linux 2.5.0.2 and dahdi-tools 2.5.0.2
 
