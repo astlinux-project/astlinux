@@ -7,18 +7,8 @@ config BR2_PACKAGE_ASTERISK_APP_NOTIFY
 
                 http://www.mezzo.net/asterisk/app_notify.html
 
-		**Deprecated in AstLinux** Instead, use the the code below (AstLinux 1.0.2 and later):
+		**Deprecated in AstLinux** Instead, use the the code link below (AstLinux 1.0.2 and later):
 
-		[macro-notify]
-		;
-		; For Asterisk 1.8
-		exten => s,1,Set(OK=0-9a-zA-Z!#%&*+./?@_~\x20\x2c\x2d\x7c)
-		exten => s,n,System(/bin/echo -ne '${FILTER(${OK},${CALLERID(name)}|${CALLERID(num)}|${ARG1})}\\x00' | /usr/bin/nc -u -w1 ${ARG2} 40000 &)
-		;
-		; For Asterisk 1.4
-		;exten => s,1,Set(OK="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#%&*+./?@_~ \,-\|"
-		;exten => s,n,System(/bin/echo -ne \'${FILTER("${OK}","${CALLERID(name)}|${CALLERID(num)}|${ARG1}")}\\x00\' | /usr/bin/nc -u -w1 ${ARG2} 40000 &)
-		;
-		;...
-		exten => 1234,n,Macro(notify,${EXTEN},192.168.101.13)
+		Example Asterisk Dialplan snippet:
 
+		http://doc.astlinux.org/userdoc:tt_asterisk_call_notify
