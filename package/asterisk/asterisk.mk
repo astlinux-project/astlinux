@@ -85,10 +85,10 @@ ASTERISK_CONFIGURE_ARGS+= \
  endif
 endif
 
-ifeq ($(strip $(BR2_PACKAGE_UW-IMAP)),y)
+ifeq ($(strip $(BR2_PACKAGE_UW_IMAP)),y)
 ASTERISK_EXTRAS+=uw-imap
 ASTERISK_CONFIGURE_ARGS+= \
-			--with-imap="$(BUILD_DIR)/imap-2007e" 
+			--with-imap="$(BUILD_DIR)/uw-imap-2007e" 
 endif
 
 #ifeq ($(strip $(BR2_PACKAGE_NETSNMP)),y)
@@ -216,6 +216,11 @@ else
 		menuselect/menuselect --enable app_mysql --enable cdr_mysql --enable res_config_mysql menuselect.makeopts; \
 	)
  endif
+ ifeq ($(strip $(BR2_PACKAGE_UW_IMAP)),y)
+	(cd $(ASTERISK_DIR); \
+		menuselect/menuselect --enable IMAP_STORAGE menuselect.makeopts; \
+	)
+ endif
 endif
 	touch $@
 
@@ -227,20 +232,6 @@ $(ASTERISK_DIR)/$(ASTERISK_BINARY): $(ASTERISK_DIR)/.configured
 		USER_MAKEOPTS= \
 		ASTVARRUNDIR=/var/run/asterisk
 
-ifeq ($(strip $(BR2_PACKAGE_UW-IMAP)),y)
-	mv $(ASTERISK_DIR)/apps/app_voicemail.so $(ASTERISK_DIR)/apps/app_voicemail-file.so
-	rm $(ASTERISK_DIR)/apps/app_voicemail.o
-	sed -i -e 's|^MENUSELECT_OPTS_app_voicemail=.*$$|MENUSELECT_OPTS_app_voicemail=IMAP_STORAGE|' $(ASTERISK_DIR)/menuselect.makeopts
-	PATH=$(STAGING_DIR)/bin:$$PATH \
-	$(MAKE) -C $(ASTERISK_DIR) \
-		GLOBAL_MAKEOPTS=$(BASE_DIR)/../project/astlinux/asterisk.makeopts-imap \
-		USER_MAKEOPTS=menuselect.makeopts \
-		ASTVARRUNDIR=/var/run/asterisk
-	mv $(ASTERISK_DIR)/apps/app_voicemail.so $(ASTERISK_DIR)/apps/app_voicemail_imap.so
-	mv $(ASTERISK_DIR)/apps/app_voicemail-file.so $(ASTERISK_DIR)/apps/app_voicemail.so
-	sed -i -e 's|^MENUSELECT_OPTS_app_voicemail=IMAP_STORAGE|MENUSELECT_OPTS_app_voicemail=FILE_STORAGE|' $(ASTERISK_DIR)/menuselect.makeopts
-endif
-
 $(TARGET_DIR)/$(ASTERISK_TARGET_BINARY): $(ASTERISK_DIR)/$(ASTERISK_BINARY)
 	# mkdir -p $(TARGET_DIR)/$(ASTERISK_MODULE_DIR)
 	PATH=$(STAGING_DIR)/bin:$$PATH \
@@ -250,9 +241,6 @@ $(TARGET_DIR)/$(ASTERISK_TARGET_BINARY): $(ASTERISK_DIR)/$(ASTERISK_BINARY)
 		ASTVARRUNDIR=/var/run/asterisk \
 		SOUNDS_CACHE_DIR=$(DL_DIR) \
 		DESTDIR=$(TARGET_DIR) install samples
-ifeq ($(strip $(BR2_PACKAGE_UW-IMAP)),y)
-	cp -p $(ASTERISK_DIR)/apps/app_voicemail_imap.so $(TARGET_DIR)/$(ASTERISK_MODULE_DIR)/.
-endif
 
 	mv $(TARGET_DIR)/usr/include/asterisk.h \
 	   $(TARGET_DIR)/usr/include/asterisk \
@@ -288,10 +276,6 @@ else
 	mv $(TARGET_DIR)/etc/asterisk $(TARGET_DIR)/stat/etc/
 endif
 	$(INSTALL) -D -m 0755 package/asterisk/logger.conf $(TARGET_DIR)/stat/etc/asterisk/logger.conf
-
-ifeq ($(strip $(BR2_PACKAGE_UW-IMAP)),y)
-	cat package/asterisk/voicemail_modules.conf >> $(TARGET_DIR)/stat/etc/asterisk/modules.conf
-endif
 
 	chmod -R 750 $(TARGET_DIR)/stat/etc/asterisk
 	rm -rf $(TARGET_DIR)/etc/asterisk

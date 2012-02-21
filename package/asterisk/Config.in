@@ -42,6 +42,11 @@ comment "cdr_mysql, app_mysql and res_config_mysql - disabled (requires MYSQL_CL
 comment "cdr_mysql, app_mysql and res_config_mysql - enabled"
         depends on BR2_PACKAGE_MYSQL_CLIENT && BR2_PACKAGE_ASTERISK
 
+comment "app_voicemail=IMAP_STORAGE - disabled (requires UW_IMAP)"
+        depends on !BR2_PACKAGE_UW_IMAP && BR2_PACKAGE_ASTERISK
+comment "app_voicemail=IMAP_STORAGE - enabled"
+        depends on BR2_PACKAGE_UW_IMAP && BR2_PACKAGE_ASTERISK
+
 config BR2_PACKAGE_ASTERISK_MENUSELECT
 	bool "Asterisk custom configure"
 	default n
