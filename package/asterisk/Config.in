@@ -37,6 +37,11 @@ choice
 			Asterisk Standard Release.
 endchoice
 
+comment "cdr_mysql, app_mysql and res_config_mysql - disabled (requires MYSQL_CLIENT)"
+        depends on !BR2_PACKAGE_MYSQL_CLIENT && BR2_PACKAGE_ASTERISK
+comment "cdr_mysql, app_mysql and res_config_mysql - enabled"
+        depends on BR2_PACKAGE_MYSQL_CLIENT && BR2_PACKAGE_ASTERISK
+
 config BR2_PACKAGE_ASTERISK_MENUSELECT
 	bool "Asterisk custom configure"
 	default n

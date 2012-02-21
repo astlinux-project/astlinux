@@ -99,6 +99,12 @@ endif
 #			CONFIG_NETSNMP="$(STAGING_DIR)/usr/bin/net-snmp-config"
 #endif
 
+ifeq ($(strip $(BR2_PACKAGE_MYSQL_CLIENT)),y)
+ASTERISK_EXTRAS+=mysql_client
+ASTERISK_CONFIGURE_ARGS+= \
+			--with-mysqlclient="$(STAGING_DIR)/usr"
+endif
+
 ifeq ($(strip $(BR2_PACKAGE_UNIXODBC)),y)
 ASTERISK_EXTRAS+=unixodbc
 ASTERISK_CONFIGURE_ARGS+= \
@@ -205,6 +211,11 @@ else
 		GLOBAL_MAKEOPTS=$(BASE_DIR)/../project/astlinux/asterisk.makeopts \
 		USER_MAKEOPTS= \
 		menuselect.makeopts
+ ifeq ($(strip $(BR2_PACKAGE_MYSQL_CLIENT)),y)
+	(cd $(ASTERISK_DIR); \
+		menuselect/menuselect --enable app_mysql --enable cdr_mysql --enable res_config_mysql menuselect.makeopts; \
+	)
+ endif
 endif
 	touch $@
 
