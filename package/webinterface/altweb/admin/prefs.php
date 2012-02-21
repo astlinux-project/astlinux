@@ -656,6 +656,8 @@ require_once '../common/header.php';
   putHtml('<option value="amaflags"'.$sel.'>amaflags</option>');
   $sel = (getPREFdef($global_prefs, 'cdrlog_last_cmd') === 'accountcode') ? ' selected="selected"' : '';
   putHtml('<option value="accountcode"'.$sel.'>accountcode</option>');
+  $sel = (getPREFdef($global_prefs, 'cdrlog_last_cmd') === 'uniqueid') ? ' selected="selected"' : '';
+  putHtml('<option value="uniqueid"'.$sel.'>uniqueid</option>');
   $sel = (getPREFdef($global_prefs, 'cdrlog_last_cmd') === 'userfield') ? ' selected="selected"' : '';
   putHtml('<option value="userfield"'.$sel.'>userfield</option>');
   putHtml('</select>');

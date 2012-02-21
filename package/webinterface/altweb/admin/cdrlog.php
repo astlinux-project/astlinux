@@ -67,6 +67,8 @@ function getMAPlast($default, $last) {
     return($def ? 14 : 15);
   case 'accountcode':
     return($def ? 15 : 0);
+  case 'uniqueid':
+    return($def ? 16 : 16);
   case 'userfield':
     return($def ? 17 : 17);
   }
@@ -184,6 +186,9 @@ function parseCDRline($line, $format, $match, $map) {
   }
   if (isset($map['accountcode'])) {
     $str .= ',"'.trim($linetokens[$map['accountcode']], '"').'"';
+  }
+  if (isset($map['uniqueid'])) {
+    $str .= ',"'.trim($linetokens[$map['uniqueid']], '"').'"';
   }
   if (isset($map['userfield'])) {
     $str .= ',"'.trim($linetokens[$map['userfield']], '"').'"';
@@ -315,6 +320,9 @@ function parseCDRlog(&$db, $match, $key, $map, $default, $extra, $last, $databas
       }
       if (isset($map['accountcode'])) {
         $db['data'][$id]['accountcode'] = trim($linetokens[$map['accountcode']], '"');
+      }
+      if (isset($map['uniqueid'])) {
+        $db['data'][$id]['uniqueid'] = trim($linetokens[$map['uniqueid']], '"');
       }
       if (isset($map['userfield'])) {
         $db['data'][$id]['userfield'] = trim($linetokens[$map['userfield']], '"');
