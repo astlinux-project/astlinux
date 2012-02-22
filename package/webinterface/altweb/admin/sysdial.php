@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008 Lonnie Abelbeck
+// Copyright (C) 2008-2012 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -9,6 +9,7 @@
 // sysdial.php for AstLinux
 // 03-24-2008
 // 04-12-2008, Added Extension Prefix
+// 02-22-2012, Added 00-999 format
 //
 // -- extensions.conf snippet --
 // exten => _11[01234]X,1,Macro(dial-sysdial,${EXTEN:2:2}) ; DB: sysdial/00-49
@@ -45,9 +46,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } elseif (isset($_POST['submit_add'])) {
     $speeddial = trim($_POST['speeddial']);
     $speeddialname = trim($_POST['speeddialname']);
+    $ext_1x00 = (isset($_POST['ext_1x00'])) ? $_POST['ext_1x00'] : '';
     $ext_11x0 = $_POST['ext_11x0'];
     $ext_110x = $_POST['ext_110x'];
-    $value = $ext_11x0.$ext_110x;
+    $value = $ext_1x00.$ext_11x0.$ext_110x;
     if (strlen($speeddial) > 0) {
       if (putAstDB($family, $value, $speeddial) == 0) {
         $result = 0;
@@ -80,13 +82,21 @@ require_once '../common/header.php';
   $db = parseAstDB($family);
   $dbname = parseAstDB($familyname);
   
+  // Sort by Number
+  if (($n = count($db['data'])) > 0) {
+    foreach ($db['data'] as $key => $row) {
+      $number[$key] = '1'.$row['key'];  // Use leading '1' to not ignore leading 0's
+    }
+    array_multisort($number, SORT_ASC, SORT_NUMERIC, $db['data']);
+  }
+
   if (($n = count($db['data'])) > 0) {
     for ($i = 0; $i < $n; $i++) {
       $key = $db['data'][$i]['key'];
       $name = '';
       if (($m = count($dbname['data'])) > 0) {
         for ($j = 0; $j < $m; $j++) {
-          if ($dbname['data'][$j]['key'] == $key) {
+          if ($dbname['data'][$j]['key'] === $key) {
             $name = $dbname['data'][$j]['value'];
             break;
           }
@@ -126,16 +136,29 @@ require_once '../common/result.php';
   putHtml('<input type="submit" class="formbtn" value="Save Changes" name="submit_add" />');
   putHtml('</td><td class="dialogText" style="text-align: center;">');
   echo('Ext:&nbsp;'.$ext_prefix.'&nbsp;');
+  if ($ext_digits > 100) {
+    putHtml('<select name="ext_1x00">');
+    putHtml('<option value="">&nbsp;</option>');
+    $digits = ($ext_digits > 1000) ? 10 : ($ext_digits / 100);
+    $key = (strlen($ldb['key']) >= 3) ? ($ldb['key'] / 100) % 10 : -1;
+    for ($i = 0; $i < $digits; $i++) {
+      $sel = ($i == $key) ? ' selected="selected"' : '';
+      putHtml('<option value="'.$i.'"'.$sel.'>'.$i.'</option>');
+    }
+    putHtml('</select>');
+  }
   putHtml('<select name="ext_11x0">');
+  $digits = ($ext_digits > 100) ? 10 : ($ext_digits / 10);
   $key = ($ldb['key'] / 10) % 10;
-  for ($i = 0; $i < ($ext_digits / 10); $i++) {
+  for ($i = 0; $i < $digits; $i++) {
     $sel = ($i == $key) ? ' selected="selected"' : '';
     putHtml('<option value="'.$i.'"'.$sel.'>'.$i.'</option>');
   }
   putHtml('</select>');
   putHtml('<select name="ext_110x">');
+  $digits = 10;
   $key = $ldb['key'] % 10;
-  for ($i = 0; $i < 10; $i++) {
+  for ($i = 0; $i < $digits; $i++) {
     $sel = ($i == $key) ? ' selected="selected"' : '';
     putHtml('<option value="'.$i.'"'.$sel.'>'.$i.'</option>');
   }

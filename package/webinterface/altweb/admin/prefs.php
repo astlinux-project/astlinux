@@ -685,6 +685,10 @@ require_once '../common/header.php';
     $sel = ($i == $value) ? ' selected="selected"' : '';
     putHtml('<option value="'.$i.'"'.$sel.'>00 to '.$j.'</option>');
   }
+  $i = 1000;
+  $j = 999;
+  $sel = ($i == $value) ? ' selected="selected"' : '';
+  putHtml('<option value="'.$i.'"'.$sel.'>00 to '.$j.'</option>');
   putHtml('</select>');
   putHtml('</td></tr>');
   
