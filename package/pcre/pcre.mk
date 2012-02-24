@@ -4,8 +4,8 @@
 #
 #############################################################
 
-PCRE_VERSION = 7.9
-PCRE_SITE = ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre
+PCRE_VERSION = 8.21
+PCRE_SITE = http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/project/pcre/pcre/$(PCRE_VERSION)
 PCRE_INSTALL_STAGING = YES
 
 ifneq ($(BR2_INSTALL_LIBSTDCPP),y)
