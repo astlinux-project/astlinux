@@ -5,10 +5,41 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.0.2:
+Additions for AstLinux 1.0.3:
 =============================
 
 Released **TBD**
+
+** System
+
+-- No changes
+
+** Networking
+
+-- No changes
+
+** Asterisk
+
+-- Asterisk 1.4.43 and 1.8.9.2
+
+-- DAHDI, dahdi-linux 2.5.0.2 and dahdi-tools 2.5.0.2
+
+   Note: zaphfc is not supported in this release since zaphfc does not support DAHDI 2.5.x
+         an upcoming release will support dahdi_hfcs using DAHDI 2.6.x
+
+-- wanpipe, version bump to 3.5.25, DAHDI 2.6.x support
+
+** Web Interface
+
+-- Prefs tab and CDR Log tab, add support for Display 'uniqueid' CDR value
+
+-- Prefs tab and Speed Dial tab, add support for Digits: '00 to 999'
+
+
+Additions for AstLinux 1.0.2:
+=============================
+
+Released 2012-02-27
 
 ** System
 
