@@ -29,11 +29,17 @@ Released **TBD**
 
 -- wanpipe, version bump to 3.5.25, DAHDI 2.6.x support
 
+-- (Custom Build Only) added support for mysql modules: cdr_mysql, app_mysql and res_config_mysql
+   Enable by setting: BR2_PACKAGE_MYSQL_CLIENT=y
+
+-- (Custom Build Only) added support for app_voicemail module with IMAP_STORAGE
+   Enable by setting: BR2_PACKAGE_UW_IMAP=y
+
 ** Web Interface
 
--- Prefs tab and CDR Log tab, add support for Display 'uniqueid' CDR value
+-- Prefs tab and CDR Log tab, added support for Display 'uniqueid' CDR value
 
--- Prefs tab and Speed Dial tab, add support for Digits: '00 to 999'
+-- Prefs tab and Speed Dial tab, added support for Digits: '00 to 999'
 
 
 Additions for AstLinux 1.0.2:
