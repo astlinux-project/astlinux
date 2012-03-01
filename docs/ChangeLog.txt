@@ -16,7 +16,12 @@ Released **TBD**
 
 ** Networking
 
--- No changes
+-- lighttpd (configuration), added a new feature when the directory "/mnt/kd/phoneprov/" exists.
+   After a reboot, both HTTP and HTTPS will be served from that directory provided the URL
+   directory path begins with /phoneprov/ . Independent from the general HTTP/HTTPS root directory(s).
+
+   Example IP Phone provisioning: (AstLinux 1.0.3 and later)
+     http://doc.astlinux.org/userdoc:tt_ip_phone_provisioning
 
 ** Asterisk
 
