@@ -2,10 +2,12 @@
 #
 # astlinux-makeimage [imagesize in MB] [dos partition size in MB] [ASTURW partition size in MB]
 #
-# astlinux-makeimage -z 128 128 0
+# astlinux-makeimage -z 256 256 0
 #
 
 PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
+
+REQUIRED_CMDS="which sudo mkdosfs mkfs fdisk losetup gzip"
 
 RUNNIX_VER="$(awk -F'=' '/^RUNNIX_VER/ { print $2; exit }' boot/runnix/runnix.mk)"
 
@@ -54,6 +56,21 @@ done
 
 if [ $# -ne 3 ]; then
   echo "Usage: astlinux-makeimage [imagesize in MB] [dos partition size in MB] [ASTURW partition size in MB]" >&2
+  exit 1
+fi
+
+error=0
+for i in $REQUIRED_CMDS; do
+  if ! which $i >/dev/null 2>&1; then
+    error=1
+    echo "astlinux-makeimage: Required command \"$i\" is missing in your build environment." >&2
+    if [ "$i" = "which" ]; then  # no use proceeding
+      break
+    fi
+  fi
+done
+if [ $error -ne 0 ]; then
+  echo "Missing Required Command(s)." >&2
   exit 1
 fi
 
