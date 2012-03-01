@@ -71,6 +71,11 @@ init () {
   else
     cli_proxy_server="#"
   fi
+  if [ -d /mnt/kd/phoneprov ]; then
+    phoneprov=""
+  else
+    phoneprov="#"
+  fi
 
   sed -i -e "s|@HOSTNAME@|${HOSTNAME}|g" \
          -e "s|@HTTPDIR@|${httpdir}|g" \
@@ -83,6 +88,7 @@ init () {
          -e "s|@HTTPSCGI@|${httpscgi}|g" \
          -e "s|@IPV6@|${ipv6}|g" \
          -e "s|@CLI_PROXY_SERVER@|${cli_proxy_server}|g" \
+         -e "s|@PHONEPROV@|${phoneprov}|g" \
             /tmp/etc/lighttpd.conf
 }
 
