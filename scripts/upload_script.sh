@@ -7,5 +7,5 @@ for i in $(ls dl | grep -v .sha1); do
 done
 
 if [ -z "$1" ]; then
-  scripts/ncftpput -z -r1000 -u astlinuxfiles files.astlinux.org / dl/*
+  s3cmd sync --exclude '*/*' -v dl/ s3://astlinuxfiles/
 fi

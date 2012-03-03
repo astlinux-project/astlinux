@@ -3,23 +3,25 @@
 # master-upload input_path
 #
 
-MIRROR_IMG_PATH="/downloads/img"
+MIRROR_IMG_PATH="downloads/img"
 
-MIRROR_FIRMWARE_PATH="/firmware-1.x"
+MIRROR_FIRMWARE_PATH="firmware-1.x"
 
-MIRROR_FIRMWARE_PATH_18="/ast18-firmware-1.x"
+MIRROR_FIRMWARE_PATH_18="ast18-firmware-1.x"
 
 input_path="$1"
 
-auth_file="$HOME/.astlinux-ftp-repo"
+auth_file="$HOME/.s3cfg"
 
 success_count=0
 
 upload_file()
 {
-  local remote_dir="$1" file="$2" count="$3"
+  local remote_dir="$1" files="$2" count="$3" IFS=' ' file
 
-  ./toolchain/ncftpput -f "$auth_file" -z -r10 "$remote_dir" $file
+  for file in $files; do
+    s3cmd put "$file" "s3://astlinuxmirror/$remote_dir/${file##*/}"
+  done
 
   if [ $? -eq 0 ]; then
     if [ "$count" = "count" ]; then
@@ -99,16 +101,6 @@ if [ ! -f "$auth_file" ]; then
   echo "master-upload: authentication file \"$auth_file\" not found."
   exit 1
 fi
-
-upload_host="$(cat "$auth_file" | awk '/^host / { print $2 }')"
-upload_user="$(cat "$auth_file" | awk '/^user / { print $2 }')"
-upload_pass="$(cat "$auth_file" | awk '/^pass / { print $2 }')"
-
-if [ -z "$upload_host" -o -z "$upload_user" -o -z "$upload_pass" ]; then
-  echo "master-upload: host/user/pass missing in \"$auth_file\""
-  exit 1
-fi
-unset upload_pass
 
 # Upload Asterisk 1.4 .tar.gz run images
 upload_run_images "$input_path/firmware-1.x" "$MIRROR_FIRMWARE_PATH"
