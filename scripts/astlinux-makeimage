@@ -74,6 +74,12 @@ if [ $error -ne 0 ]; then
   exit 1
 fi
 
+BXIMAGE="bximage"
+if ! which $BXIMAGE >/dev/null 2>&1; then
+  echo "Using local 32-bit bximage binary."
+  BXIMAGE="./scripts/bximage"
+fi
+
 DISK_SIZE=$1
 DOS_SIZE=$2
 AST_SIZE=$3
@@ -120,7 +126,7 @@ rm -f runnix.img bximage.out
 
 # dd if=/dev/zero of=runnix.img bs=1024 count=$(($DISK_SIZE*1024))
 
-./scripts/bximage -q -hd -mode=flat -size=$DISK_SIZE runnix.img > bximage.out
+$BXIMAGE -q -hd -mode=flat -size=$DISK_SIZE runnix.img > bximage.out
 
 sudo losetup ${LOOPD}0 runnix.img
 
