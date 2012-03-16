@@ -4,13 +4,13 @@
 #
 ##############################################################
 ifeq ($(BR2_PACKAGE_ASTERISK_v1_4),y)
-ASTERISK_VERSION := 1.4.43
+ASTERISK_VERSION := 1.4.44
 else
  ifeq ($(BR2_PACKAGE_ASTERISK_v1_6),y)
 ASTERISK_VERSION := 1.6.2.21
  else
   ifeq ($(BR2_PACKAGE_ASTERISK_v1_8),y)
-ASTERISK_VERSION := 1.8.9.2
+ASTERISK_VERSION := 1.8.10.1
   else
 ASTERISK_VERSION := 10.0.0
   endif
