@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+  echo "Usage: upload-dl-pair dl/package.suffix"
+  exit 1
+elif [ "${1:0:3}" != "dl/" ]; then
+  echo "upload-dl-pair: Argument must begin with \"dl/\""
+  exit 1
+elif [ ! -f "$1" ]; then
+  echo "upload-dl-pair: File not found: \"$1\""
+  exit 1
+fi
+
+sha1sum ${1} > ${1}.sha1
+
+for file in ${1} ${1}.sha1; do
+  s3cmd put "$file" "s3://astlinuxfiles/${file##*/}"
+done
+
