@@ -3,7 +3,7 @@
 # Arno's IPtables Firewall Script
 #
 #############################################################
-ARNOFW_VER:=2.0.1
+ARNOFW_VER:=2.0.1b
 ARNOFW_ROOT:=arno-iptables-firewall
 ARNOFW_SOURCE:=$(ARNOFW_ROOT)_$(ARNOFW_VER).tar.gz
 ARNOFW_SITE:=http://rocky.eld.leidenuniv.nl/arno-iptables-firewall
@@ -75,6 +75,8 @@ $(TARGET_DIR)$(ARNOFW_TARGET_BINARY): $(ARNOFW_DIR)/.patched
 	rm -f $(TARGET_DIR)$(ARNOFW_PLUGIN_SCRIPT_DIR)/??traffic-accounting.plugin \
 	       $(TARGET_DIR)$(ARNOFW_PLUGIN_SCRIPT_DIR)/traffic-accounting-* \
 	       $(TARGET_DIR)/stat$(ARNOFW_PLUGIN_CONFIG_DIR)/traffic-accounting.conf
+	rm -f $(TARGET_DIR)$(ARNOFW_PLUGIN_SCRIPT_DIR)/??rpc.plugin \
+	       $(TARGET_DIR)/stat$(ARNOFW_PLUGIN_CONFIG_DIR)/rpc.conf
 	@echo
 	@echo "Clobber the config files from the tarball with our shim-friendly versions."
 	@echo
