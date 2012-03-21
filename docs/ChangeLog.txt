@@ -25,6 +25,13 @@ Released **TBD**
    Example IP Phone provisioning: (AstLinux 1.0.3 and later)
      http://doc.astlinux.org/userdoc:tt_ip_phone_provisioning
 
+-- AIF, version bump to 2.0.1b
+
+-- inadyn (Dynamic DNS), ZoneEdit, allow an error code of 702 'Too many updates' as a valid response,
+   essentially the same as a 707 response.  Otherwise it will fail to run if it was recently updated.
+
+-- iproute2 (ip, tc) change to version 2.6.35 to match our kernel, previously iproute2 2.6.39.
+
 ** Asterisk
 
 -- Asterisk 1.4.44 and 1.8.10.1
