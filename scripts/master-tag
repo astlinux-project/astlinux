@@ -45,12 +45,6 @@ svn copy https://astlinux.svn.sourceforge.net/svnroot/astlinux/branches/${BRANCH
          https://astlinux.svn.sourceforge.net/svnroot/astlinux/tags/${1} \
          -m "create ${1} tag"
 
-if [ $? -ne 0 ]; then
-  mark_svn
-  svn up
-  exit 1
-fi
-
 mark_svn
 
 svn ci -m "return to release 'svn'"
