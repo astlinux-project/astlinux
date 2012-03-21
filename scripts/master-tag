@@ -1,0 +1,60 @@
+#!/bin/bash
+
+BRANCH="1.0"
+
+if [ "${1:0:4}" != "${BRANCH}." ]; then
+  echo "Usage: master-tag ${BRANCH}.x"
+  exit 1
+fi
+
+RELEASE="astlinux-${1}"
+
+ASTLINUX_RELEASE="project/astlinux/target_skeleton/etc/astlinux-release"
+
+mark_release()
+{
+  echo "$RELEASE" > "$ASTLINUX_RELEASE"
+}
+
+mark_svn()
+{
+  echo "svn" > "$ASTLINUX_RELEASE"
+}
+
+SVN="$(cat $ASTLINUX_RELEASE)"
+
+if [ "svn" != "$SVN" ]; then
+  echo "master-tag: Current directory is not in SVN branch"
+  exit 1
+fi
+
+if ! svn up; then
+  exit 1
+fi
+
+mark_release
+
+svn ci -m "mark release '$RELEASE'"
+
+if [ $? -ne 0 ]; then
+  mark_svn
+  exit 1
+fi
+
+svn copy https://astlinux.svn.sourceforge.net/svnroot/astlinux/branches/${BRANCH} \
+         https://astlinux.svn.sourceforge.net/svnroot/astlinux/tags/${1} \
+         -m "create ${1} tag"
+
+if [ $? -ne 0 ]; then
+  mark_svn
+  svn up
+  exit 1
+fi
+
+mark_svn
+
+svn ci -m "return to release 'svn'"
+
+svn up
+
+exit 0
