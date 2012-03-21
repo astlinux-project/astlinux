@@ -1,0 +1,20 @@
+--- inadyn-1.96.2/src/dyndns.c.orig	2012-03-21 11:43:24.000000000 -0500
++++ inadyn-1.96.2/src/dyndns.c	2012-03-21 12:32:36.000000000 -0500
+@@ -396,6 +396,8 @@
+ /**
+ 	the OK codes are:
+ 		CODE=200
++		CODE=201
++		CODE=702, TEXT="Update failed: Too many updates too quickly, try again later."
+ 		CODE=707, for duplicated updates
+ */
+ BOOL is_zoneedit_server_rsp_ok( DYN_DNS_CLIENT *p_self, char*p_rsp, char* p_ok_string)
+@@ -403,6 +405,8 @@
+ 	return 
+ 	(		
+ 		(strstr(p_rsp, "CODE=\"200\"") != NULL) ||
++		(strstr(p_rsp, "CODE=\"201\"") != NULL) ||
++		(strstr(p_rsp, "CODE=\"702\"") != NULL && strstr(p_rsp, "Too many updates") != NULL) ||
+ 		(strstr(p_rsp, "CODE=\"707\"") != NULL)
+ 	);	
+ }
