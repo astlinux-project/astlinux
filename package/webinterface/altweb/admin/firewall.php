@@ -16,6 +16,7 @@
 // 07-14-2009, Added LAN to LAN support
 // 08-23-2009, Added TCP/UDP protocol
 // 10-14-2010, Added IPv6 support
+// 03-28-2012, Added NAT EXT support
 //
 // System location of /mnt/kd/rc.conf.d directory
 $FIREWALLCONFDIR = '/mnt/kd/rc.conf.d';
@@ -69,6 +70,7 @@ $proto_label = array (
   '50' => 'ESP',
   '51' => 'AH',
   '47' => 'GRE',
+  '1' => 'ICMP',
   '58' => 'ICMPv6',
   '41' => '6to4'
 );
@@ -129,10 +131,11 @@ function getARNOvars($db) {
             break;
           case 'NAT_EXT_LAN':
           case 'NAT_EXT_DMZ':
+            $str = ($data['e_addr'] === '' || $data['e_addr'] === '0/0') ? '' : $data['e_addr'].'#';
             if ($is_ip) {
-              $str = ($data['s_addr'] === '0/0' ? '' : $data['s_addr'].$col).$data['proto'].'>'.$data['d_addr'];
+              $str .= $data['s_addr'].$col.$data['proto'].'>'.$data['d_addr'];
             } else {
-              $str = ($data['s_addr'] === '0/0' ? '' : $data['s_addr'].$col).$data['s_lport'];
+              $str .= $data['s_addr'].$col.$data['s_lport'];
               if ($data['s_uport'] !== '') {
                 $str .= ':'.$data['s_uport'];
               }
@@ -239,6 +242,7 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
         if ($db['data'][$i]['comment'] !== '') {
           $value .= str_replace('~', '-', str_replace('"', "'", stripslashes($db['data'][$i]['comment'])));
         }
+        $value .= '~'.$db['data'][$i]['e_addr'];
         fwrite($fp, $value."\n");
       }
     }
@@ -371,6 +375,7 @@ function parseFIREWALLconf($vars) {
         $db['data'][$id]['d_lport'] = $datatokens[7];
         $db['data'][$id]['d_uport'] = $datatokens[8];
         $db['data'][$id]['comment'] = (isset($datatokens[9]) ? $datatokens[9] : '');
+        $db['data'][$id]['e_addr'] = (isset($datatokens[10]) ? $datatokens[10] : '');
         $id++;
       }
     }
@@ -421,6 +426,7 @@ function addFWRule(&$db, $id) {
   $d_addr = isset($_POST['d_addr']) ? str_replace(' ', '', $_POST['d_addr']) : '';
   $d_lport = isset($_POST['d_lport']) ? str_replace(' ', '', $_POST['d_lport']) : '';
   $d_uport = isset($_POST['d_uport']) ? str_replace(' ', '', $_POST['d_uport']) : '';
+  $e_addr = isset($_POST['e_addr']) ? str_replace(' ', '', $_POST['e_addr']) : '';
   $comment = isset($_POST['comment']) ? trim($_POST['comment']) : '';
   
   switch ($action) {
@@ -437,6 +443,7 @@ function addFWRule(&$db, $id) {
     $d_addr = '';
     $d_lport = '';
     $d_uport = '';
+    $e_addr = '';
     break;
   case 'NAT_EXT_LAN':
   case 'NAT_EXT_DMZ':
@@ -445,6 +452,9 @@ function addFWRule(&$db, $id) {
     }
     if ($s_addr === '' || $d_addr === '' || $d_addr === '0/0') {
       return(FALSE);
+    }
+    if ($e_addr === '') {
+      $e_addr = '0/0';
     }
     $d_uport = '';
     break;
@@ -462,6 +472,7 @@ function addFWRule(&$db, $id) {
     }
     $s_lport = '';
     $s_uport = '';
+    $e_addr = '';
     break;
   case 'DENY_LOCAL_EXT':
   case 'LOG_LOCAL_OUT':
@@ -471,6 +482,7 @@ function addFWRule(&$db, $id) {
     $s_addr = '';
     $s_lport = '';
     $s_uport = '';
+    $e_addr = '';
     break;
   default:
     return(0);
@@ -484,6 +496,7 @@ function addFWRule(&$db, $id) {
   
   if (($eid = existFWRule($db, $action, $proto, $s_addr, $s_lport, $s_uport, $d_addr, $d_lport, $d_uport)) !== FALSE) {
     $db['data'][$eid]['comment'] = $comment;
+    $db['data'][$eid]['e_addr'] = $e_addr;
     return(0);
   }
   
@@ -497,10 +510,11 @@ function addFWRule(&$db, $id) {
   $db['data'][$id]['d_lport'] = $d_lport;
   $db['data'][$id]['d_uport'] = $d_uport;
   $db['data'][$id]['comment'] = $comment;
+  $db['data'][$id]['e_addr'] = $e_addr;
   
   return(TRUE);
 }
-    
+
 $TRAFFIC_SHAPER_FILE = NULL;
 $TRAFFIC_SHAPER_ENABLE = NULL;
 if (($plugins = getARNOplugins()) !== FALSE) {
@@ -617,6 +631,7 @@ require_once '../common/header.php';
   //<![CDATA[
   function action_change() {
     var form = document.getElementById("iform");
+    var nat_ext = document.getElementById("nat_ext");
     switch (form.action.selectedIndex) {
       case 0: // -- select --
         form.s_addr.disabled = 1;
@@ -626,6 +641,7 @@ require_once '../common/header.php';
         form.d_lport.disabled = 1;
         form.d_uport.disabled = 1;
         form.comment.disabled = 1;
+        nat_ext.style.visibility = "hidden";
         break;
       case 3:  // PASS_EXT_LOCAL
       case 6:  // PASS_DMZ_LOCAL
@@ -641,6 +657,7 @@ require_once '../common/header.php';
         form.d_lport.disabled = 1;
         form.d_uport.value = "";
         form.d_uport.disabled = 1;
+        nat_ext.style.visibility = "hidden";
         break;
       case 1:  // NAT_EXT_LAN
       case 2:  // NAT_EXT_DMZ
@@ -652,6 +669,7 @@ require_once '../common/header.php';
         form.comment.disabled = 0;
         form.d_uport.value = "";
         form.d_uport.disabled = 1;
+        nat_ext.style.visibility = "visible";
         break;
       case 4:  // PASS_EXT_LAN
       case 5:  // PASS_EXT_DMZ
@@ -668,6 +686,7 @@ require_once '../common/header.php';
         form.s_lport.disabled = 1;
         form.s_uport.value = "";
         form.s_uport.disabled = 1;
+        nat_ext.style.visibility = "hidden";
         break;
       case 10:  // DENY_LOCAL_EXT
       case 13:  // LOG_LOCAL_OUT
@@ -681,6 +700,7 @@ require_once '../common/header.php';
         form.s_lport.disabled = 1;
         form.s_uport.value = "";
         form.s_uport.disabled = 1;
+        nat_ext.style.visibility = "hidden";
         break;
     }
     switch (form.proto.selectedIndex) {
@@ -736,7 +756,12 @@ require_once '../common/header.php';
   if (is_null($ldb)) {
     $ldb['s_addr'] = '0/0';
     $ldb['d_addr'] = '0/0';
+    $ldb['e_addr'] = '0/0';
     $ldb['comment'] = '';
+  } else {
+    if ($ldb['e_addr'] === '') {
+      $ldb['e_addr'] = '0/0';
+    }
   }
   putHtml('<table width="100%" class="stdtable">');
   putHtml('<tr class="dtrow0"><td>&nbsp;</td></tr>');
@@ -773,7 +798,10 @@ require_once '../common/header.php';
   putHtml('Port:<input type="text" size="18" maxlength="64" name="d_lport" value="'.$ldb['d_lport'].'" />');
   putHtml('&ndash;&nbsp;<input type="text" size="6" maxlength="5" name="d_uport" value="'.$ldb['d_uport'].'" />');
   putHtml('</td></tr>');
-  putHtml('<tr><td>&nbsp;</td><td colspan="2" class="dialogText" style="text-align: right;">');
+  putHtml('<tr><td id="nat_ext" class="dialogText" style="visibility: hidden;">');
+  putHtml('NAT EXT:');
+  putHtml('<input type="text" size="16" maxlength="18" name="e_addr" value="'.$ldb['e_addr'].'" />');
+  putHtml('</td><td colspan="2" class="dialogText" style="text-align: right;">');
   putHtml('Comment <i>(optional)</i>:<input type="text" size="64" maxlength="64" name="comment" value="'.htmlspecialchars($ldb['comment']).'" />');
   putHtml('</td></tr>');
   putHtml('<tr><td colspan="3" class="dialogText" style="text-align: center;">');
@@ -819,6 +847,13 @@ require_once '../common/header.php';
           echo '<td>', $db['data'][$i]['d_lport'], '&ndash;', $db['data'][$i]['d_uport'], '</td>';
         }
         echo '<td colspan="2">&nbsp;</td>';
+      }
+      if ($db['data'][$i]['e_addr'] !== '' && $db['data'][$i]['e_addr'] !== '0/0') {
+        putHtml("</tr>");
+        echo '<tr ', ($i % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
+        echo '<td>&nbsp;</td>';
+        echo '<td colspan="2" class="dialogText" style="font-weight: bold;text-align: right;">NAT EXT:</td>';
+        echo '<td colspan="4">', $db['data'][$i]['e_addr'], '</td>';
       }
       if ($db['data'][$i]['comment'] !== '') {
         putHtml("</tr>");
