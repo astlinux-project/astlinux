@@ -34,7 +34,7 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.4.44 and 1.8.10.1
+-- Asterisk 1.4.44 and 1.8.11.0
 
 -- DAHDI, dahdi-linux 2.5.0.2 and dahdi-tools 2.5.0.2
 
@@ -54,6 +54,23 @@ Released **TBD**
 -- Prefs tab and CDR Log tab, added support for Display 'uniqueid' CDR value
 
 -- Prefs tab and Speed Dial tab, added support for Digits: '00 to 999'
+
+-- Firewall sub-tab, for [ NAT EXT->LAN ] and [ NAT EXT->DMZ ] actions, allow to restrict the
+   NAT to a single IPv4 external address.  When an IPv4 address is defined,
+
+      NAT EXT: |_________|
+
+   in the NAT EXT: text field, only packets arriving on the external interface with that destination
+   IPv4 address will be NAT'ed by the rule.
+
+   This feature allows multiple public IPv4 addresses to be individually NAT'ed to private internal
+   addresses by port or range of ports.
+
+   The default value, 0/0 (or empty), remains as previous, any packet arriving on the external
+   interface will be NAT'ed by the rule.
+
+-- Firewall sub-tab, the Protocol menu now includes an ICMP entry, useful when NAT'ing.  Note
+   that all ICMP types will be allowed.
 
 
 Additions for AstLinux 1.0.2:
