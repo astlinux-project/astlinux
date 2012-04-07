@@ -12,7 +12,13 @@ Released **TBD**
 
 ** System
 
--- No changes
+-- e1000e version bump to 1.10.6 Intel PCI-Express PRO/1000 Ethernet Linux driver
+
+-- r8168 version bump to 8.029.00 RealTek PCI-Express Gigabit Ethernet Linux driver
+
+-- lm-sensors, version bump to 3.3.2
+
+-- sqlite, version bump to 3.7.11
 
 ** Networking
 
@@ -31,6 +37,8 @@ Released **TBD**
    essentially the same as a 707 response.  Otherwise it will fail to run if it was recently updated.
 
 -- iproute2 (ip, tc) change to version 2.6.35 to match our kernel, previously iproute2 2.6.39.
+
+-- iptables, version bump to 1.4.13
 
 ** Asterisk
 
