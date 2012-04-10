@@ -395,7 +395,7 @@ function parseFIREWALLconf($vars) {
 
 // Function: existFWRule
 //
-function existFWRule($db, $action, $proto, $s_addr, $s_lport, $s_uport, $d_addr, $d_lport, $d_uport) {
+function existFWRule($db, $action, $proto, $s_addr, $s_lport, $s_uport, $d_addr, $d_lport, $d_uport, $e_addr) {
 
   if (($n = count($db['data'])) > 0) {
     for ($i = 0; $i < $n; $i++) {
@@ -407,7 +407,8 @@ function existFWRule($db, $action, $proto, $s_addr, $s_lport, $s_uport, $d_addr,
           $data['s_uport'] === $s_uport &&
           $data['d_addr'] === $d_addr &&
           $data['d_lport'] === $d_lport &&
-          $data['d_uport'] === $d_uport) {
+          $data['d_uport'] === $d_uport &&
+         ($data['e_addr'] === $e_addr || ($data['e_addr'] === '' && $e_addr === '0/0'))) {
         return($i);
       }
     }
@@ -494,9 +495,8 @@ function addFWRule(&$db, $id) {
     $d_uport = '';
   }
   
-  if (($eid = existFWRule($db, $action, $proto, $s_addr, $s_lport, $s_uport, $d_addr, $d_lport, $d_uport)) !== FALSE) {
+  if (($eid = existFWRule($db, $action, $proto, $s_addr, $s_lport, $s_uport, $d_addr, $d_lport, $d_uport, $e_addr)) !== FALSE) {
     $db['data'][$eid]['comment'] = $comment;
-    $db['data'][$eid]['e_addr'] = $e_addr;
     return(0);
   }
   
