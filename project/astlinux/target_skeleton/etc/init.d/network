@@ -102,6 +102,31 @@ ipv6_tunnel()
   esac
 }
 
+alias_interface()
+{
+  local action="$1" interface="$2" alias_list="$3" cnt alias IFS
+
+  case $action in
+
+    add)
+      cnt=1
+      unset IFS
+      for alias in $alias_list; do
+        ip addr add $alias/32 dev $interface label ${interface}:${cnt}
+        cnt=$((cnt+1))
+      done
+      ;;
+
+    delete)
+      unset IFS
+      for alias in $alias_list; do
+        ip addr delete $alias/32 dev $interface
+      done
+      ;;
+
+  esac
+}
+
 init () {
 
   if [ -n "$IFRENAME" ]; then
@@ -405,6 +430,9 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
       ;;
     *)
       ifconfig $EXTIF $EXTIP netmask $EXTNM
+      if [ -n "$EXTIP_ALIAS" ]; then
+        alias_interface add $EXTIF "$EXTIP_ALIAS"
+      fi
       if [ "$IPV6" = "yes" -a -n "$EXTIPV6" ]; then
         ip -6 addr add $EXTIPV6 dev $EXTIF
       fi
@@ -431,6 +459,9 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
       ;;
     *)
       ifconfig $EXT2IF $EXT2IP netmask $EXT2NM
+      if [ -n "$EXT2IP_ALIAS" ]; then
+        alias_interface add $EXT2IF "$EXT2IP_ALIAS"
+      fi
       if [ "$IPV6" = "yes" -a -n "$EXT2IPV6" ]; then
         ip -6 addr add $EXT2IPV6 dev $EXT2IF
       fi
@@ -497,11 +528,17 @@ stop () {
 
   if [ -n "$EXTIF" -a "$EXTIF" != "none" ]; then
     echo "Bringing down $EXTIF..."
+    if [ -n "$EXTIP_ALIAS" ]; then
+      alias_interface delete $EXTIF "$EXTIP_ALIAS"
+    fi
     ifconfig $EXTIF down
   fi
 
   if [ -n "$EXT2IF" -a "$EXT2IF" != "none" ]; then
     echo "Bringing down $EXT2IF..."
+    if [ -n "$EXT2IP_ALIAS" ]; then
+      alias_interface delete $EXT2IF "$EXT2IP_ALIAS"
+    fi
     ifconfig $EXT2IF down
   fi
 

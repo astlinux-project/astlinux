@@ -265,7 +265,7 @@ findip()
 find_ip_from_if()
 {
   ip -o addr show dev "$1" \
-    | awk '$3 == "inet" { split($4, field, "/"); print field[1]; }'
+    | awk '$3 == "inet" { split($4, field, "/"); print field[1]; nextfile; }'
 }
 
 nthfield()
