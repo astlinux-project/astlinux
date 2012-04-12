@@ -24,6 +24,9 @@ Released **TBD**
 
 -- OpenSSL, version bump to 0.9.8u (security fixes: CVE-2012-0884 and CVE-2011-4619)
 
+-- Added rc.conf variables EXTIP_ALIAS and EXT2IP_ALIAS to support alias (virtual) external interfaces
+   for static addressing.  See /stat/etc/rc.conf for more details.
+
 -- lighttpd (configuration), added a new feature when the directory "/mnt/kd/phoneprov/" exists.
    After a reboot, both HTTP and HTTPS will be served from that directory provided the URL
    directory path begins with /phoneprov/ . Independent from the general HTTP/HTTPS root directory(s).
