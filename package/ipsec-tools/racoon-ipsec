@@ -241,7 +241,7 @@ sainfo address $1 any address $2 any {
 
 gen_ipsecmobile()
 {
-  local auth IFS
+  local auth method IFS
 
   p1_encrypt="$IPSECM_P1_CYPHER"
   p1_hash="$IPSECM_P1_HASH"
@@ -266,6 +266,19 @@ gen_ipsecmobile()
     fi
   done
 
+  if [ "$IPSECM_AUTH_METHOD" = "xauth_rsa_server" ]; then
+    method="xauth_rsa_server"
+    IFS=' '
+    for name in IPSECM_XAUTH_POOLBASE IPSECM_XAUTH_POOLMASK IPSECM_XAUTH_POOLSIZE; do
+      if [ -z "${!name}" ]; then
+        bad_config "Empty (required) field '$name' in IPsec configuration!"
+        return 1
+      fi
+    done
+  else
+    method="rsasig"
+  fi
+
   if ! sanity_check_options; then
     return 1
   fi
@@ -274,7 +287,11 @@ gen_ipsecmobile()
 
   auth="$(get_rsa_auth_config "$rsa_path" "$rsa_cert" "$rsa_key" "$rsa_ca")"
 
-  (mobile_remote "$do_nat" "$p1_encrypt" "$p1_hash" "$p1_dhgrp" "$p1_lifetime" "$auth") >> /tmp/etc/racoon.conf
+  (mobile_remote "$do_nat" "$p1_encrypt" "$p1_hash" "$p1_dhgrp" "$p1_lifetime" "$method" "$auth") >> /tmp/etc/racoon.conf
+
+  if [ "$method" = "xauth_rsa_server" ]; then
+    (mobile_xauth) >> /tmp/etc/racoon.conf
+  fi
 
   (mobile_sainfo "$p2_encrypt" "$p2_auth" "$p2_pfsgrp" "$p2_lifetime") >> /tmp/etc/racoon.conf
 }
@@ -314,8 +331,8 @@ mobile_remote()
 {
   echo "
 remote anonymous {
-  exchange_mode main;${6:+
-$6}
+  exchange_mode main;${7:+
+$7}
   nat_traversal $1;
   passive on;
   generate_policy on;
@@ -326,11 +343,38 @@ $6}
   proposal {
     encryption_algorithm $2;
     hash_algorithm $3;
-    authentication_method rsasig;
+    authentication_method $6;
     dh_group $4;${5:+
     lifetime time $5 sec;}
   }
 }"
+}
+
+mobile_xauth()
+{
+  local arg IFS
+
+  echo "
+mode_cfg {
+  auth_source system;
+  conf_source local;
+  pool_size $IPSECM_XAUTH_POOLSIZE;
+  network4 $IPSECM_XAUTH_POOLBASE;
+  netmask4 $IPSECM_XAUTH_POOLMASK;"
+  for arg in $IPSECM_XAUTH_DNS; do
+    echo "  dns4 $arg;"
+  done
+  for arg in $IPSECM_XAUTH_WINS; do
+    echo "  wins4 $arg;"
+  done
+  if [ -n "$IPSECM_XAUTH_DOMAIN" -a -n "$IPSECM_XAUTH_DNS" ]; then
+    echo "  default_domain \"$IPSECM_XAUTH_DOMAIN\";"
+    echo "  split_dns \"$IPSECM_XAUTH_DOMAIN\";"
+  fi
+  if [ "$IPSECM_XAUTH_SAVE_PASSWD" = "yes" ]; then
+    echo "  save_passwd on;"
+  fi
+  echo "}"
 }
 
 mobile_sainfo()

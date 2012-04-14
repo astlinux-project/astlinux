@@ -15,7 +15,7 @@ IPSEC_TOOLS_DEPENDENCIES = openssl flex host-flex
 IPSEC_TOOLS_MAKE_OPT = CFLAGS='$(TARGET_CFLAGS)'
 
 IPSEC_TOOLS_CONF_OPT = \
-	  --disable-hybrid \
+	  --enable-hybrid \
 	  --without-libpam \
 	  --disable-gssapi \
 	  --localstatedir=/var \
