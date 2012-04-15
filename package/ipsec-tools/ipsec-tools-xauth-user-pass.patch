@@ -1,0 +1,42 @@
+--- ipsec-tools-0.8.0/src/racoon/isakmp_xauth.c.orig	2011-03-14 16:50:36.000000000 +0100
++++ ipsec-tools-0.8.0/src/racoon/isakmp_xauth.c	2011-10-27 09:45:08.000000000 +0200
+@@ -1261,6 +1261,39 @@
+ 	char *usr;
+ 	char *pwd;
+ {
++        /* OpenWrt fix: if possible check user from password file */
++	FILE *fp;
++	char line[256];
++	char *linecut;
++	char filename[80];
++	int found;
++	char *fusr;
++	char *fpwd;
++
++	strcpy(filename,"/tmp/etc/xauthuser.txt");
++	if ((fp = fopen(filename, "r")) != NULL) {
++		plog(LLV_INFO, LOCATION, NULL,
++			"verifying user from %s\n",filename);
++
++		found = -1;
++		while ( fgets(line, 255, fp) != NULL && found == -1) {
++			if (line[0] != '#') {
++				linecut  = strtok(line,"#\n");
++				fusr = strtok(linecut," \t");
++				fpwd = strtok(NULL," \t");
++
++				if ( fusr && fpwd 
++				&& strcmp(fusr,"")!=0 && strcmp(fpwd,"")!=0
++				&& strcmp(fusr,usr)==0 && strcmp(fpwd,pwd)==0)
++				found = 0;
++			}
++		}
++		fclose(fp);
++
++		return found;
++	}
++	/* OpenWrt fix */
++
+ 	struct passwd *pw;
+ 	char *cryptpwd;
+ 	char *syscryptpwd;
