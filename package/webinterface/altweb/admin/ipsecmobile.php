@@ -22,13 +22,25 @@ require_once '../common/openssl-ipsecmobile.php';
 
 require_once '../common/openssl.php';
 
+if (is_file($IPSECMCONFFILE)) {
+  $db = parseRCconf($IPSECMCONFFILE);
+} else {
+  $db = NULL;
+}
+
 // Function: ipsecmobile_openssl()
 //
-function ipsecmobile_openssl() {
+function ipsecmobile_openssl($keysize, $dnsname) {
   global $global_prefs;
   // System location of gui.network.conf file
   $NETCONFFILE = '/mnt/kd/rc.conf.d/gui.network.conf';
   
+  if ($keysize === '') {
+    $keysize = '1024';
+  }
+  $opts['keysize'] = (int)$keysize;
+  $opts['dnsname'] = $dnsname;
+
   if (($countryName = getPREFdef($global_prefs, 'dn_country_name_cmdstr')) === '') {
     $countryName = 'US';
   }
@@ -48,8 +60,8 @@ function ipsecmobile_openssl() {
   }
   if (($commonName = getPREFdef($global_prefs, 'dn_common_name_cmdstr')) === '') {
     if (is_file($NETCONFFILE)) {
-      $db = parseRCconf($NETCONFFILE);
-      if (($commonName = getVARdef($db, 'HOSTNAME').'.'.getVARdef($db, 'DOMAIN')) === '') {
+      $vars = parseRCconf($NETCONFFILE);
+      if (($commonName = getVARdef($vars, 'HOSTNAME').'.'.getVARdef($vars, 'DOMAIN')) === '') {
         $commonName = 'pbx.astlinux';
       }
     } else {
@@ -59,10 +71,12 @@ function ipsecmobile_openssl() {
   if (($email = getPREFdef($global_prefs, 'dn_email_address_cmdstr')) === '') {
     $email = 'info@astlinux.org';
   }
-  $ssl = ipsecmobileSETUP($countryName, $stateName, $localityName, $orgName, $orgUnit, $commonName, $email);
+  $ssl = ipsecmobileSETUP($opts, $countryName, $stateName, $localityName, $orgName, $orgUnit, $commonName, $email);
   return($ssl);
 }
-$openssl = ipsecmobile_openssl();
+$key_size = getVARdef($db, 'IPSECM_CERT_KEYSIZE');
+$dns_name = getVARdef($db, 'IPSECM_CERT_DNSNAME');
+$openssl = ipsecmobile_openssl($key_size, $dns_name);
 
 $nat_t_menu = array (
   'off' => 'Disable',
@@ -76,6 +90,11 @@ $log_level_menu = array (
   'notify' => 'Notify',
   'info' => 'Info',
   'debug' => 'Debug'
+);
+
+$auth_method_menu = array (
+  'rsasig' => 'Certificate',
+  'xauth_rsa_server' => 'XAuth RSA'
 );
 
 $p1_cypher_menu = array (
@@ -112,6 +131,11 @@ $p2_pfsgroup_menu = array (
   'modp1536' => '1536 (5)'
 );
 
+$key_size_menu = array (
+  '1024' => '1024 Bits',
+  '2048' => '2048 Bits'
+);
+
 // Function: saveIPSECMsettings
 //
 function saveIPSECMsettings($conf_dir, $conf_file) {
@@ -141,6 +165,9 @@ function saveIPSECMsettings($conf_dir, $conf_file) {
     fwrite($fp, $value."\n");
   }
   fwrite($fp, '"'."\n");
+
+  $value = 'IPSECM_AUTH_METHOD="'.$_POST['auth_method'].'"';
+  fwrite($fp, "### Auth Method\n".$value."\n");
 
   $value = 'IPSECM_P1_CYPHER="'.$_POST['p1_cypher'].'"';
   fwrite($fp, "### Phase 1 Encryption\n".$value."\n");
@@ -179,6 +206,12 @@ function saveIPSECMsettings($conf_dir, $conf_file) {
 
   $value = 'IPSECM_P2_LIFETIME="'.trim($_POST['p2_lifetime']).'"';
   fwrite($fp, "### Phase 2 Lifetime\n".$value."\n");
+
+  $value = 'IPSECM_CERT_KEYSIZE="'.$_POST['key_size'].'"';
+  fwrite($fp, "### Private Key Size\n".$value."\n");
+
+  $value = 'IPSECM_CERT_DNSNAME="'.str_replace(' ', '', $_POST['dns_name']).'"';
+  fwrite($fp, "### Server Cert DNS Name\n".$value."\n");
 
 if (opensslIPSECMOBILEis_valid($openssl)) {
   $value = 'IPSECM_RSA_PATH="'.$openssl['key_dir'].'"';
@@ -223,13 +256,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
       $result = 2;
     }
+  } elseif (isset($_POST['submit_xauth'])) {
+    $result = saveIPSECMsettings($IPSECMCONFDIR, $IPSECMCONFFILE);
+    header('Location: /admin/ipsecxauth.php');
+    exit;
   } elseif (isset($_POST['submit_new_server'])) {
     $result = 99;
     if (isset($_POST['confirm_new_server'])) {
       opensslDELETEkeys($openssl);
-      if (opensslCREATEselfCert($openssl)) {
-        if (opensslCREATEserverCert($openssl)) {
-          $result = 30;
+      if (is_file($openssl['config'])) {
+        @unlink($openssl['config']);
+      }
+      // Rebuild openssl.cnf template for new CA
+      $key_size = $_POST['key_size'];
+      $dns_name = str_replace(' ', '', $_POST['dns_name']);
+      if (($openssl = ipsecmobile_openssl($key_size, $dns_name)) !== FALSE) {
+        if (opensslCREATEselfCert($openssl)) {
+          if (opensslCREATEserverCert($openssl)) {
+            $result = 30;
+          }
         }
       }
       saveIPSECMsettings($IPSECMCONFDIR, $IPSECMCONFFILE);
@@ -312,12 +357,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $ACCESS_RIGHTS = 'admin';
 require_once '../common/header.php';
 
-  if (is_file($IPSECMCONFFILE)) {
-    $db = parseRCconf($IPSECMCONFFILE);
-  } else {
-    $db = NULL;
-  }
-
   putHtml("<center>");
   if (isset($_GET['result'])) {
     $result = $_GET['result'];
@@ -353,9 +392,24 @@ require_once '../common/header.php';
   }
   putHtml("</center>");
 ?>
+  <script language="JavaScript" type="text/javascript">
+  //<![CDATA[
+  function auth_method_change() {
+    var form = document.getElementById("iform");
+    switch (form.auth_method.selectedIndex) {
+      case 0: // Certificate
+        form.submit_xauth.style.visibility = "hidden";
+        break;
+      case 1: // XAuth RSA
+        form.submit_xauth.style.visibility = "visible";
+        break;
+    }
+  }
+  //]]>
+  </script>
   <center>
   <table class="layout"><tr><td><center>
-  <form method="post" action="<?php echo $myself;?>">
+  <form id="iform" method="post" action="<?php echo $myself;?>">
   <table width="100%" class="stdtable">
   <tr><td style="text-align: center;" colspan="2">
   <h2>IPsec Mobile Server Configuration:</h2>
@@ -417,6 +471,22 @@ require_once '../common/header.php';
   putHtml('<strong>Phase 1 - Authentication:</strong>');
   putHtml('</td></tr>');
   
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  putHtml('Auth Method:');
+  putHtml('</td><td style="text-align: left;" colspan="2">');
+  if (($auth_method = getVARdef($db, 'IPSECM_AUTH_METHOD')) === '') {
+    $auth_method = 'rsasig';
+  }
+  putHtml('<select name="auth_method" onchange="auth_method_change()">');
+  foreach ($auth_method_menu as $key => $value) {
+    $sel = ($auth_method === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td><td style="text-align: left;" colspan="3">');
+  putHtml('<input type="submit" value="XAuth Configuration" name="submit_xauth" class="button" />');
+  putHtml('</td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   putHtml('Encryption:');
   putHtml('</td><td style="text-align: left;" colspan="5">');
@@ -519,6 +589,25 @@ if ($openssl !== FALSE) {
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Server Certificate and Key:</strong>');
   putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Private Key Size:</td><td style="text-align: left;" colspan="4">');
+  if (($key_size = getVARdef($db, 'IPSECM_CERT_KEYSIZE')) === '') {
+    $key_size = '1024';
+  }
+  putHtml('<select name="key_size">');
+  foreach ($key_size_menu as $key => $value) {
+    $sel = ($key_size === (string)$key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Server Cert DNS Name:</td><td style="text-align: left;" colspan="4">');
+  $value = getVARdef($db, 'IPSECM_CERT_DNSNAME');
+  putHtml('<input type="text" size="24" maxlength="128" value="'.$value.'" name="dns_name" />');
+  putHtml('</td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="3">');
   putHtml('Create New Certificate and Key:</td><td class="dialogText" style="text-align: left;" colspan="3">');
   putHtml('<input type="submit" value="Create New" name="submit_new_server" />');
@@ -612,6 +701,11 @@ if (! opensslIPSECMOBILEis_valid($openssl)) {
   putHtml('</form>');
   putHtml('</center></td></tr></table>');
   putHtml('</center>');
+  putHtml('<script language="JavaScript" type="text/javascript">');
+  putHtml('//<![CDATA[');
+  putHtml('auth_method_change();');
+  putHtml('//]]>');
+  putHtml('</script>');
 } // End of HTTP GET
 require_once '../common/footer.php';
 

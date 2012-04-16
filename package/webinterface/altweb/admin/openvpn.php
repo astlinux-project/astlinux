@@ -226,10 +226,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = 99;
     if (isset($_POST['confirm_new_server'])) {
       opensslDELETEkeys($openssl);
-      if (opensslCREATEselfCert($openssl)) {
-        if (opensslCREATEserverCert($openssl)) {
-          if (opensslCREATEdh_pem($openssl)) {
-            $result = 30;
+      if (is_file($openssl['config'])) {
+        @unlink($openssl['config']);
+      }
+      // Rebuild openssl.cnf template for new CA
+      if (($openssl = openvpn_openssl()) !== FALSE) {
+        if (opensslCREATEselfCert($openssl)) {
+          if (opensslCREATEserverCert($openssl)) {
+            if (opensslCREATEdh_pem($openssl)) {
+              $result = 30;
+            }
           }
         }
       }

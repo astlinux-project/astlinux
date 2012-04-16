@@ -12,7 +12,7 @@
 
 // Function: ipsecmobileSETUP()
 //
-function ipsecmobileSETUP($countryName, $stateName, $localityName, $orgName, $orgUnit, $commonName, $email) {
+function ipsecmobileSETUP($opts, $countryName, $stateName, $localityName, $orgName, $orgUnit, $commonName, $email) {
   // System location of OpenSSL default configuration file
   $OPENSSL_CNF = '/usr/lib/ssl/openssl.cnf';
   
@@ -30,6 +30,7 @@ function ipsecmobileSETUP($countryName, $stateName, $localityName, $orgName, $or
     '',
     '[ ipsecmobile_server ]',
     'basicConstraints=CA:FALSE',
+    ($opts['dnsname'] !== '' ? 'subjectAltName=DNS:'.$opts['dnsname'] : '#subjectAltName=DNS:vpn.astlinux.org'),
     'nsCertType=server',
     'nsComment="IPsec Mobile Server Certificate"',
     'subjectKeyIdentifier=hash',
@@ -41,27 +42,27 @@ function ipsecmobileSETUP($countryName, $stateName, $localityName, $orgName, $or
   $ssl['configArgs'] = array(
     'config' => $ssl['config'],
     'digest_alg' => 'sha1',
-    'private_key_bits' => 1024,
+    'private_key_bits' => $opts['keysize'],
     'encrypt_key' => FALSE
   );
   $ssl['sign_ca'] = array(
     'config' => $ssl['config'],
     'digest_alg' => 'sha1',
-    'private_key_bits' => 1024,
+    'private_key_bits' => $opts['keysize'],
     'x509_extensions' => 'v3_ca',
     'encrypt_key' => FALSE
   );
   $ssl['sign_server'] = array(
     'config' => $ssl['config'],
     'digest_alg' => 'sha1',
-    'private_key_bits' => 1024,
+    'private_key_bits' => $opts['keysize'],
     'x509_extensions' => 'ipsecmobile_server',
     'encrypt_key' => FALSE
   );
   $ssl['sign_client'] = array(
     'config' => $ssl['config'],
     'digest_alg' => 'sha1',
-    'private_key_bits' => 1024,
+    'private_key_bits' => $opts['keysize'],
     'x509_extensions' => 'usr_cert',
     'encrypt_key' => FALSE
   );

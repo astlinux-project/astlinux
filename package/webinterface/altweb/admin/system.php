@@ -767,6 +767,7 @@ if (is_file('/usr/sbin/upgrade-RUNNIX-image')) {
           $var === 'GUI_FIREWALL_RULES' ||
           $var === 'STATICHOSTS' ||
           $var === 'PPTP_USER_PASS' ||
+          $var === 'IPSECM_XAUTH_USER_PASS' ||
           $var === 'IPSEC_PSK_ASSOCIATIONS') {
         $value = '********';
       } elseif (strlen($value) > 56) {

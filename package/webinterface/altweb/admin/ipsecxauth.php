@@ -1,77 +1,38 @@
 <?php
 
-// Copyright (C) 2011 Lonnie Abelbeck
+// Copyright (C) 2012 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
 // General Public License; and comes with ABSOLUTELY NO WARRANTY.
 
-// pptp.php for AstLinux
-// 23-02-2011
+// ipsecxauth.php for AstLinux
+// 16-04-2012
 //
 // System location of /mnt/kd/rc.conf.d directory
-$PPTPCONFDIR = '/mnt/kd/rc.conf.d';
-// System location of gui.pptp.conf file
-$PPTPCONFFILE = '/mnt/kd/rc.conf.d/gui.pptp.conf';
-
-$verbosity_menu = array (
-  '1' => 'Low',
-  '2' => 'Medium',
-  '3' => 'High'
-);
+$IPSECXAUTHCONFDIR = '/mnt/kd/rc.conf.d';
+// System location of gui.ipsecxauth.conf file
+$IPSECXAUTHCONFFILE = '/mnt/kd/rc.conf.d/gui.ipsecxauth.conf';
 
 $connections_menu = array (
-  '16' => '16 &ndash; [x.x.x.224-239] [x.x.x.224/28]',
-  '8' => '8 &ndash; [x.x.x.232-239] [x.x.x.232/29]',
-  '4' => '4 &ndash; [x.x.x.236-239] [x.x.x.236/30]',
-  '2' => '2 &ndash; [x.x.x.238-239] [x.x.x.238/31]',
-  '1' => '1 &ndash; [x.x.x.239] [x.x.x.239/32]'
+  '2' => '2 Users',
+  '4' => '4 Users',
+  '8' => '8 Users',
+  '16' => '16 Users',
+  '32' => '32 Users',
+  '64' => '64 Users'
 );
 
 $myself = $_SERVER['PHP_SELF'];
 
 require_once '../common/functions.php';
 
-// Function: getPOOLvars
+// Function: ipsecGETclients
 //
-function getPOOLvars($var) {
-  
-  if ($var !== '') {
-    $datatokens = explode(' ', $var);
-    if (isset($datatokens[0], $datatokens[1], $datatokens[2])) {
-      $pool['num'] = $datatokens[0];
-      $pool['remote'] = $datatokens[1];
-      $pool['server'] = $datatokens[2];
-      return($pool);
-    }
-  }
-  // Set defaults
-  // System location of gui.network.conf file
-  $NETCONFFILE = '/mnt/kd/rc.conf.d/gui.network.conf';
-  
-  $pool['num'] = '8';
-  $pool['remote'] = '192.168.101.232-239';
-  $pool['server'] = '192.168.101.240';
-  if (is_file($NETCONFFILE)) {
-    $netvars = parseRCconf($NETCONFFILE);
-    if (($intip = getVARdef($netvars, 'INTIP')) !== '') {
-      $ip4tokens = explode('.', $intip);
-      if (isset($ip4tokens[0], $ip4tokens[1], $ip4tokens[2])) {
-        $ip4 = "$ip4tokens[0].$ip4tokens[1].$ip4tokens[2]";
-        $pool['remote'] = "$ip4.232-239";
-        $pool['server'] = "$ip4.240";
-      }
-    }
-  }
-  return($pool);
-}
-
-// Function: pptpGETclients
-//
-function pptpGETclients($vars) {
+function ipsecGETclients($vars) {
   $id = 0;
 
-  if (($line = getVARdef($vars, 'PPTP_USER_PASS')) !== '') {
+  if (($line = getVARdef($vars, 'IPSECM_XAUTH_USER_PASS')) !== '') {
     $linetokens = explode("\n", $line);
     foreach ($linetokens as $data) {
       if ($data !== '') {
@@ -92,9 +53,9 @@ function pptpGETclients($vars) {
   return($db);
 }
 
-// Function: savePPTPsettings
+// Function: saveIPSECsettings
 //
-function savePPTPsettings($conf_dir, $conf_file, $db, $delete = NULL) {
+function saveIPSECsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   $result = 11;
 
   if (! is_dir($conf_dir)) {
@@ -103,9 +64,9 @@ function savePPTPsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   if (($fp = @fopen($conf_file,"wb")) === FALSE) {
     return(3);
   }
-  fwrite($fp, "### gui.pptp.conf - start ###\n###\n");
+  fwrite($fp, "### gui.ipsecxauth.conf - start ###\n###\n");
   
-  $value = 'PPTP_USER_PASS="';
+  $value = 'IPSECM_XAUTH_USER_PASS="';
   fwrite($fp, "### Authentication\n".$value."\n");
   if (count($db['data']) > 0) {
     foreach ($db['data'] as $data) {
@@ -127,49 +88,34 @@ function savePPTPsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   }
   fwrite($fp, '"'."\n");
   
-  $pool = $_POST['pool_num'];
-  if (($value = str_replace(' ', '', $_POST['pool_remote'])) !== '') {
-    $pool .= ' '.$value;
-    if (($value = str_replace(' ', '', $_POST['pool_server'])) !== '') {
-      $pool .= ' '.$value;
-    } else {
-      $pool = '';
-    }
-  } else {
-    $pool = '';
-  }
-  $value = 'PPTP_POOL="'.$pool.'"';
-  fwrite($fp, "### PPTP Address Pool\n".$value."\n");
+  $value = 'IPSECM_XAUTH_POOLSIZE="'.$_POST['pool_size'].'"';
+  fwrite($fp, "### Pool Size\n".$value."\n");
   
-  if ($pool !== '') {
-    $value = 'PPTP_SUBNET="'.str_replace(' ', '', $_POST['subnet']).'"';
-  } else {
-    $value = 'PPTP_SUBNET=""';
-  }
-  fwrite($fp, "### Routed PPTP Subnet\n".$value."\n");
+  $value = 'IPSECM_XAUTH_POOLBASE="'.trim($_POST['pool_base']).'"';
+  fwrite($fp, "### Pool Base\n".$value."\n");
   
-  $value = 'PPTP_VERBOSITY="'.$_POST['verbosity'].'"';
-  fwrite($fp, "### Log Verbosity\n".$value."\n");
+  $value = 'IPSECM_XAUTH_POOLMASK="'.trim($_POST['pool_mask']).'"';
+  fwrite($fp, "### Pool Mask\n".$value."\n");
   
-  $value = 'PPTP_DNS="'.trim($_POST['dns']).'"';
+  $value = 'IPSECM_XAUTH_DNS="'.trim($_POST['dns']).'"';
   fwrite($fp, "### MS DNS\n".$value."\n");
   
-  $value = 'PPTP_WINS="'.trim($_POST['wins']).'"';
+  $value = 'IPSECM_XAUTH_WINS="'.trim($_POST['wins']).'"';
   fwrite($fp, "### MS WINS\n".$value."\n");
   
-  $value = 'PPTP_TUNNEL_EXTERNAL_HOSTS="'.trim($_POST['tunnel_external_hosts']).'"';
-  fwrite($fp, "### Allow External Hosts for Tunnel\n".$value."\n");
+  $value = 'IPSECM_XAUTH_NETWORK="'.trim($_POST['network']).'"';
+  fwrite($fp, "### Network\n".$value."\n");
   
-  $value = 'PPTP_ALLOW_HOSTS="'.trim($_POST['allow_hosts']).'"';
-  fwrite($fp, "### Allow Hosts\n".$value."\n");
+  $value = 'IPSECM_XAUTH_DOMAIN="'.trim($_POST['domain']).'"';
+  fwrite($fp, "### Default Domain\n".$value."\n");
   
-  $value = 'PPTP_DENY_HOSTS="'.trim($_POST['deny_hosts']).'"';
-  fwrite($fp, "### Deny Hosts\n".$value."\n");
+  $value = 'IPSECM_XAUTH_BANNER="'.trim($_POST['banner']).'"';
+  fwrite($fp, "### Login Message\n".$value."\n");
   
-  $value = 'PPTP_DENY_LOG="'.$_POST['deny_log'].'"';
-  fwrite($fp, "### Log Deny Hosts\n".$value."\n");
+  $value = 'IPSECM_XAUTH_SAVE_PASSWD="'.$_POST['save_passwd'].'"';
+  fwrite($fp, "### Save Password\n".$value."\n");
   
-  fwrite($fp, "### gui.pptp.conf - end ###\n");
+  fwrite($fp, "### gui.ipsecxauth.conf - end ###\n");
   fclose($fp);
   
   return($result);
@@ -195,18 +141,18 @@ function addUserPass(&$db, $id) {
   return(TRUE);
 }
 
-if (is_file($PPTPCONFFILE)) {
-  $vars = parseRCconf($PPTPCONFFILE);
+if (is_file($IPSECXAUTHCONFFILE)) {
+  $vars = parseRCconf($IPSECXAUTHCONFFILE);
 } else {
   $vars = NULL;
 }
-$db = pptpGETclients($vars);
+$db = ipsecGETclients($vars);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
     $result = 999;                                 
-  } elseif (isset($_POST['submit_save'])) {
+  } elseif (isset($_POST['submit_save']) || isset($_POST['submit_ipsec_config'])) {
     $n = count($db['data']);
     $id = $n;
     for ($i = 0; $i < $n; $i++) {
@@ -216,21 +162,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
     }
     $ok = addUserPass($db, $id);
-    $result = savePPTPsettings($PPTPCONFDIR, $PPTPCONFFILE, $db);
+    $result = saveIPSECsettings($IPSECXAUTHCONFDIR, $IPSECXAUTHCONFFILE, $db);
     if ($result == 11 && $ok === 1) {
       $result = 12;
     }
-  } elseif (isset($_POST['submit_restart'])) {
-    $result = 99;
-    if (isset($_POST['confirm_restart'])) {
-      $result = restartPROCESS('pptpd', 10, $result, 'init');
-    } else {
-      $result = 2;
+    if (isset($_POST['submit_ipsec_config'])) {
+      header('Location: /admin/ipsecmobile.php');
+      exit;
     }
   } elseif (isset($_POST['submit_delete'])) {
     $delete = $_POST['delete'];
     if (count($delete) > 0) {
-      $result = savePPTPsettings($PPTPCONFDIR, $PPTPCONFFILE, $db, $delete);
+      $result = saveIPSECsettings($IPSECXAUTHCONFDIR, $IPSECXAUTHCONFFILE, $db, $delete);
     }
   }
   header('Location: '.$myself.'?result='.$result);
@@ -246,10 +189,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: red;">No Action, check "Confirm" for this action.</p>');
     } elseif ($result == 3) {
       putHtml('<p style="color: red;">Error creating file.</p>');
-    } elseif ($result == 10) {
-      putHtml('<p style="color: green;">PPTP VPN Server has Restarted.</p>');
     } elseif ($result == 11) {
-      putHtml('<p style="color: green;">Settings saved, click "Restart Server" to apply any changed settings.</p>');
+      putHtml('<p style="color: green;">Settings saved, click "IPsec Configuration" to return to previous screen.</p>');
     } elseif ($result == 12) {
       putHtml('<p style="color: red;">Missing Password, User not added.</p>');
     } elseif ($result == 99) {
@@ -269,13 +210,11 @@ require_once '../common/header.php';
   <form method="post" action="<?php echo $myself;?>">
   <table width="100%" class="stdtable">
   <tr><td style="text-align: center;" colspan="3">
-  <h2>PPTP VPN Server Configuration:</h2>
+  <h2>IPsec XAuth Configuration:</h2>
   </td></tr><tr><td style="text-align: center;">
   <input type="submit" class="formbtn" value="Save Settings" name="submit_save" />
   </td><td style="text-align: center;">
-  <input type="submit" class="formbtn" value="Restart Server" name="submit_restart" />
-  &ndash;
-  <input type="checkbox" value="restart" name="confirm_restart" />&nbsp;Confirm
+  <input type="submit" value="IPsec Configuration" name="submit_ipsec_config" class="button" />
   </td><td style="text-align: center;">
   <input type="submit" class="formbtn" value="Delete Checked" name="submit_delete" />
   </td></tr></table>
@@ -299,105 +238,74 @@ require_once '../common/header.php';
   putHtml('<table width="100%" class="stdtable">');
   putHtml('<tr class="dtrow0"><td width="180">&nbsp;</td><td>&nbsp;</td></tr>');
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
-  putHtml('<strong>Tunnel Options:</strong>');
+  putHtml('<strong>XAuth Client Options:</strong>');
   putHtml('</td></tr>');
-  
-  $pool = getPOOLvars(getVARdef($vars, 'PPTP_POOL'));
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   putHtml('Max. Connections:');
   putHtml('</td><td style="text-align: left;">');
-  $connections = $pool['num'];
-  putHtml('<select name="pool_num">');
+  if (($pool_size = getVARdef($vars, 'IPSECM_XAUTH_POOLSIZE')) === '') {
+    $pool_size = '8';
+  }
+  putHtml('<select name="pool_size">');
   foreach ($connections_menu as $key => $value) {
-    $sel = ($connections === (string)$key) ? ' selected="selected"' : '';
+    $sel = ($pool_size === (string)$key) ? ' selected="selected"' : '';
     putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
   }
   putHtml('</select>');
   putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  putHtml('Remote Range IPv4:');
+  putHtml('Remote IPv4 Base:');
   putHtml('</td><td style="text-align: left;">');
-  $value = $pool['remote'];
-  putHtml('<input type="text" size="36" maxlength="64" name="pool_remote" value="'.$value.'" />');
-  putHtml('</td></tr>');
-  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  putHtml('VPN Subnet:');
-  putHtml('</td><td style="text-align: left;">');
-  if (($value = getVARdef($vars, 'PPTP_SUBNET')) === '') {
-    $cidr = array('16' => '/28', '8' => '/29', '4' => '/30', '2' => '/31', '1' => '/32');
-    if (($pos = strpos($pool['remote'], '-')) !== FALSE) {
-      $value = substr($pool['remote'], 0, $pos).$cidr[$pool['num']];
-    } else {
-      $value = $pool['remote'].$cidr[$pool['num']];
-    }
+  if (($value = getVARdef($vars, 'IPSECM_XAUTH_POOLBASE')) === '') {
+    $value = '10.9.1.1';
   }
-  putHtml('<input type="text" size="36" maxlength="64" name="subnet" value="'.$value.'" />');
+  putHtml('<input type="text" size="36" maxlength="64" name="pool_base" value="'.$value.'" />');
   putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  putHtml('Server IPv4:');
+  putHtml('Remote IPv4 Mask:');
   putHtml('</td><td style="text-align: left;">');
-  $value = $pool['server'];
-  putHtml('<input type="text" size="36" maxlength="64" name="pool_server" value="'.$value.'" />');
+  if (($value = getVARdef($vars, 'IPSECM_XAUTH_POOLMASK')) === '') {
+    $value = '255.255.255.0';
+  }
+  putHtml('<input type="text" size="36" maxlength="64" name="pool_mask" value="'.$value.'" />');
+  putHtml('</td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  putHtml('DNS Default Domain:');
+  putHtml('</td><td style="text-align: left;">');
+  $value = getVARdef($vars, 'IPSECM_XAUTH_DOMAIN');
+  putHtml('<input type="text" size="36" maxlength="128" name="domain" value="'.$value.'" />');
   putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   putHtml('DNS:');
   putHtml('</td><td style="text-align: left;">');
-  $value = getVARdef($vars, 'PPTP_DNS');
-  putHtml('<input type="text" size="36" maxlength="64" name="dns" value="'.$value.'" />');
+  $value = getVARdef($vars, 'IPSECM_XAUTH_DNS');
+  putHtml('<input type="text" size="56" maxlength="128" name="dns" value="'.$value.'" />');
   putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   putHtml('WINS:');
   putHtml('</td><td style="text-align: left;">');
-  $value = getVARdef($vars, 'PPTP_WINS');
-  putHtml('<input type="text" size="36" maxlength="64" name="wins" value="'.$value.'" />');
+  $value = getVARdef($vars, 'IPSECM_XAUTH_WINS');
+  putHtml('<input type="text" size="56" maxlength="128" name="wins" value="'.$value.'" />');
   putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  putHtml('Log Verbosity:');
+  putHtml('Push Network(s):');
   putHtml('</td><td style="text-align: left;">');
-  $verbosity = getVARdef($vars, 'PPTP_VERBOSITY');
-  putHtml('<select name="verbosity">');
-  foreach ($verbosity_menu as $key => $value) {
-    $sel = ($verbosity === (string)$key) ? ' selected="selected"' : '';
-    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
-  }
-  putHtml('</select>');
+  $value = getVARdef($vars, 'IPSECM_XAUTH_NETWORK');
+  putHtml('<input type="text" size="56" maxlength="128" name="network" value="'.$value.'" />');
   putHtml('</td></tr>');
-  
-  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
-  putHtml('<strong>Firewall Options:</strong>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  putHtml('Connect Message:');
+  putHtml('</td><td style="text-align: left;">');
+  $value = getVARdef($vars, 'IPSECM_XAUTH_BANNER');
+  putHtml('<input type="text" size="56" maxlength="200" name="banner" value="'.$value.'" />');
   putHtml('</td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  putHtml('External Hosts:');
+  putHtml('Save Remote Password:');
   putHtml('</td><td style="text-align: left;">');
-  if (($value = getVARdef($vars, 'PPTP_TUNNEL_EXTERNAL_HOSTS')) === '') {
-    $value = '0/0';
-  }
-  putHtml('<input type="text" size="56" maxlength="200" name="tunnel_external_hosts" value="'.$value.'" />');
-  putHtml('</td></tr>');
-  
-  putHtml('<tr class="dtrow1"><td class="dialogText" style="text-align: center;" colspan="2">');
-  putHtml('<i>Default Policy is to allow after any "Allow/Deny" Hosts rules</i>');
-  putHtml('</td></tr>');
-  
-  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  putHtml('Allow Hosts:');
-  putHtml('</td><td style="text-align: left;">');
-  $value = getVARdef($vars, 'PPTP_ALLOW_HOSTS');
-  putHtml('<input type="text" size="56" maxlength="200" name="allow_hosts" value="'.$value.'" />');
-  putHtml('</td></tr>');
-  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  putHtml('Deny Hosts:');
-  putHtml('</td><td style="text-align: left;">');
-  $value = getVARdef($vars, 'PPTP_DENY_HOSTS');
-  putHtml('<input type="text" size="56" maxlength="200" name="deny_hosts" value="'.$value.'" />');
-  putHtml('</td></tr>');
-  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  putHtml('Log Denied:');
-  putHtml('</td><td style="text-align: left;">');
-  putHtml('<select name="deny_log">');
-  $value = getVARdef($vars, 'PPTP_DENY_LOG');
+  putHtml('<select name="save_passwd">');
+  $value = getVARdef($vars, 'IPSECM_XAUTH_SAVE_PASSWD');
   $sel = ($value === 'no') ? ' selected="selected"' : '';
   putHtml('<option value="no"'.$sel.'>No</option>');
   $sel = ($value === 'yes') ? ' selected="selected"' : '';
