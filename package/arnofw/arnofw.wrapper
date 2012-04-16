@@ -96,6 +96,18 @@ setDMZnet()
   fi
 }
 
+setIPSECnet()
+{
+  # args: IP, NM
+  if [ -n "$1" -a -n "$2" ]; then
+    local NETWORK PREFIX
+    eval `ipcalc -np $1 $2`
+
+    NAT_INTERNAL_NET="$NAT_INTERNAL_NET${NAT_INTERNAL_NET:+ }$NETWORK/$PREFIX"
+    NAT=1
+  fi
+}
+
 getLANinterface()
 {
   local lanif=""
@@ -197,6 +209,10 @@ fi
 
 if isVPNtype racoon || isVPNtype ipsecmobile; then
   RP_FILTER=0
+fi
+
+if isVPNtype ipsecmobile && [ "$IPSECM_AUTH_METHOD" = "xauth_rsa_server" ]; then
+  setIPSECnet "$IPSECM_XAUTH_POOLBASE" "$IPSECM_XAUTH_POOLMASK"
 fi
 
 if isVPNtype openvpn; then

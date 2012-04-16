@@ -282,6 +282,12 @@ gen_ipsecmobile()
     done
     chmod 600 /tmp/etc/xauthuser.txt
 
+    if [ -n "$IPSECM_XAUTH_BANNER" ]; then
+      echo "$IPSECM_XAUTH_BANNER" > /tmp/etc/xauthmsg.txt
+    else
+      touch /tmp/etc/xauthmsg.txt
+    fi
+
     IFS=' '
     for name in IPSECM_XAUTH_POOLBASE IPSECM_XAUTH_POOLMASK IPSECM_XAUTH_POOLSIZE; do
       if [ -z "${!name}" ]; then
@@ -367,7 +373,7 @@ $7}
 
 mobile_xauth()
 {
-  local arg IFS
+  local arg net IFS
 
   echo "
 mode_cfg {
@@ -382,6 +388,13 @@ mode_cfg {
   for arg in $IPSECM_XAUTH_WINS; do
     echo "  wins4 $arg;"
   done
+  if [ -n "$IPSECM_XAUTH_NETWORK" ]; then
+    net=""
+    for arg in $IPSECM_XAUTH_NETWORK; do
+      net="$net${net:+,}$arg"
+    done
+    echo "  split_network include $net;"
+  fi
   if [ -n "$IPSECM_XAUTH_DOMAIN" -a -n "$IPSECM_XAUTH_DNS" ]; then
     echo "  default_domain \"$IPSECM_XAUTH_DOMAIN\";"
     echo "  split_dns \"$IPSECM_XAUTH_DOMAIN\";"
@@ -389,6 +402,7 @@ mode_cfg {
   if [ "$IPSECM_XAUTH_SAVE_PASSWD" = "yes" ]; then
     echo "  save_passwd on;"
   fi
+  echo "  banner \"/tmp/etc/xauthmsg.txt\";"
   echo "}"
 }
 
@@ -646,7 +660,8 @@ path certificate \"/tmp/etc/certificate\";" > /tmp/etc/racoon.conf
   if [ -f /tmp/etc/racoon_bad_config ]; then
     echo "$prog failed to start due to configuration errors." 1>&2
 
-    rm -f /tmp/etc/racoon.conf /tmp/etc/psk.txt /tmp/etc/tunnel.sh /tmp/etc/xauthuser.txt /tmp/etc/racoon_bad_config
+    rm -f /tmp/etc/racoon.conf /tmp/etc/psk.txt /tmp/etc/tunnel.sh /tmp/etc/racoon_bad_config
+    rm -f /tmp/etc/xauthuser.txt /tmp/etc/xauthmsg.txt
     rm -rf /tmp/etc/certificate
 
     exit 1
@@ -701,7 +716,8 @@ stop()
   setkey -F
   setkey -FP
 
-  rm -f /tmp/etc/psk.txt /tmp/etc/racoon.conf /tmp/etc/tunnel.sh /tmp/etc/xauthuser.txt
+  rm -f /tmp/etc/psk.txt /tmp/etc/racoon.conf /tmp/etc/tunnel.sh
+  rm -f /tmp/etc/xauthuser.txt /tmp/etc/xauthmsg.txt
   rm -rf /tmp/etc/certificate
 
   ## Hangs with linux 2.6.35
