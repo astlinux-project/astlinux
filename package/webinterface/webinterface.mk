@@ -28,6 +28,7 @@ endif
 
 ifeq ($(strip $(BR2_PACKAGE_WEBINTERFACE_v2)),y)
 	rsync -a --exclude=".svn" package/webinterface/altweb/ $(TARGET_DIR)/stat/var/www/
+	$(INSTALL) -D -m 644 package/webinterface/altweb/php.ini $(TARGET_DIR)/etc/php.ini
 	$(INSTALL) -D -m 644 package/webinterface/www/admin/.htpasswd $(TARGET_DIR)/stat/var/www/admin/.htpasswd
 
 ifeq ($(strip $(BR2_PACKAGE_ASTERISK)),y)
@@ -50,6 +51,7 @@ endif
 webinterface-clean:
 	rm -rf $(TARGET_DIR)/stat/var/www
 	rm -f $(TARGET_DIR)/usr/sbin/ast-vmpass
+	rm -f $(TARGET_DIR)/etc/php.ini
 ifeq ($(strip $(BR2_PACKAGE_ASTERISK)),y)
 	$(SED) '/^\[general\]$$/,/^$$/{s/^enabled = yes$$/enabled = no/}' \
 	   -e  '/^\[webinterface\]$$/,/^$$/d' \
