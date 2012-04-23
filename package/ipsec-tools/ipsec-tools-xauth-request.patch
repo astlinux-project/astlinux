@@ -1,0 +1,14 @@
+--- ipsec-tools-0.7.3/src/racoon/isakmp_xauth.c.orig	2009-04-20 10:35:36.000000000 -0300
++++ ipsec-tools-0.7.3/src/racoon/isakmp_xauth.c	2009-09-05 17:23:16.000000000 -0300
+@@ -172,6 +172,11 @@ xauth_sendreq(iph1)
+ 	pwdattr->type = htons(XAUTH_USER_PASSWORD | ISAKMP_GEN_TLV);
+ 	pwdattr->lorv = htons(0);
+ 
++	// ARZ - Sat Sep  5 16:20:34 BRST 2009
++	// Alexandre Zia <alexandre@zia.com.br>
++	// add a one second delay so the client can propperly process the xauth request packet
++	usleep(1000000);
++
+ 	isakmp_cfg_send(iph1, buffer, 
+ 	    ISAKMP_NPTYPE_ATTR, ISAKMP_FLAG_E, 1);
+ 	
