@@ -27,6 +27,12 @@ Released **TBD**
 -- Added rc.conf variables EXTIP_ALIAS and EXT2IP_ALIAS to support alias (virtual) external interfaces
    for static addressing.  See /stat/etc/rc.conf for more details.
 
+-- IPsec Mobile, added support for XAuth, specifically support for Apple iOS IPsec VPN client.
+   Special thanks to Ingmar Schraub for demonstrating how this could be done.
+
+   Example IPsec VPN for Apple iOS: (AstLinux 1.0.3 and later)
+     http://doc.astlinux.org/userdoc:tt_ipsec_vpn_apple_ios
+
 -- lighttpd (configuration), added a new feature when the directory "/mnt/kd/phoneprov/" exists.
    After a reboot, both HTTP and HTTPS will be served from that directory provided the URL
    directory path begins with /phoneprov/ . Independent from the general HTTP/HTTPS root directory(s).
@@ -61,6 +67,8 @@ Released **TBD**
    Enable by setting: BR2_PACKAGE_UW_IMAP=y
 
 ** Web Interface
+
+-- Network tab, added IPsec Mobile XAuth support, which adds improved VPN client interoperability.
 
 -- Prefs tab and CDR Log tab, added support for Display 'uniqueid' CDR value
 
