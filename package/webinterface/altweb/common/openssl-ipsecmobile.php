@@ -35,7 +35,6 @@ function ipsecmobileSETUP($opts, $countryName, $stateName, $localityName, $orgNa
     'nsComment="IPsec Mobile Server Certificate"',
     'subjectKeyIdentifier=hash',
     'authorityKeyIdentifier=keyid,issuer:always',
-    'extendedKeyUsage=serverAuth',
     'keyUsage=digitalSignature,keyEncipherment',
     ''
   );
