@@ -42,6 +42,8 @@ Released **TBD**
 
 -- AIF, version bump to 2.0.1b
 
+-- inadyn (Dynamic DNS), add support for pairNIC, use DDSERVICE="default@pairnic.com"
+
 -- inadyn (Dynamic DNS), ZoneEdit, allow an error code of 702 'Too many updates' as a valid response,
    essentially the same as a 707 response.  Otherwise it will fail to run if it was recently updated.
 
@@ -69,6 +71,8 @@ Released **TBD**
 ** Web Interface
 
 -- Network tab, added IPsec Mobile XAuth support, which adds improved VPN client interoperability.
+
+-- Network tab, added dynamic DNS Service Type: pairNIC
 
 -- Prefs tab and CDR Log tab, added support for Display 'uniqueid' CDR value
 
