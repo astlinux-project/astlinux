@@ -20,11 +20,22 @@ init () {
     get_ip_interface="/"
   fi
 
-  if [ "$DDSERVICE" = "default@dnsomatic.com" ]; then
-    DDSERVICE="custom@http_svr_basic_auth"
-    ddcustom="dyndns_server_name updates.dnsomatic.com
+  # Handle Additional Service Types
+  case "$DDSERVICE" in
+
+    'default@dnsomatic.com')
+      DDSERVICE="custom@http_svr_basic_auth"
+      ddcustom="dyndns_server_name updates.dnsomatic.com
 dyndns_server_url /nic/update?"
-  fi
+      ;;
+
+    'default@pairnic.com')
+      DDSERVICE="dyndns@dyndns.org"
+      ddcustom="dyndns_server_name dynamic.pairnic.com
+dyndns_server_url /nic/update?"
+      ;;
+
+  esac
 
   rm -f /tmp/etc/inadyn.conf
   
