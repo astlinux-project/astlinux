@@ -69,7 +69,8 @@ $select_dyndns = array (
   'DynDNS [custom]' => 'custom@dyndns.org',
   'No-IP' => 'default@no-ip.com',
   'FreeDNS' => 'default@freedns.afraid.org',
-  'DNS-O-Matic' => 'default@dnsomatic.com'
+  'DNS-O-Matic' => 'default@dnsomatic.com',
+  'pairNIC' => 'default@pairnic.com'
 );
 
 $select_dyndns_getip = array (
