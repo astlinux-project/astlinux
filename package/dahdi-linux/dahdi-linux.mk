@@ -3,17 +3,13 @@
 # dahdi-linux
 #
 ##############################################################
-ifeq ($(BR2_PACKAGE_DAHDI_ZAPHFC),y)
-DAHDI_LINUX_VERSION := 2.4.1.1
-else
- ifeq ($(BR2_PACKAGE_RHINO),y)
+ifeq ($(BR2_PACKAGE_RHINO),y)
 DAHDI_LINUX_VERSION := 2.5.0.2
+else
+ ifeq ($(BR2_PACKAGE_WANPIPE),y)
+DAHDI_LINUX_VERSION := 2.6.0
  else
-  ifeq ($(BR2_PACKAGE_WANPIPE),y)
 DAHDI_LINUX_VERSION := 2.6.0
-  else
-DAHDI_LINUX_VERSION := 2.6.0
-  endif
  endif
 endif
 DAHDI_LINUX_SOURCE := dahdi-linux-$(DAHDI_LINUX_VERSION).tar.gz
@@ -35,11 +31,6 @@ $(DAHDI_LINUX_DIR)/.source: $(DL_DIR)/$(DAHDI_LINUX_SOURCE)  | $(DAHDI_LINUX_PRE
 ifeq ($(strip $(BR2_PACKAGE_DAHDI_OSLEC)),y)
 	mkdir -p $(DAHDI_LINUX_DIR)/drivers/staging/echo
 	cp -a $(BUILD_DIR)/linux-$(LINUX_VERSION)/drivers/staging/echo/* $(DAHDI_LINUX_DIR)/drivers/staging/echo
-endif
-ifeq ($(strip $(BR2_PACKAGE_DAHDI_ZAPHFC)),y)
-	mkdir -p $(DAHDI_LINUX_DIR)/drivers/dahdi/zaphfc
-	cp -a package/dahdi-linux/zaphfc/* $(DAHDI_LINUX_DIR)/drivers/dahdi/zaphfc
-	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ zaphfc\*.patch
 endif
 ifeq ($(strip $(BR2_PACKAGE_DAHDI_HFCS)),y)
 	mkdir -p $(DAHDI_LINUX_DIR)/drivers/dahdi/hfcs

@@ -3,17 +3,13 @@
 # dahdi-tools
 #
 ##############################################################
-ifeq ($(BR2_PACKAGE_DAHDI_ZAPHFC),y)
-DAHDI_TOOLS_VERSION := 2.4.1
-else
- ifeq ($(BR2_PACKAGE_RHINO),y)
+ifeq ($(BR2_PACKAGE_RHINO),y)
 DAHDI_TOOLS_VERSION := 2.5.0.2
+else
+ ifeq ($(BR2_PACKAGE_WANPIPE),y)
+DAHDI_TOOLS_VERSION := 2.6.0
  else
-  ifeq ($(BR2_PACKAGE_WANPIPE),y)
 DAHDI_TOOLS_VERSION := 2.6.0
-  else
-DAHDI_TOOLS_VERSION := 2.6.0
-  endif
  endif
 endif
 DAHDI_TOOLS_SOURCE := dahdi-tools-$(DAHDI_TOOLS_VERSION).tar.gz
