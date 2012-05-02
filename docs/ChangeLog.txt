@@ -57,7 +57,10 @@ Released **TBD**
 
 -- DAHDI, dahdi-linux 2.6.0 and dahdi-tools 2.6.0
 
-   Note: dahdi_hfcs is now supported in this release for Asterisk 1.8 builds
+   Note: dahdi_hfcs is now supported in this release for Asterisk 1.8 builds.
+
+   Note: Rhino PCI card support is no longer enabled in the standard, default builds.
+         Rhino support may be enabled via a custom build, automatically forcing DAHDI 2.5.x
 
 -- wanpipe, version bump to 3.5.25, DAHDI 2.6.x support
 
