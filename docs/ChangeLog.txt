@@ -22,7 +22,7 @@ Released **TBD**
 
 ** Networking
 
--- OpenSSL, version bump to 0.9.8u (security fixes: CVE-2012-0884 and CVE-2011-4619)
+-- OpenSSL, version bump to 0.9.8w (security fixes: CVE-2012-0884, CVE-2011-4619, CVE-2012-2110 and CVE-2012-2131)
 
 -- Added rc.conf variables EXTIP_ALIAS and EXT2IP_ALIAS to support alias (virtual) external interfaces
    for static addressing.  See /stat/etc/rc.conf for more details.
@@ -53,7 +53,7 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.4.44 and 1.8.11.0
+-- Asterisk 1.4.44 and 1.8.11.1
 
 -- DAHDI, dahdi-linux 2.6.0 and dahdi-tools 2.6.0
 
