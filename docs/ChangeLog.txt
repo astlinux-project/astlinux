@@ -55,10 +55,9 @@ Released **TBD**
 
 -- Asterisk 1.4.44 and 1.8.11.0
 
--- DAHDI, dahdi-linux 2.5.0.2 and dahdi-tools 2.5.0.2
+-- DAHDI, dahdi-linux 2.6.0 and dahdi-tools 2.6.0
 
-   Note: zaphfc is not supported in this release since zaphfc does not support DAHDI 2.5.x
-         an upcoming release will support dahdi_hfcs using DAHDI 2.6.x
+   Note: dahdi_hfcs is now supported in this release for Asterisk 1.8 builds
 
 -- wanpipe, version bump to 3.5.25, DAHDI 2.6.x support
 
