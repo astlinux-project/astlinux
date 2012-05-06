@@ -98,6 +98,10 @@ verb $OVPN_VERBOSITY" > /tmp/etc/openvpn.conf
     if [ -n "$OVPN_VALIDCLIENTS" ]; then
       echo "tls-verify /usr/sbin/openvpn-tls-verify" >> /tmp/etc/openvpn.conf
     fi
+    if [ "$OVPN_USER_PASS_VERIFY" = "yes" ]; then
+      echo "tmp-dir /tmp
+auth-user-pass-verify /usr/sbin/openvpn-user-pass-verify via-file" >> /tmp/etc/openvpn.conf
+    fi
 
     # Static settings -- fine for most users
     echo "#static setting--modify openvpn init script to change

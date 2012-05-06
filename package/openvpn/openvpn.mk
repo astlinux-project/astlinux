@@ -25,6 +25,7 @@ define OPENVPN_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 755 -D package/openvpn/openvpn.init $(TARGET_DIR)/etc/init.d/openvpn
 	$(INSTALL) -m 755 -D package/openvpn/openvpnclient.init $(TARGET_DIR)/etc/init.d/openvpnclient
 	$(INSTALL) -m 755 -D package/openvpn/tls-verify.sh $(TARGET_DIR)/usr/sbin/openvpn-tls-verify
+	$(INSTALL) -m 755 -D package/openvpn/user-pass-verify.sh $(TARGET_DIR)/usr/sbin/openvpn-user-pass-verify
 	mkdir -p $(TARGET_DIR)/stat/etc/openvpn
 	ln -sf /tmp/etc/openvpn.conf $(TARGET_DIR)/etc/openvpn.conf
 	ln -sf /tmp/etc/openvpnclient.conf $(TARGET_DIR)/etc/openvpnclient.conf
