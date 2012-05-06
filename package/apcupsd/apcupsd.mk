@@ -21,7 +21,7 @@ $(APCUPSD_DIR)/.unpacked: $(DL_DIR)/$(APCUPSD_SOURCE)
 
 $(APCUPSD_DIR)/.configured: $(APCUPSD_DIR)/.unpacked | libusb
 	(cd $(APCUPSD_DIR); \
-	PATH=$(STAGING_DIR)/bin:$$PATH; \
+	$(TARGET_CONFIGURE_OPTS) \
 	ac_cv_func_setpgrp_void=yes \
 	./configure \
 	--target=$(GNU_TARGET_NAME) \
@@ -34,6 +34,7 @@ $(APCUPSD_DIR)/.configured: $(APCUPSD_DIR)/.unpacked | libusb
 	--enable-usb \
 	--with-distname=unknown \
 	CPPFLAGS='$(TARGET_CFLAGS)' \
+	LD='$(TARGET_CC)' \
 	)
 	touch $@
 
