@@ -82,6 +82,11 @@ $verbosity_menu = array (
   '0' => 'None'
 );
 
+$auth_method_menu = array (
+  'no' => 'Certificate',
+  'yes' => 'Cert. + User/Pass'
+);
+
 // Function: saveOVPNsettings
 //
 function saveOVPNsettings($conf_dir, $conf_file, $disabled = NULL) {
@@ -96,6 +101,9 @@ function saveOVPNsettings($conf_dir, $conf_file, $disabled = NULL) {
     return(3);
   }
   fwrite($fp, "### gui.openvpn.conf - start ###\n###\n");
+  
+  $value = 'OVPN_USER_PASS_VERIFY="'.$_POST['auth_method'].'"';
+  fwrite($fp, "### Auth Method\n".$value."\n");
   
   $value = 'OVPN_DEV="'.$_POST['device'].'"';
   fwrite($fp, "### Device\n".$value."\n");
@@ -222,6 +230,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
       $result = 2;
     }
+  } elseif (isset($_POST['submit_user_pass'])) {
+    $disabled = isset($_POST['disabled']) ? $_POST['disabled'] : NULL;
+    $result = saveOVPNsettings($OVPNCONFDIR, $OVPNCONFFILE, $disabled);
+    header('Location: /admin/openvpnuserpass.php');
+    exit;
   } elseif (isset($_POST['submit_new_server'])) {
     $result = 99;
     if (isset($_POST['confirm_new_server'])) {
@@ -361,9 +374,24 @@ require_once '../common/header.php';
   }
   putHtml("</center>");
 ?>
+  <script language="JavaScript" type="text/javascript">
+  //<![CDATA[
+  function auth_method_change() {
+    var form = document.getElementById("iform");
+    switch (form.auth_method.selectedIndex) {
+      case 0: // Certificate
+        form.submit_user_pass.style.visibility = "hidden";
+        break;
+      case 1: // Cert. + User/Pass
+        form.submit_user_pass.style.visibility = "visible";
+        break;
+    }
+  }
+  //]]>
+  </script>
   <center>
   <table class="layout"><tr><td><center>
-  <form method="post" action="<?php echo $myself;?>">
+  <form id="iform" method="post" action="<?php echo $myself;?>">
   <table width="100%" class="stdtable">
   <tr><td style="text-align: center;" colspan="2">
   <h2>OpenVPN Server Configuration:</h2>
@@ -380,6 +408,23 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Tunnel Options:</strong>');
   putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Auth Method:');
+  putHtml('</td><td style="text-align: left;" colspan="2">');
+  if (($auth_method = getVARdef($db, 'OVPN_USER_PASS_VERIFY')) === '') {
+    $auth_method = 'no';
+  }
+  putHtml('<select name="auth_method" onchange="auth_method_change()">');
+  foreach ($auth_method_menu as $key => $value) {
+    $sel = ($auth_method === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td><td style="text-align: left;" colspan="2">');
+  putHtml('<input type="submit" value="User/Pass" name="submit_user_pass" class="button" />');
+  putHtml('</td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Protocol:');
   putHtml('</td><td style="text-align: left;" colspan="1">');
@@ -602,6 +647,11 @@ if (! opensslOPENVPNis_valid($openssl)) {
   putHtml('</form>');
   putHtml('</center></td></tr></table>');
   putHtml('</center>');
+  putHtml('<script language="JavaScript" type="text/javascript">');
+  putHtml('//<![CDATA[');
+  putHtml('auth_method_change();');
+  putHtml('//]]>');
+  putHtml('</script>');
 } // End of HTTP GET
 require_once '../common/footer.php';
 
