@@ -33,6 +33,8 @@ Released **TBD**
    Example IPsec VPN for Apple iOS: (AstLinux 1.0.3 and later)
      http://doc.astlinux.org/userdoc:tt_ipsec_vpn_apple_ios
 
+-- OpenVPN Server, added optional support for User/Pass authentication in addition to the certificate.
+
 -- lighttpd (configuration), added a new feature when the directory "/mnt/kd/phoneprov/" exists.
    After a reboot, both HTTP and HTTPS will be served from that directory provided the URL
    directory path begins with /phoneprov/ . Independent from the general HTTP/HTTPS root directory(s).
@@ -73,6 +75,8 @@ Released **TBD**
 ** Web Interface
 
 -- Network tab, added IPsec Mobile XAuth support, which adds improved VPN client interoperability.
+
+-- Network tab, added OpenVPN Server User/Pass support, which adds an optional layer of authentication.
 
 -- Network tab, added dynamic DNS Service Type: pairNIC
 
