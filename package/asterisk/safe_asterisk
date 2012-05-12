@@ -10,6 +10,10 @@ NOTIFY_FROM="$SAFE_ASTERISK_NOTIFY_FROM"      # From email header (optional)
 EXEC="/mnt/kd/ast-crash"                      # Run this command if Asterisk crashes
 MACHINE="$(hostname)"                         # To specify which machine has crashed when getting the mail
 SLEEPSECS=4
+LIMIT_TIME=$(date +%s)
+LIMIT_COUNT=0
+LIMIT_MAXCOUNT=5
+LIMIT_INTERVAL=600
 ASTSBINDIR=/usr/sbin
 
 if [ "$TTY" = "none" ]; then
@@ -106,6 +110,28 @@ run_asterisk()
     if [ $EXITSTATUS -eq 0 ] && tail -n3 /var/log/messages | grep -q 'asterisk.*: segfault at '; then
       # An asterisk segfault may return a 0, report as a signal of 99
       EXITSTATUS=227
+    fi
+    if [ $(( $(date +%s) - $LIMIT_TIME )) -lt $LIMIT_INTERVAL ]; then
+      LIMIT_TIME=$(date +%s)
+      LIMIT_COUNT=$((LIMIT_COUNT+1))
+      if [ $LIMIT_COUNT -ge $LIMIT_MAXCOUNT ]; then
+        MESG="Asterisk restarting too often, exiting."
+        logger -s -t safe_asterisk -p kern.info "$MESG"
+        for TO in $NOTIFY; do
+          echo "To: ${TO}${NOTIFY_FROM:+
+From: $NOTIFY_FROM}
+Subject: Asterisk **Stopped** on '$MACHINE'
+
+Asterisk on '$MACHINE' stopped, restarting too often.
+
+[Generated at $(date "+%H:%M:%S on %B %d, %Y")]" | \
+          sendmail -t
+        done
+        exit 1
+      fi
+    else
+      LIMIT_TIME=$(date +%s)
+      LIMIT_COUNT=0
     fi
     echo "Asterisk ended with exit status $EXITSTATUS"
     if [ $EXITSTATUS -eq 0 ]; then
