@@ -188,6 +188,9 @@ function putUSERerror($user, $tab) {
       if ((! $global_staff_disable_followme) && getPREFdef($global_prefs, 'tab_followme_show') === 'yes') {
         putHtml('<li><a href="/admin/followme.php"><span>Follow-Me</span></a></li>');
       }
+      if ($global_staff && (getPREFdef($global_prefs, 'tab_meetme_show') === 'yes')) {
+        putHtml('<li><a href="/admin/meetme.php"><span>MeetMe</span></a></li>');
+      }
       if ($global_staff && (getPREFdef($global_prefs, 'tab_cdrlog_show') !== 'no')) {
         putHtml('<li><a href="/admin/cdrlog.php"><span>CDR&nbsp;Log</span></a></li>');
       }

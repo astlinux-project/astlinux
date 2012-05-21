@@ -191,6 +191,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       fwrite($fp, $value."\n");
     }
     
+    if (($value = str_replace(' ', '', $_POST['meetme_redirect'])) !== '') {
+      $value = 'meetme_redirect_path_cmdstr = "'.$value.'"';
+      fwrite($fp, $value."\n");
+    }
+    if (isset($_POST['meetme_channel'])) {
+      $value = 'meetme_channel_show = yes';
+      fwrite($fp, $value."\n");
+    }
+    
     $value = 'cdrlog_default_format = "'.$_POST['cdr_default'].'"';
     fwrite($fp, $value."\n");
     $value = 'cdrlog_log_file_cmdstr = "'.trim($_POST['cdr_logfile']).'"';
@@ -373,6 +382,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (isset($_POST['followme_disable_staff'])) {
       $value = 'tab_followme_disable_staff = yes';
+      fwrite($fp, $value."\n");
+    }
+    if (isset($_POST['tab_meetme'])) {
+      $value = 'tab_meetme_show = yes';
       fwrite($fp, $value."\n");
     }
     if (! isset($_POST['tab_network'])) {
@@ -612,6 +625,22 @@ require_once '../common/header.php';
   $sel = (getPREFdef($global_prefs, 'followme_use_number_format') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="followme_format" name="followme_format"'.$sel.' /></td><td colspan="5">Use Caller*ID Tab Number Format Rules for Follow-Me</td></tr>');
   
+  putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
+  
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>MeetMe Tab Options:</strong>');
+  putHtml('</td></tr>');
+  
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">Redirect Path:</td><td colspan="4">');
+  if (($value = getPREFdef($global_prefs, 'meetme_redirect_path_cmdstr')) === '') {
+    $value = 'default,s,1';
+  }
+  putHtml('<input type="text" size="48" maxlength="96" value="'.$value.'" name="meetme_redirect" /></td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'meetme_channel_show') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="meetme_channel" name="meetme_channel"'.$sel.' /></td><td colspan="5">Display channel values in MeetMe Tab</td></tr>');
+
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
   
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
@@ -905,6 +934,10 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td>&nbsp;</td><td colspan="5">');
   $sel = (getPREFdef($global_prefs, 'tab_followme_disable_staff') === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="followme_disable_staff" name="followme_disable_staff"'.$sel.' />&nbsp;Disable Follow-Me Tab for &quot;staff&quot; user</td></tr>');
+  
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'tab_meetme_show') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="tab_meetme" name="tab_meetme"'.$sel.' /></td><td colspan="5">Show MeetMe Tab</td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_cdrlog_show') !== 'no') ? ' checked="checked"' : '';
