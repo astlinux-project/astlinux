@@ -7,5 +7,5 @@ for i in $(ls dl | grep -v .sha1); do
 done
 
 if [ -z "$1" ]; then
-  s3cmd sync --exclude '*/*' -v dl/ s3://astlinuxfiles/
+  s3cmd sync --acl-public --exclude '*/*' -v dl/ s3://astlinuxfiles/
 fi
