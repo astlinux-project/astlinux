@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PHP_VERSION = 5.3.10
+PHP_VERSION = 5.3.13
 PHP_SOURCE = php-$(PHP_VERSION).tar.bz2
 PHP_SITE = http://www.php.net/distributions
 PHP_INSTALL_STAGING = YES
@@ -177,6 +177,15 @@ ifeq ($(BR2_PACKAGE_PHP_EXT_PDO_MYSQL),y)
 	PHP_DEPENDENCIES += mysql_client
 endif
 endif
+
+# Fixup prefix= and exec_prefix= in php-config
+define PHP_FIXUP_PHP_CONFIG
+	$(SED) 's%^prefix="/usr"%prefix="$(STAGING_DIR)/usr"%' \
+		-e 's%^exec_prefix="/usr"%exec_prefix="$(STAGING_DIR)/usr"%' \
+		$(STAGING_DIR)/usr/bin/php-config
+endef
+
+PHP_POST_INSTALL_STAGING_HOOKS += PHP_FIXUP_PHP_CONFIG
 
 define PHP_INSTALL_FIXUP
 	mv $(TARGET_DIR)/usr/bin/php-cgi $(TARGET_DIR)/usr/bin/php
