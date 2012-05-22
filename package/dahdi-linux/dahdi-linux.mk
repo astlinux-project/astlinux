@@ -7,9 +7,9 @@ ifeq ($(BR2_PACKAGE_RHINO),y)
 DAHDI_LINUX_VERSION := 2.5.0.2
 else
  ifeq ($(BR2_PACKAGE_WANPIPE),y)
-DAHDI_LINUX_VERSION := 2.6.0
+DAHDI_LINUX_VERSION := 2.6.1
  else
-DAHDI_LINUX_VERSION := 2.6.0
+DAHDI_LINUX_VERSION := 2.6.1
  endif
 endif
 DAHDI_LINUX_SOURCE := dahdi-linux-$(DAHDI_LINUX_VERSION).tar.gz
@@ -31,6 +31,11 @@ $(DAHDI_LINUX_DIR)/.source: $(DL_DIR)/$(DAHDI_LINUX_SOURCE)  | $(DAHDI_LINUX_PRE
 ifeq ($(strip $(BR2_PACKAGE_DAHDI_OSLEC)),y)
 	mkdir -p $(DAHDI_LINUX_DIR)/drivers/staging/echo
 	cp -a $(BUILD_DIR)/linux-$(LINUX_VERSION)/drivers/staging/echo/* $(DAHDI_LINUX_DIR)/drivers/staging/echo
+ ifeq ($(strip $(DAHDI_LINUX_VERSION)),2.5.0.2)
+	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ oslec-pre2.6.1\*.patch
+ else
+	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ oslec-2.6.1\*.patch
+ endif
 endif
 ifeq ($(strip $(BR2_PACKAGE_DAHDI_HFCS)),y)
 	mkdir -p $(DAHDI_LINUX_DIR)/drivers/dahdi/hfcs
