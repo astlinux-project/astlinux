@@ -359,8 +359,15 @@ $7}
   generate_policy on;
   proposal_check obey;
   dpd_delay 30;${5:+
-  lifetime time $5 sec;}
+  lifetime time $5 sec;}"
 
+if [ "$6" = "xauth_rsa_server" ]; then
+  echo "
+  script \"/usr/sbin/ipsec-xauth-up-down\" phase1_up;
+  script \"/usr/sbin/ipsec-xauth-up-down\" phase1_down;"
+fi
+
+  echo "
   proposal {
     encryption_algorithm $2;
     hash_algorithm $3;

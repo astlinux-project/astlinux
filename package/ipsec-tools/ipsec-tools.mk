@@ -72,6 +72,7 @@ IPSEC_TOOLS_CONF_OPT+= --enable-dpd
 define IPSEC_TOOLS_INSTALL_SCRIPT
 	$(INSTALL) -D -m 755 package/ipsec-tools/racoon.init $(TARGET_DIR)/etc/init.d/racoon
 	$(INSTALL) -D -m 755 package/ipsec-tools/racoon-ipsec $(TARGET_DIR)/usr/sbin/racoon-ipsec
+	$(INSTALL) -D -m 755 package/ipsec-tools/ipsec-xauth-up-down.sh $(TARGET_DIR)/usr/sbin/ipsec-xauth-up-down
 	ln -sf /tmp/etc/racoon.conf $(TARGET_DIR)/etc/racoon.conf
 	ln -sf /tmp/etc/psk.txt $(TARGET_DIR)/etc/psk.txt
 endef
