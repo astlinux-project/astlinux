@@ -39,7 +39,7 @@ $(WANPIPE_DIR)/.built: $(WANPIPE_DIR)/.patched | $(WANPIPE_PREREQS)
 		--build=$(GNU_HOST_NAME) \
 		--prefix=/usr \
 	)
-	$(MAKE) -C $(WANPIPE_DIR)/api/libsangoma CC=$(TARGET_CC) \
+	$(MAKE) -C $(WANPIPE_DIR)/api/libsangoma CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" \
 		$(WANPIPE_CONFIGURE)
 	$(MAKE) -C $(WANPIPE_DIR)/api/libsangoma \
 		DESTDIR=$(STAGING_DIR) \
@@ -49,7 +49,7 @@ $(WANPIPE_DIR)/.built: $(WANPIPE_DIR)/.patched | $(WANPIPE_PREREQS)
 		install
 	# Finished 'libsangoma'
 	$(MAKE) -C $(WANPIPE_DIR) \
-		HOSTCC=gcc CC=$(TARGET_CC) \
+		HOSTCC=gcc CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" \
 		WARCH=$(KERNEL_ARCH) \
 		KVER=$(LINUX_VERSION_PROBED) \
 		KDIR=$(LINUX_DIR) \
@@ -61,31 +61,31 @@ $(WANPIPE_DIR)/.built: $(WANPIPE_DIR)/.patched | $(WANPIPE_PREREQS)
 		EXTRA_FLAGS="-DCONFIG_RPS" \
 		ASTBROOT=$(STAGING_DIR) \
 		all_kmod_dahdi 
-	$(MAKE) -C $(WANPIPE_DIR)/util/wanconfig CC=$(TARGET_CC) \
+	$(MAKE) -C $(WANPIPE_DIR)/util/wanconfig CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" \
 		SYSINC=$(WANPIPE_DIR)/patches/kdrivers/include \
 		$(WANPIPE_CONFIGURE)
-	$(MAKE) -C $(WANPIPE_DIR)/util/wan_aftup CC=$(TARGET_CC) \
+	$(MAKE) -C $(WANPIPE_DIR)/util/wan_aftup CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" \
 		SYSINC=$(WANPIPE_DIR)/patches/kdrivers/include \
 		EXTRA_FLAGS="-I$(STAGING_DIR)/include -I$(STAGING_DIR)/usr/include" \
 		$(WANPIPE_CONFIGURE)
-	$(MAKE) -C $(WANPIPE_DIR)/util/wancfg CC=$(TARGET_CC) \
+	$(MAKE) -C $(WANPIPE_DIR)/util/wancfg CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" \
 		SYSINC=$(WANPIPE_DIR)/patches/kdrivers/include \
 		EXTRA_FLAGS="-I$(STAGING_DIR)/include -I$(STAGING_DIR)/usr/include" \
 		EXTRA_FLAGS+=" -Wno-write-strings" \
 		DAHDI_ISSUES=YES \
 		$(WANPIPE_CONFIGURE)
-	$(MAKE) -C $(WANPIPE_DIR)/util/lxdialog CC=$(TARGET_CC) \
+	$(MAKE) -C $(WANPIPE_DIR)/util/lxdialog CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" \
 		SYSINC=$(STAGING_DIR)/include \
 		ASTBROOT=$(STAGING_DIR)/include \
 		$(WANPIPE_CONFIGURE)
-	$(MAKE) -C $(WANPIPE_DIR)/util/wanec_client CC=$(TARGET_CC) \
+	$(MAKE) -C $(WANPIPE_DIR)/util/wanec_client CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" \
 		WANINCDIR=$(STAGING_DIR)/include \
 		$(WANPIPE_CONFIGURE)
 	touch $@
 
 $(TARGET_DIR)/$(WANPIPE_TARGET_BINARY): $(WANPIPE_DIR)/.built
 	$(MAKE) -C $(WANPIPE_DIR) \
-		HOSTCC=gcc CC=$(TARGET_CC) \
+		HOSTCC=gcc CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" \
 		WARCH=$(KERNEL_ARCH) \
 		KVER=$(LINUX_VERSION_PROBED) \
 		KDIR=$(LINUX_DIR) \
@@ -95,7 +95,7 @@ $(TARGET_DIR)/$(WANPIPE_TARGET_BINARY): $(WANPIPE_DIR)/.built
 		KMOD=$(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED) \
 		$(WANPIPE_CONFIGURE) \
 		install_kmod install_etc
-	$(MAKE) -C $(WANPIPE_DIR)/util/wan_aftup CC=$(TARGET_CC) \
+	$(MAKE) -C $(WANPIPE_DIR)/util/wan_aftup CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" \
 		INSTALLPREFIX=$(TARGET_DIR) \
 		$(WANPIPE_CONFIGURE) \
 		install
