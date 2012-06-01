@@ -24,6 +24,10 @@ Released **TBD**
    IPsec XAuth clients, defaults to INTIP. Remote IPsec XAuth clients then use INTIP (or IPSECM_XAUTH_LOCAL_GW)
    as the Asterisk server, any AstLinux-local server for that matter.
 
+-- dhcpdump, new command to help debug DHCP packets, useful for IP phones and provisioning.
+   Example: dhcpdump -i eth1 -h '^00:15:65'
+            Monitor DHCP packets on interface 'eth1' for MAC addresses starting with 00:15:65 (Yealink phones)
+
 ** Asterisk
 
 -- Asterisk 1.4.44 and 1.8.12.0
