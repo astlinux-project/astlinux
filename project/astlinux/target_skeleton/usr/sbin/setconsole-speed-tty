@@ -1,0 +1,187 @@
+#!/bin/bash
+
+speed="$1"
+
+tty="$2"
+
+help()
+{
+  echo "
+#
+# setconsole-speed-tty 38400
+#   Set console speed to 38400 baud, using default ttyS0
+#
+# setconsole-speed-tty 115200 ttyS1
+#   Set console speed to 115200 baud, using /dev/ttyS1
+#
+# setconsole-speed-tty show
+#   Display current settings
+#
+# setconsole-speed-tty reset
+#   Reset /etc/inittab to default factory state with matching kernel console= values
+#
+# setconsole-speed-tty help
+#   Display this page
+#"
+}
+
+usage()
+{
+  echo "Usage: setconsole-speed-tty [ show|reset|help ] 9600|19200|38400|57600|115200 [ ttySn ]"
+  exit 1
+}
+
+test_serial_console()
+{
+  if [ -z "$1" ]; then
+    echo "No serial console." >&2
+    exit 1
+  fi
+}
+
+mount_oldroot_cdrom() {
+  if mount | grep -q "/oldroot/cdrom"; then
+    BASE=/oldroot/cdrom
+  else
+    if [ -x /sbin/findfs ]; then
+      LABEL=`/sbin/findfs LABEL=RUNNIX`
+      if [ -n "$LABEL" ]; then
+        mount -t vfat -o ro "$LABEL" /oldroot/cdrom
+      fi
+    fi
+    if mount | grep -q "/oldroot/cdrom"; then
+      BASE=/oldroot/cdrom
+    else
+      return 1
+    fi
+  fi
+  return 0
+}
+
+set_kernel_console()
+{
+  local console="$1" ttyno speed
+
+  if ! mount_oldroot_cdrom; then
+    echo "setconsole-speed-tty: unable to find Runnix partition." >&2
+    exit 1
+  fi
+
+  if ! mount -o rw,remount /oldroot/cdrom >/dev/null; then
+    echo "setconsole-speed-tty: unable to remount 'rw'." >&2
+    exit 1
+  fi
+
+  # Edit any .run.conf files
+  for file in $(ls -1 $BASE/os/*.run.conf); do
+    if grep -q '^KCMD=.* console=' "$file"; then
+      sed -i -r -e "/^KCMD=/ s/ console=[^ \"]+/ console=${console}/" "$file"
+    fi
+  done
+
+  # Edit RUNNIX syslinux.cfg file
+  file="$BASE/syslinux.cfg"
+  if grep -q '^.* console=' "$file"; then
+    ttyno="$(echo "$console" | sed -n -r -e 's/^ttyS([0-9]),[0-9]+.*$/\1/p')"
+    speed="$(echo "$console" | sed -n -r -e 's/^ttyS[0-9],([0-9]+).*$/\1/p')"
+    sed -i -e "s/^serial .*$/serial ${ttyno} ${speed}/" "$file"
+    sed -i -r -e "s/ console=[^ ]+/ console=${console}/" "$file"
+  fi
+
+  mount -o ro,remount /oldroot/cdrom >/dev/null
+}
+
+set_speed_tty()
+{
+  sed -i -r -e "s~^console::respawn:/sbin/getty -L [0-9]+ /dev/tty[^ ]+ vt100$~console::respawn:/sbin/getty -L ${1} /dev/${2} vt100~" /etc/inittab
+}
+
+get_speed()
+{
+  sed -n -r -e "s~^console::respawn:/sbin/getty -L ([0-9]+) /dev/tty[^ ]+ vt100$~\1~p" /etc/inittab
+}
+
+get_tty()
+{
+  sed -n -r -e "s~^console::respawn:/sbin/getty -L [0-9]+ /dev/(tty[^ ]+) vt100$~\1~p" /etc/inittab
+}
+
+case $speed in
+
+  9600|19200|38400|57600|115200)
+
+    if [ -n "$tty" ]; then
+      case $tty in
+        ttyS[0-9]) ;;
+        *) usage ;;
+      esac
+    else
+      tty="ttyS0"
+    fi
+
+    ospeed="$(get_speed)"
+    test_serial_console "$ospeed"
+
+    otty="$(get_tty)"
+    test_serial_console "$otty"
+
+    set_speed_tty $speed $tty
+
+    nspeed="$(get_speed)"
+    test_serial_console "$nspeed"
+
+    ntty="$(get_tty)"
+    test_serial_console "$ntty"
+
+    set_kernel_console "${ntty},${nspeed}n8"
+
+    if [ "$ospeed" = "$nspeed" -a "$otty" = "$ntty" ]; then
+      echo "Serial console unchanged at: ${ntty},${nspeed}n8"
+    else
+      echo "Serial console changed to: ${ntty},${nspeed}n8"
+    fi
+    ;;
+
+  show)
+
+    ospeed="$(get_speed)"
+    test_serial_console "$ospeed"
+
+    otty="$(get_tty)"
+    test_serial_console "$otty"
+
+    echo "${otty},${ospeed}n8"
+    ;;
+
+  reset)
+
+    if [ -f /oldroot/mnt/asturw/etc/inittab ]; then
+      rm /oldroot/mnt/asturw/etc/inittab
+
+      nspeed="$(get_speed)"
+      test_serial_console "$nspeed"
+
+      ntty="$(get_tty)"
+      test_serial_console "$ntty"
+
+      set_kernel_console "${ntty},${nspeed}n8"
+
+      echo "Serial console at factory default state: ${ntty},${nspeed}n8"
+    else
+      echo "Serial console previously at factory default state: No change"
+    fi
+    ;;
+
+  help)
+    help
+    usage
+    ;;
+
+  *)
+    usage
+    ;;
+
+esac
+
+exit 0
+

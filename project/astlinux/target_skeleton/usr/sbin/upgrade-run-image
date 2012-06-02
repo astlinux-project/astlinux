@@ -69,7 +69,7 @@ after_reboot() {
 
 merge_kcmd()
 {
-  local old_conf="$1" new_conf="$2" old_kcmd new_kcmd merge i IFS
+  local old_conf="$1" new_conf="$2" old_kcmd new_kcmd merge i console IFS
 
   if [ ! -f "$old_conf" ] || [ ! -f "$new_conf" ]; then
     echo "Merge KCMD Skipped, file not found." >&2
@@ -106,11 +106,23 @@ merge_kcmd()
   unset IFS
   for i in $old_kcmd; do
     case $i in
+
       libata.dma=*)
         if [ "$i" != "libata.dma=3" ]; then
           sed -i "/^KCMD=/ s/libata.dma=3/$i/" "$new_conf"
         fi
         ;;
+
+      console=*)
+        # Match the serial speed/tty of unionfs /etc/inittab if appropriate
+        if [ -f /oldroot/mnt/asturw/etc/inittab ]; then
+          console="$(/usr/sbin/setconsole-speed-tty show 2>/dev/null)"
+          if [ $? -eq 0 ]; then
+            sed -i -r "/^KCMD=/ s/ console=[^ \"]+/ console=${console}/" "$new_conf"
+          fi
+        fi
+        ;;
+
     esac
   done
 
