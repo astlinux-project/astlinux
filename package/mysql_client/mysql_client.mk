@@ -3,7 +3,7 @@
 # MySQL 5.1 Client
 #
 #############################################################
-MYSQL_CLIENT_VERSION = 5.1.62
+MYSQL_CLIENT_VERSION = 5.1.63
 MYSQL_CLIENT_SOURCE = mysql-$(MYSQL_CLIENT_VERSION).tar.gz
 MYSQL_CLIENT_SITE = http://downloads.skysql.com/archives/mysql-5.1
 MYSQL_CLIENT_INSTALL_TARGET = YES
@@ -30,7 +30,14 @@ MYSQL_CLIENT_CONF_OPT = \
 	--without-readline \
 	--with-low-memory \
 	--enable-thread-safe-client \
-	$(ENABLE_DEBUG)
+	--without-debug
+
+# dbug/factorial does not build via HOSTCC, ignore nroff which uses ./factorial
+define MYSQL_CLIENT_IGNORE_DBUG_NROFF
+	$(SED) "s/^all: *user.t user.ps.*$$/all:/" $(@D)/dbug/Makefile
+endef
+
+MYSQL_CLIENT_POST_CONFIGURE_HOOKS += MYSQL_CLIENT_IGNORE_DBUG_NROFF
 
 define MYSQL_CLIENT_REMOVE_TEST_PROGS
 	rm -rf $(TARGET_DIR)/usr/mysql-test $(TARGET_DIR)/usr/sql-bench
