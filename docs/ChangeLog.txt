@@ -16,9 +16,17 @@ Released **TBD**
 
 -- sqlite, version bump to 3.7.12.1
 
+-- setconsole-speed-tty, new command to change the serial console speed/tty, not only currently but also
+   automatically after upgrades.
+   Usage: setconsole-speed-tty [ show|reset|help ] 9600|19200|38400|57600|115200 [ ttySn ]
+
+   More info: http://doc.astlinux.org/userdoc:tt_serial_console_speed_tty
+
 ** Networking
 
 -- OpenSSL, version bump to 0.9.8x (security fixes: CVE-2012-2333)
+
+-- lighttpd, version bump to 1.4.31
 
 -- IPsec XAuth, new rc.conf variable IPSECM_XAUTH_LOCAL_GW which defines a client local gateway for
    IPsec XAuth clients, defaults to INTIP. Remote IPsec XAuth clients then use INTIP (or IPSECM_XAUTH_LOCAL_GW)
@@ -30,7 +38,7 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.4.44 and 1.8.12.0
+-- Asterisk 1.4.44 and 1.8.13.0
 
 -- DAHDI, dahdi-linux 2.6.1 and dahdi-tools 2.6.1
 
