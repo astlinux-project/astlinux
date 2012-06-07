@@ -45,10 +45,14 @@ gen_kd_files()
   
   cp -a /var/spool/cron/crontabs ${1}/
 
-  if [ -f /tmp/astdb ]; then
-    cp -a /tmp/astdb ${1}/
+  if [ -f /var/db/astdb ]; then
+    cp -a /var/db/astdb ${1}/
   else
     touch ${1}/astdb
+  fi
+
+  if [ -f /var/db/astdb.sqlite3 ]; then
+    cp -a /var/db/astdb.sqlite3 ${1}/
   fi
 
   if [ -d /stat/etc/arno-iptables-firewall ]; then

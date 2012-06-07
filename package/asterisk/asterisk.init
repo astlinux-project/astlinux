@@ -54,8 +54,12 @@ init () {
     cp -a /stat/etc/asterisk/* /tmp/etc/asterisk/
   fi
 
-  if [ -f /mnt/kd/astdb ]; then
-    ln -sf /mnt/kd/astdb /tmp/astdb
+  if [ -f /mnt/kd/astdb -o -f /mnt/kd/astdb.sqlite3 ]; then
+    ln -sf /mnt/kd/astdb /var/db/astdb
+
+    if [ -L /stat/var/lib/asterisk/astdb.sqlite3 ]; then
+      ln -sf /mnt/kd/astdb.sqlite3 /var/db/astdb.sqlite3
+    fi
   fi
 
   make_symlink_or_dir "/mnt/kd/cdr-csv" "/var/log/asterisk/cdr-csv"

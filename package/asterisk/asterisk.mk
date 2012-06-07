@@ -32,8 +32,15 @@ empty:=
 space:=$(empty) $(empty)
 ndots = $(subst $(space),$(dot),$(wordlist $(1),$(2),$(subst $(dot),$(space),$3)))
 ##
+ASTERISK_VERSION_SINGLE := $(call ndots,1,1,$(ASTERISK_VERSION))
 ASTERISK_VERSION_TUPLE := $(call ndots,1,2,$(ASTERISK_VERSION))
 ASTERISK_VERSION_TRIPLE := $(call ndots,1,3,$(ASTERISK_VERSION))
+
+ifeq ($(ASTERISK_VERSION_SINGLE),1)
+ASTERISK_GLOBAL_MAKEOPTS := $(BASE_DIR)/../project/astlinux/asterisk.makeopts
+else
+ASTERISK_GLOBAL_MAKEOPTS := $(BASE_DIR)/../project/astlinux/asterisk.makeopts-10
+endif
 
 ASTERISK_CONFIGURE_ENV += \
 			USE_GETIFADDRS=yes
@@ -154,8 +161,13 @@ $(ASTERISK_DIR)/.source: $(DL_DIR)/$(ASTERISK_SOURCE)
 	touch $@
 
 $(ASTERISK_DIR)/.patched: $(ASTERISK_DIR)/.source
+ifeq ($(ASTERISK_VERSION_SINGLE),1)
 	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/ asterisk-$(ASTERISK_VERSION_TUPLE)-\*.patch
 	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/ asterisk-$(ASTERISK_VERSION_TRIPLE)-\*.patch
+else
+	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/ asterisk-$(ASTERISK_VERSION_SINGLE)-\*.patch
+	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/ asterisk-$(ASTERISK_VERSION_TUPLE)-\*.patch
+endif
 
 ifeq ($(strip $(BR2_PACKAGE_SPANDSP)),y)
  ifeq ($(strip $(BR2_PACKAGE_SPANDSP_APP_FAX)),y)
@@ -202,13 +214,13 @@ $(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | libelf ncurses zlib \
 ifeq ($(strip $(BR2_PACKAGE_ASTERISK_MENUSELECT)),y)
 	PATH=$(STAGING_DIR)/bin:$$PATH \
 	$(MAKE) -C $(ASTERISK_DIR) \
-		GLOBAL_MAKEOPTS=$(BASE_DIR)/../project/astlinux/asterisk.makeopts \
+		GLOBAL_MAKEOPTS=$(ASTERISK_GLOBAL_MAKEOPTS) \
 		USER_MAKEOPTS= \
 		menuselect
 else
 	PATH=$(STAGING_DIR)/bin:$$PATH \
 	$(MAKE) -C $(ASTERISK_DIR) \
-		GLOBAL_MAKEOPTS=$(BASE_DIR)/../project/astlinux/asterisk.makeopts \
+		GLOBAL_MAKEOPTS=$(ASTERISK_GLOBAL_MAKEOPTS) \
 		USER_MAKEOPTS= \
 		menuselect.makeopts
  ifeq ($(strip $(BR2_PACKAGE_MYSQL_CLIENT)),y)
@@ -221,14 +233,18 @@ else
 		menuselect/menuselect --enable IMAP_STORAGE menuselect.makeopts; \
 	)
  endif
+ ifneq ($(ASTERISK_VERSION_SINGLE),1)
+	(cd $(ASTERISK_DIR); \
+		menuselect/menuselect --enable app_meetme --enable app_page --enable chan_jingle menuselect.makeopts; \
+	)
+ endif
 endif
 	touch $@
 
 $(ASTERISK_DIR)/$(ASTERISK_BINARY): $(ASTERISK_DIR)/.configured
-	#cp $(STAGING_DIR)/include/dlfcn.h $(STAGING_DIR)/usr/include/dlfcn.h # Can I do this?
 	PATH=$(STAGING_DIR)/bin:$$PATH \
 	$(MAKE) -C $(ASTERISK_DIR) \
-		GLOBAL_MAKEOPTS=$(BASE_DIR)/../project/astlinux/asterisk.makeopts \
+		GLOBAL_MAKEOPTS=$(ASTERISK_GLOBAL_MAKEOPTS) \
 		USER_MAKEOPTS= \
 		ASTVARRUNDIR=/var/run/asterisk
 
@@ -236,7 +252,7 @@ $(TARGET_DIR)/$(ASTERISK_TARGET_BINARY): $(ASTERISK_DIR)/$(ASTERISK_BINARY)
 	# mkdir -p $(TARGET_DIR)/$(ASTERISK_MODULE_DIR)
 	PATH=$(STAGING_DIR)/bin:$$PATH \
 	$(MAKE1) -C $(ASTERISK_DIR) \
-		GLOBAL_MAKEOPTS=$(BASE_DIR)/../project/astlinux/asterisk.makeopts \
+		GLOBAL_MAKEOPTS=$(ASTERISK_GLOBAL_MAKEOPTS) \
 		USER_MAKEOPTS=menuselect.makeopts \
 		ASTVARRUNDIR=/var/run/asterisk \
 		SOUNDS_CACHE_DIR=$(DL_DIR) \
@@ -260,7 +276,11 @@ endif
 	mv $(TARGET_DIR)/var/lib/asterisk/* $(TARGET_DIR)/stat/var/lib/asterisk/
 	rmdir $(TARGET_DIR)/var/lib/asterisk
 	rm -f $(TARGET_DIR)/stat/var/lib/asterisk/astdb
-	ln -sf /tmp/astdb $(TARGET_DIR)/stat/var/lib/asterisk/astdb
+	ln -sf /var/db/astdb $(TARGET_DIR)/stat/var/lib/asterisk/astdb
+ifneq ($(ASTERISK_VERSION_SINGLE),1)
+	rm -f $(TARGET_DIR)/stat/var/lib/asterisk/astdb.sqlite3
+	ln -sf /var/db/astdb.sqlite3 $(TARGET_DIR)/stat/var/lib/asterisk/astdb.sqlite3
+endif
 	mkdir -p $(TARGET_DIR)/stat/var/spool
 	mv $(TARGET_DIR)/var/spool/asterisk $(TARGET_DIR)/stat/var/spool/
 	touch -c $(TARGET_DIR)/$(ASTERISK_TARGET_BINARY)
