@@ -177,7 +177,7 @@ monitor_sip() {
       unset IFS
       for peer in $PEER_LIST; do
 
-        if ! echo "$SIP_SHOW_PEERS" | grep "^${peer}[/ ]" | grep -q ' OK (.*) *$'; then
+        if ! echo "$SIP_SHOW_PEERS" | grep "^${peer}[/ ]" | grep -q ' OK (.*).*$'; then
           ALERTS="${ALERTS}${ALERTS:+$'\n'}PEER $peer"
           NOTES="${NOTES}${NOTES:+ }PEER-$peer"
         fi
