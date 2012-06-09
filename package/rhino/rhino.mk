@@ -4,7 +4,7 @@
 #
 #############################################################
 
-RHINO_VERSION := 0.99.5b1
+RHINO_VERSION := 0.99.6b2
 RHINO_SOURCE := rhino-linux-$(RHINO_VERSION).tbz2
 #RHINO_SOURCE := rhino-linux-current.tbz2
 RHINO_SITE := http://files.astlinux.org
