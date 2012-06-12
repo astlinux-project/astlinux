@@ -46,6 +46,8 @@ Released **TBD**
 
 -- wanpipe, version bump to 3.5.27
 
+-- rhino, version bump to 0.99.6b2, Rhino PCI card support is now (again) enabled in the standard, default builds.
+
 -- safe_asterisk script, add restart limits so endless restarts/emails won't be generated
 
 ** Web Interface
