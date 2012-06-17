@@ -12,11 +12,14 @@ Released **TBD**
 
 ** System
 
--- php, version bump to 5.3.13 (security fixes: CVE-2012-1823 and CVE-2012-2311)
+-- php, version bump to 5.3.14 (security fixes: CVE-2012-1823, CVE-2012-2311 and CVE-2012-2143)
 
 -- mysql_client, version bump to 5.1.63, security fixes.
 
--- sqlite, version bump to 3.7.12.1
+-- sqlite, version bump to 3.7.13
+
+-- libxml2, version bump to 2.8.0, (security fixes: CVE-2011-1944, CVE-2011-2821, CVE-2011-2834,
+   CVE-2011-3919 and CVE-2012-0841)
 
 -- setconsole-speed-tty, new command to change the serial console speed/tty, not only currently but also
    automatically after upgrades.
