@@ -1,0 +1,405 @@
+--- libpri/libpri.h	None	2272
++++ libpri/libpri.h	2011/08/17 15:48:54	2273
+@@ -1892,6 +1892,31 @@
+  */
+ void pri_aoc_events_enable(struct pri *ctrl, int enable);
+ 
++enum pri_layer2_persistence {
++	PRI_L2_PERSISTENCE_DEFAULT,
++	/*! Immediately bring layer 2 back up if the peer brings layer 2 down. */
++	PRI_L2_PERSISTENCE_KEEP_UP,
++	/*! Leave layer 2 down if the peer brings layer 2 down. */
++	PRI_L2_PERSISTENCE_LEAVE_DOWN,
++#if 0	/* Possible future option.  Would need to define how long to idle before dropping. */
++	/*! Drop layer 2 on D channel idle. */
++	PRI_L2_PERSISTENCE_IDLE_DROP,
++#endif
++};
++
++/*!
++ * \brief Set the layer2 persistence option.
++ *
++ * \param ctrl D channel controller.
++ * \param option Layer 2 persistence to apply.
++ *
++ * \note
++ * Not all values are supported by all modes.
++ *
++ * \return Nothing
++ */
++void pri_persistent_layer2_option(struct pri *ctrl, enum pri_layer2_persistence option);
++
+ #define PRI_DISPLAY_OPTION_BLOCK		(1 << 0)	/*!< Do not pass display text. */
+ #define PRI_DISPLAY_OPTION_NAME_INITIAL	(1 << 1)	/*!< Use display in SETUP/CONNECT for name. */
+ #define PRI_DISPLAY_OPTION_NAME_UPDATE	(1 << 2)	/*!< Use display in FACILITY/NOTIFY for COLP name if appropriate. */
+--- libpri/pri.c	None	2272
++++ libpri/pri.c	2011/08/17 15:48:54	2273
+@@ -292,6 +292,27 @@
+ 
+ /*!
+  * \internal
++ * \brief Determine the default layer 2 persistence option.
++ *
++ * \param ctrl D channel controller.
++ *
++ * \return Default layer 2 persistence option. (legacy behaviour default)
++ */
++static enum pri_layer2_persistence pri_l2_persistence_option_default(struct pri *ctrl)
++{
++	enum pri_layer2_persistence persistence;
++
++	if (PTMP_MODE(ctrl)) {
++		persistence = PRI_L2_PERSISTENCE_LEAVE_DOWN;
++	} else {
++		persistence = PRI_L2_PERSISTENCE_KEEP_UP;
++	}
++
++	return persistence;
++}
++
++/*!
++ * \internal
+  * \brief Determine the default display text send options.
+  *
+  * \param ctrl D channel controller.
+@@ -558,6 +579,7 @@
+ 	ctrl->q931_rxcount = 0;
+ 	ctrl->q931_txcount = 0;
+ 
++	ctrl->l2_persistence = pri_l2_persistence_option_default(ctrl);
+ 	ctrl->display_flags.send = pri_display_options_send_default(ctrl);
+ 	ctrl->display_flags.receive = pri_display_options_receive_default(ctrl);
+ 	switch (switchtype) {
+@@ -2165,6 +2187,27 @@
+ 	}
+ }
+ 
++void pri_persistent_layer2_option(struct pri *ctrl, enum pri_layer2_persistence option)
++{
++	if (!ctrl) {
++		return;
++	}
++	if (PTMP_MODE(ctrl)) {
++		switch (option) {
++		case PRI_L2_PERSISTENCE_DEFAULT:
++			ctrl->l2_persistence = pri_l2_persistence_option_default(ctrl);
++			break;
++		case PRI_L2_PERSISTENCE_KEEP_UP:
++		case PRI_L2_PERSISTENCE_LEAVE_DOWN:
++			ctrl->l2_persistence = option;
++			break;
++		}
++		if (ctrl->l2_persistence == PRI_L2_PERSISTENCE_KEEP_UP) {
++			q921_bring_layer2_up(ctrl);
++		}
++	}
++}
++
+ void pri_display_options_send(struct pri *ctrl, unsigned long flags)
+ {
+ 	if (!ctrl) {
+--- libpri/pri_internal.h	None	2272
++++ libpri/pri_internal.h	2011/08/17 15:48:54	2273
+@@ -120,6 +120,8 @@
+ 
+ 	/*! Layer 2 link control for D channel. */
+ 	struct q921_link link;
++	/*! Layer 2 persistence option. */
++	enum pri_layer2_persistence l2_persistence;
+ 	/*! T201 TEI Identity Check timer. */
+ 	int t201_timer;
+ 	/*! Number of times T201 has expired. */
+--- libpri/pri_q921.h	None	2272
++++ libpri/pri_q921.h	2011/08/17 15:48:54	2273
+@@ -252,7 +252,7 @@
+ 	int n202_counter;
+ 	/*! Max idle time */
+ 	int t203_timer;
+-	/*! PTP restart delay timer */
++	/*! Layer 2 persistence restart delay timer */
+ 	int restart_timer;
+ 
+ 	/* MDL variables */
+@@ -277,6 +277,7 @@
+ 
+ /* Bring up the D-channel */
+ void q921_start(struct q921_link *link);
++void q921_bring_layer2_up(struct pri *ctrl);
+ 
+ //extern void q921_reset(struct pri *pri, int reset_iqueue);
+ 
+--- libpri/q921.c	None	2272
++++ libpri/q921.c	2011/08/17 15:48:54	2273
+@@ -235,7 +235,10 @@
+ 	link->t202_timer =
+ 		pri_schedule_event(ctrl, ctrl->timers[PRI_TIMER_T202], t202_expire, link);
+ 
+-	++link->n202_counter;
++	if (ctrl->l2_persistence != PRI_L2_PERSISTENCE_KEEP_UP) {
++		/* Only try to get a TEI for N202 times if layer 2 is not persistent. */
++		++link->n202_counter;
++	}
+ 	if (!link->t202_timer || link->n202_counter > ctrl->timers[PRI_TIMER_N202]) {
+ 		if (!link->t202_timer) {
+ 			pri_error(ctrl, "Could not start T202 timer.");
+@@ -530,26 +533,62 @@
+ 	}
+ }
+ 
+-static void restart_timer_expire(void *vlink)
++/*!
++ * \internal
++ * \brief Initiate bringing up layer 2 link.
++ *
++ * \param link Layer 2 link to bring up.
++ *
++ * \return Nothing
++ */
++static void kick_start_link(struct q921_link *link)
+ {
+-	struct q921_link *link = vlink;
+ 	struct pri *ctrl;
+ 
+ 	ctrl = link->ctrl;
+ 
+-	if (ctrl->debug & PRI_DEBUG_Q921_STATE) {
+-		pri_message(ctrl, "SAPI/TEI=%d/%d Kick starting link\n", link->sapi, link->tei);
++	switch (link->state) {
++	case Q921_TEI_UNASSIGNED:
++		if (ctrl->debug & PRI_DEBUG_Q921_STATE) {
++			pri_message(ctrl, "Kick starting link from no TEI.\n");
++		}
++		q921_setstate(link, Q921_ESTABLISH_AWAITING_TEI);
++		q921_tei_request(link);
++		break;
++	case Q921_ASSIGN_AWAITING_TEI:
++		if (ctrl->debug & PRI_DEBUG_Q921_STATE) {
++			pri_message(ctrl, "Kick starting link when get TEI.\n");
++		}
++		q921_setstate(link, Q921_ESTABLISH_AWAITING_TEI);
++		break;
++	case Q921_TEI_ASSIGNED:
++		if (ctrl->debug & PRI_DEBUG_Q921_STATE) {
++			pri_message(ctrl, "SAPI/TEI=%d/%d Kick starting link\n", link->sapi,
++				link->tei);
++		}
++		q921_discard_iqueue(link);
++		q921_establish_data_link(link);
++		link->l3_initiated = 1;
++		q921_setstate(link, Q921_AWAITING_ESTABLISHMENT);
++		break;
++	default:
++		break;
+ 	}
++}
++
++static void restart_timer_expire(void *vlink)
++{
++	struct q921_link *link = vlink;
++	struct pri *ctrl;
++
++	ctrl = link->ctrl;
+ 
+ 	link->restart_timer = 0;
+ 
+ 	switch (link->state) {
+ 	case Q921_TEI_ASSIGNED:
+ 		/* Try to bring layer 2 up. */
+-		q921_discard_iqueue(link);
+-		q921_establish_data_link(link);
+-		link->l3_initiated = 1;
+-		q921_setstate(link, Q921_AWAITING_ESTABLISHMENT);
++		kick_start_link(link);
+ 		break;
+ 	default:
+ 		/* Looks like someone forgot to stop the restart timer. */
+@@ -568,6 +607,7 @@
+ 	link->restart_timer = 0;
+ }
+ 
++/*! \note Only call on the transition to state Q921_TEI_ASSIGNED or already there. */
+ static void restart_timer_start(struct q921_link *link)
+ {
+ 	struct pri *ctrl;
+@@ -583,21 +623,27 @@
+ 		pri_schedule_event(ctrl, ctrl->timers[PRI_TIMER_T200], restart_timer_expire, link);
+ }
+ 
+-static pri_event *q921_ptp_delay_restart(struct q921_link *link)
++/*! \note Only call on the transition to state Q921_TEI_ASSIGNED or already there. */
++static pri_event *q921_check_delay_restart(struct q921_link *link)
+ {
+ 	pri_event *ev;
+ 	struct pri *ctrl;
+ 
+ 	ctrl = link->ctrl;
+ 
+-	if (PTP_MODE(ctrl)) {
++	if (ctrl->l2_persistence == PRI_L2_PERSISTENCE_KEEP_UP) {
+ 		/*
++		 * For PTP links:
+ 		 * This is where we act a bit like L3 instead of L2, since we've
+ 		 * got an L3 that depends on us keeping L2 automatically alive
+-		 * and happy for PTP links.
++		 * and happy.
++		 *
++		 * For PTMP links:
++		 * We can optionally keep L2 automatically alive and happy.
+ 		 */
+ 		restart_timer_start(link);
+-
++	}
++	if (PTP_MODE(ctrl)) {
+ 		switch (link->state) {
+ 		case Q921_MULTI_FRAME_ESTABLISHED:
+ 		case Q921_TIMER_RECOVERY:
+@@ -616,6 +662,31 @@
+ 	return ev;
+ }
+ 
++/*!
++ * \brief Bring all layer 2 links up.
++ *
++ * \param ctrl D channel controller.
++ *
++ * \return Nothing
++ */
++void q921_bring_layer2_up(struct pri *ctrl)
++{
++	struct q921_link *link;
++
++	if (PTMP_MODE(ctrl)) {
++		/* Don't start with the broadcast link. */
++		link = ctrl->link.next;
++	} else {
++		link = &ctrl->link;
++	}
++	for (; link; link = link->next) {
++		if (!link->restart_timer) {
++			/* A restart on the link is not already in the works. */
++			kick_start_link(link);
++		}
++	}
++}
++
+ /* This is the equivalent of the I-Frame queued up path in Figure B.7 in MULTI_FRAME_ESTABLISHED */
+ static int q921_send_queued_iframes(struct q921_link *link)
+ {
+@@ -859,7 +930,7 @@
+ 			q921_send_sabme(link);
+ 			start_t200(link);
+ 		} else {
+-			q921_ptp_delay_restart(link);
++			q921_check_delay_restart(link);
+ 			q921_discard_iqueue(link);
+ 			q921_mdl_error(link, 'G');
+ 			q921_setstate(link, Q921_TEI_ASSIGNED);
+@@ -873,7 +944,7 @@
+ 			q921_send_disc(link, 1);
+ 			start_t200(link);
+ 		} else {
+-			q921_ptp_delay_restart(link);
++			q921_check_delay_restart(link);
+ 			q921_mdl_error(link, 'H');
+ 			/* DL-RELEASE confirm */
+ 			q931_dl_event(link, Q931_DL_EVENT_DL_RELEASE_CONFIRM);
+@@ -1471,12 +1542,13 @@
+ 		if (ctrl->debug & PRI_DEBUG_Q921_STATE) {
+ 			pri_message(ctrl, "Allocating new TEI %d\n", tei);
+ 		}
+-		sub->next = pri_link_new(ctrl, Q921_SAPI_CALL_CTRL, tei);
+-		if (!sub->next) {
++		link = pri_link_new(ctrl, Q921_SAPI_CALL_CTRL, tei);
++		if (!link) {
+ 			pri_error(ctrl, "Unable to allocate layer 2 link for new TEI %d\n", tei);
+ 			return NULL;
+ 		}
+-		q921_setstate(sub->next, Q921_TEI_ASSIGNED);
++		sub->next = link;
++		q921_setstate(link, Q921_TEI_ASSIGNED);
+ 		q921_send_tei(ctrl, Q921_TEI_IDENTITY_ASSIGNED, ri, tei, 1);
+ 
+ 		count = 0;
+@@ -1493,6 +1565,15 @@
+ 			}
+ 			q921_tei_check(ctrl);
+ 		}
++
++		if (ctrl->l2_persistence == PRI_L2_PERSISTENCE_KEEP_UP) {
++			/*
++			 * Layer 2 is persistent so give the peer some time to setup
++			 * it's new TEI and bring the link up itself before we bring the
++			 * link up.
++			 */
++			restart_timer_start(link);
++		}
+ 		break;
+ 	case Q921_TEI_IDENTITY_CHECK_RESPONSE:
+ 		if (!BRI_NT_PTMP(ctrl)) {
+@@ -1562,7 +1643,12 @@
+ 		
+ 		switch (link->state) {
+ 		case Q921_TEI_UNASSIGNED:
+-			/* We do not have a TEI and we are not asking for one. */
++			/*
++			 * We do not have a TEI and we are not currently asking for one.
++			 * Start asking for one.
++			 */
++			q921_setstate(link, Q921_ASSIGN_AWAITING_TEI);
++			q921_tei_request(link);
+ 			return NULL;
+ 		case Q921_ASSIGN_AWAITING_TEI:
+ 		case Q921_ESTABLISH_AWAITING_TEI:
+@@ -1604,9 +1690,12 @@
+ 		switch (link->state) {
+ 		case Q921_ASSIGN_AWAITING_TEI:
+ 			q921_setstate(link, Q921_TEI_ASSIGNED);
+-			ctrl->ev.gen.e = PRI_EVENT_DCHAN_UP;
+-			res = &ctrl->ev;
+-			break;
++			if (ctrl->l2_persistence != PRI_L2_PERSISTENCE_KEEP_UP) {
++				ctrl->ev.gen.e = PRI_EVENT_DCHAN_UP;
++				res = &ctrl->ev;
++				break;
++			}
++			/* Fall through: Layer 2 is persistent so bring it up. */
+ 		case Q921_ESTABLISH_AWAITING_TEI:
+ 			q921_establish_data_link(link);
+ 			link->l3_initiated = 1;
+@@ -1765,7 +1854,7 @@
+ 		break;
+ 	case Q921_MULTI_FRAME_ESTABLISHED:
+ 	case Q921_TIMER_RECOVERY:
+-		res = q921_ptp_delay_restart(link);
++		res = q921_check_delay_restart(link);
+ 		q921_discard_iqueue(link);
+ 		q921_send_ua(link, h->u.p_f);
+ 		/* DL-RELEASE indication */
+@@ -2177,7 +2266,7 @@
+ 		if (!h->u.p_f) {
+ 			q921_mdl_error(link, 'D');
+ 		} else {
+-			res = q921_ptp_delay_restart(link);
++			res = q921_check_delay_restart(link);
+ 			/* DL-RELEASE confirm */
+ 			q931_dl_event(link, Q931_DL_EVENT_DL_RELEASE_CONFIRM);
+ 			stop_t200(link);
+@@ -2615,7 +2704,7 @@
+ 		if (!h->u.p_f)
+ 			break;
+ 
+-		res = q921_ptp_delay_restart(link);
++		res = q921_check_delay_restart(link);
+ 		q921_discard_iqueue(link);
+ 		/* DL-RELEASE indication */
+ 		q931_dl_event(link, Q931_DL_EVENT_DL_RELEASE_IND);
+@@ -2625,7 +2714,7 @@
+ 	case Q921_AWAITING_RELEASE:
+ 		if (!h->u.p_f)
+ 			break;
+-		res = q921_ptp_delay_restart(link);
++		res = q921_check_delay_restart(link);
+ 		/* DL-RELEASE confirm */
+ 		q931_dl_event(link, Q931_DL_EVENT_DL_RELEASE_CONFIRM);
+ 		stop_t200(link);
+ 		
