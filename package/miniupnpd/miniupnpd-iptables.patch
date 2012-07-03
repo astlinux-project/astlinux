@@ -1,0 +1,129 @@
+diff -rup miniupnpd-1.6.20120509-orig/netfilter/ip6tables_display.sh miniupnpd-1.6.20120509/netfilter/ip6tables_display.sh
+--- miniupnpd-1.6.20120509-orig/netfilter/ip6tables_display.sh	2012-04-24 18:13:41.000000000 -0400
++++ miniupnpd-1.6.20120509/netfilter/ip6tables_display.sh	2012-05-25 17:54:38.840942612 -0400
+@@ -1,6 +1,6 @@
+ #! /bin/sh
+ # $Id: ip6tables_display.sh,v 1.1 2012/04/24 22:13:41 nanard Exp $
+-IPTABLES=/sbin/ip6tables
++IPTABLES=/usr/sbin/ip6tables
+ 
+ #display all chains relative to miniupnpd
+ $IPTABLES -v -n -t filter -L FORWARD
+Only in miniupnpd-1.6.20120509/netfilter: ip6tables_display.sh~
+diff -rup miniupnpd-1.6.20120509-orig/netfilter/ip6tables_flush.sh miniupnpd-1.6.20120509/netfilter/ip6tables_flush.sh
+--- miniupnpd-1.6.20120509-orig/netfilter/ip6tables_flush.sh	2012-04-24 18:13:41.000000000 -0400
++++ miniupnpd-1.6.20120509/netfilter/ip6tables_flush.sh	2012-05-25 17:54:52.905319865 -0400
+@@ -1,6 +1,6 @@
+ #! /bin/sh
+ # $Id: ip6tables_flush.sh,v 1.1 2012/04/24 22:13:41 nanard Exp $
+-IPTABLES=/sbin/ip6tables
++IPTABLES=/usr/sbin/ip6tables
+ 
+ #flush all rules owned by miniupnpd
+ $IPTABLES -t filter -F MINIUPNPD
+Only in miniupnpd-1.6.20120509/netfilter: ip6tables_flush.sh~
+diff -rup miniupnpd-1.6.20120509-orig/netfilter/ip6tables_init_and_clean.sh miniupnpd-1.6.20120509/netfilter/ip6tables_init_and_clean.sh
+--- miniupnpd-1.6.20120509-orig/netfilter/ip6tables_init_and_clean.sh	2012-04-24 18:13:41.000000000 -0400
++++ miniupnpd-1.6.20120509/netfilter/ip6tables_init_and_clean.sh	2012-05-25 17:55:16.889967350 -0400
+@@ -4,8 +4,8 @@
+ # Checks for state of filter before doing anything..
+ 
+ EXTIF=eth0
+-IPTABLES=/sbin/ip6tables
+-FDIRTY="`LC_ALL=C /sbin/ip6tables -t filter -L -n | grep 'MINIUPNPD' | awk '{printf $1}'`"
++IPTABLES=/usr/sbin/ip6tables
++FDIRTY="`LC_ALL=C /usr/sbin/ip6tables -t filter -L -n | grep 'MINIUPNPD' | awk '{printf $1}'`"
+ 
+ if [[ $FDIRTY = "MINIUPNPDChain" ]]; then
+         echo "Filter table dirty; Cleaning..."
+Only in miniupnpd-1.6.20120509/netfilter: ip6tables_init_and_clean.sh~
+diff -rup miniupnpd-1.6.20120509-orig/netfilter/ip6tables_init.sh miniupnpd-1.6.20120509/netfilter/ip6tables_init.sh
+--- miniupnpd-1.6.20120509-orig/netfilter/ip6tables_init.sh	2012-04-24 18:13:41.000000000 -0400
++++ miniupnpd-1.6.20120509/netfilter/ip6tables_init.sh	2012-05-25 17:55:02.149567735 -0400
+@@ -1,6 +1,6 @@
+ #! /bin/sh
+ # $Id: ip6tables_init.sh,v 1.1 2012/04/24 22:13:41 nanard Exp $
+-IPTABLES=/sbin/ip6tables
++IPTABLES=/usr/sbin/ip6tables
+ 
+ #change this parameters :
+ EXTIF=eth0
+Only in miniupnpd-1.6.20120509/netfilter: ip6tables_init.sh~
+diff -rup miniupnpd-1.6.20120509-orig/netfilter/ip6tables_removeall.sh miniupnpd-1.6.20120509/netfilter/ip6tables_removeall.sh
+--- miniupnpd-1.6.20120509-orig/netfilter/ip6tables_removeall.sh	2012-04-24 18:13:41.000000000 -0400
++++ miniupnpd-1.6.20120509/netfilter/ip6tables_removeall.sh	2012-05-25 17:55:32.962400684 -0400
+@@ -1,6 +1,6 @@
+ #! /bin/sh
+ # $Id: ip6tables_removeall.sh,v 1.1 2012/04/24 22:13:41 nanard Exp $
+-IPTABLES=/sbin/ip6tables
++IPTABLES=/usr/sbin/ip6tables
+ 
+ #change this parameters :
+ EXTIF=eth0
+Only in miniupnpd-1.6.20120509/netfilter: ip6tables_removeall.sh~
+diff -rup miniupnpd-1.6.20120509-orig/netfilter/iptables_display.sh miniupnpd-1.6.20120509/netfilter/iptables_display.sh
+--- miniupnpd-1.6.20120509-orig/netfilter/iptables_display.sh	2011-05-16 08:42:29.000000000 -0400
++++ miniupnpd-1.6.20120509/netfilter/iptables_display.sh	2012-05-25 17:52:43.781837854 -0400
+@@ -1,6 +1,6 @@
+ #! /bin/sh
+ # $Id: iptables_display.sh,v 1.4 2011/05/16 12:11:37 nanard Exp $
+-IPTABLES=/sbin/iptables
++IPTABLES=/usr/sbin/iptables
+ 
+ #display all chains relative to miniupnpd
+ $IPTABLES -v -n -t nat -L PREROUTING
+Only in miniupnpd-1.6.20120509/netfilter: iptables_display.sh~
+diff -rup miniupnpd-1.6.20120509-orig/netfilter/iptables_flush.sh miniupnpd-1.6.20120509/netfilter/iptables_flush.sh
+--- miniupnpd-1.6.20120509-orig/netfilter/iptables_flush.sh	2011-05-16 08:42:29.000000000 -0400
++++ miniupnpd-1.6.20120509/netfilter/iptables_flush.sh	2012-05-25 17:52:57.810213703 -0400
+@@ -1,6 +1,6 @@
+ #! /bin/sh
+ # $Id: iptables_flush.sh,v 1.3 2011/05/16 12:11:37 nanard Exp $
+-IPTABLES=/sbin/iptables
++IPTABLES=/usr/sbin/iptables
+ 
+ #flush all rules owned by miniupnpd
+ $IPTABLES -t nat -F MINIUPNPD
+Only in miniupnpd-1.6.20120509/netfilter: iptables_flush.sh~
+diff -rup miniupnpd-1.6.20120509-orig/netfilter/iptables_init_and_clean.sh miniupnpd-1.6.20120509/netfilter/iptables_init_and_clean.sh
+--- miniupnpd-1.6.20120509-orig/netfilter/iptables_init_and_clean.sh	2012-03-05 15:37:13.000000000 -0500
++++ miniupnpd-1.6.20120509/netfilter/iptables_init_and_clean.sh	2012-05-25 17:53:50.411635052 -0400
+@@ -4,10 +4,10 @@
+ # Checks for state of filter before doing anything..
+ 
+ EXTIF=eth0
+-IPTABLES=/sbin/iptables
++IPTABLES=/usr/sbin/iptables
+ EXTIP="`LC_ALL=C /sbin/ifconfig $EXTIF | grep 'inet ' | awk '{print $2}' | sed -e 's/.*://'`"
+-NDIRTY="`LC_ALL=C /sbin/iptables -t nat -L -n | grep 'MINIUPNPD' | awk '{printf $1}'`"
+-FDIRTY="`LC_ALL=C /sbin/iptables -t filter -L -n | grep 'MINIUPNPD' | awk '{printf $1}'`"
++NDIRTY="`LC_ALL=C /usr/sbin/iptables -t nat -L -n | grep 'MINIUPNPD' | awk '{printf $1}'`"
++FDIRTY="`LC_ALL=C /usr/sbin/iptables -t filter -L -n | grep 'MINIUPNPD' | awk '{printf $1}'`"
+ echo "External IP = $EXTIP"
+ 
+ if [[ $NDIRTY = "MINIUPNPDChain" ]]; then
+Only in miniupnpd-1.6.20120509/netfilter: iptables_init_and_clean.sh~
+diff -rup miniupnpd-1.6.20120509-orig/netfilter/iptables_init.sh miniupnpd-1.6.20120509/netfilter/iptables_init.sh
+--- miniupnpd-1.6.20120509-orig/netfilter/iptables_init.sh	2012-01-02 05:46:25.000000000 -0500
++++ miniupnpd-1.6.20120509/netfilter/iptables_init.sh	2012-05-25 17:53:13.634643345 -0400
+@@ -1,6 +1,6 @@
+ #! /bin/sh
+ # $Id: iptables_init.sh,v 1.6 2012/01/02 09:55:20 nanard Exp $
+-IPTABLES=/sbin/iptables
++IPTABLES=/usr/sbin/iptables
+ 
+ #change this parameters :
+ EXTIF=eth0
+Only in miniupnpd-1.6.20120509/netfilter: iptables_init.sh~
+diff -rup miniupnpd-1.6.20120509-orig/netfilter/iptables_removeall.sh miniupnpd-1.6.20120509/netfilter/iptables_removeall.sh
+--- miniupnpd-1.6.20120509-orig/netfilter/iptables_removeall.sh	2012-01-02 05:46:25.000000000 -0500
++++ miniupnpd-1.6.20120509/netfilter/iptables_removeall.sh	2012-05-25 17:54:02.151949940 -0400
+@@ -1,6 +1,6 @@
+ #! /bin/sh
+ # $Id: iptables_removeall.sh,v 1.6 2012/01/02 09:55:20 nanard Exp $
+-IPTABLES=/sbin/iptables
++IPTABLES=/usr/sbin/iptables
+ 
+ #change this parameters :
+ EXTIF=eth0
+Only in miniupnpd-1.6.20120509/netfilter: iptables_removeall.sh~

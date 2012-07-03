@@ -1,0 +1,6 @@
+config BR2_PACKAGE_MINIUPNPD
+	bool "miniupnpd"
+	help
+	  Implements UPnP and NAT-PMP protocols.
+
+	  http://miniupnp.free.fr/
