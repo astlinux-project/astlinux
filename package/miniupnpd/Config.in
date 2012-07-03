@@ -1,5 +1,7 @@
 config BR2_PACKAGE_MINIUPNPD
 	bool "miniupnpd"
+	depends on BR2_LINUX_KERNEL
+	depends on BR2_PACKAGE_IPTABLES
 	help
 	  Implements UPnP and NAT-PMP protocols.
 
