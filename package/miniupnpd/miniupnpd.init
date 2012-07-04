@@ -1,22 +1,38 @@
 #!/bin/sh
 
-# If Astlinux GUI support added then some or all of these may come from rc.conf
-UPNP_ENABLE_NATPMP=yes
-UPNP_ENABLE_UPNP=yes
-UPNP_BITRATE_UP=1000000
-UPNP_BITRATE_DOWN=10000000
-UPNP_SECURE_MODE=no
-INTUPNP=yes
-INT2UPNP=yes
-INT3UPNP=yes
-DMZUPNP=yes
-
 . /etc/rc.conf
+
+if [ "$UPNP_ENABLE_NATPMP" != "yes" ]; then
+  UPNP_ENABLE_NATPMP="no"
+fi
+if [ "$UPNP_ENABLE_UPNP" != "yes" ]; then
+  UPNP_ENABLE_UPNP="no"
+fi
+if [ "$UPNP_SECURE_MODE" != "yes" ]; then
+  UPNP_SECURE_MODE="no"
+fi
+UPNP_BITRATE_UP="${UPNP_BITRATE_UP:-1000000}"
+UPNP_BITRATE_DOWN="${UPNP_BITRATE_DOWN:-1000000}"
 
 MINIUPNPD=/usr/sbin/miniupnpd
 MINIUPNPD_CONF=/tmp/etc/miniupnpd.conf
 IPTABLES_CREATE=/etc/miniupnpd/iptables_init.sh
 IPTABLES_REMOVE=/etc/miniupnpd/iptables_removeall.sh
+
+is_upnp_enabled()
+{
+  # args: IF_Name
+  local ifname IFS
+
+  unset IFS
+  for ifname in $UPNP_LISTEN; do
+    if [ "$ifname" = "$1" ]; then
+      return 0
+    fi
+  done
+
+  return 1
+}
 
 is_interface_enabled()
 {
@@ -37,31 +53,43 @@ get_cidr()
 }
 
 init () {
-  local RULES=""
+  if [ "$UPNP_ENABLE_NATPMP" != "yes" -a "$UPNP_ENABLE_UPNP" != "yes" ]; then
+    if [ -f $MINIUPNPD_CONF ]; then
+      rm -f $MINIUPNPD_CONF
+    fi
+    return
+  fi
+
   if [ -z "$UUID" ]; then
     # Use the UUID assigned to the asturw filesystem.
     UUID=$(blkid | sed -n -r -e 's/^.*: LABEL="ASTURW" UUID="([^"]*)" .*$/\1/p')
   fi
 
+  local RULES=""
   echo "## Auto generated file. Do not edit.
-## see miniupnpd init.d script
 ext_ifname=$EXTIF" > $MINIUPNPD_CONF
-  if [ "$INTUPNP" = "yes" ] && is_interface_enabled "$INTIF" "$INTIP" "$INTNM"; then
-    echo "listening_ip=$INTIF" >> $MINIUPNPD_CONF
+  if is_upnp_enabled INTIF && is_interface_enabled "$INTIF" "$INTIP" "$INTNM"; then
+    echo "listening_ip=$INTIP/$INTNM" >> $MINIUPNPD_CONF
     RULES="$RULES${RULES:+\n}allow 1024-65535 $(get_cidr $INTIP $INTNM) 1024-65535"
   fi
-  if [ "$INT2UPNP" = "yes" ] && is_interface_enabled "$INT2IF" "$INT2IP" "$INT2NM"; then
-    echo "listening_ip=$INT2IF" >> $MINIUPNPD_CONF
+  if is_upnp_enabled INT2IF && is_interface_enabled "$INT2IF" "$INT2IP" "$INT2NM"; then
+    echo "listening_ip=$INT2IP/$INT2NM" >> $MINIUPNPD_CONF
     RULES="$RULES${RULES:+\n}allow 1024-65535 $(get_cidr $INT2IP $INT2NM) 1024-65535"
   fi
-  if [ "$INT3UPNP" = "yes" ] && is_interface_enabled "$INT3IF" "$INT3IP" "$INT3NM"; then
-    echo "listening_ip=$INT3IF" >> $MINIUPNPD_CONF
+  if is_upnp_enabled INT3IF && is_interface_enabled "$INT3IF" "$INT3IP" "$INT3NM"; then
+    echo "listening_ip=$INT3IP/$INT3NM" >> $MINIUPNPD_CONF
     RULES="$RULES${RULES:+\n}allow 1024-65535 $(get_cidr $INT3IP $INT3NM) 1024-65535"
   fi
-  if [ "$DMZUPNP" = "yes" ] && is_interface_enabled "$DMZIF" "$DMZIP" "$DMZNM"; then
-    echo "listening_ip=$DMZIF" >> $MINIUPNPD_CONF
+  if is_upnp_enabled DMZIF && is_interface_enabled "$DMZIF" "$DMZIP" "$DMZNM"; then
+    echo "listening_ip=$DMZIP/$DMZNM" >> $MINIUPNPD_CONF
     RULES="$RULES${RULES:+\n}allow 1024-65535 $(get_cidr $DMZIP $DMZNM) 1024-65535"
   fi
+
+  if [ -z "$RULES" -o -z "$UUID" ]; then
+    rm -f $MINIUPNPD_CONF
+    return
+  fi
+
   echo "port=0
 enable_natpmp=$UPNP_ENABLE_NATPMP
 enable_upnp=$UPNP_ENABLE_UPNP
@@ -80,12 +108,10 @@ model_number=$(cat /etc/astlinux-release)" >> $MINIUPNPD_CONF
 }
 
 start () {
-  if [ "$UPNP_ENABLE_NATPMP" = "yes" -o "$UPNP_ENABLE_UPNP" = "yes" ]; then
-    if [ "$INTUPNP" = "yes" -o "$INT2UPNP" = "yes" -o "$INT3UPNP" = "yes" -o "$DMZUPNP" = "yes" ]; then
-      echo "Starting miniupnpd..."
-      $IPTABLES_CREATE > /dev/null 2>&1
-      $MINIUPNPD -f $MINIUPNPD_CONF
-    fi
+  if [ -f $MINIUPNPD_CONF ]; then
+    echo "Starting miniupnpd..."
+    $IPTABLES_CREATE > /dev/null 2>&1
+    $MINIUPNPD -f $MINIUPNPD_CONF
   fi
 }
 
@@ -93,7 +119,7 @@ stop () {
   if [ -f /var/run/miniupnpd.pid ]; then
     echo "Stopping miniupnpd..."
     kill $(cat /var/run/miniupnpd.pid) >/dev/null 2>&1
-    rm -f /var/run/miniupnpd.pid
+    # /var/run/miniupnpd.pid automatically removed by killed process
     $IPTABLES_REMOVE > /dev/null 2>&1
   fi
 }
