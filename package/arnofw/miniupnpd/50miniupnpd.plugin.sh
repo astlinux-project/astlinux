@@ -33,13 +33,20 @@ PLUGIN_CONF_FILE="miniupnpd.conf"
 # Plugin start function
 plugin_start()
 {
+  local IFS
+
   ip4tables -t nat -N MINIUPNPD 2>/dev/null
   ip4tables -t nat -F MINIUPNPD
 
   ip4tables -N MINIUPNPD 2>/dev/null
   ip4tables -F MINIUPNPD
 
-  plugin_restart
+  IFS=' ,'
+  for eif in $EXT_IF; do
+    ip4tables -t nat -A POST_NAT_PREROUTING_CHAIN -i $eif -j MINIUPNPD
+
+    ip4tables -A POST_FORWARD_CHAIN -i $eif ! -o $eif -j MINIUPNPD
+  done
 
   return 0
 }
@@ -48,17 +55,9 @@ plugin_start()
 # Plugin restart function
 plugin_restart()
 {
-  local IFS
 
   # Skip plugin_stop on a restart
-  # Reconnect both MINIUPNPD chains, flushed on a restart
-
-  IFS=' ,'
-  for eif in $EXT_IF; do
-    ip4tables -t nat -A NAT_PREROUTING_CHAIN -i $eif -j MINIUPNPD
-
-    ip4tables -A FORWARD_CHAIN -i $eif ! -o $eif -j MINIUPNPD
-  done
+  plugin_start
 
   return 0
 }
@@ -71,9 +70,9 @@ plugin_stop()
 
   IFS=' ,'
   for eif in $EXT_IF; do
-    ip4tables -t nat -D NAT_PREROUTING_CHAIN -i $eif -j MINIUPNPD
+    ip4tables -t nat -D POST_NAT_PREROUTING_CHAIN -i $eif -j MINIUPNPD
 
-    ip4tables -D FORWARD_CHAIN -i $eif ! -o $eif -j MINIUPNPD
+    ip4tables -D POST_FORWARD_CHAIN -i $eif ! -o $eif -j MINIUPNPD
   done
 
   ip4tables -t nat -F MINIUPNPD
