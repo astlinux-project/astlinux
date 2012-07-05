@@ -8,14 +8,15 @@ fi
 if [ "$UPNP_ENABLE_UPNP" != "yes" ]; then
   UPNP_ENABLE_UPNP="no"
 fi
-if [ "$UPNP_SECURE_MODE" != "yes" ]; then
-  UPNP_SECURE_MODE="no"
+if [ "$UPNP_SECURE_MODE" != "no" ]; then
+  UPNP_SECURE_MODE="yes"
 fi
 UPNP_BITRATE_UP="${UPNP_BITRATE_UP:-1000000}"
 UPNP_BITRATE_DOWN="${UPNP_BITRATE_DOWN:-10000000}"
 
 MINIUPNPD=/usr/sbin/miniupnpd
 MINIUPNPD_CONF=/tmp/etc/miniupnpd.conf
+MINIUPNPD_LEASEFILE=/var/db/upnp.leases
 
 is_upnp_enabled()
 {
@@ -88,9 +89,10 @@ ext_ifname=$EXTIF" > $MINIUPNPD_CONF
     return
   fi
 
-  echo "port=0
+  echo "port=5000
 enable_natpmp=$UPNP_ENABLE_NATPMP
 enable_upnp=$UPNP_ENABLE_UPNP
+lease_file=$MINIUPNPD_LEASEFILE
 bitrate_up=$UPNP_BITRATE_UP
 bitrate_down=$UPNP_BITRATE_DOWN
 secure_mode=$UPNP_SECURE_MODE
@@ -108,6 +110,7 @@ model_number=$(cat /etc/astlinux-release)" >> $MINIUPNPD_CONF
 start () {
   if [ -f $MINIUPNPD_CONF ]; then
     echo "Starting miniupnpd..."
+    touch $MINIUPNPD_LEASEFILE
     $MINIUPNPD -f $MINIUPNPD_CONF
   fi
 }

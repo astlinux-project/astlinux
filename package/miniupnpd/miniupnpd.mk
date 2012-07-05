@@ -19,6 +19,7 @@ MINIUPNPD_POST_PATCH_HOOKS += MINIUPNPD_IPTABLES_PATH_FIX
 define MINIUPNPD_CONFIGURE_CMDS
 # add this to make for IPv6... CONFIG_OPTIONS="--ipv6"
 	echo "$(LINUX_VERSION_PROBED)" >$(@D)/os.astlinux
+	CONFIG_OPTIONS="--leasefile" \
 	$(MAKE) CC="$(TARGET_CC)" LD="$(TARGET_LD)" CFLAGS="$(TARGET_CFLAGS)" \
 		-f Makefile.linux -C $(@D) config.h
 endef
@@ -36,14 +37,16 @@ define MINIUPNPD_INSTALL_TARGET_CMDS
 #	-mkdir $(TARGET_DIR)/etc/miniupnpd
 #	$(INSTALL) -D $(@D)/netfilter/iptables_*.sh $(TARGET_DIR)/etc/miniupnpd/
 #	$(INSTALL) -D $(@D)/netfilter/ip6tables_*.sh $(TARGET_DIR)/etc/miniupnpd/
-	ln -snf ../../init.d/miniupnpd $(TARGET_DIR)/etc/runlevels/default/S54miniupnpd
-	ln -snf ../../init.d/miniupnpd $(TARGET_DIR)/etc/runlevels/default/K09miniupnpd
+	ln -sf /tmp/etc/miniupnpd.conf $(TARGET_DIR)/etc/miniupnpd.conf
+	ln -sf ../../init.d/miniupnpd $(TARGET_DIR)/etc/runlevels/default/S54miniupnpd
+	ln -sf ../../init.d/miniupnpd $(TARGET_DIR)/etc/runlevels/default/K09miniupnpd
 endef
 
 define MINIUPNPD_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/etc/init.d/miniupnpd
 	rm -f $(TARGET_DIR)/usr/sbin/miniupnpd
 	rm -rf $(TARGET_DIR)/etc/miniupnpd/
+	rm -f $(TARGET_DIR)/etc/miniupnpd.conf
 	rm -f $(TARGET_DIR)/etc/runlevels/default/S54miniupnpd
 	rm -f $(TARGET_DIR)/etc/runlevels/default/K09miniupnpd
 endef
