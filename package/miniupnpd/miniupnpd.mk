@@ -33,8 +33,8 @@ endef
 define MINIUPNPD_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 package/miniupnpd/miniupnpd.init $(TARGET_DIR)/etc/init.d/miniupnpd
 	$(INSTALL) -D $(@D)/miniupnpd $(TARGET_DIR)/usr/sbin/miniupnpd
-	-mkdir $(TARGET_DIR)/etc/miniupnpd
-	$(INSTALL) -D $(@D)/netfilter/iptables_*.sh $(TARGET_DIR)/etc/miniupnpd/
+#	-mkdir $(TARGET_DIR)/etc/miniupnpd
+#	$(INSTALL) -D $(@D)/netfilter/iptables_*.sh $(TARGET_DIR)/etc/miniupnpd/
 #	$(INSTALL) -D $(@D)/netfilter/ip6tables_*.sh $(TARGET_DIR)/etc/miniupnpd/
 	ln -snf ../../init.d/miniupnpd $(TARGET_DIR)/etc/runlevels/default/S54miniupnpd
 	ln -snf ../../init.d/miniupnpd $(TARGET_DIR)/etc/runlevels/default/K09miniupnpd

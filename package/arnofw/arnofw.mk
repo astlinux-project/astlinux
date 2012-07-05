@@ -118,6 +118,13 @@ $(TARGET_DIR)$(ARNOFW_TARGET_BINARY): $(ARNOFW_DIR)/.patched
 		$(TARGET_DIR)$(ARNOFW_PLUGIN_SCRIPT_DIR)/50pptp-vpn.plugin
 	$(INSTALL) -m 0644 package/arnofw/pptp-vpn/pptp-vpn-astlinux.conf \
 		$(TARGET_DIR)/stat$(ARNOFW_PLUGIN_CONFIG_DIR)/pptp-vpn.conf
+	@echo
+	@echo "Install local version of miniupnpd plugin."
+	@echo
+	$(INSTALL) -m 0644 package/arnofw/miniupnpd/50miniupnpd.plugin.sh \
+		$(TARGET_DIR)$(ARNOFW_PLUGIN_SCRIPT_DIR)/50miniupnpd.plugin
+	$(INSTALL) -m 0644 package/arnofw/miniupnpd/miniupnpd-astlinux.conf \
+		$(TARGET_DIR)/stat$(ARNOFW_PLUGIN_CONFIG_DIR)/miniupnpd.conf
 
 arnofw: $(TARGET_DIR)$(ARNOFW_TARGET_BINARY)
 
