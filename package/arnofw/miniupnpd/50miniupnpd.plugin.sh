@@ -33,6 +33,12 @@ PLUGIN_CONF_FILE="miniupnpd.conf"
 # Plugin start function
 plugin_start()
 {
+  # Check to see if started outside of AIF
+  if ip4tables -n -L MINIUPNPD >/dev/null 2>&1; then
+    echo "${INDENT}Note: MINIUPNPD chains already created"
+    return 0
+  fi
+
   ip4tables -t nat -N MINIUPNPD 2>/dev/null
   ip4tables -t nat -F MINIUPNPD
 
@@ -50,6 +56,12 @@ plugin_start()
 plugin_restart()
 {
   local eif IFS
+
+  # Check to see if stopped outside of AIF
+  if ! ip4tables -n -L MINIUPNPD >/dev/null 2>&1; then
+    echo "${INDENT}Note: MINIUPNPD chains do not exist"
+    return 0
+  fi
 
   # Skip plugin_stop on a restart
   # Reconnect both MINIUPNPD chains, flushed on a restart
@@ -69,6 +81,12 @@ plugin_restart()
 plugin_stop()
 {
   local eif IFS
+
+  # Check to see if stopped outside of AIF
+  if ! ip4tables -n -L MINIUPNPD >/dev/null 2>&1; then
+    echo "${INDENT}Note: MINIUPNPD chains already removed"
+    return 0
+  fi
 
   IFS=' ,'
   for eif in $EXT_IF; do

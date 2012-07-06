@@ -18,6 +18,49 @@ MINIUPNPD=/usr/sbin/miniupnpd
 MINIUPNPD_CONF=/tmp/etc/miniupnpd.conf
 MINIUPNPD_LEASEFILE=/var/db/upnp.leases
 
+aif_miniupnpd_plugin()
+{
+  local action="$1"
+
+  if [ "$FWVERS" != "arno" ]; then
+    return
+  fi
+
+  (
+    plugin_file="/usr/share/arno-iptables-firewall/plugins/50miniupnpd.plugin"
+    if [ -f "$plugin_file" ]; then
+      tmp_source="$(mktemp "/var/tmp/aif_miniupnpd.XXXXXX")"
+      sed -n '1,/^# Mainline #/ p' "$plugin_file" > "$tmp_source"
+      echo '
+ip4tables()
+{
+  /usr/sbin/iptables "$@"
+}
+' >> "$tmp_source"
+
+      # Source only plugin functions from AIF Plugin
+      . "$tmp_source"
+
+      # Setup needed AIF variables
+      EXT_IF=""
+      for intf in $EXTIF $EXT2IF; do
+        EXT_IF="$EXT_IF${EXT_IF:+ }$intf"
+      done
+
+      case $action in
+        start)
+          plugin_start
+          ;;
+        stop)
+          plugin_stop
+          ;;
+      esac
+
+      rm "$tmp_source"
+    fi
+  )
+}
+
 is_upnp_enabled()
 {
   # args: IF_Name
@@ -110,6 +153,7 @@ model_number=$(cat /etc/astlinux-release)" >> $MINIUPNPD_CONF
 start () {
   if [ -f $MINIUPNPD_CONF ]; then
     echo "Starting miniupnpd..."
+    aif_miniupnpd_plugin start >/dev/null 2>&1
     touch $MINIUPNPD_LEASEFILE
     $MINIUPNPD -f $MINIUPNPD_CONF
   fi
@@ -120,6 +164,7 @@ stop () {
     echo "Stopping miniupnpd..."
     kill $(cat /var/run/miniupnpd.pid) >/dev/null 2>&1
     # /var/run/miniupnpd.pid automatically removed by killed process
+    aif_miniupnpd_plugin stop >/dev/null 2>&1
   fi
 }
 
