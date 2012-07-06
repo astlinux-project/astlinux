@@ -1,0 +1,18 @@
+--- arno-iptables-firewall_2.0.1c/bin/arno-iptables-firewall.orig
++++ arno-iptables-firewall_2.0.1c/bin/arno-iptables-firewall
+@@ -5128,9 +5128,13 @@
+   ip4tables -F OUTPUT
+   ip4tables -F FORWARD
+ 
+-  # Flush rules in the nat/mangle tables
++  # Flush builtin IPv4 nat chains
++  ip4tables -t nat -F PREROUTING
++  ip4tables -t nat -F OUTPUT
++  ip4tables -t nat -F POSTROUTING
++
++  # Flush rules in the mangle table
+   ip4tables -t mangle -F
+-  ip4tables -t nat -F
+ 
+   if [ "$IPV6_DETECTED" = "1" ]; then
+     # Flush builtin IPv6 chains

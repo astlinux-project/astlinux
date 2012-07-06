@@ -5,7 +5,7 @@ PLUGIN_NAME="MiniUPnPd plugin"
 PLUGIN_VERSION="1.0"
 PLUGIN_CONF_FILE="miniupnpd.conf"
 #
-# Last changed          : July 4, 2012
+# Last changed          : July 6, 2012
 # Requirements          : AIF 2.0.0+ with miniupnpd daemon
 # Comments              : Setup of the iptables chains that the miniupnpd daemon manages
 #
@@ -33,13 +33,26 @@ PLUGIN_CONF_FILE="miniupnpd.conf"
 # Plugin start function
 plugin_start()
 {
-  local IFS
-
   ip4tables -t nat -N MINIUPNPD 2>/dev/null
   ip4tables -t nat -F MINIUPNPD
 
   ip4tables -N MINIUPNPD 2>/dev/null
   ip4tables -F MINIUPNPD
+
+  # Connect both MINIUPNPD chains
+  plugin_restart
+
+  return 0
+}
+
+
+# Plugin restart function
+plugin_restart()
+{
+  local eif IFS
+
+  # Skip plugin_stop on a restart
+  # Reconnect both MINIUPNPD chains, flushed on a restart
 
   IFS=' ,'
   for eif in $EXT_IF; do
@@ -52,21 +65,10 @@ plugin_start()
 }
 
 
-# Plugin restart function
-plugin_restart()
-{
-
-  # Skip plugin_stop on a restart
-  plugin_start
-
-  return 0
-}
-
-
 # Plugin stop function
 plugin_stop()
 {
-  local IFS
+  local eif IFS
 
   IFS=' ,'
   for eif in $EXT_IF; do
