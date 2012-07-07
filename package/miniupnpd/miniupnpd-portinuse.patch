@@ -1,0 +1,181 @@
+diff -rupN miniupnpd-1.7-orig/Makefile.linux miniupnpd-1.7/Makefile.linux
+--- miniupnpd-1.7-orig/Makefile.linux	2012-05-23 04:46:14.000000000 -0400
++++ miniupnpd-1.7/Makefile.linux	2012-07-06 15:42:39.000000000 -0400
+@@ -41,7 +41,7 @@ SBININSTALLDIR = $(INSTALLPREFIX)/sbin
+ ETCINSTALLDIR = $(PREFIX)/etc/miniupnpd
+ 
+ BASEOBJS = miniupnpd.o upnphttp.o upnpdescgen.o upnpsoap.o \
+-           upnpreplyparse.o minixml.o \
++           upnpreplyparse.o minixml.o portinuse.o \
+            upnpredirect.o getifaddr.o daemonize.o upnpglobalvars.o \
+            options.o upnppermissions.o minissdp.o natpmp.o \
+            upnpevents.o upnputils.o getconnstatus.o \
+@@ -191,7 +191,7 @@ upnpreplyparse.o: upnpreplyparse.h minix
+ minixml.o: minixml.h
+ upnpredirect.o: macros.h config.h upnpredirect.h upnpglobalvars.h
+ upnpredirect.o: upnppermissions.h miniupnpdtypes.h upnpevents.h
+-upnpredirect.o: netfilter/iptcrdr.h commonrdr.h
++upnpredirect.o: netfilter/iptcrdr.h commonrdr.h  portinuse.h
+ getifaddr.o: config.h getifaddr.h
+ daemonize.o: daemonize.h config.h
+ upnpglobalvars.o: config.h upnpglobalvars.h upnppermissions.h
+@@ -203,7 +203,7 @@ minissdp.o: config.h upnpdescstrings.h m
+ minissdp.o: upnpglobalvars.h upnppermissions.h miniupnpdtypes.h minissdp.h
+ minissdp.o: upnputils.h codelength.h
+ natpmp.o: macros.h config.h natpmp.h upnpglobalvars.h upnppermissions.h
+-natpmp.o: miniupnpdtypes.h getifaddr.h upnpredirect.h commonrdr.h
++natpmp.o: miniupnpdtypes.h getifaddr.h upnpredirect.h commonrdr.h portinuse.h
+ upnpevents.o: config.h upnpevents.h miniupnpdpath.h upnpglobalvars.h
+ upnpevents.o: upnppermissions.h miniupnpdtypes.h upnpdescgen.h upnputils.h
+ upnputils.o: config.h upnputils.h
+diff -rupN miniupnpd-1.7-orig/natpmp.c miniupnpd-1.7/natpmp.c
+--- miniupnpd-1.7-orig/natpmp.c	2012-05-27 19:12:51.000000000 -0400
++++ miniupnpd-1.7/natpmp.c	2012-07-06 16:06:16.000000000 -0400
+@@ -23,9 +23,11 @@
+ #include "upnpredirect.h"
+ #include "commonrdr.h"
+ #include "upnputils.h"
++#include "portinuse.h"
+ 
+ #ifdef ENABLE_NATPMP
+ 
++
+ int OpenAndConfNATPMPSocket(in_addr_t addr)
+ {
+ 	int snatpmp;
+@@ -267,6 +269,12 @@ void ProcessIncomingNATPMPPacket(int s)
+ 						continue;
+ 					}
+ 				}
++				if (port_in_use(ext_if_name, eport, proto)) {
++					syslog(LOG_INFO, "port %hu protocol %s already in use", eport, (proto==IPPROTO_TCP)?"tcp":"udp");
++					eport++;
++					r = 0;
++					continue;
++				}
+ 				{ /* do the redirection */
+ 					char desc[64];
+ #if 0
+diff -rupN miniupnpd-1.7-orig/portinuse.c miniupnpd-1.7/portinuse.c
+--- miniupnpd-1.7-orig/portinuse.c	1969-12-31 19:00:00.000000000 -0500
++++ miniupnpd-1.7/portinuse.c	2012-07-06 16:05:21.000000000 -0400
+@@ -0,0 +1,71 @@
++/* */
++/* MiniUPnP project
++ * (c) 2007-2012 Thomas Bernard
++ * http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
++ * This software is subject to the conditions detailed
++ * in the LICENCE file provided within the distribution */
++#include <stdio.h>
++#include <string.h>
++#include <unistd.h>
++#include <syslog.h>
++#include <errno.h>
++#include <time.h>
++#include <sys/types.h>
++#include <sys/socket.h>
++#include <netinet/in.h>
++#include <arpa/inet.h>
++
++#include "macros.h"
++#include "config.h"
++#include "upnpglobalvars.h"
++#include "getifaddr.h"
++#include "portinuse.h"
++
++int port_in_use(const char *if_name, unsigned port, int proto)
++{
++	char line[256];
++	FILE *f;
++	int found = 0;
++	char ip_addr_str[INET_ADDRSTRLEN];
++	struct in_addr ip_addr = { .s_addr = 0 };
++	const char tcpfile[] = "/proc/net/tcp";
++	const char udpfile[] = "/proc/net/udp";
++
++	f = fopen((proto==IPPROTO_TCP)?tcpfile:udpfile, "r");
++	if (!f) return 0;
++	
++	if(getifaddr(if_name, ip_addr_str, INET_ADDRSTRLEN) == 0)
++		ip_addr.s_addr = inet_addr(ip_addr_str);
++
++	syslog(LOG_DEBUG, "Check protocol %s for port %d on ext_if %s %s, %8X",
++		(proto==IPPROTO_TCP)?"tcp":"udp", port, if_name, ip_addr_str, (unsigned)ip_addr.s_addr);
++
++	while (fgets(line, 255, f)) {
++		char addr[68];
++		unsigned tmp_port;
++		if (sscanf(line, "%*d: %64[0-9A-Fa-f]:%x %*x:%*x %*x %*x:%*x "
++				"%*x:%*x %*x %*d %*d %*llu",
++				addr, &tmp_port) == 2
++		) {
++			/* TODO add IPV6 support if enabled
++			 * Presently assumes IPV4 */
++			// syslog(LOG_DEBUG, "port_in_use check port %d and address %s", tmp_port, addr);
++			if (tmp_port == port) {
++				char tmp_addr[4];
++				struct in_addr *tmp_ip_addr = (struct in_addr *)tmp_addr;
++				if (sscanf(addr,"%2hhx%2hhx%2hhx%2hhx",
++					&tmp_addr[3],&tmp_addr[2],&tmp_addr[1],&tmp_addr[0]) == 4)
++				{
++					if (tmp_ip_addr->s_addr == inet_addr("0.0.0.0") || tmp_ip_addr->s_addr == ip_addr.s_addr)
++					{
++					  found++;
++					  break;  /* don't care how many, just that we found at least one */
++					}
++				}
++			}
++		}
++	}
++	fclose(f);
++	return found;
++}
++
+diff -rupN miniupnpd-1.7-orig/portinuse.h miniupnpd-1.7/portinuse.h
+--- miniupnpd-1.7-orig/portinuse.h	1969-12-31 19:00:00.000000000 -0500
++++ miniupnpd-1.7/portinuse.h	2012-07-06 15:57:12.000000000 -0400
+@@ -0,0 +1,19 @@
++/*  */
++/* MiniUPnP project
++ * http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
++ * (c) 2006-2011 Thomas Bernard
++ * This software is subject to the conditions detailed
++ * in the LICENCE file provided within the distribution */
++
++#ifndef __PORTINUSE_H__
++#define __PORTINUSE_H__
++
++/* portinuse()
++ * determine wither a port is already in use
++ * on a given interface.
++ * returns: 0 not in use, 1 in use */
++int
++port_in_use(const char *if_name, unsigned port, int proto);
++
++#endif
++
+diff -rupN miniupnpd-1.7-orig/upnpredirect.c miniupnpd-1.7/upnpredirect.c
+--- miniupnpd-1.7-orig/upnpredirect.c	2012-05-01 16:11:50.000000000 -0400
++++ miniupnpd-1.7/upnpredirect.c	2012-07-06 16:06:44.000000000 -0400
+@@ -23,6 +23,7 @@
+ #include "upnpredirect.h"
+ #include "upnpglobalvars.h"
+ #include "upnpevents.h"
++#include "portinuse.h"
+ #if defined(USE_NETFILTER)
+ #include "netfilter/iptcrdr.h"
+ #endif
+@@ -294,7 +295,12 @@ upnp_redirect(const char * rhost, unsign
+ 				eport, protocol, iaddr_old, iport_old);
+ 			return -2;
+ 		}
+-	} else {
++	}
++	else if (port_in_use(ext_if_name, eport, proto)) {
++		syslog(LOG_INFO, "port %hu protocol %s already in use", eport, protocol);
++		return -2;
++	} 
++	else {
+ 		timestamp = (leaseduration > 0) ? time(NULL) + leaseduration : 0;
+ 		syslog(LOG_INFO, "redirecting port %hu to %s:%hu protocol %s for: %s",
+ 			eport, iaddr, iport, protocol, desc);
