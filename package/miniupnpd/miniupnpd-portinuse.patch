@@ -30,7 +30,7 @@ diff -rupN miniupnpd-1.7-orig/Makefile.linux miniupnpd-1.7/Makefile.linux
  upnputils.o: config.h upnputils.h
 diff -rupN miniupnpd-1.7-orig/natpmp.c miniupnpd-1.7/natpmp.c
 --- miniupnpd-1.7-orig/natpmp.c	2012-05-27 19:12:51.000000000 -0400
-+++ miniupnpd-1.7/natpmp.c	2012-07-06 16:06:16.000000000 -0400
++++ miniupnpd-1.7/natpmp.c	2012-07-07 08:32:14.087915642 -0400
 @@ -23,9 +23,11 @@
  #include "upnpredirect.h"
  #include "commonrdr.h"
@@ -47,7 +47,7 @@ diff -rupN miniupnpd-1.7-orig/natpmp.c miniupnpd-1.7/natpmp.c
  						continue;
  					}
  				}
-+				if (port_in_use(ext_if_name, eport, proto)) {
++				if (port_in_use(ext_if_name, eport, proto, senderaddrstr, iport)) {
 +					syslog(LOG_INFO, "port %hu protocol %s already in use", eport, (proto==IPPROTO_TCP)?"tcp":"udp");
 +					eport++;
 +					r = 0;
@@ -56,10 +56,73 @@ diff -rupN miniupnpd-1.7-orig/natpmp.c miniupnpd-1.7/natpmp.c
  				{ /* do the redirection */
  					char desc[64];
  #if 0
+diff -rupN miniupnpd-1.7-orig/netfilter/iptcrdr.c miniupnpd-1.7/netfilter/iptcrdr.c
+--- miniupnpd-1.7-orig/netfilter/iptcrdr.c	2012-05-01 05:11:16.000000000 -0400
++++ miniupnpd-1.7/netfilter/iptcrdr.c	2012-07-06 22:07:34.537558699 -0400
+@@ -238,6 +238,18 @@ get_redirect_rule(const char * ifname, u
+                   unsigned int * timestamp,
+                   u_int64_t * packets, u_int64_t * bytes)
+ {
++	return get_nat_redirect_rule(miniupnpd_nat_chain, ifname, eport, proto, iaddr, iaddrlen, iport,
++				 desc, desclen, rhost, rhostlen,timestamp, packets, bytes);
++}
++
++int
++get_nat_redirect_rule(const char * nat_chain_name, const char * ifname, unsigned short eport, int proto,
++                  char * iaddr, int iaddrlen, unsigned short * iport,
++                  char * desc, int desclen,
++                  char * rhost, int rhostlen,
++                  unsigned int * timestamp,
++                  u_int64_t * packets, u_int64_t * bytes)
++{
+ 	int r = -1;
+ 	IPTC_HANDLE h;
+ 	const struct ipt_entry * e;
+@@ -254,18 +266,18 @@ get_redirect_rule(const char * ifname, u
+ 		       iptc_strerror(errno));
+ 		return -1;
+ 	}
+-	if(!iptc_is_chain(miniupnpd_nat_chain, h))
++	if(!iptc_is_chain(nat_chain_name, h))
+ 	{
+-		syslog(LOG_ERR, "chain %s not found", miniupnpd_nat_chain);
++		syslog(LOG_ERR, "chain %s not found", nat_chain_name);
+ 	}
+ 	else
+ 	{
+ #ifdef IPTABLES_143
+-		for(e = iptc_first_rule(miniupnpd_nat_chain, h);
++		for(e = iptc_first_rule(nat_chain_name, h);
+ 		    e;
+ 			e = iptc_next_rule(e, h))
+ #else
+-		for(e = iptc_first_rule(miniupnpd_nat_chain, &h);
++		for(e = iptc_first_rule(nat_chain_name, &h);
+ 		    e;
+ 			e = iptc_next_rule(e, &h))
+ #endif
+diff -rupN miniupnpd-1.7-orig/netfilter/iptcrdr.h miniupnpd-1.7/netfilter/iptcrdr.h
+--- miniupnpd-1.7-orig/netfilter/iptcrdr.h	2012-03-05 15:37:14.000000000 -0500
++++ miniupnpd-1.7/netfilter/iptcrdr.h	2012-07-06 22:03:25.000000000 -0400
+@@ -25,6 +25,14 @@ add_filter_rule2(const char * ifname,
+ int
+ delete_redirect_and_filter_rules(unsigned short eport, int proto);
+ 
++int
++get_nat_redirect_rule(const char * nat_chain_name, const char * ifname, unsigned short eport, int proto,
++                  char * iaddr, int iaddrlen, unsigned short * iport,
++                  char * desc, int desclen,
++                  char * rhost, int rhostlen,
++                  unsigned int * timestamp,
++                  u_int64_t * packets, u_int64_t * bytes);
++
+ /* for debug */
+ int
+ list_redirect_rule(const char * ifname);
 diff -rupN miniupnpd-1.7-orig/portinuse.c miniupnpd-1.7/portinuse.c
 --- miniupnpd-1.7-orig/portinuse.c	1969-12-31 19:00:00.000000000 -0500
-+++ miniupnpd-1.7/portinuse.c	2012-07-06 16:05:21.000000000 -0400
-@@ -0,0 +1,71 @@
++++ miniupnpd-1.7/portinuse.c	2012-07-07 08:46:20.000000000 -0400
+@@ -0,0 +1,95 @@
 +/* */
 +/* MiniUPnP project
 + * (c) 2007-2012 Thomas Bernard
@@ -83,7 +146,10 @@ diff -rupN miniupnpd-1.7-orig/portinuse.c miniupnpd-1.7/portinuse.c
 +#include "getifaddr.h"
 +#include "portinuse.h"
 +
-+int port_in_use(const char *if_name, unsigned port, int proto)
++/* Hardcoded for now.  Ideally would come from .conf file */
++char *chains_to_check[] = { "PREROUTING" , 0 };
++
++int port_in_use(const char *if_name, unsigned eport, int proto, const char *iaddr, unsigned iport)
 +{
 +	char line[256];
 +	FILE *f;
@@ -100,40 +166,61 @@ diff -rupN miniupnpd-1.7-orig/portinuse.c miniupnpd-1.7/portinuse.c
 +		ip_addr.s_addr = inet_addr(ip_addr_str);
 +
 +	syslog(LOG_DEBUG, "Check protocol %s for port %d on ext_if %s %s, %8X",
-+		(proto==IPPROTO_TCP)?"tcp":"udp", port, if_name, ip_addr_str, (unsigned)ip_addr.s_addr);
++		(proto==IPPROTO_TCP)?"tcp":"udp", eport, if_name, ip_addr_str, (unsigned)ip_addr.s_addr);
 +
 +	while (fgets(line, 255, f)) {
-+		char addr[68];
++		char eaddr[68];
 +		unsigned tmp_port;
 +		if (sscanf(line, "%*d: %64[0-9A-Fa-f]:%x %*x:%*x %*x %*x:%*x "
 +				"%*x:%*x %*x %*d %*d %*llu",
-+				addr, &tmp_port) == 2
++				eaddr, &tmp_port) == 2
 +		) {
 +			/* TODO add IPV6 support if enabled
 +			 * Presently assumes IPV4 */
-+			// syslog(LOG_DEBUG, "port_in_use check port %d and address %s", tmp_port, addr);
-+			if (tmp_port == port) {
++			// syslog(LOG_DEBUG, "port_in_use check port %d and address %s", tmp_port, eaddr);
++			if (tmp_port == eport) {
 +				char tmp_addr[4];
 +				struct in_addr *tmp_ip_addr = (struct in_addr *)tmp_addr;
-+				if (sscanf(addr,"%2hhx%2hhx%2hhx%2hhx",
++				if (sscanf(eaddr,"%2hhx%2hhx%2hhx%2hhx",
 +					&tmp_addr[3],&tmp_addr[2],&tmp_addr[1],&tmp_addr[0]) == 4)
 +				{
-+					if (tmp_ip_addr->s_addr == inet_addr("0.0.0.0") || tmp_ip_addr->s_addr == ip_addr.s_addr)
++					if (tmp_ip_addr->s_addr == 0 || tmp_ip_addr->s_addr == ip_addr.s_addr)
 +					{
-+					  found++;
-+					  break;  /* don't care how many, just that we found at least one */
++						found++;
++						break;  /* don't care how many, just that we found at least one */
 +					}
 +				}
 +			}
 +		}
 +	}
 +	fclose(f);
++
++	if (!found) {
++		char iaddr_old[16];
++		unsigned short iport_old;
++		int i = 0;
++		while (chains_to_check[i]) {
++			if (get_nat_redirect_rule(chains_to_check[i], if_name, eport, proto,
++					iaddr_old, sizeof(iaddr_old),&iport_old,
++					0, 0, 0, 0, 0, 0, 0) == 0)
++			{
++				syslog(LOG_DEBUG, "port_in_use check port %d on nat chain %s redirected to %s port %d", eport,
++						chains_to_check[i], iaddr_old, iport_old);
++				if (!(strcmp(iaddr, iaddr_old)==0 && iport==iport_old)) {
++					/* only "in use" if redirected to somewhere else */
++					found++;
++					break;  /* don't care how many, just that we found at least one */
++				}
++			}
++			i++;
++		}
++	}
 +	return found;
 +}
 +
 diff -rupN miniupnpd-1.7-orig/portinuse.h miniupnpd-1.7/portinuse.h
 --- miniupnpd-1.7-orig/portinuse.h	1969-12-31 19:00:00.000000000 -0500
-+++ miniupnpd-1.7/portinuse.h	2012-07-06 15:57:12.000000000 -0400
++++ miniupnpd-1.7/portinuse.h	2012-07-07 08:31:27.479918032 -0400
 @@ -0,0 +1,19 @@
 +/*  */
 +/* MiniUPnP project
@@ -150,13 +237,13 @@ diff -rupN miniupnpd-1.7-orig/portinuse.h miniupnpd-1.7/portinuse.h
 + * on a given interface.
 + * returns: 0 not in use, 1 in use */
 +int
-+port_in_use(const char *if_name, unsigned port, int proto);
++port_in_use(const char *if_name, unsigned port, int proto, const char *iaddr, unsigned iport);
 +
 +#endif
 +
 diff -rupN miniupnpd-1.7-orig/upnpredirect.c miniupnpd-1.7/upnpredirect.c
 --- miniupnpd-1.7-orig/upnpredirect.c	2012-05-01 16:11:50.000000000 -0400
-+++ miniupnpd-1.7/upnpredirect.c	2012-07-06 16:06:44.000000000 -0400
++++ miniupnpd-1.7/upnpredirect.c	2012-07-07 08:47:44.000000000 -0400
 @@ -23,6 +23,7 @@
  #include "upnpredirect.h"
  #include "upnpglobalvars.h"
@@ -171,7 +258,7 @@ diff -rupN miniupnpd-1.7-orig/upnpredirect.c miniupnpd-1.7/upnpredirect.c
  		}
 -	} else {
 +	}
-+	else if (port_in_use(ext_if_name, eport, proto)) {
++	else if (port_in_use(ext_if_name, eport, proto, iaddr, iport)) {
 +		syslog(LOG_INFO, "port %hu protocol %s already in use", eport, protocol);
 +		return -2;
 +	} 
