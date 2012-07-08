@@ -25,11 +25,14 @@
 // 05-05-2011, Added DAHDI Status and Hardware Monitoring sections
 // 08-10-2011, Added APC UPS Status
 // 01-02-2012, Added Jabber Status
+// 07-07-2012, Added UPnP Status
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
 // System location of OpenVPN Server logfile
 $OVPNLOGFILE = '/var/log/openvpn-status.log';
+// System location of MINIUPNPD leases
+$MINIUPNPDLEASES = '/var/db/upnp.leases';
 // System location of DNSMASQ leases
 $DNSMASQLEASES = '/var/db/dnsmasq.leases';
 // System location of nf_conntrack file
@@ -60,6 +63,7 @@ if (getPREFdef($global_prefs, 'status_require_auth') === 'yes') {
 function getDaemons() {
   $status['asterisk'] = 0;
   $status['ntpd'] = 0;
+  $status['miniupnpd'] = 0;
   $status['dnsmasq'] = 0;
   $status['openvpn'] = 0;
   $status['racoon'] = 0;
@@ -77,6 +81,8 @@ function getDaemons() {
       	$status['asterisk']++;
       } elseif (strpos($line, ' ntpd') !== FALSE || strpos($line, '/ntpd') !== FALSE) {
       	$status['ntpd']++;
+      } elseif (strpos($line, ' miniupnpd') !== FALSE || strpos($line, '/miniupnpd') !== FALSE) {
+      	$status['miniupnpd']++;
       } elseif (strpos($line, ' dnsmasq') !== FALSE || strpos($line, '/dnsmasq') !== FALSE) {
       	$status['dnsmasq']++;
       } elseif (strpos($line, ' syslogd') !== FALSE || strpos($line, '/syslogd') !== FALSE) {
@@ -310,6 +316,37 @@ function noASTERISKsounds($asterisk) {
   }
 
   return($status != 0);
+}
+
+// Function: parseMINIUPNPDleases
+//
+function parseMINIUPNPDleases($log) {
+  $cid = 0;
+  if (($ph = @fopen($log, "r")) !== FALSE) {
+    while (! feof($ph)) {
+      if ($line = trim(fgets($ph, 1024))) {
+        $linetokens = explode(':', $line);
+        if (isset($linetokens[4])) {
+          $status['clients'][$cid]['proto'] = $linetokens[0];
+          $status['clients'][$cid]['p_port'] = $linetokens[1];
+          $status['clients'][$cid]['l_ip'] = $linetokens[2];
+          $status['clients'][$cid]['l_port'] = $linetokens[3];
+          $status['clients'][$cid]['expire'] = $linetokens[4];
+          $status['clients'][$cid]['desc'] = $linetokens[5];
+          $cid++;
+        }
+      }
+    }
+    fclose($ph);
+  }
+  // Sort by Public Port
+  if ($cid > 1) {
+    foreach ($status['clients'] as $key => $row) {
+      $p_port[$key] = $row['p_port'];
+    }
+    array_multisort($p_port, SORT_ASC, SORT_STRING, $status['clients']);
+  }
+  return($status);
 }
 
 // Function: parseDNSMASQleases
@@ -617,6 +654,45 @@ if ($daemon['ntpd'] > 0) {
     }
     @unlink($tmpfile);
     putHtml("</pre>");
+  }
+}
+
+if ($daemon['miniupnpd'] > 0) {
+  if (getPREFdef($global_prefs, 'status_show_miniupnpd_leases') !== 'no') { // currently not set in the Prefs tab
+    putHtml("<h2>Universal Plug'n'Play (NAT-PMP and UPnP) Leases:</h2>");
+  
+    if (is_null($upnp = parseMINIUPNPDleases($MINIUPNPDLEASES))) {
+      putHtml("<pre>");
+      putText('No Active NAT-PMP or UPnP Leases');
+      putHtml("</pre>");
+    } else {
+      putHtml('<pre><table class="statusdatatable">');
+      putHtml("<tr>");
+      $cur_time = time();
+      if (($n = count($upnp['clients'])) > 0) {
+        echo "<td>", "Public Port", "</td>";
+        echo "<td>", "Protocol", "</td>";
+        echo "<td>", "Local IPv4", "</td>";
+        echo "<td>", "Local Port", "</td>";
+        echo "<td>", "Expire Time", "</td>";
+        echo "<td>", "Description", "</td>";
+        for ($i = 0; $i < $n; $i++) {
+          putHtml("</tr><tr>");
+          echo "<td>", $upnp['clients'][$i]['p_port'], "</td>";
+          echo "<td>", $upnp['clients'][$i]['proto'], "</td>";
+          echo "<td>", $upnp['clients'][$i]['l_ip'], "</td>";
+          echo "<td>", $upnp['clients'][$i]['l_port'], "</td>";
+          if ($upnp['clients'][$i]['expire'] > $cur_time) {
+            echo "<td>", date('Y-m-d H:i:s', $upnp['clients'][$i]['expire']), "</td>";
+          } else {
+            echo "<td>N/A</td>";
+          }
+          echo "<td>", htmlspecialchars($upnp['clients'][$i]['desc']), "</td>";
+        }
+      }
+      putHtml("</tr>");
+      putHtml("</table></pre>");
+    }
   }
 }
 

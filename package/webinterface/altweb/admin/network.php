@@ -30,6 +30,7 @@
 // 05-24-2011, Added SIP Monitoring
 // 12-03-2011, Added HTTP_ACCESSLOG and HTTPS_ACCESSLOG support
 // 01-28-2012, Added LOCALDNS_LOCAL_DOMAIN support
+// 07-07-2012, Added Universal Plug & Play support
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -96,6 +97,13 @@ $select_ups_cable = array (
   'ethernet' => 'ether',
   'smart' => 'smart',
   'simple' => 'simple'
+);
+
+$select_upnp = array (
+  'disabled' => 'no:no',
+  'NAT-PMP only' => 'yes:no',
+  'UPnP only' => 'no:yes',
+  'NAT-PMP &amp; UPnP' => 'yes:yes'
 );
 
 // Function: checkNETWORKsettings
@@ -389,6 +397,29 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $value = 'CLI_PROXY_SERVER="'.$_POST['cli_proxy'].'"';
   fwrite($fp, "### CLI Proxy Server\n".$value."\n");
   
+  $x_value = $_POST['upnp'];
+  $tokens = explode(':', $x_value);
+  $value = 'UPNP_ENABLE_NATPMP="'.$tokens[0].'"';
+  fwrite($fp, "### UPnP NAT-PMP\n".$value."\n");
+  $value = 'UPNP_ENABLE_UPNP="'.$tokens[1].'"';
+  fwrite($fp, "### UPnP Enable\n".$value."\n");
+
+  $x_value = '';
+  if (isset($_POST['upnp_INTIF'])) {
+    $x_value .= ' INTIF';
+  }
+  if (isset($_POST['upnp_INT2IF'])) {
+    $x_value .= ' INT2IF';
+  }
+  if (isset($_POST['upnp_INT3IF'])) {
+    $x_value .= ' INT3IF';
+  }
+  if (isset($_POST['upnp_DMZIF'])) {
+    $x_value .= ' DMZIF';
+  }
+  $value = 'UPNP_LISTEN="'.trim($x_value).'"';
+  fwrite($fp, "### UPnP Listen Interfaces\n".$value."\n");
+
   $value = 'HTTPDIR="'.trim($_POST['http_dir']).'"';
   fwrite($fp, "### HTTP Server Directory\n".$value."\n");
   
@@ -835,8 +866,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 32, $result, 'init');
       } elseif ($process === 'pptpd') {
         $result = restartPROCESS($process, 33, $result, 'init');
-      } elseif ($process === 'apcupsd') {
+      } elseif ($process === 'miniupnpd') {
         $result = restartPROCESS($process, 34, $result, 'init');
+      } elseif ($process === 'apcupsd') {
+        $result = restartPROCESS($process, 35, $result, 'init');
       }
     } else {
       $result = 2;
@@ -902,6 +935,8 @@ require_once '../common/header.php';
     } elseif ($result == 33) {
       putHtml('<p style="color: green;">PPTP VPN Server has Restarted.</p>');
     } elseif ($result == 34) {
+      putHtml('<p style="color: green;">Universal Plug\'n\'Play has Restarted.</p>');
+    } elseif ($result == 35) {
       putHtml('<p style="color: green;">UPS Daemon has Restarted.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
@@ -921,9 +956,27 @@ require_once '../common/header.php';
   }
   putHtml("</center>");
 ?>
+  <script language="JavaScript" type="text/javascript">
+  //<![CDATA[
+  function upnp_change() {
+    var form = document.getElementById("iform");
+    switch (form.upnp.selectedIndex) {
+      case 0: // disabled
+        break;
+      case 1:
+      case 2:
+      case 3:
+        alert('WARNING: Enabling either NAT-PMP or UPnP has security implications!\
+\n\nNAT EXT->LAN rules can be created automatically.\
+\n\nIf you must, try NAT-PMP only.');
+        break;
+    }
+  }
+  //]]>
+  </script>
   <center>
   <table class="layout"><tr><td><center>
-  <form method="post" action="<?php echo $myself;?>">
+  <form id="iform" method="post" action="<?php echo $myself;?>">
   <table width="100%" class="stdtable">
   <tr><td style="text-align: center;" colspan="2">
   <h2>Network Configuration Settings:</h2>
@@ -960,6 +1013,8 @@ require_once '../common/header.php';
   putHtml('<option value="racoon"'.$sel.'>Restart IPsec VPN</option>');
   $sel = ($reboot_restart === 'pptpd') ? ' selected="selected"' : '';
   putHtml('<option value="pptpd"'.$sel.'>Restart PPTP VPN Server</option>');
+  $sel = ($reboot_restart === 'miniupnpd') ? ' selected="selected"' : '';
+  putHtml('<option value="miniupnpd"'.$sel.'>Restart Univ. Plug\'n\'Play</option>');
   $sel = ($reboot_restart === 'apcupsd') ? ' selected="selected"' : '';
   putHtml('<option value="apcupsd"'.$sel.'>Restart UPS Daemon</option>');
   $sel = ($reboot_restart === 'asterisk') ? ' selected="selected"' : '';
@@ -1351,6 +1406,27 @@ require_once '../common/header.php';
   putHtml('<option value="shellinaboxd"'.$sel.'>enabled</option>');
   putHtml('</select>');
   putHtml('&nbsp;<i>(https://'.$_SERVER['HTTP_HOST'].'/admin/cli/ or CLI Tab)</i>');
+  putHtml('</td></tr>');
+  
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml("Universal Plug'n'Play:");
+  $upnp_natpmp = getVARdef($db, 'UPNP_ENABLE_NATPMP', $cur_db) === 'yes' ? 'yes' : 'no';
+  $upnp_upnp = getVARdef($db, 'UPNP_ENABLE_UPNP', $cur_db) === 'yes' ? 'yes' : 'no';
+  putHtml('<select name="upnp" onchange="upnp_change()">');
+  foreach ($select_upnp as $key => $value) {
+    $sel = ("$upnp_natpmp:$upnp_upnp" === $value) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$value.'"'.$sel.'>'.$key.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('&ndash;&nbsp;Interfaces:');
+  $sel = isVARtype('UPNP_LISTEN', $db, $cur_db, 'INTIF') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="upnp_INTIF" name="upnp_INTIF"'.$sel.' />&nbsp;1st LAN');
+  $sel = isVARtype('UPNP_LISTEN', $db, $cur_db, 'INT2IF') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="upnp_INT2IF" name="upnp_INT2IF"'.$sel.' />&nbsp;2nd LAN');
+  $sel = isVARtype('UPNP_LISTEN', $db, $cur_db, 'INT3IF') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="upnp_INT3IF" name="upnp_INT3IF"'.$sel.' />&nbsp;3rd LAN');
+  $sel = isVARtype('UPNP_LISTEN', $db, $cur_db, 'DMZIF') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="upnp_DMZIF" name="upnp_DMZIF"'.$sel.' />&nbsp;DMZ');
   putHtml('</td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');

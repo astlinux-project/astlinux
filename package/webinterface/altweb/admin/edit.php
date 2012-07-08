@@ -27,6 +27,7 @@ $select_reload = array (
   'openvpnclient' => 'Restart OpenVPN Client',
   'racoon' => 'Restart IPsec VPN',
   'pptpd' => 'Restart PPTP VPN Server',
+  'miniupnpd' => 'Restart Univ. Plug\'n\'Play',
   'apcupsd' => 'Restart UPS Daemon',
   'asterisk' => 'Restart Asterisk',
   'cron' => 'Reload Cron for root'
@@ -198,8 +199,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 32, $result, 'init');
       } elseif ($process === 'pptpd') {
         $result = restartPROCESS($process, 33, $result, 'init');
-      } elseif ($process === 'apcupsd') {
+      } elseif ($process === 'miniupnpd') {
         $result = restartPROCESS($process, 34, $result, 'init');
+      } elseif ($process === 'apcupsd') {
+        $result = restartPROCESS($process, 35, $result, 'init');
       } elseif ($process === 'cron') {
         $result = updateCRON('root', 30, $result);
       }
@@ -302,6 +305,8 @@ require_once '../common/header.php';
     } elseif ($result == 33) {
       putHtml('<p style="color: green;">PPTP VPN Server has Restarted.</p>');
     } elseif ($result == 34) {
+      putHtml('<p style="color: green;">Universal Plug\'n\'Play has Restarted.</p>');
+    } elseif ($result == 35) {
       putHtml('<p style="color: green;">UPS Daemon has Restarted.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
