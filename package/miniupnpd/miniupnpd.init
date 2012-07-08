@@ -61,6 +61,20 @@ ip4tables()
   )
 }
 
+upnp_allow()
+{
+  local addr allow IFS
+
+  unset IFS
+  for addr in $UPNP_ALLOW; do
+    case $addr in
+      */*) allow="$addr" ;;
+        *) allow="$addr/32" ;;
+    esac
+    echo "allow 1024-65535 ${allow} 1024-65535"
+  done
+}
+
 is_upnp_enabled()
 {
   # args: IF_Name
@@ -146,7 +160,11 @@ uuid=$UUID
 friendly_name=AstLinux Router
 serial=000001
 model_number=$(cat /etc/astlinux-release)" >> $MINIUPNPD_CONF
-  echo -e "$RULES" >> $MINIUPNPD_CONF
+  if [ -n "$UPNP_ALLOW" ]; then
+    upnp_allow >> $MINIUPNPD_CONF
+  else
+    echo -e "$RULES" >> $MINIUPNPD_CONF
+  fi
   echo "deny 0-65535 0.0.0.0/0 0-65535" >> $MINIUPNPD_CONF
 }
 
