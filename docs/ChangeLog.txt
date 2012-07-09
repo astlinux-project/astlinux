@@ -39,6 +39,13 @@ Released **TBD**
 
 -- AIF, version bump to 2.0.1c
 
+-- miniupnpd, new package added to support Universal Plug'n'Play for both NAT-PMP and UPnP.
+
+   Much thanks to David Kerr for performing the majority of the work required to implement miniupnpd.
+
+   WARNING: Enabling either NAT-PMP or UPnP has security implications!
+   More info: http://doc.astlinux.org/userdoc:tt_universal_plug_play
+
 -- IPsec XAuth, new rc.conf variable IPSECM_XAUTH_LOCAL_GW which defines a client local gateway for
    IPsec XAuth clients, defaults to INTIP. Remote IPsec XAuth clients then use INTIP (or IPSECM_XAUTH_LOCAL_GW)
    as the Asterisk server, any AstLinux-local server for that matter.
@@ -67,6 +74,11 @@ Released **TBD**
 -- MeetMe tab, added a new MeetMe tab to manage Conferences.
    The Prefs tab allows the MeetMe tab to be shown, as well as supporting MeetMe Tab Options.
    Special thanks to James Babiak for the blueprint.
+
+-- Universal Plug'n'Play support added:
+   == Status tab shows "Universal Plug'n'Play Leases" section when the miniupnpd daemon is enabled.
+   == Network tab allows "Universal Plug'n'Play" to be enabled and restarted.
+   == Edit tab allows "Universal Plug'n'Play" to be restarted.
 
 
 Additions for AstLinux 1.0.3:
