@@ -1,0 +1,10 @@
+config BR2_PACKAGE_FBFLASH
+	bool "fbflash"
+ 	default n
+	depends on BR2_PACKAGE_FONULATOR
+	select BR2_PACKAGE_LIBFB
+	help
+	  RedFone fbflash FoneBRIDGE2 configuration software
+	  	  
+	  http://support.red-fone.com/fb_flash/
+

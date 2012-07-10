@@ -1,0 +1,11 @@
+config BR2_PACKAGE_FONULATOR
+	bool "fonebridge-fonulator"
+ 	default n
+	select BR2_PACKAGE_LIBARGTABLE2
+	select BR2_PACKAGE_LIBFB
+	select BR2_PACKAGE_FBFLASH
+	help
+	  RedFone fonulator FoneBRIDGE2 configuration software
+	  	  
+	  http://support.red-fone.com/downloads/fonulator/
+

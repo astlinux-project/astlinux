@@ -1,0 +1,9 @@
+config BR2_PACKAGE_LIBFB
+	bool "libfb"
+ 	default n
+	select BR2_PACKAGE_LIBNET
+	help
+	  Flash Block Library needed for the RedFone fonulator software
+	  	  
+	  http://support.red-fone.com/downloads/fonulator/
+

@@ -1,0 +1,11 @@
+config BR2_PACKAGE_LIBNET
+	bool "libnet"
+ 	default n
+	select BR2_PACKAGE_LIBPCAP
+	help
+	  libnet provides a portable framework for low-level network packet
+	  construction. libnet at packetfactory is dead, no response to email, and
+	  no bug fixing. This version is being maintained at:
+	  
+	  http://github.com/sam-github/libnet
+
