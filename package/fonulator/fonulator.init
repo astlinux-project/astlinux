@@ -21,7 +21,7 @@ init () {
 
 start () {
 
-  if [ -f $FONULATOR_CONF -o -f $FONULATOR_CONF2 ]; then
+  if [ "$FONEBRIDGE_CONFIG" = "yes" ] && [ -f $FONULATOR_CONF -o -f $FONULATOR_CONF2 ]; then
     echo "Starting fonulator..."
 
     for i in $FONULATOR_CONF $FONULATOR_CONF2; do
@@ -37,7 +37,7 @@ start () {
 
 stop () {
 
-  if [ -f $FONULATOR_LOCK ]; then
+  if [ "$FONEBRIDGE_CONFIG" = "yes" -a -f $FONULATOR_LOCK ]; then
     echo "Stopping fonulator..."
 
     # Kill any active "fonulator" process
@@ -48,7 +48,7 @@ stop () {
   fi
 }
 
-if [ "$FONEBRIDGE_CONFIG" != "yes" ] || [ ! -x "$FONULATOR" ]; then
+if [ ! -x "$FONULATOR" ]; then
   exit
 fi
 
