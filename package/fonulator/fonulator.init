@@ -2,12 +2,10 @@
 
 . /etc/rc.conf
 
-FONULATOR="/usr/bin/fonulator"
+FONULATOR="/usr/sbin/fonulator"
 
 FONULATOR_CONF="/etc/redfone.conf"
 FONULATOR_CONF2="/etc/redfone2.conf"
-
-FONULATOR_LOCK="/var/lock/fonulator.lock"
 
 init () {
 
@@ -27,9 +25,6 @@ start () {
     for i in $FONULATOR_CONF $FONULATOR_CONF2; do
       if [ -f $i ]; then
         $FONULATOR $i &
-        if [ $? -eq 0 ]; then
-          touch $FONULATOR_LOCK
-        fi
       fi
     done
   fi
@@ -37,14 +32,12 @@ start () {
 
 stop () {
 
-  if [ "$FONEBRIDGE_CONFIG" = "yes" -a -f $FONULATOR_LOCK ]; then
-    echo "Stopping fonulator..."
-
+  if [ "$FONEBRIDGE_CONFIG" = "yes" ]; then
     # Kill any active "fonulator" process
     if ps | grep -q -e '[ /]fonulator[ ]' -e '[ /]fonulator$'; then
+      echo "Stopping fonulator..."
       killall fonulator >/dev/null 2>&1
     fi
-    rm -f $FONULATOR_LOCK
   fi
 }
 
