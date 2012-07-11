@@ -56,7 +56,7 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.4.44 and 1.8.13.0
+-- Asterisk 1.4.44 and 1.8.14.0
 
 -- DAHDI, dahdi-linux 2.6.1 and dahdi-tools 2.6.1
 
