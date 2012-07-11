@@ -67,6 +67,13 @@ Released **TBD**
 
 -- rhino, version bump to 0.99.6b2, Rhino PCI card support is now (again) enabled in the standard, default builds.
 
+-- (Custom Build Only) fonulator, new package to support the installation and configuration of the
+   Redfone foneBRIDGE (PRI-to-Ethernet bridge) using TDM-over-Ethernet to Asterisk.
+
+   Much thanks to Michael Keuter for performing the majority of the work required to implement fonulator.
+
+   More info: http://doc.astlinux.org/userdoc:fonebridge
+
 -- safe_asterisk script, add restart limits so endless restarts/emails won't be generated
 
 ** Web Interface
