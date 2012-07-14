@@ -1,0 +1,8 @@
+config BR2_PACKAGE_TINYPROXY
+	bool "tinyproxy"
+ 	default n
+	help
+	  Tinyproxy is a light-weight HTTP/HTTPS proxy daemon. 
+	  	  	  
+	  https://banu.com/tinyproxy/
+
