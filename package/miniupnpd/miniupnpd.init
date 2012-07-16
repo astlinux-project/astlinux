@@ -63,15 +63,27 @@ ip4tables()
 
 upnp_allow()
 {
-  local addr allow IFS
+  local i addr port allow portrange IFS
 
   unset IFS
-  for addr in $UPNP_ALLOW; do
+  for i in $UPNP_ALLOW; do
+
+    addr="$(echo $i | cut -d'~' -f1)"
     case $addr in
       */*) allow="$addr" ;;
         *) allow="$addr/32" ;;
     esac
-    echo "allow 1024-65535 ${allow} 1024-65535"
+
+    port="$(echo $i | cut -d'~' -f2)"
+    if [ -z "$port" ]; then
+      portrange="1024-65535"
+    elif [ -z "$(echo "$port" | tr -d '0123456789-')" ]; then
+      portrange="$port"
+    else
+      portrange="1024-65535"
+    fi
+
+    echo "allow 1024-65535 ${allow} ${portrange}"
   done
 }
 
