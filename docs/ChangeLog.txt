@@ -56,7 +56,7 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.4.44 and 1.8.14.0
+-- Asterisk 1.4.44 and 1.8.14.1
 
 -- DAHDI, dahdi-linux 2.6.1 and dahdi-tools 2.6.1
 
@@ -75,6 +75,9 @@ Released **TBD**
    More info: http://doc.astlinux.org/userdoc:fonebridge
 
 -- safe_asterisk script, add restart limits so endless restarts/emails won't be generated
+
+-- cdr-sqlite3, if the directory "/mnt/kd/cdr-sqlite3" exists, the master.db file will be placed on persistent
+   storage at "/mnt/kd/cdr-sqlite3/master.db".
 
 ** Web Interface
 
