@@ -65,6 +65,10 @@ init () {
   make_symlink_or_dir "/mnt/kd/cdr-csv" "/var/log/asterisk/cdr-csv"
 
   make_symlink_or_dir "/mnt/kd/cdr-custom" "/var/log/asterisk/cdr-custom"
+
+  if [ -d /mnt/kd/cdr-sqlite3 ]; then
+    ln -sf /mnt/kd/cdr-sqlite3/master.db /var/log/asterisk/master.db
+  fi
 }
 
 start () {
