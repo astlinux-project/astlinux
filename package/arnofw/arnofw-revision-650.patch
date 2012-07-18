@@ -1,0 +1,110 @@
+--- arno-iptables-firewall_2.0.1c/bin/arno-iptables-firewall.orig
++++ arno-iptables-firewall_2.0.1c/bin/arno-iptables-firewall
+@@ -2005,13 +2005,14 @@
+   iptables -A DMZ_INET_FORWARD_CHAIN -p icmp --icmp-type echo-request -j DROP
+ 
+   # Set the default policy (switch to DROP for a protocol when xxx_OPEN_xxx variable is used)
+   ###########################################################################################
+   if [ -z "$DMZ_INET_OPEN_TCP" -a -z "$DMZ_INET_HOST_OPEN_TCP" -a \
+        -z "$DMZ_INET_OPEN_UDP" -a -z "$DMZ_INET_HOST_OPEN_UDP" -a \
+-       -z "$DMZ_INET_OPEN_IP"  -a -z "$DMZ_INET_HOST_OPEN_IP" ]; then
++       -z "$DMZ_INET_OPEN_IP"  -a -z "$DMZ_INET_HOST_OPEN_IP"  -a -z "$DMZ_INET_DEFAULT_POLICY_DROP" ] \
++     || [ "$DMZ_INET_DEFAULT_POLICY_DROP" = "0" ]; then
+     echo "  Allowing all (other) ports/protocols"
+     iptables -A DMZ_INET_FORWARD_CHAIN -j ACCEPT
+   else
+     if [ "$DMZ_OUTPUT_DENY_LOG" != "0" ]; then
+       iptables -A DMZ_INET_FORWARD_CHAIN -p tcp -m limit \
+         --limit 1/s --limit-burst 1 -j LOG --log-level $LOGLEVEL --log-prefix "AIF:DMZ->INET denied: "
+@@ -2231,13 +2232,14 @@
+   iptables -A INT_INPUT_CHAIN -p icmp --icmp-type echo-request -j DROP
+ 
+   # Set the default policy
+   ########################
+   if [ -z "$LAN_OPEN_TCP" -a -z "$LAN_HOST_OPEN_TCP" -a \
+        -z "$LAN_OPEN_UDP" -a -z "$LAN_HOST_OPEN_UDP" -a \
+-       -z "$LAN_OPEN_IP" -a -z "$LAN_HOST_OPEN_IP" ]; then
++       -z "$LAN_OPEN_IP"  -a -z "$LAN_HOST_OPEN_IP"  -a -z "$LAN_DEFAULT_POLICY_DROP" ] \
++     || [ "$LAN_DEFAULT_POLICY_DROP" = "0" ]; then
+     echo " Allowing all (other) ports/protocols"
+     iptables -A INT_INPUT_CHAIN -j ACCEPT
+   else
+     echo " Denying all (other) ports/protocols"
+     if [ "$LAN_INPUT_DENY_LOG" != "0" ]; then
+       iptables -A INT_INPUT_CHAIN -m limit \
+@@ -2526,13 +2528,14 @@
+   iptables -A LAN_INET_FORWARD_CHAIN -p icmp --icmp-type echo-request -j DROP
+ 
+   # Set the default policy (switch to DROP for a protocol when xxx_OPEN_xxx variable is used)
+   ###########################################################################################
+   if [ -z "$LAN_INET_OPEN_TCP" -a -z "$LAN_INET_HOST_OPEN_TCP" -a \
+        -z "$LAN_INET_OPEN_UDP" -a -z "$LAN_INET_HOST_OPEN_UDP" -a \
+-       -z "$LAN_INET_OPEN_IP" -a -z "$LAN_INET_HOST_OPEN_IP" ]; then
++       -z "$LAN_INET_OPEN_IP"  -a -z "$LAN_INET_HOST_OPEN_IP"  -a -z "$LAN_INET_DEFAULT_POLICY_DROP" ] \
++     || [ "$LAN_INET_DEFAULT_POLICY_DROP" = "0" ]; then
+     echo "  Allowing all (other) ports/protocols"
+     iptables -A LAN_INET_FORWARD_CHAIN -j ACCEPT
+   else
+     if [ "$LAN_OUTPUT_DENY_LOG" != "0" ]; then
+       iptables -A LAN_INET_FORWARD_CHAIN -p tcp -m limit \
+         --limit 1/s --limit-burst 1 -j LOG --log-level $LOGLEVEL --log-prefix "AIF:LAN->INET denied: "
+--- arno-iptables-firewall_2.0.1c/etc/arno-iptables-firewall/firewall.conf.orig
++++ arno-iptables-firewall_2.0.1c/etc/arno-iptables-firewall/firewall.conf
+@@ -638,12 +638,18 @@
+ #                                                                             #
+ # Note that when both LAN_OPEN_xxx & LAN_HOST_OPEN_xxx are NOT used, the      #
+ # default policy for this chain is accept (unless denied through              #
+ # LAN_DENY_xxx and/or LAN_HOST_DENY_xxx)!                                     #
+ ###############################################################################
+ 
++# Disable this (set to "") to automatically set default policy as above.
++# When set to "1" the LAN->localhost default policy will always be DROP
++# When set to "0" the LAN->localhost default policy will always be ACCEPT
++# -----------------------------------------------------------------------------
++LAN_DEFAULT_POLICY_DROP=""
++
+ # Enable this to allow for ICMP-requests(ping) from your LAN
+ # -----------------------------------------------------------------------------
+ LAN_OPEN_ICMP=1
+ 
+ # Put in the following variables the TCP/UDP ports or IP protocols TO
+ # (remote end-point) which the LAN hosts are permitted to connect to.
+@@ -691,12 +697,18 @@
+ # LAN_INET_xxx = LAN->internet access rules (forward)                         #
+ #                                                                             #
+ # Note that when the LAN_INET_OPEN_xxx & LAN_INET_HOST_OPEN_xxx variables are #
+ # NOT used, the default policy will be accept for LAN->INET (unless denied    #
+ # through LAN_INET_DENY_xxx and/or LAN_INET_HOST_DENY_xxx)!                   #
+ ###############################################################################
++
++# Disable this (set to "") to automatically set default policy as above.
++# When set to "1" the LAN->INET default policy will always be DROP
++# When set to "0" the LAN->INET default policy will always be ACCEPT
++# -----------------------------------------------------------------------------
++LAN_INET_DEFAULT_POLICY_DROP=""
+ 
+ # Enable this to allow for ICMP-requests(ping) for LAN->INET
+ # -----------------------------------------------------------------------------
+ LAN_INET_OPEN_ICMP=1
+ 
+ # Put in the following variables the TCP/UDP ports or IP
+@@ -899,12 +911,18 @@
+ #                                                                             #
+ # Note that when the DMZ_INET_OPEN_xxx & DMZ_INET_HOST_OPEN_xxx variables are #
+ # NOT used, the default policy will be accept for DMZ->INET (unless denied    #
+ # through DMZ_INET_DENY_xxx and/or DMZ_INET_HOST_DENY_xxx)!                   #
+ ###############################################################################
+ 
++# Disable this (set to "") to automatically set default policy as above.
++# When set to "1" the DMZ->INET default policy will always be DROP
++# When set to "0" the DMZ->INET default policy will always be ACCEPT
++# -----------------------------------------------------------------------------
++DMZ_INET_DEFAULT_POLICY_DROP=""
++
+ # Enable this to make the default policy allow for ICMP(ping) for DMZ->INET
+ # -----------------------------------------------------------------------------
+ DMZ_INET_OPEN_ICMP=1
+ 
+ # Put in the following variables the TCP/UDP ports or IP
+ # protocols TO (remote end-point) which the DMZ hosts are
+
