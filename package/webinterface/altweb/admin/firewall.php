@@ -17,6 +17,7 @@
 // 08-23-2009, Added TCP/UDP protocol
 // 10-14-2010, Added IPv6 support
 // 03-28-2012, Added NAT EXT support
+// 07-16-2012, Added "Pass LAN->EXT" and "Pass DMZ->EXT" actions
 //
 // System location of /mnt/kd/rc.conf.d directory
 $FIREWALLCONFDIR = '/mnt/kd/rc.conf.d';
@@ -42,6 +43,8 @@ $action_label = array (
   'DENY_LOCAL_EXT' => 'Deny Local->EXT',
   'DENY_EXT_DMZ' => 'Deny EXT->DMZ',
   'DENY_DMZ_EXT' => 'Deny DMZ->EXT',
+  'PASS_LAN_EXT' => 'Pass LAN->EXT',
+  'PASS_DMZ_EXT' => 'Pass DMZ->EXT',
   'LOG_LOCAL_OUT' => 'Log Local Out',
   'LOG_LOCAL_IN' => 'Log Local In'
 );
@@ -59,6 +62,8 @@ $action_arno = array (
   'DENY_LOCAL_EXT' => 'HOST_DENY_xxx_OUTPUT',
   'DENY_EXT_DMZ' => 'INET_DMZ_HOST_DENY_xxx',
   'DENY_DMZ_EXT' => 'DMZ_INET_HOST_DENY_xxx',
+  'PASS_LAN_EXT' => 'LAN_INET_HOST_OPEN_xxx',
+  'PASS_DMZ_EXT' => 'DMZ_INET_HOST_OPEN_xxx',
   'LOG_LOCAL_OUT' => 'LOG_HOST_OUTPUT_xxx',
   'LOG_LOCAL_IN' => 'LOG_HOST_INPUT_xxx'
 );
@@ -89,6 +94,16 @@ $allowlan_label = array (
   'INTIF' => '1st LAN Interface',
   'INT2IF' => '2nd LAN Interface',
   'INT3IF' => '3rd LAN Interface'
+);
+
+$lan_default_policy_label = array (
+  '0' => 'Pass LAN->EXT',
+  '1' => 'Deny LAN->EXT'
+);
+
+$dmz_default_policy_label = array (
+  '0' => 'Pass DMZ->EXT',
+  '1' => 'Deny DMZ->EXT'
 );
 
 // Get arno firewall version
@@ -151,6 +166,8 @@ function getARNOvars($db) {
           case 'DENY_EXT_DMZ':
           case 'DENY_DMZ_EXT':
           case 'PASS_DMZ_LAN':
+          case 'PASS_LAN_EXT':
+          case 'PASS_DMZ_EXT':
             if ($is_ip) {
               $str = $data['s_addr'].'>'.$data['d_addr'].$col.$data['proto'];
             } else {
@@ -263,6 +280,10 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   fwrite($fp, $value."\n");
   
   fwrite($fp, "### Options\n");
+  $value = 'LAN_INET_DEFAULT_POLICY_DROP="'.$_POST['lan_DP'].'"';
+  fwrite($fp, $value."\n");
+  $value = 'DMZ_INET_DEFAULT_POLICY_DROP="'.$_POST['dmz_DP'].'"';
+  fwrite($fp, $value."\n");
   $value = 'ALLOWLANS="'.(isset($_POST['is_allowlans']) ? $_POST['allowlans'] : '').'"';
   fwrite($fp, $value."\n");
   $value = 'OVPNC_ALLOWLAN="'.(isset($_POST['is_ovpnc_allowlan']) ? $_POST['ovpnc_allowlan'] : '').'"';
@@ -465,6 +486,8 @@ function addFWRule(&$db, $id) {
   case 'DENY_EXT_DMZ':
   case 'DENY_DMZ_EXT':
   case 'PASS_DMZ_LAN':
+  case 'PASS_LAN_EXT':
+  case 'PASS_DMZ_EXT':
     if ($s_addr === '' || $d_addr === '') {
       return(FALSE);
     }
@@ -646,7 +669,7 @@ require_once '../common/header.php';
       case 3:  // PASS_EXT_LOCAL
       case 6:  // PASS_DMZ_LOCAL
       case 9:  // DENY_LAN_LOCAL
-      case 14:  // LOG_LOCAL_IN
+      case 16:  // LOG_LOCAL_IN
         form.s_addr.disabled = 0;
         form.s_lport.disabled = 0;
         form.s_uport.disabled = 0;
@@ -677,6 +700,8 @@ require_once '../common/header.php';
       case 8:  // DENY_LAN_EXT
       case 11:  // DENY_EXT_DMZ
       case 12:  // DENY_DMZ_EXT
+      case 13:  // PASS_LAN_EXT
+      case 14:  // PASS_DMZ_EXT
         form.s_addr.disabled = 0;
         form.d_addr.disabled = 0;
         form.d_lport.disabled = 0;
@@ -689,7 +714,7 @@ require_once '../common/header.php';
         nat_ext.style.visibility = "hidden";
         break;
       case 10:  // DENY_LOCAL_EXT
-      case 13:  // LOG_LOCAL_OUT
+      case 15:  // LOG_LOCAL_OUT
         form.d_addr.disabled = 0;
         form.d_lport.disabled = 0;
         form.d_uport.disabled = 0;
@@ -916,6 +941,29 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
   putHtml('<strong>Firewall Options:</strong>');
   putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td width="75" style="text-align: right;">&nbsp;</td><td>');
+  putHtml('Default Policy for LAN to EXT:');
+  $lan_DP = getVARdef($vars, 'LAN_INET_DEFAULT_POLICY_DROP');
+  putHtml('<select name="lan_DP">');
+  foreach ($lan_default_policy_label as $key => $value) {
+    $sel = ($lan_DP == $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td width="75" style="text-align: right;">&nbsp;</td><td>');
+  putHtml('Default Policy for DMZ to EXT:');
+  $dmz_DP = getVARdef($vars, 'DMZ_INET_DEFAULT_POLICY_DROP');
+  putHtml('<select name="dmz_DP">');
+  foreach ($dmz_default_policy_label as $key => $value) {
+    $sel = ($dmz_DP == $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
   putHtml('<tr class="dtrow1"><td width="75" style="text-align: right;">');
   $allowlans = getVARdef($vars, 'ALLOWLANS');
   $sel = ($allowlans !== '') ? ' checked="checked"' : '';
