@@ -37,7 +37,9 @@ Released **TBD**
 
 -- lighttpd, version bump to 1.4.31
 
--- AIF, version bump to 2.0.1c
+-- AIF, version bump to 2.0.1c plus upstream r647 and r650 patches.
+
+-- radvd, version bump to 1.9.1, now uses libdaemon to fix a previous issue.
 
 -- miniupnpd, new package added to support Universal Plug'n'Play for both NAT-PMP and UPnP.
 
@@ -49,6 +51,9 @@ Released **TBD**
 -- IPsec XAuth, new rc.conf variable IPSECM_XAUTH_LOCAL_GW which defines a client local gateway for
    IPsec XAuth clients, defaults to INTIP. Remote IPsec XAuth clients then use INTIP (or IPSECM_XAUTH_LOCAL_GW)
    as the Asterisk server, any AstLinux-local server for that matter.
+
+-- mtr, new command, network diagnostic tool that is a fancy screen-based traceroute + ping combo.
+   Try it: mtr google.com
 
 -- dhcpdump, new command to help debug DHCP packets, useful for IP phones and provisioning.
    Example: dhcpdump -i eth1 -h '^00:15:65'
@@ -80,6 +85,12 @@ Released **TBD**
    storage at "/mnt/kd/cdr-sqlite3/master.db".
 
 ** Web Interface
+
+-- Network -> Firewall sub-tab added features:
+   == New 'Pass LAN->EXT' and 'Pass DMZ->EXT' rule actions.  Useful when broad 'Deny LAN->EXT' or 'Deny DMZ->EXT'
+      rule actions are also defined, or with the new Default Policies feature with "Deny".
+   == New options to define the outbound Default Policies for LAN->EXT and DMZ->EXT.
+      Note: The defaults are 'Pass LAN->EXT' and 'Pass DMZ->EXT'
 
 -- MeetMe tab, added a new MeetMe tab to manage Conferences.
    The Prefs tab allows the MeetMe tab to be shown, as well as supporting MeetMe Tab Options.
