@@ -3,7 +3,7 @@
 # spandsp
 #
 #############################################################
-SPANDSP_VERSION = 0.0.6pre20
+SPANDSP_VERSION = 0.0.6pre21
 SPANDSP_SITE = http://www.soft-switch.org/downloads/spandsp
 SPANDSP_SOURCE:=spandsp-$(SPANDSP_VERSION).tgz
 SPANDSP_INSTALL_STAGING = YES
