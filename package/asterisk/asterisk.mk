@@ -12,7 +12,7 @@ ASTERISK_VERSION := 1.6.2.21
   ifeq ($(BR2_PACKAGE_ASTERISK_v1_8),y)
 ASTERISK_VERSION := 1.8.15.0
   else
-ASTERISK_VERSION := 10.5.0
+ASTERISK_VERSION := 11.0.0-beta1
   endif
  endif
 endif
@@ -235,7 +235,7 @@ else
  endif
  ifneq ($(ASTERISK_VERSION_SINGLE),1)
 	(cd $(ASTERISK_DIR); \
-		menuselect/menuselect --enable app_meetme --enable app_page --enable chan_jingle menuselect.makeopts; \
+		menuselect/menuselect --enable app_meetme --enable app_page menuselect.makeopts; \
 	)
  endif
 endif

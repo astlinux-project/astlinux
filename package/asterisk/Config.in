@@ -31,10 +31,10 @@ choice
 		help
 			Asterisk Long Term Stable Release.
 
-	config BR2_PACKAGE_ASTERISK_v10_0
-		bool "Asterisk v10.0.x"
+	config BR2_PACKAGE_ASTERISK_v11_0
+		bool "Asterisk v11.0.x"
 		help
-			Asterisk Standard Release.
+			Asterisk Long Term Release.
 endchoice
 
 comment "cdr_mysql, app_mysql and res_config_mysql - disabled (requires MYSQL_CLIENT)"
