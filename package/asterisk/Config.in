@@ -31,8 +31,8 @@ choice
 		help
 			Asterisk Long Term Stable Release.
 
-	config BR2_PACKAGE_ASTERISK_v11_0
-		bool "Asterisk v11.0.x"
+	config BR2_PACKAGE_ASTERISK_v11
+		bool "Asterisk v11.x"
 		help
 			Asterisk Long Term Release.
 endchoice
