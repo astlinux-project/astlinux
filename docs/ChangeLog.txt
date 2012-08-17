@@ -12,7 +12,7 @@ Released **TBD**
 
 ** System
 
--- php, version bump to 5.3.15 (security fixes: CVE-2012-2688 and CVE-2012-3365)
+-- php, version bump to 5.3.16 (security fixes: CVE-2012-2688 and CVE-2012-3365)
 
 -- spandsp, version bump to 0.0.6pre21
 
@@ -24,7 +24,9 @@ Released **TBD**
 
 -- Asterisk 1.4.44 and 1.8.15.0
 
--- DAHDI, dahdi-linux 2.6.1 and dahdi-tools 2.6.1
+-- DAHDI, no change, dahdi-linux 2.6.1 and dahdi-tools 2.6.1
+
+-- wanpipe, version bump to 3.5.28
 
 ** Web Interface
 
