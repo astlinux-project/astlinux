@@ -17,7 +17,11 @@ start () {
 
   if [ -f /etc/snmp/snmpd.conf ]; then
     echo "Starting snmpd..."
-    snmpd -u nobody -g nobody -p /var/run/snmpd.pid
+    OPTIONS="-LS0-4d -Lf /dev/null"
+    if [ -f /etc/snmp/snmpd.options ]; then
+      . /etc/snmp/snmpd.options
+    fi
+    snmpd $OPTIONS -u nobody -g nobody -p /var/run/snmpd.pid
   fi
 }
 
