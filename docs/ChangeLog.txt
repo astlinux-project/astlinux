@@ -18,7 +18,10 @@ Released **TBD**
 
 ** Networking
 
--- No changes
+-- msmtp, version bump to 1.4.28, and add new variable SMTP_HOST_DOMAIN which when defined sets
+   the hostname used by the SMTP EHLO (or LMTP LHLO) command, the default is to use 'localhost'.
+
+-- netsnmp, version bump to 5.7.1 (LTS) (security fix: CVE-2012-2141)
 
 ** Asterisk
 
