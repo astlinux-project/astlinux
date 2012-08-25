@@ -19,10 +19,6 @@ init () {
     DOMAIN="$SMTP_DOMAIN"
   fi
 
-  if [ -n "$SMTP_HOSTNAME" ]; then
-    HOSTNAME="$SMTP_HOSTNAME"
-  fi
-
   PORT="${SMTP_PORT:-25}"
 
   # MSMTP config generate...
@@ -33,6 +29,10 @@ host $SMTP_SERVER
 port $PORT
 timeout 30
 maildomain $DOMAIN" > /tmp/etc/msmtprc
+
+    if [ -n "$SMTP_HOST_DOMAIN" ]; then
+      echo "domain $SMTP_HOST_DOMAIN" >> /tmp/etc/msmtprc
+    fi
 
     if [ -n "$SMTP_FROM" ]; then
       echo "auto_from off
