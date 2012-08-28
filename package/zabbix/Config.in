@@ -7,11 +7,12 @@ config BR2_PACKAGE_ZABBIX
 	  http://www.zabbix.com	
 
 config BR2_PACKAGE_ZABBIX_PROXY
-        bool "zabbix_proxy"
+	bool "zabbix_proxy"
+	default n
 	depends on BR2_PACKAGE_ZABBIX
-        default n
-        help
-          Zabbix proxy to be used with Zabbix Monitoring Solution
+	select BR2_PACKAGE_SQLITE
+	help
+	  Zabbix proxy to be used with Zabbix Monitoring Solution
 
-          http://www.zabbix.com
+	  http://www.zabbix.com
 
