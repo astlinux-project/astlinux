@@ -11,7 +11,7 @@ ZABBIX_SITE = http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/sourceforge/za
 ZABBIX_CONF_OPT = \
 	--enable-agent
 
-ifeq ($(strip $(BR2_PACKAGE_ZABBIX_PROXY)),Y)
+ifeq ($(strip $(BR2_PACKAGE_ZABBIX_PROXY)),y)
 ZABBIX_CONF_OPT+= \
 	--enable-proxy
 endif
@@ -61,4 +61,4 @@ define ZABBIX_UNINSTALL_TARGET_CMDS
         rm -f $(TARGET_DIR)/etc/init.d/zabbix
 endef
 
-$(eval $(call AUTOTARGETS,package,zabbix))
+$(eval $(call AUTOTARGETS,package,zabbix,zabbix_proxy))
