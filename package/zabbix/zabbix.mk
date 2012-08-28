@@ -4,12 +4,17 @@
 #
 #############################################################
 
-ZABBIX_VERSION = 1.8.10
+ZABBIX_VERSION = 2.0.2
 ZABBIX_SOURCE = zabbix-$(ZABBIX_VERSION).tar.gz
 ZABBIX_SITE = http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/sourceforge/zabbix
 
 ZABBIX_CONF_OPT = \
-	--enable-agent --enable-proxy
+	--enable-agent
+
+ifeq ($(strip $(BR2_PACKAGE_ZABBIX_PROXY)),Y)
+ZABBIX_CONF_OPT+= \
+	--enable-proxy
+endif
 
 ifeq ($(strip $(BR2_PACKAGE_CURL)),y)
 ZABBIX_CONF_OPT+= \

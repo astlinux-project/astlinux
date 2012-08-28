@@ -5,3 +5,13 @@ config BR2_PACKAGE_ZABBIX
 	  Zabbix agent to be used with Zabbix Monitoring Solution
 
 	  http://www.zabbix.com	
+
+config BR2_PACKAGE_ZABBIX_PROXY
+        bool "zabbix_proxy"
+	depends on BR2_PACKAGE_ZABBIX
+        default n
+        help
+          Zabbix proxy to be used with Zabbix Monitoring Solution
+
+          http://www.zabbix.com
+
