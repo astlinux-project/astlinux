@@ -144,7 +144,7 @@ ifneq ($(ASTERISK_VERSION_TUPLE),1.4)
 endif
 
 ifeq ($(strip $(BR2_PACKAGE_CURL)),y)
-ASTERISK_EXTRAS+=curl
+ASTERISK_EXTRAS+=libcurl
 ASTERISK_CONFIGURE_ARGS+= \
 			--with-curl="$(STAGING_DIR)" \
 			--with-libcurl="$(STAGING_DIR)"
