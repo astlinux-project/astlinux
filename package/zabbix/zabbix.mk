@@ -10,7 +10,8 @@ ZABBIX_SITE = http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/sourceforge/za
 ZABBIX_AUTORECONF = YES
 
 ZABBIX_CONF_OPT = \
-	--enable-agent
+	--enable-agent \
+	--enable-ipv6
 
 ifeq ($(strip $(BR2_PACKAGE_ZABBIX_PROXY)),y)
 ZABBIX_DEPENDENCIES += sqlite
