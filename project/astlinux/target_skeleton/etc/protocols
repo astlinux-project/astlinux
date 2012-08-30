@@ -6,3 +6,4 @@ udp		17	UDP		# user datagram protocol
 gre		47	GRE		# Generic Routing Encapsulation
 esp		50	ESP		# Encap Security Payload
 ah		51	AH		# Authentication Header
+ipv6-icmp	58	IPv6-ICMP	# ICMP for IPv6

@@ -11,6 +11,7 @@ config BR2_PACKAGE_ZABBIX_PROXY
 	default n
 	depends on BR2_PACKAGE_ZABBIX
 	select BR2_PACKAGE_SQLITE
+	select BR2_PACKAGE_FPING
 	help
 	  Zabbix proxy to be used with Zabbix Monitoring Solution
 

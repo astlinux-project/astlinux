@@ -14,7 +14,7 @@ ZABBIX_CONF_OPT = \
 	--enable-ipv6
 
 ifeq ($(strip $(BR2_PACKAGE_ZABBIX_PROXY)),y)
-ZABBIX_DEPENDENCIES += sqlite
+ZABBIX_DEPENDENCIES += sqlite fping
 ZABBIX_CONF_OPT += \
 	--enable-proxy \
 	--with-sqlite3="$(STAGING_DIR)/usr"
