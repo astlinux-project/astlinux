@@ -775,6 +775,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/dnshosts.php');
     exit;
+  } elseif (isset($_POST['submit_zabbix'])) {
+    $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
+    header('Location: /admin/zabbix.php');
+    exit;
   } elseif (isset($_POST['submit_edit_dnsmasq_conf'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     if (is_writable($file = '/mnt/kd/dnsmasq.conf')) {
@@ -870,6 +874,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 34, $result, 'init');
       } elseif ($process === 'apcupsd') {
         $result = restartPROCESS($process, 35, $result, 'init');
+      } elseif ($process === 'zabbix') {
+        $result = restartPROCESS($process, 36, $result, 'init', 4);
       }
     } else {
       $result = 2;
@@ -938,6 +944,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Universal Plug\'n\'Play has Restarted.</p>');
     } elseif ($result == 35) {
       putHtml('<p style="color: green;">UPS Daemon has Restarted.</p>');
+    } elseif ($result == 36) {
+      putHtml('<p style="color: green;">Zabbix Monitoring has Restarted.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 100) {
@@ -1017,6 +1025,8 @@ require_once '../common/header.php';
   putHtml('<option value="miniupnpd"'.$sel.'>Restart Univ. Plug\'n\'Play</option>');
   $sel = ($reboot_restart === 'apcupsd') ? ' selected="selected"' : '';
   putHtml('<option value="apcupsd"'.$sel.'>Restart UPS Daemon</option>');
+  $sel = ($reboot_restart === 'zabbix') ? ' selected="selected"' : '';
+  putHtml('<option value="zabbix"'.$sel.'>Restart Zabbix Monitor</option>');
   $sel = ($reboot_restart === 'asterisk') ? ' selected="selected"' : '';
   putHtml('<option value="asterisk"'.$sel.'>Restart Asterisk</option>');
   putHtml('</select>');
@@ -1380,6 +1390,9 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('DNS&nbsp;Forwarder &amp; DHCP Server:');
   putHtml('<input type="submit" value="Configure DNS Hosts" name="submit_dns_hosts" class="button" /></td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml('Zabbix&nbsp;Monitoring:');
+  putHtml('<input type="submit" value="Configure Zabbix" name="submit_zabbix" class="button" /></td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('FTP&nbsp;&nbsp;Server:');
   putHtml('<select name="ftp">');

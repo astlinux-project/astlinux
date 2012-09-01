@@ -70,6 +70,8 @@ function getDaemons() {
   $status['pptpd'] = 0;
   $status['apcupsd'] = 0;
   $status['syslogd'] = 0;
+  $status['zabbix_agentd'] = 0;
+  $status['zabbix_proxy'] = 0;
   $status['reboot'] = 0;
   
   $tmpfile = tempnam("/tmp", "PHP_");
@@ -95,6 +97,10 @@ function getDaemons() {
       	$status['pptpd']++;
       } elseif (strpos($line, ' apcupsd') !== FALSE || strpos($line, '/apcupsd') !== FALSE) {
       	$status['apcupsd']++;
+      } elseif (strpos($line, ' zabbix_agentd ') !== FALSE || strpos($line, '/zabbix_agentd ') !== FALSE) {
+      	$status['zabbix_agentd']++;
+      } elseif (strpos($line, ' zabbix_proxy ') !== FALSE || strpos($line, '/zabbix_proxy ') !== FALSE) {
+      	$status['zabbix_proxy']++;
       } elseif (strpos($line, 'reboot -d') !== FALSE) {
       	$status['reboot']++;
       }
@@ -616,6 +622,16 @@ if (is_file('/etc/ppp/pppoe.conf')) {
     @unlink($tmpfile);
     putHtml("</pre>");
   }
+}
+
+if (is_file('/etc/zabbix_agentd.conf')) {
+  putHtml("<h2>Zabbix Monitoring Status:</h2>");
+  putHtml("<pre>");
+  putText('Zabbix Agent: '.($daemon['zabbix_agentd'] == 0 ? 'ERROR - No' : $daemon['zabbix_agentd']).' active processes');
+  if (is_file('/etc/zabbix_proxy.conf')) {
+    putText('Zabbix Proxy: '.($daemon['zabbix_proxy'] == 0 ? 'ERROR - No' : $daemon['zabbix_proxy']).' active processes');
+  }
+  putHtml("</pre>");
 }
 
 if (($cmd = getPREFdef($global_prefs, 'status_disk_usage')) !== 'no') {

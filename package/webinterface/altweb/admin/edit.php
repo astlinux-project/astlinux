@@ -29,6 +29,7 @@ $select_reload = array (
   'pptpd' => 'Restart PPTP VPN Server',
   'miniupnpd' => 'Restart Univ. Plug\'n\'Play',
   'apcupsd' => 'Restart UPS Daemon',
+  'zabbix' => 'Restart Zabbix Monitor',
   'asterisk' => 'Restart Asterisk',
   'cron' => 'Reload Cron for root'
 );
@@ -203,6 +204,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 34, $result, 'init');
       } elseif ($process === 'apcupsd') {
         $result = restartPROCESS($process, 35, $result, 'init');
+      } elseif ($process === 'zabbix') {
+        $result = restartPROCESS($process, 36, $result, 'init', 4);
       } elseif ($process === 'cron') {
         $result = updateCRON('root', 30, $result);
       }
@@ -308,6 +311,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Universal Plug\'n\'Play has Restarted.</p>');
     } elseif ($result == 35) {
       putHtml('<p style="color: green;">UPS Daemon has Restarted.</p>');
+    } elseif ($result == 36) {
+      putHtml('<p style="color: green;">Zabbix Monitoring has Restarted.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {

@@ -44,7 +44,7 @@ function shell($cmd, &$return_val) {
 
 // Function: restartPROCESS
 //
-function restartPROCESS($process, $ret_good, $ret_fail, $start = 'start') {
+function restartPROCESS($process, $ret_good, $ret_fail, $start = 'start', $wait = '1') {
   $result = $ret_fail;
   $path = getenv('PATH');
   $pathOK = ($path !== FALSE && $path !== '');
@@ -61,7 +61,7 @@ function restartPROCESS($process, $ret_good, $ret_fail, $start = 'start') {
     }
   } elseif ($start === 'start') {
     $cmd .= ';service '.$process.' stop >/dev/null 2>/dev/null';
-    $cmd .= ';sleep 1';
+    $cmd .= ';sleep '.$wait;
     $cmd .= ';/usr/sbin/gen-rc-conf';
     $cmd .= ';service '.$process.' '.$start.' >/dev/null 2>/dev/null';
   } elseif ($process === 'iptables') {
@@ -69,7 +69,7 @@ function restartPROCESS($process, $ret_good, $ret_fail, $start = 'start') {
     $cmd .= ';service iptables restart >/dev/null 2>/dev/null';
   } else {
     $cmd .= ';service '.$process.' stop >/dev/null 2>/dev/null';
-    $cmd .= ';sleep 1';
+    $cmd .= ';sleep '.$wait;
     $cmd .= ';/usr/sbin/gen-rc-conf';
     if ($process === 'openvpn' || $process === 'openvpnclient' || $process === 'racoon' || $process === 'pptpd') {
       $cmd .= ';service iptables restart >/dev/null 2>/dev/null';
