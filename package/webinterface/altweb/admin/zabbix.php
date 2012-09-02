@@ -145,7 +145,7 @@ require_once '../common/header.php';
     } elseif ($result == 10) {
       putHtml('<p style="color: green;">Zabbix Monitoring has Restarted.</p>');
     } elseif ($result == 11) {
-      putHtml('<p style="color: green;">Settings saved, click "Restart Client" to apply any changed settings.</p>');
+      putHtml('<p style="color: green;">Settings saved, click "Restart Zabbix" to apply any changed settings.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {

@@ -538,6 +538,12 @@ require_once '../common/header.php';
   if (is_file($file = '/var/log/openvpnclient.log')) {
     putHtml('<option value="'.$file.'">OpenVPN Client log</option>');
   }
+  if (is_file($file = '/var/log/zabbix_agentd.log')) {
+    putHtml('<option value="'.$file.'">Zabbix Agent log</option>');
+  }
+  if (is_file($file = '/var/log/zabbix_proxy.log')) {
+    putHtml('<option value="'.$file.'">Zabbix Proxy log</option>');
+  }
   if (is_file($file = '/stat/etc/rc.conf')) {
     putHtml('<option value="'.$file.'">Default System Variables</option>');
   }
