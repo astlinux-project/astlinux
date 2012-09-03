@@ -74,6 +74,9 @@ function saveZABBIXsettings($conf_dir, $conf_file) {
   }
   fwrite($fp, "### Server\n".$value."\n");
   
+  $value = 'ZABBIX_SERVER_PORT="'.trim($_POST['zabbix_server_port']).'"';
+  fwrite($fp, "### Server Port\n".$value."\n");
+
   $value = 'ZABBIX_HOSTNAME="'.trim($_POST['agent_hostname']).'"';
   fwrite($fp, "### Agent Hostname\n".$value."\n");
 
@@ -95,8 +98,8 @@ function saveZABBIXsettings($conf_dir, $conf_file) {
   $value = 'ZABBIX_PROXY_HOSTNAME="'.trim($_POST['zabbix_proxy_hostname']).'"';
   fwrite($fp, "### Proxy Hostname\n".$value."\n");
 
-  $value = 'ZABBIX_SERVER_PORT="'.trim($_POST['zabbix_server_port']).'"';
-  fwrite($fp, "### Server Port\n".$value."\n");
+  $value = 'ZABBIX_PROXY_LISTENPORT="'.trim($_POST['proxy_listenport']).'"';
+  fwrite($fp, "### Proxy Listen Port\n".$value."\n");
 
   $value = 'ZABBIX_PROXY_AGENT="'.$_POST['zabbix_proxy_agent'].'"';
   fwrite($fp, "### Route Agent via Proxy\n".$value."\n");
@@ -303,6 +306,15 @@ if (is_file('/usr/bin/zabbix_proxy')) {
     $value = 'proxy-'.getVARdef($db, 'HOSTNAME', $cur_db);
   }
   putHtml('<input type="text" size="32" maxlength="128" value="'.$value.'" name="zabbix_proxy_hostname" />');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Proxy ListenPort:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  if (($value = getVARdef($db, 'ZABBIX_PROXY_LISTENPORT', $cur_db)) === '') {
+    $value = '10051';
+  }
+  putHtml('<input type="text" size="8" maxlength="12" value="'.$value.'" name="proxy_listenport" />');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
