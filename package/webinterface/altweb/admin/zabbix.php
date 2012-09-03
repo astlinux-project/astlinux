@@ -15,6 +15,8 @@ $CONFFILE = '/etc/rc.conf';
 $ZABBIXCONFDIR = '/mnt/kd/rc.conf.d';
 // System location of gui.zabbix.conf file
 $ZABBIXCONFFILE = '/mnt/kd/rc.conf.d/gui.zabbix.conf';
+// Zabbix proxy executable location
+$ZABBIX_PROXY_EXE = '/usr/bin/zabbix_proxy';
 
 $myself = $_SERVER['PHP_SELF'];
 
@@ -52,7 +54,7 @@ $timeout_menu = array (
 // Function: saveZABBIXsettings
 //
 function saveZABBIXsettings($conf_dir, $conf_file) {
-  global $openssl;
+  global $ZABBIX_PROXY_EXE;
   
   $result = 11;
 
@@ -92,6 +94,8 @@ function saveZABBIXsettings($conf_dir, $conf_file) {
   $value = 'ZABBIX_TIMEOUT="'.$_POST['zabbix_timeout'].'"';
   fwrite($fp, "### Timeout\n".$value."\n");
   
+if (is_file($ZABBIX_PROXY_EXE)) {
+
   $value = 'ZABBIX_PROXY="'.$_POST['zabbix_proxy'].'"';
   fwrite($fp, "### Proxy Enable\n".$value."\n");
   
@@ -103,7 +107,8 @@ function saveZABBIXsettings($conf_dir, $conf_file) {
 
   $value = 'ZABBIX_PROXY_AGENT="'.$_POST['zabbix_proxy_agent'].'"';
   fwrite($fp, "### Route Agent via Proxy\n".$value."\n");
-  
+}
+
   fwrite($fp, "### gui.zabbix.conf - end ###\n");
   fclose($fp);
   
@@ -283,7 +288,8 @@ require_once '../common/header.php';
   putHtml('secs');
   putHtml('</td></tr>');
 
-if (is_file('/usr/bin/zabbix_proxy')) {
+if (is_file($ZABBIX_PROXY_EXE)) {
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Zabbix Proxy:</strong>');
   putHtml('</td></tr>');
