@@ -58,7 +58,7 @@ init () {
   timeout="${ZABBIX_TIMEOUT:-3}"
   proxyserver="$(echo $server | cut -d',' -f1)"  # Only use first server for proxy
   proxyhostname="${ZABBIX_PROXY_HOSTNAME:-proxy-$HOSTNAME}"
-  proxylistenport="$serverport"
+  proxylistenport="${ZABBIX_PROXY_LISTENPORT:-10051}"
 
   if [ $proxy_enabled -eq 1 ]; then
 
