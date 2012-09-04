@@ -15,7 +15,7 @@ STUNNEL_CONF_OPT += \
 	--with-threads=fork
 
 define STUNNEL_INSTALL_TARGET_CMDS
-	ln -sf /tmp/etc/stunnel.conf $(TARGET_DIR)/etc/stunnel.conf
+	ln -snf /tmp/etc/stunnel $(TARGET_DIR)/etc/stunnel
 	$(INSTALL) -m 0755 -D package/stunnel/stunnel.init $(TARGET_DIR)/etc/init.d/stunnel
 	$(INSTALL) -m 0755 -D $(@D)/src/stunnel $(TARGET_DIR)/usr/sbin/stunnel
 endef
