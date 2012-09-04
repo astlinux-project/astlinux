@@ -27,6 +27,7 @@ $select_reload = array (
   'openvpnclient' => 'Restart OpenVPN Client',
   'racoon' => 'Restart IPsec VPN',
   'pptpd' => 'Restart PPTP VPN Server',
+  'stunnel' => 'Restart Stunnel Proxy',
   'miniupnpd' => 'Restart Univ. Plug\'n\'Play',
   'apcupsd' => 'Restart UPS Daemon',
   'zabbix' => 'Restart Zabbix Monitor',
@@ -206,6 +207,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 35, $result, 'init');
       } elseif ($process === 'zabbix') {
         $result = restartPROCESS($process, 36, $result, 'init', 4);
+      } elseif ($process === 'stunnel') {
+        $result = restartPROCESS($process, 37, $result, 'init');
       } elseif ($process === 'cron') {
         $result = updateCRON('root', 30, $result);
       }
@@ -313,6 +316,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">UPS Daemon has Restarted.</p>');
     } elseif ($result == 36) {
       putHtml('<p style="color: green;">Zabbix Monitoring has Restarted.</p>');
+    } elseif ($result == 37) {
+      putHtml('<p style="color: green;">Stunnel Proxy has Restarted.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {

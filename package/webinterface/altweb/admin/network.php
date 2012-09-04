@@ -876,6 +876,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 35, $result, 'init');
       } elseif ($process === 'zabbix') {
         $result = restartPROCESS($process, 36, $result, 'init', 4);
+      } elseif ($process === 'stunnel') {
+        $result = restartPROCESS($process, 37, $result, 'init');
       }
     } else {
       $result = 2;
@@ -946,6 +948,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">UPS Daemon has Restarted.</p>');
     } elseif ($result == 36) {
       putHtml('<p style="color: green;">Zabbix Monitoring has Restarted.</p>');
+    } elseif ($result == 37) {
+      putHtml('<p style="color: green;">Stunnel Proxy has Restarted.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 100) {
@@ -1021,6 +1025,8 @@ require_once '../common/header.php';
   putHtml('<option value="racoon"'.$sel.'>Restart IPsec VPN</option>');
   $sel = ($reboot_restart === 'pptpd') ? ' selected="selected"' : '';
   putHtml('<option value="pptpd"'.$sel.'>Restart PPTP VPN Server</option>');
+  $sel = ($reboot_restart === 'stunnel') ? ' selected="selected"' : '';
+  putHtml('<option value="stunnel"'.$sel.'>Restart Stunnel Proxy</option>');
   $sel = ($reboot_restart === 'miniupnpd') ? ' selected="selected"' : '';
   putHtml('<option value="miniupnpd"'.$sel.'>Restart Univ. Plug\'n\'Play</option>');
   $sel = ($reboot_restart === 'apcupsd') ? ' selected="selected"' : '';
