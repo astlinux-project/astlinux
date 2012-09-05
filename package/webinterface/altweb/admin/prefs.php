@@ -240,6 +240,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'users_voicemail_hide_pass = yes';
       fwrite($fp, $value."\n");
     }
+    if (isset($_POST['users_delete_vmdata'])) {
+      $value = 'users_voicemail_delete_vmdata = yes';
+      fwrite($fp, $value."\n");
+    }
     $value = 'users_voicemail_context_cmdstr = "'.trim($_POST['voicemail_context']).'"';
     fwrite($fp, $value."\n");
     $value = 'users_voicemail_reload_cmdstr = "'.trim($_POST['voicemail_reload']).'"';
@@ -780,6 +784,11 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'users_voicemail_hide_pass') === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="users_hide_pass" name="users_hide_pass"'.$sel.' /></td><td colspan="5">Hide Passwords for Voicemail Users Mailboxes</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'users_voicemail_delete_vmdata') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="users_delete_vmdata" name="users_delete_vmdata"'.$sel.' /></td><td colspan="5">Remove User Voicemail Data when User is Deleted</td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="3">Voicemail Users Context:</td><td colspan="3">');
   if (($value = getPREFdef($global_prefs, 'users_voicemail_context_cmdstr')) === '') {
     $value = 'default';

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008 Lonnie Abelbeck
+// Copyright (C) 2008-2012 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -11,6 +11,7 @@
 // 06-04-2008, Added multi-user support
 // 07-20-2008, Added special user "staff" permissions
 // 07-21-2008, Added externnotify support
+// 09-05-2012, Automatically create "Old" folder if it doesn't exist
 //
 // System location of the asterisk voicemail directory
 $VOICEMAILDIR = '/var/spool/asterisk/voicemail/';
@@ -254,6 +255,10 @@ function xferVMmsg($dir, $path, $folder) {
     $msg['folder'] = $tokens[2];
     $msg['basename'] = $tokens[3];
     if ($msg['folder'] === 'INBOX' && $folder === 'Old') {
+      # Later versions of Asterisk no longer automatically create the "Old" folder
+      if (! is_dir($Old = $msg['dir'].$msg['context'].'/'.$msg['mbox'].'/'.$folder)) {
+        @mkdir($Old, 0755);
+      }
       return(moveVMmessage($msg, $folder));
     } elseif ($msg['folder'] === 'Old' && $folder === 'INBOX') {
       return(moveVMmessage($msg, $folder));

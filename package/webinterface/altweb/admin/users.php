@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2011 Lonnie Abelbeck
+// Copyright (C) 2008-2012 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -8,6 +8,7 @@
 
 // users.php for AstLinux
 // 07-29-2008
+// 09-05-2012, Support Prefs option to remove user VM data when mailbox is deleted
 //
 // System location of the asterisk voicemail.conf
 $VOICEMAILCONF = '/etc/asterisk/voicemail.conf';
@@ -114,6 +115,7 @@ function addVMmailbox($context, $mbox, $pass, $name, $email, $pager, $opts, $fna
 // Function: delVMmailbox
 //
 function delVMmailbox($context, $mbox, $fname) {
+  global $global_prefs;
   
   shell('sed -i "/^\['.$context.'\]/,/^\[/ s/^'.$mbox.'[ ]*[=][> ]*[-*0-9]*,.*/;deleted;&/" '.$fname.' >/dev/null', $status);
   
@@ -121,6 +123,14 @@ function delVMmailbox($context, $mbox, $fname) {
     $status = 1;
   } else {
     delHTpasswd($mbox);
+    # Optionally remove the local VM data for mbox
+    if (getPREFdef($global_prefs, 'users_voicemail_delete_vmdata') === 'yes') {
+      if ($context !== '' && $mbox !== '') {  // Sanity check
+        if (is_dir($VMdata = '/var/spool/asterisk/voicemail/'.$context.'/'.$mbox)) {
+          shell('rm -rf '.$VMdata, $ret_val);
+        }
+      }
+    }
   }
   return($status);
 }
