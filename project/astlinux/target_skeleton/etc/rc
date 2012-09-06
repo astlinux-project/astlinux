@@ -121,7 +121,7 @@ init() {
   esac
 
   mount -t tmpfs -o size=200k none /dev
-  mount -t tmpfs -o size=5000k none /var
+  mount -t tmpfs -o size=10000k none /var
   mount -t tmpfs -o size=10000k none /tmp
 
   mount -t sysfs none /sys
@@ -145,7 +145,7 @@ init() {
   echo "proc    /proc           proc    defaults        0       0
 none    /dev            tmpfs   size=200k       0       0
 none    /tmp            tmpfs   size=10000k     0       0
-none    /var            tmpfs   size=5000k      0       0
+none    /var            tmpfs   size=10000k     0       0
 " >> /tmp/etc/fstab
 
   if [ -d /stat/dev ]; then
