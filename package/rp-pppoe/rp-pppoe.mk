@@ -4,7 +4,7 @@
 #
 #############################################################
 
-RP_PPPOE_VERSION = 3.10
+RP_PPPOE_VERSION = 3.11
 RP_PPPOE_SITE = http://www.roaringpenguin.com/files/download
 RP_PPPOE_SUBDIR = src
 RP_PPPOE_DEPENDENCIES = pppd
