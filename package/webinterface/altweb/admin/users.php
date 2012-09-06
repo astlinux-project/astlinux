@@ -127,7 +127,7 @@ function delVMmailbox($context, $mbox, $fname) {
     if (getPREFdef($global_prefs, 'users_voicemail_delete_vmdata') === 'yes') {
       if ($context !== '' && $mbox !== '') {  // Sanity check
         if (is_dir($VMdata = '/var/spool/asterisk/voicemail/'.$context.'/'.$mbox)) {
-          shell('rm -rf '.$VMdata, $ret_val);
+          shell("rm -rf '".$VMdata."/'", $ret_val);
         }
       }
     }
