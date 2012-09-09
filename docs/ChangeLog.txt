@@ -48,9 +48,9 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.4.44 and 1.8.15.0
+-- Asterisk 1.8.15.1 (version bump), 1.4.44 (no change)
 
--- DAHDI, no change, dahdi-linux 2.6.1 and dahdi-tools 2.6.1
+-- DAHDI, dahdi-linux 2.6.1 (no change) and dahdi-tools 2.6.1 (no change)
 
 -- wanpipe, version bump to 3.5.28
 
