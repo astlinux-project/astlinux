@@ -10,7 +10,7 @@ else
 ASTERISK_VERSION := 1.6.2.21
  else
   ifeq ($(BR2_PACKAGE_ASTERISK_v1_8),y)
-ASTERISK_VERSION := 1.8.15.0
+ASTERISK_VERSION := 1.8.15.1
   else
 ASTERISK_VERSION := 11.0.0-beta1
   endif
@@ -101,10 +101,10 @@ endif
 #ifeq ($(strip $(BR2_PACKAGE_NETSNMP)),y)
 #ASTERISK_EXTRAS+=netsnmp
 #ASTERISK_CONFIGURE_ARGS+= \
-#			--with-netsnmp="$(STAGING_DIR)"
-#ASTERISK_CONFIGURE_ENV+= \
-#			CONFIG_NETSNMP="$(STAGING_DIR)/usr/bin/net-snmp-config"
+#			--with-netsnmp="$(STAGING_DIR)/usr"
 #endif
+ASTERISK_CONFIGURE_ARGS+= \
+			--without-netsnmp
 
 ifeq ($(strip $(BR2_PACKAGE_MYSQL_CLIENT)),y)
 ASTERISK_EXTRAS+=mysql_client
