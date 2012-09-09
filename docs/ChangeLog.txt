@@ -16,14 +16,35 @@ Released **TBD**
 
 -- bash, version bump to 4.1.11
 
+-- sqlite, version bump to 3.7.14
+
 -- spandsp, version bump to 0.0.6pre21
+
+-- r8168 version bump to 8.032.00 RealTek PCI-Express Gigabit Ethernet Linux driver
+
+-- zabbix, version bump to 2.0.2, zabbix_proxy support added and IPv6 support enabled
+   New variables have been added to support zabbix_proxy, see /stat/etc/rc.conf for details.
+   Note: enabling zabbix_proxy requires a remote zabbix_server version 2.x
+
+-- The default limit of the /var tmpfs size is increased from 5 MB to 10 MB. /tmp remains at 10 MB.
 
 ** Networking
 
--- msmtp, version bump to 1.4.28, and add new variable SMTP_HOST_DOMAIN which when defined sets
+-- msmtp, version bump to 1.4.29, and add new variable SMTP_HOST_DOMAIN which when defined sets
    the hostname used by the SMTP EHLO (or LMTP LHLO) command, the default is to use 'localhost'.
 
--- netsnmp, version bump to 5.7.1 (LTS) (security fix: CVE-2012-2141)
+-- netsnmp, version bump to 5.7.1 (LTS) (security fix: CVE-2012-2141) and IPv6 support enabled
+
+-- stunnel, version bump to 4.53, fixed crash on termination.  Fixed permissions issue so
+   running as 'nobody' now always works.
+   Added new variables to support both inbound servers and now also outbound clients.
+   New variables: STUNNEL_SERVERS, STUNNEL_CLIENTS, STUNNEL_SERVER_CERT and STUNNEL_CLIENT_CERT
+   Deprecated (but still work) variables: STUNNELSERVS and STUNNELCERT
+
+-- fping, new ping-like command, fping and fping6 version 3.4. Required for proper zabbix_proxy support.
+   More info: http://fping.org/
+
+-- pppoe, version bump to 3.11
 
 ** Asterisk
 
@@ -35,7 +56,26 @@ Released **TBD**
 
 ** Web Interface
 
--- No changes
+-- Add support for Zabbix 2.0:
+   == Network tab -> Network Services: Zabbix Monitoring: { Configure Zabbix }
+   == Status tab -> Zabbix Monitoring Status - when Zabbix is enabled.
+   == Network, Edit and Zabbix tabs allow Zabbix to be Restarted.
+   == System tab -> View System Files: allows both Agent and Proxy log files to be viewed.
+   == Zabbix sub-tab allows Monitoring to be disabled without deleting the Server entry.
+
+   Note: For existing Zabbix configurations via user.conf, update by first clicking { Configure Zabbix }
+         from the Network tab, the existing Zabbix settings should be automatically imported.  Then
+         click { Save Settings } in the Zabbix sub-tab to save them.  Finally edit your user.conf file
+         via { Edit User Variables } from the Network tab and remove all Zabbix variable definitions, and
+         click { Save Changes } .
+
+-- Network and Edit tabs allow Stunnel Proxy to be Restarted.
+
+-- Users tab, honors a new Prefs tab -> "Users Tab Options":
+   ___ Remove User Voicemail Data when User is Deleted
+   When checked, the user's local file voicemail storage will be removed when a user is deleted.
+
+-- Voicemail tab, now automatically creates the "Old" voicemail folder if it doesn't exist.
 
 
 Additions for AstLinux 1.0.4:
