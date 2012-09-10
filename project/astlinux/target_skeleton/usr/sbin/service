@@ -7,11 +7,14 @@ if [ -n "$1" -a -n "$2" ]; then
       $SERVICE $2
     else
       echo "service: \"$1\" is not installed"
+      exit 3
     fi
   else
     echo "service: \"$1\" is not a valid service name"
+    exit 2
   fi
 else
   echo "Usage: service service_name init|start|restart|stop"
+  exit 1
 fi
 
