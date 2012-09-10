@@ -1396,9 +1396,12 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('DNS&nbsp;Forwarder &amp; DHCP Server:');
   putHtml('<input type="submit" value="Configure DNS Hosts" name="submit_dns_hosts" class="button" /></td></tr>');
-  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
-  putHtml('Zabbix&nbsp;Monitoring:');
-  putHtml('<input type="submit" value="Configure Zabbix" name="submit_zabbix" class="button" /></td></tr>');
+
+  if (is_file('/etc/init.d/zabbix')) {
+    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+    putHtml('Zabbix&nbsp;Monitoring:');
+    putHtml('<input type="submit" value="Configure Zabbix" name="submit_zabbix" class="button" /></td></tr>');
+  }
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('FTP&nbsp;&nbsp;Server:');
   putHtml('<select name="ftp">');
