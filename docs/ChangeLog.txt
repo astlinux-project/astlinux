@@ -28,6 +28,8 @@ Released **TBD**
 
 -- The default limit of the /var tmpfs size is increased from 5 MB to 10 MB. /tmp remains at 10 MB.
 
+-- Now uses 'devtmpfs' mounted by the kernel for /dev .
+
 ** Networking
 
 -- msmtp, version bump to 1.4.29, and add new variable SMTP_HOST_DOMAIN which when defined sets
