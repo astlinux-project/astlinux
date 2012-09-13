@@ -160,11 +160,11 @@ init() {
     fstab_base="$ROOTDEV /             ext2    ro              0       0"
   fi
 
-  echo "${fstab_base}
+  echo "$fstab_base
 proc    /proc           proc    defaults        0       0${fstab_dev:+
-$fstab_dev}${fstab_tmp:+
-$fstab_tmp}${fstab_var:+
-$fstab_var}
+$fstab_dev}
+$fstab_tmp
+$fstab_var
 " > /tmp/etc/fstab
 
   mkdir /var/spool /var/lib /var/lib/nfs
