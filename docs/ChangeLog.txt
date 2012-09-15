@@ -50,7 +50,7 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.8.15.1 (version bump), 1.4.44 (no change)
+-- Asterisk 1.8.16.0 (version bump), 1.4.44 (no change)
 
 -- DAHDI, dahdi-linux 2.6.1 (no change) and dahdi-tools 2.6.1 (no change)
 
