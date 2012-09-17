@@ -12,13 +12,15 @@ Released **TBD**
 
 ** System
 
--- php, version bump to 5.3.16 (security fixes: CVE-2012-2688 and CVE-2012-3365)
+-- php, version bump to 5.3.17 (security fixes: CVE-2012-2688 and CVE-2012-3365)
 
 -- bash, version bump to 4.1.11
 
 -- sqlite, version bump to 3.7.14
 
 -- spandsp, version bump to 0.0.6pre21
+
+-- e1000e version bump to 2.1.4 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
 -- r8168 version bump to 8.032.00 RealTek PCI-Express Gigabit Ethernet Linux driver
 
