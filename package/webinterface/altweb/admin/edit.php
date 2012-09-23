@@ -344,17 +344,22 @@ require_once '../common/header.php';
   <script language="JavaScript" type="text/javascript" src="../common/murmurhash3_gc.js"></script>
   <script language="JavaScript" type="text/javascript">
   //<![CDATA[
+  var old_textSize;
   var old_textHash;
 
   function setOKexit() {
-    var cur_textHash = murmurhash3_32_gc(document.getElementById("ed").value, 6802145);
-    if (cur_textHash != old_textHash) {
+    var value = document.getElementById("ed").value;
+    var cur_textSize = value.length;
+    var cur_textHash = murmurhash3_32_gc(value, 6802145);
+    if (cur_textSize != old_textSize || cur_textHash != old_textHash) {
       return 'Unsaved changes will be lost. Really leave?';
     }
   }
 
   function setOKhandler() {
-    old_textHash = murmurhash3_32_gc(document.getElementById("ed").value, 6802145);
+    var value = document.getElementById("ed").value;
+    old_textSize = value.length;
+    old_textHash = murmurhash3_32_gc(value, 6802145);
     window.onbeforeunload = setOKexit;
   }
   //]]>
