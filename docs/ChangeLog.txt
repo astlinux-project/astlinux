@@ -81,6 +81,8 @@ Released **TBD**
 
 -- Voicemail tab, now automatically creates the "Old" voicemail folder if it doesn't exist.
 
+-- Edit tab, if unsaved edits exist a dialog will warn the user before leaving.
+
 
 Additions for AstLinux 1.0.4:
 =============================
