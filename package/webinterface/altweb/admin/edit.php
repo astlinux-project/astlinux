@@ -341,6 +341,24 @@ require_once '../common/header.php';
   }
   putHtml("</center>");
 ?>
+  <script language="JavaScript" type="text/javascript" src="../common/murmurhash3_gc.js"></script>
+  <script language="JavaScript" type="text/javascript">
+  //<![CDATA[
+  var old_textHash;
+
+  function setOKexit() {
+    var cur_textHash = murmurhash3_32_gc(document.getElementById("ed").value, 6802145);
+    if (cur_textHash != old_textHash) {
+      return 'Unsaved changes will be lost. Really leave?';
+    }
+  }
+
+  function setOKhandler() {
+    old_textHash = murmurhash3_32_gc(document.getElementById("ed").value, 6802145);
+    window.onbeforeunload = setOKexit;
+  }
+  //]]>
+  </script>
   <center>
   <table class="layoutNOpad"><tr><td><center>
   <form method="post" action="<?php echo $myself;?>">
@@ -494,7 +512,7 @@ require_once '../common/header.php';
   </td></tr></table>
   <table width="100%" class="stdtable">
   <tr><td width="240" style="text-align: center;">
-  <input type="submit" class="formbtn" value="Save Changes" name="submit_save" />
+  <input type="submit" class="formbtn" value="Save Changes" name="submit_save" onclick="setOKhandler();" />
   <input type="hidden" value="<?php echo $openfile;?>" name="openfile" />
   </td><td class="dialogText" style="text-align: center;">
   <input type="submit" class="formbtn" value="Reload/Restart" name="submit_reload" />
@@ -518,7 +536,7 @@ require_once '../common/header.php';
     $rows = '30';
   }
   putHtml('<table class="stdtable"><tr><td>');
-  echo '<textarea name="edit_text" rows="'.$rows.'" cols="'.$cols.'" wrap="off" class="editText">';
+  echo '<textarea id="ed" name="edit_text" rows="'.$rows.'" cols="'.$cols.'" wrap="off" class="editText">';
   if ($openfile !== '') {
     if (($ph = @fopen($openfile, "rb")) !== FALSE) {
       while (! feof($ph)) {
@@ -533,8 +551,13 @@ require_once '../common/header.php';
   putHtml('</textarea>');
   putHtml('</td></tr></table>');
   putHtml('</form>');
-  putHtml("</center></td></tr></table>");
-  putHtml("</center>");
+  putHtml('</center></td></tr></table>');
+  putHtml('</center>');
+  putHtml('<script language="JavaScript" type="text/javascript">');
+  putHtml('//<![CDATA[');
+  putHtml('setOKhandler();');
+  putHtml('//]]>');
+  putHtml('</script>');
 } // End of HTTP GET
 require_once '../common/footer.php';
 
