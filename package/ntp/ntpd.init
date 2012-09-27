@@ -50,26 +50,36 @@ broadcast 224.0.1.1 ttl 1" >> /tmp/etc/ntpd.conf
 }
 
 start () {
+  local NTPAF="" first
+
   if [ -f /etc/ntpd.conf ]; then
-    local NTPAF
 
     if [ "$IPV6" != "yes" ]; then
       NTPAF="-4"
     fi
 
     echo "Starting ntpd..."
-    if [ -n "$EXTIP" -a -n "$DNS" -o -r /tmp/mydhcpip -o -r /etc/ppp/pppoe.conf ]; then
-      local first=`awk '/^server / { print $2; nextfile; }' /etc/ntpd.conf`
+    first="$(awk '/^server / { print $2; nextfile; }' /etc/ntpd.conf)"
+    if [ -n "$first" ]; then
 
-      if nslookup $first >/dev/null; then
-        # Set the clock (large change) and exit
-        sntp $NTPAF -s -t4 $first
-        if [ $? -eq 0 -a -r /dev/rtc ]; then
+      # Set the clock (large change)
+      if sntp $NTPAF -s -t4 $first; then
+        if [ -r /dev/rtc ]; then
           hwclock -wu --noadjfile 2>/dev/null
         fi
         sleep 1
         # Maintain the clock (small changes)
         ntpd $NTPAF -g -c /etc/ntpd.conf
+      elif ( set -o noclobber; echo "$$" > /var/lock/ntpd-delayed.lock ) 2>/dev/null; then
+        echo "ntpd: server unreachable, will automatically retry in 2 minutes"
+        (
+          sleep 120
+          while [ ! -f /var/run/ntpd.pid ]; do
+            service ntpd start
+            sleep 300
+          done
+          rm -f /var/lock/ntpd-delayed.lock
+        ) >/dev/null 2>&1 &
       fi
     fi
   fi
