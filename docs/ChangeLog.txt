@@ -50,6 +50,9 @@ Released **TBD**
 
 -- pppoe, version bump to 3.11
 
+-- ntp, when ntpd fails to startup, often when the server is unreachable, it will now automatically retry
+   via a background process after 2 minutes, and again every 5 minutes until successful.
+
 ** Asterisk
 
 -- Asterisk 1.8.16.0 (version bump), 1.4.44 (no change)
