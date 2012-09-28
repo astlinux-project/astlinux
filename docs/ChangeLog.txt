@@ -86,6 +86,22 @@ Released **TBD**
 
 -- Edit tab, if unsaved edits exist a dialog will warn the user before leaving.
 
+-- Status and Prefs tab, add support for a custom Asterisk command.  The Name and custom Asterisk command
+   are defined in the Prefs tab.
+
+-- Status and Prefs tab, add support for Adaptive Ban Plugin Status.
+
+-- Status and Prefs tab, the "Latest System Logs" section in the Status tab can now be hidden via the Prefs tab.
+   Additionally a new feature "Hide Log Words" in the Prefs tab is a list of space separated "words" that if
+   matched on a log line it will not be displayed.  For example:
+
+     Hide Log Words: dnsmasq crond
+
+   Will not display dnsmasq or crond log entries.
+
+   Note: The regex special characters of '.' and '*' are honored in the "words", and the character matching
+         is not case sensitive.
+
 
 Additions for AstLinux 1.0.4:
 =============================
