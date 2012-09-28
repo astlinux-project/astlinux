@@ -26,6 +26,9 @@
 // 08-10-2011, Added APC UPS Status
 // 01-02-2012, Added Jabber Status
 // 07-07-2012, Added UPnP Status
+// 09-28-2012, Added Adaptive Ban Plugin Status
+// 09-28-2012, Added Latest System Logs/Hide Log Words
+// 09-28-2012, Added Custom Asterisk Command
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -1007,6 +1010,50 @@ if ($daemon['asterisk'] > 0) {
     @unlink($tmpfile);
     putHtml("</pre>");
   }
+  
+  if ($status == 0 && getPREFdef($global_prefs, 'status_custom_asterisk_status') === 'yes') {
+    if (($cmd = getPREFdef($global_prefs, 'status_custom_asterisk_name_cmdstr')) === '') {
+      $cmd = 'Asterisk Command Status';
+    }
+    putHtml("<h2>".htmlspecialchars($cmd).":</h2>");
+    putHtml("<pre>");
+    if (($cmd = getPREFdef($global_prefs, 'status_custom_asterisk_cmdstr')) !== '') {
+      $tmpfile = tempnam("/tmp", "PHP_");
+      asteriskCMD($cmd, $tmpfile);
+      $ph = @fopen($tmpfile, "r");
+      while (! feof($ph)) {
+        if ($line = trim(fgets($ph, 1024))) {
+          if (strncasecmp($line, 'verbosity ', 10)) {
+            putText($line);
+          }
+        }
+      }
+      fclose($ph);
+      @unlink($tmpfile);
+    }
+    putHtml("</pre>");
+  }
+}
+
+if (is_file('/var/lock/aif_adaptive_ban.lock')) {
+  if (getPREFdef($global_prefs, 'status_show_adaptive_ban') === 'yes') {
+    putHtml("<h2>Adaptive Ban Plugin Status:</h2>");
+    putHtml("<pre>");
+    $tmpfile = tempnam("/tmp", "PHP_");
+    $ipv6 = trim(shell_exec('. /etc/rc.conf; if [ "$IPV6" = "yes" ]; then echo "1"; else echo "0"; fi'));
+    $cmd = '/usr/share/arno-iptables-firewall/plugins/adaptive-ban-helper status /usr/sbin/iptables /usr/sbin/ip6tables '.$ipv6;
+    shell($cmd.' >'.$tmpfile, $status);
+  
+    $ph = @fopen($tmpfile, "r");
+    while (! feof($ph)) {
+      if ($line = trim(fgets($ph, 1024))) {
+        putText($line);
+      }
+    }
+    fclose($ph);
+    @unlink($tmpfile);
+    putHtml("</pre>");
+  }
 }
 
 if (is_file($CONNTRACK)) {
@@ -1121,19 +1168,33 @@ if (is_executable('/usr/bin/sensors')) {
 }
 
 if ($daemon['syslogd'] > 0) {
-  putHtml("<h2>Latest System Logs:</h2>");
-  putHtml("<pre>");
-  $tmpfile = tempnam("/tmp", "PHP_");
-  shell('tail -n 30 /var/log/messages >'.$tmpfile, $status);
-  $ph = @fopen($tmpfile, "r");
-  while (! feof($ph)) {
-    if ($line = trim(fgets($ph, 1024))) {
-      putText($line);
+  if (getPREFdef($global_prefs, 'status_show_system_logs') !== 'no') {
+    putHtml("<h2>Latest System Logs:</h2>");
+    putHtml("<pre>");
+    $tmpfile = tempnam("/tmp", "PHP_");
+    if (($str = getPREFdef($global_prefs, 'status_exclude_logs_cmdstr')) !== '') {
+      $exclude_words = explode(' ', $str);
+      $exclude_logs = '';
+      foreach ($exclude_words as $exclude_word) {
+        if ($exclude_word !== '') {
+          $exclude_word = strtr($exclude_word, '$`[]\'\\', '......');   // map special chars to dot
+          $exclude_logs .= " -e '$exclude_word'";
+        }
+      }
+      shell('grep -v -i '.$exclude_logs.' /var/log/messages | tail -n 30 >'.$tmpfile, $status);
+    } else {
+      shell('tail -n 30 /var/log/messages >'.$tmpfile, $status);
     }
+    $ph = @fopen($tmpfile, "r");
+    while (! feof($ph)) {
+      if ($line = trim(fgets($ph, 1024))) {
+        putText($line);
+      }
+    }
+    fclose($ph);
+    @unlink($tmpfile);
+    putHtml("</pre>");
   }
-  fclose($ph);
-  @unlink($tmpfile);
-  putHtml("</pre>");
 }
 putHtml('<p style="color: orange;">Asterisk&reg; is a registered trademark of Digium, Inc.</p>');
 

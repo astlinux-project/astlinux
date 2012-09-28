@@ -12,6 +12,9 @@
 // 08-19-2008, Added CDR Log Format Menu
 // 08-24-2008, Added /mnt/kd/ prefs file support
 // 01-02-2012, Added Show Jabber Status/Command
+// 09-28-2012, Added Show Adaptive Ban Plugin Status
+// 09-28-2012, Added Show Latest System Logs/Hide Log Words
+// 09-28-2012, Added Show Custom Asterisk Command
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -96,6 +99,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'status_jabber_show_status = yes';
       fwrite($fp, $value."\n");
     }
+    if (isset($_POST['custom_asterisk'])) {
+      $value = 'status_custom_asterisk_status = yes';
+      fwrite($fp, $value."\n");
+    }
+    if (($value = trim($_POST['asterisk_name'])) !== '') {
+      $value = 'status_custom_asterisk_name_cmdstr = "'.$value.'"';
+      fwrite($fp, $value."\n");
+    }
+    if (($value = trim($_POST['asterisk_cmd'])) !== '') {
+      $value = 'status_custom_asterisk_cmdstr = "'.$value.'"';
+      fwrite($fp, $value."\n");
+    }
+    if (isset($_POST['adaptive_ban'])) {
+      $value = 'status_show_adaptive_ban = yes';
+      fwrite($fp, $value."\n");
+    }
     if (isset($_POST['firewall_states'])) {
       $value = 'status_show_firewall_states = yes';
       fwrite($fp, $value."\n");
@@ -116,6 +135,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'status_show_hardware_monitoring = yes';
       fwrite($fp, $value."\n");
     }
+    if (! isset($_POST['system_logs'])) {
+      $value = 'status_show_system_logs = no';
+      fwrite($fp, $value."\n");
+    }
+    if (($value = trim($_POST['exclude_logs'])) !== '') {
+      $value = 'status_exclude_logs_cmdstr = "'.$value.'"';
+      fwrite($fp, $value."\n");
+    }
+
     if (isset($_POST['exclude_extensions'])) {
       $value = 'status_exclude_extensions = yes';
       fwrite($fp, $value."\n");
@@ -532,7 +560,22 @@ require_once '../common/header.php';
     $value = 'jabber show connections';
   }
   putHtml('<input type="text" size="28" maxlength="64" value="'.$value.'" name="jabber_cmd" /></td></tr>');
-  
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'status_custom_asterisk_status') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="custom_asterisk" name="custom_asterisk"'.$sel.' /></td><td colspan="5">Custom Asterisk Name:');
+  if (($value = getPREFdef($global_prefs, 'status_custom_asterisk_name_cmdstr')) === '') {
+    $value = 'Asterisk Command Status';
+  }
+  putHtml('<input type="text" size="28" maxlength="64" value="'.$value.'" name="asterisk_name" /></td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="3">Custom Asterisk Command:</td><td colspan="3">');
+  $value = getPREFdef($global_prefs, 'status_custom_asterisk_cmdstr');
+  putHtml('<input type="text" size="28" maxlength="64" value="'.$value.'" name="asterisk_cmd" /></td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'status_show_adaptive_ban') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="adaptive_ban" name="adaptive_ban"'.$sel.' /></td><td colspan="5">Show Adaptive Ban Plugin Status</td></tr>');
+ 
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_show_firewall_states') === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="firewall_states" name="firewall_states"'.$sel.' /></td><td colspan="5">Show Firewall States</td></tr>');
@@ -549,6 +592,14 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_show_hardware_monitoring') === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="hardware_monitoring" name="hardware_monitoring"'.$sel.' /></td><td colspan="5">Show Hardware Monitoring</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'status_show_system_logs') !== 'no') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="system_logs" name="system_logs"'.$sel.' /></td><td colspan="5">Show Latest System Logs</td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">Hide Log Words:</td><td colspan="4">');
+  $value = getPREFdef($global_prefs, 'status_exclude_logs_cmdstr');
+  putHtml('<input type="text" size="48" maxlength="128" value="'.$value.'" name="exclude_logs" /></td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_exclude_extensions') === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="exclude_extensions" name="exclude_extensions"'.$sel.' /></td><td colspan="5">Exclude 4-digit Extensions in SIP/IAX2 Peer Status</td></tr>');
@@ -558,7 +609,7 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_asterisk_manager') === 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="disable_ami" name="disable_ami"'.$sel.' /></td><td colspan="5">Disable Asterisk Manager Interface for Asterisk Commands</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
   
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
