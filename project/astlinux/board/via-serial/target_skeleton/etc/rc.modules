@@ -12,6 +12,7 @@ rtc
 #forcedeth
 8139too
 via-rhine
+via-velocity
 #pcnet32
 #acenic
 #e1000
