@@ -56,6 +56,11 @@ init () {
   startagents="${ZABBIX_STARTAGENTS:-3}"
   debuglevel="${ZABBIX_DEBUGLEVEL:-3}"
   timeout="${ZABBIX_TIMEOUT:-3}"
+  if [ -f /mnt/kd/zabbix_agentd.userparams.conf ]; then
+    agentd_include="/mnt/kd/zabbix_agentd.userparams.conf"
+  else
+    agentd_include=""
+  fi
   proxyserver="$(echo $server | cut -d',' -f1)"  # Only use first server for proxy
   proxyhostname="${ZABBIX_PROXY_HOSTNAME:-proxy-$HOSTNAME}"
   proxylistenport="${ZABBIX_PROXY_LISTENPORT:-10051}"
@@ -118,7 +123,8 @@ StartAgents=$startagents
 DebugLevel=$debuglevel
 Timeout=$timeout
 PidFile=/var/run/zabbix_agentd.pid
-LogFile=/var/log/zabbix_agentd.log
+LogFile=/var/log/zabbix_agentd.log${agentd_include:+
+Include=$agentd_include}
 AllowRoot=0
 " >/tmp/etc/zabbix_agentd.conf
   fi
