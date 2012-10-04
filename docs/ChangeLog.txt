@@ -28,6 +28,8 @@ Released **TBD**
    New variables have been added to support zabbix_proxy, see /stat/etc/rc.conf for details.
    Note: enabling zabbix_proxy requires a remote zabbix_server version 2.x
 
+   Added support for zabbix_agentd Include= if the file /mnt/kd/zabbix_agentd.userparams.conf exists.
+
 -- The default limit of the /var tmpfs size is increased from 5 MB to 10 MB. /tmp remains at 10 MB.
 
 -- Now uses 'devtmpfs' mounted by the kernel for /dev .
