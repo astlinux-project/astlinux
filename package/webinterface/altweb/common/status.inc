@@ -297,7 +297,7 @@ function parseFIREWALLstates(&$status, $log) {
 //
 function isDHCPactive() {
 
-  shell('grep -q "^dhcp-leasefile=" /etc/dnsmasq.conf 2>/dev/null', $status);
+  shell('grep -q "^dhcp-leasefile=" /etc/dnsmasq.conf 2>/dev/null || grep -q "^dhcp-leasefile=" /etc/dnsmasq.static 2>/dev/null', $status);
 
   return($status == 0);
 }
