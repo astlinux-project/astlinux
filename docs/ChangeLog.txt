@@ -5,6 +5,35 @@
 === docs/ChangeLog.txt
 =========================================================
 
+Additions for AstLinux 1.0.6:
+=============================
+
+Released **TBD**
+
+** System
+
+-- no changes
+
+** Networking
+
+-- no changes
+
+** Asterisk
+
+-- Asterisk 1.8.16.0 (no change), 1.4.44 (no change)
+
+-- DAHDI, dahdi-linux 2.6.1 (no change) and dahdi-tools 2.6.1 (no change)
+
+-- Added patch for the wcfxo module, newer clone X100P cards support additional 'global line standard settings'.
+   These different modes are selected with the opermode=N option set in /etc/modprobe.d/options.conf .
+   Thanks to Frank Collingwood for the patch and info.
+   More info: http://collingwood.me.uk/blog/index.php/adding-complex-impedance-support-to-an-x100p-fxo-card/
+
+** Web Interface
+
+-- no changes
+
+
 Additions for AstLinux 1.0.5:
 =============================
 
