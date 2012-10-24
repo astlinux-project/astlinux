@@ -2,10 +2,10 @@
 #            -= Arno's iptables firewall - DynDNS Host Open plugin =-
 #
 PLUGIN_NAME="DynDNS Host Open plugin"
-PLUGIN_VERSION="1.01-astlinux BETA"
+PLUGIN_VERSION="1.02-astlinux"
 PLUGIN_CONF_FILE="dyndns-host-open.conf"
 #
-# Last changed          : December 18, 2011
+# Last changed          : October 24, 2012
 # Requirements          : kernel 2.6 + AIF 2.0.1 or better
 # Comments              : This implements support to open ports for DynDNS IPv4 hosts
 #
@@ -32,9 +32,9 @@ PLUGIN_CONF_FILE="dyndns-host-open.conf"
 
 DYNDNS_HOST_RULES="/var/tmp/aif-dyndns-host-rules"
 
-generate_rules()
+dyndns_open_generate_rules()
 {
-  local rules_file="$1"
+  local rules_file="$1" IFS
 
   rm -f "$rules_file"
 
@@ -123,11 +123,12 @@ generate_rules()
     fi
   done
 
-  unset IFS
-
   if [ ! -f "$rules_file" ]; then
     return 1
   fi
+
+  # Only allow root to edit rules file
+  chmod 600 "$rules_file"
 
   return 0
 }
@@ -143,7 +144,7 @@ plugin_start()
   ip4tables -A EXT_INPUT_CHAIN -j DYNDNS_CHAIN
 
   # Create the rules file
-  generate_rules "$DYNDNS_HOST_RULES"
+  dyndns_open_generate_rules "$DYNDNS_HOST_RULES"
 
   # Start helper script
   "$PLUGIN_BIN_PATH/dyndns-host-open-helper" start "$IP4TABLES" \
@@ -163,7 +164,7 @@ plugin_restart()
   ip4tables -A EXT_INPUT_CHAIN -j DYNDNS_CHAIN
 
   # Re-create the rules file
-  if generate_rules "$DYNDNS_HOST_RULES.tmp"; then
+  if dyndns_open_generate_rules "$DYNDNS_HOST_RULES.tmp"; then
     mv "$DYNDNS_HOST_RULES.tmp" "$DYNDNS_HOST_RULES"
   else
     rm -f "$DYNDNS_HOST_RULES"
