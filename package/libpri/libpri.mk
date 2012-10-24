@@ -9,6 +9,7 @@ LIBPRI_SOURCE = libpri-$(LIBPRI_VERSION).tar.gz
 LIBPRI_SITE = http://downloads.asterisk.org/pub/telephony/libpri/releases
 LIBPRI_INSTALL_STAGING = YES
 LIBPRI_INSTALL_TARGET = YES
+LIBPRI_DEPENDENCIES += dahdi-tools
 
 define LIBPRI_CONFIGURE_CMDS
         @echo "No configure"
