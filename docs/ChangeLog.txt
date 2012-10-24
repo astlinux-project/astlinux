@@ -12,17 +12,23 @@ Released **TBD**
 
 ** System
 
--- no changes
+-- php, version bump to 5.3.18
+
+-- sqlite, version bump to 3.7.14.1
 
 ** Networking
 
--- no changes
+-- msmtp, version bump to 1.4.30
+
+-- iptables, version bump to 1.4.16.3
 
 ** Asterisk
 
--- Asterisk 1.8.16.0 (no change), 1.4.44 (no change)
+-- Asterisk 1.8.17.0 (version bump), 1.4.44 (no change)
 
 -- DAHDI, dahdi-linux 2.6.1 (no change) and dahdi-tools 2.6.1 (no change)
+
+-- LibPRI, version bump to 1.4.13
 
 -- Added patch for the wcfxo module, newer clone X100P cards support additional 'global line standard settings'.
    These different modes are selected with the opermode=N option set in /etc/modprobe.d/options.conf .
@@ -37,7 +43,7 @@ Released **TBD**
 Additions for AstLinux 1.0.5:
 =============================
 
-Released **TBD**
+Released 2012-10-20
 
 ** System
 
