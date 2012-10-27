@@ -1279,7 +1279,7 @@ require_once '../common/header.php';
     putHtml('Firewall Plugins:');
     putHtml('<select name="firewall_plugin">');
     foreach ($plugins as $key => $value) {
-      putHtml('<option value="'.$key.'">'.basename($key, '.conf').'&nbsp;['.($value === '1' ? 'Enabled' : 'Disabled').']</option>');
+      putHtml('<option value="'.$key.'">'.basename($key, '.conf').'&nbsp;['.substr($value, 2).']</option>');
     }
     putHtml('</select>');
     putHtml('&ndash;');

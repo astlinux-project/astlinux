@@ -544,7 +544,7 @@ if (($plugins = getARNOplugins()) !== FALSE) {
   foreach ($plugins as $key => $value) {
     if (basename($key, '.conf') === $TRAFFIC_SHAPER_PLUGIN) {
       $TRAFFIC_SHAPER_FILE = $key;
-      $TRAFFIC_SHAPER_ENABLE = $value;
+      $TRAFFIC_SHAPER_ENABLE = substr($value, 0, 1);
       break;
     }
   }

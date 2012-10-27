@@ -238,6 +238,15 @@ function getARNOplugins() {
   if (! is_dir($dir)) {
     return(FALSE);
   }
+
+  // Find the currently active plugins
+  $active = array();
+  $active_file = '/var/tmp/aif_active_plugins';
+  if (is_file($active_file)) {
+    $cmd = "sed -n -r -e 's|^.*/plugins/[0-9][0-9](.*)\\.plugin$|\\1|p' $active_file";
+    @exec($cmd, $active);
+  }
+
   $tmpfile = tempnam("/tmp", "PHP_");
   $cmd = 'grep -m1 -H \'^ENABLED=\' '.$dir.'/*.conf |';
   $cmd .= 'sed -e \'s/ENABLED=//\' -e \'s/"//g\'';
@@ -248,7 +257,21 @@ function getARNOplugins() {
     if ($line = trim(fgets($ph, 1024))) {
       if (($pos = strpos($line, ':')) !== FALSE) {
         $linetokens = explode(':', $line);
-        $plugins[$linetokens[0]] = $linetokens[1];
+        if ($linetokens[1] === '0') {
+          $value = '0~Disabled';
+        } elseif ($linetokens[1] === '1')  {
+          $value = '1~Enabled';
+        } else {
+          $value = '0~Undefined';
+        }
+        $plugin_name = basename($linetokens[0], '.conf');
+        foreach ($active as $active_name) {
+          if ($active_name === $plugin_name) {
+            $value = substr($value, 0, 2).'Active';
+            break;
+          }
+        }
+        $plugins[$linetokens[0]] = $value;
       }
     }
   }
