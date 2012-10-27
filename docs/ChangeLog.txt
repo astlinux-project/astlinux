@@ -37,7 +37,10 @@ Released **TBD**
 
 ** Web Interface
 
--- no changes
+-- Network tab, Firewall Plugins: list is now marked as:
+   ==  [Active] if the plugin is currently active.
+   ==  [Enabled] if the plugin will be active on next Restart Firewall.
+   ==  [Disabled] if the plugin will not be active on next Restart Firewall.
 
 
 Additions for AstLinux 1.0.5:
