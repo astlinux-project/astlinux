@@ -112,6 +112,13 @@ $(TARGET_DIR)$(ARNOFW_TARGET_BINARY): $(ARNOFW_DIR)/.patched
 	$(INSTALL) -m 0644 package/arnofw/traffic-shaper/traffic-shaper-astlinux.conf \
 		$(TARGET_DIR)/stat$(ARNOFW_PLUGIN_CONFIG_DIR)/traffic-shaper.conf
 	@echo
+	@echo "Install local version of OpenVPN Server plugin."
+	@echo
+	$(INSTALL) -m 0644 package/arnofw/openvpn-server/50openvpn-server.plugin.sh \
+		$(TARGET_DIR)$(ARNOFW_PLUGIN_SCRIPT_DIR)/50openvpn-server.plugin
+	$(INSTALL) -m 0644 package/arnofw/openvpn-server/openvpn-server-astlinux.conf \
+		$(TARGET_DIR)/stat$(ARNOFW_PLUGIN_CONFIG_DIR)/openvpn-server.conf
+	@echo
 	@echo "Install local version of PPTP VPN plugin."
 	@echo
 	$(INSTALL) -m 0644 package/arnofw/pptp-vpn/50pptp-vpn.plugin.sh \
