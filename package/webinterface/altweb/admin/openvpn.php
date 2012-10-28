@@ -126,6 +126,9 @@ function saveOVPNsettings($conf_dir, $conf_file, $disabled = NULL) {
   $value = 'OVPN_CIPHER="'.$_POST['cipher_menu'].'"';
   fwrite($fp, "### Cipher\n".$value."\n");
   
+  $value = 'OVPN_TUNNEL_HOSTS="'.trim($_POST['tunnel_external_hosts']).'"';
+  fwrite($fp, "### Allowed External Hosts\n".$value."\n");
+  
   $value = 'OVPN_SERVER="'.trim($_POST['server']).'"';
   fwrite($fp, "### Server Network\n".$value."\n");
   
@@ -512,6 +515,18 @@ require_once '../common/header.php';
   putHtml('</textarea>');
   putHtml('</td></tr>');
 
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>Firewall Options:</strong>');
+  putHtml('</td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('External Hosts:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  if (($value = getVARdef($db, 'OVPN_TUNNEL_HOSTS')) === '') {
+    $value = '0/0';
+  }
+  putHtml('<input type="text" size="48" maxlength="200" name="tunnel_external_hosts" value="'.$value.'" />');
+  putHtml('</td></tr>');
+  
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Server Mode:</strong>');
   putHtml('</td></tr>');
