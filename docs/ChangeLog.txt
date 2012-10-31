@@ -22,6 +22,17 @@ Released **TBD**
 
 -- iptables, version bump to 1.4.16.3
 
+-- AIF, add new "openvpn-server" plugin. This now provides consistency for all three VPN types.
+   This plugin behaves just like the "ipsec-vpn" and "pptp-vpn" plugins do, they are automatically
+   enabled/disabled when the VPN service is enabled/disabed.  Additionally, the OpenVPN Server
+   UDP/TCP and port number configuration is automatically used in the firewall rule.  By default, the
+   equivalent of the Firewall sub-tab rule:  "Pass EXT->Local UDP 0/0 1194" is created by the openvpn-server
+   plugin.  The default 0/0 (AnyHost) allowed external host can be overridden with the new web interface
+   "Network -> OpenVPN Server -> Firewall Options: External Hosts:" field (or OVPN_TUNNEL_HOSTS variable).
+
+   Note: If you previously restricted OpenVPN Server external hosts, be sure to define the External Hosts:
+         field.  Additionally, any manual OpenVPN server related Firewall sub-tab rule(s) can be deleted.
+
 ** Asterisk
 
 -- Asterisk 1.8.17.0 (version bump), 1.4.44 (no change)
@@ -41,6 +52,10 @@ Released **TBD**
    ==  [Active] if the plugin is currently active.
    ==  [Enabled] if the plugin will be active on next Restart Firewall.
    ==  [Disabled] if the plugin will not be active on next Restart Firewall.
+
+-- OpenVPN Server sub-tab, add External Hosts field to support the new AIF openvpn-server plugin.
+   The External Hosts field may contain a space separated list of IP addresses or CIDR's.
+   By default, 0/0 allows any external host to access the OpenVPN Server.
 
 
 Additions for AstLinux 1.0.5:
