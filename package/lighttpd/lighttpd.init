@@ -77,16 +77,16 @@ init () {
     phoneprov="#"
   fi
   if [ -n "$PHONEPROV_ALLOW" ]; then
-    # Replace . with \. then replace * with .* for Regex match
+    # Replace . with [.] then replace * with .* for Regex match
     # Match: "^($phoneprov_allow)$"
-    pp_allow="${PHONEPROV_ALLOW//./\.}"
-    pp_allow="${pp_allow//\*/.!}"  # Use ! for now, replace to * shortly
     phoneprov_allow=""
+    pp_allow="${PHONEPROV_ALLOW//\*/!}"  # Replace * with ! temporarily to eliminate globbing
     unset IFS
     for i in $pp_allow; do
       phoneprov_allow="$phoneprov_allow${phoneprov_allow:+|}$i"
     done
-    phoneprov_allow="${phoneprov_allow//!/*}"  # Replace ! with *
+    phoneprov_allow="${phoneprov_allow//./[.]}"  # Replace . with [.]
+    phoneprov_allow="${phoneprov_allow//!/.*}"   # Replace ! with .*
   else
     phoneprov_allow=".*"
   fi
