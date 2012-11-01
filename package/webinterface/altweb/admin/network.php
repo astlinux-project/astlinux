@@ -475,6 +475,9 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
     }
   }
   fwrite($fp, "### HTTPS Certificate File\n".$value."\n");
+
+  $value = 'PHONEPROV_ALLOW="'.trim($_POST['phoneprov_allow']).'"';
+  fwrite($fp, "### /phoneprov/ Allowed IPs\n".$value."\n");
   
   $x_value = '';
   if (isset($_POST['openvpn'])) {
@@ -1481,21 +1484,28 @@ require_once '../common/header.php';
   putHtml('<input type="checkbox" value="https_accesslog" name="https_accesslog"'.$sel.' />&nbsp;Access Logging');
   putHtml('</td></tr>');
 
+  $value = getVARdef($db, 'HTTPSCERT', $cur_db);
   if (is_opensslHERE()) {
     putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="4">');
-    $value = getVARdef($db, 'HTTPSCERT', $cur_db);
     putHtml('HTTPS&nbsp;Certificate File:<input type="text" size="36" maxlength="64" value="'.$value.'" name="https_cert" /></td>');
     putHtml('<td style="text-align: left;" colspan="2">');
-    putHtml('<input type="checkbox" value="create_cert" name="create_cert" />&nbsp;Create New HTTPS Certificate</td></tr>');
-    putHtml('<tr class="dtrow1"><td style="color: orange; text-align: center;" colspan="6">');
-    putHtml('Note: Changing HTTPS values effects this web interface.</td></tr>');
+    putHtml('<input type="checkbox" value="create_cert" name="create_cert" />&nbsp;Create New HTTPS Certificate');
   } else {
-    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="4">');
-    $value = getVARdef($db, 'HTTPSCERT', $cur_db);
-    putHtml('HTTPS&nbsp;Certificate File:<input type="text" size="36" maxlength="64" value="'.$value.'" name="https_cert" /></td>');
-    putHtml('<td style="color: orange;" colspan="2">Note: Changing HTTPS values<br />effects this web interface.</td></tr>');
+    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+    putHtml('HTTPS&nbsp;Certificate File:<input type="text" size="36" maxlength="64" value="'.$value.'" name="https_cert" />');
   }
-  
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  $value = getVARdef($db, 'PHONEPROV_ALLOW', $cur_db);
+  putHtml('HTTP &amp; HTTPS /phoneprov/ Allowed IP\'s:<input type="text" size="45" maxlength="200" value="'.$value.'" name="phoneprov_allow" />');
+  putHtml('<i>(10.1.2.* 2001:db8:1:*)</i>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="color: orange; text-align: center;" colspan="6">');
+  putHtml('Note: Changing HTTPS values effects this web interface.');
+  putHtml('</td></tr>');
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: right;">');
   putHtml('<strong>VPN Type:</strong>');
   putHtml('</td><td style="text-align: left;" colspan="5">&nbsp;</td></tr>');
