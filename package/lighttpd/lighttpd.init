@@ -76,6 +76,20 @@ init () {
   else
     phoneprov="#"
   fi
+  if [ -n "$PHONEPROV_ALLOW" ]; then
+    # Replace . with \. then replace * with .* for Regex match
+    # Match: "^($phoneprov_allow)$"
+    pp_allow="${PHONEPROV_ALLOW//./\.}"
+    pp_allow="${pp_allow//\*/.!}"  # Use ! for now, replace to * shortly
+    phoneprov_allow=""
+    unset IFS
+    for i in $pp_allow; do
+      phoneprov_allow="$phoneprov_allow${phoneprov_allow:+|}$i"
+    done
+    phoneprov_allow="${phoneprov_allow//!/*}"  # Replace ! with *
+  else
+    phoneprov_allow=".*"
+  fi
 
   sed -i -e "s|@HOSTNAME@|${HOSTNAME}|g" \
          -e "s|@HTTPDIR@|${httpdir}|g" \
@@ -89,6 +103,7 @@ init () {
          -e "s|@IPV6@|${ipv6}|g" \
          -e "s|@CLI_PROXY_SERVER@|${cli_proxy_server}|g" \
          -e "s|@PHONEPROV@|${phoneprov}|g" \
+         -e "s!@PHONEPROV_ALLOW@!${phoneprov_allow}!g" \
             /tmp/etc/lighttpd.conf
 }
 
