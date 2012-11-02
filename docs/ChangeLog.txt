@@ -22,6 +22,9 @@ Released **TBD**
 
 -- iptables, version bump to 1.4.16.3
 
+-- lighttpd, add new variable PHONEPROV_ALLOW to limit access to /phoneprov/ by IP address when
+   the directory "/mnt/kd/phoneprov/" exists.  Additionally, PCRE is now enabled in lighttpd.
+
 -- AIF, add new "openvpn-server" plugin. This now provides consistency for all three VPN types.
    This plugin behaves just like the "ipsec-vpn" and "pptp-vpn" plugins do, they are automatically
    enabled/disabled when the VPN service is enabled/disabed.  Additionally, the OpenVPN Server
@@ -52,6 +55,12 @@ Released **TBD**
    ==  [Active] if the plugin is currently active.
    ==  [Enabled] if the plugin will be active on next Restart Firewall.
    ==  [Disabled] if the plugin will not be active on next Restart Firewall.
+
+-- Network tab, add support for the new PHONEPROV_ALLOW variable, under Network Services:
+
+     HTTP & HTTPS /phoneprov/ Allowed IP's: __________ (10.1.2.* 2001:db8:1:*)
+
+   More info: http://doc.astlinux.org/userdoc:tt_ip_phone_provisioning
 
 -- OpenVPN Server sub-tab, add External Hosts field to support the new AIF openvpn-server plugin.
    The External Hosts field may contain a space separated list of IP addresses or CIDR's.
