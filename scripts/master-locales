@@ -1,0 +1,124 @@
+#!/bin/bash
+
+ACTION="$1"
+SCRIPT="$(pwd)/scripts/gen-locale"
+
+if [ "$ACTION" != "test" -a "$ACTION" != "upload" ]; then
+  echo "Usage: master-locale test|upload"
+  exit 1
+fi
+
+if ! which localedef >/dev/null 2>&1; then
+  echo "master-locale: Host command 'localedef' not found." >&2
+  exit 1
+fi
+
+if [ ! -x "$SCRIPT" ]; then
+  echo "master-locale: Host script './scripts/gen-locale' not found." >&2
+  exit 1
+fi
+
+locales="
+cs_CZ
+da_DK
+de_AT
+de_CH
+de_DE
+de_LU
+el_GR
+en_AU
+en_CA
+en_GB
+en_IE
+en_NZ
+en_US
+es_AR
+es_BO
+es_CL
+es_CO
+es_CR
+es_DO
+es_EC
+es_ES
+es_GT
+es_HN
+es_MX
+es_NI
+es_PA
+es_PE
+es_PR
+es_PY
+es_SV
+es_UY
+es_VE
+et_EE
+fi_FI
+fr_BE
+fr_CA
+fr_CH
+fr_FR
+fr_LU
+hr_HR
+hu_HU
+it_CH
+it_IT
+lt_LT
+lv_LV
+nb_NO
+nl_BE
+nl_NL
+nn_NO
+pl_PL
+pt_BR
+pt_PT
+ro_RO
+ru_RU
+sl_SI
+sv_SE
+tr_TR
+uk_UA
+vi_VN
+"
+
+TMP_LIST_FILE="/tmp/master-locale-list"
+LOCALE_FILE="$(pwd)/locale-archive"
+
+echo "AstLinux Supported Locales
+==========================" > "$TMP_LIST_FILE"
+
+err_cnt=0
+
+unset IFS
+for i in $locales; do
+  rm -f "$LOCALE_FILE"
+  $SCRIPT $i
+  if [ $? -eq 0 ]; then
+    echo "$i" >> "$TMP_LIST_FILE"
+    sha1sum locale-archive > locale-archive.sha1
+    for file in locale-archive locale-archive.sha1; do
+    if [ "$ACTION" = "upload" ]; then
+      s3cmd put --acl-public "$file" "s3://astlinuxmirror/locale/${i}/${file}"
+    else
+      echo "s3cmd put --acl-public $file s3://astlinuxmirror/locale/${i}/${file}"
+    fi
+    done
+  else
+    err_cnt=$((err_cnt+1))
+  fi
+done
+
+file="$TMP_LIST_FILE"
+if [ "$ACTION" = "upload" ]; then
+  s3cmd put --acl-public "$file" "s3://astlinuxmirror/locale/locales.txt"
+else
+  echo "s3cmd put --acl-public $file s3://astlinuxmirror/locale/locales.txt"
+fi
+
+if [ $err_cnt -gt 0 ]; then
+  echo "master-locale: Error Count: $err_cnt" >&2
+fi
+
+rm -f "$TMP_LIST_FILE" "$LOCALE_FILE" "$LOCALE_FILE.sha1"
+
+exit 0
+
