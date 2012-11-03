@@ -1,0 +1,55 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+  echo "Usage: gen-locale [ de_DE[.UTF-8] ... ]"
+  exit 1
+fi
+
+if ! which localedef >/dev/null 2>&1; then
+  echo "gen-locale: Host command 'localedef' not found." >&2
+  exit 1
+fi
+
+ARGS="$@"
+TMP_DIR="/tmp/gen-locale"
+DST_FILE="$(pwd)/locale-archive"
+I18NPATH="$(pwd)/output/staging/usr/share/i18n"
+VALID=""
+
+if [ ! -d "$I18NPATH" ]; then
+  echo "gen-locale: I18N data directory '$I18NPATH' not found." >&2
+  exit 1
+fi
+export I18NPATH
+
+rm -rf "$TMP_DIR"
+mkdir -p "$TMP_DIR/usr/lib/locale"
+
+unset IFS
+for i in $ARGS; do
+  lang="$(echo "$i" | cut -d'.' -f1)"
+  cset="$(echo "$i" | cut -s -d'.' -f2)"
+  if [ -n "$cset" -a "$cset" != "UTF-8" ]; then
+    echo "gen-locale: Skipping '$i', only UTF-8 is supported." >&2
+    continue
+  fi
+  localedef --prefix "$TMP_DIR" --little-endian -c -i ${lang} -f UTF-8 ${lang}.UTF-8
+  if [ $? -eq 0 ]; then
+    VALID="$VALID${VALID:+, }${lang}.UTF-8"
+  fi
+done
+
+if [ -f "$TMP_DIR/usr/lib/locale/locale-archive" ]; then
+  cp "$TMP_DIR/usr/lib/locale/locale-archive" "$DST_FILE"
+  echo "New locale-archive file generated: $DST_FILE"
+  echo "Language(s): $VALID"
+else
+  echo "gen-locale: No 'locale-archive' file generated." >&2
+  rm -rf "$TMP_DIR"
+  exit 1
+fi
+
+rm -rf "$TMP_DIR"
+
+exit 0
+
