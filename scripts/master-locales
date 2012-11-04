@@ -83,8 +83,7 @@ vi_VN
 TMP_LIST_FILE="/tmp/master-locale-list"
 LOCALE_FILE="$(pwd)/locale-archive"
 
-echo "AstLinux Supported Locales
-==========================" > "$TMP_LIST_FILE"
+printf "" > "$TMP_LIST_FILE"
 
 err_cnt=0
 
