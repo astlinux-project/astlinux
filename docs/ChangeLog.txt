@@ -16,6 +16,20 @@ Released **TBD**
 
 -- sqlite, version bump to 3.7.14.1
 
+-- set-locale, new command to manage locales stored via unionfs (ASTURW)...
+     Usage: set-locale install xx_XX[.UTF-8] [locale_repository_url]
+     Usage: set-locale list [locale_repository_url]
+     Usage: set-locale remove|show
+
+   Example: set-locale install de_DE
+
+   Then, in /etc/asterisk/voicemail.conf, define:
+   ==
+   charset=UTF-8
+   locale=de_DE.UTF-8
+   ==
+   Then Asterisk voicemail emails will contain dates/time in German.
+
 ** Networking
 
 -- msmtp, version bump to 1.4.30
