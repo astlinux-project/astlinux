@@ -90,7 +90,9 @@ list()
 
 remove()
 {
-  rm -rf "$ASTURW$BASE"
+  if [ -d "$ASTURW$BASE" ]; then
+    rm -rf "$ASTURW$BASE"
+  fi
 }
 
 show()
