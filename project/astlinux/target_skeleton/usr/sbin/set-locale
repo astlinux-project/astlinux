@@ -91,13 +91,6 @@ list()
 remove()
 {
   rm -rf "$ASTURW$BASE"
-
-  # Cleanup empty /usr/lib on ASTURW
-  if [ -d "$ASTURW/usr/lib" ]; then
-    if [ "$(find "$ASTURW/usr/lib" 2>/dev/null | wc -l)" = "1" ]; then
-      rm -rf "$ASTURW/usr/lib"
-    fi
-  fi
 }
 
 show()
