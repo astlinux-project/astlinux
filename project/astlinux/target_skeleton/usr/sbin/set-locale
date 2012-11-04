@@ -1,0 +1,180 @@
+#!/bin/sh
+# red color error message for web interface
+RED=1
+# orange color error message for web interface
+ORANGE=2
+# green color message for web interface
+GREEN=0
+#
+# locale repository
+SRC_URL="http://mirror.astlinux.org/locale"
+#
+# base locale directory
+BASE="/usr/lib/locale"
+#
+
+get_locale()
+{
+  if [ -f "$BASE/locale-archive" ]; then
+    if [ -f "$BASE/.locale" ]; then
+      cat "$BASE/.locale"
+    else
+      echo "Unknown"
+    fi
+    return 0
+  fi
+
+  return 1
+}
+
+install()
+{
+  local locale="${1%.UTF-8}.UTF-8"
+
+  mkdir /tmp/get-locale
+
+  if ! wget -q -c -O /tmp/get-locale/locale-archive.gz.sha1 $SRC_URL/$locale/locale-archive.gz.sha1 >/dev/null; then
+    rm -rf /tmp/get-locale/
+    echo "SHA1 download failed for locale \"$locale\"."
+    exit $RED
+  fi
+
+  if ! wget -q -c -O /tmp/get-locale/locale-archive.gz $SRC_URL/$locale/locale-archive.gz >/dev/null; then
+    rm -rf /tmp/get-locale/
+    echo "Download failed for locale \"$locale\"."
+    exit $RED
+  fi
+
+  cd /tmp/get-locale
+
+  if ! sha1sum -cs locale-archive.gz.sha1; then
+    cd /tmp
+    rm -rf /tmp/get-locale/
+    echo "Locale verification failed."
+    exit $RED
+  fi
+
+  if ! gunzip locale-archive.gz; then
+    cd /tmp
+    rm -rf /tmp/get-locale/
+    echo "Locale file is corrupted."
+    exit $RED
+  fi
+
+  if [ ! -d "$BASE" ]; then
+    mkdir -p "$BASE"
+  fi
+  chmod 0644 locale-archive
+  cp -a locale-archive "$BASE/locale-archive"
+  echo "$locale" > "$BASE/.locale"
+  sync
+
+  cd /tmp
+  rm -rf /tmp/get-locale/
+}
+
+list()
+{
+  mkdir /tmp/get-locale
+
+  if ! wget -q -c -O /tmp/get-locale/locales.txt $SRC_URL/locales.txt >/dev/null; then
+    rm -rf /tmp/get-locale/
+    echo "Locale Listing download failed."
+    exit $RED
+  fi
+
+  cat /tmp/get-locale/locales.txt
+
+  rm -rf /tmp/get-locale/
+}
+
+remove()
+{
+  rm -rf "$ASTURW$BASE"
+
+  # Cleanup empty /usr/lib on ASTURW
+  if [ -d "$ASTURW/usr/lib" ]; then
+    if [ "$(find "$ASTURW/usr/lib" 2>/dev/null | wc -l)" = "1" ]; then
+      rm -rf "$ASTURW/usr/lib"
+    fi
+  fi
+}
+
+show()
+{
+  local str
+
+  str="$(get_locale)"
+
+  if [ -z "$str" ]; then
+    str="No installed locale on ASTURW."
+  else
+    str="Locale: $str"
+  fi
+  
+  echo "$str"
+  exit $GREEN
+}
+
+# main
+
+if [ -d /tmp/get-locale ]; then
+  echo "Locale Install in Progress, please wait..."
+  exit $ORANGE
+fi
+
+if mount | grep -q "/oldroot/mnt/asturw"; then
+  ASTURW="/oldroot/mnt/asturw"
+else
+  echo "Unable to find ASTURW partition."
+  exit $RED
+fi
+
+case $1 in
+
+install)
+  if [ -z "$2" ]; then
+    echo "Usage: set-locale install xx_XX[.UTF-8] [locale_repository_url]"
+    exit 1
+  fi
+  if [ -n "$3" ]; then
+    SRC_URL="$3"
+  fi
+  install "$2"
+  echo "Successful install of locale \"$2\"."
+  exit $GREEN
+  ;;
+
+list)
+  if [ -n "$2" ]; then
+    SRC_URL="$2"
+  fi
+  list
+  echo "Successful list of locale repository \"$SRC_URL\"."
+  exit $GREEN
+  ;;
+
+remove)
+  locale="$(get_locale)"
+  remove
+  if [ -n "$locale" ]; then
+    echo "Successful removal of locale \"$locale\"."
+  else
+    echo "No locale was installed."
+  fi
+  exit $GREEN
+  ;;
+
+show)
+  show
+  ;;
+
+*)
+  echo "Usage: set-locale install xx_XX[.UTF-8] [locale_repository_url]"
+  echo "Usage: set-locale list [locale_repository_url]"
+  echo "Usage: set-locale remove|show"
+  exit 1
+  ;;
+  
+esac
+
