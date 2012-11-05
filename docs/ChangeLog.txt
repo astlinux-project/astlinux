@@ -16,6 +16,8 @@ Released **TBD**
 
 -- sqlite, version bump to 3.7.14.1
 
+-- r8168 version bump to 8.034.00 RealTek PCI-Express Gigabit Ethernet Linux driver
+
 -- set-locale, new command to manage locales stored via unionfs (ASTURW)...
      Usage: set-locale install xx_XX[.UTF-8] [locale_repository_url]
      Usage: set-locale list [locale_repository_url]
