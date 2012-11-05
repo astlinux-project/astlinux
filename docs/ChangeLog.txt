@@ -18,6 +18,8 @@ Released **TBD**
 
 -- r8168 version bump to 8.034.00 RealTek PCI-Express Gigabit Ethernet Linux driver
 
+-- libsrtp, 1.4.4 patch, fix crash on rtcp_decode, Thanks Michael Keuter
+
 -- set-locale, new command to manage locales stored via unionfs (ASTURW)...
      Usage: set-locale install xx_XX[.UTF-8] [locale_repository_url]
      Usage: set-locale list [locale_repository_url]
