@@ -29,7 +29,7 @@ get_locale()
 
 install()
 {
-  local locale="${1%.UTF-8}.UTF-8"
+  local locale="$1"
 
   mkdir /tmp/get-locale
 
@@ -135,8 +135,9 @@ install)
   if [ -n "$3" ]; then
     SRC_URL="$3"
   fi
-  install "$2"
-  echo "Successful install of locale \"$2\"."
+  locale="${2%.UTF-8}.UTF-8"
+  install "$locale"
+  echo "Successful install of locale \"$locale\"."
   exit $GREEN
   ;;
 
