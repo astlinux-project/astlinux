@@ -1,0 +1,108 @@
+#!/usr/bin/php -qC
+<?php
+$loc_file = '/usr/lib/locale/.locale';
+$format = '%c';
+$date_string = '';
+
+$usage = "
+Usage: ldate [OPTION]... [+FORMAT]
+
+Display the current time in the given FORMAT.
+
+  -d, --date=STRING         display time described by STRING
+      --help     display this help and exit
+      --version  output version information and exit
+
+FORMAT controls the output.  Interpreted sequences are:
+
+  %%   a literal %
+  %a   locale's abbreviated weekday name (e.g., Sun)
+  %A   locale's full weekday name (e.g., Sunday)
+  %b   locale's abbreviated month name (e.g., Jan)
+  %B   locale's full month name (e.g., January)
+  %c   locale's date and time (e.g., Thu Mar  3 23:05:25 2005)
+  %C   century; like %Y, except omit last two digits (e.g., 20)
+  %d   day of month (e.g, 01)
+  %D   date; same as %m/%d/%y
+  %e   day of month, space padded
+  %F   full date; same as %Y-%m-%d
+  %g   last two digits of year of ISO week number (see %G)
+  %G   year of ISO week number (see %V); normally useful only with %V
+  %h   same as %b
+  %H   hour (00..23)
+  %I   hour (01..12)
+  %j   day of year (001..366)
+  %m   month (01..12)
+  %M   minute (00..59)
+  %n   a newline
+  %N   nanoseconds (000000000..999999999)
+  %p   locale's equivalent of either AM or PM; blank if not known
+  %P   like %p, but lower case
+  %r   locale's 12-hour clock time (e.g., 11:11:04 PM)
+  %R   24-hour hour and minute; same as %H:%M
+  %s   seconds since 1970-01-01 00:00:00 UTC
+  %S   second (00..60)
+  %t   a tab
+  %T   time; same as %H:%M:%S
+  %u   day of week (1..7); 1 is Monday
+  %U   week number of year, with Sunday as first day of week (00..53)
+  %V   ISO week number, with Monday as first day of week (01..53)
+  %w   day of week (0..6); 0 is Sunday
+  %W   week number of year, with Monday as first day of week (00..53)
+  %x   locale's date representation (e.g., 12/31/99)
+  %X   locale's time representation (e.g., 23:13:48)
+  %y   last two digits of year (00..99)
+  %Y   year
+  %z   +hhmm numeric timezone (e.g., -0400)
+  %Z   alphabetic time zone abbreviation (e.g., EDT)
+";
+
+$i = 1;
+while (isset($argv[$i])) {
+  if ($argv[$i] === '--help') {
+    echo "$usage\n";
+    exit(0);
+  } elseif ($argv[$i] === '--version') {
+    echo "ldate: v1.0.0\n";
+    exit(0);
+  } elseif ($argv[$i] === '-d' && isset($argv[$i+1])) {
+    $date_string = $argv[++$i];
+  } elseif (substr($argv[$i], 0, 7)  === '--date=') {
+    $date_string = substr($argv[$i], 7);
+  } elseif (substr($argv[$i], 0, 1)  === '+') {
+    $format = substr($argv[$i], 1);
+  } else {
+    echo "ldate: Invalid option '$argv[$i]'\n$usage\n";
+    exit(1);
+  }
+  $i++;
+}
+
+date_default_timezone_set(@date_default_timezone_get());
+
+if (is_file($loc_file)) {
+  $locale = trim(file_get_contents($loc_file));
+} else {
+  $locale = 'C';
+}
+
+if (setlocale(LC_TIME, $locale) === FALSE) {
+  exit(1);
+}
+
+if ($date_string !== '') {
+  if (($timestamp = strtotime($date_string)) === FALSE) {
+    exit(2);
+  }
+} else {
+  $timestamp = time();
+}
+
+if (($str = strftime($format, $timestamp)) === FALSE) {
+  exit(3);
+}
+
+echo "$str\n";
+
+exit(0);
+?>
