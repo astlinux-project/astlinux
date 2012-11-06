@@ -20,7 +20,7 @@ Released **TBD**
 
 -- libsrtp, 1.4.4 patch, fix crash on rtcp_decode, Thanks Michael Keuter
 
--- set-locale, new command to manage locales stored via unionfs (ASTURW)...
+-- set-locale, new AstLinux specific command to manage locales stored via unionfs (ASTURW)...
      Usage: set-locale install xx_XX[.UTF-8] [locale_repository_url]
      Usage: set-locale list [locale_repository_url]
      Usage: set-locale remove|show
@@ -33,6 +33,9 @@ Released **TBD**
    locale=de_DE.UTF-8
    ==
    Then Asterisk voicemail emails will contain dates/time in German.
+
+-- ldate, new AstLinux specific 'date' command supporting UTF-8 locales installed via set-locale.
+   Custom generated emails and such may use 'ldate' to provide a locale specific date string.
 
 ** Networking
 
