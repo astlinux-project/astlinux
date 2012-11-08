@@ -18,9 +18,9 @@ Released **TBD**
 
 -- r8168 version bump to 8.034.00 RealTek PCI-Express Gigabit Ethernet Linux driver
 
--- libsrtp, 1.4.4 patch, fix crash on rtcp_decode, Thanks Michael Keuter
-
 -- lm-sensors, version bump to 3.3.3
+
+-- libsrtp, 1.4.4 patch, fix crash on rtcp_decode, Thanks Michael Keuter
 
 -- set-locale, new AstLinux specific command to manage locales stored via unionfs (ASTURW)...
      Usage: set-locale install xx_XX[.UTF-8] [locale_repository_url]
@@ -61,7 +61,7 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.8.17.0 (version bump), 1.4.44 (no change)
+-- Asterisk 1.8.18.0 (version bump), Testing: 11.0.1 (version bump), Deprecated: 1.4.44 (no change)
 
 -- DAHDI, dahdi-linux 2.6.1 (no change) and dahdi-tools 2.6.1 (no change)
 
