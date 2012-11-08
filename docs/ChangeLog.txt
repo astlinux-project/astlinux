@@ -20,6 +20,8 @@ Released **TBD**
 
 -- libsrtp, 1.4.4 patch, fix crash on rtcp_decode, Thanks Michael Keuter
 
+-- lm-sensors, version bump to 3.3.3
+
 -- set-locale, new AstLinux specific command to manage locales stored via unionfs (ASTURW)...
      Usage: set-locale install xx_XX[.UTF-8] [locale_repository_url]
      Usage: set-locale list [locale_repository_url]
