@@ -778,6 +778,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/dnshosts.php');
     exit;
+  } elseif (isset($_POST['submit_sip_tls'])) {
+    $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
+    header('Location: /admin/siptlscert.php');
+    exit;
   } elseif (isset($_POST['submit_zabbix'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/zabbix.php');
@@ -1399,6 +1403,10 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('DNS&nbsp;Forwarder &amp; DHCP Server:');
   putHtml('<input type="submit" value="Configure DNS Hosts" name="submit_dns_hosts" class="button" /></td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml('Asterisk&nbsp;SIP-TLS Server Certificate:');
+  putHtml('<input type="submit" value="SIP-TLS Certificate" name="submit_sip_tls" class="button" /></td></tr>');
 
   if (is_file('/etc/init.d/zabbix')) {
     putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');

@@ -98,7 +98,7 @@ function opensslCREATEserverCert($ssl) {
   if (($privkey = openssl_pkey_new($ssl['configArgs'])) === FALSE) {
     return(FALSE);
   }
-  $dn = opensslCREATEdn('server', $ssl);
+  $dn = opensslCREATEdn('', $ssl);
   if (($csr = openssl_csr_new($dn, $privkey, $ssl['configArgs'])) === FALSE) {
     return(FALSE);
   }
