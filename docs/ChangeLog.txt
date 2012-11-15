@@ -85,6 +85,20 @@ Released **TBD**
 
    More info: http://doc.astlinux.org/userdoc:tt_ip_phone_provisioning
 
+-- Network tab, add new, Network Services: Asterisk SIP-TLS Server Certificate { SIP-TLS Certificate }
+   This new sub-tab creates TLS certificates similar to what the Asterisk "ast_tls_cert" script does.
+   After clicking { Create New }, the following Asterisk sip.conf settings will enable SIP-TLS support.
+   == sip.conf ==
+   tlsenable=yes
+   tlsbindaddr=0.0.0.0
+   tlscertfile=/mnt/kd/ssl/sip-tls/keys/server.crt
+   tlsprivatekey=/mnt/kd/ssl/sip-tls/keys/server.key
+   tlscipher=ALL
+   tlsclientmethod=tlsv1
+   ==
+   Then for each applicable sip.conf peer add "transport=tls" and optionally "encryption=yes" for SRTP.
+   More info: https://wiki.asterisk.org/wiki/display/AST/Secure+Calling+Tutorial
+
 -- OpenVPN Server sub-tab, add External Hosts field to support the new AIF openvpn-server plugin.
    The External Hosts field may contain a space separated list of IP addresses or CIDR's.
    By default, 0/0 allows any external host to access the OpenVPN Server.
