@@ -16,6 +16,8 @@ Released **TBD**
 
 -- sqlite, version bump to 3.7.14.1
 
+-- mysql_client, version bump to 5.1.66, multiple bug fixes.
+
 -- r8168 version bump to 8.034.00 RealTek PCI-Express Gigabit Ethernet Linux driver
 
 -- lm-sensors, version bump to 3.3.3
@@ -47,6 +49,11 @@ Released **TBD**
 
 -- lighttpd, add new variable PHONEPROV_ALLOW to limit access to /phoneprov/ by IP address when
    the directory "/mnt/kd/phoneprov/" exists.  Additionally, PCRE is now enabled in lighttpd.
+
+-- AIF, version bump to 2.0.1d, new features including:
+   == Added nat-loopback plugin for local nets using existing NAT_FORWARD_TCP and NAT_FORWARD_UDP rules.
+   == Added outbound-snat plugin to support when a NAT'ed external interface has multiple IPv4 addresses, it may be
+      desirable to specify which internal IP's or CIDR's use which external IPv4 addresses for outbound connections.
 
 -- AIF, add new "openvpn-server" plugin. This now provides consistency for all three VPN types.
    This plugin behaves just like the "ipsec-vpn" and "pptp-vpn" plugins do, they are automatically
