@@ -12,7 +12,7 @@ Released **TBD**
 
 ** System
 
--- php, version bump to 5.3.18
+-- php, version bump to 5.3.19
 
 -- sqlite, version bump to 3.7.14.1
 
@@ -44,6 +44,8 @@ Released **TBD**
 ** Networking
 
 -- msmtp, version bump to 1.4.30
+
+-- lighttpd, version bump to 1.4.32, security fix (CVE-2012-5533) and bug fixes
 
 -- iptables, version bump to 1.4.16.3
 
