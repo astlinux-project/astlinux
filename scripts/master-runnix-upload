@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+  echo "Usage: master-runnix-upload [runnix-0.4-]NNNN"
+  exit 1
+fi
+
+runnix="runnix-0.4-${1#runnix-0.4-}"
+
+if [ ! -f "$runnix.tar.gz" ]; then
+  echo "master-runnix-upload: File not found: \"$runnix.tar.gz\""
+  exit 1
+fi
+
+if [ ! -f "$runnix.tar.gz.sha1" ]; then
+  echo "master-runnix-upload: File not found: \"$runnix.tar.gz.sha1\""
+  exit 1
+fi
+
+echo "$runnix" > /tmp/ver
+
+for file in $runnix.tar.gz $runnix.tar.gz.sha1 /tmp/ver; do
+  s3cmd put --acl-public "$file" "s3://astlinuxmirror/runnix4/${file##*/}"
+done
+
+rm /tmp/ver
+
