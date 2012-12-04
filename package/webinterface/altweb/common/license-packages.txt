@@ -6,32 +6,34 @@
 ## 3) Lines beginning with a '#' are treated as comments
 ##
 ex-vi~Copyright (c) 2001-2002 Caldera International Inc. All rights reserved.
-RUNNIX~Copyright (c) 2006-2011 by Kristian Kielhofner.
+RUNNIX~Copyright (c) 2006-2013 by Kristian Kielhofner.
 libSRTP~Copyright (c) 2001-2005 Cisco Systems, Inc. All rights reserved.
-iLBC~Copyright (c) 2011 The WebRTC project authors. All rights reserved.
-Web Interface~Copyright (c) 2008-2012 Lonnie Abelbeck.
+iLBC CODEC~Copyright (c) 2011 The WebRTC project authors. All rights reserved.
+Web Interface~Copyright (c) 2008-2013 Lonnie Abelbeck.
 shellinabox~Copyright (c) 2008-2010 Markus Gutschke.
-Asterisk~Copyright (c) 1999-2011 Digium, Inc.
-DAHDI~Copyright (c) 2001-2011 Digium, Inc.
-libPRI~Copyright (c) 2001-2010 Digium, Inc.
-Arno's Firewall~Copyright (c) 2001-2012 by Arno van Amersfoort.
-dnsmasq~Copyright (c) 2000-2011 Simon Kelley.
-OpenSSL~Copyright (c) 1998-2011 The OpenSSL Project. All rights reserved.
+Asterisk~Copyright (c) 1999-2013 Digium, Inc.
+DAHDI~Copyright (c) 2001-2013 Digium, Inc.
+libPRI~Copyright (c) 2001-2012 Digium, Inc.
+Arno's Firewall~Copyright (c) 2001-2013 by Arno van Amersfoort.
+dnsmasq~Copyright (c) 2000-2012 Simon Kelley.
+OpenSSL~Copyright (c) 1998-2012 The OpenSSL Project. All rights reserved.
 OpenSSH~Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland. All rights reserved.
-OpenVPN~Copyright (c) 2002-2010 OpenVPN Technologies, Inc. <sales@openvpn.net>
-PHP~Copyright (c) 1999-2011 The PHP Group. All rights reserved.
+OpenVPN~Copyright (c) 2002-2012 OpenVPN Technologies, Inc. <sales@openvpn.net>
+PHP~Copyright (c) 1999-2013 The PHP Group. All rights reserved.
 ntpd~Copyright (c) 1992-2009 David L. Mills.
 vsftpd~Copyright (c) 2001 Daniel Jacobowitz. <dan@debian.org>
-lighttpd~Copyright (c) 2004-2010, Jan Kneschke.
-radvd~Copyright (c) 1996-2011 by Lars Fenneberg <lf@elemental.net>
-msmtp~Copyright (c) 2000-2010 Martin Lambers <marlam@marlam.de>
-libxml2~Copyright (c) 1998-2003 Daniel Veillard. All Rights Reserved.
+lighttpd~Copyright (c) 2004-2012, Jan Kneschke.
+radvd~Copyright (c) 1996-2012 by Lars Fenneberg <lf@elemental.net>
+msmtp~Copyright (c) 2000-2012 Martin Lambers <marlam@marlam.de>
+libxml2~Copyright (c) 1998-2012 Daniel Veillard. All Rights Reserved.
 libtiff~Copyright (c) 1988-1997 Sam Leffler, Copyright (c) 1991-1997 Silicon Graphics, Inc.
 libjpeg~Copyright (c) 1991-2010, Thomas G. Lane, Guido Vollbeding.
-iptables~Copyright (c) 2000-2002 by the netfilter coreteam <coreteam@netfilter.org>
+iptables~Copyright (c) 2000-2012 by the netfilter coreteam <coreteam@netfilter.org>
 curl~Copyright (c) 1996-2011 Daniel Stenberg, <daniel@haxx.se>.
 mDNS~Copyright (c) 2002-2004 Apple Computer, Inc. All rights reserved.
-rp-pppoe~Copyright (c) 2001-2005 Roaring Penguin Software Inc.
-zabbix~Copyright (c) 2000-2011 SIA Zabbix.
+rp-pppoe~Copyright (c) 2001-2012 Roaring Penguin Software Inc.
+zabbix~Copyright (c) 2000-2012 SIA Zabbix.
 zlib~Copyright (c) 1995-2005 Jean-loup Gailly.
 MS-Win Installer~Copyright (c) 2010-2011 Tom Chadwin, Nullsoft, et al.
+SILK CODEC~Copyright (c) 2010-2012 Skype and/or Microsoft. All rights reserved. Licensed via Digium, Inc.
+SpanDSP~Copyright (c) 2003-2012 Steve Underwood <steveu@coppice.org>. All rights reserved.
