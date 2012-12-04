@@ -12,6 +12,8 @@ Released **TBD**
 
 ** System
 
+-- RUNNIX, version bump to 0.4-5781, adds support for VMware/VirtualBox 'lsilogic' SCSI driver (CONFIG_FUSION_SPI)
+
 -- php, version bump to 5.3.19
 
 -- sqlite, version bump to 3.7.14.1
@@ -23,6 +25,8 @@ Released **TBD**
 -- lm-sensors, version bump to 3.3.3
 
 -- libsrtp, 1.4.4 patch, fix crash on rtcp_decode, Thanks Michael Keuter
+
+-- zabbix, version bump to 2.0.3, many bug fixes
 
 -- set-locale, new AstLinux specific command to manage locales stored via unionfs (ASTURW)...
      Usage: set-locale install xx_XX[.UTF-8] [locale_repository_url]
@@ -76,6 +80,8 @@ Released **TBD**
 
 -- LibPRI, version bump to 1.4.13
 
+-- Asterisk 11 builds now support the SILK CODEC using an x86 binary, licensed by Skype/Microsoft via Digium.
+
 -- Added patch for the wcfxo module, newer clone X100P cards support additional 'global line standard settings'.
    These different modes are selected with the opermode=N option set in /etc/modprobe.d/options.conf .
    Thanks to Frank Collingwood for the patch and info.
@@ -111,6 +117,8 @@ Released **TBD**
 -- OpenVPN Server sub-tab, add External Hosts field to support the new AIF openvpn-server plugin.
    The External Hosts field may contain a space separated list of IP addresses or CIDR's.
    By default, 0/0 allows any external host to access the OpenVPN Server.
+
+-- Status tab, updated "Show Licenses" information.
 
 
 Additions for AstLinux 1.0.5:
