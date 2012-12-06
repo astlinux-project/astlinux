@@ -3,12 +3,6 @@
 # master-upload input_path
 #
 
-MIRROR_IMG_PATH="downloads/img"
-
-MIRROR_FIRMWARE_PATH="firmware-1.x"
-
-MIRROR_FIRMWARE_PATH_18="ast18-firmware-1.x"
-
 input_path="$1"
 
 auth_file="$HOME/.s3cfg"
@@ -74,6 +68,34 @@ upload_flash_images()
   done
 }
 
+set_asterisk_version()
+{
+  case $1 in
+    ast14)
+      FIRMWARE="firmware-1.x"
+      IMG="img"
+      MIRROR_FIRMWARE="$FIRMWARE"
+      MIRROR_IMG="downloads/img"
+      ;;
+    ast18)
+      FIRMWARE="ast18-firmware-1.x"
+      IMG="ast18-img"
+      MIRROR_FIRMWARE="$FIRMWARE"
+      MIRROR_IMG="downloads/img"
+      ;;
+    ast11)
+      FIRMWARE="ast11-firmware-1.x"
+      IMG="ast11-img"
+      MIRROR_FIRMWARE="$FIRMWARE"
+      MIRROR_IMG="downloads/img"
+      ;;
+    *)
+      echo "master-upload: Unknown Asterisk Version."
+      exit 1
+      ;;
+  esac
+}
+
 if [ -z "$input_path" ]; then
   echo "Usage: master-upload input_path"
   exit 1
@@ -102,17 +124,21 @@ if [ ! -f "$auth_file" ]; then
   exit 1
 fi
 
-# Upload Asterisk 1.4 .tar.gz run images
-upload_run_images "$input_path/firmware-1.x" "$MIRROR_FIRMWARE_PATH"
+#
+# Uplaod Asterisk 1.4, 1.8 versions of AstLinux
+#
 
-# Upload Asterisk 1.4 .img.gz flash images
-upload_flash_images "$input_path/img" "$MIRROR_IMG_PATH"
+for asterisk in ast14 ast18; do
 
-# Upload Asterisk 1.8 .tar.gz run images
-upload_run_images "$input_path/ast18-firmware-1.x" "$MIRROR_FIRMWARE_PATH_18"
+  set_asterisk_version $asterisk
 
-# Upload Asterisk 1.8 .img.gz flash images
-upload_flash_images "$input_path/ast18-img" "$MIRROR_IMG_PATH"
+  # Upload .tar.gz run images
+  upload_run_images "$input_path/$FIRMWARE" "$MIRROR_FIRMWARE"
+
+  # Upload .img.gz flash images
+  upload_flash_images "$input_path/$IMG" "$MIRROR_IMG"
+
+done
 
 echo "
 ##
