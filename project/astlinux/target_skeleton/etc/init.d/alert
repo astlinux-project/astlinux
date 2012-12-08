@@ -2,6 +2,38 @@
 
 . /etc/rc.conf
 
+welcome_msg()
+{
+  local ext_ipv4="" asterisk=""
+
+  if [ -n "$EXTIF" ]; then
+    ext_ipv4="$(ip -o addr show dev "$EXTIF" 2>/dev/null | awk '$3 == "inet" { split($4, field, "/"); print field[1]; }' | tr '\n' ' ')"
+  fi
+
+  if [ -x /usr/sbin/asterisk ]; then
+    asterisk="$(/usr/sbin/asterisk -V)"
+  fi
+
+  memtotal="$(awk '/^MemTotal:/ { print int(($2 + 512) / 1024) }' /proc/meminfo 2>/dev/null)"
+  memfree="$(awk '/^MemFree:/ { print int(($2 + 512) / 1024) }' /proc/meminfo 2>/dev/null)"
+
+  echo -e "\n\n\033[40m\033[1;32m  Welcome to AstLinux, Release: $(cat /etc/astlinux-release)${asterisk:+ - $asterisk}  \033[0m"
+  echo "
+  System information (as of $(date))
+
+       Hostname: $HOSTNAME
+         Domain: $DOMAIN
+          Linux: $(uname -r)
+     RAM Memory: $memtotal MB, Free $memfree MB
+
+      Interface: $EXTIF (External)   IPv4 Address: $ext_ipv4${INTIF:+
+      Interface: $INTIF (1st LAN)}${INT2IF:+
+      Interface: $INT2IF (2nd LAN)}${INT3IF:+
+      Interface: $INT3IF (3rd LAN)}${DMZIF:+
+      Interface: $DMZIF (The DMZ)}
+"
+}
+
 is_alert_sound_type()
 {
   local sound_type="$1" sound IFS
@@ -17,6 +49,8 @@ is_alert_sound_type()
 }
 
 start () {
+
+  welcome_msg
 
   # Turn OFF the errorled (after finshed booting) 
   if grep -q "astlinux=net4801" /proc/cmdline; then
