@@ -4,7 +4,7 @@
 
 welcome_msg()
 {
-  local ext_ipv4="" asterisk=""
+  local ext_ipv4="" asterisk="" memtotal memfree release
 
   if [ -n "$EXTIF" ]; then
     ext_ipv4="$(ip -o addr show dev "$EXTIF" 2>/dev/null | awk '$3 == "inet" { split($4, field, "/"); print field[1]; }' | tr '\n' ' ')"
@@ -14,10 +14,12 @@ welcome_msg()
     asterisk="$(/usr/sbin/asterisk -V)"
   fi
 
-  memtotal="$(awk '/^MemTotal:/ { print int(($2 + 512) / 1024) }' /proc/meminfo 2>/dev/null)"
-  memfree="$(awk '/^MemFree:/ { print int(($2 + 512) / 1024) }' /proc/meminfo 2>/dev/null)"
+  memtotal="$(awk '/^MemTotal:/ { print int(($2 + 512) / 1024) }' /proc/meminfo)"
+  memfree="$(awk '/^MemFree:/ { print int(($2 + 512) / 1024) }' /proc/meminfo)"
 
-  echo -e "\n\n\033[40m\033[1;32m  Welcome to AstLinux, Release: $(cat /etc/astlinux-release)${asterisk:+ - $asterisk}  \033[0m"
+  release="$(cat /etc/astlinux-release)"
+
+  echo -e "\n\n\033[40m\033[1;32m  Welcome to AstLinux, Release: ${release}${asterisk:+ - $asterisk}  \033[0m"
   echo "
   System information (as of $(date))
 
@@ -32,6 +34,9 @@ welcome_msg()
       Interface: $INT3IF (3rd LAN)}${DMZIF:+
       Interface: $DMZIF (The DMZ)}
 "
+  # Add a one second delay to allow the message to transmit since getty immediately
+  # follows this service and flushes any unsent serial data for a serial console.
+  sleep 1
 }
 
 is_alert_sound_type()
