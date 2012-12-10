@@ -26,7 +26,7 @@ Released **TBD**
 
 -- libsrtp, 1.4.4 patch, fix crash on rtcp_decode, Thanks Michael Keuter
 
--- zabbix, version bump to 2.0.3, many bug fixes
+-- zabbix, version bump to 2.0.4, many bug fixes
 
 -- set-locale, new AstLinux specific command to manage locales stored via unionfs (ASTURW)...
      Usage: set-locale install xx_XX[.UTF-8] [locale_repository_url]
