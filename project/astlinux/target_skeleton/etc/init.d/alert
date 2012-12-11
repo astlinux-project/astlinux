@@ -2,13 +2,23 @@
 
 . /etc/rc.conf
 
+dev_to_ipv4_addresses()
+{
+  ip -o addr show dev "$1" 2>/dev/null | \
+        awk '$3 == "inet" { split($4, field, "/"); print field[1]; }' | \
+        tr '\n' ' '
+}
+
+dev_to_ipv4_networks()
+{
+  ip -o addr show dev "$1" 2>/dev/null | \
+        awk '$3 == "inet" { print $4; }' | \
+        tr '\n' ' '
+}
+
 welcome_msg()
 {
-  local ext_ipv4="" asterisk="" memtotal memfree release
-
-  if [ -n "$EXTIF" ]; then
-    ext_ipv4="$(ip -o addr show dev "$EXTIF" 2>/dev/null | awk '$3 == "inet" { split($4, field, "/"); print field[1]; }' | tr '\n' ' ')"
-  fi
+  local asterisk="" memtotal memfree release
 
   if [ -x /usr/sbin/asterisk ]; then
     asterisk="$(/usr/sbin/asterisk -V)"
@@ -28,11 +38,11 @@ welcome_msg()
           Linux: $(uname -r)
      RAM Memory: $memtotal MB, Free $memfree MB
 
-      Interface: $EXTIF (External)   IPv4 Address: $ext_ipv4${INTIF:+
-      Interface: $INTIF (1st LAN)}${INT2IF:+
-      Interface: $INT2IF (2nd LAN)}${INT3IF:+
-      Interface: $INT3IF (3rd LAN)}${DMZIF:+
-      Interface: $DMZIF (The DMZ)}
+      Interface: $EXTIF (External)   IPv4 Address: $(dev_to_ipv4_addresses $EXTIF)${INTIF:+
+      Interface: $INTIF (1st LAN)    IPv4 Network: $(dev_to_ipv4_networks $INTIF)}${INT2IF:+
+      Interface: $INT2IF (2nd LAN)    IPv4 Network: $(dev_to_ipv4_networks $INT2IF)}${INT3IF:+
+      Interface: $INT3IF (3rd LAN)    IPv4 Network: $(dev_to_ipv4_networks $INT3IF)}${DMZIF:+
+      Interface: $DMZIF (The DMZ)    IPv4 Network: $(dev_to_ipv4_networks $DMZIF)}
 "
   # Add a one second delay to allow the message to transmit since getty immediately
   # follows this service and flushes any unsent serial data for a serial console.
