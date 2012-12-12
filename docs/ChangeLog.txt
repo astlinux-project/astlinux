@@ -45,6 +45,8 @@ Released **TBD**
 -- ldate, new AstLinux specific 'date' command supporting UTF-8 locales installed via set-locale.
    Custom generated emails and such may use 'ldate' to provide a locale specific date string.
 
+-- A console welcome message is now generated on startup, showing versions, interfaces, IP's, etc. .
+
 ** Networking
 
 -- msmtp, version bump to 1.4.30
