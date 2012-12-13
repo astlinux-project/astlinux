@@ -532,10 +532,10 @@ index 0000000..1adde69
 +
 +For more information, see <http://unionfs.filesystems.org/>.
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 696e7d2..7662b63 100644
+index d0cdb2f..eacc093 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -5765,6 +5765,14 @@ F:	Documentation/cdrom/
+@@ -5771,6 +5771,14 @@ F:	Documentation/cdrom/
  F:	drivers/cdrom/cdrom.c
  F:	include/linux/cdrom.h
  
@@ -723,11 +723,11 @@ index 0000000..f3c1ac4
 +	  If you say Y here, you can turn on debugging output from Unionfs.
 diff --git a/fs/unionfs/Makefile b/fs/unionfs/Makefile
 new file mode 100644
-index 0000000..d3d8e23
+index 0000000..ba7546a
 --- /dev/null
 +++ b/fs/unionfs/Makefile
 @@ -0,0 +1,17 @@
-+UNIONFS_VERSION="2.5.9.2 (for 2.6.35.13)"
++UNIONFS_VERSION="2.5.11 (for 2.6.35.14)"
 +
 +EXTRA_CFLAGS += -DUNIONFS_VERSION=\"$(UNIONFS_VERSION)\"
 +
@@ -746,10 +746,10 @@ index 0000000..d3d8e23
 +endif
 diff --git a/fs/unionfs/commonfops.c b/fs/unionfs/commonfops.c
 new file mode 100644
-index 0000000..9ae2e61
+index 0000000..0d2146c
 --- /dev/null
 +++ b/fs/unionfs/commonfops.c
-@@ -0,0 +1,896 @@
+@@ -0,0 +1,899 @@
 +/*
 + * Copyright (c) 2003-2011 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
@@ -1258,8 +1258,11 @@ index 0000000..9ae2e61
 +			for (bindex = bstart - 1; bindex >= 0; bindex--) {
 +				err = copyup_file(parent->d_inode, file,
 +						  bstart, bindex, size);
-+				if (!err)
++				if (!err) {
++					/* only one regular file open */
++					fbend(file) = fbstart(file);
 +					break;
++				}
 +			}
 +			return err;
 +		} else {
@@ -2550,10 +2553,10 @@ index 0000000..37c2654
 +}
 diff --git a/fs/unionfs/debug.c b/fs/unionfs/debug.c
 new file mode 100644
-index 0000000..1720ce1
+index 0000000..f34e512
 --- /dev/null
 +++ b/fs/unionfs/debug.c
-@@ -0,0 +1,532 @@
+@@ -0,0 +1,533 @@
 +/*
 + * Copyright (c) 2003-2011 Erez Zadok
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
@@ -2918,12 +2921,13 @@ index 0000000..1720ce1
 +		pr_debug(" CF0: file/dentry=%p:%p fstart/end=%d:%d\n",
 +			 file, dentry, fstart, fend);
 +	}
-+	if (unlikely(fstart != dstart)) {
++	/* d_deleted dentries can be ignored for this test */
++	if (unlikely(fstart != dstart) && !d_deleted(dentry)) {
 +		PRINT_CALLER(fname, fxn, line);
 +		pr_debug(" CF1: file/dentry=%p:%p fstart=%d dstart=%d\n",
 +			 file, dentry, fstart, dstart);
 +	}
-+	if (unlikely(fend != dend)) {
++	if (unlikely(fend != dend) && !d_deleted(dentry)) {
 +		PRINT_CALLER(fname, fxn, line);
 +		pr_debug(" CF2: file/dentry=%p:%p fend=%d dend=%d\n",
 +			 file, dentry, fend, dend);
@@ -4761,10 +4765,10 @@ index 0000000..e6abd5c
 +};
 diff --git a/fs/unionfs/inode.c b/fs/unionfs/inode.c
 new file mode 100644
-index 0000000..449d9db
+index 0000000..74b0ead
 --- /dev/null
 +++ b/fs/unionfs/inode.c
-@@ -0,0 +1,1074 @@
+@@ -0,0 +1,1089 @@
 +/*
 + * Copyright (c) 2003-2011 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
@@ -5700,7 +5704,12 @@ index 0000000..449d9db
 +		err = -EINVAL;
 +		goto out;
 +	}
-+	lower_inode = unionfs_lower_inode(inode);
++
++	/*
++	 * Get the lower inode directly from lower dentry, in case ibstart
++	 * is -1 (which happens when the file is open but unlinked.
++	 */
++	lower_inode = lower_dentry->d_inode;
 +
 +	/* check if user has permission to change lower inode */
 +	err = inode_change_ok(lower_inode, ia);
@@ -5735,6 +5744,16 @@ index 0000000..449d9db
 +		/* get updated lower_dentry/inode after copyup */
 +		lower_dentry = unionfs_lower_dentry(dentry);
 +		lower_inode = unionfs_lower_inode(inode);
++		/*
++		 * check for whiteouts in writeable branch, and remove them
++		 * if necessary.
++		 */
++		if (lower_dentry) {
++			err = check_unlink_whiteout(dentry, lower_dentry,
++						    bindex);
++			if (err > 0) /* ignore if whiteout found and removed */
++				err = 0;
++		}
 +	}
 +
 +	/*
@@ -9452,10 +9471,10 @@ index 0000000..fdeec51
 +};
 diff --git a/fs/unionfs/union.h b/fs/unionfs/union.h
 new file mode 100644
-index 0000000..e85cd00
+index 0000000..9397f40
 --- /dev/null
 +++ b/fs/unionfs/union.h
-@@ -0,0 +1,669 @@
+@@ -0,0 +1,670 @@
 +/*
 + * Copyright (c) 2003-2011 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
@@ -10121,6 +10140,7 @@ index 0000000..e85cd00
 +#define show_inode_times(i)		do { } while (0)
 +#define show_dinode_times(d)		do { } while (0)
 +#define show_inode_counts(i)		do { } while (0)
++#define UDBG				do { } while (0)
 +
 +#endif /* not CONFIG_UNION_FS_DEBUG */
 +
@@ -10411,10 +10431,10 @@ index 0000000..bf447bb
 +}
 diff --git a/fs/unionfs/whiteout.c b/fs/unionfs/whiteout.c
 new file mode 100644
-index 0000000..c0a5729
+index 0000000..022a3ea
 --- /dev/null
 +++ b/fs/unionfs/whiteout.c
-@@ -0,0 +1,584 @@
+@@ -0,0 +1,581 @@
 +/*
 + * Copyright (c) 2003-2011 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
@@ -10620,8 +10640,8 @@ index 0000000..c0a5729
 + * Checks to see if there's a whiteout in @lower_dentry's parent directory,
 + * whose name is taken from @dentry.  Then tries to remove that whiteout, if
 + * found.  If <dentry,bindex> is a branch marked readonly, return -EROFS.
-+ * If it finds both a regular file and a whiteout, return -EIO (this should
-+ * never happen).
++ * If it finds both a regular file and a whiteout, delete whiteout (this
++ * should never happen).
 + *
 + * Return 0 if no whiteout was found.  Return 1 if one was found and
 + * successfully removed.  Therefore a value >= 0 tells the caller that
@@ -10651,13 +10671,10 @@ index 0000000..c0a5729
 +	}
 +
 +	/* check if regular file and whiteout were both found */
-+	if (unlikely(lower_dentry->d_inode)) {
-+		err = -EIO;
-+		printk(KERN_ERR "unionfs: found both whiteout and regular "
-+		       "file in directory %s (branch %d)\n",
++	if (unlikely(lower_dentry->d_inode))
++		printk(KERN_WARNING "unionfs: removing whiteout; regular "
++		       "file exists in directory %s (branch %d)\n",
 +		       lower_dir_dentry->d_name.name, bindex);
-+		goto out_dput;
-+	}
 +
 +	/* check if branch is writeable */
 +	err = is_robranch_super(dentry->d_sb, bindex);
