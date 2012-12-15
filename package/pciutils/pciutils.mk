@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PCIUTILS_VERSION = 3.1.9
+PCIUTILS_VERSION = 3.1.10
 PCIUTILS_SITE = ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci
 
 PCIUTILS_ZLIB=no
@@ -36,9 +36,7 @@ endef
 # Ditch install-lib if SHARED is an option in the future
 define PCIUTILS_INSTALL_TARGET_CMDS
 	$(MAKE) BUILDDIR=$(@D) -C $(@D) PREFIX=$(TARGET_DIR)/usr \
-		SHARED=$(PCIUTILS_SHARED) install
-	$(MAKE) BUILDDIR=$(@D) -C $(@D) PREFIX=$(TARGET_DIR)/usr \
-		SHARED=$(PCIUTILS_SHARED) install-lib
+		SHARED=$(PCIUTILS_SHARED) install install-lib
 	chmod 755 $(TARGET_DIR)/usr/lib/libpci.so.$(PCIUTILS_VERSION) # set permissions so it is stripped
 endef
 
