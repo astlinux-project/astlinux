@@ -5,10 +5,36 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.0.6:
+Additions for AstLinux 1.0.7:
 =============================
 
 Released **TBD**
+
+** System
+
+-- Linux Kernel 2.6.35.14 (minor bump)  Info: http://lwn.net/Articles/453757/
+
+-- unionfs, version bump to 2.5.11
+
+** Networking
+
+-- links, version bump to 2.7
+
+** Asterisk
+
+-- Asterisk 1.8.19.0 (version bump), Testing: 11.1.0 (version bump), Deprecated: 1.4.44 (no change)
+
+-- DAHDI, dahdi-linux 2.6.1 (no change) and dahdi-tools 2.6.1 (no change)
+
+** Web Interface
+
+-- No Change
+
+
+Additions for AstLinux 1.0.6:
+=============================
+
+Released 2012-12-14
 
 ** System
 
