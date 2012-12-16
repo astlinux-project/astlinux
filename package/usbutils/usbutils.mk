@@ -4,12 +4,20 @@
 #
 #############################################################
 
-USBUTILS_VERSION = 004
-USBUTILS_SITE = $(BR2_KERNEL_MIRROR)/linux/utils/usb/usbutils
+USBUTILS_VERSION = 006
+USBUTILS_SITE = http://www.kernel.org/pub/linux/utils/usb/usbutils
+USBUTILS_SOURCE = usbutils-$(USBUTILS_VERSION).tar.gz
 USBUTILS_DEPENDENCIES = host-pkg-config libusb
 USBUTILS_INSTALL_STAGING = YES
 
+USBUTILS_AUTORECONF = YES
+
 USBUTILS_CONF_OPT = --disable-zlib
+
+# Build after busybox since it's got a lightweight lsusb
+ifeq ($(BR2_PACKAGE_BUSYBOX),y)
+	USBUTILS_DEPENDENCIES += busybox
+endif
 
 define USBUTILS_TARGET_CLEANUP
 	rm -f $(TARGET_DIR)/usr/bin/usb-devices
