@@ -16,9 +16,21 @@ Released **TBD**
 
 -- unionfs, version bump to 2.5.11
 
+-- zlib, version bump to 1.2.7
+
+-- sqlite, version bump to 3.7.15
+
+-- pciutils, version bump to 3.1.10
+
+-- libusb / libusb-compat, version bump to 1.0.9 / 0.1.4 respectively
+
+-- libpcap, version bump to 1.3.0
+
 ** Networking
 
 -- links, version bump to 2.7
+
+-- tcpdump, version bump to 4.3.0
 
 ** Asterisk
 
