@@ -6,10 +6,16 @@
 
 PCIUTILS_VERSION = 3.1.10
 PCIUTILS_SITE = ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci
+PCIUTILS_INSTALL_STAGING = YES
 
 PCIUTILS_ZLIB=no
 PCIUTILS_DNS=no
 PCIUTILS_SHARED=yes
+
+# Build after busybox since it's got a lightweight lspci
+ifeq ($(BR2_PACKAGE_BUSYBOX),y)
+	PCIUTILS_DEPENDENCIES += busybox
+endif
 
 define PCIUTILS_CONFIGURE_CMDS
 	$(SED) 's/wget --no-timestamping/wget/' $(PCIUTILS_DIR)/update-pciids.sh
@@ -35,9 +41,14 @@ endef
 
 # Ditch install-lib if SHARED is an option in the future
 define PCIUTILS_INSTALL_TARGET_CMDS
-	$(MAKE) BUILDDIR=$(@D) -C $(@D) PREFIX=$(TARGET_DIR)/usr \
+	$(MAKE1) BUILDDIR=$(@D) -C $(@D) PREFIX=$(TARGET_DIR)/usr \
 		SHARED=$(PCIUTILS_SHARED) install install-lib
 	chmod 755 $(TARGET_DIR)/usr/lib/libpci.so.$(PCIUTILS_VERSION) # set permissions so it is stripped
+endef
+
+define PCIUTILS_INSTALL_STAGING_CMDS
+	$(MAKE1) BUILDDIR=$(@D) -C $(@D) PREFIX=$(STAGING_DIR)/usr \
+		SHARED=$(PCIUTILS_SHARED) install install-lib
 endef
 
 $(eval $(call GENTARGETS,package,pciutils))
