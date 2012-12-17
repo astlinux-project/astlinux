@@ -5,7 +5,7 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.0.7:
+Additions for AstLinux 1.1.0:
 =============================
 
 Released **TBD**
@@ -22,9 +22,13 @@ Released **TBD**
 
 -- pciutils, version bump to 3.1.10
 
+-- usbutils, version bump to 006
+
 -- libusb / libusb-compat, version bump to 1.0.9 / 0.1.4 respectively
 
 -- libpcap, version bump to 1.3.0
+
+-- udev, enable use of usb.ids and pci.ids hwdb
 
 ** Networking
 
