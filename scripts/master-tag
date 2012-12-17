@@ -1,9 +1,11 @@
 #!/bin/bash
 
+TVER="1.1"
+
 BRANCH="1.0"
 
-if [ "${1:0:4}" != "${BRANCH}." ]; then
-  echo "Usage: master-tag ${BRANCH}.x"
+if [ "${1:0:4}" != "${TVER}." ]; then
+  echo "Usage: master-tag ${TVER}.x"
   exit 1
 fi
 
