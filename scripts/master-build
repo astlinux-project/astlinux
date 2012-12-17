@@ -105,10 +105,10 @@ echo "Regenerate the initrd"
 rm -f initrd.img
 
 #
-# Build Asterisk 1.4, 1.8 versions of AstLinux
+# Build Asterisk 1.4, 1.8 and 11 versions of AstLinux
 #
 
-for asterisk in ast14 ast18; do
+for asterisk in ast14 ast18 ast11; do
 
   set_asterisk_version $asterisk
 

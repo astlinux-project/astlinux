@@ -125,10 +125,10 @@ if [ ! -f "$auth_file" ]; then
 fi
 
 #
-# Uplaod Asterisk 1.4, 1.8 versions of AstLinux
+# Uplaod Asterisk 1.4, 1.8 and 11 versions of AstLinux
 #
 
-for asterisk in ast14 ast18; do
+for asterisk in ast14 ast18 ast11; do
 
   set_asterisk_version $asterisk
 
