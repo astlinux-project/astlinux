@@ -4,11 +4,11 @@
 #
 #############################################################
 
-DNSMASQ_VERSION = 2.59
+DNSMASQ_VERSION = 2.65
 DNSMASQ_SITE = http://thekelleys.org.uk/dnsmasq
-DNSMASQ_MAKE_ENV = CC="$(TARGET_CC)" LDFLAGS="$(TARGET_LDFLAGS)"
+DNSMASQ_MAKE_ENV = CC="$(TARGET_CC)"
 DNSMASQ_MAKE_OPT = COPTS="$(DNSMASQ_COPTS)" PREFIX=/usr CFLAGS="$(TARGET_CFLAGS)"
-DNSMASQ_MAKE_OPT += DESTDIR=$(TARGET_DIR)
+DNSMASQ_MAKE_OPT += DESTDIR=$(TARGET_DIR) LDFLAGS="$(TARGET_LDFLAGS)"
 
 ifneq ($(BR2_INET_IPV6),y)
 	DNSMASQ_COPTS += -DNO_IPV6
@@ -36,12 +36,15 @@ ifeq ($(BR2_PACKAGE_DBUS),y)
 	DNSMASQ_DEPENDENCIES += host-pkg-config dbus
 endif
 
+define DNSMASQ_FIX_PKGCONFIG
+	$(SED) 's^PKG_CONFIG = pkg-config^PKG_CONFIG = $(PKG_CONFIG_HOST_BINARY)^' \
+		$(DNSMASQ_DIR)/Makefile
+endef
+
 ifeq ($(BR2_PACKAGE_DBUS),y)
 define DNSMASQ_ENABLE_DBUS
 	$(SED) 's^.*#define HAVE_DBUS.*^#define HAVE_DBUS^' \
 		$(DNSMASQ_DIR)/src/config.h
-	$(SED) 's^PKG_CONFIG = pkg-config^PKG_CONFIG = $(PKG_CONFIG_HOST_BINARY)^' \
-		$(DNSMASQ_DIR)/Makefile
 endef
 else
 define DNSMASQ_ENABLE_DBUS
@@ -51,6 +54,7 @@ endef
 endif
 
 define DNSMASQ_BUILD_CMDS
+	$(DNSMASQ_FIX_PKGCONFIG)
 	$(DNSMASQ_ENABLE_DBUS)
 	$(DNSMASQ_MAKE_ENV) $(MAKE) -C $(@D) $(DNSMASQ_MAKE_OPT)
 endef
