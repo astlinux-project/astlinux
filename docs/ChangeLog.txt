@@ -34,6 +34,8 @@ Released **TBD**
 
 ** Networking
 
+-- dnsmasq, version bump to 2.65
+
 -- links, version bump to 2.7
 
 -- tcpdump, version bump to 4.3.0
