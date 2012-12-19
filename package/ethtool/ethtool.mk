@@ -4,8 +4,7 @@
 #
 #############################################################
 
-ETHTOOL_VERSION = 3.2
+ETHTOOL_VERSION = 3.7
 ETHTOOL_SITE = http://www.kernel.org/pub/software/network/ethtool
-#ETHTOOL_SITE = $(BR2_KERNEL_MIRROR)/software/network/ethtool
 
 $(eval $(call AUTOTARGETS,package,ethtool))
