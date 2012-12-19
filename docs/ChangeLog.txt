@@ -24,6 +24,10 @@ Released **TBD**
 
 -- udev, enable use of usb.ids and pci.ids hwdb
 
+-- ethtool, version bump to 3.7
+
+-- acpid, version bump to 2.0.17
+
 -- zlib, version bump to 1.2.7
 
 -- libusb / libusb-compat, version bump to 1.0.9 / 0.1.4 respectively
