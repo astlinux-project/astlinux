@@ -16,7 +16,9 @@ Released **TBD**
 
 -- unionfs, version bump to 2.5.11
 
--- sqlite, version bump to 3.7.15
+-- php, version bump to 5.3.20
+
+-- sqlite, version bump to 3.7.15.1
 
 -- pciutils, version bump to 3.1.10
 
@@ -45,6 +47,8 @@ Released **TBD**
 -- tcpdump, version bump to 4.3.0
 
 -- OpenSSH, version bump to 6.1p1
+
+-- libcurl (curl) version 7.28.1, security fix (CVE-2012-0036) and bug fixes
 
 ** Asterisk
 
