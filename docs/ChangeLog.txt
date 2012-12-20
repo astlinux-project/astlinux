@@ -56,6 +56,8 @@ Released **TBD**
 
 -- DAHDI, dahdi-linux 2.6.1 (no change) and dahdi-tools 2.6.1 (no change)
 
+-- LibPRI, version bump to 1.4.14
+
 ** Web Interface
 
 -- No Change
