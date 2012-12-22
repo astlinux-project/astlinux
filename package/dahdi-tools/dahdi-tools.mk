@@ -63,6 +63,7 @@ $(TARGET_DIR)/$(DAHDI_TOOLS_TARGET_BINARY): $(DAHDI_TOOLS_DIR)/$(DAHDI_TOOLS_BIN
 	mkdir -p $(TARGET_DIR)/$(PERLLIBDIR)
 	rm -rf $(TARGET_DIR)/etc/dahdi
 	$(MAKE1) -C $(DAHDI_TOOLS_DIR) HOSTCC=gcc CC=$(TARGET_CC) \
+		PERLLIBDIR=/usr/local/share/perl \
 		install DESTDIR=$(TARGET_DIR)
 	@rm -rf $(TARGET_DIR)/stat/etc/dahdi
 	mv $(TARGET_DIR)/etc/dahdi $(TARGET_DIR)/stat/etc/dahdi
