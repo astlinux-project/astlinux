@@ -20,7 +20,7 @@ config BR2_PACKAGE_NTP_NTP_KEYGEN
 
 config BR2_PACKAGE_NTP_NTP_WAIT
 	bool "ntp-wait"
-	depends on BR2_PACKAGE_MICROPERL
+	depends on BR2_PACKAGE_PERL || BR2_PACKAGE_MICROPERL
 	depends on BR2_PACKAGE_NTP
 	help
 	  ntp-wait waits until the locally running ntpd is in state 4
@@ -59,7 +59,7 @@ config BR2_PACKAGE_NTP_NTPQ
 
 config BR2_PACKAGE_NTP_NTPTRACE
 	bool "ntptrace"
-	depends on BR2_PACKAGE_MICROPERL
+	depends on BR2_PACKAGE_PERL || BR2_PACKAGE_MICROPERL
 	depends on BR2_PACKAGE_NTP
 	help
 	  ntptrace is a perl script that uses the ntpq utility program to

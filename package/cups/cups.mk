@@ -27,10 +27,10 @@ CUPS_CONF_OPT +=	--disable-java
 CUPS_CFLAGS = $(TARGET_CFLAGS)
 
 
-ifeq ($(BR2_PACKAGE_PERL),disabled)	# We do not provide perl (yet)
+ifeq ($(BR2_PACKAGE_PERL),y)
 	CUPS_CONF_ENV +=	ac_cv_path_perl=$(STAGING_DIR)/usr/bin/perl
 	CUPS_CONF_OPT +=	--with-perl
-	CUPS_DEPENDENCIES +=	microperl
+	CUPS_DEPENDENCIES +=	perl
 else
 	CUPS_CONF_OPT +=	--disable-perl
 endif
