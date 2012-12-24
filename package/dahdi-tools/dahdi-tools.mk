@@ -17,7 +17,7 @@ DAHDI_TOOLS_SITE := http://downloads.asterisk.org/pub/telephony/dahdi-tools/rele
 DAHDI_TOOLS_DIR := $(BUILD_DIR)/dahdi-tools-$(DAHDI_TOOLS_VERSION)
 DAHDI_TOOLS_BINARY := dahdi_cfg
 DAHDI_TOOLS_TARGET_BINARY := usr/sbin/dahdi_cfg
-PERLLIBDIR := $(shell eval `perl -V:sitelib`; echo "$$sitelib")
+PERLLIBDIR := /usr/local/share/perl
 DAHDI_TOOLS_PREREQS := libusb newt dahdi-linux
 DAHDI_TOOLS_CONFIGURE_ARGS :=
 
@@ -60,10 +60,10 @@ $(DAHDI_TOOLS_DIR)/$(DAHDI_TOOLS_BINARY): $(DAHDI_TOOLS_DIR)/menuselect.makeopts
 	$(MAKE) -C $(DAHDI_TOOLS_DIR) HOSTCC=gcc CC=$(TARGET_CC)
 
 $(TARGET_DIR)/$(DAHDI_TOOLS_TARGET_BINARY): $(DAHDI_TOOLS_DIR)/$(DAHDI_TOOLS_BINARY)
-	mkdir -p $(TARGET_DIR)/$(PERLLIBDIR)
+	mkdir -p $(TARGET_DIR)$(PERLLIBDIR)
 	rm -rf $(TARGET_DIR)/etc/dahdi
 	$(MAKE1) -C $(DAHDI_TOOLS_DIR) HOSTCC=gcc CC=$(TARGET_CC) \
-		PERLLIBDIR=/usr/local/share/perl \
+		PERLLIBDIR=$(PERLLIBDIR) \
 		install DESTDIR=$(TARGET_DIR)
 	@rm -rf $(TARGET_DIR)/stat/etc/dahdi
 	mv $(TARGET_DIR)/etc/dahdi $(TARGET_DIR)/stat/etc/dahdi
