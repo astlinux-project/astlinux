@@ -1,0 +1,11 @@
+config BR2_PACKAGE_PERL
+	bool "perl"
+	depends on BR2_LINUX_KERNEL
+	default n
+	help
+	  Larry Wall's Practical Extraction and Report Language
+	  An interpreted scripting language, known among some as "Unix's Swiss
+	  Army Chainsaw".
+
+	  http://www.perl.org/
+

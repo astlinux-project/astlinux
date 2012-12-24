@@ -1,4 +1,5 @@
 config BR2_PACKAGE_MICROPERL
+	depends on !BR2_PACKAGE_PERL
 	bool "microperl"
 	help
 	  Perl without operating-specific functions such as readdir.
