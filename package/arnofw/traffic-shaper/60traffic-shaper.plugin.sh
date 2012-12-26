@@ -2,10 +2,10 @@
 #      -= Arno's iptables firewall - HTB & HFSC traffic shaper plugin =-
 #
 PLUGIN_NAME="Traffic-Shaper plugin"
-PLUGIN_VERSION="1.2.06-astlinux"
+PLUGIN_VERSION="1.2.07-astlinux"
 PLUGIN_CONF_FILE="traffic-shaper.conf"
 #
-# Last changed          : December 19, 2010
+# Last changed          : December 26, 2012
 # Requirements          : kernel 2.6 + iproute
 # Comments              : This plugin will shape traffic. It borrows heavily on
 #                         the logic of Maciej's original script (below), with
