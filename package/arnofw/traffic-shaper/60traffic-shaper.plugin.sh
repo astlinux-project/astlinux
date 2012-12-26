@@ -187,6 +187,11 @@ classify_by_dscp_class()
 
 incoming_traffic_limit()
 {
+  # Skip if DOWNLINK is 0
+  if [ $DOWNLINK -eq 0 ]; then
+    return
+  fi
+
   # Try to control the incoming traffic as well.
   # Set up ingress qdisc
   tc qdisc add dev $1 handle ffff: ingress
@@ -223,7 +228,7 @@ plugin_start_hfsc()
 
   modprobe sch_hfsc
 
-  printf "${INDENT}Shaping as %d/%d kb/s using '%s' for interface: %s\n" $DOWNLINK $UPLINK hfsc "$SHAPER_IF"
+  printf "${INDENT}Shaping as (Down/Up) %d/%d kb/s using '%s' for interface: %s\n" $DOWNLINK $UPLINK hfsc "$SHAPER_IF"
 
   iptables -t mangle -N SHAPER_CHAIN
 
@@ -294,7 +299,7 @@ plugin_start_htb()
   # Some required modules are already loaded by the main script:
   modprobe ip_nat
 
-  printf "${INDENT}Shaping as %d/%d kb/s using '%s' for interface: %s\n" $DOWNLINK $UPLINK htb "$SHAPER_IF"
+  printf "${INDENT}Shaping as (Down/Up) %d/%d kb/s using '%s' for interface: %s\n" $DOWNLINK $UPLINK htb "$SHAPER_IF"
 
   iptables -t mangle -N SHAPER_CHAIN
 
