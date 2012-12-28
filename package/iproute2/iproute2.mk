@@ -6,7 +6,7 @@
 
 IPROUTE2_VERSION = 2.6.35
 IPROUTE2_SOURCE = iproute2-$(IPROUTE2_VERSION).tar.bz2
-#IPROUTE2_SITE = http://devresources.linuxfoundation.org/dev/iproute2/download
+#IPROUTE2_SITE = http://www.kernel.org/pub/linux/utils/net/iproute2
 IPROUTE2_SITE = http://files.astlinux.org
 IPROUTE2_TARGET_SBINS = ctstat genl ifstat ip lnstat nstat routef routel rtacct rtmon rtpr rtstat ss tc
 
@@ -29,6 +29,9 @@ endif
 define IPROUTE2_CONFIGURE_CMDS
 	# Use kernel headers
 	rm -r $(IPROUTE2_DIR)/include/netinet
+	# Cross-compile configure
+	$(SED) 's/gcc/$$CC $$CFLAGS/g' $(@D)/configure
+	cd $(@D) && $(TARGET_CONFIGURE_OPTS) ./configure
 	# arpd needs berkeleydb
 	$(SED) "/^TARGETS=/s: arpd : :" $(IPROUTE2_DIR)/misc/Makefile
 	echo "IPT_LIB_DIR:=/usr/lib/xtables" >>$(IPROUTE2_DIR)/Config
