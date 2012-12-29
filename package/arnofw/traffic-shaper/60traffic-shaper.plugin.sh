@@ -198,12 +198,12 @@ incoming_traffic_limit()
 
   # filter *everything* to it (0.0.0.0/0), drop everything that's
   # coming in too fast:
-  tc filter add dev $1 parent ffff: protocol ip prio 100 u32 match ip src \
-     0.0.0.0/0 police rate ${DOWNLINK}kbit burst $((1*$DOWNLINK/10))k drop flowid :1
+  tc filter add dev $1 parent ffff: protocol ip prio 100 estimator 500ms 2sec \
+     u32 match ip src 0.0.0.0/0 police avrate ${DOWNLINK}kbit drop flowid :1
 
   if [ "$IPV6_SUPPORT" = "1" ]; then
-    tc filter add dev $1 parent ffff: protocol ipv6 prio 101 u32 match ip6 src \
-       ::/0 police rate ${DOWNLINK}kbit burst $((1*$DOWNLINK/10))k drop flowid :1
+    tc filter add dev $1 parent ffff: protocol ipv6 prio 101 estimator 500ms 2sec \
+       u32 match ip6 src ::/0 police avrate ${DOWNLINK}kbit drop flowid :1
   fi
 } 
 
