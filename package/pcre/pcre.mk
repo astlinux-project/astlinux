@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PCRE_VERSION = 8.31
+PCRE_VERSION = 8.32
 PCRE_SITE = http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/project/pcre/pcre/$(PCRE_VERSION)
 PCRE_INSTALL_STAGING = YES
 
