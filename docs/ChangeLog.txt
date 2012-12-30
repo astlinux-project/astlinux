@@ -16,9 +16,20 @@ Released **TBD**
 
 -- unionfs, version bump to 2.5.11
 
+-- r8168 version bump to 8.035.00 RealTek PCI-Express Gigabit Ethernet Linux driver
+
+-- perl, version bump to 5.16.2. No longer use "microperl", now using "miniperl" which is a
+   cross-compiled version of full perl using perlcross.  While compiled modules are now supported,
+   only a limited set of perl modules are included because of our small image size design.
+   Note: The directory "/mnt/kd/perl" will be searched for additional perl modules, such as Asterisk::AGI.
+         Issue 'perl -V' from the CLI for more details including the --only-mod= modules.
+         Issue 'find /usr/lib/perl -name "*.pm"' to show all installed perl modules.
+
 -- php, version bump to 5.3.20
 
 -- sqlite, version bump to 3.7.15.1
+
+-- mysql_client, version bump to 5.1.67
 
 -- pciutils, version bump to 3.1.10
 
@@ -29,6 +40,8 @@ Released **TBD**
 -- ethtool, version bump to 3.7
 
 -- acpid, version bump to 2.0.17
+
+-- pcre, version bump to 8.32
 
 -- zlib, version bump to 1.2.7
 
@@ -46,17 +59,30 @@ Released **TBD**
 
 -- tcpdump, version bump to 4.3.0
 
+-- iptables, version bump to 1.4.17
+
 -- OpenSSH, version bump to 6.1p1
 
 -- libcurl (curl) version 7.28.1, security fix (CVE-2012-0036) and bug fixes
+
+-- AIF traffic-shaping, the EXTDOWN variable or "Firewall -> Downlink Speed:" may be set to "0"
+   to disable incoming (ingress) traffic shaping.
+
+-- AIF traffic-shaping, incoming (ingress) traffic shaping now uses "avrate" for more accurate shaping.
+   Note: This new approach is somewhat more aggressive than previously, increasing the limit may be desired.
 
 ** Asterisk
 
 -- Asterisk 1.8.19.0 (version bump), Testing: 11.1.0 (version bump), Deprecated: 1.4.44 (no change)
 
 -- DAHDI, dahdi-linux 2.6.1 (no change) and dahdi-tools 2.6.1 (no change)
+   Note: The commands 'dahdi_genconf' and 'dahdi_hardware' now work with the new installed perl.
 
 -- LibPRI, version bump to 1.4.14
+
+-- Asterisk AGI scripts using "perl" are better supported, for example Asterisk::AGI is supported
+   if the "/mnt/kd/perl" directory contains Asterisk.pm and Asterisk/AGI.pm .
+   More Info: http://search.cpan.org/~jamesgol/asterisk-perl-1.03/lib/Asterisk/AGI.pm
 
 ** Web Interface
 
