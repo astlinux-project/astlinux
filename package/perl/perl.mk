@@ -102,9 +102,10 @@ endif
 define PERL_INSTALL_TARGET_CMDS
 	PERL5LIB=$(@D)/dist/base/lib $(MAKE1) -C $(@D) DESTDIR="$(TARGET_DIR)" $(PERL_INSTALL_TARGET_GOALS)
 	# Remove all .pod files
-	find $(TARGET_DIR)/usr/lib/perl/ -name "*.pod" | xargs rm -f
+	find $(TARGET_DIR)/usr/lib/perl/ -name "*.pod" -print0 | xargs -0 rm -f
 	# Remove many unicore files
-	find $(TARGET_DIR)/usr/lib/perl/unicore/* -type d | xargs rm -rf
+	rm -rf $(TARGET_DIR)/usr/lib/perl/unicore/lib/
+	rm -rf $(TARGET_DIR)/usr/lib/perl/unicore/To/
 	rm -f $(TARGET_DIR)/usr/lib/perl/unicore/Name.pl
 	#
 	ln -sf perl$(PERL_VERSION) $(TARGET_DIR)/usr/bin/perl
