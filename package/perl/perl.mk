@@ -86,7 +86,7 @@ endef
 # perlcross's miniperl_top forgets base, which is required by mktables.
 # Instead of patching, it's easier to just set PERL5LIB
 define PERL_BUILD_CMDS
-	PERL5LIB=$(@D)/dist/base/lib $(MAKE1) -C $(@D) perl modules
+	PERL5LIB=$(@D)/dist/base/lib $(MAKE1) -C $(@D) perl modules unidatafiles
 endef
 
 define PERL_INSTALL_STAGING_CMDS
@@ -103,6 +103,9 @@ define PERL_INSTALL_TARGET_CMDS
 	PERL5LIB=$(@D)/dist/base/lib $(MAKE1) -C $(@D) DESTDIR="$(TARGET_DIR)" $(PERL_INSTALL_TARGET_GOALS)
 	# Remove all .pod files
 	find $(TARGET_DIR)/usr/lib/perl/ -name "*.pod" | xargs rm -f
+	# Remove many unicore files
+	find $(TARGET_DIR)/usr/lib/perl/unicore/* -type d | xargs rm -rf
+	rm -f $(TARGET_DIR)/usr/lib/perl/unicore/Name.pl
 	#
 	ln -sf perl$(PERL_VERSION) $(TARGET_DIR)/usr/bin/perl
 endef
