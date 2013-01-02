@@ -53,15 +53,11 @@ Subsystem       sftp    /usr/libexec/sftp-server" >> /tmp/etc/ssh/sshd_config
 
   # Generate server keys
   unset IFS
-  for i in ssh_host_key ssh_host_rsa_key ssh_host_dsa_key ssh_host_ecdsa_key; do
+  for i in ssh_host_rsa_key ssh_host_dsa_key ssh_host_ecdsa_key; do
     file="/tmp/etc/ssh/$i"
     if [ ! -f "$file" ]; then
       msg="Generating ssh server public/private key type:"
       case $i in
-        ssh_host_key)
-          echo -n "$msg rsa1..."
-          /usr/bin/ssh-keygen -q -t rsa1 -b 1024 -f "$file" -N ''
-          ;;
         ssh_host_rsa_key)
           echo -n "$msg rsa..."
           /usr/bin/ssh-keygen -q -t rsa -f "$file" -N ''
@@ -109,17 +105,17 @@ Subsystem       sftp    /usr/libexec/sftp-server" >> /tmp/etc/ssh/sshd_config
 
   # Generate root user keys
   if [ -d /mnt/kd/ssh_root_keys ]; then
-    for i in id_dsa id_ecdsa; do
+    for i in id_rsa id_ecdsa; do
       file="/mnt/kd/ssh_root_keys/$i"
       if [ ! -f "$file" ]; then
         msg="Generating ssh root user public/private key type:"
         case $i in
-          id_dsa)
-            echo -n "$msg dsa..."
-            # run in a background process since DSA takes a long time...
+          id_rsa)
+            echo -n "$msg rsa..."
+            # run in a background process since RSA takes a long time...
             (
-              nice /usr/bin/ssh-keygen -q -t dsa -f "$file" -N ''
-              if [ ! -f /root/.ssh/id_dsa ]; then
+              nice /usr/bin/ssh-keygen -q -t rsa -f "$file" -N ''
+              if [ ! -f /root/.ssh/id_rsa ]; then
                 cp -p "$file"* /root/.ssh/
               fi
             ) >/dev/null 2>&1 &
@@ -144,7 +140,7 @@ Subsystem       sftp    /usr/libexec/sftp-server" >> /tmp/etc/ssh/sshd_config
 }
 
 start () {
-  if [ -f /etc/ssh/ssh_host_key ]; then
+  if [ -f /etc/ssh/ssh_host_rsa_key ]; then
     echo "Starting sshd..."
     /usr/sbin/sshd
   fi
