@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2009 Lonnie Abelbeck
+// Copyright (C) 2008-2013 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -11,6 +11,7 @@
 // 12-27-2008, Added Certificate Support
 // 02-06-2009, Added tls-verify, temporarily disable clients
 // 08-13-2010, Added QoS Passthrough, setting passtos
+// 01-03-2013, Added private keysize support
 //
 // System location of /mnt/kd/rc.conf.d directory
 $OVPNCONFDIR = '/mnt/kd/rc.conf.d';
@@ -25,13 +26,24 @@ require_once '../common/openssl-openvpn.php';
 
 require_once '../common/openssl.php';
 
+if (is_file($OVPNCONFFILE)) {
+  $db = parseRCconf($OVPNCONFFILE);
+} else {
+  $db = NULL;
+}
+
 // Function: openvpn_openssl()
 //
-function openvpn_openssl() {
+function openvpn_openssl($keysize) {
   global $global_prefs;
   // System location of gui.network.conf file
   $NETCONFFILE = '/mnt/kd/rc.conf.d/gui.network.conf';
   
+  if ($keysize === '') {
+    $keysize = '1024';
+  }
+  $opts['keysize'] = (int)$keysize;
+
   if (($countryName = getPREFdef($global_prefs, 'dn_country_name_cmdstr')) === '') {
     $countryName = 'US';
   }
@@ -51,8 +63,8 @@ function openvpn_openssl() {
   }
   if (($commonName = getPREFdef($global_prefs, 'dn_common_name_cmdstr')) === '') {
     if (is_file($NETCONFFILE)) {
-      $db = parseRCconf($NETCONFFILE);
-      if (($commonName = getVARdef($db, 'HOSTNAME').'.'.getVARdef($db, 'DOMAIN')) === '') {
+      $vars = parseRCconf($NETCONFFILE);
+      if (($commonName = getVARdef($vars, 'HOSTNAME').'.'.getVARdef($vars, 'DOMAIN')) === '') {
         $commonName = 'pbx.astlinux';
       }
     } else {
@@ -62,10 +74,11 @@ function openvpn_openssl() {
   if (($email = getPREFdef($global_prefs, 'dn_email_address_cmdstr')) === '') {
     $email = 'info@astlinux.org';
   }
-  $ssl = openvpnSETUP($countryName, $stateName, $localityName, $orgName, $orgUnit, $commonName, $email);
+  $ssl = openvpnSETUP($opts, $countryName, $stateName, $localityName, $orgName, $orgUnit, $commonName, $email);
   return($ssl);
 }
-$openssl = openvpn_openssl();
+$key_size = getVARdef($db, 'OVPN_CERT_KEYSIZE');
+$openssl = openvpn_openssl($key_size);
 
 $cipher_menu = array (
   '' => 'Default Cipher',
@@ -85,6 +98,11 @@ $verbosity_menu = array (
 $auth_method_menu = array (
   'no' => 'Certificate',
   'yes' => 'Cert. + User/Pass'
+);
+
+$key_size_menu = array (
+  '1024' => '1024 Bits',
+  '2048' => '2048 Bits'
 );
 
 // Function: saveOVPNsettings
@@ -150,6 +168,9 @@ function saveOVPNsettings($conf_dir, $conf_file, $disabled = NULL) {
   }
   fwrite($fp, '"'."\n");
   
+  $value = 'OVPN_CERT_KEYSIZE="'.$_POST['key_size'].'"';
+  fwrite($fp, "### Private Key Size\n".$value."\n");
+
 if (opensslOPENVPNis_valid($openssl)) {
   $value = 'OVPN_CA="'.$openssl['key_dir'].'/ca.crt"';
   fwrite($fp, "### CA File\n".$value."\n");
@@ -246,7 +267,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         @unlink($openssl['config']);
       }
       // Rebuild openssl.cnf template for new CA
-      if (($openssl = openvpn_openssl()) !== FALSE) {
+      $key_size = $_POST['key_size'];
+      if (($openssl = openvpn_openssl($key_size)) !== FALSE) {
         if (opensslCREATEselfCert($openssl)) {
           if (opensslCREATEserverCert($openssl)) {
             if (opensslCREATEdh_pem($openssl)) {
@@ -335,12 +357,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else { // Start of HTTP GET
 $ACCESS_RIGHTS = 'admin';
 require_once '../common/header.php';
-
-  if (is_file($OVPNCONFFILE)) {
-    $db = parseRCconf($OVPNCONFFILE);
-  } else {
-    $db = NULL;
-  }
 
   putHtml("<center>");
   if (isset($_GET['result'])) {
@@ -558,6 +574,20 @@ if ($openssl !== FALSE) {
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Server Certificate and Key:</strong>');
   putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Private Key Size:</td><td style="text-align: left;" colspan="4">');
+  if (($key_size = getVARdef($db, 'OVPN_CERT_KEYSIZE')) === '') {
+    $key_size = '1024';
+  }
+  putHtml('<select name="key_size">');
+  foreach ($key_size_menu as $key => $value) {
+    $sel = ($key_size === (string)$key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="3">');
   putHtml('Create New Certificate and Key:</td><td class="dialogText" style="text-align: left;" colspan="3">');
   $msg = '';

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2009 Lonnie Abelbeck
+// Copyright (C) 2008-2013 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -8,11 +8,12 @@
 
 // openssl-openvpn.php for AstLinux
 // 05-24-2009
+// 01-03-2013, Added private keysize support
 //
 
 // Function: openvpnSETUP()
 //
-function openvpnSETUP($countryName, $stateName, $localityName, $orgName, $orgUnit, $commonName, $email) {
+function openvpnSETUP($opts, $countryName, $stateName, $localityName, $orgName, $orgUnit, $commonName, $email) {
   // System location of OpenSSL default configuration file
   $OPENSSL_CNF = '/usr/lib/ssl/openssl.cnf';
   
@@ -42,27 +43,27 @@ function openvpnSETUP($countryName, $stateName, $localityName, $orgName, $orgUni
   $ssl['configArgs'] = array(
     'config' => $ssl['config'],
     'digest_alg' => 'sha1',
-    'private_key_bits' => 1024,
+    'private_key_bits' => $opts['keysize'],
     'encrypt_key' => FALSE
   );
   $ssl['sign_ca'] = array(
     'config' => $ssl['config'],
     'digest_alg' => 'sha1',
-    'private_key_bits' => 1024,
+    'private_key_bits' => $opts['keysize'],
     'x509_extensions' => 'v3_ca',
     'encrypt_key' => FALSE
   );
   $ssl['sign_server'] = array(
     'config' => $ssl['config'],
     'digest_alg' => 'sha1',
-    'private_key_bits' => 1024,
+    'private_key_bits' => $opts['keysize'],
     'x509_extensions' => 'openvpn_server',
     'encrypt_key' => FALSE
   );
   $ssl['sign_client'] = array(
     'config' => $ssl['config'],
     'digest_alg' => 'sha1',
-    'private_key_bits' => 1024,
+    'private_key_bits' => $opts['keysize'],
     'x509_extensions' => 'usr_cert',
     'encrypt_key' => FALSE
   );
