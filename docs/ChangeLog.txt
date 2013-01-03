@@ -86,7 +86,8 @@ Released **TBD**
 
 ** Web Interface
 
--- No Change
+-- OpenVPN Server sub-tab, added a new "Private Key Size:" entry, 1024 or 2048 Bits.  Future generated
+   keys/certificates will use the private key size value.
 
 
 Additions for AstLinux 1.0.6:
