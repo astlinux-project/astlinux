@@ -73,7 +73,7 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.8.19.1 (version bump), Testing: 11.1.1 (version bump), Deprecated: 1.4.44 (no change)
+-- Asterisk 1.8.19.1 (version bump), Testing: 11.1.2 (version bump), Deprecated: 1.4.44 (no change)
 
 -- DAHDI, dahdi-linux 2.6.1 (no change) and dahdi-tools 2.6.1 (no change)
    Note: The commands 'dahdi_genconf' and 'dahdi_hardware' now work with the new installed perl.
