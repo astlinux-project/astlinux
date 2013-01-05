@@ -3,10 +3,9 @@
 # shellinabox
 #
 #############################################################
-SHELLINABOX_VERSION = 239
+SHELLINABOX_VERSION = 2.14
 SHELLINABOX_SOURCE = shellinabox-$(SHELLINABOX_VERSION).tar.gz
-#SHELLINABOX_SITE = http://shellinabox.googlecode.com/files
-SHELLINABOX_SITE = http://files.astlinux.org
+SHELLINABOX_SITE = http://shellinabox.googlecode.com/files
 SHELLINABOX_DEPENDENCIES = openssl
 
 define SHELLINABOX_INSTALL_TARGET_CMDS

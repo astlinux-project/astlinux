@@ -1,14 +1,14 @@
 --- shellinabox-239/shellinabox/vt100.js.orig	2013-01-05 10:42:23.000000000 -0600
 +++ shellinabox-239/shellinabox/vt100.js	2013-01-05 10:45:41.000000000 -0600
-@@ -2709,6 +2709,7 @@
+@@ -2742,6 +2742,7 @@
        case 187: /* =            */ ch = this.applyModifiers(61, event); break;
        case 188: /* ,            */ ch = this.applyModifiers(44, event); break;
        case 189: /* -            */ ch = this.applyModifiers(45, event); break;
 +      case 173: /* -            */ ch = this.applyModifiers(45, event); break; // FF15 Patch
        case 190: /* .            */ ch = this.applyModifiers(46, event); break;
        case 191: /* /            */ ch = this.applyModifiers(47, event); break;
-       case 192: /* `            */ ch = this.applyModifiers(96, event); break;
-@@ -2849,6 +2850,7 @@
+       // Conflicts with dead key " on Swiss keyboards
+@@ -2886,6 +2887,7 @@
      case 187: /* = -> + */ u = 61; s =  43; break;
      case 188: /* , -> < */ u = 44; s =  60; break;
      case 189: /* - -> _ */ u = 45; s =  95; break;
