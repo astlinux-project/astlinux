@@ -65,6 +65,8 @@ Released **TBD**
 
 -- libcurl (curl) version 7.28.1, security fix (CVE-2012-0036) and bug fixes
 
+-- shellinaboxd, version bump to 2.14
+
 -- AIF traffic-shaping, the EXTDOWN variable or "Firewall -> Downlink Speed:" may be set to "0"
    to disable incoming (ingress) traffic shaping.
 
@@ -88,6 +90,8 @@ Released **TBD**
 
 -- OpenVPN Server sub-tab, added a new "Private Key Size:" entry, 1024 or 2048 Bits.  Future generated
    keys/certificates will use the private key size value.
+
+-- CLI tab, fix issue with Firefox 15+ ignoring the '-' and '_' keys. (shellinaboxd related)
 
 
 Additions for AstLinux 1.0.6:
