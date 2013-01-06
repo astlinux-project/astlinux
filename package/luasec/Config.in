@@ -1,0 +1,7 @@
+config BR2_PACKAGE_LUASEC
+	bool "luasec"
+	help
+	  LuaSec is a binding for OpenSSL library to provide TLS/SSL communication.
+
+	  https://github.com/brunoos/luasec/wiki
+
