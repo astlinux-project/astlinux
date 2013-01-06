@@ -12,5 +12,6 @@ tape:x:26:
 audio:x:29:
 video:x:44:
 users:x:100:
+prosody:x:130:
 zabbix:x:906:
 nobody:x:65535:
