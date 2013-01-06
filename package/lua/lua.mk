@@ -16,6 +16,7 @@ LUA_MYLIBS += -ldl
 HOST_LUA_DEPENDENCIES =
 HOST_LUA_CFLAGS = -Wall -fPIC -DLUA_USE_DLOPEN -DLUA_USE_POSIX
 HOST_LUA_MYLIBS = -ldl
+HOST_LUA_LDFLAGS = -Wl,-rpath,$(HOST_DIR)/usr/lib
 
 define LUA_BUILD_CMDS
 	$(MAKE) \
@@ -29,6 +30,7 @@ define HOST_LUA_BUILD_CMDS
 	$(MAKE) \
 	CFLAGS="$(HOST_LUA_CFLAGS)" \
 	MYLIBS="$(HOST_LUA_MYLIBS)" \
+	MYLDFLAGS="$(HOST_LUA_LDFLAGS)" \
 	PKG_VERSION=$(LUA_VERSION) -C $(@D)/src all
 endef
 
@@ -122,3 +124,4 @@ define HOST_LUA_CLEAN_CMDS
 endef
 
 $(eval $(call GENTARGETS,package,lua))
+$(eval $(call GENTARGETS,package,lua,host))
