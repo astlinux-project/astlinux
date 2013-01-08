@@ -4,8 +4,8 @@
 #
 #############################################################
 
-LIBIDN_VERSION = 1.19
-LIBIDN_SITE = http://ftp.gnu.org/gnu/libidn/
+LIBIDN_VERSION = 1.26
+LIBIDN_SITE = http://ftp.gnu.org/gnu/libidn
 LIBIDN_INSTALL_STAGING = YES
 LIBIDN_CONF_ENV = EMACS="no"
 LIBIDN_CONF_OPT = --disable-java --enable-csharp=no
