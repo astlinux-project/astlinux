@@ -89,14 +89,14 @@ authentication = \"internal_plain\"
 admins = { $admins }
 
 log = {
-${LOG_OK}  $log = \"/var/log/prosody/prosody.log\",
-${SYSLOG_OK}  $syslog = \"*syslog\",
-${ERROR_LOG}  error = \"/var/log/prosody/prosody.err\",
+${LOG_OK}  $log = \"/var/log/prosody/prosody.log\";
+${SYSLOG_OK}  { levels = { min = \"$syslog\" }, to = \"syslog\" };
+${ERROR_LOG}  error = \"/var/log/prosody/prosody.err\";
 }
 
 ${SSL_OK}ssl = {
-${SSL_OK}  certificate = \"$cert\",
-${SSL_OK}  key = \"$key\",
+${SSL_OK}  certificate = \"$cert\";
+${SSL_OK}  key = \"$key\";
 ${SSL_OK}}
 
 modules_enabled = { \"posix\", $modules }
@@ -109,6 +109,11 @@ VirtualHost \"$hostname\"
   if [ -n "$XMPP_CONFERENCE" ]; then
     echo "Component \"$XMPP_CONFERENCE\" \"muc\""
   fi
+
+  if [ -n "$SSL_OK" ]; then
+    return 1
+  fi
+  return 0
 }
 
 init () {
@@ -155,6 +160,12 @@ init () {
 -- A manually generated prosody.cfg.lua config will use /mnt/kd/prosody/prosody.conf if it exists.
 " >/mnt/kd/prosody/prosody.cfg.lua
     gen_xmpp_config >>/mnt/kd/prosody/prosody.cfg.lua
+    if [ $? -ne 0 -a "$XMPP_REQUIRE_SSL" != "no" ]; then
+      logger -s -t prosody -p kern.info "XMPP SSL configuration error, failed to start."
+      logger -s -t prosody -p kern.info "Try generating an Asterisk SIP-TLS Server Certificate, which XMPP will use."
+      rm /mnt/kd/prosody/prosody.cfg.lua
+      return
+    fi
   fi
   chown prosody:prosody /mnt/kd/prosody/prosody.cfg.lua
 
