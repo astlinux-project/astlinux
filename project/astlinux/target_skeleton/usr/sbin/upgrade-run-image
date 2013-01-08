@@ -133,6 +133,9 @@ check() {
   for i in `cat /proc/cmdline`; do
     if echo $i | grep -q "astlinux="; then
       ARCH=`echo $i | sed -e 's/astlinux=//'`
+      if [ "$ARCH" = "via" -o "$ARCH" = "viac7" ]; then  # Redirect deprecated boards
+        ARCH="geni586"
+      fi
     elif echo $i | grep -q "console="; then
       SERIAL=`echo $i | sed -e 's/console=//'`
     fi
@@ -143,7 +146,7 @@ check() {
     exit $RED
   fi
 
-  if [ "$ARCH" = "geni586" -o "$ARCH" = "via" -o "$ARCH" = "viac7" ]; then
+  if [ "$ARCH" = "geni586" ]; then
     if [ -n "$SERIAL" ]; then
       ARCH="${ARCH}-serial"
     fi
