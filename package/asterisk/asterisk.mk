@@ -68,6 +68,9 @@ ASTERISK_CONFIGURE_ARGS+= \
 ASTERISK_CONFIGURE_ARGS+= \
 			--disable-xmldoc
  endif
+
+ASTERISK_CONFIGURE_ARGS+= \
+			--without-lua
 endif
 
 ifeq ($(strip $(BR2_PACKAGE_IKSEMEL)),y)
