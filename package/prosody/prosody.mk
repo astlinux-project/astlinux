@@ -7,7 +7,7 @@
 PROSODY_VERSION = 0.8.2
 PROSODY_SOURCE = prosody-$(PROSODY_VERSION).tar.gz
 PROSODY_SITE = http://prosody.im/downloads/source
-PROSODY_DEPENDENCIES = host-lua lua libidn openssl luafilesystem luaexpat luasocket luasec
+PROSODY_DEPENDENCIES = lua libidn openssl luafilesystem luaexpat luasocket luasec
 
 define PROSODY_CONFIGURE_CMDS
 	# this is *NOT* GNU autoconf stuff
