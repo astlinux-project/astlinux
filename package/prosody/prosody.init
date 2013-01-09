@@ -24,7 +24,16 @@ mod_in_list()
 gen_xmpp_config()
 {
   local m ADD_MODS="" modules="" admins="" hostname cert key log syslog error
-  local SSL_OK LOG_OK SYSLOG_OK ERROR_LOG IFS
+  local LOG_OK SYSLOG_OK ERROR_LOG IFS
+
+  cert="${XMPP_CERT:-/etc/prosody/certs/server.crt}"
+  key="${XMPP_KEY:-/etc/prosody/certs/server.key}"
+  if [ ! -f "$cert" ] || [ ! -f "$key" ]; then
+    return 1
+  fi
+  if [ "$(stat -c '%U:%G' "$cert")" != "prosody:prosody" -o "$(stat -c '%U:%G' "$key")" != "prosody:prosody" ]; then
+    return 1
+  fi
 
   unset IFS
   for m in $XMPP_ENABLE_MODULES; do
@@ -37,15 +46,6 @@ gen_xmpp_config()
       modules="$modules${modules:+, }\"$m\""
     fi
   done
-
-  SSL_OK="-- "
-  cert="${XMPP_CERT:-/etc/prosody/certs/server.crt}"
-  key="${XMPP_KEY:-/etc/prosody/certs/server.key}"
-  if [ -f "$cert" -a -f "$key" ]; then
-    if [ "$(stat -c '%U:%G' "$cert")" = "prosody:prosody" -a "$(stat -c '%U:%G' "$key")" = "prosody:prosody" ]; then
-      SSL_OK=""
-    fi
-  fi
 
   for m in $XMPP_ADMIN_USERS; do
     admins="$admins${admins:+, }\"$m\""
@@ -86,6 +86,10 @@ allow_registration = false
 
 authentication = \"internal_plain\"
 
+disallow_s2s = true
+
+c2s_require_encryption = true
+
 admins = { $admins }
 
 log = {
@@ -94,10 +98,10 @@ ${SYSLOG_OK}  { levels = { min = \"$syslog\" }, to = \"syslog\" };
 ${ERROR_LOG}  error = \"/var/log/prosody/prosody.err\";
 }
 
-${SSL_OK}ssl = {
-${SSL_OK}  certificate = \"$cert\";
-${SSL_OK}  key = \"$key\";
-${SSL_OK}}
+ssl = {
+  certificate = \"$cert\";
+  key = \"$key\";
+}
 
 modules_enabled = { \"posix\", $modules }
 
@@ -110,9 +114,6 @@ VirtualHost \"$hostname\"
     echo "Component \"$XMPP_CONFERENCE\" \"muc\""
   fi
 
-  if [ -n "$SSL_OK" ]; then
-    return 1
-  fi
   return 0
 }
 
@@ -160,9 +161,9 @@ init () {
 -- A manually generated prosody.cfg.lua config will use /mnt/kd/prosody/prosody.conf if it exists.
 " >/mnt/kd/prosody/prosody.cfg.lua
     gen_xmpp_config >>/mnt/kd/prosody/prosody.cfg.lua
-    if [ $? -ne 0 -a "$XMPP_REQUIRE_SSL" != "no" ]; then
+    if [ $? -ne 0 ]; then
       logger -s -t prosody -p kern.info "XMPP SSL configuration error, failed to start."
-      logger -s -t prosody -p kern.info "Try generating an Asterisk SIP-TLS Server Certificate, which XMPP will use."
+      logger -s -t prosody -p kern.info "Try generating an Asterisk SIP-TLS Server Certificate, which XMPP will use by default."
       rm /mnt/kd/prosody/prosody.cfg.lua
       return
     fi
