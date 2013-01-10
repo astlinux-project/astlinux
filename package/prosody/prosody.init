@@ -2,10 +2,12 @@
 
 . /etc/rc.conf
 
-DEFAULT_MODULES="roster saslauth tls dialback disco \
+DEFAULT_MODULES="roster saslauth tls disco \
 private vcard \
 legacyauth version uptime time ping pep register adhoc \
 admin_adhoc"
+
+DEFAULT_MODULES_S2S="dialback"
 
 mod_in_list()
 {
@@ -23,7 +25,7 @@ mod_in_list()
 
 gen_xmpp_config()
 {
-  local m ADD_MODS="" modules="" admins="" hostname cert key log syslog error
+  local m MODS ADD_MODS="" modules="" admins="" hostname cert key no_s2s log syslog error
   local LOG_OK SYSLOG_OK ERROR_LOG IFS
 
   cert="${XMPP_CERT:-/etc/prosody/certs/server.crt}"
@@ -35,13 +37,21 @@ gen_xmpp_config()
     return 1
   fi
 
+  if [ "$XMPP_ENABLE_S2S" = "yes" ]; then
+    MODS="$DEFAULT_MODULES $DEFAULT_MODULES_S2S"
+    no_s2s="false"
+  else
+    MODS="$DEFAULT_MODULES"
+    no_s2s="true"
+  fi
+
   unset IFS
   for m in $XMPP_ENABLE_MODULES; do
-    if ! mod_in_list "$m" "$DEFAULT_MODULES"; then
+    if ! mod_in_list "$m" "$MODS"; then
       ADD_MODS="$ADD_MODS${ADD_MODS:+ }$m"
     fi
   done
-  for m in $DEFAULT_MODULES $ADD_MODS; do
+  for m in $MODS $ADD_MODS; do
     if ! mod_in_list "$m" "$XMPP_DISABLE_MODULES"; then
       modules="$modules${modules:+, }\"$m\""
     fi
@@ -86,7 +96,7 @@ allow_registration = false
 
 authentication = \"internal_plain\"
 
-disallow_s2s = true
+disallow_s2s = $no_s2s
 
 c2s_require_encryption = true
 
