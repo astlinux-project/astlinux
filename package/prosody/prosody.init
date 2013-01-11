@@ -25,7 +25,7 @@ mod_in_list()
 
 gen_xmpp_config()
 {
-  local m MODS ADD_MODS="" modules="" admins="" hostname cert key no_s2s log syslog error
+  local m MODS ADD_MODS="" modules="" admins="" hostname cert key no_s2s log syslog error c2s_port s2s_port
   local LOG_OK SYSLOG_OK ERROR_LOG IFS
 
   cert="${XMPP_CERT:-/etc/prosody/certs/server.crt}"
@@ -63,6 +63,10 @@ gen_xmpp_config()
 
   hostname="${XMPP_HOSTNAME:-$HOSTNAME.$DOMAIN}"
 
+  c2s_port="${XMPP_C2S_PORT:-5222}"
+
+  s2s_port="${XMPP_S2S_PORT:-5269}"
+
   log="${XMPP_LOG:-none}"
   if [ "$log" = "warn" -o "$log" = "info" -o "$log" = "debug" ]; then
     LOG_OK=""
@@ -99,6 +103,10 @@ authentication = \"internal_plain\"
 disallow_s2s = $no_s2s
 
 c2s_require_encryption = true
+
+c2s_ports = { $c2s_port }
+
+s2s_ports = { $s2s_port }
 
 admins = { $admins }
 
