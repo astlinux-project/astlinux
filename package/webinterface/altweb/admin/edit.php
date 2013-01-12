@@ -30,6 +30,7 @@ $select_reload = array (
   'stunnel' => 'Restart Stunnel Proxy',
   'miniupnpd' => 'Restart Univ. Plug\'n\'Play',
   'apcupsd' => 'Restart UPS Daemon',
+  'prosody' => 'Restart XMPP Server',
   'zabbix' => 'Restart Zabbix Monitor',
   'asterisk' => 'Restart Asterisk',
   'cron' => 'Reload Cron for root'
@@ -209,6 +210,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 36, $result, 'init', 4);
       } elseif ($process === 'stunnel') {
         $result = restartPROCESS($process, 37, $result, 'init');
+      } elseif ($process === 'prosody') {
+        $result = restartPROCESS($process, 38, $result, 'init');
       } elseif ($process === 'cron') {
         $result = updateCRON('root', 30, $result);
       }
@@ -318,6 +321,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Zabbix Monitoring has Restarted.</p>');
     } elseif ($result == 37) {
       putHtml('<p style="color: green;">Stunnel Proxy has Restarted.</p>');
+    } elseif ($result == 38) {
+      putHtml('<p style="color: green;">XMPP Server has Restarted.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {

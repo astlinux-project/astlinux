@@ -37,3 +37,6 @@ zlib~Copyright (c) 1995-2005 Jean-loup Gailly.
 MS-Win Installer~Copyright (c) 2010-2011 Tom Chadwin, Nullsoft, et al.
 SILK CODEC~Copyright (c) 2010-2012 Skype and/or Microsoft. All rights reserved. Licensed via Digium, Inc.
 SpanDSP~Copyright (c) 2003-2012 Steve Underwood <steveu@coppice.org>. All rights reserved.
+Prosody~Copyright (c) 2008-2010 Matthew Wild and Waqas Hussain.
+Lua~Copyright (c) 1994-2012 Lua.org, PUC-Rio.  All rights reserved.
+perl~Copyright (c) 1987-2012 by Larry Wall, et al.

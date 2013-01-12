@@ -782,6 +782,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/siptlscert.php');
     exit;
+  } elseif (isset($_POST['submit_xmpp'])) {
+    $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
+    header('Location: /admin/xmpp.php');
+    exit;
   } elseif (isset($_POST['submit_zabbix'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/zabbix.php');
@@ -885,6 +889,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 36, $result, 'init', 4);
       } elseif ($process === 'stunnel') {
         $result = restartPROCESS($process, 37, $result, 'init');
+      } elseif ($process === 'prosody') {
+        $result = restartPROCESS($process, 38, $result, 'init');
       }
     } else {
       $result = 2;
@@ -957,6 +963,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Zabbix Monitoring has Restarted.</p>');
     } elseif ($result == 37) {
       putHtml('<p style="color: green;">Stunnel Proxy has Restarted.</p>');
+    } elseif ($result == 38) {
+      putHtml('<p style="color: green;">XMPP Server has Restarted.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 100) {
@@ -1038,6 +1046,8 @@ require_once '../common/header.php';
   putHtml('<option value="miniupnpd"'.$sel.'>Restart Univ. Plug\'n\'Play</option>');
   $sel = ($reboot_restart === 'apcupsd') ? ' selected="selected"' : '';
   putHtml('<option value="apcupsd"'.$sel.'>Restart UPS Daemon</option>');
+  $sel = ($reboot_restart === 'prosody') ? ' selected="selected"' : '';
+  putHtml('<option value="prosody"'.$sel.'>Restart XMPP Server</option>');
   $sel = ($reboot_restart === 'zabbix') ? ' selected="selected"' : '';
   putHtml('<option value="zabbix"'.$sel.'>Restart Zabbix Monitor</option>');
   $sel = ($reboot_restart === 'asterisk') ? ' selected="selected"' : '';
@@ -1407,6 +1417,10 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('Asterisk&nbsp;SIP-TLS Server Certificate:');
   putHtml('<input type="submit" value="SIP-TLS Certificate" name="submit_sip_tls" class="button" /></td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml('XMPP Server, Messaging and Presence:');
+  putHtml('<input type="submit" value="Configure XMPP" name="submit_xmpp" class="button" /></td></tr>');
 
   if (is_file('/etc/init.d/zabbix')) {
     putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
