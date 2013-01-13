@@ -3,7 +3,7 @@
 # mac2vendor
 #
 ##############################################################
-MAC2VENDOR_VERSION := 2012-07-08
+MAC2VENDOR_VERSION := 2013-01-12
 MAC2VENDOR_DATA := oui-$(MAC2VENDOR_VERSION).txt
 MAC2VENDOR_DATA_ORIG := oui.txt
 MAC2VENDOR_SITE := http://standards.ieee.org/develop/regauth/oui
