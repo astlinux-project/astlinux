@@ -75,6 +75,7 @@ Released **TBD**
 
 -- prosody, an XMPP Server supporting Messaging and Presence has been added.
    New XMPP_* rc.conf variables and web interface configuration support.
+   Special thanks to Michael Keuter for the idea and development.
 
 -- dnsmasq, version bump to 2.65
 
