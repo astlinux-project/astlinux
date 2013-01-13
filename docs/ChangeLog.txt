@@ -10,6 +10,18 @@ Additions for AstLinux 1.1.0:
 
 Released **TBD**
 
+** IMPORTANT NOTICE
+
+-- "via[-serial]" and "viac7[-serial]" board types will be automatically redirected to "geni586[-serial]"
+   board types.  Since the release of AstLinux 1.x using a unified kernel config across all boards, the
+   usefulness of special "via" and "viac7" board types has been eliminated.  Users do not have to do anything
+   special, upgrading with "upgrade-run-image" or the web interface System tab is all that is required.
+
+-- "net4801" and "wrap" board types have reached end-of-life.  AstLinux 1.0.6 was the last supported version.
+
+-- Current supported board types are: "geni586", "geni586-serial", "alix" and "net5501"
+
+
 ** System
 
 -- Linux Kernel 2.6.35.14 (minor bump)  Info: http://lwn.net/Articles/453757/
@@ -17,6 +29,10 @@ Released **TBD**
 -- unionfs, version bump to 2.5.11
 
 -- r8168 version bump to 8.035.00 RealTek PCI-Express Gigabit Ethernet Linux driver
+
+-- Lua, a simple, efficient porgramming language is now supported, version 5.1.5.
+   Additional Lua Modules: luafilesystem, luasocket, luaexpat, luasec
+   More Info: http://www.lua.org/
 
 -- perl, version bump to 5.16.2. No longer use "microperl", now using "miniperl" which is a
    cross-compiled version of full perl using perlcross.  While compiled modules are now supported,
@@ -51,7 +67,14 @@ Released **TBD**
 
 -- libxml2, version bump to 2.9.0
 
+-- mac2vendor, database update
+
+-- Time Zone Database, tzdata2012j and tzcode2012j
+
 ** Networking
+
+-- prosody, an XMPP Server supporting Messaging and Presence has been added.
+   New XMPP_* rc.conf variables and web interface configuration support.
 
 -- dnsmasq, version bump to 2.65
 
@@ -87,6 +110,12 @@ Released **TBD**
    More Info: http://search.cpan.org/~jamesgol/asterisk-perl-1.03/lib/Asterisk/AGI.pm
 
 ** Web Interface
+
+-- XMPP Server (Prosody) is supported as a sub-tab from the Network tab:
+   Network tab -> Network Services: XMPP Server, Messaging and Presence { Configure XMPP }
+   More Info: http://doc.astlinux.org/userdoc:tt-xmpp-server
+
+-- Network and Edit tabs allow the XMPP Server to be Restarted.
 
 -- OpenVPN Server sub-tab, added a new "Private Key Size:" entry, 1024 or 2048 Bits.  Future generated
    keys/certificates will use the private key size value.
