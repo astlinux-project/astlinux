@@ -156,6 +156,17 @@ ASTERISK_CONFIGURE_ENV+= \
 			_libcurl_config="$(STAGING_DIR)/usr/bin/curl-config"
 endif
 
+ifeq ($(strip $(BR2_PACKAGE_NEON)),y)
+ ifeq ($(strip $(BR2_PACKAGE_LIBICAL)),y)
+ASTERISK_EXTRAS+=neon libical
+ASTERISK_CONFIGURE_ARGS+= \
+			--with-neon \
+			--with-ical
+ASTERISK_CONFIGURE_ENV+= \
+			CONFIG_NEON="$(STAGING_DIR)/usr/bin/neon-config"
+ endif
+endif
+
 $(DL_DIR)/$(ASTERISK_SOURCE):
 	$(WGET) -P $(DL_DIR) $(ASTERISK_SITE)/$(ASTERISK_SOURCE)
 
