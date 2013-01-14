@@ -4,7 +4,7 @@
 #
 #############################################################
 
-SQLITE_VERSION = 3071501
+SQLITE_VERSION = 3071502
 SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VERSION).tar.gz
 SQLITE_SITE = http://www.sqlite.org
 SQLITE_INSTALL_STAGING = YES
