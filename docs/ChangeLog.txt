@@ -28,6 +28,8 @@ Released **TBD**
 
 -- unionfs, version bump to 2.5.11
 
+-- e1000e version bump to 2.2.14 Intel PCI-Express PRO/1000 Ethernet Linux driver
+
 -- r8168 version bump to 8.035.00 RealTek PCI-Express Gigabit Ethernet Linux driver
 
 -- Lua, a simple, efficient porgramming language is now supported, version 5.1.5.
@@ -43,7 +45,7 @@ Released **TBD**
 
 -- php, version bump to 5.3.20
 
--- sqlite, version bump to 3.7.15.1
+-- sqlite, version bump to 3.7.15.2
 
 -- mysql_client, version bump to 5.1.67
 
