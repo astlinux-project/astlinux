@@ -161,9 +161,11 @@ ifeq ($(strip $(BR2_PACKAGE_NEON)),y)
 ASTERISK_EXTRAS+=neon libical
 ASTERISK_CONFIGURE_ARGS+= \
 			--with-neon \
+			--with-neon29 \
 			--with-ical
 ASTERISK_CONFIGURE_ENV+= \
-			CONFIG_NEON="$(STAGING_DIR)/usr/bin/neon-config"
+			CONFIG_NEON="$(STAGING_DIR)/usr/bin/neon-config" \
+			CONFIG_NEON29="$(STAGING_DIR)/usr/bin/neon-config"
  endif
 endif
 
