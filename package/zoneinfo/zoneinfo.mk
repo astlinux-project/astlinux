@@ -26,6 +26,8 @@ $(TARGET_DIR)/$(ZONEINFO_BINARY): $(ZONEINFO_DIR)/.source
 	(cd $(ZONEINFO_DIR); \
 	  $(MAKE1) TZDIR=$(TARGET_DIR)/usr/share/zoneinfo posix_only \
 	)
+	$(INSTALL) -D -m 0644 $(ZONEINFO_DIR)/zone.tab $(TARGET_DIR)/usr/share/zoneinfo/zone.tab
+	$(INSTALL) -D -m 0644 $(ZONEINFO_DIR)/iso3166.tab $(TARGET_DIR)/usr/share/zoneinfo/iso3166.tab
 	touch $@
 
 zoneinfo: $(TARGET_DIR)/$(ZONEINFO_BINARY)
