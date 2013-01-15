@@ -12,7 +12,6 @@ LIBICAL_INSTALL_STAGING = YES
 LIBICAL_AUTORECONF = YES
 
 LIBICAL_CONF_OPT = \
-		--disable-static \
-		--with-builtintz
+		--disable-static
 
 $(eval $(call AUTOTARGETS,package,libical))
