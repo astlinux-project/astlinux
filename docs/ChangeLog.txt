@@ -72,6 +72,7 @@ Released **TBD**
 -- mac2vendor, database update
 
 -- Time Zone Database, tzdata2012j and tzcode2012j
+   Additionally, install zone.tab and iso3166.tab, required by libical.
 
 ** Networking
 
@@ -101,12 +102,15 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.8.19.1 (version bump), Testing: 11.1.2 (version bump), Deprecated: 1.4.44 (no change)
+-- Asterisk 1.8.20.0 (version bump), Testing: 11.2.0 (version bump), Deprecated: 1.4.44 (no change)
 
 -- DAHDI, dahdi-linux 2.6.1 (no change) and dahdi-tools 2.6.1 (no change)
    Note: The commands 'dahdi_genconf' and 'dahdi_hardware' now work with the new installed perl.
 
 -- LibPRI, version bump to 1.4.14
+
+-- Added Asterisk Calendar Support: CalDAV, iCalendar(.ics), MS Exchange and MS Exchange Web Service
+   New system libraries 'neon' (libneon) and 'libical' are added to enabled this feature.
 
 -- Asterisk AGI scripts using "perl" are better supported, for example Asterisk::AGI is supported
    if the "/mnt/kd/perl" directory contains Asterisk.pm and Asterisk/AGI.pm .
