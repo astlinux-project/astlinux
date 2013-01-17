@@ -116,6 +116,11 @@ Released **TBD**
    if the "/mnt/kd/perl" directory contains Asterisk.pm and Asterisk/AGI.pm .
    More Info: http://search.cpan.org/~jamesgol/asterisk-perl-1.03/lib/Asterisk/AGI.pm
 
+-- app_notify, previously marked as deprecated, not provided in Asterisk 11
+
+   Example Dialplan Code to replace Notify() application:
+     http://doc.astlinux.org/userdoc:tt_asterisk_call_notify
+
 ** Web Interface
 
 -- XMPP Server (Prosody) is supported as a sub-tab from the Network tab:
