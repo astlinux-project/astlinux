@@ -39,7 +39,7 @@ MAXFILES_MAX=12794
 
 # Check if Asterisk is already running.  If it is, then bug out, because
 # starting safe_asterisk when Asterisk is running is very bad.
-if ${ASTSBINDIR}/asterisk -rnx 'core show version' | grep -q "^Asterisk "; then
+if ${ASTSBINDIR}/asterisk -rnx 'core show version' 2>/dev/null | grep -q "^Asterisk "; then
   echo "Asterisk is already running.  $0 will exit now."
   exit 1
 fi
