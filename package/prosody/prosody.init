@@ -26,7 +26,7 @@ mod_in_list()
 gen_xmpp_config()
 {
   local m MODS ADD_MODS="" modules="" admins="" hostname cert key no_s2s log syslog error c2s_port s2s_port
-  local LOG_OK SYSLOG_OK ERROR_LOG IFS
+  local LOG_OK SYSLOG_OK ERROR_LOG IFS c2s_idle_timeout
 
   cert="${XMPP_CERT:-/etc/prosody/certs/server.crt}"
   key="${XMPP_KEY:-/etc/prosody/certs/server.key}"
@@ -43,6 +43,13 @@ gen_xmpp_config()
   else
     MODS="$DEFAULT_MODULES"
     no_s2s="true"
+  fi
+
+  if [ -n "$XMPP_C2S_IDLE_TIMEOUT" ]; then
+    MODS="$MODS pinger"
+    c2s_idle_timeout="$XMPP_C2S_IDLE_TIMEOUT"
+  else
+    c2s_idle_timeout=""
   fi
 
   unset IFS
@@ -102,7 +109,9 @@ authentication = \"internal_plain\"
 
 disallow_s2s = $no_s2s
 
-c2s_require_encryption = true
+c2s_require_encryption = true${c2s_idle_timeout:+
+
+c2s_idle_timeout = $c2s_idle_timeout}
 
 c2s_ports = { $c2s_port }
 

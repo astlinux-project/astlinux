@@ -30,6 +30,8 @@ define PROSODY_POST_INSTALL
 	cp $(TARGET_DIR)/etc/prosody/prosody.cfg.lua $(TARGET_DIR)/stat/etc/prosody/prosody.cfg.lua
 	rm -rf $(TARGET_DIR)/etc/prosody
 	$(INSTALL) -m 0644 -D package/prosody/modules/mod_listusers.lua $(TARGET_DIR)/usr/lib/prosody/modules/
+	$(INSTALL) -m 0644 -D package/prosody/modules/mod_pinger.lua $(TARGET_DIR)/usr/lib/prosody/modules/
+	$(INSTALL) -m 0644 -D package/prosody/util/watchdog.lua $(TARGET_DIR)/usr/lib/prosody/util/
 	$(INSTALL) -m 0755 -D package/prosody/prosody.init $(TARGET_DIR)/etc/init.d/prosody
 	ln -s /tmp/etc/prosody $(TARGET_DIR)/etc/prosody
 	ln -sf ../../init.d/prosody $(TARGET_DIR)/etc/runlevels/default/S58prosody
