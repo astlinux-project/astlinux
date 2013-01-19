@@ -21,6 +21,17 @@ $verbosity_menu = array (
   'none' => 'None'
 );
 
+$idle_timeout_menu = array (
+  '' => 'disabled',
+  '120' => '2 minute',
+  '180' => '3 minute',
+  '240' => '4 minute',
+  '300' => '5 minute',
+  '360' => '6 minute',
+  '480' => '8 minute',
+  '600' => '10 minute'
+);
+
 $myself = $_SERVER['PHP_SELF'];
 
 require_once '../common/functions.php';
@@ -102,6 +113,9 @@ function saveXMPPsettings($conf_dir, $conf_file) {
 
   $value = 'XMPP_S2S_PORT="'.trim($_POST['xmpp_s2s_port']).'"';
   fwrite($fp, "### Server to Server TCP Port\n".$value."\n");
+
+  $value = 'XMPP_C2S_IDLE_TIMEOUT="'.$_POST['idle_timeout'].'"';
+  fwrite($fp, "### Dead Client Timeout\n".$value."\n");
 
   $value = 'XMPP_HOSTNAME="'.trim($_POST['xmpp_hostname']).'"';
   fwrite($fp, "### XMPP VirtualHost\n".$value."\n");
@@ -385,6 +399,19 @@ if (! is_file('/mnt/kd/ssl/sip-tls/keys/server.crt') || ! is_file('/mnt/kd/ssl/s
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  putHtml('Server-to-Client<br />Keep Alive Ping:');
+  putHtml('</td><td style="text-align: left;">');
+  $idle_timeout = getVARdef($vars, 'XMPP_C2S_IDLE_TIMEOUT');
+  putHtml('<select name="idle_timeout">');
+  foreach ($idle_timeout_menu as $key => $value) {
+    $sel = ($idle_timeout === (string)$key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('dead client timeout');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   putHtml('Hostname:');
   putHtml('</td><td style="text-align: left;">');
   if (($hostname = getVARdef($vars, 'XMPP_HOSTNAME')) === '') {
@@ -422,7 +449,8 @@ if (! is_file('/mnt/kd/ssl/sip-tls/keys/server.crt') || ! is_file('/mnt/kd/ssl/s
   putHtml('</td></tr>');
 if ($value === '') {
   putHtml('<tr class="dtrow1"><td style="text-align: right;"><i>Example:</i></td><td style="text-align: left;">');
-  putHtml('<i>conference.'.$hostname.'</i>');
+  $hosts = explode(' ', $hostname);
+  putHtml('<i>conference.'.$hosts[0].'</i>');
   putHtml('</td></tr>');
 }
 
