@@ -25,7 +25,7 @@ mod_in_list()
 
 gen_xmpp_config()
 {
-  local m MODS ADD_MODS="" modules="" admins="" hostname cert key no_s2s log syslog error c2s_port s2s_port
+  local m vh MODS ADD_MODS="" modules="" admins="" hostname cert key no_s2s log syslog error c2s_port s2s_port
   local LOG_OK SYSLOG_OK ERROR_LOG IFS c2s_idle_timeout
 
   cert="${XMPP_CERT:-/etc/prosody/certs/server.crt}"
@@ -133,9 +133,13 @@ ssl = {
 modules_enabled = { \"posix\", $modules }
 
 modules_disabled = {  }
-
-VirtualHost \"$hostname\"
 "
+
+  unset IFS
+  for vh in $hostname; do
+    echo "VirtualHost \"$vh\""
+    echo ""
+  done
 
   if [ -n "$XMPP_CONFERENCE" ]; then
     echo "Component \"$XMPP_CONFERENCE\" \"muc\""
