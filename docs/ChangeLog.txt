@@ -43,7 +43,7 @@ Released **TBD**
          Issue 'perl -V' from the CLI for more details including the --only-mod= modules.
          Issue 'find /usr/lib/perl -name "*.pm"' to show all installed perl modules.
 
--- php, version bump to 5.3.20
+-- php, version bump to 5.3.21
 
 -- sqlite, version bump to 3.7.15.2
 
