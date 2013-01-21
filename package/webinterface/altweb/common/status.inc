@@ -1048,6 +1048,11 @@ if (is_file('/var/run/prosody/prosody.pid')) {
     shell($cmd.' >'.$tmpfile, $status);
   
     $ph = @fopen($tmpfile, "r");
+    if (! feof($ph)) {
+      if ($line = rtrim(fgets($ph, 1024))) {
+        putText('Prosody Version: '.$line);
+      }
+    }
     while (! feof($ph)) {
       if ($line = rtrim(fgets($ph, 1024))) {
         putText($line);

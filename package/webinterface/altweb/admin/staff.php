@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2010 Lonnie Abelbeck
+// Copyright (C) 2008-2013 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -8,6 +8,7 @@
 
 // staff.php for AstLinux
 // 12-12-2009
+// 01-21-2013, Add Restart Asterisk
 //
 // System location of webgui-staff-backup.conf
 $CONFFILE = '/mnt/kd/webgui-staff-backup.conf';
@@ -134,6 +135,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       header('Location: '.$myself.'?reboot_delay='.$delay.'&result='.$result);
       exit;
     }
+  } elseif (isset($_POST['submit_restart_asterisk'])) {
+    $result = 99;
+    if (isset($_POST['confirm_restart_asterisk'])) {
+      $mesg = date('Y-m-d H:i:s').'  RESTART_ASTERISK  Remote Address: '.$_SERVER['REMOTE_ADDR'];
+      @file_put_contents($LOGFILE, $mesg."\n", FILE_APPEND);
+      chmod($LOGFILE, 0600);
+      $result = restartPROCESS('asterisk', 25, $result);
+    } else {
+      $result = 7;
+    }
   } elseif (isset($_POST['submit_shutdown'])) {
     $result = 99;
     if (isset($_POST['confirm_shutdown'])) {
@@ -166,6 +177,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">System is Rebooting... back in <span id="count_down"><script language="JavaScript" type="text/javascript">document.write(count_down_secs);</script></span> seconds.</p>');
     } elseif ($result == 15) {
       putHtml('<p style="color: red;">Backup Failed, error archiving unionfs partition.</p>');
+    } elseif ($result == 25) {
+      putHtml('<p style="color: green;">Asterisk has Restarted.</p>');
     } elseif ($result == 40) {
       putHtml('<p style="color: green;">Reboot Scheduled within 24 hours.</p>');
     } elseif ($result == 41) {
@@ -202,6 +215,14 @@ if (isDownloadValid($CONFFILE)) {
   putHtml('</td></tr>');
 }
   
+  putHtml('<tr><td style="text-align: center;">');
+  putHtml('<h2>Restart Asterisk:</h2>');
+  putHtml('</td></tr><tr><td class="dialogText" style="text-align: center;">');
+  putHtml('<input type="submit" value="Restart Asterisk" name="submit_restart_asterisk" />');
+  putHtml('&ndash;');
+  putHtml('<input type="checkbox" value="restart_asterisk" name="confirm_restart_asterisk" />&nbsp;Confirm');
+  putHtml('</td></tr>');
+
   putHtml('<tr><td style="text-align: center;">');
   putHtml('<h2>Reboot/Restart System:</h2>');
   putHtml('</td></tr><tr><td class="dialogText" style="text-align: center;">');

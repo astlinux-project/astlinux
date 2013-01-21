@@ -445,8 +445,10 @@ if (! is_file('/mnt/kd/ssl/sip-tls/keys/server.crt') || ! is_file('/mnt/kd/ssl/s
   if (is_file('/mnt/kd/prosody/sharedgroups.conf')) {
     putHtml('&ndash;');
     putHtml('<input type="submit" value="Edit Groups" name="submit_edit_groups" class="button" />');
-    putHtml('&ndash;');
-    putHtml('<input type="submit" value="Reload" name="submit_reload_groups" class="button" />');
+    if ($xmpp_groups === 'yes') {
+      putHtml('&ndash;');
+      putHtml('<input type="submit" value="Reload" name="submit_reload_groups" class="button" />');
+    }
   }
   putHtml('</td></tr>');
 
