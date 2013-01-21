@@ -434,7 +434,7 @@ if (! is_file('/mnt/kd/ssl/sip-tls/keys/server.crt') || ! is_file('/mnt/kd/ssl/s
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  putHtml('Shared Groups:');
+  putHtml(includeTOPICinfo('xmpp-shared-groups').'Shared Groups:');
   putHtml('</td><td style="text-align: left;">');
   $xmpp_groups = getVARdef($vars, 'XMPP_GROUPS');
   putHtml('<select name="xmpp_groups">');

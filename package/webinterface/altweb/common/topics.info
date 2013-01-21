@@ -284,3 +284,32 @@ exten => s,n(end),MacroExit()
 ---- /etc/asterisk/extensions.conf snippet ----
 
 
+[[xmpp-shared-groups]]
+
+XMPP Shared Groups:
+
+Groups were designed to allow administrators to create virtual groups of users that automatically
+see each other in their contact lists. The shared groups will be sent to the user along with
+their usual roster without overriding or permanently adding the contacts. There is no need for
+the user to authorize these contacts in their contact list, this is done automatically on the
+server (be careful: everyone in a group can monitor the presence of each other!).
+
+As an example, if you have a team of people working together on a project, you can create a group
+for that team. They will automatically be added to each others' contact lists, and the list can
+easily be modified on the server at any time to add and remove people.
+
+Note: Clicking "Shared Groups: ... - { Reload }" will apply { Edit Groups } changes without
+      requiring to the server to be restarted.
+
+Example: "/mnt/kd/prosody/sharedgroups.conf"
+--
+[Support Team]
+support@example.com
+john.doe@example.com
+
+[Development Team]
+hardworkingdeveloper@example.net=Joe Coder
+other.dev@example.com=Mel
+--
+You can see the last two entries here have custom names, if no name is given then it is up to
+the user's client to find a suitable name (e.g. take it from the contact's vcard/profile).
