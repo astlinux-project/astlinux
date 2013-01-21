@@ -5,7 +5,7 @@
 DEFAULT_MODULES="roster saslauth tls disco \
 private vcard \
 legacyauth version uptime time ping pep register adhoc \
-admin_adhoc"
+admin_adhoc admin_telnet"
 
 DEFAULT_MODULES_S2S="dialback"
 

@@ -33,6 +33,7 @@ define PROSODY_POST_INSTALL
 	$(INSTALL) -m 0644 -D package/prosody/modules/mod_pinger.lua $(TARGET_DIR)/usr/lib/prosody/modules/
 	$(INSTALL) -m 0644 -D package/prosody/util/watchdog.lua $(TARGET_DIR)/usr/lib/prosody/util/
 	$(INSTALL) -m 0755 -D package/prosody/prosody.init $(TARGET_DIR)/etc/init.d/prosody
+	$(INSTALL) -m 0755 -D package/prosody/prosodycmd $(TARGET_DIR)/usr/bin/prosodycmd
 	ln -s /tmp/etc/prosody $(TARGET_DIR)/etc/prosody
 	ln -sf ../../init.d/prosody $(TARGET_DIR)/etc/runlevels/default/S58prosody
 	ln -sf ../../init.d/prosody $(TARGET_DIR)/etc/runlevels/default/K02prosody
@@ -45,6 +46,7 @@ PROSODY_UNINSTALL_STAGING_OPT = --version
 define PROSODY_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/bin/prosody
 	rm -f $(TARGET_DIR)/usr/bin/prosodyctl
+	rm -f $(TARGET_DIR)/usr/bin/prosodycmd
 	rm -rf $(TARGET_DIR)/usr/lib/prosody
 	rm -rf $(TARGET_DIR)/stat/etc/prosody
 	rm -f $(TARGET_DIR)/etc/prosody

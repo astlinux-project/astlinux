@@ -1,0 +1,30 @@
+#!/bin/sh
+
+## Issue Prosody Console commands
+##
+## Requires the mod_admin_telnet module to be enabled.
+##
+## No arguments drops into a telnet console
+##
+## Example: prosodycmd 'server:version()' 'server:uptime()' 'c2s:show()' 's2s:show()'
+
+PORT=5582
+
+if [ $# -gt 0 ]; then
+  (
+    for cmd in "$@"; do
+      echo "$cmd"
+    done
+    echo "quit"
+  ) | nc -w1 127.0.0.1 $PORT \
+    | tr -d '\x00\x0d' \
+    | sed -e '1,/^| http:/ d' \
+          -e '/^$/ d' \
+          -e 's/^| //' \
+          -e 's/^OK: //' \
+          -e '/^See you!/ d'
+else
+  echo "Prosody Console: type 'quit' or 'exit' to return."
+  telnet 127.0.0.1 $PORT
+fi
+
