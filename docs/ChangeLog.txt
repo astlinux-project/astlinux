@@ -80,6 +80,12 @@ Released **TBD**
    New XMPP_* rc.conf variables and web interface configuration support.
    Special thanks to Michael Keuter for the idea and development.
 
+-- prosodycmd, a new CLI command to communicate with the XMPP prosody console.
+   With no arguments, prosodycmd establishes a telnet session to the localhost prosody console.
+   With arguments, prosodycmd issues commands to the localhost prosody console, and exits.
+   Example: prosodycmd 'server:uptime()' 'module:list()'
+   More Info: http://prosody.im/doc/console
+
 -- dnsmasq, version bump to 2.65
 
 -- links, version bump to 2.7
@@ -129,10 +135,14 @@ Released **TBD**
 
 -- Network and Edit tabs allow the XMPP Server to be Restarted.
 
+-- Status tab, added "Show XMPP Server Status", and can be hidden via the Prefs tab.
+
 -- OpenVPN Server sub-tab, added a new "Private Key Size:" entry, 1024 or 2048 Bits.  Future generated
    keys/certificates will use the private key size value.
 
 -- CLI tab, fix issue with Firefox 15+ ignoring the '-' and '_' keys. (shellinaboxd related)
+
+-- Staff tab, added { Restart Asterisk } as an allowed operation.
 
 
 Additions for AstLinux 1.0.6:
