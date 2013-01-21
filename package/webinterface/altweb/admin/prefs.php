@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2012 Lonnie Abelbeck
+// Copyright (C) 2008-2013 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -15,6 +15,7 @@
 // 09-28-2012, Added Show Adaptive Ban Plugin Status
 // 09-28-2012, Added Show Latest System Logs/Hide Log Words
 // 09-28-2012, Added Show Custom Asterisk Command
+// 01-20-2013, Added Show XMPP Server Status
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -109,6 +110,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (($value = trim($_POST['asterisk_cmd'])) !== '') {
       $value = 'status_custom_asterisk_cmdstr = "'.$value.'"';
+      fwrite($fp, $value."\n");
+    }
+    if (! isset($_POST['xmpp_server'])) {
+      $value = 'status_show_xmpp_server = no';
       fwrite($fp, $value."\n");
     }
     if (isset($_POST['adaptive_ban'])) {
@@ -572,6 +577,10 @@ require_once '../common/header.php';
   $value = getPREFdef($global_prefs, 'status_custom_asterisk_cmdstr');
   putHtml('<input type="text" size="28" maxlength="64" value="'.$value.'" name="asterisk_cmd" /></td></tr>');
 
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'status_show_xmpp_server') !== 'no') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="xmpp_server" name="xmpp_server"'.$sel.' /></td><td colspan="5">Show XMPP Server Status</td></tr>');
+ 
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_show_adaptive_ban') === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="adaptive_ban" name="adaptive_ban"'.$sel.' /></td><td colspan="5">Show Adaptive Ban Plugin Status</td></tr>');

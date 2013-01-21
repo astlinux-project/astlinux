@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2012 Lonnie Abelbeck
+// Copyright (C) 2008-2013 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -29,6 +29,7 @@
 // 09-28-2012, Added Adaptive Ban Plugin Status
 // 09-28-2012, Added Latest System Logs/Hide Log Words
 // 09-28-2012, Added Custom Asterisk Command
+// 01-20-2013, Added XMPP Server Status
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -1031,6 +1032,29 @@ if ($daemon['asterisk'] > 0) {
       fclose($ph);
       @unlink($tmpfile);
     }
+    putHtml("</pre>");
+  }
+}
+
+if (is_file('/var/run/prosody/prosody.pid')) {
+  if (getPREFdef($global_prefs, 'status_show_xmpp_server') !== 'no') {
+    putHtml("<h2>XMPP Server Status:</h2>");
+    putHtml("<pre>");
+    $tmpfile = tempnam("/tmp", "PHP_");
+    $cmd = "/usr/bin/prosodycmd 'server:version()' 'server:uptime()' 'c2s:show()'";
+    if (trim(shell_exec('. /etc/rc.conf; echo "$XMPP_ENABLE_S2S"')) === 'yes') {
+      $cmd .= " 's2s:show()'";
+    }
+    shell($cmd.' >'.$tmpfile, $status);
+  
+    $ph = @fopen($tmpfile, "r");
+    while (! feof($ph)) {
+      if ($line = rtrim(fgets($ph, 1024))) {
+        putText($line);
+      }
+    }
+    fclose($ph);
+    @unlink($tmpfile);
     putHtml("</pre>");
   }
 }

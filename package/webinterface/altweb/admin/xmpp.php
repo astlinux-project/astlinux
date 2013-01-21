@@ -114,6 +114,9 @@ function saveXMPPsettings($conf_dir, $conf_file) {
   $value = 'XMPP_S2S_PORT="'.trim($_POST['xmpp_s2s_port']).'"';
   fwrite($fp, "### Server to Server TCP Port\n".$value."\n");
 
+  $value = 'XMPP_GROUPS="'.$_POST['xmpp_groups'].'"';
+  fwrite($fp, "### Shared Groups\n".$value."\n");
+
   $value = 'XMPP_C2S_IDLE_TIMEOUT="'.$_POST['idle_timeout'].'"';
   fwrite($fp, "### Dead Client Timeout\n".$value."\n");
 
@@ -207,6 +210,25 @@ function deleteUser($user) {
   return($status == 0 ? TRUE : FALSE);
 }
 
+// Function: reloadModule
+//
+function reloadModule($mod) {
+
+  if ($mod === '') {
+    return(FALSE);
+  }
+  if (! is_file('/mnt/kd/prosody/prosody.cfg.lua')) {
+    return(2);
+  }
+  if (! is_file('/var/run/prosody/prosody.pid')) {
+    return(3);
+  }
+
+  shell('prosodycmd \'module:reload("'.$mod.'")\' >/dev/null 2>/dev/null', $status);
+
+  return($status == 0 ? TRUE : FALSE);
+}
+
 if (is_file($XMPPCONFFILE)) {
   $vars = parseRCconf($XMPPCONFFILE);
 } else {
@@ -261,10 +283,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($result == 11 && $ok === TRUE) {
       $result = 14;
     }
+  } elseif (isset($_POST['submit_reload_groups'])) {
+    $result = 99;
+    if (reloadModule('groups') === TRUE) {
+      $result = 16;
+    }
   } elseif (isset($_POST['submit_sip_tls'])) {
     $result = saveXMPPsettings($XMPPCONFDIR, $XMPPCONFFILE);
     header('Location: /admin/siptlscert.php');
     exit;
+  } elseif (isset($_POST['submit_edit_groups'])) {
+    $result = saveXMPPsettings($XMPPCONFDIR, $XMPPCONFFILE);
+    if (is_writable($file = '/mnt/kd/prosody/sharedgroups.conf')) {
+      header('Location: /admin/edit.php?file='.$file);
+      exit;
+    }
   }
   header('Location: '.$myself.'?result='.$result);
   exit;
@@ -293,6 +326,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">User(s) successfully deleted.</p>');
     } elseif ($result == 15) {
       putHtml('<p style="color: green;">User successfully added or changed.</p>');
+    } elseif ($result == 16) {
+      putHtml('<p style="color: green;">Shared Groups Reloaded.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {
@@ -396,6 +431,23 @@ if (! is_file('/mnt/kd/ssl/sip-tls/keys/server.crt') || ! is_file('/mnt/kd/ssl/s
     $value = '5269';
   }
   putHtml('<input type="text" size="10" maxlength="6" name="xmpp_s2s_port" value="'.$value.'" />');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  putHtml('Shared Groups:');
+  putHtml('</td><td style="text-align: left;">');
+  $xmpp_groups = getVARdef($vars, 'XMPP_GROUPS');
+  putHtml('<select name="xmpp_groups">');
+  putHtml('<option value="no">disabled</option>');
+  $sel = ($xmpp_groups === 'yes') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>enabled</option>');
+  putHtml('</select>');
+  if (is_file('/mnt/kd/prosody/sharedgroups.conf')) {
+    putHtml('&ndash;');
+    putHtml('<input type="submit" value="Edit Groups" name="submit_edit_groups" class="button" />');
+    putHtml('&ndash;');
+    putHtml('<input type="submit" value="Reload" name="submit_reload_groups" class="button" />');
+  }
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');

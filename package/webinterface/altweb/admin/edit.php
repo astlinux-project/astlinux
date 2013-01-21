@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2011 Lonnie Abelbeck
+// Copyright (C) 2008-2013 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -251,6 +251,7 @@ require_once '../common/header.php';
       $dir === '/mnt/kd/rc.conf.d' ||
       $dir === '/mnt/kd/crontabs' ||
       $dir === '/mnt/kd/apcupsd' ||
+      $dir === '/mnt/kd/prosody' ||
       $dir === '/mnt/kd/docs' ||
       $dir === '/mnt/kd/arno-iptables-firewall' ||
       $dir === '/mnt/kd/arno-iptables-firewall/plugins' ||
@@ -459,6 +460,14 @@ require_once '../common/header.php';
   if (is_writable($file = '/etc/udev/rules.d/70-persistent-net.rules')) {
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
     putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - Net Interface Rules</option>');
+  }
+  if (is_writable($file = '/mnt/kd/prosody/prosody.conf')) {
+    $sel = ($file === $openfile) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$file.'"'.$sel.'>prosody/'.basename($file).' - XMPP Configuration</option>');
+  }
+  if (is_writable($file = '/mnt/kd/prosody/sharedgroups.conf')) {
+    $sel = ($file === $openfile) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$file.'"'.$sel.'>prosody/'.basename($file).' - XMPP Shared Groups</option>');
   }
   putHtml('</optgroup>');
   if (is_dir('/mnt/kd/docs')) {
