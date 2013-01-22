@@ -299,7 +299,7 @@ for that team. They will automatically be added to each others' contact lists, a
 easily be modified on the server at any time to add and remove people.
 
 Note: Clicking "Shared Groups: ... - { Reload }" will apply { Edit Groups } changes without
-      requiring to the server to be restarted.
+      requiring the server to be restarted.
 
 Example: "/mnt/kd/prosody/sharedgroups.conf"
 --
@@ -313,3 +313,4 @@ other.dev@example.com=Mel
 --
 You can see the last two entries here have custom names, if no name is given then it is up to
 the user's client to find a suitable name (e.g. take it from the contact's vcard/profile).
+
