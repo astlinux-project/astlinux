@@ -20,6 +20,7 @@ ascii_download_enable=YES
 ftpd_banner=FTP Server
 chroot_list_enable=NO
 chroot_local_user=YES
+allow_writeable_chroot=YES
 chroot_list_file=/etc/vsftpd.nochroot
 ls_recurse_enable=YES
 secure_chroot_dir=/usr/share/empty

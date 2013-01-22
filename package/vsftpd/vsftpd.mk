@@ -3,7 +3,7 @@
 # vsftpd
 #
 #############################################################
-VSFTPD_VERSION = 2.3.4
+VSFTPD_VERSION = 3.0.2
 VSFTPD_SOURCE = vsftpd-$(VSFTPD_VERSION).tar.gz
 VSFTPD_SITE = https://security.appspot.com/downloads
 
@@ -33,7 +33,7 @@ define VSFTPD_INSTALL_TARGET_CMDS
 	install -D -m 755 $(@D)/vsftpd $(TARGET_DIR)/usr/sbin/vsftpd
 	install -D -m 755 package/vsftpd/vsftpd.init $(TARGET_DIR)/etc/init.d/vsftpd
 	ln -sf /tmp/etc/vsftpd.conf $(TARGET_DIR)/etc/vsftpd.conf
-	mkdir -p $(TARGET_DIR)/usr/share/empty
+	install -d -m 700 $(TARGET_DIR)/usr/share/empty
 endef
 
 define VSFTPD_UNINSTALL_TARGET_CMDS
