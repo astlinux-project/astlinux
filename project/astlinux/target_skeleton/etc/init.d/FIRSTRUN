@@ -5,16 +5,6 @@
 
 . /etc/rc.conf
 
-cleanup_asturw_utmp()
-{
-  if rm /oldroot/mnt/asturw/var/run/utmp; then
-    if rmdir /oldroot/mnt/asturw/var/run; then
-      rmdir /oldroot/mnt/asturw/var
-    fi
-  fi
-}
-
-
 init () {
   local new old=""
   
@@ -31,22 +21,17 @@ init () {
 
     cp -p /etc/astlinux-release /mnt/kd/astlinux-release
 
-    case $new in
+    # Upgrade AIF firewall supporting files
+    if /usr/sbin/upgrade-arno-firewall checkMajor; then  # Don't auto-upgrade if a major version change
+      /usr/sbin/upgrade-arno-firewall upgrade
+    fi
 
-      astlinux-1.1.*|astlinux-1.0-*)
-        # Upgrade AIF firewall supporting files
-        if /usr/sbin/upgrade-arno-firewall checkMajor; then  # Don't auto-upgrade if a major version change
-          /usr/sbin/upgrade-arno-firewall upgrade
-        fi
-
-        case $old in
-          astlinux-0.7*)
-            # 0.7 -> 1.x upgrade scripts
-            ;;
-        esac
+    case $old in
+      astlinux-1.0.*)
+        # 1.0.x -> Current upgrade scripts
         ;;
-
     esac
+
   else
     echo "  no version change."
   fi
