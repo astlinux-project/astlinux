@@ -33,20 +33,15 @@ init () {
 
     case $new in
 
-      astlinux-1.0*)
+      astlinux-1.1.*|astlinux-1.0-*)
         # Upgrade AIF firewall supporting files
         if /usr/sbin/upgrade-arno-firewall checkMajor; then  # Don't auto-upgrade if a major version change
           /usr/sbin/upgrade-arno-firewall upgrade
         fi
 
-        # Cleanup ASTURW /var/run/utmp file caused by Busybox bug fixed in commit r5411
-        if [ -f /oldroot/mnt/asturw/var/run/utmp ]; then
-          cleanup_asturw_utmp 2>/dev/null
-        fi
-
         case $old in
           astlinux-0.7*)
-            # 0.7 -> 1.0 upgrade scripts
+            # 0.7 -> 1.x upgrade scripts
             ;;
         esac
         ;;
