@@ -31,7 +31,7 @@ Released **TBD**
 
 -- r8168 version bump to 8.035.00 RealTek PCI-Express Gigabit Ethernet Linux driver
 
--- Lua, a simple, efficient porgramming language is now supported, version 5.1.5.
+-- Lua, a simple, efficient programming language is now supported, version 5.1.5.
    Additional Lua Modules: luafilesystem, luasocket, luaexpat, luasec
    More Info: http://www.lua.org/
 
@@ -126,7 +126,6 @@ Released **TBD**
    More Info: http://search.cpan.org/~jamesgol/asterisk-perl-1.03/lib/Asterisk/AGI.pm
 
 -- app_notify, previously marked as deprecated, not provided in Asterisk 11
-
    Example Dialplan Code to replace Notify() application:
      http://doc.astlinux.org/userdoc:tt_asterisk_call_notify
 
