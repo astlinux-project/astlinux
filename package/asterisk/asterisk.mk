@@ -10,9 +10,9 @@ else
 ASTERISK_VERSION := 1.6.2.21
  else
   ifeq ($(BR2_PACKAGE_ASTERISK_v1_8),y)
-ASTERISK_VERSION := 1.8.20.0
+ASTERISK_VERSION := 1.8.20.1
   else
-ASTERISK_VERSION := 11.2.0
+ASTERISK_VERSION := 11.2.1
   endif
  endif
 endif
