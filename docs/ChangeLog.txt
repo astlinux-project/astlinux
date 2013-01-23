@@ -21,6 +21,9 @@ Released **TBD**
 
 -- Current supported board types are: "geni586", "geni586-serial", "alix" and "net5501"
 
+-- vsftpd, if you have a custom "/mnt/kd/vsftpd.conf" file you will need to add the 'allow_writeable_chroot=YES'
+   new config option.  Without the new vsftpd config option you will not be able to login via ftp.
+   Most users don't have a custom vsftpd config, no change is required for them.
 
 ** System
 
@@ -85,6 +88,9 @@ Released **TBD**
    With arguments, prosodycmd issues commands to the localhost prosody console, and exits.
    Example: prosodycmd 'server:uptime()' 'module:list()'
    More Info: http://prosody.im/doc/console
+
+-- vsftpd, version bump to 3.0.2, added new vsftpd.conf 'allow_writeable_chroot=YES' config option.
+   Note: If you have a custom "/mnt/kd/vsftpd.conf" file you need to add the above new config option.
 
 -- dnsmasq, version bump to 2.65
 
