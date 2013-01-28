@@ -3,7 +3,7 @@
 # tiff
 #
 #############################################################
-TIFF_VERSION:=3.9.5
+TIFF_VERSION:=4.0.3
 TIFF_SITE:=ftp://ftp.remotesensing.org/pub/libtiff
 TIFF_SOURCE:=tiff-$(TIFF_VERSION).tar.gz
 TIFF_INSTALL_STAGING = YES
