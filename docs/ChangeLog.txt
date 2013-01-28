@@ -58,6 +58,8 @@ Released **TBD**
 
 -- acpid, version bump to 2.0.17
 
+-- tiff, version bump to 4.0.3 (security fixes: CVE-2012-3401 and CVE-2012-3386)
+
 -- pcre, version bump to 8.32
 
 -- zlib, version bump to 1.2.7
