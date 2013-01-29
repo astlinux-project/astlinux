@@ -5,6 +5,21 @@
 
 . /etc/rc.conf
 
+add_system_default_users()
+{
+  local base="$1" user file IFS
+
+  unset IFS
+  for user in zabbix prosody; do
+    for file in passwd shadow group; do
+      if ! grep -q "^${user}:" "/etc/${file}"; then
+        grep "^${user}:" "${base}/etc/${file}" >> "/etc/${file}"
+        echo "FIRSTRUN: Added system default '${user}' user/group to '/etc/${file}'"
+      fi
+    done
+  done
+}
+
 init () {
   local new old=""
   
@@ -24,6 +39,13 @@ init () {
     # Upgrade AIF firewall supporting files
     if /usr/sbin/upgrade-arno-firewall checkMajor; then  # Don't auto-upgrade if a major version change
       /usr/sbin/upgrade-arno-firewall upgrade
+    fi
+
+    # Update system default user/group files to ASTURW files
+    if [ -d /oldroot/mnt/asturo ]; then
+      add_system_default_users /oldroot/mnt/asturo
+    elif [ -d /oldroot/image ]; then
+      add_system_default_users /oldroot/image
     fi
 
     case $old in
