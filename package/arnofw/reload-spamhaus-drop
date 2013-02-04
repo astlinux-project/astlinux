@@ -4,7 +4,7 @@
 #
 # http://www.spamhaus.org/drop/
 #
-# Retrieve the latest spamhaus-drop file, and copy it to 'outfile'.
+# Retrieve the latest spamhaus-drop files, and copy it to 'outfile'.
 # If 'infile' is specified, it is appended to 'outfile'.
 # Finally, the firewall reloads the Blocked Hosts File, presumably
 # configured to use 'outfile'.
@@ -16,9 +16,10 @@
 # than once every hour.
 #
 
-URL="http://www.spamhaus.org/drop/drop.lasso"
+URLS="http://www.spamhaus.org/drop/drop.txt http://www.spamhaus.org/drop/edrop.txt"
 
-TMPFILE="/tmp/drop.lasso"
+TMP_FILE="/tmp/dropfile.txt"
+TMP_DROP="/tmp/drop.txt"
 
 if [ -z "$1" ]; then
   echo "Usage: reload-spamhaus-drop outfile [ infile ]"
@@ -33,22 +34,29 @@ if [ -f "$1" ]; then
   fi
 fi
 
-if ! wget -q -O $TMPFILE $URL >/dev/null; then
-  rm -f $TMPFILE
-  MESG="Retrieving Spamhaus DROP list failed, no action."
-  logger -s -t reload-spamhaus-drop -p kern.info "$MESG"
-  exit 1
-fi
+rm -f $TMP_DROP
 
-if grep -q -i -e '^<!DOCTYPE HTML' -e '^<HTML' $TMPFILE; then
-  rm -f $TMPFILE
-  MESG="Spamhaus DROP list format is invalid, no action."
-  logger -s -t reload-spamhaus-drop -p kern.info "$MESG"
-  exit 1
-fi
+unset IFS
+for URL in $URLS; do
+  rm -f $TMP_FILE
+  if ! wget -q -O $TMP_FILE $URL >/dev/null; then
+    rm -f $TMP_DROP $TMP_FILE
+    MESG="Retrieving Spamhaus DROP list failed for '$URL', no action."
+    logger -s -t reload-spamhaus-drop -p kern.info "$MESG"
+    exit 1
+  fi
 
-cp $TMPFILE "$1"
-rm -f $TMPFILE
+  if grep -q -i -e '^<!DOCTYPE HTML' -e '^<HTML' $TMP_FILE; then
+    rm -f $TMP_DROP $TMP_FILE
+    MESG="Spamhaus DROP list format is invalid for '$URL', no action."
+    logger -s -t reload-spamhaus-drop -p kern.info "$MESG"
+    exit 1
+  fi
+  cat "$TMP_FILE" >> "$TMP_DROP"
+done
+
+cp $TMP_DROP "$1"
+rm -f $TMP_DROP $TMP_FILE
 
 if [ -n "$2" ] && [ -f "$2" ]; then
   cat "$2" >> "$1"
