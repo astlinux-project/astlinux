@@ -477,10 +477,20 @@ function asteriskURLrepo() {
 
   $version = trim(shell_exec('/usr/sbin/asterisk -V'));
 
-  if (strncmp($version, 'Asterisk 1.4.', 13) == 0) {
-    $str = 'http://mirror.astlinux.org/firmware-1.x';
+  if (($i = strpos($version, ' ')) !== FALSE) {
+    $ver3 = substr($version, $i + 1, 3);
   } else {
-    $str = 'http://mirror.astlinux.org/ast18-firmware-1.x';
+    $ver3 = '';
+  }
+
+  $str = 'http://mirror.astlinux.org/';
+
+  if ($ver3 === '1.4') {
+    $str .= 'firmware-1.x';
+  } elseif ($ver3 === '1.8') {
+    $str .= 'ast18-firmware-1.x';
+  } else {
+    $str .= 'ast11-firmware-1.x';
   }
   return($str);
 }
