@@ -1,14 +1,39 @@
 =========================================================
-=== ChangeLog Information for AstLinux 1.0
+=== ChangeLog Information for AstLinux 1.x
 ===
 ===
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.1.0:
+Additions for AstLinux 1.1.1:
 =============================
 
 Released **TBD**
+
+** System
+
+-- OpenSSL, version bump to 0.9.8y (security fixes: CVE-2013-0169, CVE-2012-2686 and CVE-2013-0166)
+
+** Networking
+
+-- reload-spamhaus-drop (optional CRON script), add support for the new 'edrop' list, used along with AIF
+   More Info: http://www.spamhaus.org/drop/
+
+** Asterisk
+
+-- Asterisk 1.8.20.1 (no change) and 11.2.1 (no change)
+
+-- DAHDI, dahdi-linux 2.6.1 (no change) and dahdi-tools 2.6.1 (no change)
+
+** Web Interface
+
+-- Prefs and System tabs, add the Asterisk 11 Repository URL to the list of defaults.
+
+
+Additions for AstLinux 1.1.0:
+=============================
+
+Released 2013-02-07
 
 ** IMPORTANT NOTICE
 
