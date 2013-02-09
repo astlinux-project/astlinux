@@ -9,7 +9,7 @@
 
 if [ "$1" -eq 0 ]; then
   # Extract the CommonName from the X509 subject string
-  cn="`expr match "$2" '.*/CN=\([^/][^/]*\)'`"
+  cn="$(echo "$2" | sed -n -r -e 's:^.*[, ]CN=([^, ]+).*$:\1:p')"
   if [ -z "$cn" ]; then
     exit 1
   fi

@@ -4,9 +4,19 @@
 #
 #############################################################
 
-OPENVPN_VERSION = 2.2.2
+OPENVPN_VERSION = 2.3.0
 OPENVPN_SITE = http://swupdate.openvpn.net/community/releases
-OPENVPN_CONF_OPT = --disable-plugins
+OPENVPN_DEPENDENCIES = host-pkg-config
+OPENVPN_CONF_OPT = --disable-plugins --enable-iproute2
+OPENVPN_CONF_ENV = IFCONFIG=/sbin/ifconfig \
+	NETSTAT=/bin/netstat \
+	ROUTE=/sbin/route
+
+ifeq ($(BR2_PACKAGE_IPROUTE2),y)
+OPENVPN_CONF_ENV += IPROUTE=/sbin/ip
+else
+OPENVPN_CONF_ENV += IPROUTE=/bin/ip
+endif
 
 ifeq ($(BR2_PACKAGE_OPENVPN_LZO),y)
 	OPENVPN_DEPENDENCIES += lzo
@@ -15,13 +25,12 @@ else
 endif
 
 ifeq ($(BR2_PACKAGE_OPENVPN_OPENSSL),y)
+	OPENVPN_CONF_OPT += --with-crypto-library=openssl
 	OPENVPN_DEPENDENCIES += openssl
-else
-	OPENVPN_CONF_OPT += --disable-crypto --disable-ssl
 endif
 
 define OPENVPN_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 755 $(@D)/openvpn $(TARGET_DIR)/usr/sbin/openvpn
+	$(INSTALL) -m 755 $(@D)/src/openvpn/openvpn $(TARGET_DIR)/usr/sbin/openvpn
 	$(INSTALL) -m 755 -D package/openvpn/openvpn.init $(TARGET_DIR)/etc/init.d/openvpn
 	$(INSTALL) -m 755 -D package/openvpn/openvpnclient.init $(TARGET_DIR)/etc/init.d/openvpnclient
 	$(INSTALL) -m 755 -D package/openvpn/tls-verify.sh $(TARGET_DIR)/usr/sbin/openvpn-tls-verify
