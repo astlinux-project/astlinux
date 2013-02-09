@@ -12,9 +12,15 @@ Released **TBD**
 
 ** System
 
--- OpenSSL, version bump to 0.9.8y (security fixes: CVE-2013-0169, CVE-2012-2686 and CVE-2013-0166)
+-- No Change
 
 ** Networking
+
+-- OpenSSL, version bump to 0.9.8y (security fixes: CVE-2013-0169, CVE-2012-2686 and CVE-2013-0166)
+
+-- libcurl (curl) version bump to 7.29.0, (security fix: CVE-2013-0249) and bug fixes. Additionally enable IPv6.
+
+-- OpenVPN, version bump to 2.3.0.  Remove easy-rsa scripts.
 
 -- reload-spamhaus-drop (optional CRON script), add support for the new 'edrop' list, used along with AIF
    More Info: http://www.spamhaus.org/drop/
