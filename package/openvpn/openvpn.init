@@ -53,7 +53,8 @@ ca $OVPN_CA
 cert $OVPN_CERT
 key $OVPN_KEY
 dh $OVPN_DH
-server $OVPN_SERVER
+server $OVPN_SERVER${OVPN_SERVERV6:+
+server-ipv6 $OVPN_SERVERV6}
 verb $OVPN_VERBOSITY" > /tmp/etc/openvpn.conf
     # push settings from the server to the client
     if [ -n "$OVPN_PUSH1" ]; then
@@ -94,6 +95,9 @@ verb $OVPN_VERBOSITY" > /tmp/etc/openvpn.conf
     fi
     if [ -n "$OVPN_CIPHER" ]; then
       echo "cipher $OVPN_CIPHER" >> /tmp/etc/openvpn.conf
+    fi
+    if [ -n "$OVPN_TOPOLOGY" ]; then
+      echo "topology $OVPN_TOPOLOGY" >> /tmp/etc/openvpn.conf
     fi
     if [ -n "$OVPN_VALIDCLIENTS" ]; then
       echo "tls-verify /usr/sbin/openvpn-tls-verify" >> /tmp/etc/openvpn.conf
