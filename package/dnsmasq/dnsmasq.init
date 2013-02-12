@@ -172,6 +172,19 @@ which_extern_resolv()
   fi
 }
 
+is_EXTDHCP_active()
+{
+
+  # Applies to static EXTIP address, no EXT2IF and no PPPoE
+  if [ "$EXTDHCP" = "yes" -a -n "$EXTIP" -a -z "$EXT2IF" -a -z "$PPPOEIF" ]; then
+    if [ -n "$EXTIF" -a "$EXTIF" != "none" ] && isDHCPinterface $EXTIF; then
+      return 0
+    fi
+  fi
+
+  return 1
+}
+
 is_DHCP_active()
 {
 
@@ -243,7 +256,7 @@ nameserver 127.0.0.1" > /tmp/etc/resolv.conf
     return
   fi
   
-  if is_DHCP_active; then
+  if is_DHCP_active || is_EXTDHCP_active; then
     createDNSMASQbasic dhcp >> /tmp/etc/dnsmasq.conf
 
     addDNSMASQnet "$INTIF" "$INTIP" "$INTNM" lan >> /tmp/etc/dnsmasq.conf
@@ -253,6 +266,10 @@ nameserver 127.0.0.1" > /tmp/etc/resolv.conf
     addDNSMASQnet "$INT3IF" "$INT3IP" "$INT3NM" lan3 >> /tmp/etc/dnsmasq.conf
 
     addDNSMASQnet "$DMZIF" "$DMZIP" "$DMZNM" dmz >> /tmp/etc/dnsmasq.conf
+
+    if is_EXTDHCP_active; then
+      addDNSMASQnet "$EXTIF" "$EXTIP" "$EXTNM" ext >> /tmp/etc/dnsmasq.conf
+    fi
 
     addDHCPhosts_options >> /tmp/etc/dnsmasq.conf
   else
