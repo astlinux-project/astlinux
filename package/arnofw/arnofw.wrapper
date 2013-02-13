@@ -207,7 +207,7 @@ if [ -n "$EXT2IF" -a -z "$EXT2IP" ] && [ "$EXT2IF" != "ppp0" -o -z "$PPPOEIF" ];
   EXT_IF_DHCP_IP=1
 fi
 
-if [ "$EXTDHCP" = "yes" -a -n "$EXTIP" -a -z "$EXT2IF" -a -z "$PPPOEIF" ]; then
+if [ "$EXTDHCP" = "yes" -a -n "$EXTIP" -a -n "$EXTGW" -a -z "$EXT2IF" -a -z "$PPPOEIF" ]; then
   EXTERNAL_DHCP_SERVER=1
 fi
 

@@ -36,18 +36,18 @@ isDHCPinterface()
 trueDNSMASQnet()
 {
   # args: tag, IP, ip.dstart, ip.dend
-  local servername
+  local servername="$2" gateway="$2"
 
   if [ "$1" = "lan" ]; then
     servername="$HOSTNAME.$DOMAIN"
-  else
-    servername="$2"
+  elif [ "$1" = "ext" ]; then
+    gateway="$EXTGW"
   fi
 
   echo "
 dhcp-range=$1,$3,$4,24h
-dhcp-option=$1,option:router,$2
-dhcp-option=$1,option:dns-server,$2
+dhcp-option=$1,option:router,$gateway
+dhcp-option=$1,option:dns-server,$gateway
 dhcp-option=$1,option:tftp-server,\"$servername\"
 dhcp-option=$1,150,$2"
 
@@ -176,7 +176,7 @@ is_EXTDHCP_active()
 {
 
   # Applies to static EXTIP address, no EXT2IF and no PPPoE
-  if [ "$EXTDHCP" = "yes" -a -n "$EXTIP" -a -z "$EXT2IF" -a -z "$PPPOEIF" ]; then
+  if [ "$EXTDHCP" = "yes" -a -n "$EXTIP" -a -n "$EXTGW" -a -z "$EXT2IF" -a -z "$PPPOEIF" ]; then
     if [ -n "$EXTIF" -a "$EXTIF" != "none" ] && isDHCPinterface $EXTIF; then
       return 0
     fi
