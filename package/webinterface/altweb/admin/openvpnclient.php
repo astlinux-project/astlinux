@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2009 Lonnie Abelbeck
+// Copyright (C) 2008-2013 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -9,6 +9,7 @@
 // openvpnclient.php for AstLinux
 // 04-15-2009
 // 08-13-2010, Added QoS Passthrough, setting passtos
+// 02-13-2013, Added OpenVPN 2.3 IPv6 support
 //
 // System location of /mnt/kd/rc.conf.d directory
 $OVPNCONFDIR = '/mnt/kd/rc.conf.d';
@@ -22,6 +23,13 @@ require_once '../common/functions.php';
 require_once '../common/openssl-openvpnclient.php';
 
 $openssl = openvpnclientSETUP();
+
+$protocol_menu = array (
+  'udp' => 'UDP v4',
+  'tcp-client' => 'TCP v4',
+  'udp6' => 'UDP v6',
+  'tcp6-client' => 'TCP v6'
+);
 
 $cipher_menu = array (
   '' => 'Default Cipher',
@@ -254,11 +262,12 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Protocol:');
   putHtml('</td><td style="text-align: left;" colspan="1">');
+  $protocol = getVARdef($db, 'OVPNC_PROTOCOL');
   putHtml('<select name="protocol">');
-  $sel = (getVARdef($db, 'OVPNC_PROTOCOL') === 'udp') ? ' selected="selected"' : '';
-  putHtml('<option value="udp"'.$sel.'>UDP</option>');
-  $sel = (getVARdef($db, 'OVPNC_PROTOCOL') === 'tcp-client') ? ' selected="selected"' : '';
-  putHtml('<option value="tcp-client"'.$sel.'>TCP</option>');
+  foreach ($protocol_menu as $key => $value) {
+    $sel = ($protocol === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
   putHtml('</select>');
   putHtml('</td><td style="text-align: right;" colspan="1">');
   putHtml('Port:');
@@ -349,13 +358,13 @@ require_once '../common/header.php';
   putHtml('<strong>Client Mode:</strong>');
   putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
-  putHtml('Remote Server:');
+  putHtml('Remote Server Hostname:');
   putHtml('</td><td style="text-align: left;" colspan="4">');
   $value = getVARdef($db, 'OVPNC_REMOTE');
   putHtml('<input type="text" size="32" maxlength="128" value="'.$value.'" name="remote" />');
   putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
-  putHtml('Remote Network:');
+  putHtml('Remote Network IPv4&nbsp;NM:');
   putHtml('</td><td style="text-align: left;" colspan="4">');
   if (($value = getVARdef($db, 'OVPNC_SERVER')) === '') {
     $value = '10.8.0.0 255.255.255.0';

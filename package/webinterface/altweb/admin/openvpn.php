@@ -12,6 +12,7 @@
 // 02-06-2009, Added tls-verify, temporarily disable clients
 // 08-13-2010, Added QoS Passthrough, setting passtos
 // 01-03-2013, Added private keysize support
+// 02-13-2013, Added OpenVPN 2.3 IPv6 support
 //
 // System location of /mnt/kd/rc.conf.d directory
 $OVPNCONFDIR = '/mnt/kd/rc.conf.d';
@@ -100,9 +101,23 @@ $auth_method_menu = array (
   'yes' => 'Cert. + User/Pass'
 );
 
+$protocol_menu = array (
+  'udp' => 'UDP v4',
+  'tcp-server' => 'TCP v4',
+  'udp6' => 'UDP v4/v6',
+  'tcp6-server' => 'TCP v4/v6'
+);
+
 $key_size_menu = array (
   '1024' => '1024 Bits',
   '2048' => '2048 Bits'
+);
+
+$topology_menu = array (
+  '' => 'Default Topology',
+  'net30' => '[net30] older, OpenVPN 2.0 default',
+  'p2p' => '[p2p] point-to-point, no Windows clients',
+  'subnet' => '[subnet] latest, requires OpenVPN 2.1+ clients'
 );
 
 // Function: saveOVPNsettings
@@ -148,7 +163,13 @@ function saveOVPNsettings($conf_dir, $conf_file, $disabled = NULL) {
   fwrite($fp, "### Allowed External Hosts\n".$value."\n");
   
   $value = 'OVPN_SERVER="'.trim($_POST['server']).'"';
-  fwrite($fp, "### Server Network\n".$value."\n");
+  fwrite($fp, "### Server IPv4 Network\n".$value."\n");
+  
+  $value = 'OVPN_SERVERV6="'.trim($_POST['serverv6']).'"';
+  fwrite($fp, "### Server IPv6 Network\n".$value."\n");
+  
+  $value = 'OVPN_TOPOLOGY="'.$_POST['topology'].'"';
+  fwrite($fp, "### Topology\n".$value."\n");
   
   $value = 'OVPN_PUSH="';
   fwrite($fp, "### Server Push\n".$value."\n");
@@ -447,11 +468,12 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Protocol:');
   putHtml('</td><td style="text-align: left;" colspan="1">');
+  $protocol = getVARdef($db, 'OVPN_PROTOCOL');
   putHtml('<select name="protocol">');
-  $sel = (getVARdef($db, 'OVPN_PROTOCOL') === 'udp') ? ' selected="selected"' : '';
-  putHtml('<option value="udp"'.$sel.'>UDP</option>');
-  $sel = (getVARdef($db, 'OVPN_PROTOCOL') === 'tcp-server') ? ' selected="selected"' : '';
-  putHtml('<option value="tcp-server"'.$sel.'>TCP</option>');
+  foreach ($protocol_menu as $key => $value) {
+    $sel = ($protocol === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
   putHtml('</select>');
   putHtml('</td><td style="text-align: right;" colspan="1">');
   putHtml('Port:');
@@ -546,14 +568,35 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Server Mode:</strong>');
   putHtml('</td></tr>');
-  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  putHtml('Network:');
-  putHtml('</td><td style="text-align: left;" colspan="5">');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Network IPv4 NM:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
   if (($value = getVARdef($db, 'OVPN_SERVER')) === '') {
     $value = '10.8.0.0 255.255.255.0';
   }
   putHtml('<input type="text" size="48" maxlength="128" value="'.$value.'" name="server" />');
   putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Network IPv6/nn:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  $value = getVARdef($db, 'OVPN_SERVERV6');
+  putHtml('<input type="text" size="48" maxlength="128" value="'.$value.'" name="serverv6" />');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Topology:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  $topology = getVARdef($db, 'OVPN_TOPOLOGY');
+  putHtml('<select name="topology">');
+  foreach ($topology_menu as $key => $value) {
+    $sel = ($topology === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   putHtml('"push":');
   putHtml('</td><td style="text-align: left;" colspan="5">');
