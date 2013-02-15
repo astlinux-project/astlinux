@@ -193,9 +193,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 //      $p12pass = opensslRANDOMpass(12);
 //      if (($p12 = opensslPKCS12str($openssl, $value, $p12pass)) !== '') {
 //        $zip->addFromString($value.'/'.$value.'.p12', $p12);
-//        $zip->addFromString($value.'/README.txt', opensslREADMEstr(TRUE, $value, $p12pass));
+//        $zip->addFromString($value.'/README.txt', opensslREADMEstr('p12', $value, $p12pass));
 //      } else {
-//        $zip->addFromString($value.'/README.txt', opensslREADMEstr(FALSE, $value, $p12pass));
+//        $zip->addFromString($value.'/README.txt', opensslREADMEstr('', $value, $p12pass));
 //      }
       $readme = "Asterisk SIP-TLS Server \"".$openssl['dn']['commonName']."\" Credentials.\n\n";
       $readme .= "ca.crt - A self-signed Certificate Authority (CA).\n\n";

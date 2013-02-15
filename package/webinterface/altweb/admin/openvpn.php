@@ -120,6 +120,25 @@ $topology_menu = array (
   'subnet' => '[subnet] latest, requires OpenVPN 2.1+ clients'
 );
 
+// Function: get_HOSTNAME_DOMAIN
+//
+function get_HOSTNAME_DOMAIN() {
+  $hostname_domain = '';
+  
+  // System location of gui.network.conf file
+  $NETCONFFILE = '/mnt/kd/rc.conf.d/gui.network.conf';
+  
+  if (is_file($NETCONFFILE)) {
+    $netvars = parseRCconf($NETCONFFILE);
+    if (($hostname = getVARdef($netvars, 'HOSTNAME')) !== '') {
+      if (($domain = getVARdef($netvars, 'DOMAIN')) !== '') {
+        $hostname_domain = $hostname.'.'.$domain;
+      }
+    }
+  }
+  return($hostname_domain);
+}
+
 // Function: saveOVPNsettings
 //
 function saveOVPNsettings($conf_dir, $conf_file, $disabled = NULL) {
@@ -161,6 +180,9 @@ function saveOVPNsettings($conf_dir, $conf_file, $disabled = NULL) {
   
   $value = 'OVPN_TUNNEL_HOSTS="'.trim($_POST['tunnel_external_hosts']).'"';
   fwrite($fp, "### Allowed External Hosts\n".$value."\n");
+  
+  $value = 'OVPN_HOSTNAME="'.trim($_POST['server_hostname']).'"';
+  fwrite($fp, "### Server Hostname\n".$value."\n");
   
   $value = 'OVPN_SERVER="'.trim($_POST['server']).'"';
   fwrite($fp, "### Server IPv4 Network\n".$value."\n");
@@ -261,6 +283,53 @@ function isClientDisabled($vars, $client) {
   return(TRUE);
 }
 
+// Function: ovpnProfile
+//
+function ovpnProfile($db, $ca_file) {
+
+  $default = array (
+    'client',
+    'ns-cert-type server',
+    'nobind',
+    'persist-key',
+    'persist-tun',
+    'dev tun',
+    'verb 3'
+  );
+
+  if (($server_hostname = getVARdef($db, 'OVPN_HOSTNAME')) === '') {
+    $server_hostname = get_HOSTNAME_DOMAIN();
+  }
+  if (($port = getVARdef($db, 'OVPN_PORT')) === '') {
+    return(FALSE);
+  }
+  if (($protocol = substr(getVARdef($db, 'OVPN_PROTOCOL'), 0 , 3)) === '') {
+    return(FALSE);
+  }
+
+  $str = "remote $server_hostname $port $protocol\n";
+
+  $str .= "comp-lzo ".getVARdef($db, 'OVPN_LZO')."\n";
+
+  if (getVARdef($db, 'OVPN_USER_PASS_VERIFY') === 'yes') {
+    $str .= "auth-user-pass\n";
+    $str .= "auth-retry interact\n";
+    $str .= "auth-nocache\n";
+  }
+  if (($cipher = getVARdef($db, 'OVPN_CIPHER')) !== '') {
+    $str .= "cipher $cipher\n";
+  }
+  foreach ($default as $value) {
+    $str .= "$value\n";
+  }
+  if (($caStr = @file_get_contents($ca_file)) !== FALSE) {
+    $str .= "<ca>\n";
+    $str .= $caStr;
+    $str .= "</ca>\n";
+  }
+  return($str);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
@@ -356,9 +425,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $p12pass = opensslRANDOMpass(12);
       if (($p12 = opensslPKCS12str($openssl, $value, $p12pass)) !== '') {
         $zip->addFromString($value.'/'.$value.'.p12', $p12);
-        $zip->addFromString($value.'/README.txt', opensslREADMEstr(TRUE, $value, $p12pass));
+        if (($ovpn = ovpnProfile($db, $openssl['key_dir'].'/ca.crt')) !== FALSE) {
+          $zip->addFromString($value.'/'.$value.'.ovpn', $ovpn);
+          $zip->addFromString($value.'/README.txt', opensslREADMEstr('ovpn', $value, $p12pass));
+        } else {
+          $zip->addFromString($value.'/README.txt', opensslREADMEstr('p12', $value, $p12pass));
+        }
       } else {
-        $zip->addFromString($value.'/README.txt', opensslREADMEstr(FALSE, $value, $p12pass));
+        $zip->addFromString($value.'/README.txt', opensslREADMEstr('', $value, $p12pass));
       }
       $zip->close();
     
@@ -567,6 +641,15 @@ require_once '../common/header.php';
   
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Server Mode:</strong>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Server Hostname:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  if (($server_hostname = getVARdef($db, 'OVPN_HOSTNAME')) === '') {
+    $server_hostname = get_HOSTNAME_DOMAIN();
+  }
+  putHtml('<input type="text" size="48" maxlength="128" value="'.$server_hostname.'" name="server_hostname" />');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');

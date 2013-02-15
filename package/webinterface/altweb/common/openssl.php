@@ -244,17 +244,20 @@ function opensslPKCS12str($ssl, $commonName, $pass) {
 
 // Function: opensslREADMEstr()
 //
-function opensslREADMEstr($pkcs12, $commonName, $pass) {
+function opensslREADMEstr($type, $commonName, $pass) {
 
-  $readme = 'Client "'.$commonName.'" Credentials'."\n\n";
+  $readme = "Client \"$commonName\" Credentials\n\n";
   $readme .= "ca.crt - A self-signed Certificate Authority (CA).\n\n";
-  $readme .= $commonName.".crt - This client's public key certificate, signed by ca.crt.\n\n";
-  $readme .= $commonName.".key - This client's private key.\n";
-  $readme .= "Note: File ".$commonName.".key is not encrypted and must be kept secure.\n\n";
-  if ($pkcs12) {
-    $readme .= $commonName.".p12 - A password protected PKCS#12 container combining the credentials from the above three files.\n\n";
-    $readme .= "PKCS#12 Container Password: ".$pass."\n";
+  $readme .= "$commonName.crt - This client's public key certificate, signed by ca.crt.\n\n";
+  $readme .= "$commonName.key - This client's private key.\n";
+  $readme .= "Note: File '$commonName.key' is not encrypted and must be kept secure.\n\n";
+  if ($type === 'p12' || $type === 'ovpn') {
+    $readme .= "$commonName.p12 - A password protected PKCS#12 container combining the credentials from the above three files.\n\n";
+    $readme .= "PKCS#12 Container Password: $pass\n";
     $readme .= "Keep it secure.\n\n";
+    if ($type === 'ovpn') {
+      $readme .= "$commonName.ovpn - OpenVPN certificate profile, use with file '$commonName.p12' for client devices.\n\n";
+    }
   }
 
   return($readme);
