@@ -54,7 +54,8 @@ remote $OVPNC_REMOTE $OVPNC_PORT
 proto $OVPNC_PROTOCOL
 ca $OVPNC_CA
 cert $OVPNC_CERT
-key $OVPNC_KEY
+key $OVPNC_KEY${OVPNC_TA:+
+tls-auth $OVPNC_TA 1}
 verb $OVPNC_VERBOSITY" > /tmp/etc/openvpnclient.conf
 
     IFS=$'\n'
@@ -94,9 +95,8 @@ log-append /var/log/openvpnclient.log" >> /tmp/etc/openvpnclient.conf
 start () {
   if [ -f $lock ]; then
     # we were not shut down correctly
-    kill `cat $pid` >/dev/null 2>&1
-    rm -f $pid
-    rm -f $lock
+    kill $(cat $pid) >/dev/null 2>&1
+    rm -f $pid $lock
     sleep 2
   fi
 
@@ -112,9 +112,8 @@ start () {
 stop () {
   if [ -f $pid ]; then
     echo "Stopping OpenVPN Client..."
-    kill `cat $pid` >/dev/null 2>&1
-    rm -f $pid
-    rm -f $lock
+    kill $(cat $pid) >/dev/null 2>&1
+    rm -f $pid $lock
   fi
 }
 
