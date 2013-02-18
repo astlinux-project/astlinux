@@ -103,6 +103,9 @@ verb $OVPN_VERBOSITY" > /tmp/etc/openvpn.conf
     if [ -n "$OVPN_CIPHER" ]; then
       echo "cipher $OVPN_CIPHER" >> /tmp/etc/openvpn.conf
     fi
+    if [ -n "$OVPN_AUTH" ]; then
+      echo "auth $OVPN_AUTH" >> /tmp/etc/openvpn.conf
+    fi
     if [ -n "$OVPN_TOPOLOGY" ]; then
       echo "topology $OVPN_TOPOLOGY" >> /tmp/etc/openvpn.conf
     fi

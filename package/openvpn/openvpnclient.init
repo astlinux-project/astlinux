@@ -70,6 +70,9 @@ verb $OVPNC_VERBOSITY" > /tmp/etc/openvpnclient.conf
     if [ -n "$OVPNC_CIPHER" ]; then
       echo "cipher $OVPNC_CIPHER" >> /tmp/etc/openvpnclient.conf
     fi
+    if [ -n "$OVPNC_AUTH" ]; then
+      echo "auth $OVPNC_AUTH" >> /tmp/etc/openvpnclient.conf
+    fi
     if [ -n "$OVPNC_NSCERTTYPE" ]; then
       echo "ns-cert-type $OVPNC_NSCERTTYPE" >> /tmp/etc/openvpnclient.conf
     fi
