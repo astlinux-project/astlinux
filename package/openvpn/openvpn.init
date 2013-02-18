@@ -34,10 +34,13 @@ init () {
   if [ -d /mnt/kd/openvpn ]; then
     ln -snf /mnt/kd/openvpn /tmp/etc/openvpn
   else
-    echo "No openvpn certificate directory found.
-A directory on the keydisk is required.
-Manual configuration of certificates is also required."
-    exit
+    echo "openvpn: Directory \"/mnt/kd/openvpn\" not found, exiting." >&2
+    exit 1
+  fi
+
+  # Create the 'ccd' directory by default
+  if [ ! -d /mnt/kd/openvpn/ccd ]; then
+    mkdir /mnt/kd/openvpn/ccd
   fi
 
   if [ -f /mnt/kd/openvpn/openvpn.conf ]; then
@@ -137,9 +140,12 @@ start () {
   if  [ -f /etc/openvpn.conf ]; then
     echo "Starting OpenVPN Server..."
     openvpn --daemon  --writepid $pid --config /etc/openvpn.conf
-    if [ $? = 0 ]; then
-      touch $lock
+    result=$?
+    if [ $result -ne 0 ]; then
+      echo "openvpn: Failed to start." >&2
+      return $result
     fi
+    touch $lock
   fi
 }
 

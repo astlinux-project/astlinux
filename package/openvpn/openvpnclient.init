@@ -34,10 +34,8 @@ init () {
   if [ -d /mnt/kd/openvpn ]; then
     ln -snf /mnt/kd/openvpn /tmp/etc/openvpn
   else
-    echo "No openvpn certificate directory found.
-A directory on the keydisk is required.
-Manual configuration of certificates is also required."
-    exit
+    echo "openvpnclient: Directory \"/mnt/kd/openvpn\" not found, exiting." >&2
+    exit 1
   fi
 
   if [ -f /mnt/kd/openvpn/openvpnclient.conf ]; then
@@ -103,9 +101,12 @@ start () {
   if  [ -f /etc/openvpnclient.conf ]; then
     echo "Starting OpenVPN Client..."
     openvpn --daemon  --writepid $pid --config /etc/openvpnclient.conf
-    if [ $? = 0 ]; then
-      touch $lock
+    result=$?
+    if [ $result -ne 0 ]; then
+      echo "openvpnclient: Failed to start." >&2
+      return $result
     fi
+    touch $lock
   fi
 }
 
