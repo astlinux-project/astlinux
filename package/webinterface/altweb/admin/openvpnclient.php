@@ -32,11 +32,17 @@ $protocol_menu = array (
 );
 
 $cipher_menu = array (
-  '' => 'Default Cipher',
+  '' => 'Use Default',
   'BF-CBC' => 'BF-CBC',
   'AES-128-CBC' => 'AES-128-CBC',
   'AES-192-CBC' => 'AES-192-CBC',
   'AES-256-CBC' => 'AES-256-CBC'
+);
+
+$auth_hmac_menu = array (
+  '' => 'Use Default',
+  'SHA1' => 'SHA1',
+  'SHA256' => 'SHA256'
 );
 
 $nscerttype_menu = array (
@@ -86,6 +92,9 @@ function saveOVPNCsettings($conf_dir, $conf_file) {
   
   $value = 'OVPNC_CIPHER="'.$_POST['cipher_menu'].'"';
   fwrite($fp, "### Cipher\n".$value."\n");
+
+  $value = 'OVPNC_AUTH="'.$_POST['auth_hmac'].'"';
+  fwrite($fp, "### Auth HMAC\n".$value."\n");
   
   $value = 'OVPNC_NSCERTTYPE="'.$_POST['nscerttype'].'"';
   fwrite($fp, "### nsCertType\n".$value."\n");
@@ -333,12 +342,22 @@ require_once '../common/header.php';
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Device:');
-  putHtml('</td><td style="text-align: left;" colspan="4">');
+  putHtml('</td><td style="text-align: left;" colspan="1">');
   putHtml('<select name="device">');
   $sel = (getVARdef($db, 'OVPNC_DEV') === 'tun2') ? ' selected="selected"' : '';
   putHtml('<option value="tun2"'.$sel.'>tun2</option>');
   $sel = (getVARdef($db, 'OVPNC_DEV') === 'tun3') ? ' selected="selected"' : '';
   putHtml('<option value="tun3"'.$sel.'>tun3</option>');
+  putHtml('</select>');
+  putHtml('</td><td style="text-align: right;" colspan="1">');
+  putHtml('Auth HMAC:');
+  putHtml('</td><td style="text-align: left;" colspan="2">');
+  $auth_hmac = getVARdef($db, 'OVPNC_AUTH');
+  putHtml('<select name="auth_hmac">');
+  foreach ($auth_hmac_menu as $key => $value) {
+    $sel = ($auth_hmac === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
   putHtml('</select>');
   putHtml('</td></tr>');
   

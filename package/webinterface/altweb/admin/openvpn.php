@@ -82,11 +82,17 @@ $key_size = getVARdef($db, 'OVPN_CERT_KEYSIZE');
 $openssl = openvpn_openssl($key_size);
 
 $cipher_menu = array (
-  '' => 'Default Cipher',
+  '' => 'Use Default',
   'BF-CBC' => 'BF-CBC',
   'AES-128-CBC' => 'AES-128-CBC',
   'AES-192-CBC' => 'AES-192-CBC',
   'AES-256-CBC' => 'AES-256-CBC'
+);
+
+$auth_hmac_menu = array (
+  '' => 'Use Default',
+  'SHA1' => 'SHA1',
+  'SHA256' => 'SHA256'
 );
 
 $verbosity_menu = array (
@@ -114,7 +120,7 @@ $key_size_menu = array (
 );
 
 $topology_menu = array (
-  '' => 'Default Topology',
+  '' => 'Use Default',
   'net30' => '[net30] older, OpenVPN 2.0 default',
   'p2p' => '[p2p] point-to-point, no Windows clients',
   'subnet' => '[subnet] latest, requires OpenVPN 2.1+ clients'
@@ -177,6 +183,9 @@ function saveOVPNsettings($conf_dir, $conf_file, $disabled = NULL) {
   
   $value = 'OVPN_CIPHER="'.$_POST['cipher_menu'].'"';
   fwrite($fp, "### Cipher\n".$value."\n");
+  
+  $value = 'OVPN_AUTH="'.$_POST['auth_hmac'].'"';
+  fwrite($fp, "### Auth HMAC\n".$value."\n");
   
   $value = 'OVPN_TUNNEL_HOSTS="'.trim($_POST['tunnel_external_hosts']).'"';
   fwrite($fp, "### Allowed External Hosts\n".$value."\n");
@@ -338,6 +347,9 @@ function ovpnProfile($db, $ssl, &$ta_file) {
   }
   if (($cipher = getVARdef($db, 'OVPN_CIPHER')) !== '') {
     $str .= "cipher $cipher\n";
+  }
+  if (($auth_hmac = getVARdef($db, 'OVPN_AUTH')) !== '') {
+    $str .= "auth $auth_hmac\n";
   }
   if ($ta_file !== '') {
     $str .= "key-direction 1\n";
@@ -622,12 +634,22 @@ require_once '../common/header.php';
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Device:');
-  putHtml('</td><td style="text-align: left;" colspan="4">');
+  putHtml('</td><td style="text-align: left;" colspan="1">');
   putHtml('<select name="device">');
   $sel = (getVARdef($db, 'OVPN_DEV') === 'tun0') ? ' selected="selected"' : '';
   putHtml('<option value="tun0"'.$sel.'>tun0</option>');
   $sel = (getVARdef($db, 'OVPN_DEV') === 'tun1') ? ' selected="selected"' : '';
   putHtml('<option value="tun1"'.$sel.'>tun1</option>');
+  putHtml('</select>');
+  putHtml('</td><td style="text-align: right;" colspan="1">');
+  putHtml('Auth HMAC:');
+  putHtml('</td><td style="text-align: left;" colspan="2">');
+  $auth_hmac = getVARdef($db, 'OVPN_AUTH');
+  putHtml('<select name="auth_hmac">');
+  foreach ($auth_hmac_menu as $key => $value) {
+    $sel = ($auth_hmac === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
   putHtml('</select>');
   putHtml('</td></tr>');
   

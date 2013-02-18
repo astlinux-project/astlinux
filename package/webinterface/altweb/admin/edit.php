@@ -9,6 +9,7 @@
 // edit.php for AstLinux
 // 04-28-2008
 // 12-04-2008, Added Reload/Restart Menu
+// 02-18-2013, Added OpenVPN Client Config editing
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -248,6 +249,7 @@ require_once '../common/header.php';
   if ($dir === '/mnt/kd' ||
       $dir === '/mnt/kd/dahdi' ||
       $dir === '/mnt/kd/openvpn' ||
+      $dir === '/mnt/kd/openvpn/ccd' ||
       $dir === '/mnt/kd/rc.conf.d' ||
       $dir === '/mnt/kd/crontabs' ||
       $dir === '/mnt/kd/apcupsd' ||
@@ -470,10 +472,20 @@ require_once '../common/header.php';
     putHtml('<option value="'.$file.'"'.$sel.'>prosody/'.basename($file).' - XMPP Shared Groups</option>');
   }
   putHtml('</optgroup>');
-  if (is_dir('/mnt/kd/docs')) {
+  if (is_dir('/mnt/kd/openvpn/ccd') && count($globfiles = glob('/mnt/kd/openvpn/ccd/*')) > 0) {
+    putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; OpenVPN Client Configs &mdash;&mdash;&mdash;&mdash;">');
+    foreach ($globfiles as $globfile) {
+      if (is_file($globfile) && is_writable($globfile)) {
+        $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
+        putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - X509 CN of OpenVPN Client</option>');
+      }
+    }
+    putHtml('</optgroup>');
+  }
+  if (is_dir('/mnt/kd/docs') && count($globfiles = glob('/mnt/kd/docs/*')) > 0) {
     putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; Documentation &mdash;&mdash;&mdash;&mdash;">');
-    foreach (glob('/mnt/kd/docs/*') as $globfile) {
-      if (is_writable($globfile)) {
+    foreach ($globfiles as $globfile) {
+      if (is_file($globfile) && is_writable($globfile)) {
         $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
         putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - /mnt/kd/docs/ File</option>');
       }
