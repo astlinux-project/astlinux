@@ -140,4 +140,22 @@ function opensslCREATEdh_pem($ssl) {
   chmod($ssl['dh_pem'], 0644);
   return(TRUE);
 }
+
+// Function: openvpnCREATEtls_auth()
+//
+function openvpnCREATEtls_auth($ssl) {
+
+  $ta_file = $ssl['key_dir'].'/ta.key';
+
+  if (is_file($ta_file)) {
+    return(TRUE);
+  }
+  shell('openvpn --genkey --secret '.$ta_file.' >/dev/null 2>/dev/null', $status);
+  if ($status != 0) {
+    @unlink($ta_file);
+    return(FALSE);
+  }
+  chmod($ta_file, 0600);
+  return(TRUE);
+}
 ?>

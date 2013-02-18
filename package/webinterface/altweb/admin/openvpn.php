@@ -223,6 +223,12 @@ if (opensslOPENVPNis_valid($openssl)) {
   fwrite($fp, "### Key File\n".$value."\n");
   $value = 'OVPN_DH="'.$openssl['dh_pem'].'"';
   fwrite($fp, "### DH File\n".$value."\n");
+  if ($_POST['tls_auth'] === 'yes' && openvpnCREATEtls_auth($openssl)) {
+    $value = 'OVPN_TA="'.$openssl['key_dir'].'/ta.key"';
+  } else {
+    $value = 'OVPN_TA=""';
+  }
+  fwrite($fp, "### TLS-Auth File\n".$value."\n");
   if (! is_null($disabled)) {
     if (count($disabled) > 0) {
       $value = 'OVPN_VALIDCLIENTS="';
@@ -256,8 +262,15 @@ if (opensslOPENVPNis_valid($openssl)) {
   $value = isset($_POST['dh']) ? trim($_POST['dh']) : $base.'/dh1024.pem';
   $value = 'OVPN_DH="'.$value.'"';
   fwrite($fp, "### DH File\n".$value."\n");
+  if ($_POST['tls_auth'] === 'yes') {
+    $value = isset($_POST['ta']) ? trim($_POST['ta']) : $base.'/ta.key';
+    $value = 'OVPN_TA="'.$value.'"';
+  } else {
+    $value = 'OVPN_TA=""';
+  }
+  fwrite($fp, "### TLS-Auth File\n".$value."\n");
 }
-  
+
   fwrite($fp, "### gui.openvpn.conf - end ###\n");
   fclose($fp);
   
@@ -285,7 +298,7 @@ function isClientDisabled($vars, $client) {
 
 // Function: ovpnProfile
 //
-function ovpnProfile($db, $ca_file) {
+function ovpnProfile($db, $ssl, &$ta_file) {
 
   $default = array (
     'client',
@@ -296,6 +309,13 @@ function ovpnProfile($db, $ca_file) {
     'dev tun',
     'verb 3'
   );
+
+  $ca_file = $ssl['key_dir'].'/ca.crt';
+  if (($ta_file = getVARdef($db, 'OVPN_TA')) !== '') {
+    if (! is_file($ta_file)) {
+      $ta_file = '';
+    }
+  }
 
   if (($server_hostname = getVARdef($db, 'OVPN_HOSTNAME')) === '') {
     $server_hostname = get_HOSTNAME_DOMAIN();
@@ -319,6 +339,9 @@ function ovpnProfile($db, $ca_file) {
   if (($cipher = getVARdef($db, 'OVPN_CIPHER')) !== '') {
     $str .= "cipher $cipher\n";
   }
+  if ($ta_file !== '') {
+    $str .= "key-direction 1\n";
+  }
   foreach ($default as $value) {
     $str .= "$value\n";
   }
@@ -326,6 +349,13 @@ function ovpnProfile($db, $ca_file) {
     $str .= "<ca>\n";
     $str .= $caStr;
     $str .= "</ca>\n";
+  }
+  if ($ta_file !== '') {
+    if (($taStr = @file_get_contents($ta_file)) !== FALSE) {
+      $str .= "<tls-auth>\n";
+      $str .= $taStr;
+      $str .= "</tls-auth>\n";
+    }
   }
   return($str);
 }
@@ -382,7 +412,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } elseif (isset($_POST['submit_new_client'])) {
     if (($value = trim($_POST['new_client'])) !== '') {
       if (preg_match('/^[a-zA-Z0-9][a-zA-Z0-9._-]*$/', $value)) {
-        if (! is_file($openssl['key_dir'].'/'.$value.'.crt') &&
+        if ($value !== 'ta' &&
+            ! is_file($openssl['key_dir'].'/'.$value.'.crt') &&
             ! is_file($openssl['key_dir'].'/'.$value.'.key')) {
           if (opensslCREATEclientCert($value, $openssl)) {
             $disabled = isset($_POST['disabled']) ? $_POST['disabled'] : NULL;
@@ -425,9 +456,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $p12pass = opensslRANDOMpass(12);
       if (($p12 = opensslPKCS12str($openssl, $value, $p12pass)) !== '') {
         $zip->addFromString($value.'/'.$value.'.p12', $p12);
-        if (($ovpn = ovpnProfile($db, $openssl['key_dir'].'/ca.crt')) !== FALSE) {
+        if (($ovpn = ovpnProfile($db, $openssl, $tls_auth_file)) !== FALSE) {
           $zip->addFromString($value.'/'.$value.'.ovpn', $ovpn);
-          $zip->addFromString($value.'/README.txt', opensslREADMEstr('ovpn', $value, $p12pass));
+          if ($tls_auth_file !== '') {
+            $zip->addFile($tls_auth_file, $value.'/'.$value.'-ta.key');
+            $zip->addFromString($value.'/README.txt', opensslREADMEstr('ovpn-ta', $value, $p12pass));
+          } else {
+            $zip->addFromString($value.'/README.txt', opensslREADMEstr('ovpn', $value, $p12pass));
+          }
         } else {
           $zip->addFromString($value.'/README.txt', opensslREADMEstr('p12', $value, $p12pass));
         }
@@ -524,22 +560,6 @@ require_once '../common/header.php';
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
-  putHtml('Auth Method:');
-  putHtml('</td><td style="text-align: left;" colspan="2">');
-  if (($auth_method = getVARdef($db, 'OVPN_USER_PASS_VERIFY')) === '') {
-    $auth_method = 'no';
-  }
-  putHtml('<select name="auth_method" onchange="auth_method_change()">');
-  foreach ($auth_method_menu as $key => $value) {
-    $sel = ($auth_method === $key) ? ' selected="selected"' : '';
-    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
-  }
-  putHtml('</select>');
-  putHtml('</td><td style="text-align: left;" colspan="2">');
-  putHtml('<input type="submit" value="User/Pass" name="submit_user_pass" class="button" />');
-  putHtml('</td></tr>');
-
-  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Protocol:');
   putHtml('</td><td style="text-align: left;" colspan="1">');
   $protocol = getVARdef($db, 'OVPN_PROTOCOL');
@@ -625,6 +645,38 @@ require_once '../common/header.php';
     }
   }
   putHtml('</textarea>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>Authentication:</strong>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Auth Method:');
+  putHtml('</td><td style="text-align: left;" colspan="2">');
+  if (($auth_method = getVARdef($db, 'OVPN_USER_PASS_VERIFY')) === '') {
+    $auth_method = 'no';
+  }
+  putHtml('<select name="auth_method" onchange="auth_method_change()">');
+  foreach ($auth_method_menu as $key => $value) {
+    $sel = ($auth_method === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td><td style="text-align: left;" colspan="2">');
+  putHtml('<input type="submit" value="User/Pass" name="submit_user_pass" class="button" />');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Extra TLS-Auth:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  $tls_auth = getVARdef($db, 'OVPN_TA');
+  putHtml('<select name="tls_auth">');
+  $sel = ($tls_auth === '') ? ' selected="selected"' : '';
+  putHtml('<option value=""'.$sel.'>No</option>');
+  $sel = ($tls_auth !== '') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>Yes</option>');
+  putHtml('</select>');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
@@ -811,6 +863,12 @@ if (! opensslOPENVPNis_valid($openssl)) {
     $value = '/mnt/kd/openvpn/easy-rsa/keys/dh1024.pem';
   }
   putHtml('<input type="text" size="64" maxlength="128" value="'.$value.'" name="dh" />');
+  putHtml('</td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  putHtml('TLS-Auth File:');
+  putHtml('</td><td style="text-align: left;" colspan="5">');
+  $value = getVARdef($db, 'OVPN_TA');
+  putHtml('<input type="text" size="64" maxlength="128" value="'.$value.'" name="ta" />');
   putHtml('</td></tr>');
 }
 

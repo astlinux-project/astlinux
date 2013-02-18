@@ -23,6 +23,7 @@ function openvpnclientSETUP() {
   $ssl['ca_crt'] = $ssl['key_dir'].'/ca.crt';
   $ssl['client_crt'] = $ssl['key_dir'].'/client.crt';
   $ssl['client_key'] = $ssl['key_dir'].'/client.key';
+  $ssl['tls_auth_key'] = $ssl['key_dir'].'/ta.key';
   
   if (! is_dir($ssl['base_dir'])) {
     if (! @mkdir($ssl['base_dir'], 0755)) {
@@ -70,7 +71,7 @@ function getCREDinfo($ssl, $type, &$CommonName) {
 function opensslDELETEclientkeys($ssl) {
 
   if ($ssl !== FALSE) {
-    $types = array ('ca_crt', 'client_crt', 'client_key');
+    $types = array ('ca_crt', 'client_crt', 'client_key', 'tls_auth_key');
     foreach ($types as $type) {
       if (is_file($ssl[$type])) {
         @unlink($ssl[$type]);

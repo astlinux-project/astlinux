@@ -40,7 +40,7 @@ $cipher_menu = array (
 );
 
 $nscerttype_menu = array (
-  '' => 'None',
+  '' => 'No',
   'server' => 'Server'
 );
 
@@ -112,6 +112,12 @@ function saveOVPNCsettings($conf_dir, $conf_file) {
     fwrite($fp, "### CERT File\n".$value."\n");
     $value = 'OVPNC_KEY="'.$openssl['client_key'].'"';
     fwrite($fp, "### Key File\n".$value."\n");
+    if ($_POST['tls_auth'] === 'yes' && is_file($openssl['tls_auth_key'])) {
+      $value = 'OVPNC_TA="'.$openssl['tls_auth_key'].'"';
+    } else {
+      $value = 'OVPNC_TA=""';
+    }
+    fwrite($fp, "### TLS-Auth File\n".$value."\n");
   }
   
   fwrite($fp, "### gui.openvpnclient.conf - end ###\n");
@@ -141,6 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $result = 2;
     }
   } elseif (isset($_FILES['creds'])) {
+    $tls_auth_key = TRUE;
     $result = 1;
     foreach ($_FILES['creds']['error'] as $key => $error) {
       if ($error == 0) {
@@ -159,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             break;
           }
         } elseif (stripos($name, '.key', $len) !== FALSE) {
-          if ($key !== 'client_key') {
+          if ($key !== 'client_key' && $key !== 'tls_auth_key') {
             $result = 23;
             break;
           }
@@ -170,6 +177,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       } elseif ($error == 1 || $error == 2) {
         $result = 20;
         break;
+      } elseif ($key === 'tls_auth_key') {  // TLS-Auth is optional
+        $tls_auth_key = FALSE;
       } else {
         $result = 21;
         break;
@@ -180,12 +189,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($openssl !== FALSE) {
         $result = 30;
         foreach ($_FILES['creds']['tmp_name'] as $key => $tmp_name) {
-          if (! move_uploaded_file($tmp_name, $openssl[$key])) {
-            $result = 3;
-            break;
-          }
-          if ($key === 'client_key') {
-            chmod($openssl[$key], 0600);
+          if ($key !== 'tls_auth_key' || $tls_auth_key) {
+            if (! move_uploaded_file($tmp_name, $openssl[$key])) {
+              $result = 3;
+              break;
+            }
+            if ($key === 'client_key' || $key === 'tls_auth_key') {
+              chmod($openssl[$key], 0600);
+            }
           }
         }
       }
@@ -219,7 +230,7 @@ require_once '../common/header.php';
     } elseif ($result == 20) {
       putHtml('<p style="color: red;">File size is not reasonable for a cert or key.</p>');
     } elseif ($result == 21) {
-      putHtml('<p style="color: red;">All three files, CA, Cert and Key must be defined.</p>');
+      putHtml('<p style="color: red;">The three files, CA, Cert and Key must be defined. The TLS-Auth Key is optional.</p>');
     } elseif ($result == 22) {
       putHtml('<p style="color: red;">Invalid suffix, only files ending with .crt and .key are allowed.</p>');
     } elseif ($result == 23) {
@@ -322,22 +333,12 @@ require_once '../common/header.php';
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Device:');
-  putHtml('</td><td style="text-align: left;" colspan="1">');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
   putHtml('<select name="device">');
   $sel = (getVARdef($db, 'OVPNC_DEV') === 'tun2') ? ' selected="selected"' : '';
   putHtml('<option value="tun2"'.$sel.'>tun2</option>');
   $sel = (getVARdef($db, 'OVPNC_DEV') === 'tun3') ? ' selected="selected"' : '';
   putHtml('<option value="tun3"'.$sel.'>tun3</option>');
-  putHtml('</select>');
-  putHtml('</td><td style="text-align: right;" colspan="1">');
-  putHtml('nsCertType:');
-  putHtml('</td><td style="text-align: left;" colspan="2">');
-  $nscerttype = getVARdef($db, 'OVPNC_NSCERTTYPE');
-  putHtml('<select name="nscerttype">');
-  foreach ($nscerttype_menu as $key => $value) {
-    $sel = ($nscerttype === $key) ? ' selected="selected"' : '';
-    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
-  }
   putHtml('</select>');
   putHtml('</td></tr>');
   
@@ -352,6 +353,34 @@ require_once '../common/header.php';
     }
   }
   putHtml('</textarea>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>Authentication:</strong>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Require nsCertType:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  $nscerttype = getVARdef($db, 'OVPNC_NSCERTTYPE');
+  putHtml('<select name="nscerttype">');
+  foreach ($nscerttype_menu as $key => $value) {
+    $sel = ($nscerttype === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Extra TLS-Auth:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  $tls_auth = getVARdef($db, 'OVPNC_TA');
+  putHtml('<select name="tls_auth">');
+  $sel = ($tls_auth === '') ? ' selected="selected"' : '';
+  putHtml('<option value=""'.$sel.'>No</option>');
+  $sel = ($tls_auth !== '') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>Yes</option>');
+  putHtml('</select>');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
@@ -379,9 +408,9 @@ require_once '../common/header.php';
   putHtml('</form>');
   
   if (opensslOPENVPNCis_valid($openssl)) {
-    putHtml('<p style="color: green;">Client Credentials are defined.</p>');
+    putHtml('<p style="color: green;">Required Client Credentials are defined.</p>');
   } else {
-    putHtml('<p style="color: red;">Not all Client Credential files are defined.</p>');
+    putHtml('<p style="color: red;">Not all required Client Credential files are defined.</p>');
   }
   
   putHtml('<form method="post" action="'.$myself.'" enctype="multipart/form-data">');
@@ -399,6 +428,10 @@ require_once '../common/header.php';
   putHtml('Key:');
   putHtml('</td><td style="text-align: left;">');
   putHtml(getCREDinfo($openssl, 'client_key', $str).'<input type="file" name="creds[client_key]" />');
+  putHtml('</td></tr><tr class="dtrow1"><td style="text-align: right;">');
+  putHtml('TLS-Auth Key:');
+  putHtml('</td><td style="text-align: left;">');
+  putHtml(getCREDinfo($openssl, 'tls_auth_key', $str).'<input type="file" name="creds[tls_auth_key]" />');
   putHtml('</td></tr><tr class="dtrow1"><td style="text-align: right;">');
   if ($CName !== '') {
     putHtml('CN:');

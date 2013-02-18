@@ -251,12 +251,16 @@ function opensslREADMEstr($type, $commonName, $pass) {
   $readme .= "$commonName.crt - This client's public key certificate, signed by ca.crt.\n\n";
   $readme .= "$commonName.key - This client's private key.\n";
   $readme .= "Note: File '$commonName.key' is not encrypted and must be kept secure.\n\n";
-  if ($type === 'p12' || $type === 'ovpn') {
+  if ($type === 'p12' || $type === 'ovpn' || $type === 'ovpn-ta') {
     $readme .= "$commonName.p12 - A password protected PKCS#12 container combining the credentials from the above three files.\n\n";
     $readme .= "PKCS#12 Container Password: $pass\n";
     $readme .= "Keep it secure.\n\n";
-    if ($type === 'ovpn') {
+    if ($type === 'ovpn' || $type === 'ovpn-ta') {
       $readme .= "$commonName.ovpn - OpenVPN certificate profile, use with file '$commonName.p12' for client devices.\n\n";
+      if ($type === 'ovpn-ta') {
+        $readme .= "$commonName-ta.key - TLS-Auth key which adds an additional HMAC signature to all SSL/TLS handshake packets.\n";
+        $readme .= "Note: File '$commonName-ta.key' is not encrypted and must be kept secure.\n\n";
+      }
     }
   }
 
