@@ -307,7 +307,7 @@ function isClientDisabled($vars, $client) {
 
 // Function: ovpnProfile
 //
-function ovpnProfile($db, $ssl, &$ta_file) {
+function ovpnProfile($db, $ssl, $client, &$ta_file) {
 
   $default = array (
     'client',
@@ -361,6 +361,18 @@ function ovpnProfile($db, $ssl, &$ta_file) {
     $str .= "<ca>\n";
     $str .= $caStr;
     $str .= "</ca>\n";
+  }
+  if ($client !== '') {
+    if (($certStr = @file_get_contents($ssl['key_dir'].'/'.$client.'.crt')) !== FALSE) {
+      $str .= "<cert>\n";
+      $str .= $certStr;
+      $str .= "</cert>\n";
+    }
+    if (($keyStr = @file_get_contents($ssl['key_dir'].'/'.$client.'.key')) !== FALSE) {
+      $str .= "<key>\n";
+      $str .= $keyStr;
+      $str .= "</key>\n";
+    }
   }
   if ($ta_file !== '') {
     if (($taStr = @file_get_contents($ta_file)) !== FALSE) {
@@ -468,8 +480,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $p12pass = opensslRANDOMpass(12);
       if (($p12 = opensslPKCS12str($openssl, $value, $p12pass)) !== '') {
         $zip->addFromString($value.'/'.$value.'.p12', $p12);
-        if (($ovpn = ovpnProfile($db, $openssl, $tls_auth_file)) !== FALSE) {
-          $zip->addFromString($value.'/'.$value.'.ovpn', $ovpn);
+        if (($ovpn = ovpnProfile($db, $openssl, $value, $tls_auth_file)) !== FALSE) {
+          $zip->addFromString($value.'/openvpn-cert-key/'.$value.'.ovpn', $ovpn);
+          if (($ovpn = preg_filter('/<cert>.*<\/cert>/s', '', $ovpn)) !== NULL) {
+            if (($ovpn = preg_filter('/<key>.*<\/key>/s', '', $ovpn)) !== NULL) {
+              $zip->addFromString($value.'/openvpn-nocert-nokey/'.$value.'.ovpn', $ovpn);
+            }
+          }
           if ($tls_auth_file !== '') {
             $zip->addFile($tls_auth_file, $value.'/'.$value.'-ta.key');
             $zip->addFromString($value.'/README.txt', opensslREADMEstr('ovpn-ta', $value, $p12pass));
