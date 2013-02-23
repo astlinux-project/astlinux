@@ -343,7 +343,6 @@ function ovpnProfile($db, $ssl, $client, &$ta_file) {
   if (getVARdef($db, 'OVPN_USER_PASS_VERIFY') === 'yes') {
     $str .= "auth-user-pass\n";
     $str .= "auth-retry interact\n";
-    $str .= "auth-nocache\n";
   }
   if (($cipher = getVARdef($db, 'OVPN_CIPHER')) !== '') {
     $str .= "cipher $cipher\n";
