@@ -8,6 +8,8 @@
 lock="/var/lock/openvpnclient.lock"
 # PID
 pid="/var/run/openvpnclient.pid"
+# PSK file for optional OVPNC_USER_PASS
+psk="/tmp/etc/openvpnclient-psk.txt"
 
 init () {
   local IFS
@@ -73,6 +75,12 @@ verb $OVPNC_VERBOSITY" > /tmp/etc/openvpnclient.conf
     if [ -n "$OVPNC_AUTH" ]; then
       echo "auth $OVPNC_AUTH" >> /tmp/etc/openvpnclient.conf
     fi
+    if [ -n "$OVPNC_USER_PASS" ]; then
+      echo "$OVPNC_USER_PASS" | awk -F' ' '{ print $1; }' > $psk
+      echo "$OVPNC_USER_PASS" | awk -F' ' '{ print $2; }' >> $psk
+      chmod 600 $psk
+      echo "auth-user-pass $psk" >> /tmp/etc/openvpnclient.conf
+    fi
     if [ -n "$OVPNC_NSCERTTYPE" ]; then
       echo "ns-cert-type $OVPNC_NSCERTTYPE" >> /tmp/etc/openvpnclient.conf
     fi
@@ -97,7 +105,7 @@ start () {
   if [ -f $lock ]; then
     # we were not shut down correctly
     kill $(cat $pid) >/dev/null 2>&1
-    rm -f $pid $lock
+    rm -f $pid $lock $psk
     sleep 2
   fi
 
@@ -117,7 +125,7 @@ stop () {
   if [ -f $pid ]; then
     echo "Stopping OpenVPN Client..."
     kill $(cat $pid) >/dev/null 2>&1
-    rm -f $pid $lock
+    rm -f $pid $lock $psk
   fi
 }
 
