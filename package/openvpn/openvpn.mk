@@ -7,7 +7,7 @@
 OPENVPN_VERSION = 2.3.0
 OPENVPN_SITE = http://swupdate.openvpn.net/community/releases
 OPENVPN_DEPENDENCIES = host-pkg-config
-OPENVPN_CONF_OPT = --disable-plugins --enable-iproute2
+OPENVPN_CONF_OPT = --disable-plugins --enable-iproute2 --enable-password-save
 OPENVPN_CONF_ENV = IFCONFIG=/sbin/ifconfig \
 	NETSTAT=/bin/netstat \
 	ROUTE=/sbin/route
