@@ -12,7 +12,7 @@ Released **TBD**
 
 ** System
 
--- No Change
+-- php, version bump to 5.3.22
 
 ** Networking
 
@@ -21,6 +21,12 @@ Released **TBD**
 -- libcurl (curl) version bump to 7.29.0, (security fix: CVE-2013-0249) and bug fixes. Additionally enable IPv6.
 
 -- OpenVPN, version bump to 2.3.0.  Remove easy-rsa scripts.
+   == New Server rc.conf variables: OVPN_AUTH, OVPN_TA, OVPN_SERVERV6 and OVPN_TOPOLOGY
+   == New Client rc.conf variables: OVPNC_AUTH, OVPNC_TA and OVPNC_USER_PASS
+
+-- dnsmasq, for very special situations such as in a VM, added an rc.conf variable EXTDHCP="yes" to allow a single,
+   static, non-PPPoE external interface to act as a DHCP server.  Obviously EXTDHCP="no" by default.
+   More Info: http://doc.astlinux.org/userdoc:tt-ext-dhcp-server
 
 -- reload-spamhaus-drop (optional CRON script), add support for the new 'edrop' list, used along with AIF
    More Info: http://www.spamhaus.org/drop/
@@ -31,7 +37,24 @@ Released **TBD**
 
 -- DAHDI, dahdi-linux 2.6.1 (no change) and dahdi-tools 2.6.1 (no change)
 
+-- rhino, version bump to 0.99.6b3
+
 ** Web Interface
+
+-- OpenVPN Server sub-tab
+   ==  Either IPv4 or IPv6 may be used for transport, and dual IPv4/IPv6 tunnels
+   ==  Added TLS-Auth support
+   ==  Added Auth HMAC selections of SHA1 and SHA256
+   ==  Added Topology selections
+   ==  Downloaded credentials now contain client.ovpn configurations for the OpenVPN Client App
+   More info: http://doc.astlinux.org/userdoc:tt_openvpn_server
+
+-- OpenVPN Client sub-tab
+   ==  Added User/Pass authentication support
+   ==  Added TLS-Auth support
+   ==  Added Auth HMAC selections of SHA1 and SHA256
+
+-- Edit tab support for editing existing OpenVPN files in "/mnt/kd/openvpn/ccd/"
 
 -- Prefs and System tabs, add the Asterisk 11 Repository URL to the list of defaults.
 
