@@ -4,11 +4,9 @@
 #
 #############################################################
 
-RHINO_VERSION := 0.99.6b2
+RHINO_VERSION := 0.99.6b3
 RHINO_SOURCE := rhino-linux-$(RHINO_VERSION).tbz2
-#RHINO_SOURCE := rhino-linux-current.tbz2
-RHINO_SITE := http://files.astlinux.org
-#RHINO_SITE := http://downloads.rhinoequipment.com/Rhino%20Downloads/Drivers/DAHDI
+RHINO_SITE := http://downloads.rhinoequipment.com/Rhino%20Downloads/Drivers/Beta
 RHINO_DIR := $(BUILD_DIR)/rhino-linux-$(RHINO_VERSION)
 RHINO_CAT := bzcat
 RHINO_TARGET_BINARY := usr/sbin/rhino_ver
