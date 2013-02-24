@@ -774,6 +774,7 @@ if (is_file('/usr/sbin/upgrade-RUNNIX-image')) {
           $var === 'STATICHOSTS' ||
           $var === 'PPTP_USER_PASS' ||
           $var === 'OVPN_USER_PASS' ||
+          $var === 'OVPNC_USER_PASS' ||
           $var === 'IPSECM_XAUTH_USER_PASS' ||
           $var === 'IPSEC_PSK_ASSOCIATIONS') {
         $value = '********';

@@ -10,6 +10,7 @@
 // 04-15-2009
 // 08-13-2010, Added QoS Passthrough, setting passtos
 // 02-13-2013, Added OpenVPN 2.3 IPv6 support
+// 02-23-2013, Added User/Pass support
 //
 // System location of /mnt/kd/rc.conf.d directory
 $OVPNCONFDIR = '/mnt/kd/rc.conf.d';
@@ -23,6 +24,11 @@ require_once '../common/functions.php';
 require_once '../common/openssl-openvpnclient.php';
 
 $openssl = openvpnclientSETUP();
+
+$auth_method_menu = array (
+  '' => 'Certificate',
+  'yes' => 'Cert. + User/Pass'
+);
 
 $protocol_menu = array (
   'udp' => 'UDP v4',
@@ -56,6 +62,26 @@ $verbosity_menu = array (
   '4' => 'High',
   '0' => 'None'
 );
+
+// Function: parseUserPass
+//
+function parseUserPass($user_pass, $type) {
+  $str = '';
+  if ($user_pass !== '') {
+    $index = 0;
+    $match = ($type === 'user') ? 1 : 2;
+    $strtokens = explode(' ', $user_pass);
+    foreach ($strtokens as $value) {
+      if ($value !== '') {
+        if (++$index == $match) {
+          $str = $value;
+          break;
+        }
+      }
+    }
+  }
+  return($str);
+}
 
 // Function: saveOVPNCsettings
 //
@@ -95,6 +121,13 @@ function saveOVPNCsettings($conf_dir, $conf_file) {
 
   $value = 'OVPNC_AUTH="'.$_POST['auth_hmac'].'"';
   fwrite($fp, "### Auth HMAC\n".$value."\n");
+
+  if ($_POST['auth_method'] === 'yes' && trim($_POST['auth_user']) !== '' && trim($_POST['auth_pass']) !== '') {
+    $value = 'OVPNC_USER_PASS="'.trim($_POST['auth_user']).' '.string2RCconfig(trim($_POST['auth_pass'])).'"';
+  } else {
+    $value = 'OVPNC_USER_PASS=""';
+  }
+  fwrite($fp, "### Auth User/Pass\n".$value."\n");
   
   $value = 'OVPNC_NSCERTTYPE="'.$_POST['nscerttype'].'"';
   fwrite($fp, "### nsCertType\n".$value."\n");
@@ -260,9 +293,25 @@ require_once '../common/header.php';
   }
   putHtml("</center>");
 ?>
+  <script language="JavaScript" type="text/javascript">
+  //<![CDATA[
+  function auth_method_change() {
+    var form = document.getElementById("iform");
+    var user_pass = document.getElementById("user_pass");
+    switch (form.auth_method.selectedIndex) {
+      case 0: // Certificate
+        user_pass.style.visibility = "hidden";
+        break;
+      case 1: // Cert. + User/Pass
+        user_pass.style.visibility = "visible";
+        break;
+    }
+  }
+  //]]>
+  </script>
   <center>
   <table class="layout"><tr><td><center>
-  <form method="post" action="<?php echo $myself;?>">
+  <form id="iform" method="post" action="<?php echo $myself;?>">
   <table width="100%" class="stdtable">
   <tr><td style="text-align: center;" colspan="2">
   <h2>OpenVPN Client Configuration:</h2>
@@ -379,6 +428,33 @@ require_once '../common/header.php';
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Auth Method:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  if (($auth_method = getVARdef($db, 'OVPNC_USER_PASS')) !== '') {
+    $auth_method = 'yes';
+  }
+  putHtml('<select name="auth_method" onchange="auth_method_change()">');
+  foreach ($auth_method_menu as $key => $value) {
+    $sel = ($auth_method === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('&nbsp;');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  putHtml('<div id="user_pass" style="visibility: hidden;">');
+  $user_pass = getVARdef($db, 'OVPNC_USER_PASS');
+  $value = parseUserPass($user_pass, 'user');
+  putHtml('User:&nbsp;<input type="text" size="16" maxlength="128" value="'.$value.'" name="auth_user" />');
+  $value = parseUserPass($user_pass, 'pass');
+  $value = htmlspecialchars(RCconfig2string($value));
+  putHtml('Pass:&nbsp;<input type="password" size="16" maxlength="128" value="'.$value.'" name="auth_pass" />');
+  putHtml('</div>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Require nsCertType:');
   putHtml('</td><td style="text-align: left;" colspan="4">');
   $nscerttype = getVARdef($db, 'OVPNC_NSCERTTYPE');
@@ -479,6 +555,11 @@ require_once '../common/header.php';
   
   putHtml('</center></td></tr></table>');
   putHtml('</center>');
+  putHtml('<script language="JavaScript" type="text/javascript">');
+  putHtml('//<![CDATA[');
+  putHtml('auth_method_change();');
+  putHtml('//]]>');
+  putHtml('</script>');
 } // End of HTTP GET
 require_once '../common/footer.php';
 
