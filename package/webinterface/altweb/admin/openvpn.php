@@ -484,6 +484,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           if (($ovpn = preg_filter('/<cert>.*<\/cert>/s', '', $ovpn)) !== NULL) {
             if (($ovpn = preg_filter('/<key>.*<\/key>/s', '', $ovpn)) !== NULL) {
               $zip->addFromString($value.'/openvpn-nocert-nokey/'.$value.'.ovpn', $ovpn);
+              if (($ovpn = preg_filter('/<ca>.*<\/ca>/s', '', $ovpn)) !== NULL) {
+                $ovpn .= "pkcs12 $value.p12\n";
+                $zip->addFromString($value.'/openvpn-pkcs12/'.$value.'.ovpn', $ovpn);
+                $zip->addFromString($value.'/openvpn-pkcs12/'.$value.'.p12', $p12);
+              }
             }
           }
           if ($tls_auth_file !== '') {

@@ -260,12 +260,16 @@ function opensslREADMEstr($type, $commonName, $pass) {
         $readme .= "$commonName-ta.key - TLS-Auth key which adds an additional HMAC signature to all SSL/TLS handshake packets.\n";
         $readme .= "Note: File '$commonName-ta.key' is not encrypted and must be kept secure.\n\n";
       }
-      $readme .= "Directory 'openvpn-cert-key':\n";
-      $readme .= "$commonName.ovpn - OpenVPN certificate profile, contains client certificate and private key.\n";
+      $readme .= "Folder: 'openvpn-cert-key'\n";
+      $readme .= "$commonName.ovpn - OpenVPN CA-CERT-KEY profile, contains client certificate and private key.\n";
       $readme .= "Note: File 'openvpn-cert-key/$commonName.ovpn' is not encrypted and must be kept secure.\n\n";
 
-      $readme .= "Directory 'openvpn-nocert-nokey':\n";
-      $readme .= "$commonName.ovpn - OpenVPN certificate profile, use with file '$commonName.p12' for client devices.\n\n";
+      $readme .= "Folder: 'openvpn-nocert-nokey'\n";
+      $readme .= "$commonName.ovpn - OpenVPN CA profile, use separately with the above '$commonName.p12' file for client devices.\n\n";
+
+      $readme .= "Folder: 'openvpn-pkcs12'\n";
+      $readme .= "$commonName.ovpn - OpenVPN profile, use paired with the file '$commonName.p12'.\n";
+      $readme .= "$commonName.p12 - A password protected PKCS#12 container, use paired with the file '$commonName.ovpn'.\n\n";
     }
   }
 
