@@ -322,12 +322,14 @@ $fstab_var
   fi
 
   # glibc/zoneinfo style TZ support
-  if [ -n "$TIMEZONE" -a -f "/usr/share/zoneinfo/$TIMEZONE" ]; then
+  if [ -z "$TIMEZONE" ]; then
+    TIMEZONE="UTC"
+  fi
+  if [ -f "/usr/share/zoneinfo/$TIMEZONE" ]; then
     ln -sf "/usr/share/zoneinfo/$TIMEZONE" /tmp/etc/localtime
-  elif [ -f /mnt/kd/localtime ]; then
-    ln -sf /mnt/kd/localtime /tmp/etc/localtime
-  elif [ -f /stat/etc/localtime ]; then
-    ln -sf /stat/etc/localtime /tmp/etc/localtime
+    echo "$TIMEZONE" > /tmp/etc/timezone
+  else
+    echo "Invalid Timezone: $TIMEZONE" >&2
   fi
 
   # /etc/TZ Timezone support
@@ -336,10 +338,6 @@ $fstab_var
   fi
   if [ -n "$TZ_TIMEZONE" ]; then
     echo "$TZ_TIMEZONE" > /tmp/etc/TZ
-  elif [ -f /mnt/kd/TZ ]; then
-    cp /mnt/kd/TZ /tmp/etc/TZ
-  elif [ -f /stat/etc/TZ ]; then
-    cp /stat/etc/TZ /tmp/etc/TZ
   fi
 
   if [ "$PERSISTLOG" = "yes" ]; then
