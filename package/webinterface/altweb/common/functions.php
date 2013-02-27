@@ -802,10 +802,20 @@ function parsePrefs($pfile)
   }
   return($db);
 }
-// Set default timezone
-if (function_exists('date_default_timezone_set')) {
-  date_default_timezone_set(@date_default_timezone_get());
+
+// Function: system_timezone
+//
+function system_timezone() {
+
+  if (($tz = trim(@file_get_contents('/etc/timezone'))) === '') {
+    $tz = @date_default_timezone_get();
+  }
+  return ($tz);
 }
+
+// Set system timezone
+date_default_timezone_set(system_timezone());
+
 // Set globals
 $global_prefs = parsePrefs(getPREFSlocation());
 $global_user = getPHPusername();
