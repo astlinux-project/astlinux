@@ -138,7 +138,14 @@ function checkNETWORKsettings() {
       return(102);
     }
   }
-  
+
+  $tz = ($_POST['timezone'] !== '') ? $_POST['timezone'] : trim($_POST['other_timezone']);
+  if ($tz !== '') {
+    if (! is_file("/usr/share/zoneinfo/$tz")) {
+      return(103);
+    }
+  }
+
   return(11);
 }
 
@@ -973,6 +980,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: red;">Error in Network Configuration, DMZ requires a LAN to also be defined.</p>');
     } elseif ($result == 102) {
       putHtml('<p style="color: red;">Warning! Firewall is enabled, but not configured, click "Firewall Configuration" and save.</p>');
+    } elseif ($result == 103) {
+      putHtml('<p style="color: red;">Error in Network Configuration, Invalid Timezone setting.</p>');
     } elseif ($result == 999) {
       putHtml('<p style="color: red;">Permission denied for user "'.$global_user.'".</p>');
     } else {
