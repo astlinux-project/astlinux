@@ -118,7 +118,7 @@ endif
 ifeq ($(strip $(BR2_PACKAGE_UNIXODBC)),y)
 ASTERISK_EXTRAS+=unixodbc
 ASTERISK_CONFIGURE_ARGS+= \
-			--with-odbc="$(STAGING_DIR)/usr"
+			--with-unixodbc="$(STAGING_DIR)/usr"
 endif
 
 ifeq ($(strip $(BR2_PACKAGE_ALSA_LIB)),y)
