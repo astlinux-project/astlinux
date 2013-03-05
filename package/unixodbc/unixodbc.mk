@@ -11,6 +11,7 @@ UNIXODBC_DEPENDENCIES = libtool
 UNIXODBC_INSTALL_STAGING = YES
 
 UNIXODBC_CONF_OPT = \
+	--disable-static \
 	--disable-gui \
 	--with-pic \
 	--enable-drivers
