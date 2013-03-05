@@ -1,0 +1,10 @@
+config BR2_PACKAGE_UNIXODBC
+	bool "unixodbc"
+	default n
+	select BR2_PACKAGE_LIBTOOL
+	help
+
+	  Connect to ODBC resources from Linux systems
+
+	  http://www.unixodbc.org
+

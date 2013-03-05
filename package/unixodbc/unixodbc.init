@@ -1,0 +1,70 @@
+#!/bin/sh
+
+# No variables required
+#. /etc/rc.conf
+
+init () {
+
+  # Automatically create "/mnt/kd/odbc" directory if it doesn't exist
+  if [ ! -d /mnt/kd/odbc ]; then
+    mkdir /mnt/kd/odbc 2>/dev/null     # will fail on virgin RO filesystem, ignore stderr
+  fi
+
+  if [ -d /mnt/kd/odbc ]; then
+    ln -sf /mnt/kd/odbc/odbc.ini /tmp/etc/odbc.ini
+    ln -sf /mnt/kd/odbc/odbcinst.ini /tmp/etc/odbcinst.ini
+  fi
+  if [ ! -d /tmp/etc/ODBCDataSources ]; then
+    mkdir /tmp/etc/ODBCDataSources
+  fi
+
+  if [ ! -f /etc/odbc.ini ]; then
+    touch /etc/odbc.ini
+  fi
+  if [ ! -f /etc/odbcinst.ini ]; then
+    touch /etc/odbcinst.ini
+  fi
+
+  if [ ! -f /root/.odbc.ini ]; then
+    ln -sf /etc/odbc.ini /root/.odbc.ini
+  fi
+  if [ ! -f /root/.odbcinst.ini ]; then
+    ln -sf /etc/odbcinst.ini /root/.odbcinst.ini
+  fi
+}
+
+start () {
+  :
+}
+
+stop () {
+  :
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+
