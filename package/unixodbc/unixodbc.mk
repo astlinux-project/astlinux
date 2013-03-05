@@ -14,11 +14,10 @@ UNIXODBC_CONF_OPT = \
 	--disable-static \
 	--disable-gui \
 	--with-pic \
-	--enable-drivers
+	--disable-drivers
 
 define UNIXODBC_INSTALL_TARGET_CMDS
-        cp -a $(STAGING_DIR)/usr/lib/libodbc[.ci]*so* $(TARGET_DIR)/usr/lib/
-        cp -a $(STAGING_DIR)/usr/lib/libnn.*so* $(TARGET_DIR)/usr/lib/
+        cp -a $(STAGING_DIR)/usr/lib/libodbc*so* $(TARGET_DIR)/usr/lib/
 	$(INSTALL) -m 0755 -D package/unixodbc/unixodbc.init $(TARGET_DIR)/etc/init.d/unixodbc
 	$(INSTALL) -m 0755 -D $(STAGING_DIR)/usr/bin/isql $(TARGET_DIR)/usr/bin/isql
 	$(INSTALL) -m 0755 -D $(STAGING_DIR)/usr/bin/odbcinst $(TARGET_DIR)/usr/bin/odbcinst
@@ -29,8 +28,7 @@ define UNIXODBC_INSTALL_TARGET_CMDS
 endef
 
 define UNIXODBC_UNINSTALL_TARGET_CMDS
-        rm -f $(TARGET_DIR)/usr/lib/libodbc[.ci]*so*
-        rm -f $(TARGET_DIR)/usr/lib/libnn.*so*
+        rm -f $(TARGET_DIR)/usr/lib/libodbc*so*
         rm -f $(TARGET_DIR)/etc/init.d/unixodbc
         rm -f $(TARGET_DIR)/usr/bin/isql
         rm -f $(TARGET_DIR)/usr/bin/odbcinst
