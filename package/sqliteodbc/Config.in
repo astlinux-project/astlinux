@@ -1,0 +1,11 @@
+config BR2_PACKAGE_SQLITEODBC
+	bool "sqliteodbc"
+	default n
+	depends on BR2_PACKAGE_SQLITE
+	select BR2_PACKAGE_UNIXODBC
+	help
+
+	  SQLite library wrapped into an ODBC driver.
+
+	  http://www.ch-werner.de/sqliteodbc/
+
