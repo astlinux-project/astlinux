@@ -3,37 +3,68 @@
 # No variables required
 #. /etc/rc.conf
 
+install_odbc_driver()
+{
+  local name="$1" data="$2"
+
+  if ! odbcinst -q -d -n "$name" >/dev/null 2>&1; then
+    echo "[${name}]${data}" | odbcinst -i -d -r >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      echo "unixodbc: Driver '$name' installed."
+    else
+      echo "unixodbc: Driver '$name' install failed."
+    fi
+  fi
+}
+
+install_odbc_dsn()
+{
+  local name="$1" data="$2"
+
+  if ! odbcinst -q -s -l -n "$name" >/dev/null 2>&1; then
+    echo "[${name}]${data}" | odbcinst -i -s -l -r >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      echo "unixodbc: DSN '$name' installed."
+    else
+      echo "unixodbc: DSN '$name' install failed."
+    fi
+  fi
+}
+
+remove_odbc_driver()
+{
+  local name="$1"
+
+  if odbcinst -q -d -n "$name" >/dev/null 2>&1; then
+    odbcinst -u -d -n "$name" >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      echo "unixodbc: Driver '$name' removed."
+    fi
+  fi
+}
+
+remove_odbc_dsn()
+{
+  local name="$1"
+
+  if odbcinst -q -s -l -n "$name" >/dev/null 2>&1; then
+    odbcinst -u -s -l -n "$name" >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      echo "unixodbc: DSN '$name' removed."
+    fi
+  fi
+}
+
 init () {
 
-  # Automatically create "/mnt/kd/odbc" directory if it doesn't exist
-  if [ ! -d /mnt/kd/odbc ]; then
-    mkdir /mnt/kd/odbc 2>/dev/null     # will fail on virgin RO filesystem, ignore stderr
+  if [ ! -f /etc/odbc.ini ]; then
+    touch /etc/odbc.ini
   fi
-
-  if [ -d /mnt/kd/odbc ]; then
-    ln -sf /mnt/kd/odbc/odbc.ini /tmp/etc/odbc.ini
-    ln -sf /mnt/kd/odbc/odbcinst.ini /tmp/etc/odbcinst.ini
+  if [ ! -f /etc/odbcinst.ini ]; then
+    touch /etc/odbcinst.ini
   fi
   if [ ! -d /tmp/etc/ODBCDataSources ]; then
     mkdir /tmp/etc/ODBCDataSources
-  fi
-
-  if [ ! -f /etc/odbc.ini ]; then
-    echo "[asterisk]
-Description=SQLite3 database
-Driver=SQLite3
-Database=/mnt/kd/asterisk-odbc.sqlite3
-# optional lock timeout in milliseconds
-Timeout=2000
-" > /etc/odbc.ini
-  fi
-  if [ ! -f /etc/odbcinst.ini ]; then
-    echo "[SQLite3]
-Description=SQLite3 ODBC Driver
-Driver=/usr/lib/libsqlite3odbc.so
-Setup=/usr/lib/libsqlite3odbc.so
-Threading=2
-" > /etc/odbcinst.ini
   fi
 
   if [ ! -f /root/.odbc.ini ]; then
@@ -45,11 +76,33 @@ Threading=2
 }
 
 start () {
-  :
+
+  # Install Driver
+  DATA="
+Description=SQLite3 ODBC Driver
+Driver=/usr/lib/libsqlite3odbc.so
+Setup=/usr/lib/libsqlite3odbc.so
+Threading=2
+"
+  install_odbc_driver "SQLite3" "$DATA"
+
+  # Install DSN
+  DATA="
+Description=SQLite3 database
+Driver=SQLite3
+Database=/mnt/kd/asterisk-odbc.sqlite3
+Timeout=2000
+"
+  install_odbc_dsn "asterisk" "$DATA"
 }
 
 stop () {
-  :
+
+  # Remove Driver
+  remove_odbc_driver "SQLite3"
+
+  # Remove DSN
+  remove_odbc_dsn "asterisk"
 }
 
 case $1 in
