@@ -12,9 +12,14 @@ Released **TBD**
 
 ** System
 
--- php, version bump to 5.3.22
+-- php, version bump to 5.3.22. Additionally, PDO SQLite(3) is enabled.
 
 -- Timezone, add "/etc/timezone" file support defined as the validated TIMEZONE variable.
+
+-- unixodbc, new package, adds ODBC database interface.
+
+-- sqliteodbc, new package, adds SQLite3 driver for the unixodbc ODBC database interface.
+   Note: The SQLite3 database is located at "/mnt/kd/asterisk-odbc.sqlite3" with DSN=asterisk
 
 ** Networking
 
@@ -41,6 +46,11 @@ Released **TBD**
 
 -- rhino, version bump to 0.99.6b3
 
+-- Asterisk 1.8 and 11 builds now support ODBC database functionality.  Most interesting is the "func_odbc" module.
+   By default the ODBC features are disabled until enabled for [asterisk] in "res_odbc.conf".
+   Note: The SQLite3 database is located at "/mnt/kd/asterisk-odbc.sqlite3" with DSN=asterisk
+   More Info: http://www.asteriskdocs.org/en/3rd_Edition/asterisk-book-html-chunk/getting_funky.html
+
 ** Web Interface
 
 -- OpenVPN Server sub-tab
@@ -61,6 +71,8 @@ Released **TBD**
 -- Prefs and System tabs, add the Asterisk 11 Repository URL to the list of defaults.
 
 -- All tabs, prefer the "/etc/timezone" file as the souce of the Timezone, if it exists.
+
+-- Network tab, validate Timezone setting and display an error if invalid.
 
 
 Additions for AstLinux 1.1.0:
