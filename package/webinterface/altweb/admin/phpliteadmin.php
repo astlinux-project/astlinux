@@ -63,6 +63,7 @@ $subdirectories = false;
 
 //if the above $directory variable is set to false, you must specify the databases manually in an array as the next variable
 //if any of the databases do not exist as they are referenced by their path, they will be created automatically
+//AstLinux// define database files
 $databases = array
 (
 	array
@@ -71,6 +72,10 @@ $databases = array
 		"name"=> "Asterisk"
 	)
 );
+if (is_file('/mnt/kd/cdr-sqlite3/master.db')) {
+	$databases[] = array( "path"=> "/mnt/kd/cdr-sqlite3/master.db", "name"=> "CDR SQLite3" );
+}
+//AstLinux// end of define database files
 
 //a list of custom functions that can be applied to columns in the databases
 //make sure to define every function below if it is not a core PHP function
