@@ -4,13 +4,13 @@ CREATE TABLE IF NOT EXISTS 'sip_users' (
   'sipuser' TEXT NOT NULL,
   'lastname' TEXT,
   'firstname' TEXT,
-  'out_contextid' INTEGER DEFAULT 7,
+  'out_cxid' INTEGER DEFAULT 7,
   'vm' INTEGER DEFAULT 0,
-  'mailbox' TEXT,
+  'vmbox' TEXT,
   'email' TEXT,
-  'exten_intern' TEXT,
-  'exten_exten' TEXT,
-  'fax_number' TEXT,
+  'ext_intern' TEXT,
+  'ext_extern' TEXT,
+  'fax_ext' TEXT,
   'fax_email' TEXT,
   'xmpp_jid' TEXT
 );
@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS 'out_context' (
 
 CREATE TABLE IF NOT EXISTS 'ip_phones' (
   'phone_id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  'phone_type1' TEXT,
-  'phone_fw1' TEXT,
+  'phone_type' TEXT,
+  'phone_fw' TEXT,
   'phone_ip' TEXT,
   'phone_mac' TEXT,
   'userid' INTEGER

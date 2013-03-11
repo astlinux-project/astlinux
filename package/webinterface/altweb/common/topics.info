@@ -288,6 +288,45 @@ exten => s,n(end),MacroExit()
 
 SQL-Data Tab:
 
+The SQL-Data Tab adds a web dialog to edit the SQLite3 database (added in AstLinux 1.1.1).
+The database exists in "/mnt/kd/asterisk-odbc.sqlite3".
+
+The Prefs tab contains a relevant option under "SQL-Data Tab Options:".
+
+The "Create default SIP & Phone SQL Schema if not defined" (checked by default),
+automatically creates the default table structure for the SQLite3 database.
+
+You can access the database via Asterisk with user defined "func_odbc" functions, where
+you can define customized database queries and more. A quite universal example for an entry
+in the "func_odbc.conf" would be:
+
+Credit: Michael Keuter
+---- /etc/asterisk/func_odbc.conf snippet ----
+
+[SIPUSERS]
+dsn=asterisk
+readsql=SELECT ${SQL_ESC(${ARG1})} FROM sip_users WHERE ${SQL_ESC(${ARG2})}='${SQL_ESC(${ARG3})}'
+
+---- /etc/asterisk/func_odbc.conf snippet ----
+
+For example, if you want to find the SIP-user belonging to the internal extension "101"
+(as defined in your database), this could be accessed in the Asterisk dialplan
+like this:
+
+---- /etc/asterisk/extensions.conf snippet ----
+
+; ODBC Test
+exten => 999,1,NoOp(ODBC Query Test)
+;
+; ODBC_SIPUSERS: SELECT ARG1 FROM sip_users WHERE ARG2=ARG3
+;   in the case: SELECT sipuser FROM sip_users WHERE ext_intern=101
+;
+same => n,Set(val=${ODBC_SIPUSERS(sipuser,ext_intern,101)})
+same => n,NoOp(ODBC-ReturnValue: ${val})
+same => n,Hangup()
+
+---- /etc/asterisk/extensions.conf snippet ----
+
 
 [[xmpp-shared-groups]]
 
