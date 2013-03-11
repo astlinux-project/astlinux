@@ -284,6 +284,11 @@ exten => s,n(end),MacroExit()
 ---- /etc/asterisk/extensions.conf snippet ----
 
 
+[[sqldata-dialplan]]
+
+SQL-Data Tab:
+
+
 [[xmpp-shared-groups]]
 
 XMPP Shared Groups:

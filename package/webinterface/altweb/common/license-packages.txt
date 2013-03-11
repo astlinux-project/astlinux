@@ -40,3 +40,4 @@ SpanDSP~Copyright (c) 2003-2012 Steve Underwood <steveu@coppice.org>. All rights
 Prosody~Copyright (c) 2008-2010 Matthew Wild and Waqas Hussain.
 Lua~Copyright (c) 1994-2012 Lua.org, PUC-Rio.  All rights reserved.
 perl~Copyright (c) 1987-2012 by Larry Wall, et al.
+phpliteadmin~Copyright (c) 2011-2013 phpLiteAdmin (http://phpliteadmin.googlecode.com)

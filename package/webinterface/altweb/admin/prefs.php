@@ -269,6 +269,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       fwrite($fp, $value."\n");
     }
     
+    if (! isset($_POST['sqldata_create_schema'])) {
+      $value = 'sqldata_create_schema = no';
+      fwrite($fp, $value."\n");
+    }
+
     if (isset($_POST['users_hide_pass'])) {
       $value = 'users_voicemail_hide_pass = yes';
       fwrite($fp, $value."\n");
@@ -387,6 +392,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (isset($_POST['tab_actionlist'])) {
       $value = 'tab_actionlist_show = yes';
+      fwrite($fp, $value."\n");
+    }
+    if (isset($_POST['tab_sqldata'])) {
+      $value = 'tab_sqldata_show = yes';
       fwrite($fp, $value."\n");
     }
     if (isset($_POST['tab_users'])) {
@@ -839,6 +848,15 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
   
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>SQL-Data Tab Options:</strong>');
+  putHtml('</td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'sqldata_create_schema') !== 'no') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="sqldata_create_schema" name="sqldata_create_schema"'.$sel.' /></td><td colspan="5">Create default SIP &amp; Phone SQL Schema if not defined</td></tr>');
+
+  putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
+  
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Users Tab Options:</strong>');
   putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
@@ -1031,6 +1049,10 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_actionlist_show') === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="tab_actionlist" name="tab_actionlist"'.$sel.' /></td><td colspan="5">Show Actionlist Tab'.includeTOPICinfo('actionlist-dialplan').'</td></tr>');
+  
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'tab_sqldata_show') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="tab_sqldata" name="tab_sqldata"'.$sel.' /></td><td colspan="5">Show SQL-Data Tab'.includeTOPICinfo('sqldata-dialplan').'</td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_users_show') === 'yes') ? ' checked="checked"' : '';
