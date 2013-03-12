@@ -1287,7 +1287,7 @@ class Database
 $auth = new Authorization(); //create authorization object
 //AstLinux// Disable authorization, always grant permission.
 if(! $auth->isAuthorized()) {
-  $auth->grant(true);
+  $auth->grant(false);
 }
 //
 //if(isset($_POST['logout'])) //user has attempted to log out
