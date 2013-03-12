@@ -92,7 +92,7 @@ function sha1rev($value)
 }
 function mydate($value)
 {
-	return date("g:ia n/j/y", intval($value));
+	return date("H:i n/j/y", intval($value));
 }
 function myreplace($value)
 {
@@ -557,7 +557,8 @@ class Database
 	//get the last modified time of database
 	public function getDate()
 	{
-		return date("g:ia \o\\n F j, Y", filemtime($this->data["path"]));
+		//AstLinux//
+		return date("M d H:i:s T Y", filemtime($this->data["path"]));
 	}
 
 	//get number of affected rows from last query
@@ -2988,6 +2989,8 @@ else //user is authorized - display the main application
 			//row actions
 			/////////////////////////////////////////////// view row
 			case "row_view":
+				$is_view = isset($_GET['view']) ? '&amp;view=1' : '';
+
 				if(!isset($_POST['startRow']))
 					$_POST['startRow'] = 0;
 
@@ -3020,14 +3023,14 @@ else //user is authorized - display the main application
 				if($_POST['startRow']>0)
 				{
 					echo "<div style='float:left; overflow:hidden;'>";
-					echo "<form action='".PAGE."?action=row_view&amp;table=".urlencode($_GET['table'])."' method='post'>";
+					echo "<form action='".PAGE."?action=row_view&amp;table=".urlencode($_GET['table']).$is_view."' method='post'>";
 					echo "<input type='hidden' name='startRow' value='0'/>";
 					echo "<input type='hidden' name='numRows' value='".$_SESSION[COOKIENAME.'numRows']."'/> ";
 					echo "<input type='submit' value='&larr;&larr;' name='previous' class='btn'/> ";
 					echo "</form>";
 					echo "</div>";
 					echo "<div style='float:left; overflow:hidden; margin-right:20px;'>";
-					echo "<form action='".PAGE."?action=row_view&amp;table=".urlencode($_GET['table'])."' method='post'>";
+					echo "<form action='".PAGE."?action=row_view&amp;table=".urlencode($_GET['table']).$is_view."' method='post'>";
 					echo "<input type='hidden' name='startRow' value='".intval($_POST['startRow']-$_SESSION[COOKIENAME.'numRows'])."'/>";
 					echo "<input type='hidden' name='numRows' value='".$_SESSION[COOKIENAME.'numRows']."'/> ";
 					echo "<input type='submit' value='&larr;' name='previous_full' class='btn'/> ";
@@ -3037,7 +3040,7 @@ else //user is authorized - display the main application
 				
 				//show certain number buttons
 				echo "<div style='float:left; overflow:hidden;'>";
-				echo "<form action='".PAGE."?action=row_view&amp;table=".urlencode($_GET['table'])."' method='post'>";
+				echo "<form action='".PAGE."?action=row_view&amp;table=".urlencode($_GET['table']).$is_view."' method='post'>";
 				echo "<input type='submit' value='Show : ' name='show' class='btn'/> ";
 				echo "<input type='text' name='numRows' style='width:50px;' value='".$_SESSION[COOKIENAME.'numRows']."'/> ";
 				echo "row(s) starting from record # ";
@@ -3065,14 +3068,14 @@ else //user is authorized - display the main application
 				if(intval($_POST['startRow']+$_SESSION[COOKIENAME.'numRows'])<$rowCount)
 				{
 					echo "<div style='float:left; overflow:hidden; margin-left:20px; '>";
-					echo "<form action='".PAGE."?action=row_view&amp;table=".urlencode($_GET['table'])."' method='post'>";
+					echo "<form action='".PAGE."?action=row_view&amp;table=".urlencode($_GET['table']).$is_view."' method='post'>";
 					echo "<input type='hidden' name='startRow' value='".intval($_POST['startRow']+$_SESSION[COOKIENAME.'numRows'])."'/>";
 					echo "<input type='hidden' name='numRows' value='".$_SESSION[COOKIENAME.'numRows']."'/> ";
 					echo "<input type='submit' value='&rarr;' name='next' class='btn'/> ";
 					echo "</form>";
 					echo "</div>";
 					echo "<div style='float:left; overflow:hidden;'>";
-					echo "<form action='".PAGE."?action=row_view&amp;table=".urlencode($_GET['table'])."' method='post'>";
+					echo "<form action='".PAGE."?action=row_view&amp;table=".urlencode($_GET['table']).$is_view."' method='post'>";
 					echo "<input type='hidden' name='startRow' value='".intval($rowCount-$remainder)."'/>";
 					echo "<input type='hidden' name='numRows' value='".$_SESSION[COOKIENAME.'numRows']."'/> ";
 					echo "<input type='submit' value='&rarr;&rarr;' name='next_full' class='btn'/> ";
@@ -3126,7 +3129,7 @@ else //user is authorized - display the main application
 					
 					if(isset($_GET['view']))
 					{
-						echo "'".htmlencode($_GET['table'])."' is a view, which means it is a SELECT statement treated as a read-only table. You may not edit or insert records. <a href='http://en.wikipedia.org/wiki/View_(database)' target='_blank'>http://en.wikipedia.org/wiki/View_(database)</a>"; 
+						echo "'".htmlencode($_GET['table'])."' is a view, which means it is a SELECT statement treated as a read-only table. You may not edit or insert records."; 
 						echo "<br/><br/>";	
 					}
 					
@@ -3136,7 +3139,7 @@ else //user is authorized - display the main application
 					
 					if(!isset($_SESSION[COOKIENAME.'viewtype']) || $_SESSION[COOKIENAME.'viewtype']=="table")
 					{
-						echo "<form action='".PAGE."?action=row_editordelete&amp;table=".urlencode($table)."' method='post' name='checkForm'>";
+						echo "<form action='".PAGE."?action=row_editordelete&amp;table=".urlencode($table).$is_view."' method='post' name='checkForm'>";
 						echo "<table border='0' cellpadding='2' cellspacing='1' class='viewTable'>";
 						echo "<tr>";
 						if(!isset($_GET['view']))
@@ -3298,7 +3301,7 @@ else //user is authorized - display the main application
 						<div id="chart_div" style="float:left;">If you can read this, it means the chart could not be generated. The data you are trying to view may not be appropriate for a chart.</div>
 						<?php
 						echo "<fieldset style='float:right; text-align:center;' id='chartsettingsbox'><legend><b>Chart Settings</b></legend>";
-						echo "<form action='".PAGE."?action=row_view&amp;table=".urlencode($_GET['table'])."' method='post'>";
+						echo "<form action='".PAGE."?action=row_view&amp;table=".urlencode($_GET['table']).$is_view."' method='post'>";
 						echo "Chart Type: <select name='charttype'>";
 						echo "<option value='bar'";
 						if($_SESSION[COOKIENAME.'charttype']=="bar")

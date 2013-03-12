@@ -291,10 +291,14 @@ SQL-Data Tab:
 The SQL-Data Tab adds a web dialog to edit the SQLite3 database (added in AstLinux 1.1.1).
 The database exists in "/mnt/kd/asterisk-odbc.sqlite3".
 
-The Prefs tab contains a relevant option under "SQL-Data Tab Options:".
+The Prefs tab contains relevant options under "SQL-Data Tab Options:".
 
-The "Create default SIP & Phone SQL Schema if not defined" (checked by default),
-automatically creates the default table structure for the SQLite3 database.
+The "Create SIP & Phone standard SQL schema" (checked by default),
+automatically creates the standard table structure for the SQLite3 database.
+
+The "Create CDR SQLite3 standard view if database exists" (checked by default),
+automatically creates the standard view for the CDR SQLite3 database located
+at "/mnt/kd/cdr-sqlite3/master.db" if it exists.
 
 You can access the database via Asterisk with user defined "func_odbc" functions, where
 you can define customized database queries and more. A quite universal example for an entry
