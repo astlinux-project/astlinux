@@ -66,8 +66,37 @@ init () {
 
   make_symlink_or_dir "/mnt/kd/cdr-custom" "/var/log/asterisk/cdr-custom"
 
+  # Automatically create "/mnt/kd/cdr-sqlite3" directory if it doesn't exist
+  if [ ! -d /mnt/kd/cdr-sqlite3 ]; then
+    mkdir /mnt/kd/cdr-sqlite3 2>/dev/null     # will fail on virgin RO filesystem, ignore stderr
+  fi
   if [ -d /mnt/kd/cdr-sqlite3 ]; then
     ln -sf /mnt/kd/cdr-sqlite3/master.db /var/log/asterisk/master.db
+
+    if [ ! -f /mnt/kd/cdr-sqlite3/cdr-odbc.sqlite3 ]; then
+      sqlite3 -batch /mnt/kd/cdr-sqlite3/cdr-odbc.sqlite3 <<EOF
+CREATE TABLE 'cdr' (
+  'id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  'calldate' TEXT,
+  'clid' TEXT,
+  'src' TEXT,
+  'dst' TEXT,
+  'dcontext' TEXT,
+  'channel' TEXT,
+  'dstchannel' TEXT,
+  'lastapp' TEXT,
+  'lastdata' TEXT,
+  'duration' REAL,
+  'billsec' REAL,
+  'disposition' TEXT,
+  'amaflags' INTEGER,
+  'accountcode' TEXT,
+  'uniqueid' TEXT,
+  'userfield' TEXT
+);
+CREATE VIEW 'standard' AS SELECT calldate, clid, dst, dcontext, billsec, userfield from cdr ORDER BY calldate DESC;
+EOF
+    fi
   fi
 }
 

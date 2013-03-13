@@ -86,14 +86,22 @@ Threading=2
 "
   install_odbc_driver "SQLite3" "$DATA"
 
-  # Install DSN
+  # Install DSN's
   DATA="
-Description=SQLite3 database
+Description=Asterisk database
 Driver=SQLite3
 Database=/mnt/kd/asterisk-odbc.sqlite3
 Timeout=2000
 "
   install_odbc_dsn "asterisk" "$DATA"
+
+  DATA="
+Description=CDR ODBC database
+Driver=SQLite3
+Database=/mnt/kd/cdr-sqlite3/cdr-odbc.sqlite3
+Timeout=2000
+"
+  install_odbc_dsn "asterisk-cdr" "$DATA"
 }
 
 stop () {
@@ -101,8 +109,9 @@ stop () {
   # Remove Driver
   remove_odbc_driver "SQLite3"
 
-  # Remove DSN
+  # Remove DSN's
   remove_odbc_dsn "asterisk"
+  remove_odbc_dsn "asterisk-cdr"
 }
 
 case $1 in
