@@ -296,10 +296,6 @@ The Prefs tab contains relevant options under "SQL-Data Tab Options:".
 The "Create SIP & Phone standard SQL schema" (checked by default),
 automatically creates the standard table structure for the SQLite3 database.
 
-The "Create CDR SQLite3 standard view if database exists" (checked by default),
-automatically creates the standard view for the CDR SQLite3 database located
-at "/mnt/kd/cdr-sqlite3/master.db" if it exists.
-
 You can access the database via Asterisk with user defined "func_odbc" functions, where
 you can define customized database queries and more. A quite universal example for an entry
 in the "func_odbc.conf" would be:

@@ -72,6 +72,9 @@ $databases = array
 		"name"=> "Asterisk"
 	)
 );
+if (is_file('/mnt/kd/cdr-sqlite3/cdr-odbc.sqlite3')) {
+	$databases[] = array( "path"=> "/mnt/kd/cdr-sqlite3/cdr-odbc.sqlite3", "name"=> "CDR ODBC" );
+}
 if (is_file('/mnt/kd/cdr-sqlite3/master.db')) {
 	$databases[] = array( "path"=> "/mnt/kd/cdr-sqlite3/master.db", "name"=> "CDR SQLite3" );
 }

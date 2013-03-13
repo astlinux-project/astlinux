@@ -51,23 +51,6 @@ function create_sql_tables()
       }
     }
     $pdo_db = NULL;
-
-    if (is_file('/mnt/kd/cdr-sqlite3/master.db') && getPREFdef($global_prefs, 'sqldata_create_cdr_view') !== 'no') {
-      $pdo_db = new PDO("sqlite:/mnt/kd/cdr-sqlite3/master.db");
-      $pdo_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-      // List all views
-      $view_arr = array();
-      $sql = "SELECT name FROM sqlite_master WHERE type='view'";
-      foreach ($pdo_db->query($sql) as $row) {
-        $view_arr[] = $row['name'];
-      }
-      if (! in_array('standard', $view_arr)) {
-        $sql = "CREATE VIEW IF NOT EXISTS 'standard' AS SELECT calldate, clid, dstchannel, dcontext, billsec, userfield FROM cdr ORDER BY calldate DESC";
-        $pdo_db->exec($sql);
-      }
-      $pdo_db = NULL;
-    }
   } catch (PDOException $e) {
     return($e->getMessage());
   }

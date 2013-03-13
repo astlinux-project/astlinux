@@ -273,10 +273,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'sqldata_create_schema = no';
       fwrite($fp, $value."\n");
     }
-    if (! isset($_POST['sqldata_create_cdr_view'])) {
-      $value = 'sqldata_create_cdr_view = no';
-      fwrite($fp, $value."\n");
-    }
 
     if (isset($_POST['users_hide_pass'])) {
       $value = 'users_voicemail_hide_pass = yes';
@@ -857,10 +853,6 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'sqldata_create_schema') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="sqldata_create_schema" name="sqldata_create_schema"'.$sel.' /></td><td colspan="5">Create SIP &amp; Phone standard SQL schema</td></tr>');
-
-  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  $sel = (getPREFdef($global_prefs, 'sqldata_create_cdr_view') !== 'no') ? ' checked="checked"' : '';
-  putHtml('<input type="checkbox" value="sqldata_create_cdr_view" name="sqldata_create_cdr_view"'.$sel.' /></td><td colspan="5">Create CDR SQLite3 standard view if database exists</td></tr>');
 
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
   
