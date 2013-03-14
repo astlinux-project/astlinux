@@ -19,7 +19,10 @@ Released **TBD**
 -- unixodbc, new package, adds ODBC database interface.
 
 -- sqliteodbc, new package, adds SQLite3 driver for the unixodbc ODBC database interface.
-   Note: The SQLite3 database is located at "/mnt/kd/asterisk-odbc.sqlite3" with DSN=asterisk
+   Note: The Asterisk database is located at "/mnt/kd/asterisk-odbc.sqlite3" with DSN=asterisk
+         The CDR ODBC database is located at "/mnt/kd/cdr-sqlite3/cdr-odbc.sqlite3" with DSN=asterisk-cdr
+
+-- zabbix, version bump to 2.0.5, many bug fixes
 
 ** Networking
 
@@ -42,14 +45,16 @@ Released **TBD**
 
 -- Asterisk 1.8.20.1 (no change) and 11.2.1 (no change)
 
--- DAHDI, dahdi-linux 2.6.1 (no change) and dahdi-tools 2.6.1 (no change)
+-- DAHDI, dahdi-linux 2.6.2 (version bump) and dahdi-tools 2.6.2 (version bump)
 
 -- rhino, version bump to 0.99.6b3
 
 -- Asterisk 1.8 and 11 builds now support ODBC database functionality.  Most interesting is the "func_odbc" module.
-   By default the ODBC features are disabled until enabled for [asterisk] in "res_odbc.conf".
-   Note: The SQLite3 database is located at "/mnt/kd/asterisk-odbc.sqlite3" with DSN=asterisk
-   More Info: http://www.asteriskdocs.org/en/3rd_Edition/asterisk-book-html-chunk/getting_funky.html
+   By default the ODBC features are disabled until enabled for [asterisk] and optionally [asterisk-cdr] in "res_odbc.conf".
+   New CDR logging options are available, most interesting is the "cdr_adaptive_odbc" module, use with DSN=asterisk-cdr .
+   Note: The Asterisk database is located at "/mnt/kd/asterisk-odbc.sqlite3" with DSN=asterisk
+         The CDR ODBC database is located at "/mnt/kd/cdr-sqlite3/cdr-odbc.sqlite3" with DSN=asterisk-cdr
+   More Info: http://doc.astlinux.org/userdoc:tt_asterisk-odbc
 
 ** Web Interface
 
@@ -65,6 +70,13 @@ Released **TBD**
    ==  Added User/Pass authentication support
    ==  Added TLS-Auth support
    ==  Added Auth HMAC selections of SHA1 and SHA256
+
+-- SQL-Data tab, new tab, not shown by default
+   ==  Prefs tab, SQL-Data Tab Options: and Show SQL-Data Tab
+   ==  Manages SQL data in "/mnt/kd/asterisk-odbc.sqlite3" used by func_odbc in Asterisk.
+   ==  Manages SQL data in "/mnt/kd/cdr-sqlite3/cdr-odbc.sqlite3" if it exists, created by cdr_adaptive_odbc or cdr_odbc.
+   ==  Manages SQL data in "/mnt/kd/cdr-sqlite3/master.db" if it exists, created by cdr_sqlite3_custom.
+   Note: The SQL-Data tab is a customized variation of phpLiteAdmin: http://code.google.com/p/phpliteadmin/
 
 -- Edit tab support for editing existing OpenVPN files in "/mnt/kd/openvpn/ccd/"
 
