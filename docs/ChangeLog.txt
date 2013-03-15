@@ -65,6 +65,7 @@ Released **TBD**
    ==  Added Topology selections
    ==  Downloaded credentials now contain client.ovpn configurations for the OpenVPN Client App
    More info: http://doc.astlinux.org/userdoc:tt_openvpn_server
+   More info: http://doc.astlinux.org/userdoc:tt_openvpn_client_networks
 
 -- OpenVPN Client sub-tab
    ==  Added User/Pass authentication support
