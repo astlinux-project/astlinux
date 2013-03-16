@@ -2976,7 +2976,9 @@ else //user is authorized - display the main application
 					  if($type=="INTEGER" || $type=="REAL" || $type=="NULL")
 						  echo "<input type='text' name='".htmlencode($field)."'/>";
 					  else
-						  echo "<textarea name='".htmlencode($field)."' wrap='hard' rows='1' cols='60'></textarea>";
+						  //AstLinux//
+						  echo "<input type='text' size='60' name='".htmlencode($field)."'/>";
+						  //echo "<textarea name='".htmlencode($field)."' wrap='hard' rows='1' cols='60'></textarea>";
 					  echo "</td>";
 					  echo "</tr>";
 					}
@@ -3445,7 +3447,9 @@ else //user is authorized - display the main application
 						if($scalarField)
 							echo "<input type='text' id='row_".$j."_field_".$i."_value' name='".$j.":".$field_html."' value='".deQuoteSQL($result[$i][4])."' onblur='changeIgnore(this, \"row_".$j."_ignore\");' onclick='notNull(\"row_".$j."_field_".$i."_null\");'/>";
 						else
-							echo "<textarea id='row_".$j."_field_".$i."_value' name='".$j.":".$field_html."' rows='5' cols='60' onclick='notNull(\"row_".$j."_field_".$i."_null\");' onblur='changeIgnore(this, \"row_".$j."_ignore\");'>".deQuoteSQL($result[$i][4])."</textarea>";
+							//AstLinux//
+							echo "<input type='text' size='60' id='row_".$j."_field_".$i."_value' name='".$j.":".$field_html."' value='".deQuoteSQL($result[$i][4])."' onblur='changeIgnore(this, \"row_".$j."_ignore\");' onclick='notNull(\"row_".$j."_field_".$i."_null\");'/>";
+							//echo "<textarea id='row_".$j."_field_".$i."_value' name='".$j.":".$field_html."' rows='5' cols='60' onclick='notNull(\"row_".$j."_field_".$i."_null\");' onblur='changeIgnore(this, \"row_".$j."_ignore\");'>".deQuoteSQL($result[$i][4])."</textarea>";
             		echo "</td>";
             		echo "</tr>";
 					}
@@ -3547,7 +3551,9 @@ else //user is authorized - display the main application
 								if($type=="INTEGER" || $type=="REAL" || $type=="NULL")
 									echo "<input type='text' name='".htmlencode($pks[$j]).":".htmlencode($field)."' value='".htmlencode($value)."' onblur='changeIgnore(this, \"".$j."\", \"".htmlencode($pks[$j]).":".htmlencode($field)."_null\")' />";
 								else
-									echo "<textarea name='".htmlencode($pks[$j]).":".htmlencode($field)."' wrap='hard' rows='1' cols='60' onblur='changeIgnore(this, \"".$j."\", \"".htmlencode($pks[$j]).":".htmlencode($field)."_null\")'>".htmlencode($value)."</textarea>";
+									//AstLinux//
+									echo "<input type='text' size='60' name='".htmlencode($pks[$j]).":".htmlencode($field)."' value='".htmlencode($value)."' onblur='changeIgnore(this, \"".$j."\", \"".htmlencode($pks[$j]).":".htmlencode($field)."_null\")' />";
+									//echo "<textarea name='".htmlencode($pks[$j]).":".htmlencode($field)."' wrap='hard' rows='1' cols='60' onblur='changeIgnore(this, \"".$j."\", \"".htmlencode($pks[$j]).":".htmlencode($field)."_null\")'>".htmlencode($value)."</textarea>";
 								echo "</td>";
 								echo "</tr>";
 							}
