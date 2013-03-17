@@ -12,7 +12,7 @@ Released **TBD**
 
 ** System
 
--- php, version bump to 5.3.22. Additionally, PDO SQLite(3) is enabled.
+-- e1000e version bump to 2.3.2 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
 -- Timezone, add "/etc/timezone" file support defined as the validated TIMEZONE variable.
 
@@ -21,6 +21,8 @@ Released **TBD**
 -- sqliteodbc, new package, adds SQLite3 driver for the unixodbc ODBC database interface.
    Note: The Asterisk database is located at "/mnt/kd/asterisk-odbc.sqlite3" with DSN=asterisk
          The CDR ODBC database is located at "/mnt/kd/cdr-sqlite3/cdr-odbc.sqlite3" with DSN=asterisk-cdr
+
+-- php, version bump to 5.3.22. Additionally, PDO SQLite(3) is enabled.
 
 -- zabbix, version bump to 2.0.5, many bug fixes
 
