@@ -91,25 +91,25 @@ function saveIPSECsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   $value = 'IPSECM_XAUTH_POOLSIZE="'.$_POST['pool_size'].'"';
   fwrite($fp, "### Pool Size\n".$value."\n");
   
-  $value = 'IPSECM_XAUTH_POOLBASE="'.trim($_POST['pool_base']).'"';
+  $value = 'IPSECM_XAUTH_POOLBASE="'.tuq($_POST['pool_base']).'"';
   fwrite($fp, "### Pool Base\n".$value."\n");
   
-  $value = 'IPSECM_XAUTH_POOLMASK="'.trim($_POST['pool_mask']).'"';
+  $value = 'IPSECM_XAUTH_POOLMASK="'.tuq($_POST['pool_mask']).'"';
   fwrite($fp, "### Pool Mask\n".$value."\n");
   
-  $value = 'IPSECM_XAUTH_DNS="'.trim($_POST['dns']).'"';
+  $value = 'IPSECM_XAUTH_DNS="'.tuq($_POST['dns']).'"';
   fwrite($fp, "### MS DNS\n".$value."\n");
   
-  $value = 'IPSECM_XAUTH_WINS="'.trim($_POST['wins']).'"';
+  $value = 'IPSECM_XAUTH_WINS="'.tuq($_POST['wins']).'"';
   fwrite($fp, "### MS WINS\n".$value."\n");
   
-  $value = 'IPSECM_XAUTH_NETWORK="'.trim($_POST['network']).'"';
+  $value = 'IPSECM_XAUTH_NETWORK="'.tuq($_POST['network']).'"';
   fwrite($fp, "### Network\n".$value."\n");
   
-  $value = 'IPSECM_XAUTH_DOMAIN="'.trim($_POST['domain']).'"';
+  $value = 'IPSECM_XAUTH_DOMAIN="'.tuq($_POST['domain']).'"';
   fwrite($fp, "### Default Domain\n".$value."\n");
   
-  $value = 'IPSECM_XAUTH_BANNER="'.trim($_POST['banner']).'"';
+  $value = 'IPSECM_XAUTH_BANNER="'.tuq($_POST['banner']).'"';
   fwrite($fp, "### Login Message\n".$value."\n");
   
   $value = 'IPSECM_XAUTH_SAVE_PASSWD="'.$_POST['save_passwd'].'"';
@@ -125,8 +125,8 @@ function saveIPSECsettings($conf_dir, $conf_file, $db, $delete = NULL) {
 //
 function addUserPass(&$db, $id) {
 
-  $user = str_replace(' ', '', $_POST['user']);
-  $pass = str_replace(' ', '', stripslashes($_POST['pass']));
+  $user = str_replace(' ', '', stripshellsafe($_POST['user']));
+  $pass = str_replace(' ', '', stripshellsafe($_POST['pass']));
   
   if ($user === '') {
     return(FALSE);
@@ -156,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $n = count($db['data']);
     $id = $n;
     for ($i = 0; $i < $n; $i++) {
-      if ($db['data'][$i]['user'] === str_replace(' ', '', $_POST['user'])) {
+      if ($db['data'][$i]['user'] === str_replace(' ', '', stripshellsafe($_POST['user']))) {
         $id = $i;
         break;
       }

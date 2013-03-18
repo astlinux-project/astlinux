@@ -101,7 +101,7 @@ function saveSIPTLSCERTsettings($conf_dir, $conf_file) {
   $value = 'SIPTLSCERT_CERT_KEYSIZE="'.$_POST['key_size'].'"';
   fwrite($fp, "### Private Key Size\n".$value."\n");
 
-  $value = 'SIPTLSCERT_CERT_DNSNAME="'.str_replace(' ', '', $_POST['dns_name']).'"';
+  $value = 'SIPTLSCERT_CERT_DNSNAME="'.str_replace(' ', '', tuq($_POST['dns_name'])).'"';
   fwrite($fp, "### Server Cert DNS Name\n".$value."\n");
 
   fwrite($fp, "### gui.siptlscert.conf - end ###\n");
@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       // Rebuild openssl.cnf template for new CA
       $key_size = $_POST['key_size'];
-      $dns_name = str_replace(' ', '', $_POST['dns_name']);
+      $dns_name = str_replace(' ', '', tuq($_POST['dns_name']));
       if (($openssl = siptlscert_openssl($key_size, $dns_name)) !== FALSE) {
         if (opensslCREATEselfCert($openssl)) {
           if (opensslCREATEserverCert($openssl)) {
@@ -144,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $result = 2;
     }
 //  } elseif (isset($_POST['submit_new_client'])) {
-//    if (($value = trim($_POST['new_client'])) !== '') {
+//    if (($value = tuq($_POST['new_client'])) !== '') {
 //      if (preg_match('/^[a-zA-Z0-9][a-zA-Z0-9._-]*$/', $value)) {
 //        if (! is_file($openssl['key_dir'].'/'.$value.'.crt') &&
 //            ! is_file($openssl['key_dir'].'/'.$value.'.key')) {

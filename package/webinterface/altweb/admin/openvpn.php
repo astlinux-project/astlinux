@@ -166,7 +166,7 @@ function saveOVPNsettings($conf_dir, $conf_file, $disabled = NULL) {
   $value = 'OVPN_DEV="'.$_POST['device'].'"';
   fwrite($fp, "### Device\n".$value."\n");
   
-  $value = 'OVPN_PORT="'.trim($_POST['port']).'"';
+  $value = 'OVPN_PORT="'.tuq($_POST['port']).'"';
   fwrite($fp, "### Port Number\n".$value."\n");
   
   $value = 'OVPN_PROTOCOL="'.$_POST['protocol'].'"';
@@ -187,16 +187,16 @@ function saveOVPNsettings($conf_dir, $conf_file, $disabled = NULL) {
   $value = 'OVPN_AUTH="'.$_POST['auth_hmac'].'"';
   fwrite($fp, "### Auth HMAC\n".$value."\n");
   
-  $value = 'OVPN_TUNNEL_HOSTS="'.trim($_POST['tunnel_external_hosts']).'"';
+  $value = 'OVPN_TUNNEL_HOSTS="'.tuq($_POST['tunnel_external_hosts']).'"';
   fwrite($fp, "### Allowed External Hosts\n".$value."\n");
   
-  $value = 'OVPN_HOSTNAME="'.trim($_POST['server_hostname']).'"';
+  $value = 'OVPN_HOSTNAME="'.tuq($_POST['server_hostname']).'"';
   fwrite($fp, "### Server Hostname\n".$value."\n");
   
-  $value = 'OVPN_SERVER="'.trim($_POST['server']).'"';
+  $value = 'OVPN_SERVER="'.tuq($_POST['server']).'"';
   fwrite($fp, "### Server IPv4 Network\n".$value."\n");
   
-  $value = 'OVPN_SERVERV6="'.trim($_POST['serverv6']).'"';
+  $value = 'OVPN_SERVERV6="'.tuq($_POST['serverv6']).'"';
   fwrite($fp, "### Server IPv6 Network\n".$value."\n");
   
   $value = 'OVPN_TOPOLOGY="'.$_POST['topology'].'"';
@@ -204,7 +204,7 @@ function saveOVPNsettings($conf_dir, $conf_file, $disabled = NULL) {
   
   $value = 'OVPN_PUSH="';
   fwrite($fp, "### Server Push\n".$value."\n");
-  $value = stripslashes($_POST['push']);
+  $value = stripshellsafe($_POST['push']);
   $value = str_replace(chr(13), '', $value);
   if (($value = trim($value, chr(10))) !== '') {
     fwrite($fp, $value."\n");
@@ -213,7 +213,7 @@ function saveOVPNsettings($conf_dir, $conf_file, $disabled = NULL) {
   
   $value = 'OVPN_OTHER="';
   fwrite($fp, "### Raw Commands\n".$value."\n");
-  $value = stripslashes($_POST['other']);
+  $value = stripshellsafe($_POST['other']);
   $value = str_replace(chr(13), '', $value);
   if (($value = trim($value, chr(10))) !== '') {
     fwrite($fp, $value."\n");
@@ -259,20 +259,20 @@ if (opensslOPENVPNis_valid($openssl)) {
   }
 } else {
   $base = '/mnt/kd/openvpn/easy-rsa/keys';
-  $value = isset($_POST['ca']) ? trim($_POST['ca']) : $base.'/ca.crt';
+  $value = isset($_POST['ca']) ? tuq($_POST['ca']) : $base.'/ca.crt';
   $value = 'OVPN_CA="'.$value.'"';
   fwrite($fp, "### CA File\n".$value."\n");
-  $value = isset($_POST['cert']) ? trim($_POST['cert']) : $base.'/server.crt';
+  $value = isset($_POST['cert']) ? tuq($_POST['cert']) : $base.'/server.crt';
   $value = 'OVPN_CERT="'.$value.'"';
   fwrite($fp, "### CERT File\n".$value."\n");
-  $value = isset($_POST['key']) ? trim($_POST['key']) : $base.'/server.key';
+  $value = isset($_POST['key']) ? tuq($_POST['key']) : $base.'/server.key';
   $value = 'OVPN_KEY="'.$value.'"';
   fwrite($fp, "### Key File\n".$value."\n");
-  $value = isset($_POST['dh']) ? trim($_POST['dh']) : $base.'/dh1024.pem';
+  $value = isset($_POST['dh']) ? tuq($_POST['dh']) : $base.'/dh1024.pem';
   $value = 'OVPN_DH="'.$value.'"';
   fwrite($fp, "### DH File\n".$value."\n");
   if ($_POST['tls_auth'] === 'yes') {
-    $value = isset($_POST['ta']) ? trim($_POST['ta']) : $base.'/ta.key';
+    $value = isset($_POST['ta']) ? tuq($_POST['ta']) : $base.'/ta.key';
     $value = 'OVPN_TA="'.$value.'"';
   } else {
     $value = 'OVPN_TA=""';
@@ -433,7 +433,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $result = 2;
     }
   } elseif (isset($_POST['submit_new_client'])) {
-    if (($value = trim($_POST['new_client'])) !== '') {
+    if (($value = tuq($_POST['new_client'])) !== '') {
       if (preg_match('/^[a-zA-Z0-9][a-zA-Z0-9._-]*$/', $value)) {
         if ($value !== 'ta' &&
             ! is_file($openssl['key_dir'].'/'.$value.'.crt') &&

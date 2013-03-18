@@ -108,10 +108,10 @@ function saveXMPPsettings($conf_dir, $conf_file) {
   $value = 'XMPP_SYSLOG="'.$_POST['verbosity'].'"';
   fwrite($fp, "### Log Syslog\n".$value."\n");
 
-  $value = 'XMPP_C2S_PORT="'.trim($_POST['xmpp_c2s_port']).'"';
+  $value = 'XMPP_C2S_PORT="'.tuq($_POST['xmpp_c2s_port']).'"';
   fwrite($fp, "### Client to Server TCP Port\n".$value."\n");
 
-  $value = 'XMPP_S2S_PORT="'.trim($_POST['xmpp_s2s_port']).'"';
+  $value = 'XMPP_S2S_PORT="'.tuq($_POST['xmpp_s2s_port']).'"';
   fwrite($fp, "### Server to Server TCP Port\n".$value."\n");
 
   $value = 'XMPP_GROUPS="'.$_POST['xmpp_groups'].'"';
@@ -120,19 +120,19 @@ function saveXMPPsettings($conf_dir, $conf_file) {
   $value = 'XMPP_C2S_IDLE_TIMEOUT="'.$_POST['idle_timeout'].'"';
   fwrite($fp, "### Dead Client Timeout\n".$value."\n");
 
-  $value = 'XMPP_HOSTNAME="'.trim($_POST['xmpp_hostname']).'"';
+  $value = 'XMPP_HOSTNAME="'.tuq($_POST['xmpp_hostname']).'"';
   fwrite($fp, "### XMPP VirtualHost\n".$value."\n");
 
-  $value = 'XMPP_ADMIN_USERS="'.trim($_POST['xmpp_admin_users']).'"';
+  $value = 'XMPP_ADMIN_USERS="'.tuq($_POST['xmpp_admin_users']).'"';
   fwrite($fp, "### Admin Users\n".$value."\n");
 
-  $value = 'XMPP_ENABLE_MODULES="'.trim($_POST['xmpp_enable_modules']).'"';
+  $value = 'XMPP_ENABLE_MODULES="'.tuq($_POST['xmpp_enable_modules']).'"';
   fwrite($fp, "### Enable Additional Modules\n".$value."\n");
 
-  $value = 'XMPP_DISABLE_MODULES="'.trim($_POST['xmpp_disable_modules']).'"';
+  $value = 'XMPP_DISABLE_MODULES="'.tuq($_POST['xmpp_disable_modules']).'"';
   fwrite($fp, "### Disable Default Modules\n".$value."\n");
 
-  $value = 'XMPP_CONFERENCE="'.trim($_POST['xmpp_conference']).'"';
+  $value = 'XMPP_CONFERENCE="'.tuq($_POST['xmpp_conference']).'"';
   fwrite($fp, "### Multi-User Chat Conference\n".$value."\n");
 
   $value = 'XMPP_CERT=""';
@@ -151,8 +151,8 @@ function saveXMPPsettings($conf_dir, $conf_file) {
 //
 function changeUserPass() {
 
-  $user = str_replace(' ', '', $_POST['user']);
-  $pass = str_replace(' ', '', stripslashes($_POST['pass']));
+  $user = str_replace(' ', '', stripshellsafe($_POST['user']));
+  $pass = str_replace(' ', '', stripshellsafe($_POST['pass']));
   
   if ($user === '') {
     return(FALSE);
@@ -173,8 +173,8 @@ function changeUserPass() {
 //
 function addUserPass() {
 
-  $user = str_replace(' ', '', $_POST['user']);
-  $pass = str_replace(' ', '', stripslashes($_POST['pass']));
+  $user = str_replace(' ', '', stripshellsafe($_POST['user']));
+  $pass = str_replace(' ', '', stripshellsafe($_POST['pass']));
   
   if ($user === '') {
     return(FALSE);
@@ -244,7 +244,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ok = 0;
     $n = count($db['data']);
     for ($i = 0; $i < $n; $i++) {
-      if ($db['data'][$i]['user'] === str_replace(' ', '', $_POST['user'])) {
+      if ($db['data'][$i]['user'] === str_replace(' ', '', stripshellsafe($_POST['user']))) {
         $ok = changeUserPass();
         break;
       }

@@ -128,9 +128,9 @@ function savePPTPsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   fwrite($fp, '"'."\n");
   
   $pool = $_POST['pool_num'];
-  if (($value = str_replace(' ', '', $_POST['pool_remote'])) !== '') {
+  if (($value = str_replace(' ', '', tuq($_POST['pool_remote']))) !== '') {
     $pool .= ' '.$value;
-    if (($value = str_replace(' ', '', $_POST['pool_server'])) !== '') {
+    if (($value = str_replace(' ', '', tuq($_POST['pool_server']))) !== '') {
       $pool .= ' '.$value;
     } else {
       $pool = '';
@@ -142,7 +142,7 @@ function savePPTPsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   fwrite($fp, "### PPTP Address Pool\n".$value."\n");
   
   if ($pool !== '') {
-    $value = 'PPTP_SUBNET="'.str_replace(' ', '', $_POST['subnet']).'"';
+    $value = 'PPTP_SUBNET="'.str_replace(' ', '', tuq($_POST['subnet'])).'"';
   } else {
     $value = 'PPTP_SUBNET=""';
   }
@@ -151,19 +151,19 @@ function savePPTPsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   $value = 'PPTP_VERBOSITY="'.$_POST['verbosity'].'"';
   fwrite($fp, "### Log Verbosity\n".$value."\n");
   
-  $value = 'PPTP_DNS="'.trim($_POST['dns']).'"';
+  $value = 'PPTP_DNS="'.tuq($_POST['dns']).'"';
   fwrite($fp, "### MS DNS\n".$value."\n");
   
-  $value = 'PPTP_WINS="'.trim($_POST['wins']).'"';
+  $value = 'PPTP_WINS="'.tuq($_POST['wins']).'"';
   fwrite($fp, "### MS WINS\n".$value."\n");
   
-  $value = 'PPTP_TUNNEL_EXTERNAL_HOSTS="'.trim($_POST['tunnel_external_hosts']).'"';
+  $value = 'PPTP_TUNNEL_EXTERNAL_HOSTS="'.tuq($_POST['tunnel_external_hosts']).'"';
   fwrite($fp, "### Allow External Hosts for Tunnel\n".$value."\n");
   
-  $value = 'PPTP_ALLOW_HOSTS="'.trim($_POST['allow_hosts']).'"';
+  $value = 'PPTP_ALLOW_HOSTS="'.tuq($_POST['allow_hosts']).'"';
   fwrite($fp, "### Allow Hosts\n".$value."\n");
   
-  $value = 'PPTP_DENY_HOSTS="'.trim($_POST['deny_hosts']).'"';
+  $value = 'PPTP_DENY_HOSTS="'.tuq($_POST['deny_hosts']).'"';
   fwrite($fp, "### Deny Hosts\n".$value."\n");
   
   $value = 'PPTP_DENY_LOG="'.$_POST['deny_log'].'"';
@@ -179,8 +179,8 @@ function savePPTPsettings($conf_dir, $conf_file, $db, $delete = NULL) {
 //
 function addUserPass(&$db, $id) {
 
-  $user = str_replace(' ', '', $_POST['user']);
-  $pass = str_replace(' ', '', stripslashes($_POST['pass']));
+  $user = str_replace(' ', '', stripshellsafe($_POST['user']));
+  $pass = str_replace(' ', '', stripshellsafe($_POST['pass']));
   
   if ($user === '') {
     return(FALSE);
@@ -210,7 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $n = count($db['data']);
     $id = $n;
     for ($i = 0; $i < $n; $i++) {
-      if ($db['data'][$i]['user'] === str_replace(' ', '', $_POST['user'])) {
+      if ($db['data'][$i]['user'] === str_replace(' ', '', stripshellsafe($_POST['user']))) {
         $id = $i;
         break;
       }

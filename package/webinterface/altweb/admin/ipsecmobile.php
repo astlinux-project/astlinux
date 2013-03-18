@@ -159,7 +159,7 @@ function saveIPSECMsettings($conf_dir, $conf_file) {
 
   $value = 'IPSECM_STATIC_ROUTES="';
   fwrite($fp, "### Static Routes\n".$value."\n");
-  $value = stripslashes($_POST['static_routes']);
+  $value = stripshellsafe($_POST['static_routes']);
   $value = str_replace(chr(13), '', $value);
   if (($value = trim($value, chr(10))) !== '') {
     fwrite($fp, $value."\n");
@@ -178,7 +178,7 @@ function saveIPSECMsettings($conf_dir, $conf_file) {
   $value = 'IPSECM_P1_DHGROUP="'.$_POST['p1_dhgroup'].'"';
   fwrite($fp, "### Phase 1 DH Group\n".$value."\n");
 
-  $value = 'IPSECM_P1_LIFETIME="'.trim($_POST['p1_lifetime']).'"';
+  $value = 'IPSECM_P1_LIFETIME="'.tuq($_POST['p1_lifetime']).'"';
   fwrite($fp, "### Phase 1 Lifetime\n".$value."\n");
 
   $value = '';
@@ -204,13 +204,13 @@ function saveIPSECMsettings($conf_dir, $conf_file) {
   $value = 'IPSECM_P2_PFSGROUP="'.$_POST['p2_pfsgroup'].'"';
   fwrite($fp, "### Phase 2 PFS Group\n".$value."\n");
 
-  $value = 'IPSECM_P2_LIFETIME="'.trim($_POST['p2_lifetime']).'"';
+  $value = 'IPSECM_P2_LIFETIME="'.tuq($_POST['p2_lifetime']).'"';
   fwrite($fp, "### Phase 2 Lifetime\n".$value."\n");
 
   $value = 'IPSECM_CERT_KEYSIZE="'.$_POST['key_size'].'"';
   fwrite($fp, "### Private Key Size\n".$value."\n");
 
-  $value = 'IPSECM_CERT_DNSNAME="'.str_replace(' ', '', $_POST['dns_name']).'"';
+  $value = 'IPSECM_CERT_DNSNAME="'.str_replace(' ', '', tuq($_POST['dns_name'])).'"';
   fwrite($fp, "### Server Cert DNS Name\n".$value."\n");
 
 if (opensslIPSECMOBILEis_valid($openssl)) {
@@ -223,16 +223,16 @@ if (opensslIPSECMOBILEis_valid($openssl)) {
   $value = 'IPSECM_RSA_KEY="server.key"';
   fwrite($fp, "### Key File\n".$value."\n");
 } else {
-  $value = isset($_POST['path']) ? trim($_POST['path']) : '/mnt/kd/ipsec';
+  $value = isset($_POST['path']) ? tuq($_POST['path']) : '/mnt/kd/ipsec';
   $value = 'IPSECM_RSA_PATH="'.$value.'"';
   fwrite($fp, "### Certificate Directory\n".$value."\n");
-  $value = isset($_POST['ca']) ? trim($_POST['ca']) : 'ca.crt';
+  $value = isset($_POST['ca']) ? tuq($_POST['ca']) : 'ca.crt';
   $value = 'IPSECM_RSA_CA="'.$value.'"';
   fwrite($fp, "### CA File\n".$value."\n");
-  $value = isset($_POST['cert']) ? trim($_POST['cert']) : 'server.crt';
+  $value = isset($_POST['cert']) ? tuq($_POST['cert']) : 'server.crt';
   $value = 'IPSECM_RSA_CERT="'.$value.'"';
   fwrite($fp, "### CERT File\n".$value."\n");
-  $value = isset($_POST['key']) ? trim($_POST['key']) : 'server.key';
+  $value = isset($_POST['key']) ? tuq($_POST['key']) : 'server.key';
   $value = 'IPSECM_RSA_KEY="'.$value.'"';
   fwrite($fp, "### Key File\n".$value."\n");
 }
@@ -269,7 +269,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       // Rebuild openssl.cnf template for new CA
       $key_size = $_POST['key_size'];
-      $dns_name = str_replace(' ', '', $_POST['dns_name']);
+      $dns_name = str_replace(' ', '', tuq($_POST['dns_name']));
       if (($openssl = ipsecmobile_openssl($key_size, $dns_name)) !== FALSE) {
         if (opensslCREATEselfCert($openssl)) {
           if (opensslCREATEserverCert($openssl)) {
@@ -290,7 +290,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $result = 2;
     }
   } elseif (isset($_POST['submit_new_client'])) {
-    if (($value = trim($_POST['new_client'])) !== '') {
+    if (($value = tuq($_POST['new_client'])) !== '') {
       if (preg_match('/^[a-zA-Z0-9][a-zA-Z0-9._-]*$/', $value)) {
         if (! is_file($openssl['key_dir'].'/'.$value.'.crt') &&
             ! is_file($openssl['key_dir'].'/'.$value.'.key')) {

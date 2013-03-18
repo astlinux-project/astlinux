@@ -140,14 +140,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (! $global_staff) {
     $result = 999;                                 
   } elseif (isset($_POST['submit_add'])) {
-    $mailbox = trim($_POST['mailbox']);
-    $password = trim($_POST['password']);
+    $mailbox = tuq($_POST['mailbox']);
+    $password = tuq($_POST['password']);
     if (preg_match('/^[0-9][0-9]*$/', $mailbox)) {
       if (preg_match('/^[-*0-9][*0-9]*$/', $password)) {
-        $name = trim($_POST['name']);
-        $email = trim($_POST['email']);
-        $pager = trim($_POST['pager']);
-        $options = trim($_POST['options']);
+        $name = tuq($_POST['name']);
+        $email = tuq($_POST['email']);
+        $pager = tuq($_POST['pager']);
+        $options = tuq($_POST['options']);
         if (addVMmailbox($context, $mailbox, $password, $name, $email, $pager, $options, $VOICEMAILCONF) == 0) {
           $result = 10;
         } else {

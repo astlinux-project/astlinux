@@ -101,7 +101,7 @@ function saveOVPNCsettings($conf_dir, $conf_file) {
   $value = 'OVPNC_DEV="'.$_POST['device'].'"';
   fwrite($fp, "### Device\n".$value."\n");
   
-  $value = 'OVPNC_PORT="'.trim($_POST['port']).'"';
+  $value = 'OVPNC_PORT="'.tuq($_POST['port']).'"';
   fwrite($fp, "### Port Number\n".$value."\n");
   
   $value = 'OVPNC_PROTOCOL="'.$_POST['protocol'].'"';
@@ -122,8 +122,8 @@ function saveOVPNCsettings($conf_dir, $conf_file) {
   $value = 'OVPNC_AUTH="'.$_POST['auth_hmac'].'"';
   fwrite($fp, "### Auth HMAC\n".$value."\n");
 
-  if ($_POST['auth_method'] === 'yes' && trim($_POST['auth_user']) !== '' && trim($_POST['auth_pass']) !== '') {
-    $value = 'OVPNC_USER_PASS="'.trim($_POST['auth_user']).' '.string2RCconfig(trim($_POST['auth_pass'])).'"';
+  if ($_POST['auth_method'] === 'yes' && tuq($_POST['auth_user']) !== '' && trim($_POST['auth_pass']) !== '') {
+    $value = 'OVPNC_USER_PASS="'.tuq($_POST['auth_user']).' '.string2RCconfig(trim($_POST['auth_pass'])).'"';
   } else {
     $value = 'OVPNC_USER_PASS=""';
   }
@@ -132,15 +132,15 @@ function saveOVPNCsettings($conf_dir, $conf_file) {
   $value = 'OVPNC_NSCERTTYPE="'.$_POST['nscerttype'].'"';
   fwrite($fp, "### nsCertType\n".$value."\n");
   
-  $value = 'OVPNC_REMOTE="'.trim($_POST['remote']).'"';
+  $value = 'OVPNC_REMOTE="'.tuq($_POST['remote']).'"';
   fwrite($fp, "### Server Network\n".$value."\n");
   
-  $value = 'OVPNC_SERVER="'.trim($_POST['server']).'"';
+  $value = 'OVPNC_SERVER="'.tuq($_POST['server']).'"';
   fwrite($fp, "### Server Network\n".$value."\n");
   
   $value = 'OVPNC_OTHER="';
   fwrite($fp, "### Raw Commands\n".$value."\n");
-  $value = stripslashes($_POST['other']);
+  $value = stripshellsafe($_POST['other']);
   $value = str_replace(chr(13), '', $value);
   if (($value = trim($value, chr(10))) !== '') {
     fwrite($fp, $value."\n");

@@ -269,13 +269,13 @@ function parseIPSECconf($vars) {
 //
 function addTunnel(&$db, $id) {
 
-  $local_host = trim($_POST['local_host']);
-  $local_net = trim($_POST['local_net']);
-  $remote_host = trim($_POST['remote_host']);
-  $remote_net = trim($_POST['remote_net']);
+  $local_host = tuq($_POST['local_host']);
+  $local_net = tuq($_POST['local_net']);
+  $remote_host = tuq($_POST['remote_host']);
+  $remote_net = tuq($_POST['remote_net']);
   
   if (($method = $_POST['method']) === 'psk') {
-    $key = trim(stripslashes($_POST['key']));
+    $key = tuq($_POST['key']);
   } else {
     $key = '';
   }
@@ -295,7 +295,7 @@ function addTunnel(&$db, $id) {
   $p1_encrypt = $_POST['p1_encrypt'];
   $p1_hash = $_POST['p1_hash'];
   $p1_dhgroup = $_POST['p1_dhgroup'];
-  $p1_lifetime = trim(stripslashes($_POST['p1_lifetime']));
+  $p1_lifetime = tuq($_POST['p1_lifetime']);
   
   $p2_encrypt = '';
   if (isset($_POST['p2_encrypt'])) {
@@ -316,9 +316,9 @@ function addTunnel(&$db, $id) {
   $p2_auth = trim($p2_auth, ' ,');
   
   $p2_pfsgroup = $_POST['p2_pfsgroup'];
-  $p2_lifetime = trim(stripslashes($_POST['p2_lifetime']));
+  $p2_lifetime = tuq($_POST['p2_lifetime']);
   $nat_t = $_POST['nat_t'];
-  if (($auto_establish = trim(stripslashes($_POST['auto_establish']))) === 'none' ) {
+  if (($auto_establish = tuq($_POST['auto_establish'])) === 'none' ) {
     $auto_establish = '';
   }
   
@@ -356,7 +356,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $n = count($db['data']);
     $id = $n;
     for ($i = 0; $i < $n; $i++) {
-      if ($db['data'][$i]['remote_host'] === trim($_POST['remote_host'])) {
+      if ($db['data'][$i]['remote_host'] === tuq($_POST['remote_host'])) {
         $id = $i;
         break;
       }

@@ -252,7 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = 999;                                 
   } elseif (isset($_POST['submit_add'])) {
     if (isset($_POST['key'])) {
-      $key = trim($_POST['key']);
+      $key = tuqd($_POST['key']);
     } else {
       $key = $global_user;
     }
@@ -269,8 +269,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       $enabled = isset($_POST['enabled']) ? $_POST['enabled'] : array();
       for ($i = 0; $i < $MAXNUM; $i++) {
-        $number[$i] = trim($_POST["number$i"]);
-        $timeout[$i] = trim($_POST["timeout$i"]);
+        $number[$i] = tuqd($_POST["number$i"]);
+        $timeout[$i] = tuqd($_POST["timeout$i"]);
         if ($USE_RULES && $number[$i] !== '') {
           if (! preg_match("/$NUMBER_FORMAT/", $number[$i])) {
             $result = 12;                                 

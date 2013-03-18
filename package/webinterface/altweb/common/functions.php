@@ -360,7 +360,9 @@ function getVARdef($db, $var, $cur = NULL) {
 //
 function string2RCconfig($str) {
 
-  $str = stripslashes($str);
+  if (get_magic_quotes_gpc()) {
+    $str = stripslashes($str);
+  }
   $str = str_replace('\\', '\\\\', $str);
   $str = str_replace('$', '\\$', $str);
   $str = str_replace('`', '\\`', $str);
@@ -376,6 +378,52 @@ function RCconfig2string($str) {
   $str = str_replace('\\`', '`', $str);
   $str = str_replace('\\"', '"', $str);
   $str = str_replace('\\\\', '\\', $str);
+  return($str);
+}
+
+// Function: stripshellsafe
+//
+function stripshellsafe($str) {
+
+  if (get_magic_quotes_gpc()) {
+    $str = stripslashes($str);
+  }
+  $str = str_replace('$', '', $str);
+  $str = str_replace('`', '', $str);
+  $str = str_replace('"', '', $str);
+  return($str);
+}
+
+// Function: tuq (Trim Un-Quote for Shell)
+//
+function tuq($str) {
+
+  $str = stripshellsafe($str);
+  $str = trim($str);
+  return($str);
+}
+
+// Function: tuqp (Trim Un-Quote for Prefs)
+//
+function tuqp($str) {
+
+  if (get_magic_quotes_gpc()) {
+    $str = stripslashes($str);
+  }
+  $str = str_replace('"', '', $str);
+  $str = trim($str);
+  return($str);
+}
+
+// Function: tuqd (Trim Un-Quote for Data)
+//
+function tuqd($str) {
+
+  if (get_magic_quotes_gpc()) {
+    $str = stripslashes($str);
+  }
+  $str = str_replace('"', '', $str);
+  $str = trim($str);
   return($str);
 }
 

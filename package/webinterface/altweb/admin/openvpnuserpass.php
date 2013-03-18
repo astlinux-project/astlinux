@@ -89,8 +89,8 @@ function saveOPENVPNsettings($conf_dir, $conf_file, $db, $delete = NULL) {
 //
 function addUserPass(&$db, $id) {
 
-  $user = str_replace(' ', '', $_POST['user']);
-  $pass = str_replace(' ', '', stripslashes($_POST['pass']));
+  $user = str_replace(' ', '', stripshellsafe($_POST['user']));
+  $pass = str_replace(' ', '', stripshellsafe($_POST['pass']));
   
   if ($user === '') {
     return(FALSE);
@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $n = count($db['data']);
     $id = $n;
     for ($i = 0; $i < $n; $i++) {
-      if ($db['data'][$i]['user'] === str_replace(' ', '', $_POST['user'])) {
+      if ($db['data'][$i]['user'] === str_replace(' ', '', stripshellsafe($_POST['user']))) {
         $id = $i;
         break;
       }

@@ -82,13 +82,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (! $global_staff) {
     $result = 999;                                 
   } elseif (isset($_POST['submit_add'])) {
-    $actionkey = trim($_POST['actionkey']);
+    $actionkey = tuqd($_POST['actionkey']);
     if (($action = $_POST['action']) === '') {
-      $action = trim($_POST['actiondata']);
+      $action = tuqd($_POST['actiondata']);
     }
-    if (($comment = trim($_POST['comment'])) !== '') {
-      $comment = str_replace('"', "'", stripslashes($comment));
-    }
+    $comment = tuqd($_POST['comment']);
     if (strlen($actionkey) > 0) {
       if (($cmd = getPREFdef($global_prefs, 'actionlist_format_cmdstr')) === '') {
         $cmd = '^[A-Za-z0-9-]{2,20}$';

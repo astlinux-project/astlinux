@@ -55,8 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (! $global_admin) {
     $result = 999;                                 
   } elseif (isset($_POST['submit_send_email'])) {
-    $to = trim($_POST['to_email']);
-    $from = trim($_POST['from_email']);
+    $to = tuqd($_POST['to_email']);
+    $from = tuqd($_POST['from_email']);
     if ($to !== '') {
       // Sanitize to and from
       if (preg_match('/^[a-zA-Z0-9._@-]*$/', $to) && preg_match('/^[a-zA-Z0-9._@-]*$/', $from)) {

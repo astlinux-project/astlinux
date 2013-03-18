@@ -50,7 +50,7 @@ function saveDNSHOSTSsettings($conf_dir, $conf_file, $db, $delete = NULL) {
         $value .= '~'.$db['data'][$i]['mac'];
         $value .= '~';
         if ($db['data'][$i]['comment'] !== '') {
-          $value .= str_replace('~', '-', str_replace('"', "'", stripslashes($db['data'][$i]['comment'])));
+          $value .= str_replace('~', '-', $db['data'][$i]['comment']);
         }
         fwrite($fp, $value."\n");
       }
@@ -96,10 +96,10 @@ function parseDNSHOSTSconf($vars) {
 //
 function addDNSHOST(&$db, $id) {
 
-  $name = trim($_POST['name']);
-  $ip = trim($_POST['ip']);
-  $mac = trim($_POST['mac']);
-  $comment = trim($_POST['comment']);
+  $name = tuq($_POST['name']);
+  $ip = tuq($_POST['ip']);
+  $mac = tuq($_POST['mac']);
+  $comment = tuq($_POST['comment']);
   if ($name === '' ||
       $ip === '') {
     return(FALSE);
@@ -127,13 +127,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $n = count($db['data']);
     $id = $n;
     for ($i = 0; $i < $n; $i++) {
-      if ($db['data'][$i]['name'] === trim($_POST['name']) && $db['data'][$i]['ip'] === trim($_POST['ip'])) {
+      if ($db['data'][$i]['name'] === tuq($_POST['name']) && $db['data'][$i]['ip'] === tuq($_POST['ip'])) {
         $id = $i;
         break;
       }
     }
-    if (preg_match('/^[0-9a-fA-F][0-9a-fA-F.:]*[0-9a-fA-F]$/', trim($_POST['ip']))) {
-      $mac = trim($_POST['mac']);
+    if (preg_match('/^[0-9a-fA-F][0-9a-fA-F.:]*[0-9a-fA-F]$/', tuq($_POST['ip']))) {
+      $mac = tuq($_POST['mac']);
       if ($mac === '' || preg_match('/^[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}$/', $mac)) {
         if (addDNSHOST($db, $id)) {
           $result = saveDNSHOSTSsettings($DNSHOSTSCONFDIR, $DNSHOSTSCONFFILE, $db);

@@ -44,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (! $global_staff) {
     $result = 999;                                 
   } elseif (isset($_POST['submit_add'])) {
-    $speeddial = trim($_POST['speeddial']);
-    $speeddialname = trim($_POST['speeddialname']);
+    $speeddial = tuqd($_POST['speeddial']);
+    $speeddialname = tuqd($_POST['speeddialname']);
     $ext_1x00 = (isset($_POST['ext_1x00'])) ? $_POST['ext_1x00'] : '';
     $ext_11x0 = $_POST['ext_11x0'];
     $ext_110x = $_POST['ext_110x'];

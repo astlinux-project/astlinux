@@ -57,11 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (! $global_staff) {
     $result = 999;
   } elseif (isset($_POST['submit_add'])) {
-    $cidnum = trim($_POST['cidnum']);
+    $cidnum = tuqd($_POST['cidnum']);
     $action = $_POST['action'];
-    if (($comment = trim($_POST['comment'])) !== '') {
-      $comment = str_replace('"', "'", stripslashes($comment));
-    }
+    $comment = tuqd($_POST['comment']);
     if (strlen($cidnum) > 0) {
       if (($cmd = getPREFdef($global_prefs, 'number_format_cmdstr')) === '') {
         $cmd = '^[2-9][0-9][0-9][2-9][0-9][0-9][0-9][0-9][0-9][0-9]$';

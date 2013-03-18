@@ -139,10 +139,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = 999;                                 
   } elseif (isset($_POST['submit_password'])) {
     if (isset($_POST['pass1'])) {
-      $pass1 = trim($_POST['pass1']);
+      $pass1 = tuqd($_POST['pass1']);
     }
     if (isset($_POST['pass2'])) {
-      $pass2 = trim($_POST['pass2']);
+      $pass2 = tuqd($_POST['pass2']);
     }
     if (($user = $_POST['user_pass']) !== '') {
       $result = genHTpasswd($user, $pass1, $pass2, 3);

@@ -43,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (! $global_staff) {
     $result = 999;                                 
   } elseif (isset($_POST['submit_add'])) {
-    $cidnum = trim($_POST['cidnum']);
-    $cidname = trim($_POST['cidname']);
+    $cidnum = tuqd($_POST['cidnum']);
+    $cidname = tuqd($_POST['cidname']);
     if (strlen($cidname) > 0) {
       if (($cmd = getPREFdef($global_prefs, 'number_format_cmdstr')) === '') {
         $cmd = '^[2-9][0-9][0-9][2-9][0-9][0-9][0-9][0-9][0-9][0-9]$';

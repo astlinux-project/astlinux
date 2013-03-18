@@ -66,23 +66,23 @@ function saveZABBIXsettings($conf_dir, $conf_file) {
   }
   fwrite($fp, "### gui.zabbix.conf - start ###\n###\n");
 
-  $value = 'GUI_ZABBIX_DATA="'.$_POST['zabbix_enabled'].'~'.trim($_POST['zabbix_server']).'"';
+  $value = 'GUI_ZABBIX_DATA="'.$_POST['zabbix_enabled'].'~'.tuq($_POST['zabbix_server']).'"';
   fwrite($fp, "### GUI Data\n".$value."\n");
 
   if ($_POST['zabbix_enabled'] == '1') {
-    $value = 'ZABBIX_SERVER="'.trim($_POST['zabbix_server']).'"';
+    $value = 'ZABBIX_SERVER="'.tuq($_POST['zabbix_server']).'"';
   } else {
     $value = 'ZABBIX_SERVER=""';
   }
   fwrite($fp, "### Server\n".$value."\n");
   
-  $value = 'ZABBIX_SERVER_PORT="'.trim($_POST['zabbix_server_port']).'"';
+  $value = 'ZABBIX_SERVER_PORT="'.tuq($_POST['zabbix_server_port']).'"';
   fwrite($fp, "### Server Port\n".$value."\n");
 
-  $value = 'ZABBIX_HOSTNAME="'.trim($_POST['agent_hostname']).'"';
+  $value = 'ZABBIX_HOSTNAME="'.tuq($_POST['agent_hostname']).'"';
   fwrite($fp, "### Agent Hostname\n".$value."\n");
 
-  $value = 'ZABBIX_LISTENPORT="'.trim($_POST['agent_listenport']).'"';
+  $value = 'ZABBIX_LISTENPORT="'.tuq($_POST['agent_listenport']).'"';
   fwrite($fp, "### Agent Listen Port\n".$value."\n");
 
   $value = 'ZABBIX_STARTAGENTS="'.$_POST['zabbix_startagents'].'"';
@@ -99,10 +99,10 @@ if (is_file($ZABBIX_PROXY_EXE)) {
   $value = 'ZABBIX_PROXY="'.$_POST['zabbix_proxy'].'"';
   fwrite($fp, "### Proxy Enable\n".$value."\n");
   
-  $value = 'ZABBIX_PROXY_HOSTNAME="'.trim($_POST['zabbix_proxy_hostname']).'"';
+  $value = 'ZABBIX_PROXY_HOSTNAME="'.tuq($_POST['zabbix_proxy_hostname']).'"';
   fwrite($fp, "### Proxy Hostname\n".$value."\n");
 
-  $value = 'ZABBIX_PROXY_LISTENPORT="'.trim($_POST['proxy_listenport']).'"';
+  $value = 'ZABBIX_PROXY_LISTENPORT="'.tuq($_POST['proxy_listenport']).'"';
   fwrite($fp, "### Proxy Listen Port\n".$value."\n");
 
   $value = 'ZABBIX_PROXY_AGENT="'.$_POST['zabbix_proxy_agent'].'"';

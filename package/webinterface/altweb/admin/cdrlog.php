@@ -484,7 +484,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $db['displayStart'] = 0;
     }
     if (isset($_POST['list_type_val'])) {
-      $search = trim(stripslashes($_POST['list_type_val']));
+      $search = tuqd($_POST['list_type_val']);
       $search = trim($search, ' |&"');
       if ($search === '') {
         $result = 0;

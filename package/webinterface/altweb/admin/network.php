@@ -139,7 +139,7 @@ function checkNETWORKsettings() {
     }
   }
 
-  $tz = ($_POST['timezone'] !== '') ? $_POST['timezone'] : trim($_POST['other_timezone']);
+  $tz = ($_POST['timezone'] !== '') ? $_POST['timezone'] : tuq($_POST['other_timezone']);
   if ($tz !== '') {
     if (! is_file("/usr/share/zoneinfo/$tz")) {
       return(103);
@@ -184,28 +184,28 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   if ($_POST['ip_type'] === 'dhcp') {
     $value = 'EXTIP=""';
   } else {
-    $value = 'EXTIP="'.trim($_POST['static_ip']).'"';
+    $value = 'EXTIP="'.tuq($_POST['static_ip']).'"';
   }
   fwrite($fp, "### External Static IPv4\n".$value."\n");
   
   if ($_POST['ip_type'] === 'dhcp') {
     $value = 'EXTNM=""';
   } else {
-    $value = 'EXTNM="'.trim($_POST['mask_ip']).'"';
+    $value = 'EXTNM="'.tuq($_POST['mask_ip']).'"';
   }
   fwrite($fp, "### External Static IPv4 NetMask\n".$value."\n");
   
   if ($_POST['ip_type'] === 'dhcp') {
     $value = 'EXTGW=""';
   } else {
-    $value = 'EXTGW="'.trim($_POST['gateway_ip']).'"';
+    $value = 'EXTGW="'.tuq($_POST['gateway_ip']).'"';
   }
   fwrite($fp, "### External Static IPv4 Gateway\n".$value."\n");
   
   if ($_POST['ip_type'] === 'dhcp') {
     $value = 'EXTIPV6=""';
   } else {
-    $value = trim($_POST['static_ipv6']);
+    $value = tuq($_POST['static_ipv6']);
     if ($value !== '' && strpos($value, '/') === FALSE) {
       $value="$value/64";
     }
@@ -216,7 +216,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   if ($_POST['ip_type'] === 'dhcp') {
     $value = 'EXTGWIPV6=""';
   } else {
-    $value = trim($_POST['gateway_ipv6']);
+    $value = tuq($_POST['gateway_ipv6']);
     if (($pos = strpos($value, '/')) !== FALSE) {
       $value=substr($value, 0, $pos);
     }
@@ -224,25 +224,25 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   }
   fwrite($fp, "### External Static IPv6 Gateway\n".$value."\n");
   
-  $value = 'PPPOEUSER="'.trim($_POST['user_pppoe']).'"';
+  $value = 'PPPOEUSER="'.tuq($_POST['user_pppoe']).'"';
   fwrite($fp, "### PPPoE Username\n".$value."\n");
   
   $value = 'PPPOEPASS="'.string2RCconfig(trim($_POST['pass_pppoe'])).'"';
   fwrite($fp, "### PPPoE Password\n".$value."\n");
   
-  $value = 'HOSTNAME="'.trim($_POST['hostname']).'"';
+  $value = 'HOSTNAME="'.tuq($_POST['hostname']).'"';
   fwrite($fp, "### Hostname\n".$value."\n");
   
-  $value = 'DOMAIN="'.trim($_POST['domain']).'"';
+  $value = 'DOMAIN="'.tuq($_POST['domain']).'"';
   fwrite($fp, "### Domain\n".$value."\n");
   
   $value = isset($_POST['local_domain']) ? 'LOCALDNS_LOCAL_DOMAIN="yes"' : 'LOCALDNS_LOCAL_DOMAIN="no"';
   fwrite($fp, "### Local Domain\n".$value."\n");
   
-  $value = 'DNS="'.trim($_POST['dns']).'"';
+  $value = 'DNS="'.tuq($_POST['dns']).'"';
   fwrite($fp, "### DNS Servers\n".$value."\n");
   
-  $value = 'VLANS="'.trim($_POST['vlans']).'"';
+  $value = 'VLANS="'.tuq($_POST['vlans']).'"';
   fwrite($fp, "### VLAN Interfaces\n".$value."\n");
   
   $value = isset($_POST['vlan_cos']) ? 'VLANCOS="yes"' : 'VLANCOS=""';
@@ -251,13 +251,13 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $value = 'INTIF="'.$_POST['int_eth'].'"';
   fwrite($fp, "### 1st LAN Interface\n".$value."\n");
   
-  $value = 'INTIP="'.trim($_POST['int_ip']).'"';
+  $value = 'INTIP="'.tuq($_POST['int_ip']).'"';
   fwrite($fp, "### 1st LAN IPv4\n".$value."\n");
     
-  $value = 'INTNM="'.trim($_POST['int_mask_ip']).'"';
+  $value = 'INTNM="'.tuq($_POST['int_mask_ip']).'"';
   fwrite($fp, "### 1st LAN NetMask\n".$value."\n");
     
-  $value = trim($_POST['int_ipv6']);
+  $value = tuq($_POST['int_ipv6']);
   if ($value !== '' && strpos($value, '/') === FALSE) {
     $value="$value/64";
   }
@@ -267,13 +267,13 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $value = 'INT2IF="'.$_POST['int2_eth'].'"';
   fwrite($fp, "### 2nd LAN Interface\n".$value."\n");
   
-  $value = 'INT2IP="'.trim($_POST['int2_ip']).'"';
+  $value = 'INT2IP="'.tuq($_POST['int2_ip']).'"';
   fwrite($fp, "### 2nd LAN IPv4\n".$value."\n");
     
-  $value = 'INT2NM="'.trim($_POST['int2_mask_ip']).'"';
+  $value = 'INT2NM="'.tuq($_POST['int2_mask_ip']).'"';
   fwrite($fp, "### 2nd LAN NetMask\n".$value."\n");
 
-  $value = trim($_POST['int2_ipv6']);
+  $value = tuq($_POST['int2_ipv6']);
   if ($value !== '' && strpos($value, '/') === FALSE) {
     $value="$value/64";
   }
@@ -283,13 +283,13 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $value = 'INT3IF="'.$_POST['int3_eth'].'"';
   fwrite($fp, "### 3rd LAN Interface\n".$value."\n");
   
-  $value = 'INT3IP="'.trim($_POST['int3_ip']).'"';
+  $value = 'INT3IP="'.tuq($_POST['int3_ip']).'"';
   fwrite($fp, "### 3rd LAN IPv4\n".$value."\n");
     
-  $value = 'INT3NM="'.trim($_POST['int3_mask_ip']).'"';
+  $value = 'INT3NM="'.tuq($_POST['int3_mask_ip']).'"';
   fwrite($fp, "### 3rd LAN NetMask\n".$value."\n");
 
-  $value = trim($_POST['int3_ipv6']);
+  $value = tuq($_POST['int3_ipv6']);
   if ($value !== '' && strpos($value, '/') === FALSE) {
     $value="$value/64";
   }
@@ -299,13 +299,13 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $value = 'DMZIF="'.$_POST['dmz_eth'].'"';
   fwrite($fp, "### DMZ Interface\n".$value."\n");
   
-  $value = 'DMZIP="'.trim($_POST['dmz_ip']).'"';
+  $value = 'DMZIP="'.tuq($_POST['dmz_ip']).'"';
   fwrite($fp, "### DMZ IPv4\n".$value."\n");
     
-  $value = 'DMZNM="'.trim($_POST['dmz_mask_ip']).'"';
+  $value = 'DMZNM="'.tuq($_POST['dmz_mask_ip']).'"';
   fwrite($fp, "### DMZ NetMask\n".$value."\n");
   
-  $value = trim($_POST['dmz_ipv6']);
+  $value = tuq($_POST['dmz_ipv6']);
   if ($value !== '' && strpos($value, '/') === FALSE) {
     $value="$value/64";
   }
@@ -327,7 +327,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
 
   $value = 'NTPSERVS="us.pool.ntp.org"';
   if (isset($_POST['other_ntp_server'], $_POST['ntp_server'])) {
-    $t_value = trim($_POST['other_ntp_server']);
+    $t_value = tuq($_POST['other_ntp_server']);
     if ($_POST['ntp_server'] !== '') {
       if ($t_value !== '') {
         $value = 'NTPSERVS="'.$_POST['ntp_server'].' '.$t_value.'"';
@@ -343,20 +343,20 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   if ($_POST['timezone'] !== '') {
     $value = 'TIMEZONE="'.$_POST['timezone'].'"';
   } else {
-    $value = 'TIMEZONE="'.trim($_POST['other_timezone']).'"';
+    $value = 'TIMEZONE="'.tuq($_POST['other_timezone']).'"';
   }
   fwrite($fp, "### UNIX Timezone\n".$value."\n");
     
-  $value = 'SMTP_SERVER="'.trim($_POST['smtp_server']).'"';
+  $value = 'SMTP_SERVER="'.tuq($_POST['smtp_server']).'"';
   fwrite($fp, "### SMTP Server\n".$value."\n");
   
-  $value = 'SMTP_DOMAIN="'.trim($_POST['smtp_domain']).'"';
+  $value = 'SMTP_DOMAIN="'.tuq($_POST['smtp_domain']).'"';
   fwrite($fp, "### SMTP Domain\n".$value."\n");
   
   $value = 'SMTP_AUTH="'.$_POST['smtp_auth'].'"';
   fwrite($fp, "### SMTP Authentication Type\n".$value."\n");
   
-  $value = 'SMTP_PORT="'.trim($_POST['smtp_port']).'"';
+  $value = 'SMTP_PORT="'.tuq($_POST['smtp_port']).'"';
   fwrite($fp, "### SMTP TCP Port\n".$value."\n");
 
   fwrite($fp, "### SMTP TLS\n");
@@ -379,13 +379,13 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $value = 'SMTP_CERTCHECK="'.$_POST['smtp_certcheck'].'"';
   fwrite($fp, $value."\n");
   if ($_POST['smtp_certcheck'] === 'on') {
-    $value = 'SMTP_CA="'.trim($_POST['smtp_ca_cert']).'"';
+    $value = 'SMTP_CA="'.tuq($_POST['smtp_ca_cert']).'"';
   } else {
     $value = 'SMTP_CA=""';
   }
   fwrite($fp, $value."\n");
 
-  $value = 'SMTP_USER="'.trim($_POST['smtp_user']).'"';
+  $value = 'SMTP_USER="'.tuq($_POST['smtp_user']).'"';
   fwrite($fp, "### SMTP Auth Username\n".$value."\n");
   
   $value = 'SMTP_PASS="'.string2RCconfig(trim($_POST['smtp_pass'])).'"';
@@ -427,7 +427,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $value = 'UPNP_LISTEN="'.trim($x_value).'"';
   fwrite($fp, "### UPnP Listen Interfaces\n".$value."\n");
 
-  $value = 'HTTPDIR="'.trim($_POST['http_dir']).'"';
+  $value = 'HTTPDIR="'.tuq($_POST['http_dir']).'"';
   fwrite($fp, "### HTTP Server Directory\n".$value."\n");
   
   $value = isset($_POST['http_cgi']) ? 'HTTPCGI="yes"' : 'HTTPCGI="no"';
@@ -439,7 +439,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $value = isset($_POST['http_accesslog']) ? 'HTTP_ACCESSLOG="yes"' : 'HTTP_ACCESSLOG="no"';
   fwrite($fp, "### HTTP access logging\n".$value."\n");
   
-  $value = 'HTTPSDIR="'.trim($_POST['https_dir']).'"';
+  $value = 'HTTPSDIR="'.tuq($_POST['https_dir']).'"';
   fwrite($fp, "### HTTPS Server Directory\n".$value."\n");
   
   $value = isset($_POST['https_cgi']) ? 'HTTPSCGI="yes"' : 'HTTPSCGI="no"';
@@ -451,7 +451,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $value = isset($_POST['https_accesslog']) ? 'HTTPS_ACCESSLOG="yes"' : 'HTTPS_ACCESSLOG="no"';
   fwrite($fp, "### HTTPS access logging\n".$value."\n");
   
-  $value = 'HTTPSCERT="'.trim($_POST['https_cert']).'"';
+  $value = 'HTTPSCERT="'.tuq($_POST['https_cert']).'"';
   if (isset($_POST['create_cert']) && is_opensslHERE()) {
     if (($countryName = getPREFdef($global_prefs, 'dn_country_name_cmdstr')) === '') {
       $countryName = 'US';
@@ -470,7 +470,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
     if (($orgUnit = getPREFdef($global_prefs, 'dn_org_unit_cmdstr')) === '') {
       $orgUnit = 'Web Interface';
     }
-    if (($commonName = trim($_POST['hostname'])) === '') {
+    if (($commonName = tuq($_POST['hostname'])) === '') {
       $commonName = '*';
     }
     if (($email = getPREFdef($global_prefs, 'dn_email_address_cmdstr')) === '') {
@@ -483,7 +483,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   }
   fwrite($fp, "### HTTPS Certificate File\n".$value."\n");
 
-  $value = 'PHONEPROV_ALLOW="'.trim($_POST['phoneprov_allow']).'"';
+  $value = 'PHONEPROV_ALLOW="'.tuq($_POST['phoneprov_allow']).'"';
   fwrite($fp, "### /phoneprov/ Allowed IPs\n".$value."\n");
   
   $x_value = '';
@@ -520,18 +520,18 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   if ($_POST['dd_service'] !== '') {
     $value = 'DDSERVICE="'.$_POST['dd_service'].'"';
   } else {
-    $value = 'DDSERVICE="'.trim($_POST['other_dd_service']).'"';
+    $value = 'DDSERVICE="'.tuq($_POST['other_dd_service']).'"';
   }
   fwrite($fp, $value."\n");
   if ($_POST['dd_getip'] !== '') {
     $value = 'DDGETIP="'.$_POST['dd_getip'].'"';
   } else {
-    $value = 'DDGETIP="'.trim($_POST['other_dd_getip']).'"';
+    $value = 'DDGETIP="'.tuq($_POST['other_dd_getip']).'"';
   }
   fwrite($fp, $value."\n");
-  $value = 'DDHOST="'.trim($_POST['dd_host']).'"';
+  $value = 'DDHOST="'.tuq($_POST['dd_host']).'"';
   fwrite($fp, $value."\n");
-  $value = 'DDUSER="'.trim($_POST['dd_user']).'"';
+  $value = 'DDUSER="'.tuq($_POST['dd_user']).'"';
   fwrite($fp, $value."\n");
   $value = 'DDPASS="'.string2RCconfig(trim($_POST['dd_pass'])).'"';
   fwrite($fp, $value."\n");
@@ -539,13 +539,13 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   fwrite($fp, "### Safe Asterisk - SIP Monitoring\n");
   $value = 'SAFE_ASTERISK="'.$_POST['safe_asterisk'].'"';
   fwrite($fp, $value."\n");
-  $value = 'SAFE_ASTERISK_NOTIFY="'.trim($_POST['safe_asterisk_notify']).'"';
+  $value = 'SAFE_ASTERISK_NOTIFY="'.tuq($_POST['safe_asterisk_notify']).'"';
   fwrite($fp, $value."\n");
-  $value = 'SAFE_ASTERISK_NOTIFY_FROM="'.trim($_POST['safe_asterisk_notify_from']).'"';
+  $value = 'SAFE_ASTERISK_NOTIFY_FROM="'.tuq($_POST['safe_asterisk_notify_from']).'"';
   fwrite($fp, $value."\n");
-  $value = 'MONITOR_ASTERISK_SIP_TRUNKS="'.trim($_POST['monitor_sip_trunks']).'"';
+  $value = 'MONITOR_ASTERISK_SIP_TRUNKS="'.tuq($_POST['monitor_sip_trunks']).'"';
   fwrite($fp, $value."\n");
-  $value = 'MONITOR_ASTERISK_SIP_PEERS="'.trim($_POST['monitor_sip_peers']).'"';
+  $value = 'MONITOR_ASTERISK_SIP_PEERS="'.tuq($_POST['monitor_sip_peers']).'"';
   fwrite($fp, $value."\n");
   $value = 'MONITOR_ASTERISK_SIP_STATUS_UPDATES="'.$_POST['monitor_status_updates'].'"';
   fwrite($fp, $value."\n");
@@ -559,7 +559,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
     if ($_POST['ups_type'] === 'usb') {
       $value = 'UPSDEVICE=""';
     } else {
-      $value = 'UPSDEVICE="'.trim($_POST['ups_device']).'"';
+      $value = 'UPSDEVICE="'.tuq($_POST['ups_device']).'"';
     }
     fwrite($fp, $value."\n");
   } else {
@@ -570,9 +570,9 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
     $value = 'UPSDEVICE=""';
     fwrite($fp, $value."\n");
   }
-  $value = 'UPS_NOTIFY="'.trim($_POST['ups_notify']).'"';
+  $value = 'UPS_NOTIFY="'.tuq($_POST['ups_notify']).'"';
   fwrite($fp, $value."\n");
-  $value = 'UPS_NOTIFY_FROM="'.trim($_POST['ups_notify_from']).'"';
+  $value = 'UPS_NOTIFY_FROM="'.tuq($_POST['ups_notify_from']).'"';
   fwrite($fp, $value."\n");
   $value = 'UPS_KILL_POWER="'.$_POST['ups_kill_power'].'"';
   fwrite($fp, $value."\n");

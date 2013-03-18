@@ -117,8 +117,12 @@ function saveEDITfile($text, $file, $cleanup) {
   if (! @copy($file, $tmpfile)) {
     return(FALSE);
   }
-  $data = stripslashes($text);
-  $data = str_replace(chr(13), '', $data);
+  if (get_magic_quotes_gpc()) {
+    $data = stripslashes($text);
+    $data = str_replace(chr(13), '', $data);
+  } else {
+    $data = str_replace(chr(13), '', $text);
+  }
   if (($ph = @fopen($file, "wb")) === FALSE) {
     if ($cleanup) {
       @unlink($tmpfile);

@@ -257,7 +257,7 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
         $value .= '~'.$db['data'][$i]['d_uport'];
         $value .= '~';
         if ($db['data'][$i]['comment'] !== '') {
-          $value .= str_replace('~', '-', str_replace('"', "'", stripslashes($db['data'][$i]['comment'])));
+          $value .= str_replace('~', '-', $db['data'][$i]['comment']);
         }
         $value .= '~'.$db['data'][$i]['e_addr'];
         fwrite($fp, $value."\n");
@@ -317,16 +317,16 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
     fwrite($fp, "### Traffic Shaping\n");
     $value = 'SHAPETYPE="'.$_POST['shaper_enable_type'].'"';
     fwrite($fp, $value."\n");
-    $value = 'EXTDOWN="'.trim($_POST['shaper_extdown']).'"';
+    $value = 'EXTDOWN="'.tuq($_POST['shaper_extdown']).'"';
     fwrite($fp, $value."\n");
-    $value = 'EXTUP="'.trim($_POST['shaper_extup']).'"';
+    $value = 'EXTUP="'.tuq($_POST['shaper_extup']).'"';
     fwrite($fp, $value."\n");
-    $value = 'VOIPPORTS="'.trim($_POST['shaper_voipports']).'"';
+    $value = 'VOIPPORTS="'.tuq($_POST['shaper_voipports']).'"';
     fwrite($fp, $value."\n");
   }
   
   fwrite($fp, "### Block All Traffic\n");
-  $value = 'BLOCK_HOSTS="'.trim($_POST['hosts_blocked']).'"';
+  $value = 'BLOCK_HOSTS="'.tuq($_POST['hosts_blocked']).'"';
   fwrite($fp, $value."\n");
   if (isset($_POST['file_blocked'])) {
     $value = 'BLOCK_HOSTS_FILE="/mnt/kd/blocked-hosts"';
@@ -442,14 +442,14 @@ function existFWRule($db, $action, $proto, $s_addr, $s_lport, $s_uport, $d_addr,
 function addFWRule(&$db, $id) {
   $action = $_POST['action'];
   $proto = $_POST['proto'];
-  $s_addr = isset($_POST['s_addr']) ? str_replace(' ', '', $_POST['s_addr']) : '';
-  $s_lport = isset($_POST['s_lport']) ? str_replace(' ', '', $_POST['s_lport']) : '';
-  $s_uport = isset($_POST['s_uport']) ? str_replace(' ', '', $_POST['s_uport']) : '';
-  $d_addr = isset($_POST['d_addr']) ? str_replace(' ', '', $_POST['d_addr']) : '';
-  $d_lport = isset($_POST['d_lport']) ? str_replace(' ', '', $_POST['d_lport']) : '';
-  $d_uport = isset($_POST['d_uport']) ? str_replace(' ', '', $_POST['d_uport']) : '';
-  $e_addr = isset($_POST['e_addr']) ? str_replace(' ', '', $_POST['e_addr']) : '';
-  $comment = isset($_POST['comment']) ? trim($_POST['comment']) : '';
+  $s_addr = isset($_POST['s_addr']) ? str_replace(' ', '', tuq($_POST['s_addr'])) : '';
+  $s_lport = isset($_POST['s_lport']) ? str_replace(' ', '', tuq($_POST['s_lport'])) : '';
+  $s_uport = isset($_POST['s_uport']) ? str_replace(' ', '', tuq($_POST['s_uport'])) : '';
+  $d_addr = isset($_POST['d_addr']) ? str_replace(' ', '', tuq($_POST['d_addr'])) : '';
+  $d_lport = isset($_POST['d_lport']) ? str_replace(' ', '', tuq($_POST['d_lport'])) : '';
+  $d_uport = isset($_POST['d_uport']) ? str_replace(' ', '', tuq($_POST['d_uport'])) : '';
+  $e_addr = isset($_POST['e_addr']) ? str_replace(' ', '', tuq($_POST['e_addr'])) : '';
+  $comment = isset($_POST['comment']) ? tuq($_POST['comment']) : '';
   
   switch ($action) {
   case 'PASS_EXT_LOCAL':

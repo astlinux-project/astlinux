@@ -104,11 +104,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'status_custom_asterisk_status = yes';
       fwrite($fp, $value."\n");
     }
-    if (($value = trim($_POST['asterisk_name'])) !== '') {
+    if (($value = tuqp($_POST['asterisk_name'])) !== '') {
       $value = 'status_custom_asterisk_name_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
     }
-    if (($value = trim($_POST['asterisk_cmd'])) !== '') {
+    if (($value = tuqp($_POST['asterisk_cmd'])) !== '') {
       $value = 'status_custom_asterisk_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
     }
@@ -124,11 +124,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'status_show_firewall_states = yes';
       fwrite($fp, $value."\n");
     }
-    if (($value = trim($_POST['firewall_sports'])) !== '') {
+    if (($value = tuqp($_POST['firewall_sports'])) !== '') {
       $value = 'status_firewall_sports_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
     }
-    if (($value = trim($_POST['firewall_dports'])) !== '') {
+    if (($value = tuqp($_POST['firewall_dports'])) !== '') {
       $value = 'status_firewall_dports_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
     }
@@ -144,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'status_show_system_logs = no';
       fwrite($fp, $value."\n");
     }
-    if (($value = trim($_POST['exclude_logs'])) !== '') {
+    if (($value = tuqp($_POST['exclude_logs'])) !== '') {
       $value = 'status_exclude_logs_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
     }
@@ -169,37 +169,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'status_asterisk_manager = no';
       fwrite($fp, $value."\n");
     }
-    $value = 'status_active_chan_cmdstr = "'.trim($_POST['active_cmd']).'"';
+    $value = 'status_active_chan_cmdstr = "'.tuqp($_POST['active_cmd']).'"';
     fwrite($fp, $value."\n");
-    $value = 'status_voicemail_users_cmdstr = "'.trim($_POST['voicemail_cmd']).'"';
+    $value = 'status_voicemail_users_cmdstr = "'.tuqp($_POST['voicemail_cmd']).'"';
     fwrite($fp, $value."\n");
-    $value = 'status_dahdi_status_cmdstr = "'.trim($_POST['dahdi_cmd']).'"';
+    $value = 'status_dahdi_status_cmdstr = "'.tuqp($_POST['dahdi_cmd']).'"';
     fwrite($fp, $value."\n");
-    $value = 'status_jabber_status_cmdstr = "'.trim($_POST['jabber_cmd']).'"';
+    $value = 'status_jabber_status_cmdstr = "'.tuqp($_POST['jabber_cmd']).'"';
     fwrite($fp, $value."\n");
     
-    $value = 'sysdial_ext_prefix_cmdstr = "'.trim($_POST['ext_prefix']).'"';
+    $value = 'sysdial_ext_prefix_cmdstr = "'.tuqp($_POST['ext_prefix']).'"';
     fwrite($fp, $value."\n");
     $value = 'sysdial_ext_digits_cmdstr = "'.$_POST['ext_digits'].'"';
     fwrite($fp, $value."\n");
     
-    $value = 'number_format_cmdstr = "'.trim($_POST['num_format']).'"';
+    $value = 'number_format_cmdstr = "'.tuqp($_POST['num_format']).'"';
     fwrite($fp, $value."\n");
-    $value = 'number_error_cmdstr = "'.trim($_POST['num_error']).'"';
+    $value = 'number_error_cmdstr = "'.tuqp($_POST['num_error']).'"';
     fwrite($fp, $value."\n");
-    $value = 'blacklist_action_menu_cmdstr = "'.trim($_POST['blacklist_menu']).'"';
+    $value = 'blacklist_action_menu_cmdstr = "'.tuqp($_POST['blacklist_menu']).'"';
     fwrite($fp, $value."\n");
-    $value = 'whitelist_action_menu_cmdstr = "'.trim($_POST['whitelist_menu']).'"';
-    fwrite($fp, $value."\n");
-    
-    $value = 'actionlist_format_cmdstr = "'.trim($_POST['actionlist_key_format']).'"';
-    fwrite($fp, $value."\n");
-    $value = 'actionlist_error_cmdstr = "'.trim($_POST['actionlist_key_error']).'"';
-    fwrite($fp, $value."\n");
-    $value = 'actionlist_action_menu_cmdstr = "'.trim($_POST['actionlist_menu']).'"';
+    $value = 'whitelist_action_menu_cmdstr = "'.tuqp($_POST['whitelist_menu']).'"';
     fwrite($fp, $value."\n");
     
-    $value = trim($_POST['cidname_maxlen']);
+    $value = 'actionlist_format_cmdstr = "'.tuqp($_POST['actionlist_key_format']).'"';
+    fwrite($fp, $value."\n");
+    $value = 'actionlist_error_cmdstr = "'.tuqp($_POST['actionlist_key_error']).'"';
+    fwrite($fp, $value."\n");
+    $value = 'actionlist_action_menu_cmdstr = "'.tuqp($_POST['actionlist_menu']).'"';
+    fwrite($fp, $value."\n");
+    
+    $value = tuqp($_POST['cidname_maxlen']);
     if ($value > 7 && $value != 15) {
       $value = 'cidname_maxlen_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
@@ -207,15 +207,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $value = 'followme_numbers_displayed = "'.$_POST['followme_maxnum'].'"';
     fwrite($fp, $value."\n");
-    if (($value = trim($_POST['followme_menu'])) !== '') {
+    if (($value = tuqp($_POST['followme_menu'])) !== '') {
       $value = 'followme_schedule_menu_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
     }
-    if (($value = trim($_POST['followme_number_context'])) !== '') {
+    if (($value = tuqp($_POST['followme_number_context'])) !== '') {
       $value = 'followme_number_context_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
     }
-    if (($value = trim($_POST['followme_music_class'])) !== '') {
+    if (($value = tuqp($_POST['followme_music_class'])) !== '') {
       $value = 'followme_music_class_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
     }
@@ -224,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       fwrite($fp, $value."\n");
     }
     
-    if (($value = str_replace(' ', '', $_POST['meetme_redirect'])) !== '') {
+    if (($value = str_replace(' ', '', tuqp($_POST['meetme_redirect']))) !== '') {
       $value = 'meetme_redirect_path_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
     }
@@ -235,7 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $value = 'cdrlog_default_format = "'.$_POST['cdr_default'].'"';
     fwrite($fp, $value."\n");
-    $value = 'cdrlog_log_file_cmdstr = "'.trim($_POST['cdr_logfile']).'"';
+    $value = 'cdrlog_log_file_cmdstr = "'.tuqp($_POST['cdr_logfile']).'"';
     fwrite($fp, $value."\n");
     if (isset($_POST['cdr_databases'])) {
       $value = 'cdrlog_databases_show = yes';
@@ -282,21 +282,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'users_voicemail_delete_vmdata = yes';
       fwrite($fp, $value."\n");
     }
-    $value = 'users_voicemail_context_cmdstr = "'.trim($_POST['voicemail_context']).'"';
+    $value = 'users_voicemail_context_cmdstr = "'.tuqp($_POST['voicemail_context']).'"';
     fwrite($fp, $value."\n");
-    $value = 'users_voicemail_reload_cmdstr = "'.trim($_POST['voicemail_reload']).'"';
+    $value = 'users_voicemail_reload_cmdstr = "'.tuqp($_POST['voicemail_reload']).'"';
     fwrite($fp, $value."\n");
     
     if (isset($_POST['bak_files'])) {
       $value = 'edit_keep_bak_files = yes';
       fwrite($fp, $value."\n");
     }
-    $value = trim($_POST['text_cols']);
+    $value = tuqp($_POST['text_cols']);
     if ($value > 79 && $value != 95 && $value < 161) {
       $value = 'edit_text_cols_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
     }
-    $value = trim($_POST['text_rows']);
+    $value = tuqp($_POST['text_rows']);
     if ($value > 19 && $value != 30 && $value < 61) {
       $value = 'edit_text_rows_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
@@ -316,11 +316,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $value = 'system_reboot_timer_adjust = "'.$_POST['reboot_timer'].'"';
     fwrite($fp, $value."\n");
-    $value = 'system_asterisk_reload_cmdstr = "'.trim($_POST['asterisk_reload']).'"';
+    $value = 'system_asterisk_reload_cmdstr = "'.tuqp($_POST['asterisk_reload']).'"';
     fwrite($fp, $value."\n");
-    $value = 'system_firmware_repository_url = "'.trim($_POST['repository_url']).'"';
+    $value = 'system_firmware_repository_url = "'.tuqp($_POST['repository_url']).'"';
     fwrite($fp, $value."\n");
-    $value = 'system_asterisk_sounds_url = "'.trim($_POST['sounds_url']).'"';
+    $value = 'system_asterisk_sounds_url = "'.tuqp($_POST['sounds_url']).'"';
     fwrite($fp, $value."\n");
     
     if (($value = trim(preg_replace('/[^a-zA-Z]+/', '', $_POST['dn_country_name']))) !== '') {
@@ -355,17 +355,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       fwrite($fp, $value."\n");
     }
     
-    $value = 'title_name_cmdstr = "'.trim($_POST['title_name']).'"';
+    $value = 'title_name_cmdstr = "'.tuqp($_POST['title_name']).'"';
     fwrite($fp, $value."\n");
-    if (($value = trim($_POST['external_url_link'])) !== '') {
+    if (($value = tuqp($_POST['external_url_link'])) !== '') {
       $value = 'external_url_link_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
     }
-    if (($value = trim($_POST['external_url_name'])) !== '') {
+    if (($value = tuqp($_POST['external_url_name'])) !== '') {
       $value = 'external_url_name_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
     }
-    if (($value = trim($_POST['external_cli_link'])) !== '') {
+    if (($value = tuqp($_POST['external_cli_link'])) !== '') {
       $value = 'external_cli_link_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
     }
