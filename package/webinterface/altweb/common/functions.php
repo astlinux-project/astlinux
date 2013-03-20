@@ -391,6 +391,7 @@ function stripshellsafe($str) {
   $str = str_replace('$', '', $str);
   $str = str_replace('`', '', $str);
   $str = str_replace('"', '', $str);
+  $str = str_replace('\\', '', $str);
   return($str);
 }
 
@@ -411,6 +412,7 @@ function tuqp($str) {
     $str = stripslashes($str);
   }
   $str = str_replace('"', '', $str);
+  $str = str_replace('\\', '', $str);
   $str = trim($str);
   return($str);
 }
@@ -423,6 +425,7 @@ function tuqd($str) {
     $str = stripslashes($str);
   }
   $str = str_replace('"', '', $str);
+  $str = str_replace('\\', '', $str);
   $str = trim($str);
   return($str);
 }
