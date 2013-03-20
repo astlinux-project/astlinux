@@ -4,7 +4,7 @@
 #
 #############################################################
 
-STUNNEL_VERSION = 4.53
+STUNNEL_VERSION = 4.55
 STUNNEL_SITE = http://ftp.nluug.nl/pub/networking/stunnel/archive/4.x
 STUNNEL_DEPENDENCIES = openssl
 
