@@ -40,7 +40,7 @@ function getACTIONresult($result) {
   $str = 'No Action.';
 
   if (isset($_GET['result_str'])) {
-    $str = stripslashes(rawurldecode($_GET['result_str']));
+    $str = rawurldecode($_GET['result_str']);
   }
   if ($result == 100) {
     $color = 'green';
