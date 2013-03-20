@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PHP_VERSION = 5.3.22
+PHP_VERSION = 5.3.23
 PHP_SOURCE = php-$(PHP_VERSION).tar.bz2
 PHP_SITE = http://www.php.net/distributions
 PHP_INSTALL_STAGING = YES
@@ -21,6 +21,7 @@ PHP_CONF_OPT =  --mandir=/usr/share/man \
 		--enable-hash \
 		--enable-tokenizer \
 		--with-config-file-path=/etc \
+		--program-prefix= \
 		--localstatedir=/var
 
 PHP_CFLAGS = $(TARGET_CFLAGS)
