@@ -95,8 +95,8 @@ Released **TBD**
 -- Network tab, validate Timezone setting and display an error if invalid.
 
 -- All tabs, sanitize text input data used for rc.conf variable configuration.
-   Input characters: double-quote ("), dollar-sign ($) and grave-accent (`) will be ignored.
-   Asterisk astDB stored data will only ignore the double-quote (") character.
+   Input characters: double-quote ("), dollar-sign ($), grave-accent (`) and backslash (\) will be ignored.
+   Asterisk astDB stored data will ignore the double-quote (") and backslash (\) characters.
    Note: The single-quote (') character is allowed.
 
 
