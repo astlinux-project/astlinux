@@ -4,7 +4,7 @@
 #
 #############################################################
 
-SUDO_VERSION = 1.7.8p1
+SUDO_VERSION = 1.8.6p7
 SUDO_SITE    = http://www.sudo.ws/sudo/dist
 
 SUDO_CONF_OPT = \
@@ -15,10 +15,13 @@ SUDO_CONF_OPT = \
 		--without-interfaces \
 		--without-pam
 
-define SUDO_INSTALL_TARGET_CMDS
-	install -m 4555 -D $(@D)/sudo $(TARGET_DIR)/usr/bin/sudo
-	install -m 0555 -D $(@D)/visudo $(TARGET_DIR)/usr/sbin/visudo
-	install -m 0440 -D $(@D)/sudoers $(TARGET_DIR)/etc/sudoers
+# mksigname/mksiglist needs to run on build host to generate source files
+define SUDO_BUILD_MKSIGNAME_MKSIGLIST_HOST
+	$(MAKE) $(HOST_CONFIGURE_OPTS) \
+		CPPFLAGS="$(HOST_CPPFLAGS) -I../include -I.." \
+		-C $(@D)/compat mksigname mksiglist
 endef
+
+SUDO_POST_CONFIGURE_HOOKS += SUDO_BUILD_MKSIGNAME_MKSIGLIST_HOST
 
 $(eval $(call AUTOTARGETS,package,sudo))
