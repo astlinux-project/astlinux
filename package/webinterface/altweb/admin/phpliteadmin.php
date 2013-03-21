@@ -420,11 +420,7 @@ define('PROJECT_URL','http://phpliteadmin.googlecode.com');
 define('PROJECT_BUGTRACKER_LINK','<a href="http://code.google.com/p/phpliteadmin/issues/list" target="_blank">http://code.google.com/p/phpliteadmin/issues/list</a>');
 
 // Resource output (css and javascript files)
-// we get out of the main code as soon as possible, without inizializing the session
-if (isset($_GET['resource'])) {
-	Resources::output($_GET['resource']);
-	exit();
-}
+//AstLinux// Remove all 'resource' related code, use external files instead
 
 // don't mess with this - required for the login session
 ini_set('session.cookie_httponly', '1');
@@ -2010,7 +2006,6 @@ header('Content-Type: text/html; charset=utf-8');
 <head>
 <!-- Copyright <?php echo date("Y").' '.PROJECT.' ('.PROJECT_URL.')'; ?> -->
 <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-<link rel="shortcut icon" href="<?php echo PAGE ?>?resource=favicon" />
 <title><?php echo PROJECT ?></title>
 
 <?php
@@ -2071,7 +2066,7 @@ if(isset($_GET['help'])) //this page is used as the popup help section
 }
 ?>
 <!-- JavaScript Support -->
-<script type='text/javascript' src='<?php echo PAGE ?>?resource=javascript'></script>
+<script type='text/javascript' src='/common/phpliteadmin.js'></script>
 </head>
 <body style="direction:<?php echo $lang['direction']; ?>;">
 <?php
@@ -5037,75 +5032,4 @@ class MicroTimer {
 
 }
 
-
-/*	class Resources (issue #157)
-	outputs secondary files, such as css and javascript
-	data is stored gzipped (gzencode) and encoded (base64_encode)
-*/
-
-class Resources {
-
-	private static $_resources = array(
-		'css' => array(
-			'mime' => 'text/css',
-			'data' => 'H4sIAAAAAAAAA91XTY/jNgz9KwMEvcWGnXQGGfvUPQQ99dR7IFt0LIxseSUlmazh/15KlhPF9nxlWyxQBAESSqLIR/KRygQ9txWRe1YnUdoQSlm9x1+FqHVQkIrxc/KHZIQv/wR+BM1yslSkVoECyYp+m2I/IIl/b17TXHAhk0UURWlG8pe9FIeaBk4KEWTFUyqOIAsuTgk5aJF2YYYW7HTGHzRth/ufm9eHFX6f+y/u4lDoHe44MarLJI4iIyXtcOF6m2p41QGFXEiimaiTWtSQ5gepcEMjWK1B4omkNPdfzj1t066UbQlsX+okRqWZkBQkIuC2ZFk244uRXkz5DXXEUxAfUdsVn5XBZ6qoWOeQQ2884WxfJzlYU30orUmBFk1gYAgkoeygrH5vSRoX/LWgEj8Ct6EXm31GwzvLVotd7xYlEFzkrH5R7dTA3l/UoLWoEAY84nvuNHsBchIH23WL0mcOiRKc0UFk3ezlNoyDmdZFT+6l32oWXpdzdt+pD3ImODUBe1hgIijMlNaD2lP4ZDAw27jYC39PV67erJhrKdzCs7L5yurmoJcKOOR6aRAlEkj7yVKbcY6YTzqFeCqZwfgaB+eMF7V3s8iKB7/XF7/CTCOUo3q7rLi6mzqR53naFQw4VaAvBBD/dAp97MJMMT6bD2Z+jiEhrEaDLwbZAC5MYv5Fjm2Foe2tWD36mR/da/TElu12O2i91NiXItSFRwanv0nG4UFLn13j3hWBQf8mXh2lPlpKdVlrScLysxP0tOBLkCsS6/q/6fDnnVtUGJ/2vrtvk+w9Q3rg32Jdtzoh3i+Scq/mPV7ud1yp+UPqDjWNZ2qteIY1rP1mY8+MaXRIO2uST+wuDfpawDtWc3dMGtrP3dE3oTsjPeH9e6x4s6t8oRSRUAomqy+7QYkq4cOMdfYgXCRrKVMNJ+ck4yJ/uWnJt75txv5v7i7mG5KwYw8XRCdG66hWvN7dCMXsoCaB48R2xJxBSok9qxztzQ9Orvn9otnIIL1rJCgF9H+A+DwJumZOoSAHrn8Z1CXw5nvrVW48DNausmshK8LtwMqb3bR3R+Oy/0SXmyG2onDG7MRBz84yXs/GS92jYm0b6xR7p4szpW+nDHfOPY8M/9F2NFxOeG0+BT9FX//thO68ZPV0mOpXMNjjAhqgIhleiVCnPhl7z40uPBFZo8JlSHGm1rAMoWr0Gf9K0QzCHc3c9C6RSbtQMQoZkTttJqNxWnUhyU10+tXl8A9VjJ+XiKd9GxkX6wPnwwths9mgpDB4exliciOaf6J2/wAraB0Fgw8AAA==',
-		),
-		'javascript' => array(
-			'mime' => 'text/javascript',
-			'data' => 'H4sIAAAAAAAAC8VWbW/bNhD+Kw6HNhKkqSq2T9WIICu8zWhRDG2+DUNAUSeJiEyqFBXXS/3fdyTlFymx463A9sWW7v157nhU2UtuhJIzIYW57o0SkmtYgjRB+HDP9IzRNFvVooGgULy3iqQCM2+czc/rRREQQSIWkVt26E3CC9rLAkohoQgf/qFvUoiO5Q0U1OgeMhZFm025rdSoqmpgXGvui+X0VKIcE5l1CyTMrHHxrHGrxZLp9R2sBxf2rMsESCbK4IKFDxpMr+WsZE0HG5Tx5J41PVBKFh9u5r/OP5KXL4uE18DvLF1sT4B3Afw5lHpatg6D0ZSiD33TBMwzk5+snD0F9jSZ1kUqIzGHh5nvy+eTQvmuUPvqwfApxH31zvgaa8/PHkHncotVnTl2e/tRaZNJw///pRRHyKQWXjNZwaKSSkOQxzzGxjrW3SBdUELc+7E0/Lxq+KSIzYmQZwKc4tocgFqqe/hFQFN0u21zlKfS2nElDcN8ejejElaza63ZOgizUunAD3ua5T+xRLU2S5c0ICtTZ3kUOY52ij/yP5MOGuDGT23bd/VY68gNseJRZD6OKDvQ5tq8ZXjKA/K5B71GPxJfksuI2yga2oZxCF6RVxVKyWUYoS48IGIco4prT0d5lI5qu5DKpONaNc2NagdGUvcvaBCUAzrM8Mkwbb5+nUpwAaUkvCJlSd7sG72zuSICyBvXttAdcoEOKAofyqREa2ybSwb0sW+CS5AZ+GjHFs0gsc12Se3MM82QdU3i70tP8kBpmHEKiYEvZhD4bTGkxjKxT3SKYrPxvQmGWGHS9XlntJBVkMZ8u+6fUvN4mn94p3lURwVWw6N62+7/hoBjhnyrmstipEitwqcNwsd8Peo5zw5EGMwJBjQ4k/uBomw/objrt/fJ2Sd95zys+htsa8DifDiFu/viWMA8HHpBSHbCZnTZePznWD99ac6/tEqb7hROAs5mWBO33We8AZPOrBuwwfGorymRSsLxoicReHf/jRHc9TEJkDeK35EpvsXyeXxi+a34xhH+Db5xhHPwqRbkb9C0Ftrvqu3btxgMdHB5VaOUvv7uMmIxsRazT372SegWh1V3wIdrdxfvMIYb2q3dSshCrRKbzypiYpRqcqZpGvujg88dfR1jfcxGsnLDTN95G8TY+ycNnfjLDiM+r0RhavpjmsY1iKo29IcUN/Pko+i9uLOXv7/6GR7w94t38xfkuY/fHLfq9iS9INHwHOHzZpP9DYY8LKACDAAA',
-		),
-		'favicon' => array(
-			'mime' => 'image/x-icon',
-			'data' => 'H4sIAAAAAAAAA2NgYARCAQEGIKnAoMHCwCDGwMCgAcRAIaAIRJxYwM/FlQqkhInWgAYEeXgmAylZcvUL8fEdBFIeZGhlFObnd+Lk5LzKysq6D8hPBomRYgAfN3cYkHovISz8H0i/BeKNQCxIrH4RXl5vIHUSpB9qBgjvAGJ+YvRLCgra8HJxHQLpFeDlXYNkjj2xbuDh4KgE2QuMh7NA+hDUDe+AOJEY/dAw+Aiyl4OVdStUPwg/ZSAyXoF+OAh2Az//GSB9EsmMKiK94QxSD3IDME6PAtmfoPpfAbEaEfqZgHgrzAwgvRPJDZ1EukEeiB+D9LCxsYHccBOq/xiR+kEgDoh/AvFfpPRwgQT9IOAIxI8YEO4vI1E/CCgD8TogzkOXAAAwF/00PgQAAA==',
-		),
-	);
-
-	// override the internal resource with an external file
-	public static function useExternal($resource, $filename)
-	{
-		if (isset(self::$_resources[$resource]) && is_readable($filename)) {
-			self::$_resources[$resource]['file'] = $filename;
-		}
-	}
-
-	// outputs the specified resource, if defined in this class.
-	// the main script should do no further output after calling this function.
-	public static function output($resource)
-	{
-		if (isset(self::$_resources[$resource])) {
-			$res =& self::$_resources[$resource];
-
-			// use last-modified time as etag; etag must be quoted
-			$etag = '"' . filemtime(isset($res['file']) ? $res['file'] : PAGE) . '"';
-
-			// check headers for matching etag; if etag hasn't changed, use the cached version
-			if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] == $etag) {
-				header('HTTP/1.0 304 Not Modified');
-				return;
-			}
-
-			header('Etag: ' . $etag);
-
-			// cache file for at most 30 days
-			header('Cache-control: max-age=2592000');
-
-			// output resource
-			header('Content-type: ' . $res['mime']);
-
-			if (isset($res['file'])) {
-				readfile($res['file']);
-			} else {
-				if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false) {
-					header('Content-encoding: gzip');
-					echo base64_decode($res['data']);
-				} else {
-					// browser does not accept gzipped data, decompress
-					echo gzdecode(base64_decode($res['data']));
-				}
-			}
-		}
-	}
-
-}
-
-# - eof -
+?>

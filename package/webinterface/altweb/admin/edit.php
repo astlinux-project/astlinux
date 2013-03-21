@@ -353,7 +353,7 @@ require_once '../common/header.php';
   }
   putHtml("</center>");
 ?>
-  <script language="JavaScript" type="text/javascript" src="../common/murmurhash3_gc.js"></script>
+  <script language="JavaScript" type="text/javascript" src="/common/murmurhash3_gc.js"></script>
   <script language="JavaScript" type="text/javascript">
   //<![CDATA[
   var old_textSize;
