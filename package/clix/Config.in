@@ -1,0 +1,19 @@
+config BR2_PACKAGE_CLIX
+	bool "clix"
+	select BR2_PACKAGE_OPENSSL
+	select BR2_PACKAGE_LIBIDN
+	select BR2_PACKAGE_LUA
+	select BR2_PACKAGE_LUAFILESYSTEM
+	select BR2_PACKAGE_LUASOCKET
+	select BR2_PACKAGE_LUASEC
+	select BR2_PACKAGE_LUAEXPAT
+	default n
+	help
+	  clix is a command line client for Jabber/XMPP written in Lua
+
+	  hg clone http://code.matthewwild.co.uk/verse
+	  hg clone http://code.matthewwild.co.uk/clix
+	  hg clone http://code.matthewwild.co.uk/squish
+
+	  Manually created into package download.
+
