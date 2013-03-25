@@ -224,7 +224,7 @@ start () {
   if [ -f /etc/prosody/prosody.cfg.lua ] && grep -q '^[^-]*"posix"' /etc/prosody/prosody.cfg.lua; then
     echo "Starting XMPP Server..."
 
-    su -p -c "/usr/bin/prosody" prosody 2>/dev/null
+    su -p -s /bin/ash -c /usr/bin/prosody prosody
   fi
 }
 

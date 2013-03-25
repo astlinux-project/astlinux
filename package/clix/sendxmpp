@@ -48,7 +48,7 @@ password=othersecret
 
 help()
 {
-  su -p -c "/usr/bin/clix" prosody 2>/dev/null
+  su -p -s /bin/ash -c /usr/bin/clix prosody 2>/dev/null
   usage
 }
 
@@ -97,9 +97,9 @@ gen_commands()
 do_clix()
 {
   if [ $debug -eq 1 ]; then
-    su -p -c "/usr/bin/clix $CMDS" prosody 2>&1 | grep -v '^shell-init'
+    su -p -s /bin/ash -c "/usr/bin/clix $CMDS" prosody
   else
-    su -p -c "/usr/bin/clix $CMDS" prosody 2>/dev/null
+    su -p -s /bin/ash -c "/usr/bin/clix $CMDS" prosody 2>/dev/null
   fi
 }
 
