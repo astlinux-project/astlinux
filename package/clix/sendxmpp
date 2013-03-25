@@ -1,0 +1,191 @@
+#!/bin/sh
+
+##
+## Shell wrapper for clix, command-line Jabber/XMPP client
+##
+
+usage()
+{
+  echo '
+Usage: sendxmpp [options...] [-c cmd] [-t jid] [-m message] [args]
+
+Options:
+      --chatroom ROOM  Join a chatroom, defaults to the --to JID
+  -c, --cmd CMD        Specify "clix" command, defaults to "send"
+  -d, --debug          Enables debug logging
+  -h, --help           Show this help text
+  -i, --interactive    Enable interactive shell
+  -m, --message MSG    Specify message to "send", uses stdin if not specified with "send" cmd
+      --nickname NAME  The nickname to use when joining a chatroom, default is "clix"
+  -o, --send-presence  Send presence, that is - appear online to contacts
+  -p, --password PASS  Override clix.conf password= setting if no "username" is also defined
+                       Ignore clix.conf and use "username" and "password" if both are defined
+  -q, --quiet          Suppress informational messages
+  -r, --resource RESR  Set the resource to use, default is to let the server choose
+  -t, --to JID         JID where to send message
+  -u, --username USER  Specify clix.conf [username] if no "password" is also defined
+                       Ignore clix.conf and use "username" and "password" if both are defined
+  -v, --verbose        Enables verbose logging of the XMPP connection
+
+  Examples:
+  sendxmpp --help
+  sendxmpp -t alice@example.com -m "Howdy Alice"
+  echo "Howdy Alice" | sendxmpp -t alice@example.com
+  sendxmpp -c version example.com
+
+  Example "/mnt/kd/clix.conf" configuration file:
+
+[default]
+jid=user@example.com
+password=secret
+
+[otheraccount]
+jid=otheruser@example.com
+password=othersecret
+'
+  exit 1
+}
+
+help()
+{
+  su -p -c "/usr/bin/clix" prosody 2>/dev/null
+  usage
+}
+
+gen_commands()
+{
+  local cmds="$cmd"
+
+  if [ $verbose -eq 1 ]; then
+    cmds="$cmds -v"
+  fi
+  if [ $quiet -eq 1 ]; then
+    cmds="$cmds -q"
+  fi
+  if [ $send_presence -eq 1 ]; then
+    cmds="$cmds -o"
+  fi
+  if [ $interactive -eq 1 ]; then
+    cmds="$cmds --interactive"
+  fi
+  if [ -n "$resource" ]; then
+    cmds="$cmds --resource=$resource"
+  fi
+  if [ -n "$chatroom" ]; then
+    cmds="$cmds --chatroom=$chatroom"
+  fi
+  if [ -n "$nickname" ]; then
+    cmds="$cmds --nick=$nickname"
+  fi
+  if [ -n "$username" -a -z "$password" ]; then
+    cmds="$cmds --account=$username"
+  fi
+  if [ -n "$password" -a -z "$username" ]; then
+    cmds="$cmds --password=$password"
+  fi
+  if [ -n "$to" ]; then
+    cmds="$cmds --to=$to"
+  fi
+
+  if [ -n "$message" ]; then
+    cmds="$cmds '$message'"
+  fi
+
+  echo "$cmds"
+}
+
+do_clix()
+{
+  if [ $debug -eq 1 ]; then
+    su -p -c "/usr/bin/clix $CMDS" prosody 2>&1 | grep -v '^shell-init'
+  else
+    su -p -c "/usr/bin/clix $CMDS" prosody 2>/dev/null
+  fi
+}
+
+ARGS="$(getopt --name sendxmpp \
+               --long help,verbose,quiet,debug,send-presence,interactive,cmd:,message:,resource:,username:,password:,to:,chatroom:,nickname: \
+               --options hvqdoic:m:r:u:p:t: \
+               -- "$@")"
+if [ $? -ne 0 ]; then
+  usage
+fi
+eval set -- $ARGS
+
+verbose=0
+quiet=0
+debug=0
+send_presence=0
+interactive=0
+cmd="send"
+message=""
+resource=""
+username=""
+password=""
+to=""
+chatroom=""
+nickname=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -h|--help)          help ;;
+    -v|--verbose)       verbose=1 ;;
+    -q|--quiet)         quiet=1 ;;
+    -d|--debug)         debug=1 ;;
+    -o|--send-presence) send_presence=1 ;;
+    -i|--interactive)   interactive=1 ;;
+    -c|--cmd)           cmd="$2"; shift ;;
+    -m|--message)       message="$2"; shift ;;
+    -r|--resource)      resource="$2"; shift ;;
+    -u|--username)      username="$2"; shift ;;
+    -p|--password)      password="$2"; shift ;;
+    -t|--to)            to="$2"; shift ;;
+    --chatroom)         chatroom="$2"; shift ;;
+    --nickname)         nickname="$2"; shift ;;
+    --) shift; break ;;
+  esac
+  shift
+done
+
+if [ "$cmd" = "send" -a -n "$to" -a -z "$message" ]; then  # Read message from stdin
+  message="$(cat)"
+fi
+
+if [ $# -gt 0 ]; then
+  CMDS="$(gen_commands) $@"
+else
+  CMDS="$(gen_commands)"
+fi
+
+if [ "$CMDS" = "send" ]; then  # Incomplete
+  usage
+fi
+
+if [ $debug -eq 1 ]; then
+  echo "DEBUG: clix $CMDS"
+fi
+
+if [ -n "$username" -a -n "$password" ]; then
+  export XDG_CONFIG_HOME="$(mktemp -d "/tmp/clix_XXXXXX")"
+  chown prosody:prosody "$XDG_CONFIG_HOME"
+
+  echo "
+[default]
+jid=$username
+password=$password
+" > "$XDG_CONFIG_HOME/clix.conf"
+  chown prosody:prosody "$XDG_CONFIG_HOME/clix.conf"
+
+  trap '[ -n "$XDG_CONFIG_HOME" ] && rm -rf "$XDG_CONFIG_HOME"; unset XDG_CONFIG_HOME; exit 74' INT TERM EXIT
+
+  do_clix
+
+  trap - INT TERM EXIT
+
+  if [ -n "$XDG_CONFIG_HOME" ]; then
+    rm -rf "$XDG_CONFIG_HOME"
+  fi
+  unset XDG_CONFIG_HOME
+else
+  do_clix
+fi
+
