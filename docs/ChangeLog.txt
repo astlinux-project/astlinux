@@ -37,8 +37,9 @@ Released **TBD**
 
 -- stunnel, version bump to 4.55, (security fix: CVE-2013-1762)
 
--- clix, an XMPP Client command line tool to send Jabber/XMPP messages has been added.
-   The "clix" command uses the same Lua runtime environment as Prosody uses.
+-- sendxmpp, an XMPP Client command line tool to send Jabber/XMPP messages has been added.
+   (based on the "clix" Lua tool by Matthew Wild, uses the same Lua runtime environment as Prosody)
+   More Info: sendxmpp --help
 
 -- OpenVPN, version bump to 2.3.0.  Remove easy-rsa scripts.
    == New Server rc.conf variables: OVPN_AUTH, OVPN_TA, OVPN_SERVERV6 and OVPN_TOPOLOGY
