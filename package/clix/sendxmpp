@@ -146,8 +146,8 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-if [ "$cmd" = "send" -a -n "$to" -a -z "$message" ]; then  # Read message from stdin
-  message="$(cat)"
+if [ "$cmd" = "send" -a -n "$to" -a -z "$message" ]; then  # Read message from stdin, translate single-quote
+  message="$(tr "'" '`')"
 fi
 
 if [ $# -gt 0 ]; then
