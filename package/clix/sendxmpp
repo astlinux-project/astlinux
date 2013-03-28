@@ -17,7 +17,7 @@ Options:
   -i, --interactive    Enable interactive shell
   -m, --message MSG    Specify message to "send", uses stdin if not specified with "send" cmd
       --nickname NAME  The nickname to use when joining a chatroom, default is "clix"
-  -o, --send-presence  Send presence, that is - appear online to contacts
+  -o, --send-presence  Send presence, appear online to contacts
   -p, --password PASS  Override clix.conf password= setting if no "username" is also defined
                        Ignore clix.conf and use "username" and "password" if both are defined
   -q, --quiet          Suppress informational messages
@@ -31,6 +31,8 @@ Options:
   sendxmpp --help
   sendxmpp -t alice@example.com -m "Howdy Alice"
   echo "Howdy Alice" | sendxmpp -t alice@example.com
+  sendxmpp -c presence -t alice@example.com
+  sendxmpp -c presence --send-presence
   sendxmpp -c version example.com
 
   Example "/mnt/kd/clix.conf" configuration file:
