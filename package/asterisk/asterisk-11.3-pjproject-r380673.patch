@@ -1,0 +1,213 @@
+Index: res/pjproject/pjnath/build/Makefile
+===================================================================
+--- asterisk-11.3.0/res/pjproject/pjnath/build/Makefile	(revision 380672)
++++ asterisk-11.3.0/res/pjproject/pjnath/build/Makefile	(revision 380673)
+@@ -92,18 +92,24 @@
+ dep: depend
+ distclean: realclean
+ 
+-.PHONY: dep depend pjlib pjlib-test clean realclean distclean
++.PHONY: dep depend clean realclean distclean
++.PHONY: $(TARGETS)
++.PHONY: $(PJNATH_LIB) $(PJNATH_TEST_EXE) $(PJTURN_CLIENT_EXE) $(PJTURN_SRV_EXE)
+ 
+-pjnath:
++pjnath: $(PJNATH_LIB)
++$(PJNATH_LIB):
+ 	$(MAKE) -f $(RULES_MAK) APP=PJNATH app=pjnath $(PJNATH_LIB)
+ 
+-pjnath-test: $(PJLIB_LIB) $(PJLIB_UTIL_LIB) $(PJNATH_LIB)
++pjnath-test: $(PJNATH_TEST_EXE)
++$(PJNATH_TEST_EXE): $(PJNATH_LIB)
+ 	$(MAKE) -f $(RULES_MAK) APP=PJNATH_TEST app=pjnath-test $(PJNATH_TEST_EXE)
+ 
+-pjturn-client: $(PJLIB_LIB) $(PJLIB_UTIL_LIB) $(PJNATH_LIB)
++pjturn-client: $(PJTURN_CLIENT_EXE)
++$(PJTURN_CLIENT_EXE): $(PJNATH_LIB)
+ 	$(MAKE) -f $(RULES_MAK) APP=PJTURN_CLIENT app=pjturn-client $(PJTURN_CLIENT_EXE)
+ 
+-pjturn-srv: $(PJLIB_LIB) $(PJLIB_UTIL_LIB) $(PJNATH_LIB)
++pjturn-srv: $(PJTURN_SRV_EXE)
++$(PJTURN_SRV_EXE): $(PJNATH_LIB)
+ 	$(MAKE) -f $(RULES_MAK) APP=PJTURN_SRV app=pjturn-srv $(PJTURN_SRV_EXE)
+ 
+ .PHONY: ../lib/pjnath.ko
+Index: res/pjproject/pjsip/build/Makefile
+===================================================================
+--- asterisk-11.3.0/res/pjproject/pjsip/build/Makefile	(revision 380672)
++++ asterisk-11.3.0/res/pjproject/pjsip/build/Makefile	(revision 380673)
+@@ -106,8 +106,6 @@
+ #
+ TARGETS := pjsip pjsip-ua pjsip-simple pjsua-lib pjsip-test
+ 
+-.PHONY: $(TARGETS)
+-
+ all: $(TARGETS)
+ 
+ doc:
+@@ -124,21 +122,28 @@
+ dep: depend
+ distclean: realclean
+ 
+-.PHONY: dep depend pjsip pjsip-ua pjsua-lib clean realclean distclean
++.PHONY: dep depend clean realclean distclean
++.PHONY: $(TARGETS)
++.PHONY: $(PJSIP_LIB) $(PJSIP_UA_LIB) $(PJSIP_SIMPLE_LIB) $(PJSUA_LIB_LIB) $(TEST_EXE)
+ 
+-pjsip:
++pjsip: $(PJSIP_LIB)
++$(PJSIP_LIB):
+ 	$(MAKE) -f $(RULES_MAK) APP=PJSIP app=pjsip $(PJSIP_LIB)
+ 
+-pjsip-ua:
++pjsip-ua: $(PJSIP_UA_LIB)
++$(PJSIP_UA_LIB):
+ 	$(MAKE) -f $(RULES_MAK) APP=PJSIP_UA app=pjsip-ua $(PJSIP_UA_LIB)
+ 
+-pjsip-simple:
++pjsip-simple: $(PJSIP_SIMPLE_LIB)
++$(PJSIP_SIMPLE_LIB):
+ 	$(MAKE) -f $(RULES_MAK) APP=PJSIP_SIMPLE app=pjsip-simple $(PJSIP_SIMPLE_LIB)
+ 
+-pjsua-lib: 
++pjsua-lib: $(PJSUA_LIB_LIB)
++$(PJSUA_LIB_LIB): 
+ 	$(MAKE) -f $(RULES_MAK) APP=PJSUA_LIB app=pjsua-lib $(PJSUA_LIB_LIB)
+ 
+-pjsip-test:
++pjsip-test: $(TEST_EXE)
++$(TEST_EXE): $(PJSUA_LIB_LIB) $(PJSIP_SIMPLE_LIB) $(PJSIP_UA_LIB) $(PJSIP_LIB)
+ 	$(MAKE) -f $(RULES_MAK) APP=TEST app=pjsip-test $(TEST_EXE)
+ 
+ .PHONY: ../lib/pjsip.ko
+Index: res/pjproject/pjsip-apps/build/Makefile
+===================================================================
+--- asterisk-11.3.0/res/pjproject/pjsip-apps/build/Makefile	(revision 380672)
++++ asterisk-11.3.0/res/pjproject/pjsip-apps/build/Makefile	(revision 380673)
+@@ -57,8 +57,6 @@
+ #
+ TARGETS := pjsua pjsystest samples
+ 
+-.PHONY: $(TARGETS)
+-
+ all: $(TARGETS)
+ 
+ doc:
+@@ -66,12 +64,16 @@
+ dep: depend
+ distclean: realclean
+ 
+-.PHONY: dep depend pjsua clean realclean distclean
++.PHONY: dep depend clean realclean distclean
++.PHONY: $(TARGETS)
++.PHONY: $(PJSUA_EXE) $(PJSYSTEST_EXE)
+ 
+-pjsua:
++pjsua: $(PJSUA_EXE)
++$(PJSUA_EXE):
+ 	$(MAKE) -f $(RULES_MAK) APP=PJSUA app=pjsua $(PJSUA_EXE)
+ 
+-pjsystest:
++pjsystest: $(PJSYSTEST_EXE)
++$(PJSYSTEST_EXE):
+ 	$(MAKE) -f $(RULES_MAK) APP=PJSYSTEST app=pjsystest $(PJSYSTEST_EXE)
+ 
+ samples:
+Index: res/pjproject/pjmedia/build/Makefile
+===================================================================
+--- asterisk-11.3.0/res/pjproject/pjmedia/build/Makefile	(revision 380672)
++++ asterisk-11.3.0/res/pjproject/pjmedia/build/Makefile	(revision 380673)
+@@ -156,24 +156,32 @@
+ dep: depend
+ distclean: realclean
+ 
+-.PHONY: dep depend pjmedia pjmedia-codec pjmedia-videodev pjmedia-audiodev pjmedia-test clean realclean distclean
++.PHONY: dep depend clean realclean distclean
++.PHONY: $(TARGETS)
++.PHONY: $(PJMEDIA_LIB) $(PJMEDIA_CODEC_LIB) $(PJMEDIA_VIDEODEV_LIB) $(PJMEDIA_AUDIODEV_LIB) $(PJSDP_LIB) $(PJMEDIA_TEST_EXE)
+ 
+-pjmedia:
++pjmedia: $(PJMEDIA_LIB)
++$(PJMEDIA_LIB):
+ 	$(MAKE) -f $(RULES_MAK) APP=PJMEDIA app=pjmedia $(PJMEDIA_LIB)
+ 
+-pjmedia-codec:
++pjmedia-codec: $(PJMEDIA_CODEC_LIB)
++$(PJMEDIA_CODEC_LIB):
+ 	$(MAKE) -f $(RULES_MAK) APP=PJMEDIA_CODEC app=pjmedia-codec $(PJMEDIA_CODEC_LIB)
+ 
+-pjmedia-videodev:
++pjmedia-videodev: $(PJMEDIA_VIDEODEV_LIB)
++$(PJMEDIA_VIDEODEV_LIB):
+ 	$(MAKE) -f $(RULES_MAK) APP=PJMEDIA_VIDEODEV app=pjmedia-videodev $(PJMEDIA_VIDEODEV_LIB)
+ 
+-pjmedia-audiodev:
++pjmedia-audiodev: $(PJMEDIA_AUDIODEV_LIB)
++$(PJMEDIA_AUDIODEV_LIB):
+ 	$(MAKE) -f $(RULES_MAK) APP=PJMEDIA_AUDIODEV app=pjmedia-audiodev $(PJMEDIA_AUDIODEV_LIB)
+ 
+-pjsdp:
++pjsdp: $(PJSDP_LIB)
++$(PJSDP_LIB):
+ 	$(MAKE) -f $(RULES_MAK) APP=PJSDP app=pjsdp $(PJSDP_LIB)
+ 
+-pjmedia-test: $(PJMEDIA_LIB)
++pjmedia-test: $(PJMEDIA_TEST_EXE)
++$(PJMEDIA_TEST_EXE): $(PJMEDIA_LIB) $(PJMEDIA_CODEC_LIB)
+ 	$(MAKE) -f $(RULES_MAK) APP=PJMEDIA_TEST app=pjmedia-test $(PJMEDIA_TEST_EXE)
+ 
+ .PHONY: ../lib/pjmedia.ko
+Index: res/pjproject/pjlib/build/Makefile
+===================================================================
+--- asterisk-11.3.0/res/pjproject/pjlib/build/Makefile	(revision 380672)
++++ asterisk-11.3.0/res/pjproject/pjlib/build/Makefile	(revision 380673)
+@@ -77,17 +77,21 @@
+ 	echo '$(TEST_EXE): $(PJLIB_LIB)' >> .pjlib-test-$(TARGET_NAME).depend
+ 
+ 
+-.PHONY: dep depend pjlib pjlib-test clean realclean distclean
++.PHONY: dep depend clean realclean distclean
++.PHONY: $(TARGETS)
++.PHONY: $(PJLIB_LIB) $(TEST_EXE)
+ 
+ dep: depend
+ 
+-pjlib: ../include/pj/config_site.h
++pjlib: $(PJLIB_LIB)
++$(PJLIB_LIB): ../include/pj/config_site.h
+ 	$(MAKE) -f $(RULES_MAK) APP=PJLIB app=pjlib $(PJLIB_LIB)
+ 
+ ../include/pj/config_site.h:
+ 	touch ../include/pj/config_site.h
+-	
+-pjlib-test: 
++
++pjlib-test: $(TEST_EXE)
++$(TEST_EXE): $(PJLIB_LIB)
+ 	$(MAKE) -f $(RULES_MAK) APP=TEST app=pjlib-test $(TEST_EXE)
+ 
+ .PHONY: ../lib/pjlib.ko
+Index: res/pjproject/pjlib-util/build/Makefile
+===================================================================
+--- asterisk-11.3.0/res/pjproject/pjlib-util/build/Makefile	(revision 380672)
++++ asterisk-11.3.0/res/pjproject/pjlib-util/build/Makefile	(revision 380673)
+@@ -69,12 +69,16 @@
+ dep: depend
+ distclean: realclean
+ 
+-.PHONY: dep depend pjlib pjlib-test clean realclean distclean
++.PHONY: dep depend clean realclean distclean
++.PHONY: $(TARGETS)
++.PHONY: $(PJLIB_UTIL_LIB) $(UTIL_TEST_EXE)
+ 
+-pjlib-util:
++pjlib-util: $(PJLIB_UTIL_LIB)
++$(PJLIB_UTIL_LIB):
+ 	$(MAKE) -f $(RULES_MAK) APP=PJLIB_UTIL app=pjlib-util $(PJLIB_UTIL_LIB)
+ 
+-pjlib-util-test:
++pjlib-util-test: $(UTIL_TEST_EXE)
++$(UTIL_TEST_EXE): $(PJLIB_UTIL_LIB)
+ 	$(MAKE) -f $(RULES_MAK) APP=UTIL_TEST app=pjlib-util-test $(UTIL_TEST_EXE)
+ 
+ .PHONY: ../lib/pjlib-util.ko

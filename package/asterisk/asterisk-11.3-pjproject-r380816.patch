@@ -1,0 +1,258 @@
+Index: Makefile
+===================================================================
+--- asterisk-11.3.0/Makefile	(revision 380815)
++++ asterisk-11.3.0/Makefile	(revision 380816)
+@@ -98,12 +98,7 @@
+ export LDCONFIG_FLAGS
+ export PYTHON
+ 
+-# even though we could use '-include makeopts' here, use a wildcard
+-# lookup anyway, so that make won't try to build makeopts if it doesn't
+-# exist (other rules will force it to be built if needed)
+-ifneq ($(wildcard makeopts),)
+-  include makeopts
+-endif
++-include makeopts
+ 
+ # start the primary CFLAGS and LDFLAGS with any that were provided
+ # to the configure script
+@@ -311,7 +306,7 @@
+ 	mK=" make"
+ endif
+ 
+-all: _cleantest_all
++all: _all
+ 	@echo " +--------- Asterisk Build Complete ---------+"
+ 	@echo " + Asterisk has successfully been built, and +"
+ 	@echo " + can be installed by running:              +"
+@@ -319,7 +314,7 @@
+ 	@echo " +               $(mK) install               +"
+ 	@echo " +-------------------------------------------+"
+ 
+-full: _cleantest_all_full
++full: _full
+ 	@echo " +--------- Asterisk Build Complete ---------+"
+ 	@echo " + Asterisk has successfully been built, and +"
+ 	@echo " + can be installed by running:              +"
+@@ -328,19 +323,9 @@
+ 	@echo " +-------------------------------------------+"
+ 
+ 
+-# For parallel builds, we must call cleantest *before* running the
+-# other dependencies on _all.
+-_cleantest_all: cleantest
+-	@$(MAKE) _all
+-
+-# For parallel builds, we must call cleantest *before* running the
+-# other dependencies on _all.
+-_cleantest_all_full: cleantest
+-	@$(MAKE) _all_full
+-
+ _all: makeopts $(SUBDIRS) doc/core-en_US.xml $(ADDL_TARGETS)
+ 
+-_all_full: makeopts $(SUBDIRS) doc/full-en_US.xml $(ADDL_TARGETS)
++_full: makeopts $(SUBDIRS) doc/full-en_US.xml $(ADDL_TARGETS)
+ 
+ makeopts: configure
+ 	@echo "****"
+@@ -375,7 +360,7 @@
+ 	+@$(SUBMAKE) $(MOD_SUBDIRS_EMBED_LDFLAGS)
+ 	+@$(SUBMAKE) $(MOD_SUBDIRS_EMBED_LIBS)
+ 
+-$(SUBDIRS): main/version.c include/asterisk/build.h include/asterisk/buildopts.h defaults.h makeopts.embed_rules
++$(SUBDIRS): makeopts cleantest main/version.c include/asterisk/build.h include/asterisk/buildopts.h defaults.h makeopts.embed_rules
+ 
+ ifeq ($(findstring $(OSARCH), mingw32 cygwin ),)
+     # Non-windows:
+@@ -395,10 +380,10 @@
+ res:	main
+ endif
+ 
+-$(MOD_SUBDIRS):
++$(MOD_SUBDIRS): makeopts
+ 	+@_ASTCFLAGS="$(MOD_SUBDIR_CFLAGS) $(_ASTCFLAGS)" ASTCFLAGS="$(ASTCFLAGS)" _ASTLDFLAGS="$(_ASTLDFLAGS)" ASTLDFLAGS="$(ASTLDFLAGS)" $(SUBMAKE) --no-builtin-rules -C $@ SUBDIR=$@ all
+ 
+-$(OTHER_SUBDIRS):
++$(OTHER_SUBDIRS): makeopts
+ 	+@_ASTCFLAGS="$(OTHER_SUBDIR_CFLAGS) $(_ASTCFLAGS)" ASTCFLAGS="$(ASTCFLAGS)" _ASTLDFLAGS="$(_ASTLDFLAGS)" ASTLDFLAGS="$(ASTLDFLAGS)" $(SUBMAKE) --no-builtin-rules -C $@ SUBDIR=$@ all
+ 
+ defaults.h: makeopts build_tools/make_defaults_h
+@@ -452,7 +437,7 @@
+ 	rm -rf doc/api
+ 	rm -f build_tools/menuselect-deps
+ 
+-datafiles: _cleantest_all doc/core-en_US.xml
++datafiles: _all doc/core-en_US.xml
+ 	CFLAGS="$(_ASTCFLAGS) $(ASTCFLAGS)" build_tools/mkpkgconfig "$(DESTDIR)$(libdir)/pkgconfig";
+ # Should static HTTP be installed during make samples or even with its own target ala
+ # webvoicemail?  There are portions here that *could* be customized but might also be
+@@ -473,7 +458,7 @@
+ 	done
+ 	$(MAKE) -C sounds install
+ 
+-doc/core-en_US.xml: $(foreach dir,$(MOD_SUBDIRS),$(shell $(GREP) -l "language=\"en_US\"" $(dir)/*.c $(dir)/*.cc 2>/dev/null))
++doc/core-en_US.xml: makeopts $(foreach dir,$(MOD_SUBDIRS),$(shell $(GREP) -l "language=\"en_US\"" $(dir)/*.c $(dir)/*.cc 2>/dev/null))
+ 	@printf "Building Documentation For: "
+ 	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > $@
+ 	@echo "<!DOCTYPE docs SYSTEM \"appdocsxml.dtd\">" >> $@
+@@ -487,7 +472,7 @@
+ 	@echo
+ 	@echo "</docs>" >> $@
+ 
+-doc/full-en_US.xml: $(foreach dir,$(MOD_SUBDIRS),$(shell $(GREP) -l "language=\"en_US\"" $(dir)/*.c $(dir)/*.cc 2>/dev/null))
++doc/full-en_US.xml: makeopts $(foreach dir,$(MOD_SUBDIRS),$(shell $(GREP) -l "language=\"en_US\"" $(dir)/*.c $(dir)/*.cc 2>/dev/null))
+ ifeq ($(PYTHON),:)
+ 	@echo "--------------------------------------------------------------------------"
+ 	@echo "---        Please install python to build full documentation           ---"
+@@ -561,7 +546,7 @@
+ main-bininstall:
+ 	+@DESTDIR="$(DESTDIR)" ASTSBINDIR="$(ASTSBINDIR)" ASTLIBDIR="$(ASTLIBDIR)" $(SUBMAKE) -C main bininstall
+ 
+-bininstall: _cleantest_all installdirs $(SUBDIRS_INSTALL) main-bininstall
++bininstall: _all installdirs $(SUBDIRS_INSTALL) main-bininstall
+ 	$(INSTALL) -m 755 contrib/scripts/astgenkey "$(DESTDIR)$(ASTSBINDIR)/"
+ 	$(INSTALL) -m 755 contrib/scripts/autosupport "$(DESTDIR)$(ASTSBINDIR)/"
+ 	if [ ! -f "$(DESTDIR)$(ASTSBINDIR)/safe_asterisk" -a ! -f /sbin/launchd ]; then \
+@@ -916,19 +901,19 @@
+ 		CFLAGS="$(BUILD_CFLAGS)" LDFLAGS="$(BUILD_LDFLAGS)" \
+ 		$(MAKE) -C menuselect CONFIGURE_SILENT="--silent"
+ 
+-menuselect/menuselect: menuselect/makeopts
++menuselect/menuselect: menuselect/makeopts cleantest
+ 	+$(MAKE_MENUSELECT) menuselect
+ 
+-menuselect/cmenuselect: menuselect/makeopts
++menuselect/cmenuselect: menuselect/makeopts cleantest
+ 	+$(MAKE_MENUSELECT) cmenuselect
+ 
+-menuselect/gmenuselect: menuselect/makeopts
++menuselect/gmenuselect: menuselect/makeopts cleantest
+ 	+$(MAKE_MENUSELECT) gmenuselect
+ 
+-menuselect/nmenuselect: menuselect/makeopts
++menuselect/nmenuselect: menuselect/makeopts cleantest
+ 	+$(MAKE_MENUSELECT) nmenuselect
+ 
+-menuselect/makeopts: makeopts
++menuselect/makeopts: makeopts cleantest
+ 	+$(MAKE_MENUSELECT) makeopts
+ 
+ menuselect-tree: $(foreach dir,$(filter-out main,$(MOD_SUBDIRS)),$(wildcard $(dir)/*.c) $(wildcard $(dir)/*.cc)) build_tools/cflags.xml build_tools/cflags-devmode.xml sounds/sounds.xml build_tools/embed_modules.xml utils/utils.xml agi/agi.xml configure makeopts
+@@ -956,7 +941,8 @@
+ .PHONY: distclean
+ .PHONY: all
+ .PHONY: _all
+-.PHONY: _cleantest_all
++.PHONY: full
++.PHONY: _full
+ .PHONY: prereqs
+ .PHONY: cleantest
+ .PHONY: uninstall
+Index: res/Makefile
+===================================================================
+--- asterisk-11.3.0/res/Makefile	(revision 380815)
++++ asterisk-11.3.0/res/Makefile	(revision 380816)
+@@ -67,21 +67,25 @@
+ ael/pval.o: ael/pval.c
+ 
+ clean::
+-	$(MAKE) -C pjproject realclean
++	@if [ -f pjproject/build.mak ]; then $(MAKE) -C pjproject realclean; fi
+ 	rm -f snmp/*.o snmp/*.i ael/*.o ael/*.i ais/*.o ais/*.i
+ 
+-pjproject/build.mak:
+-	cd pjproject && ./configure AR="" CFLAGS=-fPIC  --disable-floating-point --disable-sound --disable-oss --disable-speex-aec --disable-l16-codec --disable-gsm-codec --disable-g722-codec --disable-g7221-codec --disable-speex-codec --disable-ilbc-codec --disable-g711-codec
++dist-clean::
++	rm -f pjproject/build.mak
+ 
+-.PHONY : pjproject
+-pjproject: pjproject/build.mak
+-	# Make sure we always build pjproject with a single job.
+-	$(MAKE) -j1 -C pjproject dep
+-	$(MAKE) -j1 -C pjproject
++pjproject/build.mak: pjproject/aconfigure
++	(cd pjproject && CFLAGS="-fPIC" ./configure --build=$(BUILD_PLATFORM) --host=$(HOST_PLATFORM) --disable-floating-point --disable-sound --disable-oss --disable-speex-aec --disable-l16-codec --disable-gsm-codec --disable-g722-codec --disable-g7221-codec --disable-speex-codec --disable-ilbc-codec --disable-g711-codec)
+ 
+-include pjproject/build.mak
++ifneq ($(findstring $(MAKECMDGOALS),all),)
++-include pjproject/build.mak
++endif
+ 
+-$(PJ_LIB_FILES): pjproject
++.PHONY: FORCE
++FORCE:
++
++$(PJ_LIB_FILES): FORCE
++	$(MAKE) -C $(patsubst %/lib/,%,$(dir $@))/build/ ../lib/$(notdir $@)
++
+ res_rtp_asterisk.o: $(PJ_LIB_FILES)
+ res_rtp_asterisk.o: _ASTCFLAGS+=$(PJ_CFLAGS)
+ res_rtp_asterisk.so: _ASTLDFLAGS+=$(PJ_LDFLAGS)
+Index: res/pjproject/aconfigure
+===================================================================
+--- asterisk-11.3.0/res/pjproject/aconfigure	(revision 380815)
++++ asterisk-11.3.0/res/pjproject/aconfigure	(revision 380816)
+@@ -2403,7 +2403,7 @@
+   program_prefix=${target_alias}-
+ ac_config_headers="$ac_config_headers pjlib/include/pj/compat/os_auto.h pjlib/include/pj/compat/m_auto.h pjmedia/include/pjmedia/config_auto.h pjmedia/include/pjmedia-codec/config_auto.h pjsip/include/pjsip/sip_autoconf.h"
+ 
+-ac_config_files="$ac_config_files build.mak build/os-auto.mak pjlib/build/os-auto.mak pjlib-util/build/os-auto.mak pjmedia/build/os-auto.mak pjsip/build/os-auto.mak third_party/build/os-auto.mak third_party/build/portaudio/os-auto.mak"
++ac_config_files="$ac_config_files build.mak build/os-auto.mak build/cc-auto.mak pjlib/build/os-auto.mak pjlib-util/build/os-auto.mak pjmedia/build/os-auto.mak pjsip/build/os-auto.mak third_party/build/os-auto.mak third_party/build/portaudio/os-auto.mak"
+ 
+ 
+ 
+@@ -7988,6 +7988,7 @@
+     "pjsip/include/pjsip/sip_autoconf.h") CONFIG_HEADERS="$CONFIG_HEADERS pjsip/include/pjsip/sip_autoconf.h" ;;
+     "build.mak") CONFIG_FILES="$CONFIG_FILES build.mak" ;;
+     "build/os-auto.mak") CONFIG_FILES="$CONFIG_FILES build/os-auto.mak" ;;
++    "build/cc-auto.mak") CONFIG_FILES="$CONFIG_FILES build/cc-auto.mak" ;;
+     "pjlib/build/os-auto.mak") CONFIG_FILES="$CONFIG_FILES pjlib/build/os-auto.mak" ;;
+     "pjlib-util/build/os-auto.mak") CONFIG_FILES="$CONFIG_FILES pjlib-util/build/os-auto.mak" ;;
+     "pjmedia/build/os-auto.mak") CONFIG_FILES="$CONFIG_FILES pjmedia/build/os-auto.mak" ;;
+Index: res/pjproject/build/common.mak
+===================================================================
+--- asterisk-11.3.0/res/pjproject/build/common.mak	(revision 380815)
++++ asterisk-11.3.0/res/pjproject/build/common.mak	(revision 380816)
+@@ -17,6 +17,15 @@
+ -include cc-$(CC_NAME).mak
+ 
+ #
++# Include auto configured compiler specification.
++# This will override the compiler settings above.
++# Currently this is made OPTIONAL, to prevent people
++# from getting errors because they don't re-run ./configure
++# after downloading new PJSIP.
++#
++-include $(PJDIR)/build/cc-auto.mak
++
++#
+ # Include global machine specific definitions
+ #
+ include $(PJDIR)/build/m-$(MACHINE_NAME).mak
+Index: res/pjproject/build/os-auto.mak.in
+===================================================================
+--- asterisk-11.3.0/res/pjproject/build/os-auto.mak.in	(revision 380815)
++++ asterisk-11.3.0/res/pjproject/build/os-auto.mak.in	(revision 380816)
+@@ -1,8 +1,8 @@
+ # @configure_input@
+ 
+-export OS_CFLAGS   := $(CC_DEF)PJ_AUTOCONF=1 @CFLAGS@ -g
++export OS_CFLAGS   := $(CC_DEF)PJ_AUTOCONF=1 @CFLAGS@
+ 
+-export OS_CXXFLAGS := $(CC_DEF)PJ_AUTOCONF=1 @CXXFLAGS@ -g
++export OS_CXXFLAGS := $(CC_DEF)PJ_AUTOCONF=1 @CXXFLAGS@
+ 
+ export OS_LDFLAGS  := @LDFLAGS@ @LIBS@
+ 
+Index: res/pjproject/aconfigure.ac
+===================================================================
+--- asterisk-11.3.0/res/pjproject/aconfigure.ac	(revision 380815)
++++ asterisk-11.3.0/res/pjproject/aconfigure.ac	(revision 380816)
+@@ -13,6 +13,7 @@
+ 		 ])
+ AC_CONFIG_FILES([build.mak 
+ 		 build/os-auto.mak 
++		 build/cc-auto.mak
+ 		 pjlib/build/os-auto.mak 
+ 		 pjlib-util/build/os-auto.mak 
+ 		 pjmedia/build/os-auto.mak
