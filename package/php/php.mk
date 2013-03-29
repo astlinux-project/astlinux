@@ -21,7 +21,6 @@ PHP_CONF_OPT =  --mandir=/usr/share/man \
 		--enable-hash \
 		--enable-tokenizer \
 		--with-config-file-path=/etc \
-		--program-prefix= \
 		--localstatedir=/var
 
 PHP_CFLAGS = $(TARGET_CFLAGS)
