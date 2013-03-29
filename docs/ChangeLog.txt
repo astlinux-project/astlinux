@@ -39,6 +39,8 @@ Released **TBD**
 
 -- sendxmpp, an XMPP Client command line tool to send Jabber/XMPP messages has been added.
    (based on the "clix" Lua tool by Matthew Wild, uses the same Lua runtime environment as Prosody)
+   This allows Asterisk 1.8 users to use Jabber/XMPP from the dialplan with the Prosody XMPP server.
+   More Info: http://doc.astlinux.org/userdoc:tt-xmpp-server#xmpp_command_line_client
    More Info: sendxmpp --help
 
 -- OpenVPN, version bump to 2.3.0.  Remove easy-rsa scripts.
