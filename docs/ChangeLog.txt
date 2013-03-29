@@ -29,6 +29,9 @@ Released **TBD**
 
 -- zabbix, version bump to 2.0.5, many bug fixes
 
+-- build system, various fixes and additions from the upstream Buildroot including:
+   host-fakeroot, host-makedevs and automatically define --program-prefix= when calling ./configure
+
 ** Networking
 
 -- OpenSSL, version bump to 0.9.8y (security fixes: CVE-2013-0169, CVE-2012-2686 and CVE-2013-0166)
