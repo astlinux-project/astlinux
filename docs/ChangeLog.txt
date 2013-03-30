@@ -46,7 +46,7 @@ Released **TBD**
    More Info: http://doc.astlinux.org/userdoc:tt-xmpp-server#xmpp_command_line_client
    More Info: sendxmpp --help
 
--- OpenVPN, version bump to 2.3.0.  Remove easy-rsa scripts.
+-- OpenVPN, version bump to 2.3.1,  Remove easy-rsa scripts.
    == New Server rc.conf variables: OVPN_AUTH, OVPN_TA, OVPN_SERVERV6 and OVPN_TOPOLOGY
    == New Client rc.conf variables: OVPNC_AUTH, OVPNC_TA and OVPNC_USER_PASS
 
