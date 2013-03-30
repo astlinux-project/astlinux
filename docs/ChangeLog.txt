@@ -104,6 +104,8 @@ Released **TBD**
 
 -- Network tab, validate Timezone setting and display an error if invalid.
 
+-- Firewall tab, Traffic Shaping - Downlink Speed, set "Disabled" by default and make the setting more obvious.
+
 -- All tabs, sanitize text input data used for rc.conf variable configuration.
    Input characters: double-quote ("), dollar-sign ($), grave-accent (`) and backslash (\) will be ignored.
    Asterisk astDB stored data will ignore the double-quote (") and backslash (\) characters.
