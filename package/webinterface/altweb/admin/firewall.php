@@ -317,7 +317,10 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
     fwrite($fp, "### Traffic Shaping\n");
     $value = 'SHAPETYPE="'.$_POST['shaper_enable_type'].'"';
     fwrite($fp, $value."\n");
-    $value = 'EXTDOWN="'.tuq($_POST['shaper_extdown']).'"';
+    if (($value = tuq($_POST['shaper_extdown'])) === '' || $_POST['shaper_extdown_enable'] === 'no') {
+      $value = '0';
+    }
+    $value = 'EXTDOWN="'.$value.'"';
     fwrite($fp, $value."\n");
     $value = 'EXTUP="'.tuq($_POST['shaper_extup']).'"';
     fwrite($fp, $value."\n");
@@ -915,11 +918,17 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
   putHtml('<tr class="dtrow1"><td width="175" style="text-align: right;">');
   putHtml('Downlink Speed:');
   putHtml('</td><td style="text-align: left;">');
-  if (($value = getVARdef($vars, 'EXTDOWN')) === '') {
-    $value = '4000';
+  if ((int)($value = getVARdef($vars, 'EXTDOWN')) == 0) {
+    $value = '';
   }
   putHtml('<input type="text" size="8" maxlength="6" value="'.$value.'" name="shaper_extdown" />');
-  putHtml('K bits-per-second</td></tr>');
+  putHtml('<select name="shaper_extdown_enable">');
+  $sel = ($value === '') ? ' selected="selected"' : '';
+  putHtml('<option value="no"'.$sel.'>Disabled</option>');
+  $sel = ($value !== '') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>K bits-per-second</option>');
+  putHtml('</select>');
+  putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   putHtml('Uplink Speed:');
   putHtml('</td><td style="text-align: left;">');
@@ -927,12 +936,15 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
     $value = '800';
   }
   putHtml('<input type="text" size="8" maxlength="6" value="'.$value.'" name="shaper_extup" />');
-  putHtml('K bits-per-second</td></tr>');
+  putHtml('<select name="shaper_extup_enable">');
+  putHtml('<option value="yes">K bits-per-second</option>');
+  putHtml('</select>');
+  putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   putHtml('VoIP UDP Ports:');
   putHtml('</td><td style="text-align: left;">');
   if (($value = getVARdef($vars, 'VOIPPORTS')) === '') {
-    $value = '4569 16384:16639';
+    $value = '16384:16639';
   }
   putHtml('<input type="text" size="56" maxlength="128" value="'.$value.'" name="shaper_voipports" />');
   putHtml('</td></tr>');
