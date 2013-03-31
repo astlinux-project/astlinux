@@ -58,6 +58,10 @@ gen_commands()
 {
   local cmds="$cmd"
 
+  if [ "$cmd" = "presence" ]; then
+    cmds="$cmds --delim='~'"
+  fi
+
   if [ $verbose -eq 1 ]; then
     cmds="$cmds -v"
   fi
@@ -71,22 +75,22 @@ gen_commands()
     cmds="$cmds --interactive"
   fi
   if [ -n "$resource" ]; then
-    cmds="$cmds --resource=$resource"
+    cmds="$cmds --resource='$resource'"
   fi
   if [ -n "$chatroom" ]; then
-    cmds="$cmds --chatroom=$chatroom"
+    cmds="$cmds --chatroom='$chatroom'"
   fi
   if [ -n "$nickname" ]; then
-    cmds="$cmds --nick=$nickname"
+    cmds="$cmds --nick='$nickname'"
   fi
   if [ -n "$username" -a -z "$password" ]; then
-    cmds="$cmds --account=$username"
+    cmds="$cmds --account='$username'"
   fi
   if [ -n "$password" -a -z "$username" ]; then
-    cmds="$cmds --password=$password"
+    cmds="$cmds --password='$password'"
   fi
   if [ -n "$to" ]; then
-    cmds="$cmds --to=$to"
+    cmds="$cmds --to='$to'"
   fi
 
   if [ -n "$message" ]; then

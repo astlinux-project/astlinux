@@ -3,7 +3,7 @@
 # clix
 #
 #############################################################
-CLIX_VERSION = 2013-03-27
+CLIX_VERSION = 2013-03-30
 CLIX_SOURCE = clix-$(CLIX_VERSION).tar.gz
 CLIX_SITE = http://files.astlinux.org
 
