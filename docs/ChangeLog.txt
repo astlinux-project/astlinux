@@ -38,7 +38,7 @@ Released **TBD**
 
 -- libcurl (curl) version bump to 7.29.0, (security fix: CVE-2013-0249) and bug fixes. Additionally enable IPv6.
 
--- stunnel, version bump to 4.55, (security fix: CVE-2013-1762)
+-- stunnel, version bump to 4.56, (security fix: CVE-2013-1762)
 
 -- sendxmpp, an XMPP Client command line tool to send Jabber/XMPP messages has been added.
    (based on the "clix" Lua tool by Matthew Wild, uses the same Lua runtime environment as Prosody)
