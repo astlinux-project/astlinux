@@ -23,6 +23,12 @@ mark_svn()
   echo "svn" > "$ASTLINUX_RELEASE"
 }
 
+REPO_ROOT="$(LANG=C svn info | awk -F': ' '/^Repository Root:/ { print $2 }')"
+
+if [ -z "$REPO_ROOT" ]; then
+  exit 1
+fi
+
 SVN="$(cat $ASTLINUX_RELEASE)"
 
 if [ "svn" != "$SVN" ]; then
@@ -43,9 +49,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-svn copy https://astlinux.svn.sourceforge.net/svnroot/astlinux/branches/${BRANCH} \
-         https://astlinux.svn.sourceforge.net/svnroot/astlinux/tags/${1} \
-         -m "create ${1} tag"
+svn copy ${REPO_ROOT}/branches/${BRANCH} ${REPO_ROOT}/tags/${1} -m "create ${1} tag"
 
 mark_svn
 
