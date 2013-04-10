@@ -191,6 +191,9 @@ function putUSERerror($user, $tab) {
       if ($global_staff && (getPREFdef($global_prefs, 'tab_meetme_show') === 'yes')) {
         putHtml('<li><a href="/admin/meetme.php"><span>MeetMe</span></a></li>');
       }
+      if ($global_staff && (getPREFdef($global_prefs, 'tab_confbridge_show') === 'yes')) {
+        putHtml('<li><a href="/admin/confbridge.php"><span>ConfBridge</span></a></li>');
+      }
       if ($global_staff && (getPREFdef($global_prefs, 'tab_cdrlog_show') !== 'no')) {
         putHtml('<li><a href="/admin/cdrlog.php"><span>CDR&nbsp;Log</span></a></li>');
       }

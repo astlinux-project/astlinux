@@ -434,6 +434,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'tab_meetme_show = yes';
       fwrite($fp, $value."\n");
     }
+    if (isset($_POST['tab_confbridge'])) {
+      $value = 'tab_confbridge_show = yes';
+      fwrite($fp, $value."\n");
+    }
     if (! isset($_POST['tab_network'])) {
       $value = 'tab_network_show = no';
       fwrite($fp, $value."\n");
@@ -701,7 +705,7 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
   
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
-  putHtml('<strong>MeetMe Tab Options:</strong>');
+  putHtml('<strong>MeetMe &amp; ConfBridge Tab Options:</strong>');
   putHtml('</td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">Redirect Path:</td><td colspan="4">');
@@ -712,7 +716,7 @@ require_once '../common/header.php';
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'meetme_channel_show') === 'yes') ? ' checked="checked"' : '';
-  putHtml('<input type="checkbox" value="meetme_channel" name="meetme_channel"'.$sel.' /></td><td colspan="5">Display channel values in MeetMe Tab</td></tr>');
+  putHtml('<input type="checkbox" value="meetme_channel" name="meetme_channel"'.$sel.' /></td><td colspan="5">Display channel values in MeetMe and ConfBridge Tabs</td></tr>');
 
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
   
@@ -1025,6 +1029,10 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_meetme_show') === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="tab_meetme" name="tab_meetme"'.$sel.' /></td><td colspan="5">Show MeetMe Tab</td></tr>');
+  
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'tab_confbridge_show') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="tab_confbridge" name="tab_confbridge"'.$sel.' /></td><td colspan="5">Show ConfBridge Tab</td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_cdrlog_show') !== 'no') ? ' checked="checked"' : '';
