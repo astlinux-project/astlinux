@@ -51,7 +51,6 @@ E2FSPROGS_TXTTARGETS_ = \
 	usr/sbin/mkfs.ext4dev \
 	usr/sbin/fsck.ext[234] \
 	usr/sbin/fsck.ext4dev \
-	usr/sbin/findfs \
 	usr/sbin/tune2fs
 
 define E2FSPROGS_TARGET_REMOVE_UNNEEDED
@@ -89,14 +88,6 @@ endef
 
 ifeq ($(BR2_PACKAGE_E2FSPROGS_TUNE2FS),y)
 E2FSPROGS_POST_INSTALL_TARGET_HOOKS += E2FSPROGS_TARGET_TUNE2FS_SYMLINK
-endif
-
-define E2FSPROGS_TARGET_FINDFS_SYMLINK
-	ln -sf e2label $(TARGET_DIR)/usr/sbin/findfs
-endef
-
-ifeq ($(BR2_PACKAGE_E2FSPROGS_FINDFS),y)
-E2FSPROGS_POST_INSTALL_TARGET_HOOKS += E2FSPROGS_TARGET_FINDFS_SYMLINK
 endif
 
 $(eval $(call AUTOTARGETS,package,e2fsprogs))
