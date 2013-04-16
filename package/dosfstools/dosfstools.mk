@@ -3,16 +3,23 @@
 # dosfstools
 #
 #############################################################
-DOSFSTOOLS_VERSION = 3.0.12
+DOSFSTOOLS_VERSION = 3.0.16
 DOSFSTOOLS_SOURCE = dosfstools-$(DOSFSTOOLS_VERSION).tar.gz
-DOSFSTOOLS_SITE = http://www.daniel-baumann.ch/software/dosfstools
+DOSFSTOOLS_SITE = http://fossies.org/linux/misc
+DOSFSTOOLS_LDFLAGS = $(TARGET_LDFLAGS)
+
+ifneq ($(BR2_ENABLE_LOCALE),y)
+DOSFSTOOLS_DEPENDENCIES += libiconv
+DOSFSTOOLS_LDFLAGS += -liconv
+endif
+
 MKDOSFS_BINARY = mkdosfs
 DOSFSCK_BINARY = dosfsck
 DOSFSLABEL_BINARY = dosfslabel
 
 define DOSFSTOOLS_BUILD_CMDS
-	$(MAKE) CFLAGS="$(TARGET_CFLAGS)" LDFLAGS="$(TARGET_LDFLAGS)" \
-		CC="$(TARGET_CC)" -C $(@D)
+	$(MAKE) CFLAGS="$(TARGET_CFLAGS)" CC="$(TARGET_CC)" \
+		LDFLAGS="$(DOSFSTOOLS_LDFLAGS)" -C $(@D)
 endef
 
 DOSFSTOOLS_INSTALL_BIN_FILES_$(BR2_PACKAGE_DOSFSTOOLS_MKDOSFS)+=$(MKDOSFS_BINARY)
