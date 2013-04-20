@@ -1,0 +1,11 @@
+--- dosfstools-3.0.16/src/charconv.c.orig	2013-04-18 12:01:16.000000000 -0500
++++ dosfstools-3.0.16/src/charconv.c	2013-04-18 12:04:17.000000000 -0500
+@@ -24,7 +24,7 @@
+  */
+ static int init_conversion(int codepage)
+ {
+-    static int initialized = -1;
++    static int initialized = 0;  /* Disable iconv() conversion */
+     if (initialized < 0) {
+ 	initialized = 1;
+ 	if (codepage < 0)
