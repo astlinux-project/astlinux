@@ -4,9 +4,9 @@
 #
 #############################################################
 
-DNSMASQ_VERSION = 2.65
+DNSMASQ_VERSION = 2.66
 DNSMASQ_SITE = http://thekelleys.org.uk/dnsmasq
-DNSMASQ_MAKE_ENV = CC="$(TARGET_CC)"
+DNSMASQ_MAKE_ENV = $(TARGET_MAKE_ENV) CC="$(TARGET_CC)"
 DNSMASQ_MAKE_OPT = COPTS="$(DNSMASQ_COPTS)" PREFIX=/usr CFLAGS="$(TARGET_CFLAGS)"
 DNSMASQ_MAKE_OPT += DESTDIR=$(TARGET_DIR) LDFLAGS="$(TARGET_LDFLAGS)"
 
@@ -53,9 +53,22 @@ define DNSMASQ_ENABLE_DBUS
 endef
 endif
 
+ifeq ($(BR2_PACKAGE_IPSET),y)
+define DNSMASQ_ENABLE_IPSET
+	$(SED) 's^.*#define HAVE_IPSET.*^#define HAVE_IPSET^' \
+		$(DNSMASQ_DIR)/src/config.h
+endef
+else
+define DNSMASQ_ENABLE_IPSET
+	$(SED) 's^.*#define HAVE_IPSET.*^/* #define HAVE_IPSET */^' \
+		$(DNSMASQ_DIR)/src/config.h
+endef
+endif
+
 define DNSMASQ_BUILD_CMDS
 	$(DNSMASQ_FIX_PKGCONFIG)
 	$(DNSMASQ_ENABLE_DBUS)
+	$(DNSMASQ_ENABLE_IPSET)
 	$(DNSMASQ_MAKE_ENV) $(MAKE) -C $(@D) $(DNSMASQ_MAKE_OPT)
 endef
 
