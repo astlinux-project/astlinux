@@ -12,11 +12,21 @@ Released **TBD**
 
 ** System
 
--- No Change
+-- RUNNIX, version bump to runnix-0.4-6047, Linux Kernel 2.6.35.14 and many package upgrades.
+
+-- php, version bump to 5.3.24
+
+-- util-linux, version bump to 2.22.2
+
+-- e2fsprogs, version bump to 1.42.7
+
+-- dosfstools, version bump to 3.0.16
 
 ** Networking
 
--- No Change
+-- radvd, version bump to 1.9.3
+
+-- dnsmasq, version bump to 2.66
 
 ** Asterisk
 
@@ -26,13 +36,13 @@ Released **TBD**
 
 ** Web Interface
 
--- No Change
+-- ConfBridge tab, new ConfBridge tab has been added, hidden by default. Similar to the MeetMe tab.
 
 
 Additions for AstLinux 1.1.1:
 =============================
 
-Released **TBD**
+Released 2013-04-17
 
 ** System
 
