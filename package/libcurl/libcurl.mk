@@ -17,8 +17,9 @@ LIBCURL_CONF_ENV += ac_cv_lib_crypto_CRYPTO_lock=yes
 # Fix it by setting LD_LIBRARY_PATH to something sensible so those libs
 # are found first.
 LIBCURL_CONF_ENV += LD_LIBRARY_PATH=$$LD_LIBRARY_PATH:/lib:/usr/lib
-LIBCURL_CONF_OPT += --with-ssl=$(STAGING_DIR)/usr --with-random=/dev/urandom
-LIBCURL_CONF_OPT += --with-ca-path=/usr/lib/ssl/certs
+LIBCURL_CONF_OPT += --with-ssl=$(STAGING_DIR)/usr \
+	--with-random=/dev/urandom \
+	--with-ca-path=/usr/lib/ssl/certs
 else
 LIBCURL_CONF_OPT += --without-ssl
 endif
