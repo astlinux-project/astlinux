@@ -28,6 +28,8 @@ Released **TBD**
 
 -- dnsmasq, version bump to 2.66
 
+-- msmtp, version bump to 1.4.31
+
 ** Asterisk
 
 -- Asterisk 1.8.21.0 (no change) and 11.3.0 (no change)
