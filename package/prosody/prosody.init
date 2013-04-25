@@ -40,9 +40,11 @@ gen_xmpp_config()
   if [ "$XMPP_ENABLE_S2S" = "yes" ]; then
     MODS="$DEFAULT_MODULES $DEFAULT_MODULES_S2S"
     no_s2s="false"
+    s2s_port="${XMPP_S2S_PORT:-5269}"
   else
     MODS="$DEFAULT_MODULES"
     no_s2s="true"
+    s2s_port=""
   fi
 
   if [ "$XMPP_GROUPS" = "yes" ]; then
@@ -80,8 +82,6 @@ gen_xmpp_config()
   hostname="${XMPP_HOSTNAME:-$HOSTNAME.$DOMAIN}"
 
   c2s_port="${XMPP_C2S_PORT:-5222}"
-
-  s2s_port="${XMPP_S2S_PORT:-5269}"
 
   log="${XMPP_LOG:-none}"
   if [ "$log" = "warn" -o "$log" = "info" -o "$log" = "debug" ]; then
