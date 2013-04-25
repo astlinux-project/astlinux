@@ -4,9 +4,9 @@
 #
 #############################################################
 
-MSMTP_VERSION = 1.4.30
+MSMTP_VERSION = 1.4.31
 MSMTP_SOURCE = msmtp-$(MSMTP_VERSION).tar.bz2
-MSMTP_SITE = http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/sourceforge/msmtp
+MSMTP_SITE = http://downloads.sourceforge.net/project/msmtp/msmtp/$(MSMTP_VERSION)
 MSMTP_DEPENDENCIES = openssl
 
 MSMTP_CONF_OPT += \
