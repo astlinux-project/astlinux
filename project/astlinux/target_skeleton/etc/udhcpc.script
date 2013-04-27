@@ -5,41 +5,49 @@
 
 [ -z "$1" ] && echo "Error: should be called from udhcpc" && exit 1
 
-. /etc/rc.conf
+resolv_conf="/tmp/etc/resolv-up.conf"
 
-[ -n "$broadcast" ] && BROADCAST="broadcast $broadcast"
-[ -n "$subnet" ] && NETMASK="netmask $subnet"
+udhcpc_conf="/tmp/udhcpc-${interface}.conf"
 
 case "$1" in
-	deconfig)
-		/sbin/ifconfig $interface 0.0.0.0
-		rm -f /tmp/mydhcpip /tmp/udhcpc-$interface.conf
-		;;
+  deconfig)
+    /sbin/ip link set dev ${interface} up
+    /sbin/ip -4 addr flush dev ${interface} scope global
+    rm -f /tmp/mydhcpip "$udhcpc_conf"
+    ;;
 
-	renew|bound)
-		/sbin/ifconfig $interface $ip $BROADCAST $NETMASK
-		echo $ip > /tmp/mydhcpip
-		echo -e "IP=$ip\nBCAST=$broadcast\nNETMASK=$subnet" > /tmp/udhcpc-$interface.conf
-		if [ -n "$router" ] ; then
-			echo "deleting routers"
-			while route del default gw 0.0.0.0 dev $interface 2> /dev/null > /dev/null; do
-				:
-			done
+  renew|bound)
+    /sbin/ip link set dev ${interface} up
+    /sbin/ip -4 addr flush dev ${interface} scope global
+    /sbin/ip -4 addr add ${ip}/${subnet} brd ${broadcast:-+} dev ${interface}
+    echo "${ip}" > /tmp/mydhcpip
+    echo "IP=${ip}
+BCAST=${broadcast}
+NETMASK=${subnet}" > "$udhcpc_conf"
+    if [ -n "${router}" ]; then
+      # Delete existing default route(s)
+      while /sbin/ip route del default dev ${interface} >/dev/null 2>&1; do
+        :
+      done
 
-			for i in $router ; do
-				route add default gw $i dev $interface
-				echo "GW=$i" >> /tmp/udhcpc-$interface.conf
-			done
-		fi
+      metric=0
+      for i in ${router}; do
+        echo "udhcpc: adding route via ${i}"
+        /sbin/ip route add default via ${i} dev ${interface} metric $((metric++))
+        echo "GW=${i}" >> "$udhcpc_conf"
+      done
+    fi
 
-		echo -n > /tmp/etc/resolv-up.conf
-		[ -n "$domain" ] && echo search $domain >> /tmp/etc/resolv-up.conf
-		for i in $dns ; do
-			echo adding dns $i
-			echo nameserver $i >> /tmp/etc/resolv-up.conf
-			echo "DNS=$i" >> /tmp/udhcpc-$interface.conf
-		done
-		;;
+    echo -n "" > "$resolv_conf"
+    if [ -n "${domain}" ]; then
+      echo "search ${domain}" >> "$resolv_conf"
+    fi
+    for i in ${dns}; do
+      echo "udhcpc: adding resolver ${i}"
+      echo "nameserver ${i}" >> "$resolv_conf"
+      echo "DNS=${i}" >> "$udhcpc_conf"
+    done
+    ;;
 esac
 
 exit 0

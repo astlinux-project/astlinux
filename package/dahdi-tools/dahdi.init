@@ -39,7 +39,7 @@ start () {
       if [ "$HDLCLMI" -a "$HDLCDLCI" ]; then
         sethdlc hdlc0 fr lmi "$HDLCLMI"
         sethdlc hdlc0 create "$HDLCDLCI"
-        ifconfig hdlc0 up
+        ip link set dev hdlc0 up
       fi
     fi
   fi

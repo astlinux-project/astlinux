@@ -20,9 +20,9 @@ create_nasX()
   # initialize any values
   IFS=$'\n'
   for list in $ATM_PARAMS; do
-    type="`nthfield list ~ 1`"
-    tag="`nthfield list ~ 2`"
-    value="`nthfield list ~ 3`"
+    type="$(nthfield list ~ 1)"
+    tag="$(nthfield list ~ 2)"
+    value="$(nthfield list ~ 3)"
     case $type in
     solos)
       soloscli -s $CARD "$tag" "$value"
@@ -43,7 +43,7 @@ create_nasX()
 
   br2684ctl -b -c "$CARD" -e 0 -p 1 -s 2040 -a "$CARD.$VPI.$VCI"
 
-  ifconfig "$IF" up
+  ip link set dev "$IF" up
 
   return 0
 }
@@ -70,13 +70,13 @@ ipv6_tunnel()
       case $type in
         6in4-static)
           ip tunnel add ip6tun mode sit remote $remote_addr local $local_addr ttl 255
-          ip link set ip6tun up
+          ip link set dev ip6tun up
           ip -6 addr add $endpoint_addr dev ip6tun
           ip -6 route add ::/0 dev ip6tun metric 1
           ;;
         6to4-relay)
           ip tunnel add ip6tun mode sit remote any local $local_addr ttl 255
-          ip link set ip6tun up
+          ip link set dev ip6tun up
           ip -6 addr add $endpoint_addr dev ip6tun
           ip -6 route add ::/0 via ::192.88.99.1 dev ip6tun metric 1
           ;;
@@ -90,7 +90,7 @@ ipv6_tunnel()
       case $type in
         6in4-static|6to4-relay)
           ip -6 route flush dev ip6tun
-          ip link set ip6tun down
+          ip link set dev ip6tun down
           ip tunnel del ip6tun
           ;;
         *)
@@ -139,14 +139,14 @@ init () {
     COUNT=10
 
     for i in $IFRENAME; do
-      IF=`echo $i | cut -d: -f1`
-      DRIVER=`echo $i | cut -d: -f2`
-      ID=`echo $i | cut -d: -f3`
+      IF="$(echo $i | cut -d: -f1)"
+      DRIVER="$(echo $i | cut -d: -f2)"
+      ID="$(echo $i | cut -d: -f3)"
 
-      COUNT=`expr $COUNT - 1`
+      COUNT=$((COUNT-1))
 
       if echo $ID | grep -q i; then
-        RID=`echo $ID | tr -d i`
+        RID="$(echo $ID | tr -d i)"
         echo "eth$COUNT driver $DRIVER interrupt $RID" >> /tmp/etc/iftab.init
         echo "$IF driver $DRIVER interrupt $RID" >> /tmp/etc/iftab
       fi
@@ -154,21 +154,21 @@ init () {
     done
   fi
 
-  if [ -r /etc/iftab.init ]; then
+  if [ -f /etc/iftab.init ]; then
     echo "Remapping interfaces (init)..."
     ifrename -c /etc/iftab.init
   fi
 
-  if [ -r /etc/iftab ]; then
+  if [ -f /etc/iftab ]; then
     echo "Remapping interfaces..."
     ifrename -c /etc/iftab
   fi
 
   if [ -n "$PHYETH" ]; then
     for i in $PHYETH; do
-      INT=`echo $i | cut -d: -f1`
-      SPEED=`echo $i | cut -d: -f2`
-      DUP=`echo $i | cut -d: -f3`
+      INT="$(echo $i | cut -d: -f1)"
+      SPEED="$(echo $i | cut -d: -f2)"
+      DUP="$(echo $i | cut -d: -f3)"
 
       echo "Setting ethernet parameters for $INT..."
       ethtool -s "$INT" speed "$SPEED" duplex "$DUP" autoneg off
@@ -200,15 +200,16 @@ start () {
 
   echo -n "" > /tmp/etc/ethers
 
-  if [ -r /stat/etc/ethers ]; then
+  if [ -f /stat/etc/ethers ]; then
     cat /stat/etc/ethers >> /tmp/etc/ethers
   fi
 
-  if [ -r /mnt/kd/ethers ]; then
+  if [ -f /mnt/kd/ethers ]; then
     cat /mnt/kd/ethers >> /tmp/etc/ethers
   fi
 
-  ifconfig lo up 127.0.0.1
+  ip addr add 127.0.0.1/8 dev lo scope host
+  ip link set dev lo up
 
   # look for nas[0123] being any one of our interfaces, and create it
   for IF in $PPPOEIF $BRIDGE0 $BRIDGE1 $BRIDGE2 $INTIF $INT2IF $INT3IF; do
@@ -225,7 +226,7 @@ start () {
     br[0-2])
       ;;
     *) 
-      ifconfig "$EXTIF" down hw ether $EXTIFMAC up
+      ip link set dev "$EXTIF" address $EXTIFMAC
       ;;
     esac
   fi
@@ -235,7 +236,7 @@ start () {
     br[0-2])
       ;;
     *)
-      ifconfig "$EXT2IF" down hw ether $EXT2IFMAC up
+      ip link set dev "$EXT2IF" address $EXT2IFMAC
       ;;
     esac
   fi
@@ -243,11 +244,11 @@ start () {
   #VLANS
   if [ -n "$VLANS" ]; then
     for i in $VLANS; do
-      IF=`echo $i | cut -d. -f1`
-      VID=`echo $i | cut -d. -f2`
+      IF="$(echo $i | cut -d. -f1)"
+      VID="$(echo $i | cut -d. -f2)"
       modprobe 8021q
-      ifconfig $IF up
-      vconfig add $IF $VID > /dev/null
+      ip link add link $IF name $IF.$VID type vlan id $VID
+      ip link set dev $IF up
       if [ "$VLANCOS" = "yes" ]; then
         vconfig set_egress_map "$IF.$VID" 0 3 > /dev/null
         vconfig set_egress_map "$IF.$VID" 1 3 > /dev/null
@@ -267,7 +268,7 @@ start () {
     brctl addbr br0
     brctl setfd br0 0
     for i in $BRIDGE0; do
-      ifconfig $i up
+      ip link set dev $i up
       brctl addif br0 $i
     done
   fi
@@ -277,7 +278,7 @@ start () {
     brctl addbr br1
     brctl setfd br1 0
     for i in $BRIDGE1; do
-      ifconfig $i up
+      ip link set dev $i up
       brctl addif br1 $i
     done
   fi
@@ -287,7 +288,7 @@ start () {
     brctl addbr br2
     brctl setfd br2 0
     for i in $BRIDGE2; do
-      ifconfig $i up
+      ip link set dev $i up
       brctl addif br2 $i
     done
   fi
@@ -296,7 +297,8 @@ start () {
   if [ -n "$EXTIF" -a -n "$EXTIFMAC" -a "$EXTIF" != "none" ]; then
     case "$EXTIF" in
     br[0-2])
-      ifconfig "$EXTIF" down hw ether $EXTIFMAC up
+      ip link set dev "$EXTIF" down
+      ip link set dev "$EXTIF" address $EXTIFMAC
       ;;
     esac
   fi
@@ -304,41 +306,46 @@ start () {
   if [ -n "$EXT2IF" -a -n "$EXT2IFMAC" -a "$EXT2IF" != "none" ]; then
     case "$EXT2IF" in
     br[0-2])
-      ifconfig "$EXT2IF" down hw ether $EXT2IFMAC up
+      ip link set dev "$EXT2IF" down
+      ip link set dev "$EXT2IF" address $EXT2IFMAC
       ;;
     esac
   fi
 
   if [ -n "$IFMTU" ]; then
     for i in $IFMTU; do
-      IF=`echo $i | cut -d: -f1`
-      MTU=`echo $i | cut -d: -f2`
-      ifconfig $IF mtu $MTU
+      IF="$(echo $i | cut -d: -f1)"
+      MTU="$(echo $i | cut -d: -f2)"
+      ip link set dev $IF mtu $MTU
     done
   fi
 
   if [ -n "$INTIF" -a -n "$INTIP" -a -n "$INTNM" -a "$INTIF" != "none" ]; then
-    ifconfig $INTIF $INTIP netmask $INTNM
-    route add -net 224.0.0.0 netmask 240.0.0.0 $INTIF
+    ip addr add $INTIP/$INTNM brd + dev $INTIF
     if [ "$IPV6" = "yes" -a -n "$INTIPV6" ]; then
       ip -6 addr add $INTIPV6 dev $INTIF
+    fi
+    ip link set dev $INTIF up
+
+    if [ "$NTPBROADCAST" = "yes" ]; then
+      ip route add 224.0.0.0/4 dev $INTIF
     fi
   fi
 
   if [ -n "$INT2IF" -a -n "$INT2IP" -a -n "$INT2NM" -a "$INT2IF" != "none" ]; then
-    ifconfig $INT2IF $INT2IP netmask $INT2NM
-    route add -net 224.0.0.0 netmask 240.0.0.0 $INT2IF
+    ip addr add $INT2IP/$INT2NM brd + dev $INT2IF
     if [ "$IPV6" = "yes" -a -n "$INT2IPV6" ]; then
       ip -6 addr add $INT2IPV6 dev $INT2IF
     fi
+    ip link set dev $INT2IF up
   fi
 
   if [ -n "$INT3IF" -a -n "$INT3IP" -a -n "$INT3NM" -a "$INT3IF" != "none" ]; then
-    ifconfig $INT3IF $INT3IP netmask $INT3NM
-    route add -net 224.0.0.0 netmask 240.0.0.0 $INT3IF
+    ip addr add $INT3IP/$INT3NM brd + dev $INT3IF
     if [ "$IPV6" = "yes" -a -n "$INT3IPV6" ]; then
       ip -6 addr add $INT3IPV6 dev $INT3IF
     fi
+    ip link set dev $INT3IF up
   fi
 
   if [ -n "$WANDELAY" ]; then
@@ -350,9 +357,9 @@ start () {
   if isextppp; then
     case $PPPOEIF in
     eth*|nas[0123])
-      ifconfig $PPPOEIF up ;;
+      ip link set dev $PPPOEIF up ;;
     br[012])
-      ifconfig $PPPOEIF up
+      ip link set dev $PPPOEIF up
       # because bridging does weird and unpleasant things to PPPoE packets
       echo "0" > /proc/sys/net/bridge/bridge-nf-call-iptables
       echo "0" > /proc/sys/net/bridge/bridge-nf-filter-pppoe-tagged
@@ -382,7 +389,7 @@ PPPOE_TIMEOUT=80
 FIREWALL=NONE
 PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
 
-    PPPVER=`(pppd --version 2>&1 >/dev/null ) | awk '/^pppd version/ { print $3; }'`
+    PPPVER="$( (pppd --version 2>&1 >/dev/null ) | awk '/^pppd version/ { print $3; }')"
 
     if [ -n "$PPPOEKERNEL" ]; then
       echo "LINUX_PLUGIN=\"/usr/lib/pppd/$PPPVER/rp-pppoe.so\"" >> /tmp/etc/ppp/pppoe.conf
@@ -426,24 +433,26 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
     wp)
       ;;
     hdlc0|pvc0)
-      ifconfig $EXTIF $EXTIP pointopoint $EXTGW
+      ip tunnel add $EXTIF mode ipip remote $EXTGW local $EXTIP
+      ip link set dev $EXTIF up
       ;;
     *)
-      ifconfig $EXTIF $EXTIP netmask $EXTNM
+      ip addr add $EXTIP/$EXTNM brd + dev $EXTIF
       if [ -n "$EXTIP_ALIAS" ]; then
         alias_interface add $EXTIF "$EXTIP_ALIAS"
       fi
       if [ "$IPV6" = "yes" -a -n "$EXTIPV6" ]; then
         ip -6 addr add $EXTIPV6 dev $EXTIF
       fi
+      ip link set dev $EXTIF up
       ;;
     esac
 
     if [ -n "$EXTGW" ]; then
-      route add -net default gw $EXTGW dev $EXTIF
+      ip route add default via $EXTGW dev $EXTIF
     fi
     if [ "$IPV6" = "yes" -a -n "$EXTGWIPV6" ]; then
-      ip -6 route add ::/0 via $EXTGWIPV6 dev $EXTIF metric 1
+      ip -6 route add default via $EXTGWIPV6 dev $EXTIF metric 1
     fi
     #end static IP
   fi
@@ -455,24 +464,26 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
     wp)
       ;;
     hdlc0|pvc0)
-      ifconfig $EXT2IF $EXT2IP pointopoint $EXT2GW
+      ip tunnel add $EXT2IF mode ipip remote $EXT2GW local $EXT2IP
+      ip link set dev $EXT2IF up
       ;;
     *)
-      ifconfig $EXT2IF $EXT2IP netmask $EXT2NM
+      ip addr add $EXT2IP/$EXT2NM brd + dev $EXT2IF
       if [ -n "$EXT2IP_ALIAS" ]; then
         alias_interface add $EXT2IF "$EXT2IP_ALIAS"
       fi
       if [ "$IPV6" = "yes" -a -n "$EXT2IPV6" ]; then
         ip -6 addr add $EXT2IPV6 dev $EXT2IF
       fi
+      ip link set dev $EXT2IF up
       ;;
     esac
 
     if [ -n "$EXT2GW" ]; then
-      route add -net default gw $EXT2GW dev $EXT2IF
+      ip route add default via $EXT2GW dev $EXT2IF
     fi
     if [ "$IPV6" = "yes" -a -n "$EXT2GWIPV6" ]; then
-      ip -6 route add ::/0 via $EXT2GWIPV6 dev $EXT2IF metric 1
+      ip -6 route add default via $EXT2GWIPV6 dev $EXT2IF metric 1
     fi
     #end static ip on 2nd if
   fi
@@ -498,16 +509,20 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
 
   ##DMZ Network
   if [ -n "$DMZIF" -a -n "$DMZIP" -a -n "$DMZNM" -a "$DMZIF" != "none" ]; then
-    ifconfig $DMZIF $DMZIP netmask $DMZNM
+    ip addr add $DMZIP/$DMZNM brd + dev $DMZIF
     if [ "$IPV6" = "yes" -a -n "$DMZIPV6" ]; then
       ip -6 addr add $DMZIPV6 dev $DMZIF
     fi
+    ip link set dev $DMZIF up
   fi
 
   ##IPv6 Tunnel
   if [ "$IPV6" = "yes" -a -n "$IPV6_TUNNEL" ]; then
     ipv6_tunnel start
   fi
+
+  echo "Network UP"
+  sleep 1
 }
 
 stop () {
@@ -519,11 +534,11 @@ stop () {
   fi
 
   if [ -z "$EXTIP" ]; then
-    kill `cat /var/run/udhcpc-$EXTIF.pid` 2>/dev/null
+    kill $(cat /var/run/udhcpc-$EXTIF.pid) 2>/dev/null
   fi
 
-  if [ -r /var/run/ppp0.pid ]; then
-    kill `cat /var/run/ppp0.pid`
+  if [ -f /var/run/ppp0.pid ]; then
+    kill $(cat /var/run/ppp0.pid)
   fi
 
   if [ -n "$EXTIF" -a "$EXTIF" != "none" ]; then
@@ -531,7 +546,7 @@ stop () {
     if [ -n "$EXTIP_ALIAS" ]; then
       alias_interface delete $EXTIF "$EXTIP_ALIAS"
     fi
-    ifconfig $EXTIF down
+    ip link set dev $EXTIF down
   fi
 
   if [ -n "$EXT2IF" -a "$EXT2IF" != "none" ]; then
@@ -539,49 +554,50 @@ stop () {
     if [ -n "$EXT2IP_ALIAS" ]; then
       alias_interface delete $EXT2IF "$EXT2IP_ALIAS"
     fi
-    ifconfig $EXT2IF down
+    ip link set dev $EXT2IF down
   fi
 
   if [ -n "$INTIF" -a "$INTIF" != "none" ]; then
     echo "Bringing down $INTIF..."
-    ifconfig $INTIF down
+    ip link set dev $INTIF down
   fi
 
   if [ -n "$INT2IF" -a "$INT2IF" != "none" ]; then
     echo "Bringing down $INT2IF ..."
-    ifconfig $INT2IF down
+    ip link set dev $INT2IF down
   fi
 
   if [ -n "$INT3IF" -a "$INT3IF" != "none" ]; then
     echo "Bringing down $INT3IF..."
-    ifconfig $INT3IF down
+    ip link set dev $INT3IF down
   fi
 
   if [ -n "$DMZIF" -a "$DMZIF" != "none" ]; then
     echo "Bringing down $DMZIF ..."
-    ifconfig $DMZIF down
+    ip link set dev $DMZIF down
   fi
 
   #BRIDGES
   if [ -n "$BRIDGE0" ]; then
-    ifconfig br0 down
+    ip link set dev br0 down
     brctl delbr br0
   fi
 
   if [ -n "$BRIDGE1" ]; then
-    ifconfig br1 down
+    ip link set dev br1 down
     brctl delbr br1
   fi
 
   if [ -n "$BRIDGE2" ]; then
-    ifconfig br2 down
+    ip link set dev br2 down
     brctl delbr br2
   fi
 
   #VLANS
   if [ -n "$VLANS" ]; then
     for i in $VLANS; do
-      vconfig rem $i
+      ip link set dev $i down
+      ip link delete $i
     done
   fi
 
@@ -589,7 +605,7 @@ stop () {
   for IF in $PPPOEIF $BRIDGE0 $BRIDGE1 $BRIDGE2 $INTIF $INT2IF $INT3IF; do
     case $IF in
     nas[0123])
-      ifconfig "$IF" down
+      ip link set dev "$IF" down
       killall br2684ctl
       if [ -n "$ATM_MODULE" ]; then
         modprobe -r $ATM_MODULE
@@ -598,6 +614,8 @@ stop () {
       ;;
     esac
   done
+
+  echo "Network DOWN"
 }
 
 case $1 in
