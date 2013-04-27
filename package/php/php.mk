@@ -65,11 +65,8 @@ ifeq ($(BR2_PACKAGE_PHP_EXT_CURL),y)
 endif
 
 ifeq ($(BR2_PACKAGE_PHP_EXT_LIBXML2),y)
-	PHP_CONF_OPT += --enable-libxml \
-		--with-libxml-dir=${STAGING_DIR}/usr \
-		 --enable-xml \
-		 --enable-xmlreader \
-		 --enable-xmlwriter
+	PHP_CONF_ENV += php_cv_libxml_build_works=yes
+	PHP_CONF_OPT += --enable-libxml --with-libxml-dir=${STAGING_DIR}/usr
 	PHP_DEPENDENCIES += libxml2
 endif
 
