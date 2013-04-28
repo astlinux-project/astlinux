@@ -1,0 +1,30 @@
+#!/bin/sh
+
+interface="$1"
+
+action="$2"
+
+kill_udhcpc()
+{
+  if [ -f "/var/run/udhcpc-${interface}.pid" ]; then
+    kill $(cat "/var/run/udhcpc-${interface}.pid") 2>/dev/null
+    sleep 1
+  fi
+}
+
+case $action in
+
+  up)
+    kill_udhcpc
+    udhcpc -b -s /etc/udhcpc.script -H $(uname -n) -p /var/run/udhcpc-${interface}.pid -i ${interface}
+    logger -t udhcpc.action -p kern.info "udhcp up: ${interface}"
+    ;;
+
+  down)
+    kill_udhcpc
+    logger -t udhcpc.action -p kern.info "udhcp down: ${interface}"
+    ;;
+
+esac
+
+exit 0

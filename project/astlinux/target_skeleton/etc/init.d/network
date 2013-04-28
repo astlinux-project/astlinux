@@ -500,6 +500,7 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
   #DHCP
   if [ -n "$EXTIF" -a -z "$EXTIP" ] && ! isextppp extif; then
     udhcpc -b -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXTIF.pid -i $EXTIF
+    ifplugd -apqs -t2 -u3 -d3 -i $EXTIF -r /etc/ifplugd/udhcpc.action
   fi
 
   #DHCP
@@ -533,8 +534,19 @@ stop () {
     ipv6_tunnel stop
   fi
 
-  if [ -z "$EXTIP" ]; then
-    kill $(cat /var/run/udhcpc-$EXTIF.pid) 2>/dev/null
+  if [ -n "$EXTIF" -a -f /var/run/ifplugd.$EXTIF.pid ]; then
+    echo "Stopping ifplugd..."
+    kill $(cat /var/run/ifplugd.$EXTIF.pid)
+  fi
+
+  if [ -n "$EXTIF" -a -z "$EXTIP" -a -f /var/run/udhcpc-$EXTIF.pid ]; then
+    echo "Stopping udhcpc..."
+    kill $(cat /var/run/udhcpc-$EXTIF.pid)
+  fi
+
+  if [ -n "$EXT2IF" -a -z "$EXT2IP" -a -f /var/run/udhcpc-$EXT2IF.pid ]; then
+    echo "Stopping udhcpc..."
+    kill $(cat /var/run/udhcpc-$EXT2IF.pid)
   fi
 
   if [ -f /var/run/ppp0.pid ]; then
