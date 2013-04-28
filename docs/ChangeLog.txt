@@ -24,6 +24,16 @@ Released **TBD**
 
 ** Networking
 
+-- network, unify network configuration to use ip (iproute2).  Users with custom /mnt/kd/rc.elocal and rc.local scripts
+   performing network configuration are urged to make the similar changes (ifconfig, route -> ip), though not required.
+
+-- ntpd, when NTPBROADCAST=yes clarify in the rc.conf comments that the IPv4 multicast only applies to the 1st LAN Interface.
+
+-- ifplugd, new daemon added, when udhcpc is enabled (External Connection Type: DHCP) ifplugd monitors the ethernet
+   link status and calls the udhcpc.action script to immediately (4-5 seconds) restart udhcpc when the link is back up.
+   Note: The link must be down for at least 4-5 seconds before the script is called.
+         Shorter durations are intentionally ignored.
+
 -- radvd, version bump to 1.9.3
 
 -- dnsmasq, version bump to 2.66
