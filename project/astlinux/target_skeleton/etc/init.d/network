@@ -501,12 +501,24 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
   if [ -n "$EXTIF" -a -z "$EXTIP" ] && ! isextppp extif; then
     udhcpc -b -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXTIF.pid -i $EXTIF
     ifplugd -apqs -t2 -u3 -d3 -i $EXTIF -r /etc/ifplugd/udhcpc.action
+
+    # No DHCPv6 - Static IPv6 if defined
+    if [ "$IPV6" = "yes" -a -n "$EXTIPV6" -a -n "$EXTGWIPV6" ]; then
+      ip -6 addr add $EXTIPV6 dev $EXTIF
+      ip -6 route add default via $EXTGWIPV6 dev $EXTIF metric 1
+    fi
   fi
 
   #DHCP
   if [ -n "$EXT2IF" -a -z "$EXT2IP" ] && ! isextppp ext2if; then
     udhcpc -b -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXT2IF.pid -i $EXT2IF
     ifplugd -apqs -t2 -u3 -d3 -i $EXT2IF -r /etc/ifplugd/udhcpc.action
+
+    # No DHCPv6 - Static IPv6 if defined
+    if [ "$IPV6" = "yes" -a -n "$EXT2IPV6" -a -n "$EXT2GWIPV6" ]; then
+      ip -6 addr add $EXT2IPV6 dev $EXT2IF
+      ip -6 route add default via $EXT2GWIPV6 dev $EXT2IF metric 1
+    fi
   fi
 
   ##DMZ Network
