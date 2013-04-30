@@ -506,6 +506,7 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
   #DHCP
   if [ -n "$EXT2IF" -a -z "$EXT2IP" ] && ! isextppp ext2if; then
     udhcpc -b -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXT2IF.pid -i $EXT2IF
+    ifplugd -apqs -t2 -u3 -d3 -i $EXT2IF -r /etc/ifplugd/udhcpc.action
   fi
 
   ##DMZ Network
@@ -527,27 +528,22 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
 }
 
 stop () {
-  local IF
+  local IF PID
 
   if [ "$IPV6" = "yes" -a -n "$IPV6_TUNNEL" ]; then
     echo "Bringing down IPv6 tunnel..."
     ipv6_tunnel stop
   fi
 
-  if [ -n "$EXTIF" -a -f /var/run/ifplugd.$EXTIF.pid ]; then
+  for PID in $(ls -1 /var/run/ifplugd.*.pid 2>/dev/null); do
     echo "Stopping ifplugd..."
-    kill $(cat /var/run/ifplugd.$EXTIF.pid)
-  fi
+    kill $(cat "$PID")
+  done
 
-  if [ -n "$EXTIF" -a -z "$EXTIP" -a -f /var/run/udhcpc-$EXTIF.pid ]; then
+  for PID in $(ls -1 /var/run/udhcpc-*.pid 2>/dev/null); do
     echo "Stopping udhcpc..."
-    kill $(cat /var/run/udhcpc-$EXTIF.pid)
-  fi
-
-  if [ -n "$EXT2IF" -a -z "$EXT2IP" -a -f /var/run/udhcpc-$EXT2IF.pid ]; then
-    echo "Stopping udhcpc..."
-    kill $(cat /var/run/udhcpc-$EXT2IF.pid)
-  fi
+    kill $(cat "$PID")
+  done
 
   if [ -f /var/run/ppp0.pid ]; then
     kill $(cat /var/run/ppp0.pid)
