@@ -63,6 +63,46 @@ is_alert_sound_type()
   return 1
 }
 
+set_tune_octave()
+{
+  local orig_tune="$1" octave="$2" dest_tune arg freq power IFS
+
+  if [ "$octave" = "1" -o "$octave" = "2" -o "$octave" = "3" ]; then
+    power=$((2**octave))
+    dest_tune=""
+    unset IFS
+    for arg in $orig_tune; do
+      if [ "${arg#-f}" != "$arg" ]; then
+        freq="${arg#-f}"
+        dest_tune="$dest_tune${dest_tune:+ }-f$((freq*power))"
+      else
+        dest_tune="$dest_tune${dest_tune:+ }$arg"
+      fi
+    done
+  else
+    dest_tune="$orig_tune"
+  fi
+
+  echo "$dest_tune"
+}
+
+play_alert_sound_type()
+{
+  local tune=""
+
+  case $1 in
+    startup)  tune="-f330 -l100 -d1 -n -f277 -l100 -d1 -n -f330 -l100 -d1 -n -f440 -l330" ;;
+    shutdown) tune="-f988 -l180 -d33 -n -f831 -l110" ;;
+  esac
+
+  if [ -n "$tune" ]; then
+    if [ -n "$ALERT_SOUNDS_OCTAVE" ]; then
+      tune="$(set_tune_octave "$tune" "$ALERT_SOUNDS_OCTAVE")"
+    fi
+    beep $tune
+  fi
+}
+
 start () {
 
   welcome_msg
@@ -125,7 +165,7 @@ start () {
   if grep -q "astlinux=geni586" /proc/cmdline; then
 
     if is_alert_sound_type startup; then
-      beep -f 330 -l 100 -d1 -n -f 277 -l 100 -d1 -n -f 330 -l 100 -d 1 -n -f 440 -l 330
+      play_alert_sound_type startup
     fi
   fi
 }
@@ -167,7 +207,7 @@ stop () {
   if grep -q "astlinux=geni586" /proc/cmdline; then
 
     if is_alert_sound_type shutdown; then
-      beep -f 988 -l 180 -d 33 -n -f 831 -l 110
+      play_alert_sound_type shutdown
     fi
   fi
 }
