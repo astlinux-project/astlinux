@@ -14,6 +14,9 @@ Released **TBD**
 
 -- RUNNIX, version bump to runnix-0.4-6047, Linux Kernel 2.6.35.14 and many package upgrades.
 
+-- alert, add new variable ALERT_SOUNDS_OCTAVE to increase the ALERT_SOUNDS alert tones by 1, 2 or 3 octaves
+   (x2, x4 or x8 frequency). Useful for boards with smaller high frequency piezo-speakers or noisy environments.
+
 -- php, version bump to 5.3.24
 
 -- util-linux, version bump to 2.22.2
