@@ -50,6 +50,8 @@ Released **TBD**
 
 -- ConfBridge tab, new ConfBridge tab has been added, hidden by default. Similar to the MeetMe tab.
 
+-- Network tab, allow static IPv6 when DHCP is specified for IPv4 on external interface.
+
 
 Additions for AstLinux 1.1.1:
 =============================
