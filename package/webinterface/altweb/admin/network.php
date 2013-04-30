@@ -202,28 +202,20 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   }
   fwrite($fp, "### External Static IPv4 Gateway\n".$value."\n");
   
-  if ($_POST['ip_type'] === 'dhcp') {
-    $value = 'EXTIPV6=""';
-  } else {
-    $value = tuq($_POST['static_ipv6']);
-    if ($value !== '' && strpos($value, '/') === FALSE) {
-      $value="$value/64";
-    }
-    $value = 'EXTIPV6="'.$value.'"';
+  $value = tuq($_POST['static_ipv6']);
+  if ($value !== '' && strpos($value, '/') === FALSE) {
+    $value="$value/64";
   }
+  $value = 'EXTIPV6="'.$value.'"';
   fwrite($fp, "### External Static IPv6\n".$value."\n");
-  
-  if ($_POST['ip_type'] === 'dhcp') {
-    $value = 'EXTGWIPV6=""';
-  } else {
-    $value = tuq($_POST['gateway_ipv6']);
-    if (($pos = strpos($value, '/')) !== FALSE) {
-      $value=substr($value, 0, $pos);
-    }
-    $value = 'EXTGWIPV6="'.$value.'"';
+
+  $value = tuq($_POST['gateway_ipv6']);
+  if (($pos = strpos($value, '/')) !== FALSE) {
+    $value=substr($value, 0, $pos);
   }
+  $value = 'EXTGWIPV6="'.$value.'"';
   fwrite($fp, "### External Static IPv6 Gateway\n".$value."\n");
-  
+
   $value = 'PPPOEUSER="'.tuq($_POST['user_pppoe']).'"';
   fwrite($fp, "### PPPoE Username\n".$value."\n");
   
@@ -1123,7 +1115,7 @@ require_once '../common/header.php';
   putHtml('<input type="checkbox" value="vlan_cos" name="vlan_cos"'.$sel.' />&nbsp;VLAN COS</td></tr>');
   
   putHtml('<tr class="dtrow1"><td class="dialogText" style="text-align: left;" colspan="6">');
-  putHtml('<strong>External Static IP Settings:</strong>&nbsp;<i>(Cleared for DHCP)</i>');
+  putHtml('<strong>External Static IPv4 Settings:</strong>&nbsp;<i>(Cleared for DHCP)</i>');
   putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="2">');
   $value = getVARdef($db, 'EXTIP', $cur_db);
@@ -1135,6 +1127,9 @@ require_once '../common/header.php';
   $value = getVARdef($db, 'EXTGW', $cur_db);
   putHtml('IPv4 Gateway:<input type="text" size="18" maxlength="15" value="'.$value.'" name="gateway_ip" /></td></tr>');
   
+  putHtml('<tr class="dtrow1"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>External Static IPv6 Settings:</strong>');
+  putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
   $value = getVARdef($db, 'EXTIPV6', $cur_db);
   putHtml('Static IPv6/nn:<input type="text" size="38" maxlength="43" value="'.$value.'" name="static_ipv6" /></td>');
