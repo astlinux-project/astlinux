@@ -59,13 +59,13 @@ function create_sql_tables()
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
-  if (! $global_admin) {
+  if (! ($global_admin || $global_staff_enable_sqldata)) {
     $result = 999;                                 
   }
   header('Location: '.$myself.'?result='.$result);
   exit;
 } else { // Start of HTTP GET
-$ACCESS_RIGHTS = 'admin';
+$ACCESS_RIGHTS = $global_staff_enable_sqldata ? 'staff' : 'admin';
 require_once '../common/header.php';
 
   putHtml("<center>");

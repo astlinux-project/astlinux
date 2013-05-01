@@ -875,5 +875,6 @@ $global_staff = ($global_admin || $global_user === 'staff');
 $global_staff_disable_voicemail = ($global_user === 'staff' && (getPREFdef($global_prefs, 'tab_voicemail_disable_staff') === 'yes'));
 $global_staff_disable_monitor = ($global_user === 'staff' && (getPREFdef($global_prefs, 'tab_monitor_disable_staff') === 'yes'));
 $global_staff_disable_followme = ($global_user === 'staff' && (getPREFdef($global_prefs, 'tab_followme_disable_staff') === 'yes'));
+$global_staff_enable_sqldata = ($global_user === 'staff' && (getPREFdef($global_prefs, 'tab_sqldata_disable_staff') === 'no'));
 $global_staff_disable_staff = ($global_user === 'staff' && (getPREFdef($global_prefs, 'tab_staff_disable_staff') === 'yes'));
 ?>

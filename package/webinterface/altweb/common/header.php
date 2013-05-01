@@ -212,7 +212,7 @@ function putUSERerror($user, $tab) {
       if ($global_staff && (getPREFdef($global_prefs, 'tab_actionlist_show') === 'yes')) {
         putHtml('<li><a href="/admin/actionlist.php"><span>Actionlist</span></a></li>');
       }
-      if ($global_admin && (getPREFdef($global_prefs, 'tab_sqldata_show') === 'yes')) {
+      if (($global_admin || $global_staff_enable_sqldata) && (getPREFdef($global_prefs, 'tab_sqldata_show') === 'yes')) {
         putHtml('<li><a href="/admin/sqldata.php"><span>SQL-Data</span></a></li>');
       }
       if ($global_staff && (getPREFdef($global_prefs, 'tab_users_show') === 'yes')) {

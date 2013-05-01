@@ -33,7 +33,7 @@
 
 //please report any bugs you encounter to http://code.google.com/p/phpliteadmin/issues/list
 
-//AstLinux//  Restrict to 'admin' user.
+//AstLinux//  Restrict to 'admin' or 'staff' user.
 function getPHPusername()
 {
   if (isset($_SERVER['REMOTE_USER'])) {
@@ -43,11 +43,12 @@ function getPHPusername()
   }
   return($str_R);
 }
-if (($global_user = getPHPusername()) !== 'admin') {
+$global_user = getPHPusername();
+if ($global_user !== 'admin' && $global_user !== 'staff') {
   echo '<p style="color: red;">User "'.$global_user.'" does not have permission to access the "phpliteadmin" tab.</p>';
   exit();
 }
-//AstLinux// end of restrict to 'admin' user.
+//AstLinux// end of restrict to 'admin' or 'staff' user.
 
 //BEGIN USER-DEFINED VARIABLES
 //////////////////////////////
