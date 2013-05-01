@@ -55,6 +55,8 @@ Released **TBD**
 
 -- Network tab, allow static IPv6 when DHCP is specified for IPv4 on external interface.
 
+-- Prefs tab, allow "staff" user to access SQL-Data tab, disabled by default.
+
 
 Additions for AstLinux 1.1.1:
 =============================
