@@ -3,11 +3,10 @@
 # dbus
 #
 #############################################################
-DBUS_VERSION = 1.4.10
+DBUS_VERSION = 1.4.24
 DBUS_SOURCE = dbus-$(DBUS_VERSION).tar.gz
-DBUS_SITE = http://dbus.freedesktop.org/releases/dbus/
+DBUS_SITE = http://dbus.freedesktop.org/releases/dbus
 DBUS_INSTALL_STAGING = YES
-DBUS_INSTALL_TARGET = YES
 
 DBUS_DEPENDENCIES = host-pkg-config
 
@@ -58,7 +57,7 @@ endif
 define DBUS_INSTALL_TARGET_FIXUP
 	rm -rf $(TARGET_DIR)/var/lib/dbus
 	ln -sf /tmp/dbus $(TARGET_DIR)/var/lib/dbus
-	$(INSTALL) -m 0755 -D package/dbus/S30dbus $(TARGET_DIR)/etc/init.d/S30dbus
+	#$(INSTALL) -m 0755 -D package/dbus/S30dbus $(TARGET_DIR)/etc/init.d/S30dbus
 endef
 
 DBUS_POST_INSTALL_TARGET_HOOKS += DBUS_INSTALL_TARGET_FIXUP
