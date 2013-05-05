@@ -324,6 +324,11 @@ endif
 	ln -sf /tmp/etc/asterisk $(TARGET_DIR)/etc/asterisk
 	ln -sf /mnt/kd/custom-sounds $(TARGET_DIR)/stat/var/lib/asterisk/sounds/custom-sounds
 
+	if [ -d $(TARGET_DIR)/usr/share/snmp/mibs ]; then \
+	  $(INSTALL) -D -m 0644 package/asterisk/mibs/ASTERISK-MIB.txt $(TARGET_DIR)/usr/share/snmp/mibs/ ; \
+	  $(INSTALL) -D -m 0644 package/asterisk/mibs/DIGIUM-MIB.txt $(TARGET_DIR)/usr/share/snmp/mibs/ ; \
+	fi
+
 asterisk: $(TARGET_DIR)/$(ASTERISK_TARGET_BINARY)
 
 asterisk-source: $(ASTERISK_DIR)/.patched
@@ -349,6 +354,8 @@ asterisk-clean:
 	rm -Rf $(TARGET_DIR)/stat/var/lib/asterisk
 	rm -Rf $(TARGET_DIR)/stat/var/spool/asterisk
 	rm -Rf $(TARGET_DIR)/stat/etc/asterisk
+	rm -f $(TARGET_DIR)/usr/share/snmp/mibs/ASTERISK-MIB.txt
+	rm -f $(TARGET_DIR)/usr/share/snmp/mibs/DIGIUM-MIB.txt
 	-$(MAKE) -C $(ASTERISK_DIR) clean
 	rm -rf $(BUILD_DIR)/asterisk
 	rm -rf $(BUILD_DIR)/asterisk-$(ASTERISK_VERSION)
