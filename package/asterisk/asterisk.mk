@@ -101,13 +101,19 @@ ASTERISK_CONFIGURE_ARGS+= \
 			--with-imap="$(BUILD_DIR)/uw-imap-2007e" 
 endif
 
-#ifeq ($(strip $(BR2_PACKAGE_NETSNMP)),y)
-#ASTERISK_EXTRAS+=netsnmp
-#ASTERISK_CONFIGURE_ARGS+= \
-#			--with-netsnmp="$(STAGING_DIR)/usr"
-#endif
+ifneq ($(ASTERISK_VERSION_TUPLE),1.4)
+ ifeq ($(strip $(BR2_PACKAGE_NETSNMP)),y)
+ASTERISK_EXTRAS+=netsnmp
+ASTERISK_CONFIGURE_ARGS+= \
+			--with-netsnmp="$(STAGING_DIR)/usr"
+ else
 ASTERISK_CONFIGURE_ARGS+= \
 			--without-netsnmp
+ endif
+else
+ASTERISK_CONFIGURE_ARGS+= \
+			--without-netsnmp
+endif
 
 ifeq ($(strip $(BR2_PACKAGE_MYSQL_CLIENT)),y)
 ASTERISK_EXTRAS+=mysql_client
