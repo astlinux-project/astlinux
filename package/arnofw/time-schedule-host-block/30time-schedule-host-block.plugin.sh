@@ -32,7 +32,10 @@ PLUGIN_CONF_FILE="time-schedule-host-block.conf"
 # Plugin start function
 plugin_start()
 {
-  local rule type data addr timestart timestop weekdays i DAYS SHOWRULE IFS
+  local rule type data addr timestart timestop weekdays i DAYS SHOWRULE LOG LOG_PREFIX IFS
+
+  LOG="-m limit --limit 3/m --limit-burst 1 -j LOG --log-level $LOGLEVEL --log-prefix"
+  LOG_PREFIX="AIF:Time Schedule Host Block:"
 
   IFS=$EOL
   for rule in $TIME_SCHEDULE_HOST_BLOCK_MAC; do
@@ -83,16 +86,28 @@ plugin_start()
     case $type in
       LAN-EXT|lan-ext)
         echo "$SHOWRULE"
+        if [ "$TIME_SCHEDULE_HOST_BLOCK_LOG" = "1" ]; then
+          iptables -A LAN_INET_FORWARD_CHAIN -m mac --mac-source $addr \
+                   -m time --timestart $timestart --timestop $timestop $DAYS $LOG "$LOG_PREFIX"
+        fi
         iptables -A LAN_INET_FORWARD_CHAIN -m mac --mac-source $addr \
                  -m time --timestart $timestart --timestop $timestop $DAYS -j REJECT
         ;;
       DMZ-EXT|dmz-ext)
         echo "$SHOWRULE"
+        if [ "$TIME_SCHEDULE_HOST_BLOCK_LOG" = "1" ]; then
+          iptables -A DMZ_INET_FORWARD_CHAIN -m mac --mac-source $addr \
+                   -m time --timestart $timestart --timestop $timestop $DAYS $LOG "$LOG_PREFIX"
+        fi
         iptables -A DMZ_INET_FORWARD_CHAIN -m mac --mac-source $addr \
                  -m time --timestart $timestart --timestop $timestop $DAYS -j REJECT
         ;;
       ANY|any)
         echo "$SHOWRULE"
+        if [ "$TIME_SCHEDULE_HOST_BLOCK_LOG" = "1" ]; then
+          iptables -A FORWARD_CHAIN -m mac --mac-source $addr \
+                   -m time --timestart $timestart --timestop $timestop $DAYS $LOG "$LOG_PREFIX"
+        fi
         iptables -A FORWARD_CHAIN -m mac --mac-source $addr \
                  -m time --timestart $timestart --timestop $timestop $DAYS -j REJECT
         ;;
@@ -131,16 +146,28 @@ plugin_start()
     case $type in
       LAN-EXT|lan-ext)
         echo "$SHOWRULE"
+        if [ "$TIME_SCHEDULE_HOST_BLOCK_LOG" = "1" ]; then
+          iptables -A LAN_INET_FORWARD_CHAIN -s $addr \
+                   -m time --timestart $timestart --timestop $timestop $DAYS $LOG "$LOG_PREFIX"
+        fi
         iptables -A LAN_INET_FORWARD_CHAIN -s $addr \
                  -m time --timestart $timestart --timestop $timestop $DAYS -j REJECT
         ;;
       DMZ-EXT|dmz-ext)
         echo "$SHOWRULE"
+        if [ "$TIME_SCHEDULE_HOST_BLOCK_LOG" = "1" ]; then
+          iptables -A DMZ_INET_FORWARD_CHAIN -s $addr \
+                   -m time --timestart $timestart --timestop $timestop $DAYS $LOG "$LOG_PREFIX"
+        fi
         iptables -A DMZ_INET_FORWARD_CHAIN -s $addr \
                  -m time --timestart $timestart --timestop $timestop $DAYS -j REJECT
         ;;
       ANY|any)
         echo "$SHOWRULE"
+        if [ "$TIME_SCHEDULE_HOST_BLOCK_LOG" = "1" ]; then
+          iptables -A FORWARD_CHAIN -s $addr \
+                   -m time --timestart $timestart --timestop $timestop $DAYS $LOG "$LOG_PREFIX"
+        fi
         iptables -A FORWARD_CHAIN -s $addr \
                  -m time --timestart $timestart --timestop $timestop $DAYS -j REJECT
         ;;
@@ -151,6 +178,12 @@ plugin_start()
         ;;
     esac
   done
+
+  if [ "$TIME_SCHEDULE_HOST_BLOCK_LOG" = "1" ]; then
+    echo "${INDENT}Logging of Time Schedule Host Block packets: Enabled"
+  else
+    echo "${INDENT}Logging of Time Schedule Host Block packets: Disabled"
+  fi
 
   return 0
 }
