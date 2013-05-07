@@ -36,7 +36,7 @@ upgrade_arno_version()
 
 merge_old_plugin_configs()
 {
-  local plugin plugins editname var search replace IFS
+  local plugin plugins editname var search IFS
   
   plugins="$(grep -m1 '^ENABLED=1' /mnt/kd/arno-iptables-OLD/plugins/*.conf | sed 's/:ENABLED.*//')"
 
@@ -44,11 +44,38 @@ merge_old_plugin_configs()
   for plugin in $plugins; do
     editname="$(echo $plugin | sed 's/arno-iptables-OLD/arno-iptables-firewall/')"
     if [ -f "$editname" ]; then
+      IFS=$'\n'
       for var in $(grep '^[A-Z][A-Z0-9_-]*[=][^$\`]*$' $plugin); do
+        unset IFS
         search="$(echo $var | cut -d= -f1)"
         if [ -n "$search" -a "$search" != "IFS" ]; then
-          replace="$(echo $var | sed 's:/:\\/:g')"
-          sed -i "/^${search}=/ s/^.*$/${replace}/" "$editname"
+          if echo $var | grep -q "^${search}=\"[^\"]*$"; then  # Single double-quote (")
+            # Multi-line OLD variable
+            if grep -q "^${search}=\"[^\"]*$" "$editname"; then  # Multi-Line NEW variable
+              sed -n "/^${search}=\"/,/^.*\"/ p" "$plugin" | sed -i "/^${search}=\"/,/^.*\"/ {
+r /dev/stdin
+d
+}" "$editname"
+            else
+              sed -n "/^${search}=\"/,/^.*\"/ p" "$plugin" | sed -i "/^${search}=/ {
+r /dev/stdin
+d
+}" "$editname"
+            fi
+          else
+            # Single-line OLD variable
+            if grep -q "^${search}=\"[^\"]*$" "$editname"; then  # Multi-Line NEW variable
+              echo $var | sed -i "/^${search}=\"/,/^.*\"/ {
+r /dev/stdin
+d
+}" "$editname"
+            else
+              echo $var | sed -i "/^${search}=/ {
+r /dev/stdin
+d
+}" "$editname"
+            fi
+          fi
           echo "Merged variable \"${search}\" in plugin: $editname" 1>&2
         fi
       done

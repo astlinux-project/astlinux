@@ -119,6 +119,13 @@ $(TARGET_DIR)$(ARNOFW_TARGET_BINARY): $(ARNOFW_DIR)/.patched
 	$(INSTALL) -m 0644 package/arnofw/openvpn-server/openvpn-server-astlinux.conf \
 		$(TARGET_DIR)/stat$(ARNOFW_PLUGIN_CONFIG_DIR)/openvpn-server.conf
 	@echo
+	@echo "Install local version of Time Schedule Host Block plugin."
+	@echo
+	$(INSTALL) -m 0644 package/arnofw/time-schedule-host-block/30time-schedule-host-block.plugin.sh \
+		$(TARGET_DIR)$(ARNOFW_PLUGIN_SCRIPT_DIR)/30time-schedule-host-block.plugin
+	$(INSTALL) -m 0644 package/arnofw/time-schedule-host-block/time-schedule-host-block.conf \
+		$(TARGET_DIR)/stat$(ARNOFW_PLUGIN_CONFIG_DIR)/time-schedule-host-block.conf
+	@echo
 	@echo "Install local version of PPTP VPN plugin."
 	@echo
 	$(INSTALL) -m 0644 package/arnofw/pptp-vpn/50pptp-vpn.plugin.sh \
