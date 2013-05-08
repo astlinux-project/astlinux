@@ -37,6 +37,11 @@ Released **TBD**
    Note: The link must be down for at least 4-5 seconds before the script is called.
          Shorter durations are intentionally ignored.
 
+-- AIF, add new "time-schedule-host-block" plugin. This selectively blocks outgoing connections by MAC or IP address based
+   on a local time schedule and day-of-week.  Useful for blocking guest WiFi access during off-hours, children's curfew, etc. .
+
+-- netsnmp, version bump to 5.7.2, change build options to enable Unix transport and agentx to support Asterisk's res_snmp.
+
 -- radvd, version bump to 1.9.3
 
 -- dnsmasq, version bump to 2.66
@@ -48,6 +53,10 @@ Released **TBD**
 -- Asterisk 1.8.21.0 (no change) and 11.3.0 (no change)
 
 -- DAHDI, dahdi-linux 2.6.2 (no change) and dahdi-tools 2.6.2 (no change)
+
+-- Enable Asterisk res_snmp.so module when netsnmp is enabled (standard) used together with the snmpd service.
+   Includes ASTERISK-MIB.txt and DIGIUM-MIB.txt mib files.
+   More Info: http://doc.astlinux.org/userdoc:tt_asterisk_snmp_monitoring
 
 ** Web Interface
 
