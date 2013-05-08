@@ -17,6 +17,8 @@ Released **TBD**
 -- alert, add new variable ALERT_SOUNDS_OCTAVE to increase the ALERT_SOUNDS alert tones by 1, 2 or 3 octaves
    (x2, x4 or x8 frequency). Useful for boards with smaller high frequency piezo-speakers or noisy environments.
 
+-- Enable kernel module CONFIG_USB_ACM, per Dominko Vrljic on the mailing list and Arduino board integration.
+
 -- php, version bump to 5.3.24
 
 -- util-linux, version bump to 2.22.2
