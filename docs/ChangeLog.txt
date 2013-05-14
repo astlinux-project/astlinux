@@ -19,7 +19,9 @@ Released **TBD**
 
 -- Enable kernel module CONFIG_USB_ACM, per Dominko Vrljic on the mailing list and Arduino board integration.
 
--- php, version bump to 5.3.24
+-- php, version bump to 5.3.25
+
+-- ethtool, version bump to 3.9
 
 -- util-linux, version bump to 2.22.2
 
@@ -59,6 +61,9 @@ Released **TBD**
 -- Enable Asterisk res_snmp.so module when netsnmp is enabled (standard) used together with the snmpd service.
    Includes ASTERISK-MIB.txt and DIGIUM-MIB.txt mib files.
    More Info: http://doc.astlinux.org/userdoc:tt_asterisk_snmp_monitoring
+
+-- Asterisk 11, fixed an issue when res_xmpp is active and unwanted debug log /tmp/refs grows without limit.
+   More Info: https://issues.asterisk.org/jira/browse/ASTERISK-21785
 
 ** Web Interface
 
