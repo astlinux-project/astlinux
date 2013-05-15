@@ -28,6 +28,7 @@ $select_reload = array (
   'openvpnclient' => 'Restart OpenVPN Client',
   'racoon' => 'Restart IPsec VPN',
   'pptpd' => 'Restart PPTP VPN Server',
+  'snmpd' => 'Restart SNMP Server',
   'stunnel' => 'Restart Stunnel Proxy',
   'miniupnpd' => 'Restart Univ. Plug\'n\'Play',
   'apcupsd' => 'Restart UPS Daemon',
@@ -217,6 +218,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 37, $result, 'init');
       } elseif ($process === 'prosody') {
         $result = restartPROCESS($process, 38, $result, 'init');
+      } elseif ($process === 'snmpd') {
+        $result = restartPROCESS($process, 39, $result, 'init');
       } elseif ($process === 'cron') {
         $result = updateCRON('root', 30, $result);
       }
@@ -256,6 +259,7 @@ require_once '../common/header.php';
       $dir === '/mnt/kd/openvpn/ccd' ||
       $dir === '/mnt/kd/rc.conf.d' ||
       $dir === '/mnt/kd/crontabs' ||
+      $dir === '/mnt/kd/snmp' ||
       $dir === '/mnt/kd/apcupsd' ||
       $dir === '/mnt/kd/prosody' ||
       $dir === '/mnt/kd/docs' ||
@@ -330,6 +334,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Stunnel Proxy has Restarted.</p>');
     } elseif ($result == 38) {
       putHtml('<p style="color: green;">XMPP Server has Restarted.</p>');
+    } elseif ($result == 39) {
+      putHtml('<p style="color: green;">SNMP Server has Restarted.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {
@@ -474,6 +480,14 @@ require_once '../common/header.php';
   if (is_writable($file = '/mnt/kd/prosody/sharedgroups.conf')) {
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
     putHtml('<option value="'.$file.'"'.$sel.'>prosody/'.basename($file).' - XMPP Shared Groups</option>');
+  }
+  if (is_writable($file = '/mnt/kd/snmp/snmpd.conf')) {
+    $sel = ($file === $openfile) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$file.'"'.$sel.'>snmp/'.basename($file).' - SNMP Agent Server Config</option>');
+  }
+  if (is_writable($file = '/mnt/kd/snmp/snmp.conf')) {
+    $sel = ($file === $openfile) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$file.'"'.$sel.'>snmp/'.basename($file).' - SNMP Applications Config</option>');
   }
   putHtml('</optgroup>');
   if (is_dir('/mnt/kd/openvpn/ccd') && count($globfiles = glob('/mnt/kd/openvpn/ccd/*')) > 0) {

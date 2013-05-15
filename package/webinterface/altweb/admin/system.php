@@ -174,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $srcfile .= ' -e "s/^.*[.]conf$/&/p" -e "s/^webgui-prefs.txt$/&/p" -e "s/^ast.*/&/p"';
       $srcfile .= ' -e "s/^blocked-hosts$/&/p" -e "s/^dnsmasq.static$/&/p" -e "s/^hosts$/&/p" -e "s/^ethers$/&/p"';
       $srcfile .= ' -e "s/^rc.local$/&/p" -e "s/^rc.local.stop$/&/p" -e "s/^rc.elocal$/&/p" -e "s/^rc.ledcontrol$/&/p"';
-      $srcfile .= ' -e "s/^crontabs$/&/p"';
+      $srcfile .= ' -e "s/^crontabs$/&/p" -e "s/^snmp$/&/p"';
       $srcfile .= ' -e "s/^openvpn$/&/p" -e "s/^ipsec$/&/p" -e "s/^dahdi$/&/p" -e "s/^ssl$/&/p" -e "s/^apcupsd$/&/p")';
       $srcfile .= $firewall;
     } elseif ($backup_type === 'cdr') {

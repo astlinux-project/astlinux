@@ -785,6 +785,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/xmpp.php');
     exit;
+  } elseif (isset($_POST['submit_snmp_agent'])) {
+    $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
+    if (is_writable($file = '/mnt/kd/snmp/snmpd.conf')) {
+      header('Location: /admin/edit.php?file='.$file);
+      exit;
+    }
   } elseif (isset($_POST['submit_zabbix'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/zabbix.php');
@@ -890,6 +896,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 37, $result, 'init');
       } elseif ($process === 'prosody') {
         $result = restartPROCESS($process, 38, $result, 'init');
+      } elseif ($process === 'snmpd') {
+        $result = restartPROCESS($process, 39, $result, 'init');
       }
     } else {
       $result = 2;
@@ -964,6 +972,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Stunnel Proxy has Restarted.</p>');
     } elseif ($result == 38) {
       putHtml('<p style="color: green;">XMPP Server has Restarted.</p>');
+    } elseif ($result == 39) {
+      putHtml('<p style="color: green;">SNMP Server has Restarted.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 100) {
@@ -1041,6 +1051,8 @@ require_once '../common/header.php';
   putHtml('<option value="racoon"'.$sel.'>Restart IPsec VPN</option>');
   $sel = ($reboot_restart === 'pptpd') ? ' selected="selected"' : '';
   putHtml('<option value="pptpd"'.$sel.'>Restart PPTP VPN Server</option>');
+  $sel = ($reboot_restart === 'snmpd') ? ' selected="selected"' : '';
+  putHtml('<option value="snmpd"'.$sel.'>Restart SNMP Server</option>');
   $sel = ($reboot_restart === 'stunnel') ? ' selected="selected"' : '';
   putHtml('<option value="stunnel"'.$sel.'>Restart Stunnel Proxy</option>');
   $sel = ($reboot_restart === 'miniupnpd') ? ' selected="selected"' : '';
@@ -1426,6 +1438,11 @@ require_once '../common/header.php';
   putHtml('XMPP Server, Messaging and Presence:');
   putHtml('<input type="submit" value="Configure XMPP" name="submit_xmpp" class="button" /></td></tr>');
 
+  if (is_file('/etc/init.d/snmpd') && is_file('/mnt/kd/snmp/snmpd.conf')) {
+    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+    putHtml('SNMP&nbsp;Agent&nbsp;Server:');
+    putHtml('<input type="submit" value="Configure SNMP Agent" name="submit_snmp_agent" class="button" /></td></tr>');
+  }
   if (is_file('/etc/init.d/zabbix')) {
     putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
     putHtml('Zabbix&nbsp;Monitoring:');
