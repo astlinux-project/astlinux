@@ -73,6 +73,11 @@ Released **TBD**
 
 -- Prefs tab, allow "staff" user to access SQL-Data tab, disabled by default.
 
+-- Network and Edit tabs, add "SNMP Agent Server" support for "/mnt/kd/snmp/snmpd.conf".
+   Additionally, added "Restart SNMP Server" menu entries.
+
+-- System tab, add the "/mnt/kd/snmp/" directory to the Basic Configuration Backup.
+
 
 Additions for AstLinux 1.1.1:
 =============================
