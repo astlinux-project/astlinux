@@ -1,0 +1,12 @@
+config BR2_PACKAGE_TG3
+	bool "tg3"
+	depends on BR2_LINUX_KERNEL
+	default n
+	help
+	  Linux NIC device driver tg3 released for Broadcom's NetLink Ethernet
+	  controllers: 5784, 5785, 57780, 57781, 57785, 57790, 57795
+
+	  10/100/1000 Mbps PCI/PCI-X/PCI Express Ethernet Network Controllers
+
+	  http://www.broadcom.com/support/ethernet_nic/netlink_k57.php
+
