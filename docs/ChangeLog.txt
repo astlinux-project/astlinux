@@ -14,6 +14,8 @@ Released **TBD**
 
 -- RUNNIX, version bump to runnix-0.4-6047, Linux Kernel 2.6.35.14 and many package upgrades.
 
+-- tg3, version 3.124c Broadcom NetLink 10/100/1000 Mbps PCI/PCI-X/PCI Express Ethernet Linux driver
+
 -- alert, add new variable ALERT_SOUNDS_OCTAVE to increase the ALERT_SOUNDS alert tones by 1, 2 or 3 octaves
    (x2, x4 or x8 frequency). Useful for boards with smaller high frequency piezo-speakers or noisy environments.
 
@@ -54,7 +56,7 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.8.21.0 (no change) and 11.3.0 (no change)
+-- Asterisk 1.8.22.0 (version bump) and 11.4.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.6.2 (no change) and dahdi-tools 2.6.2 (no change)
 
