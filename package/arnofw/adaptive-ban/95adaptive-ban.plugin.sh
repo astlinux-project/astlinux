@@ -5,7 +5,7 @@ PLUGIN_NAME="Adaptive Ban plugin"
 PLUGIN_VERSION="1.05"
 PLUGIN_CONF_FILE="adaptive-ban.conf"
 #
-# Last changed          : May 5, 2013
+# Last changed          : May 18, 2013
 # Requirements          : AIF 2.0.0+
 # Comments              : Parse a log file for failed access with offending IP addresses
 #                         Ban the IP address after multiple failed attempts
