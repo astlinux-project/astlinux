@@ -3,7 +3,7 @@
 # sqliteodbc
 #
 #############################################################
-SQLITEODBC_VERSION = 0.99
+SQLITEODBC_VERSION = 0.992
 SQLITEODBC_SOURCE = sqliteodbc-$(SQLITEODBC_VERSION).tar.gz
 SQLITEODBC_SITE = http://www.ch-werner.de/sqliteodbc
 SQLITEODBC_SUBDIR = sqliteodbc-$(SQLITEODBC_VERSION)
@@ -16,6 +16,7 @@ SQLITEODBC_CONF_OPT = \
 	--with-pic \
 	--with-sqlite="$(STAGING_DIR)/usr" \
 	--with-sqlite3="$(STAGING_DIR)/usr" \
+	--with-sqlite4="$(STAGING_DIR)/usr" \
 	--with-odbc="$(STAGING_DIR)/usr"
 
 define SQLITEODBC_INSTALL_TARGET_CMDS
