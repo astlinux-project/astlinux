@@ -70,6 +70,7 @@ ASTERISK_CONFIGURE_ARGS+= \
  endif
 
 ASTERISK_CONFIGURE_ARGS+= \
+			--without-ldap \
 			--without-lua
 endif
 
