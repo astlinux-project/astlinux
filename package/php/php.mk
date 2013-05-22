@@ -175,6 +175,12 @@ ifeq ($(BR2_PACKAGE_PHP_EXT_PDO_MYSQL),y)
 endif
 endif
 
+### LDAP
+ifeq ($(BR2_PACKAGE_OPENLDAP),y)
+	PHP_CONF_OPT += --with-ldap=$(STAGING_DIR)/usr
+	PHP_DEPENDENCIES += openldap
+endif
+
 # Fixup prefix= and exec_prefix= in php-config
 define PHP_FIXUP_PHP_CONFIG
 	$(SED) 's%^prefix="/usr"%prefix="$(STAGING_DIR)/usr"%' \
