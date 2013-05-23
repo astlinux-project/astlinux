@@ -23,9 +23,9 @@ Released **TBD**
 
 -- php, version bump to 5.3.25
 
--- sqlite, version bump to 3.7.16.1
+-- sqlite, version bump to 3.7.17.0
 
--- sqliteodbc, version bump to 0.992
+-- sqliteodbc, version bump to 0.993
 
 -- ethtool, version bump to 3.9
 
