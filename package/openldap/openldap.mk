@@ -33,6 +33,7 @@ define OPENLDAP_INSTALL_TARGET_CMDS
 	cp -a $(STAGING_DIR)/usr/lib/libldap*.so* $(TARGET_DIR)/usr/lib/
 	cp -a $(STAGING_DIR)/usr/lib/liblber*.so* $(TARGET_DIR)/usr/lib/
 	$(INSTALL) -D -m 0755 $(STAGING_DIR)/usr/bin/ldapsearch $(TARGET_DIR)/usr/bin/ldapsearch
+	$(INSTALL) -D -m 0755 $(STAGING_DIR)/usr/bin/ldapwhoami $(TARGET_DIR)/usr/bin/ldapwhoami
 	$(INSTALL) -m 0755 -D package/openldap/ldap.init $(TARGET_DIR)/etc/init.d/ldap
 	mkdir -p $(TARGET_DIR)/etc/openldap
 	ln -sf /tmp/etc/openldap/ldap.conf $(TARGET_DIR)/etc/openldap/ldap.conf
@@ -43,6 +44,7 @@ define OPENLDAP_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/lib/libldap*
 	rm -f $(TARGET_DIR)/usr/lib/liblber*
 	rm -f $(TARGET_DIR)/usr/bin/ldapsearch
+	rm -f $(TARGET_DIR)/usr/bin/ldapwhoami
 	rm -f $(TARGET_DIR)/etc/init.d/ldap
 	rm -rf $(TARGET_DIR)/etc/openldap
 	rm -f $(TARGET_DIR)/etc/runlevels/default/S00ldap
