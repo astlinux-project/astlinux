@@ -48,6 +48,13 @@ config BR2_PACKAGE_PHP_EXT_LIBXML2
 	help
 	  libxml2 support
 
+config BR2_PACKAGE_PHP_EXT_XMLPARSER
+	bool "xmlparser"
+	select BR2_PACKAGE_PHP_EXT_LIBXML2
+	help
+	  XML Parser support
+	  Also adds utf8_encode()/utf8_decode() from/to ISO-8859-1 functions
+
 config BR2_PACKAGE_PHP_EXT_SIMPLEXML
 	bool "simplexml"
 	select BR2_PACKAGE_PHP_EXT_LIBXML2

@@ -70,6 +70,10 @@ ifeq ($(BR2_PACKAGE_PHP_EXT_LIBXML2),y)
 	PHP_DEPENDENCIES += libxml2
 endif
 
+ifeq ($(BR2_PACKAGE_PHP_EXT_XMLPARSER),y)
+	PHP_CONF_OPT += --enable-xml
+endif
+
 ifeq ($(BR2_PACKAGE_PHP_EXT_SIMPLEXML),y)
 	PHP_CONF_OPT += --enable-simplexml
 endif
