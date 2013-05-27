@@ -9,12 +9,14 @@
 // phone-ldap-dir.php for AstLinux
 // 25-05-2013, Convert phone-dir.php for use with LDAP
 //
-// Usage: https://pbx/phone-ldap-dir.php?type=generic&search=
+// Usage: https://pbx/phone-ldap-dir.php?tls&type=generic&search=
+// If 'tls' appears, regardless of value,  start_tls is enabled (defaults to disabled)
 // type= generic, polycom, aastra, yealink, snom (defaults to "generic")
 // search= text to search for anywhere in name (defaults to none)
 
 $myself = $_SERVER['PHP_SELF'];
 
+$opts['tls'] = isset($_GET['tls']) ? TRUE : FALSE;
 $opts['type'] = isset($_GET['type']) ? $_GET['type'] : 'generic';
 $opts['search'] = isset($_GET['search']) ? $_GET['search'] : '';
 
@@ -60,11 +62,18 @@ function ldap_utf8_decode($utf8, $type) {
 
 // Function: LDAP_Client
 //
-function LDAP_Client(&$uri, &$base) {
+function LDAP_Client($start_tls, &$uri, &$base) {
 
   if (! function_exists('ldap_connect')) {
     return(FALSE);
   }
+
+  // begin - Custom variables, don't edit origional phone-ldap-dir.php script.
+  // Copy this script to /mnt/kd/phoneprov/phone-ldap-dir.php to make changes.
+  $user = '';
+  $pass = '';
+  $proto_version = 3;
+  // end
 
   $uri = '';
   $base = '';
@@ -83,8 +92,21 @@ function LDAP_Client(&$uri, &$base) {
   }
 
   if (($client = ldap_connect($uri)) !== FALSE) {
-    ldap_set_option($client, LDAP_OPT_PROTOCOL_VERSION, 3);
-    if (! ldap_bind($client)) {
+    if ($proto_version > 0) {
+      ldap_set_option($client, LDAP_OPT_PROTOCOL_VERSION, $proto_version);
+    }
+    if ($start_tls && strncmp($uri, 'ldaps://', 8)) {  // Don't use together with ldaps://
+      if (! ldap_start_tls($client)) {
+        ldap_close($client);
+        return(FALSE);
+      }
+    }
+    if ($user !== '' && $pass !== '') {
+      $ok_bind = ldap_bind($client, $user, $pass);
+    } else {
+      $ok_bind = ldap_bind($client);
+    }
+    if (! $ok_bind) {
       ldap_close($client);
       return(FALSE);
     }
@@ -123,7 +145,7 @@ if ($opts['type'] === 'aastra') {
   buildData('<body>');
 }
 
-if (($ldapconn = LDAP_Client($uri, $dn)) !== FALSE) {
+if (($ldapconn = LDAP_Client($opts['tls'], $uri, $dn)) !== FALSE) {
   
   $name = $opts['search'];
   $filter = "(|(sn=$name*)(givenname=$name*))";
