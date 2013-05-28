@@ -28,6 +28,7 @@ $select_reload = array (
   'openvpnclient' => 'Restart OpenVPN Client',
   'racoon' => 'Restart IPsec VPN',
   'pptpd' => 'Restart PPTP VPN Server',
+  'ldap' => 'Reload LDAP Client',
   'snmpd' => 'Restart SNMP Server',
   'stunnel' => 'Restart Stunnel Proxy',
   'miniupnpd' => 'Restart Univ. Plug\'n\'Play',
@@ -43,6 +44,7 @@ $sys_label = array (
   'misdn-init.conf' => 'mISDN Configuration',
   'ntpd.conf' => 'NTP Time Client/Server',
   'sshd.conf' => 'SSH Server sshd_config',
+  'ldap.conf' => 'LDAP Client System Defaults',
   'lighttpd.conf' => 'Web Server Configuration',
   'sensors.conf' => 'Lm_sensors Hardware Monitoring',
   'zaptel.conf' => 'Zaptel System Config',
@@ -220,6 +222,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 38, $result, 'init');
       } elseif ($process === 'snmpd') {
         $result = restartPROCESS($process, 39, $result, 'init');
+      } elseif ($process === 'ldap') {
+        $result = restartPROCESS($process, 40, $result, 'init');
       } elseif ($process === 'cron') {
         $result = updateCRON('root', 30, $result);
       }
@@ -336,6 +340,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">XMPP Server has Restarted.</p>');
     } elseif ($result == 39) {
       putHtml('<p style="color: green;">SNMP Server has Restarted.</p>');
+    } elseif ($result == 40) {
+      putHtml('<p style="color: green;">LDAP Client Defaults has been Reloaded.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {

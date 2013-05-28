@@ -81,6 +81,20 @@ $select_dyndns_getip = array (
   'External Interface' => 'interface'
 );
 
+$select_ldap_deref = array (
+  'never' => 'never',
+  'searching' => 'searching',
+  'finding' => 'finding',
+  'always' => 'always'
+);
+
+$select_ldap_tls_reqcert = array (
+  'never' => 'never',
+  'allow' => 'allow',
+  'try' => 'try',
+  'demand' => 'demand'
+);
+
 $select_ups_type = array (
   'disabled' => '',
   'usb' => 'usb',
@@ -541,7 +555,32 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   fwrite($fp, $value."\n");
   $value = 'MONITOR_ASTERISK_SIP_STATUS_UPDATES="'.$_POST['monitor_status_updates'].'"';
   fwrite($fp, $value."\n");
-  
+
+  fwrite($fp, "### LDAP Client System Defaults\n");
+  if (isset($_POST['ldap_uri'], $_POST['ldap_base'])) {
+    $value = 'LDAP_URI="'.tuq($_POST['ldap_uri']).'"';
+    fwrite($fp, $value."\n");
+    $value = 'LDAP_BASE="'.tuq($_POST['ldap_base']).'"';
+    fwrite($fp, $value."\n");
+    $value = 'LDAP_DEREF="'.$_POST['ldap_deref'].'"';
+    fwrite($fp, $value."\n");
+    $value = 'LDAP_TLS_CACERT="'.tuq($_POST['ldap_tls_cacert']).'"';
+    fwrite($fp, $value."\n");
+    $value = 'LDAP_TLS_REQCERT="'.$_POST['ldap_tls_reqcert'].'"';
+    fwrite($fp, $value."\n");
+  } else {
+    $value = 'LDAP_URI=""';
+    fwrite($fp, $value."\n");
+    $value = 'LDAP_BASE=""';
+    fwrite($fp, $value."\n");
+    $value = 'LDAP_DEREF=""';
+    fwrite($fp, $value."\n");
+    $value = 'LDAP_TLS_CACERT=""';
+    fwrite($fp, $value."\n");
+    $value = 'LDAP_TLS_REQCERT=""';
+    fwrite($fp, $value."\n");
+  }
+
   fwrite($fp, "### APC UPS Monitoring - Shutdown\n");
   if (isset($_POST['ups_type'], $_POST['ups_cable'], $_POST['ups_device'])) {
     $value = 'UPSTYPE="'.$_POST['ups_type'].'"';
@@ -819,6 +858,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/pptp.php');
     exit;
+  } elseif (isset($_POST['submit_edit_ldap'])) {
+    $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
+    if (is_writable($file = '/mnt/kd/ldap.conf')) {
+      header('Location: /admin/edit.php?file='.$file);
+      exit;
+    }
   } elseif (isset($_POST['submit_edit_ups'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     if (is_writable($file = '/mnt/kd/apcupsd/apcupsd.conf')) {
@@ -898,6 +943,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 38, $result, 'init');
       } elseif ($process === 'snmpd') {
         $result = restartPROCESS($process, 39, $result, 'init');
+      } elseif ($process === 'ldap') {
+        $result = restartPROCESS($process, 40, $result, 'init');
       }
     } else {
       $result = 2;
@@ -974,6 +1021,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">XMPP Server has Restarted.</p>');
     } elseif ($result == 39) {
       putHtml('<p style="color: green;">SNMP Server has Restarted.</p>');
+    } elseif ($result == 40) {
+      putHtml('<p style="color: green;">LDAP Client Defaults has been Reloaded.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 100) {
@@ -1051,6 +1100,8 @@ require_once '../common/header.php';
   putHtml('<option value="racoon"'.$sel.'>Restart IPsec VPN</option>');
   $sel = ($reboot_restart === 'pptpd') ? ' selected="selected"' : '';
   putHtml('<option value="pptpd"'.$sel.'>Restart PPTP VPN Server</option>');
+  $sel = ($reboot_restart === 'ldap') ? ' selected="selected"' : '';
+  putHtml('<option value="ldap"'.$sel.'>Reload LDAP Client</option>');
   $sel = ($reboot_restart === 'snmpd') ? ' selected="selected"' : '';
   putHtml('<option value="snmpd"'.$sel.'>Restart SNMP Server</option>');
   $sel = ($reboot_restart === 'stunnel') ? ' selected="selected"' : '';
@@ -1702,6 +1753,48 @@ require_once '../common/header.php';
   putHtml('<option value="yes"'.$sel.'>enabled</option>');
   putHtml('</select></td></tr>');
   
+  putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
+  
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+
+  putHtml('<strong>LDAP Client System Defaults:</strong>');
+  putHtml('</td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  if (! is_file('/mnt/kd/ldap.conf')) {
+    $value = getVARdef($db, 'LDAP_URI', $cur_db);
+    putHtml('LDAP Server URI(s):<input type="text" size="82" maxlength="256" value="'.$value.'" name="ldap_uri" /></td></tr>');
+    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+    $value = getVARdef($db, 'LDAP_BASE', $cur_db);
+    putHtml('LDAP Base DN:<input type="text" size="82" maxlength="256" value="'.$value.'" name="ldap_base" /></td></tr>');
+
+    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+    putHtml('LDAP Dereferencing:');
+    $ldap_deref = getVARdef($db, 'LDAP_DEREF', $cur_db);
+    putHtml('<select name="ldap_deref">');
+    foreach ($select_ldap_deref as $key => $value) {
+      $sel = ($ldap_deref === $value) ? ' selected="selected"' : '';
+      putHtml('<option value="'.$value.'"'.$sel.'>'.$key.'</option>');
+    }
+    putHtml('</select>');
+    putHtml('</td></tr>');
+
+    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+    putHtml('LDAP TLS Cert Check:');
+    $ldap_tls_reqcert = getVARdef($db, 'LDAP_TLS_REQCERT', $cur_db);
+    putHtml('<select name="ldap_tls_reqcert">');
+    foreach ($select_ldap_tls_reqcert as $key => $value) {
+      $sel = ($ldap_tls_reqcert === $value) ? ' selected="selected"' : '';
+      putHtml('<option value="'.$value.'"'.$sel.'>'.$key.'</option>');
+    }
+    putHtml('</select>');
+    putHtml('&ndash;&nbsp;Server CA Cert File:');
+    $value = getVARdef($db, 'LDAP_TLS_CACERT', $cur_db);
+    putHtml('<input type="text" size="24" maxlength="64" value="'.$value.'" name="ldap_tls_cacert" /></td></tr>');
+  } else {
+    putHtml('LDAP Defaults:');
+    putHtml('<input type="submit" value="LDAP Configuration" name="submit_edit_ldap" class="button" /></td></tr>');
+  }
+
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
   
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
