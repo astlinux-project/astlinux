@@ -1788,7 +1788,9 @@ require_once '../common/header.php';
     }
     putHtml('</select>');
     putHtml('&ndash;&nbsp;Server CA Cert File:');
-    $value = getVARdef($db, 'LDAP_TLS_CACERT', $cur_db);
+    if (($value = getVARdef($db, 'LDAP_TLS_CACERT', $cur_db)) === '') {
+      $value = '/mnt/kd/ssl/ca-ldap.pem';
+    }
     putHtml('<input type="text" size="24" maxlength="64" value="'.$value.'" name="ldap_tls_cacert" /></td></tr>');
   } else {
     putHtml('LDAP Defaults:');
