@@ -30,15 +30,21 @@ gen_ldap_config()
       ;;
   esac
 
-  if [ -n "$LDAP_TLS_CACERT" ]; then
-    echo "TLS_CACERT $LDAP_TLS_CACERT"
-  fi
-
   case "$LDAP_TLS_REQCERT" in
     never|allow|try|demand)
       echo "TLS_REQCERT $LDAP_TLS_REQCERT"
       ;;
   esac
+
+  if [ -n "$LDAP_TLS_CACERT" ]; then
+    case "$LDAP_TLS_REQCERT" in
+      never|allow)
+        ;;
+      *)
+        echo "TLS_CACERT $LDAP_TLS_CACERT"
+        ;;
+    esac
+  fi
 
   return 0
 }
