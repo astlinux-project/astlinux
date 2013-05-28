@@ -21,13 +21,15 @@ Released **TBD**
 
 -- Enable kernel module CONFIG_USB_ACM, per Dominko Vrljic on the mailing list and Arduino board integration.
 
--- php, version bump to 5.3.25
+-- php, version bump to 5.3.25, enable basic XML support using libxml2 and enable LDAP support using openldap.
 
 -- sqlite, version bump to 3.7.17.0
 
 -- sqliteodbc, version bump to 0.993
 
 -- ethtool, version bump to 3.9
+
+-- lm-sensors, version bump to 3.3.4
 
 -- util-linux, version bump to 2.22.2
 
@@ -36,6 +38,9 @@ Released **TBD**
 -- dosfstools, version bump to 3.0.16
 
 ** Networking
+
+-- openldap, added libraries and shell commands ldapsearch and ldapwhoami for LDAP client queries.  Added LDAP_* rc.conf
+   variables to set the "LDAP Client System Defaults" via the "/etc/openldap/ldap.conf" system file.
 
 -- network, unify network configuration to use ip (iproute2).  Users with custom /mnt/kd/rc.elocal and rc.local scripts
    performing network configuration are urged to make the similar changes (ifconfig, route -> ip), though not required.
@@ -83,6 +88,16 @@ Released **TBD**
    Additionally, added "Restart SNMP Server" menu entries.
 
 -- System tab, add the "/mnt/kd/snmp/" directory to the Basic Configuration Backup.
+
+-- Network tab, added "LDAP Client System Defaults" support for LDAP_* rc.conf variables.
+   Edit tab, added "LDAP Client System Defaults" support for optional /mnt/kd/ldap.conf file.
+   Additionally, Network and Edit tabs, added "Reload LDAP Client" menu entries.
+
+-- A new "phone-ldap-dir.php" cgi script, similar to the "phone-dir.php cgi script", but uses
+   the "LDAP Client System Defaults" settings to query the data.  Only 'anonymous' queries are
+   supported by the standard cgi script.
+   Note: The Network tab "LDAP Server URI(s):" entry must be defined for this cgi script to be enabled.
+   More Info: http://doc.astlinux.org/userdoc:tt_ldap_client
 
 
 Additions for AstLinux 1.1.1:
