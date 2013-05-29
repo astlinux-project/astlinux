@@ -12,7 +12,7 @@ Released **TBD**
 
 ** System
 
--- RUNNIX, version bump to runnix-0.4-6047, Linux Kernel 2.6.35.14 and many package upgrades.
+-- RUNNIX, version bump to runnix-0.4-6112, Linux Kernel 2.6.35.14 and many package upgrades.
 
 -- tg3, version 3.124c Broadcom NetLink 10/100/1000 Mbps PCI/PCI-X/PCI Express Ethernet Linux driver
 
