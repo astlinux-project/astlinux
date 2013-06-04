@@ -57,6 +57,8 @@ Released **TBD**
 
 -- netsnmp, version bump to 5.7.2, change build options to enable Unix transport and agentx to support Asterisk's res_snmp.
 
+-- OpenVPN, version bump to 2.3.2
+
 -- radvd, version bump to 1.9.3
 
 -- dnsmasq, version bump to 2.66
