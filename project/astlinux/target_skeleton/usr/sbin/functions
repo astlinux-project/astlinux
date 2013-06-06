@@ -19,6 +19,7 @@ gen_kd_files()
 
   mkdir ${1}/home
   mkdir ${1}/monitor
+  mkdir ${1}/dictate
 
   mkdir ${1}/dahdi
   if [ -f /stat/etc/dahdi/system.conf ]; then

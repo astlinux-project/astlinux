@@ -42,12 +42,25 @@ init () {
     if [ -L /var/spool/asterisk/monitor ]; then
       rm -f /var/spool/asterisk/monitor
     fi
+    if [ -L /var/spool/asterisk/meetme ]; then
+      rm -f /var/spool/asterisk/meetme
+    fi
+    if [ -L /var/spool/asterisk/dictate ]; then
+      rm -f /var/spool/asterisk/dictate
+    fi
   fi
   cp -a /stat/var/spool/asterisk/* /var/spool/asterisk/
 
   make_symlink_or_dir "/mnt/kd/voicemail" "/var/spool/asterisk/voicemail"
 
   make_symlink_or_dir "/mnt/kd/monitor" "/var/spool/asterisk/monitor"
+
+  if [ -d /mnt/kd/monitor ] && [ ! -d /mnt/kd/monitor/meetme ]; then
+    mkdir /mnt/kd/monitor/meetme
+  fi
+  make_symlink_or_dir "/mnt/kd/monitor/meetme" "/var/spool/asterisk/meetme"
+
+  make_symlink_or_dir "/mnt/kd/dictate" "/var/spool/asterisk/dictate"
 
   make_symlink_or_dir "/mnt/kd/asterisk" "/tmp/etc/asterisk"
   if [ $? -eq 1 ]; then
