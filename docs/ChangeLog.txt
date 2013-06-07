@@ -78,6 +78,12 @@ Released **TBD**
 -- Asterisk 11, fixed an issue when res_xmpp is active and unwanted debug log /tmp/refs grows without limit.
    More Info: https://issues.asterisk.org/jira/browse/ASTERISK-21785
 
+-- Automatically add symlink /var/spool/asterisk/meetme -> /mnt/kd/monitor/meetme so recordings without MEETME_RECORDINGFILE
+   defined will be saved on persistent storage, and located such that the Monitor tab may be used to manage them.
+
+-- When the directory /mnt/kd/dictate exists, add symlink /var/spool/asterisk/dictate -> /mnt/kd/dictate so the
+   dialplan Dictate() application files will be placed on persistent storage.
+
 ** Web Interface
 
 -- ConfBridge tab, new ConfBridge tab has been added, hidden by default. Similar to the MeetMe tab.
