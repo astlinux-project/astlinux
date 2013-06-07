@@ -21,7 +21,7 @@ Released **TBD**
 
 -- Enable kernel module CONFIG_USB_ACM, per Dominko Vrljic on the mailing list and Arduino board integration.
 
--- php, version bump to 5.3.25, enable basic XML support using libxml2 and enable LDAP support using openldap.
+-- php, version bump to 5.3.26, enable basic XML support using libxml2 and enable LDAP support using openldap.
 
 -- sqlite, version bump to 3.7.17.0
 
