@@ -5,10 +5,42 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.1.2:
+Additions for AstLinux 1.1.3:
 =============================
 
 Released **TBD**
+
+** System
+
+-- e1000e version bump to 2.4.14 Intel PCI-Express PRO/1000 Ethernet Linux driver
+
+-- r8168 version bump to 8.036.00 RealTek PCI-Express Gigabit Ethernet Linux driver
+
+-- mysql_client, version bump to 5.1.70
+
+-- pcre, version bump to 8.33
+
+-- e2fsprogs, version bump to 1.42.8
+
+** Networking
+
+-- no change
+
+** Asterisk
+
+-- Asterisk 1.8.22.0 (no change) and 11.4.0 (no change)
+
+-- DAHDI, dahdi-linux 2.6.2 (no change) and dahdi-tools 2.6.2 (no change)
+
+** Web Interface
+
+-- no change
+
+
+Additions for AstLinux 1.1.2:
+=============================
+
+Released 2013-07-01
 
 ** System
 
