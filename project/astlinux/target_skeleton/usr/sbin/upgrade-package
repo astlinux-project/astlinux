@@ -1,0 +1,233 @@
+#!/bin/sh
+# red color error message for web interface
+RED=1
+# orange color error message for web interface
+ORANGE=2
+# green color message for web interface
+GREEN=0
+#
+# Base packages directory
+BASE="/stat/var/packages"
+# Lockfile
+LOCKFILE="/var/lock/upgrade-package.lock"
+#
+
+upgrade() {
+  local suffix="${SRC_URL##*.}" tar_args pkg_dir err_str sha1
+
+  case $suffix in
+    tgz|gz) tar_args="-xzf" ;;
+    bz2)    tar_args="-xjf" ;;
+    *)
+      finish $RED "Package '$PKG' invalid file suffix: $suffix"
+      ;;
+  esac
+
+  # Create empty temporary directory to download into
+  if [ -d $BASE/dl ]; then
+    rm -rf $BASE/dl
+  fi
+  mkdir -p $BASE/dl
+
+  if ! wget -q -c -O $BASE/dl/$PKG.$suffix.sha1 "$SRC_URL.sha1" >/dev/null; then
+    finish $RED "Package '$PKG' SHA1 download failed."
+  fi
+
+  if [ -f $BASE/$PKG/.sha1 ] && cmp -s $BASE/dl/$PKG.$suffix.sha1 $BASE/$PKG/.sha1; then
+    finish $ORANGE "Package '$PKG' is already installed."
+  fi
+
+  if ! wget -q -c -O $BASE/dl/$PKG.$suffix "$SRC_URL" >/dev/null; then
+    finish $RED "Package '$PKG' download failed."
+  fi
+
+  cd $BASE
+  sha1="$(cat dl/$PKG.$suffix.sha1 | awk '{ print $2; exit; }')"
+  mv dl/$PKG.$suffix dl/${sha1#dl/}
+  if ! sha1sum -cs dl/$PKG.$suffix.sha1; then
+    finish $RED "Package '$PKG' SHA1 verification failed."
+  fi
+  mv dl/${sha1#dl/} dl/$PKG.$suffix
+
+  # Make sure the package is stopped
+  service $PKG stop >/dev/null 2>&1
+
+  if [ -d $BASE/$PKG ]; then
+    if [ -d $BASE/$PKG-OLD ]; then
+      rm -rf $BASE/$PKG-OLD
+    fi
+    mv $BASE/$PKG $BASE/$PKG-OLD
+  fi
+
+  # Create empty temporary directory to untar into
+  if [ -d $BASE/TMP ]; then
+    rm -rf $BASE/TMP
+  fi
+  mkdir $BASE/TMP
+
+  tar $tar_args $BASE/dl/$PKG.$suffix -C $BASE/TMP
+  TAR_ARCHIVE_RTN=$?
+  pkg_dir="$(find $BASE/TMP/* -type d -maxdepth 0 | head -n1)"
+  if [ -n "$pkg_dir" ]; then
+    mv "$pkg_dir" $BASE/$PKG
+  fi
+  rm -rf $BASE/TMP
+  sync
+
+  if [ $TAR_ARCHIVE_RTN -eq 0 ] && [ -d $BASE/$PKG ]; then
+    cp $BASE/dl/$PKG.$suffix.sha1 $BASE/$PKG/.sha1
+  else
+    if [ ! -d $BASE/$PKG ]; then
+      err_str="Package '$PKG' expanded incorrectly"
+    else
+      err_str="Not enough free space for package '$PKG'"
+      rm -rf $BASE/$PKG
+    fi
+    if [ ! -d $BASE/$PKG-OLD ]; then
+      finish $RED "$err_str, '$PKG' is not running."
+    fi
+    mv $BASE/$PKG-OLD $BASE/$PKG
+    finish $RED "$err_str, reverted to previous, '$PKG' is not running."
+  fi
+}
+
+revert() {
+
+  if [ ! -d $BASE/$PKG ]; then
+    finish $RED "Package '$PKG' not installed."
+  fi
+
+  if [ ! -d $BASE/$PKG-OLD ]; then
+    finish $RED "No previous '$PKG' package to revert to."
+  fi
+
+  # Make sure the package is stopped
+  service $PKG stop >/dev/null 2>&1
+
+  mv $BASE/$PKG-OLD $BASE/$PKG-NEW
+  mv $BASE/$PKG $BASE/$PKG-OLD
+  mv $BASE/$PKG-NEW $BASE/$PKG
+}
+
+remove() {
+
+  if [ -d $BASE/$PKG-OLD ]; then
+    rm -rf $BASE/$PKG-OLD
+  fi
+
+  if [ ! -d $BASE/$PKG ]; then
+    finish $RED "Package '$PKG' not installed."
+  fi
+
+  # Make sure the package is stopped
+  service $PKG stop >/dev/null 2>&1
+
+  rm -rf $BASE/$PKG
+}
+
+show() {
+  local str="" pkgs pkg ver IFS
+
+  pkgs="$(find $BASE/* -type d -maxdepth 0 2>/dev/null)"
+  if [ -n "$pkgs" ]; then
+    unset IFS
+    for pkg in $pkgs; do
+      pkg="${pkg##*/}"
+      if [ -f $BASE/$pkg/.sha1 ]; then
+        ver="$(cat $BASE/$pkg/.sha1 | awk '{ print $2; exit; }')"
+        ver="${ver##*/}"
+        ver="${ver%.*}"
+        str="$str${str:+, }$pkg ($ver)"
+      else
+        str="$str${str:+, }$pkg (unknown)"
+      fi
+    done
+  fi
+
+  if [ -z "$str" ]; then
+    PKG_STR="No Packages Installed."
+  else
+    PKG_STR="Installed Packages: $str"
+  fi
+}
+
+finish() {
+
+  trap - INT TERM EXIT
+
+  if [ -d $BASE/dl ]; then
+    rm -rf $BASE/dl
+  fi
+
+  if [ -n "$2" ]; then
+    echo "$2"
+  fi
+  rm -f $LOCKFILE
+  exit $1
+}
+
+# main
+
+if mount | grep -q "/oldroot/mnt/asturw"; then
+  ASTURW="/oldroot/mnt/asturw"
+else
+  echo "Unable to find ASTURW partition."
+  exit $RED
+fi
+
+if [ -f $LOCKFILE ]; then
+  echo "Package Upgrade in Progress, please wait..."
+  exit $ORANGE
+fi
+touch $LOCKFILE
+
+trap 'finish 1 "Aborted"' INT TERM EXIT
+
+PKG="$1"
+
+case $PKG in
+
+fop2)
+  SRC_URL="http://files.astlinux.org/fop2-2.27-debian-i386.tgz"
+  ;;
+
+show)
+  show
+  finish $GREEN "$PKG_STR"
+  ;;
+
+*)
+  echo "Usage: upgrade-package show"
+  finish 1 "Usage: upgrade-package fop2 upgrade|revert|remove [ package_url ]"
+  ;;
+
+esac
+
+shift
+
+case $1 in
+
+upgrade)
+  if [ -n "$2" ]; then
+    SRC_URL=$2
+  fi
+  upgrade
+  finish $GREEN "Successful package '$PKG' upgrade, '$PKG' is not running."
+  ;;
+
+revert)
+  revert
+  finish $GREEN "Successful package '$PKG' revert to previous, '$PKG' is not running."
+  ;;
+
+remove)
+  remove
+  finish $GREEN "Successful package '$PKG' removal."
+  ;;
+
+*)
+  finish 1 "Usage: upgrade-package $PKG upgrade|revert|remove [ package_url ]"
+  ;;
+
+esac
+

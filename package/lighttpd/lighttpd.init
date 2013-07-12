@@ -90,6 +90,11 @@ init () {
   else
     phoneprov_allow=".*"
   fi
+  if [ -d /stat/var/packages/fop2/html ]; then
+    fop2=""
+  else
+    fop2="#"
+  fi
 
   sed -i -e "s|@HOSTNAME@|${HOSTNAME}|g" \
          -e "s|@HTTPDIR@|${httpdir}|g" \
@@ -104,6 +109,7 @@ init () {
          -e "s|@CLI_PROXY_SERVER@|${cli_proxy_server}|g" \
          -e "s|@PHONEPROV@|${phoneprov}|g" \
          -e "s!@PHONEPROV_ALLOW@!${phoneprov_allow}!g" \
+         -e "s|@FOP2@|${fop2}|g" \
             /tmp/etc/lighttpd.conf
 }
 

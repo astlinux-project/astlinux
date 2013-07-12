@@ -1,0 +1,93 @@
+#!/bin/sh
+
+## Package: fop2
+## Description: Flash Operator Panel 2
+## Requirements: Asterisk AMI
+
+# No variables required
+#. /etc/rc.conf
+
+PACKAGES_DIR="/stat/var/packages"
+
+FOP2_SERVER="$PACKAGES_DIR/fop2/server/fop2_server"
+
+PIDFILE="/var/run/fop2.pid"
+
+TMPSIZEMAX=30000
+
+init () {
+
+  if [ ! -x $FOP2_SERVER ]; then
+    return
+  fi
+
+  if [ ! -d /mnt/kd/fop2 ]; then
+    cp -a /stat/etc/fop2 /mnt/kd/
+  fi
+  ln -snf /mnt/kd/fop2 /tmp/etc/fop2
+
+  if [ $(df -k /tmp | awk '/ \/tmp$/ { print $2; nextfile }') -lt ${TMPSIZEMAX} ]; then
+    mount -o remount,size=${TMPSIZEMAX}k /tmp
+  fi
+}
+
+start () {
+
+  if [ ! -x $FOP2_SERVER ]; then
+    return
+  fi
+
+  if [ -f /etc/fop2/fop2.cfg ]; then
+    echo "Starting Asterisk FOP2..."
+    $FOP2_SERVER -d -c /etc/fop2 -p $PIDFILE
+  fi
+}
+
+stop () {
+
+  if [ -f $PIDFILE ]; then
+    echo "Stopping Asterisk FOP2..."
+    kill $(cat $PIDFILE) >/dev/null 2>&1
+    rm -f $PIDFILE
+  fi
+}
+
+reload () {
+
+  if [ -f $PIDFILE ]; then
+    echo "Reloading Asterisk FOP2..."
+    kill -HUP $(cat $PIDFILE)
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+reload)
+  reload
+  ;;
+
+*)
+  echo "Usage: start|stop|restart|reload"
+  ;;
+
+esac
+

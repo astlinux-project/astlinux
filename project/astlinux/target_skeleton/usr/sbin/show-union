@@ -6,12 +6,14 @@ KD="mnt/kd"
 
 ASTERISK_SOUNDS="stat/var/lib/asterisk/sounds"
 ASTERISK_MOH="stat/var/lib/asterisk/moh"
+PACKAGES="stat/var/packages"
 
 system()
 {
   find $ASTURW | grep -v -e "^$ASTURW/$KD" \
                          -e "^$ASTURW/$ASTERISK_SOUNDS" \
-                         -e "^$ASTURW/$ASTERISK_MOH"
+                         -e "^$ASTURW/$ASTERISK_MOH" \
+                         -e "^$ASTURW/$PACKAGES"
 }
 
 kd()
@@ -34,6 +36,15 @@ asterisk_sounds()
     find $ASTURW/$ASTERISK_MOH
   else
     echo "No Asterisk MOH Sounds on ASTURW." >&2
+  fi
+}
+
+packages()
+{
+  if [ -d $ASTURW/$PACKAGES ]; then
+    find $ASTURW/$PACKAGES
+  else
+    echo "No Installed Packages on ASTURW." >&2
   fi
 }
 
@@ -63,12 +74,16 @@ asterisk_sounds)
   asterisk_sounds
   ;;
 
+packages)
+  packages
+  ;;
+
 all)
   all
   ;;
 
 *)
-  echo "Usage: show-union [ system kd asterisk_sounds all ]"
+  echo "Usage: show-union [ system|kd|asterisk_sounds|packages|all ]"
   exit 1
   ;;
   

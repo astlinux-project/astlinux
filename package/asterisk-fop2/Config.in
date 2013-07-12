@@ -1,0 +1,15 @@
+config BR2_PACKAGE_ASTERISK_FOP2
+	bool "asterisk-fop2"
+	depends on BR2_PACKAGE_ASTERISK
+	default n
+	help
+	  Asterisk Operator Panel 2
+	  Free version for up to 15 buttons.
+
+	  Note: Only the supporting framework is included on the AstLinux image,
+	        use the CLI command...
+	          "upgrade-package fop2 upgrade"
+	        to install 'fop2' at runtime.
+
+	  http://www.fop2.com/
+
