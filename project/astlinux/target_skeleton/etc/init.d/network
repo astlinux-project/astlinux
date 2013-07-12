@@ -499,7 +499,7 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
 
   #DHCP
   if [ -n "$EXTIF" -a -z "$EXTIP" ] && ! isextppp extif; then
-    udhcpc -b -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXTIF.pid -i $EXTIF
+    udhcpc -b -T2 -t6 -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXTIF.pid -i $EXTIF
     ifplugd -apqs -t2 -u3 -d3 -i $EXTIF -r /etc/ifplugd/udhcpc.action
 
     # No DHCPv6 - Static IPv6 if defined
@@ -511,7 +511,7 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
 
   #DHCP
   if [ -n "$EXT2IF" -a -z "$EXT2IP" ] && ! isextppp ext2if; then
-    udhcpc -b -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXT2IF.pid -i $EXT2IF
+    udhcpc -b -T2 -t6 -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXT2IF.pid -i $EXT2IF
     ifplugd -apqs -t2 -u3 -d3 -i $EXT2IF -r /etc/ifplugd/udhcpc.action
 
     # No DHCPv6 - Static IPv6 if defined
