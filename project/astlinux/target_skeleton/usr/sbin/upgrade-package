@@ -23,25 +23,26 @@ upgrade() {
       ;;
   esac
 
-  # Create empty temporary directory to download into
-  if [ -d $BASE/dl ]; then
-    rm -rf $BASE/dl
+  # Create empty temporary directory to download and untar into
+  if [ -d $BASE/TMP ]; then
+    rm -rf $BASE/TMP
   fi
-  mkdir -p $BASE/dl
+  mkdir -p $BASE/TMP/dl
+  mkdir -p $BASE/TMP/tar
 
-  if ! wget -q -c -O $BASE/dl/$PKG.$suffix.sha1 "$SRC_URL.sha1" >/dev/null; then
+  if ! wget -q -c -O $BASE/TMP/dl/$PKG.$suffix.sha1 "$SRC_URL.sha1" >/dev/null; then
     finish $RED "Package '$PKG' SHA1 download failed."
   fi
 
-  if [ -f $BASE/$PKG/.sha1 ] && cmp -s $BASE/dl/$PKG.$suffix.sha1 $BASE/$PKG/.sha1; then
+  if [ -f $BASE/$PKG/.sha1 ] && cmp -s $BASE/TMP/dl/$PKG.$suffix.sha1 $BASE/$PKG/.sha1; then
     finish $ORANGE "Package '$PKG' is already installed."
   fi
 
-  if ! wget -q -c -O $BASE/dl/$PKG.$suffix "$SRC_URL" >/dev/null; then
+  if ! wget -q -c -O $BASE/TMP/dl/$PKG.$suffix "$SRC_URL" >/dev/null; then
     finish $RED "Package '$PKG' download failed."
   fi
 
-  cd $BASE
+  cd $BASE/TMP
   sha1="$(cat dl/$PKG.$suffix.sha1 | awk '{ print $2; exit; }')"
   mv dl/$PKG.$suffix dl/${sha1#dl/}
   if ! sha1sum -cs dl/$PKG.$suffix.sha1; then
@@ -59,23 +60,16 @@ upgrade() {
     mv $BASE/$PKG $BASE/$PKG-OLD
   fi
 
-  # Create empty temporary directory to untar into
-  if [ -d $BASE/TMP ]; then
-    rm -rf $BASE/TMP
-  fi
-  mkdir $BASE/TMP
-
-  tar $tar_args $BASE/dl/$PKG.$suffix -C $BASE/TMP
+  tar $tar_args $BASE/TMP/dl/$PKG.$suffix -C $BASE/TMP/tar
   TAR_ARCHIVE_RTN=$?
-  pkg_dir="$(find $BASE/TMP/* -type d -maxdepth 0 | head -n1)"
+  pkg_dir="$(find $BASE/TMP/tar/* -type d -maxdepth 0 2>/dev/null | head -n1)"
   if [ -n "$pkg_dir" ]; then
     mv "$pkg_dir" $BASE/$PKG
   fi
-  rm -rf $BASE/TMP
   sync
 
   if [ $TAR_ARCHIVE_RTN -eq 0 ] && [ -d $BASE/$PKG ]; then
-    cp $BASE/dl/$PKG.$suffix.sha1 $BASE/$PKG/.sha1
+    cp $BASE/TMP/dl/$PKG.$suffix.sha1 $BASE/$PKG/.sha1
   else
     if [ ! -d $BASE/$PKG ]; then
       err_str="Package '$PKG' expanded incorrectly"
@@ -155,8 +149,9 @@ finish() {
 
   trap - INT TERM EXIT
 
-  if [ -d $BASE/dl ]; then
-    rm -rf $BASE/dl
+  if [ -d $BASE/TMP ]; then
+    cd $BASE
+    rm -rf $BASE/TMP
   fi
 
   if [ -n "$2" ]; then
