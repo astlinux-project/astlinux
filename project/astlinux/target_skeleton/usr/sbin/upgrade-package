@@ -12,6 +12,16 @@ BASE="/stat/var/packages"
 LOCKFILE="/var/lock/upgrade-package.lock"
 #
 
+RAM_needed_MB() {
+  local MB="$1"
+
+  # Get amount of RAM in machine (in MB)
+  if [ $(awk '/^MemTotal:/ { print int($2 / 1024) }' /proc/meminfo) -lt $MB ]; then
+    return 1
+  fi
+  return 0
+}
+
 upgrade() {
   local suffix="${SRC_URL##*.}" tar_args pkg_dir err_str sha1
 
@@ -183,6 +193,9 @@ PKG="$1"
 case $PKG in
 
 fop2)
+  if ! RAM_needed_MB 475; then
+    finish $RED "Not enough RAM installed. Minimum: 512 MB, Recommended: 1024+ MB"
+  fi
   SRC_URL="http://files.astlinux.org/fop2-2.27-debian-i386.tgz"
   ;;
 
