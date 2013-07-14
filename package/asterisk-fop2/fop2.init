@@ -11,6 +11,11 @@ PACKAGES_DIR="/stat/var/packages"
 
 FOP2_SERVER="$PACKAGES_DIR/fop2/server/fop2_server"
 
+# Gracefully exit if the package is not installed.
+if [ ! -x $FOP2_SERVER ]; then
+  exit 0
+fi
+
 PIDFILE="/var/run/fop2.pid"
 
 # fop2 uses Perl Archive (PAR) which generates many "/tmp/par-root/cache-" files
@@ -20,10 +25,6 @@ PIDFILE="/var/run/fop2.pid"
 TMPSIZEMAX=50000
 
 init () {
-
-  if [ ! -x $FOP2_SERVER ]; then
-    return
-  fi
 
   if [ ! -d /mnt/kd/fop2 ]; then
     cp -a /stat/etc/fop2 /mnt/kd/
@@ -36,10 +37,6 @@ init () {
 }
 
 start () {
-
-  if [ ! -x $FOP2_SERVER ]; then
-    return
-  fi
 
   if [ -f /etc/fop2/fop2.cfg ]; then
     echo "Starting Asterisk FOP2..."
