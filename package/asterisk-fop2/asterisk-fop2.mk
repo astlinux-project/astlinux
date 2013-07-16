@@ -12,6 +12,7 @@ define ASTERISK_FOP2_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 package/asterisk-fop2/fop2.init $(TARGET_DIR)/etc/init.d/fop2
 	$(INSTALL) -D -m 0644 package/asterisk-fop2/config/fop2.cfg $(TARGET_DIR)/stat/etc/fop2/fop2.cfg
 	$(INSTALL) -D -m 0644 package/asterisk-fop2/config/buttons.cfg $(TARGET_DIR)/stat/etc/fop2/buttons.cfg
+	$(INSTALL) -D -m 0644 package/asterisk-fop2/config/users.cfg $(TARGET_DIR)/stat/etc/fop2/users.cfg
 	ln -snf /tmp/etc/fop2 $(TARGET_DIR)/etc/fop2
 	ln -sf ../../init.d/fop2 $(TARGET_DIR)/etc/runlevels/default/S98fop2
 	ln -sf ../../init.d/fop2 $(TARGET_DIR)/etc/runlevels/default/K00fop2
