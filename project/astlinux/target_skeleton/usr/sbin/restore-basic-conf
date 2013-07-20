@@ -63,7 +63,7 @@ fi
 
 # Restore basic configuration directories, clearing target directory
 #
-if ! restore_dirs rc.conf.d ssh_keys asterisk dahdi openvpn ipsec crontabs apcupsd snmp; then
+if ! restore_dirs rc.conf.d ssh_keys asterisk dahdi openvpn ipsec crontabs apcupsd snmp fop2; then
   exit 2
 fi
 
