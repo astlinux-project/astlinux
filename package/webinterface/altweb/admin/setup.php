@@ -175,7 +175,7 @@ require_once '../common/header.php';
     putHtml('<tr class="dtrow1"><td style="text-align: right;">&nbsp;');
     putHtml('</td><td style="text-align: left;" colspan="5">');
     putHtml('Unionfs Partition Size:');
-    putHtml('<input type="text" size="5" maxlength="4" value="128" name="unionfs_size" />');
+    putHtml('<input type="text" size="5" maxlength="4" value="256" name="unionfs_size" />');
     putHtml('MBytes');
     putHtml('</td></tr>');
     putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">&nbsp;</td></tr>');

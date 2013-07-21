@@ -67,6 +67,8 @@ function restartPROCESS($process, $ret_good, $ret_fail, $start = 'start', $wait 
   } elseif ($process === 'iptables') {
     $cmd .= ';/usr/sbin/gen-rc-conf';
     $cmd .= ';service iptables restart >/dev/null 2>/dev/null';
+  } elseif ($start === 'reload') {
+    $cmd .= ';service '.$process.' '.$start.' >/dev/null 2>/dev/null';
   } else {
     $cmd .= ';service '.$process.' stop >/dev/null 2>/dev/null';
     $cmd .= ';sleep '.$wait;
@@ -701,6 +703,14 @@ function compressIPV6addr($addr) {
     return(inet_ntop(inet_pton($addr)));
   }
   return($addr);
+}
+
+// Function: is_addon_package
+//
+function is_addon_package($pkg) {
+
+  $pkg_dir = '/stat/var/packages/'.$pkg;
+  return(is_dir($pkg_dir));
 }
 
 // Function: is_mac2vendor

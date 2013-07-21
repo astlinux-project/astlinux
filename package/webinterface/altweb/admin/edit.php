@@ -35,9 +35,13 @@ $select_reload = array (
   'apcupsd' => 'Restart UPS Daemon',
   'prosody' => 'Restart XMPP Server',
   'zabbix' => 'Restart Zabbix Monitor',
-  'asterisk' => 'Restart Asterisk',
-  'cron' => 'Reload Cron for root'
+  'asterisk' => 'Restart Asterisk'
 );
+if (is_addon_package('fop2')) {
+  $select_reload['fop2'] = 'Restart Asterisk FOP2';
+  $select_reload['FOP2'] = 'Reload Asterisk FOP2';
+}
+$select_reload['cron'] = 'Reload Cron for root';
 
 $sys_label = array (
   'dnsmasq.conf' => 'DNSmasq Configuration',
@@ -224,6 +228,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 39, $result, 'init');
       } elseif ($process === 'ldap') {
         $result = restartPROCESS($process, 40, $result, 'init');
+      } elseif ($process === 'fop2') {
+        $result = restartPROCESS($process, 41, $result, 'init');
+      } elseif ($process === 'FOP2') {
+        $result = restartPROCESS('fop2', 42, $result, 'reload');
       } elseif ($process === 'cron') {
         $result = updateCRON('root', 30, $result);
       }
@@ -264,6 +272,7 @@ require_once '../common/header.php';
       $dir === '/mnt/kd/rc.conf.d' ||
       $dir === '/mnt/kd/crontabs' ||
       $dir === '/mnt/kd/snmp' ||
+      $dir === '/mnt/kd/fop2' ||
       $dir === '/mnt/kd/apcupsd' ||
       $dir === '/mnt/kd/prosody' ||
       $dir === '/mnt/kd/docs' ||
@@ -342,6 +351,10 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">SNMP Server has Restarted.</p>');
     } elseif ($result == 40) {
       putHtml('<p style="color: green;">LDAP Client Defaults has been Reloaded.</p>');
+    } elseif ($result == 41) {
+      putHtml('<p style="color: green;">Asterisk Flash Operating Panel2 has Restarted.</p>');
+    } elseif ($result == 42) {
+      putHtml('<p style="color: green;">Asterisk Flash Operating Panel2 has been Reloaded.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {
@@ -512,6 +525,16 @@ require_once '../common/header.php';
       if (is_file($globfile) && is_writable($globfile)) {
         $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
         putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - /mnt/kd/docs/ File</option>');
+      }
+    }
+    putHtml('</optgroup>');
+  }
+  if (is_dir('/mnt/kd/fop2') && count($globfiles = glob('/mnt/kd/fop2/*.cfg')) > 0) {
+    putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; Flash Operating Panel2 Configs &mdash;&mdash;&mdash;&mdash;">');
+    foreach ($globfiles as $globfile) {
+      if (is_file($globfile) && is_writable($globfile)) {
+        $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
+        putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - Asterisk FOP2 Config</option>');
       }
     }
     putHtml('</optgroup>');

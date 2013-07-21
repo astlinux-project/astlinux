@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2012 Lonnie Abelbeck
+// Copyright (C) 2008-2013 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -17,6 +17,7 @@
 // 12-12-2009, Added System Shutdown/Halt
 // 02-01-2010, Added Asterisk Sounds upgrade, remove, show
 // 01-16-2011, Added runnix check, upgrade, show, revert
+// 07-21-2013, Added Add-On Packages
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -61,6 +62,11 @@ $sounds_codec_menu = array (
   'wav' => 'wav',
   'g729' => 'g729',
   'g722' => 'g722'
+);
+
+$addon_package_type_menu = array (
+  '' => 'none',
+  'fop2' => 'fop2'
 );
 
 // Function: putACTIONresult
@@ -174,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $srcfile .= ' -e "s/^.*[.]conf$/&/p" -e "s/^webgui-prefs.txt$/&/p" -e "s/^ast.*/&/p"';
       $srcfile .= ' -e "s/^blocked-hosts$/&/p" -e "s/^dnsmasq.static$/&/p" -e "s/^hosts$/&/p" -e "s/^ethers$/&/p"';
       $srcfile .= ' -e "s/^rc.local$/&/p" -e "s/^rc.local.stop$/&/p" -e "s/^rc.elocal$/&/p" -e "s/^rc.ledcontrol$/&/p"';
-      $srcfile .= ' -e "s/^crontabs$/&/p" -e "s/^snmp$/&/p"';
+      $srcfile .= ' -e "s/^crontabs$/&/p" -e "s/^snmp$/&/p" -e "s/^fop2$/&/p"';
       $srcfile .= ' -e "s/^openvpn$/&/p" -e "s/^ipsec$/&/p" -e "s/^dahdi$/&/p" -e "s/^ssl$/&/p" -e "s/^apcupsd$/&/p")';
       $srcfile .= $firewall;
     } elseif ($backup_type === 'cdr') {
@@ -328,6 +334,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       header('Location: '.$myself.'?sounds_action='.$action.'&result='.$result);
       exit;
     }
+  } elseif (isset($_POST['addon_package_submit'])) {
+    $result = 99;
+    $action = $_POST['addon_package_action'];
+    if (isset($_POST['addon_package_type']) && ($_POST['addon_package_type'] !== '' || $action === 'show')) {
+      $type = $_POST['addon_package_type'];
+      $file = '/usr/sbin/upgrade-package';
+      $std_err = ' 2>/dev/null';
+      if ($action === 'upgrade') {
+        $result_str = shell($file.' '.$type.' '.$action.$std_err, $status);
+        putACTIONresult($result_str, $status);
+        exit;
+      } elseif ($action === 'remove') {
+        $result_str = shell($file.' '.$type.' '.$action.$std_err, $status);
+        putACTIONresult($result_str, $status);
+        exit;
+      } elseif ($action === 'show') {
+        $result_str = shell($file.' '.$action.$std_err, $status);
+        putACTIONresult($result_str, $status);
+        exit;
+      } elseif ($action === 'revert') {
+        $result_str = shell($file.' '.$type.' '.$action.$std_err, $status);
+        putACTIONresult($result_str, $status);
+        exit;
+      }
+    } else {
+      $result = 19;
+      header('Location: '.$myself.'?addon_package_action='.$action.'&result='.$result);
+      exit;
+    }
   } elseif (isset($_POST['runnix_submit'])) {
     $result = 99;
     $action = $_POST['runnix_action'];
@@ -426,6 +461,12 @@ require_once '../common/header.php';
     $sounds_action = 'upgrade';
   }
   
+  if (isset($_GET['addon_package_action'])) {
+    $addon_package_action = $_GET['addon_package_action'];
+  } else {
+    $addon_package_action = 'upgrade';
+  }
+  
   if (isset($_GET['runnix_action'])) {
     $runnix_action = $_GET['runnix_action'];
   } else {
@@ -465,6 +506,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: red;">Backup Failed, error archiving unionfs partition.</p>');
     } elseif ($result == 16) {
       putHtml('<p style="color: red;">Backup Failed, click <a href="/admin/prefs.php" class="headerText">Prefs</a>then check "Backup temporary file uses /mnt/kd/ instead of /tmp/"</p>');
+    } elseif ($result == 19) {
+      putHtml('<p style="color: red;">No Action, select an add-on package type for this action.</p>');
     } elseif ($result == 20) {
       putHtml('<p style="color: red;">File size must be less then 8 MBytes.</p>');
     } elseif ($result == 21) {
@@ -703,6 +746,32 @@ if (is_file('/usr/sbin/upgrade-asterisk-sounds')) {
   putHtml('<input type="submit" value="Sounds Package" name="sounds_submit" />');
   putHtml('</td></tr><tr><td class="dialogText" style="text-align: center;" colspan="2">');
   putHtml('<strong>Sounds Pkg URL:</strong> '.$SOUNDS_URL);
+  putHtml('</td></tr>');
+}
+
+if (is_file('/usr/sbin/upgrade-package')) {
+  putHtml('<tr><td style="text-align: center;" colspan="2">');
+  putHtml('<h2>Add-On Packages:</h2>');
+  putHtml('</td></tr><tr><td class="dialogText" style="text-align: center;" colspan="2">');
+  putHtml('Package:');
+  putHtml('<select name="addon_package_type">');
+  foreach ($addon_package_type_menu as $key => $value) {
+    putHtml('<option value="'.$key.'">'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('&ndash;');
+  putHtml('<select name="addon_package_action">');
+  $sel = ($addon_package_action === 'upgrade') ? ' selected="selected"' : '';
+  putHtml('<option value="upgrade"'.$sel.'>Upgrade/Install</option>');
+  $sel = ($addon_package_action === 'remove') ? ' selected="selected"' : '';
+  putHtml('<option value="remove"'.$sel.'>Remove</option>');
+  $sel = ($addon_package_action === 'show') ? ' selected="selected"' : '';
+  putHtml('<option value="show"'.$sel.'>Show Installed</option>');
+  $sel = ($addon_package_action === 'revert') ? ' selected="selected"' : '';
+  putHtml('<option value="revert"'.$sel.'>Revert to Previous</option>');
+  putHtml('</select>');
+  putHtml('&ndash;');
+  putHtml('<input type="submit" value="Add-On Package" name="addon_package_submit" />');
   putHtml('</td></tr>');
 }
 

@@ -945,6 +945,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 39, $result, 'init');
       } elseif ($process === 'ldap') {
         $result = restartPROCESS($process, 40, $result, 'init');
+      } elseif ($process === 'fop2') {
+        $result = restartPROCESS($process, 41, $result, 'init');
+      } elseif ($process === 'FOP2') {
+        $result = restartPROCESS('fop2', 42, $result, 'reload');
       }
     } else {
       $result = 2;
@@ -1023,6 +1027,10 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">SNMP Server has Restarted.</p>');
     } elseif ($result == 40) {
       putHtml('<p style="color: green;">LDAP Client Defaults has been Reloaded.</p>');
+    } elseif ($result == 41) {
+      putHtml('<p style="color: green;">Asterisk Flash Operating Panel2 has Restarted.</p>');
+    } elseif ($result == 42) {
+      putHtml('<p style="color: green;">Asterisk Flash Operating Panel2 has been Reloaded.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 100) {
@@ -1116,6 +1124,12 @@ require_once '../common/header.php';
   putHtml('<option value="zabbix"'.$sel.'>Restart Zabbix Monitor</option>');
   $sel = ($reboot_restart === 'asterisk') ? ' selected="selected"' : '';
   putHtml('<option value="asterisk"'.$sel.'>Restart Asterisk</option>');
+  if (is_addon_package('fop2')) {
+    $sel = ($reboot_restart === 'fop2') ? ' selected="selected"' : '';
+    putHtml('<option value="fop2"'.$sel.'>Restart Asterisk FOP2</option>');
+    $sel = ($reboot_restart === 'FOP2') ? ' selected="selected"' : '';
+    putHtml('<option value="FOP2"'.$sel.'>Reload Asterisk FOP2</option>');
+  }
   putHtml('</select>');
   putHtml('&ndash;');
 ?>

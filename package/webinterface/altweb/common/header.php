@@ -98,6 +98,21 @@ function getCLIlink($g_prefs) {
   return(htmlspecialchars($cmd));
 }
 
+// Function: getFOP2link
+//
+function getFOP2link($g_prefs) {
+  $cmd = '';
+  if (is_addon_package('fop2')) {
+    if (getPREFdef($g_prefs, 'external_fop2_https') === 'yes') {
+      $cmd = 'https://localhost/fop2/';
+    } else {
+      $cmd = 'http://localhost/fop2/';
+    }
+    $cmd = url_localhost_handler($cmd);
+  }
+  return(htmlspecialchars($cmd));
+}
+
 // Function: putUSERerror
 //
 function putUSERerror($user, $tab) {
@@ -155,7 +170,8 @@ function putUSERerror($user, $tab) {
     putHtml('<td><h1>'.getTITLEname($global_prefs).'</h1></td>');
     $URLlink = getURLlink($global_prefs);
     $CLIlink = getCLIlink($global_prefs);
-    if ($URLlink !== '' || ($global_admin && $CLIlink !== '')) {
+    $FOP2link = getFOP2link($global_prefs);
+    if ($URLlink !== '' || ($global_admin && $CLIlink !== '') || $FOP2link !== '') {
       putHtml('<td style="text-align: right;">');
       if ($URLlink !== '') {
         putHtml('<a href="'.$URLlink.'" class="headerText" target="_blank">'.getURLname($global_prefs).'</a>');
@@ -166,6 +182,9 @@ function putUSERerror($user, $tab) {
         } else {
           putHtml('<a href="'.$CLIlink.'" class="headerText" target="_blank">CLI</a>');
         }
+      }
+      if ($FOP2link !== '') {
+        putHtml('<a href="'.$FOP2link.'" class="headerText" target="_blank">FOP2</a>');
       }
       putHtml('</td>');
     }
