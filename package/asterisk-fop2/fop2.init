@@ -58,6 +58,8 @@ reload () {
   if [ -f $PIDFILE ]; then
     echo "Reloading Asterisk FOP2..."
     kill -HUP $(cat $PIDFILE)
+  else
+    start
   fi
 }
 
