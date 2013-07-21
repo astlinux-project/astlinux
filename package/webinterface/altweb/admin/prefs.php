@@ -302,6 +302,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       fwrite($fp, $value."\n");
     }
     
+    if (isset($_POST['backup_hostname_domain'])) {
+      $value = 'system_backup_hostname_domain = yes';
+      fwrite($fp, $value."\n");
+    }
     if (! isset($_POST['backup_gzip'])) {
       $value = 'system_backup_compress_gzip = no';
       fwrite($fp, $value."\n");
@@ -915,6 +919,9 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>System &amp; Staff Tab Options:</strong>');
   putHtml('</td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'system_backup_hostname_domain') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="backup_hostname_domain" name="backup_hostname_domain"'.$sel.' /></td><td colspan="5">Backup filename uses both Hostname and Domain</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'system_backup_compress_gzip') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="backup_gzip" name="backup_gzip"'.$sel.' /></td><td colspan="5">Backup tar archives compressed with gzip [.gz]</td></tr>');

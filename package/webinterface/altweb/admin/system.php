@@ -171,9 +171,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $suffix = '.tar.gz';
       $tarcmd = 'tar czf ';
     }
+    if (($backup_name = get_HOSTNAME_DOMAIN()) === '') {
+      $backup_name = $_SERVER['SERVER_NAME'];
+    }
+    if (getPREFdef($global_prefs, 'system_backup_hostname_domain') !== 'yes') {
+      if (($pos = strpos($backup_name, '.')) !== FALSE) {
+        $backup_name = substr($backup_name, 0, $pos);
+      }
+    }
     $asturw = (getPREFdef($global_prefs, 'system_backup_asturw') === 'yes') ? '/mnt/kd/asturw'.$suffix : '';
     $prefix = (getPREFdef($global_prefs, 'system_backup_temp_disk') === 'yes') ? '/mnt/kd/.' : '/tmp/';
-    $tmpfile = $_SERVER['SERVER_NAME'].'-'.$backup_type.'-'.date('Y-m-d').$suffix;
+    $tmpfile = $backup_name.'-'.$backup_type.'-'.date('Y-m-d').$suffix;
     $firewall = is_dir('/mnt/kd/arno-iptables-firewall/plugins') ? ' "arno-iptables-firewall/plugins"' : '';
     if ($backup_type === 'basic') {
       $srcfile = '$(ls -1 /mnt/kd/ | sed -n -e "s/^rc.conf.d$/&/p" -e "s/^ssh_keys$/&/p"';

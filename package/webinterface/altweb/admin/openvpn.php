@@ -126,25 +126,6 @@ $topology_menu = array (
   'subnet' => '[subnet] latest, requires OpenVPN 2.1+ clients'
 );
 
-// Function: get_HOSTNAME_DOMAIN
-//
-function get_HOSTNAME_DOMAIN() {
-  $hostname_domain = '';
-  
-  // System location of gui.network.conf file
-  $NETCONFFILE = '/mnt/kd/rc.conf.d/gui.network.conf';
-  
-  if (is_file($NETCONFFILE)) {
-    $netvars = parseRCconf($NETCONFFILE);
-    if (($hostname = getVARdef($netvars, 'HOSTNAME')) !== '') {
-      if (($domain = getVARdef($netvars, 'DOMAIN')) !== '') {
-        $hostname_domain = $hostname.'.'.$domain;
-      }
-    }
-  }
-  return($hostname_domain);
-}
-
 // Function: saveOVPNsettings
 //
 function saveOVPNsettings($conf_dir, $conf_file, $disabled = NULL) {
