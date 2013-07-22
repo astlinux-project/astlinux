@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2010 Lonnie Abelbeck
+// Copyright (C) 2008-2013 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -9,6 +9,7 @@
 // dnshosts.php for AstLinux
 // 01-05-2009
 // 12-10-2010, Added IPv6 support
+// 07-22-2013, Reorganize to force unique IP's
 //
 // System location of /mnt/kd/rc.conf.d directory
 $DNSHOSTSCONFDIR = '/mnt/kd/rc.conf.d';
@@ -82,12 +83,12 @@ function parseDNSHOSTSconf($vars) {
       }
     }
   }
-  // Sort by Host Name
+  // Sort by IP Address
   if ($id > 1) {
     foreach ($db['data'] as $key => $row) {
-      $name[$key] = $row['name'];
+      $ip[$key] = $row['ip'];
     }
-    array_multisort($name, SORT_ASC, SORT_STRING, $db['data']);
+    array_multisort($ip, SORT_ASC, SORT_STRING, $db['data']); // Use SORT_NATURAL with PHP 5.4.x
   }
   return($db);
 }
@@ -127,12 +128,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $n = count($db['data']);
     $id = $n;
     for ($i = 0; $i < $n; $i++) {
-      if ($db['data'][$i]['name'] === tuq($_POST['name']) && $db['data'][$i]['ip'] === tuq($_POST['ip'])) {
+      if ($db['data'][$i]['ip'] === tuq($_POST['ip'])) {
         $id = $i;
         break;
       }
     }
-    if (preg_match('/^[0-9a-fA-F][0-9a-fA-F.:]*[0-9a-fA-F]$/', tuq($_POST['ip']))) {
+    if (filter_var(tuq($_POST['ip']), FILTER_VALIDATE_IP) !== FALSE) {
       $mac = tuq($_POST['mac']);
       if ($mac === '' || preg_match('/^[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}$/', $mac)) {
         if (addDNSHOST($db, $id)) {
@@ -225,9 +226,9 @@ require_once '../common/header.php';
   }
   putHtml('<table class="stdtable">');
   putHtml('<tr><td class="dialogText" style="text-align: right;">');
-  putHtml('Host Name:<input type="text" size="24" maxlength="128" name="name" value="'.$ldb['name'].'" />');
-  putHtml('</td><td class="dialogText" style="text-align: right;">');
   putHtml('IP Address:<input type="text" size="42" maxlength="39" name="ip" value="'.$ldb['ip'].'" />');
+  putHtml('</td><td class="dialogText" style="text-align: right;">');
+  putHtml('Host Name:<input type="text" size="24" maxlength="128" name="name" value="'.$ldb['name'].'" />');
   putHtml('</td></tr>');
   putHtml('<tr><td class="dialogText" style="text-align: right;" colspan="2">');
   putHtml('MAC Address matched via DHCP for IPv4 address <i>(optional)</i>:<input type="text" size="20" maxlength="17" name="mac" value="'.$ldb['mac'].'" />');
@@ -241,22 +242,22 @@ require_once '../common/header.php';
   putHtml('<tr>');
   
   if (($n = count($db['data'])) > 0) {
-    echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Host Name", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "IP Address", "</td>";
+    echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Host Name", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "MAC Address", "</td>";
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Delete", "</td>";
     for ($i = 0; $i < $n; $i++) {
       putHtml("</tr>");
       echo '<tr ', ($i % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
-      echo '<td>', '<a href="'.$myself.'?id='.$i.'" class="actionText">'.$db['data'][$i]['name'].'</a>', '</td>';
-      echo '<td>', $db['data'][$i]['ip'], '</td>';
+      echo '<td>', '<a href="'.$myself.'?id='.$i.'" class="actionText">'.$db['data'][$i]['ip'].'</a>', '</td>';
+      echo '<td>', $db['data'][$i]['name'], '</td>';
       echo '<td>', $db['data'][$i]['mac'], '</td>';
       echo '<td style="text-align: center;">', '<input type="checkbox" name="delete[]" value="', $i, '" />', '</td>';
       if ($db['data'][$i]['comment'] !== '') {
         putHtml("</tr>");
         echo '<tr ', ($i % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
-        echo '<td class="dialogText" style="text-align: right; font-weight: bold;">Comment:</td>';
-        echo '<td colspan="3">', htmlspecialchars($db['data'][$i]['comment']), '</td>';
+        echo '<td class="dialogText" colspan="4">', '&nbsp;&nbsp;<strong>Comment:</strong>&nbsp;',
+             htmlspecialchars($db['data'][$i]['comment']), '</td>';
       }
     }
   } else {
