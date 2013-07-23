@@ -210,7 +210,7 @@ endif
 	touch $@
 
 $(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | libelf ncurses zlib \
-				openssl libtool $(ASTERISK_EXTRAS)
+				openssl libtool util-linux $(ASTERISK_EXTRAS)
 	(cd $(ASTERISK_DIR); rm -rf config.cache configure; \
 		./bootstrap.sh; \
 		$(TARGET_CONFIGURE_OPTS) \
