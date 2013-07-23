@@ -43,7 +43,7 @@ Released **TBD**
 -- New package 'asterisk-fop2', adds the framework for supporting the 'Flash Operator Panel 2'
    (free for 15 buttons, reasonable for unlimited).  The actual 'fop2' code is downloaded on ASTURW
    as a 'package' using the new CLI command 'upgrade-package'.
-   More Info: http://doc.astlinux.org/userdoc:**TBD**
+   More Info: http://doc.astlinux.org/userdoc:tt_asterisk-fop2
 
 ** Web Interface
 
@@ -57,6 +57,10 @@ Released **TBD**
 -- Prefs tab, add "__ Backup filename uses both Hostname and Domain" option.
 
 -- Network -> Configure DNS Hosts sub-tab, force unique IP's so dnsmasq always restarts properly.
+   Note: The interface layout has changed for the DNS Hosts sub-tab, the IP Address appears on the
+         left instead of the Host Name.  If you want to define more than one DNS host name to an
+         IP address the Host Name field may contain a space separated list of host names or FQDN's.
+         Only the first host name will be used with the MAC address (if any) for DHCP.
 
 
 Additions for AstLinux 1.1.2:
