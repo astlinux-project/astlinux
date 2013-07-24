@@ -65,23 +65,6 @@ function saveDNSHOSTSsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   return(11);
 }
 
-// Function: pad_ipv4_str
-//
-function pad_ipv4_str($ip) {
-  $str = $ip;
-
-  if (strpos($ip, ':') === FALSE && strpos($ip, '.') !== FALSE) {
-    $tokens = explode('.', $ip);
-    if (count($tokens) == 4) {
-      $str = str_pad($tokens[0], 3, '0', STR_PAD_LEFT).'.'.
-             str_pad($tokens[1], 3, '0', STR_PAD_LEFT).'.'.
-             str_pad($tokens[2], 3, '0', STR_PAD_LEFT).'.'.
-             str_pad($tokens[3], 3, '0', STR_PAD_LEFT);
-    }
-  }
-  return($str);
-}
-
 // Function: parseDNSHOSTSconf
 //
 function parseDNSHOSTSconf($vars) {

@@ -715,6 +715,23 @@ function getRebootDelayMenu() {
   return($menuitems);
 }
 
+// Function: pad_ipv4_str
+//
+function pad_ipv4_str($ip) {
+  $str = $ip;
+
+  if (strpos($ip, ':') === FALSE && strpos($ip, '.') !== FALSE) {
+    $tokens = explode('.', $ip);
+    if (count($tokens) == 4) {
+      $str = str_pad($tokens[0], 3, '0', STR_PAD_LEFT).'.'.
+             str_pad($tokens[1], 3, '0', STR_PAD_LEFT).'.'.
+             str_pad($tokens[2], 3, '0', STR_PAD_LEFT).'.'.
+             str_pad($tokens[3], 3, '0', STR_PAD_LEFT);
+    }
+  }
+  return($str);
+}
+
 // Function: compressIPV6addr
 //
 function compressIPV6addr($addr) {

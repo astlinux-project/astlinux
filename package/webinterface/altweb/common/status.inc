@@ -382,7 +382,7 @@ function parseDNSMASQleases($log) {
   // Sort by IP Address
   if ($cid > 1) {
     foreach ($status['clients'] as $key => $row) {
-      $ip[$key] = $row['ip'];
+      $ip[$key] = pad_ipv4_str($row['ip']);
     }
     array_multisort($ip, SORT_ASC, SORT_STRING, $status['clients']);
   }
