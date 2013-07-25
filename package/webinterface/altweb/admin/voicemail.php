@@ -182,7 +182,7 @@ function notifyVMdir($dir, $path, $count, $fop2) {
   $folder = $tokens[2];
 
   if ($fop2 && is_addon_package('fop2')) {
-    $user_event= 'UserEvent: FOP2RELOADVOICEMAIL,Mailbox: '.$mbox.'@'.$context.',Server: 0';
+    $user_event= 'UserEvent: FOP2RELOADVOICEMAIL,Mailbox: '.$mbox.'@'.$context;
     asteriskAMI_UserEvent('fop2', 'astlinux', $user_event);
   }
 
