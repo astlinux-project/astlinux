@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2012 Lonnie Abelbeck
+// Copyright (C) 2008-2013 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -12,6 +12,7 @@
 // 07-20-2008, Added special user "staff" permissions
 // 07-21-2008, Added externnotify support
 // 09-05-2012, Automatically create "Old" folder if it doesn't exist
+// 07-25-2013, Add support for FOP2 UserEvent: FOP2RELOADVOICEMAIL
 //
 // System location of the asterisk voicemail directory
 $VOICEMAILDIR = '/var/spool/asterisk/voicemail/';
@@ -19,6 +20,54 @@ $VOICEMAILDIR = '/var/spool/asterisk/voicemail/';
 $myself = $_SERVER['PHP_SELF'];
 
 require_once '../common/functions.php';
+
+// Function: asteriskAMI_UserEvent
+//
+function asteriskAMI_UserEvent($user, $pass, $event) {
+
+  $event_list = explode(',', $event);
+
+  if (($socket = @fsockopen('127.0.0.1', '5038', $errno, $errstr, 5)) === FALSE) {
+    return(FALSE);
+  }
+  fputs($socket, "Action: login\r\n");
+  fputs($socket, "Username: $user\r\n");
+  fputs($socket, "Secret: $pass\r\n");
+  fputs($socket, "Events: off\r\n\r\n");
+  
+  fputs($socket, "Action: UserEvent\r\n");
+  foreach ($event_list as $value) {
+    fputs($socket, "$value\r\n");
+  }
+  fputs($socket, "\r\n");
+
+  fputs($socket, "Action: logoff\r\n\r\n");
+
+  stream_set_timeout($socket, 5);
+  $info = stream_get_meta_data($socket);
+  while (! feof($socket) && ! $info['timed_out']) {
+    $line = fgets($socket, 256);
+    $info = stream_get_meta_data($socket);
+    if (strncasecmp($line, 'Response: Error', 15) == 0) {
+      while (! feof($socket) && ! $info['timed_out']) {
+        fgets($socket, 256);
+        $info = stream_get_meta_data($socket);
+      }
+      fclose($socket);
+      return(FALSE);
+    }
+    if (strncasecmp($line, 'Message: Event Sent', 19) == 0) {
+      break;
+    }
+  }
+  while (! feof($socket) && ! $info['timed_out']) {
+    fgets($socket, 256);
+    $info = stream_get_meta_data($socket);
+  }
+  fclose($socket);
+
+  return(0);
+}
 
 // Function: getVMdataTXT
 //
@@ -123,17 +172,24 @@ function parseVOICEMAILfiles($dir, $username) {
 
 // Function: notifyVMdir
 //
-function notifyVMdir($dir, $path, $count) {
+function notifyVMdir($dir, $path, $count, $fop2) {
   global $global_prefs;
   
   $value = substr($path, strlen($dir));
   $tokens = explode('/', $value);
-  if ($tokens[2] !== 'INBOX') {
-    return(FALSE);
-  }
   $context = $tokens[0];
   $mbox = $tokens[1];
-  
+  $folder = $tokens[2];
+
+  if ($fop2 && is_addon_package('fop2')) {
+    $user_event= 'UserEvent: FOP2RELOADVOICEMAIL,Mailbox: '.$mbox.'@'.$context.',Server: 0';
+    asteriskAMI_UserEvent('fop2', 'astlinux', $user_event);
+  }
+
+  if ($folder !== 'INBOX') {
+    return(FALSE);
+  }
+
   if (getPREFdef($global_prefs, 'voicemail_extern_notify') === 'yes') {
     if (($ph = popen("grep -m 1 '^externnotify' /etc/asterisk/voicemail.conf", "r")) !== FALSE) {
       if (! feof($ph)) {
@@ -235,11 +291,11 @@ function moveVMmessage($msg, $folder) {
     }
   }
   $cnt = sequenceVMdir($fpath);
-  notifyVMdir($msg['dir'], $fpath, $cnt);
+  notifyVMdir($msg['dir'], $fpath, $cnt, FALSE);
   
   $cnt = sequenceVMdir($tpath);
-  notifyVMdir($msg['dir'], $tpath, $cnt);
-  
+  notifyVMdir($msg['dir'], $tpath, $cnt, TRUE);
+
   return($cnt == 0 ? FALSE : $cnt);
 }
 
@@ -308,7 +364,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($resequence > 0) {
       for ($i = 0; $i < count($delete); $i++) {
         $cnt = sequenceVMdir($VOICEMAILDIR.$delete[$i]);
-        notifyVMdir('', $delete[$i], $cnt);
+        notifyVMdir('', $delete[$i], $cnt, TRUE);
       }
       $result = 0;
     }

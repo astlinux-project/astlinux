@@ -228,7 +228,7 @@ require_once '../common/header.php';
   putHtml('<tr><td class="dialogText" style="text-align: right;">');
   putHtml('IP Address:<input type="text" size="42" maxlength="39" name="ip" value="'.$ldb['ip'].'" />');
   putHtml('</td><td class="dialogText" style="text-align: right;">');
-  putHtml('Host Name:<input type="text" size="24" maxlength="128" name="name" value="'.$ldb['name'].'" />');
+  putHtml('Host Name(s):<input type="text" size="28" maxlength="128" name="name" value="'.$ldb['name'].'" />');
   putHtml('</td></tr>');
   putHtml('<tr><td class="dialogText" style="text-align: right;" colspan="2">');
   putHtml('MAC Address matched via DHCP for IPv4 address <i>(optional)</i>:<input type="text" size="20" maxlength="17" name="mac" value="'.$ldb['mac'].'" />');
@@ -243,7 +243,7 @@ require_once '../common/header.php';
   
   if (($n = count($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "IP Address", "</td>";
-    echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Host Name", "</td>";
+    echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Host Name(s)", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "MAC Address", "</td>";
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Delete", "</td>";
     for ($i = 0; $i < $n; $i++) {
