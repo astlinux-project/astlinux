@@ -33,7 +33,7 @@ if ($topic === '' || $ifile === '') {
 $tmpfile = tempnam("/tmp", "PHP_");
 @exec('sed -n "/^\[\['.$topic.'\]\]/,/^\[\[/ p" '.$ifile.' | sed "/^\[\[/ d" >'.$tmpfile);
 
-header('Content-Type: text/plain;  charset=iso-8859-1');
+header('Content-Type: text/plain; charset=utf-8');
 header('Content-Disposition: inline; filename="'.$topic.'.txt"');
 header('Content-Transfer-Encoding: binary');
 header('Content-Length: '.filesize($tmpfile));
