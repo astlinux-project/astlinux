@@ -125,7 +125,7 @@ Music-on-Hold ulaw Sound Package  ==>  upgrade-asterisk-sounds upgrade moh en ul
 "
   fi
 
-  if grep -A1 "[admin]" /etc/asterisk/manager.conf | grep -q astlinux; then
+  if grep -A1 '\[admin\]' /etc/asterisk/manager.conf | grep -q 'astlinux'; then
     echo "
 WARNING WARNING WARNING
 
