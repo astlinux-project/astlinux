@@ -5,7 +5,7 @@
 #############################################################
 
 PERL_VERSION_MAJOR = 16
-PERL_VERSION = 5.$(PERL_VERSION_MAJOR).2
+PERL_VERSION = 5.$(PERL_VERSION_MAJOR).3
 PERL_SITE = http://www.cpan.org/src/5.0
 PERL_SOURCE = perl-$(PERL_VERSION).tar.bz2
 PERL_INSTALL_STAGING = YES
@@ -14,8 +14,8 @@ PERL_DEPENDENCIES = linux
 
 PERL_MODULES = constant Carp Errno Fcntl Cwd POSIX Digest Socket IO XSLoader Digest/MD5 Digest/SHA Getopt/Std Time/Local File/Glob
 
-PERL_CROSS_VERSION = 0.7.1
-PERL_CROSS_BASE_VERSION = 5.$(PERL_VERSION_MAJOR).0
+PERL_CROSS_VERSION = 0.7.4
+PERL_CROSS_BASE_VERSION = 5.$(PERL_VERSION_MAJOR).3
 #PERL_CROSS_SITE    = http://download.berlios.de/perlcross
 PERL_CROSS_SITE    = http://files.astlinux.org
 PERL_CROSS_SOURCE  = perl-$(PERL_CROSS_BASE_VERSION)-cross-$(PERL_CROSS_VERSION).tar.gz
@@ -102,18 +102,18 @@ endif
 define PERL_INSTALL_TARGET_CMDS
 	PERL5LIB=$(@D)/dist/base/lib $(MAKE1) -C $(@D) DESTDIR="$(TARGET_DIR)" $(PERL_INSTALL_TARGET_GOALS)
 	# Remove all .pod files
-	find $(TARGET_DIR)/usr/lib/perl/ -name "*.pod" -print0 | xargs -0 rm -f
+	find $(TARGET_DIR)/usr/lib/perl5/ -name "*.pod" -print0 | xargs -0 rm -f
 	# Remove many unicore files
-	rm -rf $(TARGET_DIR)/usr/lib/perl/unicore/lib/
-	rm -rf $(TARGET_DIR)/usr/lib/perl/unicore/To/
-	rm -f $(TARGET_DIR)/usr/lib/perl/unicore/Name.pl
+	rm -rf $(TARGET_DIR)/usr/lib/perl5/unicore/lib/
+	rm -rf $(TARGET_DIR)/usr/lib/perl5/unicore/To/
+	rm -f $(TARGET_DIR)/usr/lib/perl5/unicore/Name.pl
 	#
 	ln -sf perl$(PERL_VERSION) $(TARGET_DIR)/usr/bin/perl
 endef
 
 define PERL_CLEAN_CMDS
 	-$(MAKE1) -C $(@D) clean
-	rm -rf $(TARGET_DIR)/usr/lib/perl/
+	rm -rf $(TARGET_DIR)/usr/lib/perl5/
 	rm -f $(TARGET_DIR)/usr/bin/perl $(TARGET_DIR)/usr/bin/perl$(PERL_VERSION)
 endef
 
