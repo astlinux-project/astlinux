@@ -18,6 +18,10 @@ Released **TBD**
 
 -- php, version bump to 5.3.27, enable the 'zlib' module
 
+-- perl, version bump to 5.16.3 using perlcross 0.7.4, ('rehashing flaw' fix: CVE-2013-1667)
+
+-- ex-vi (vi), enable multi-byte (UTF-8) support, use set-locale to define locale if desired.
+
 -- mysql_client, version bump to 5.1.70
 
 -- zlib, version bump to 1.2.8
@@ -61,6 +65,10 @@ Released **TBD**
          left instead of the Host Name.  If you want to define more than one DNS host name to an
          IP address the Host Name field may contain a space separated list of host names or FQDN's.
          Only the first host name will be used with the MAC address (if any) for DHCP.
+
+-- Voicemail tab, support FOP2 UserEvent: FOP2RELOADVOICEMAIL to sync mailbox status.
+
+-- All tabs, use charset encoding 'utf-8' instead of 'iso-8859-1', allows Edit tab to edit UTF-8 characters.
 
 
 Additions for AstLinux 1.1.2:
