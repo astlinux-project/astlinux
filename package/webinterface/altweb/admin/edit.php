@@ -282,7 +282,8 @@ require_once '../common/header.php';
       $dir === '/etc/asterisk/includes' ||
       $openfile === '/etc/rc.modules' ||
       $openfile === '/etc/modprobe.d/options.conf' ||
-      $openfile === '/etc/udev/rules.d/70-persistent-net.rules') {
+      $openfile === '/etc/udev/rules.d/70-persistent-net.rules' ||
+      $openfile === '/stat/var/packages/fop2/html/js/presence.js') {
     if (! is_writable($openfile)) {
       $openfile = '';
     }
@@ -536,6 +537,10 @@ require_once '../common/header.php';
         $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
         putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - Asterisk FOP2 Config</option>');
       }
+    }
+    if (is_writable($file = '/stat/var/packages/fop2/html/js/presence.js')) {
+      $sel = ($file === $openfile) ? ' selected="selected"' : '';
+      putHtml('<option value="'.$file.'"'.$sel.'>html/js/'.basename($file).' - FOP2 Global Options</option>');
     }
     putHtml('</optgroup>');
   }
