@@ -12,7 +12,8 @@ PERL_INSTALL_STAGING = YES
 # Depend on linux to define LINUX_VERSION_PROBED
 PERL_DEPENDENCIES = linux
 
-PERL_MODULES = constant Carp Errno Fcntl Cwd POSIX Digest Socket IO XSLoader Digest/MD5 Digest/SHA Getopt/Std Time/Local File/Glob
+PERL_MODULES = constant Carp Errno Fcntl Cwd POSIX Digest Socket IO XSLoader
+PERL_MODULES += Digest/MD5 Digest/SHA Getopt/Std Getopt/Long Time/Local File/Glob Sys/Hostname
 
 PERL_CROSS_VERSION = 0.7.4
 PERL_CROSS_BASE_VERSION = 5.$(PERL_VERSION_MAJOR).3
