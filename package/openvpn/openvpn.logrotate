@@ -1,0 +1,8 @@
+#
+/var/log/openvpn.log /var/log/openvpnclient.log {
+  missingok
+  size 100k
+  copytruncate
+  rotate 1
+}
+

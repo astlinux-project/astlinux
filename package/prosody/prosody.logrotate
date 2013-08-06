@@ -1,0 +1,13 @@
+#
+/var/log/prosody/prosody.log /var/log/prosody/prosody.err {
+  missingok
+  size 100k
+  rotate 1
+  sharedscripts
+  postrotate
+    if [ -f /var/run/prosody/prosody.pid ]; then
+      /bin/kill -HUP $(cat /var/run/prosody/prosody.pid) >/dev/null 2>&1
+    fi
+  endscript
+}
+

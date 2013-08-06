@@ -33,6 +33,7 @@ define PROSODY_POST_INSTALL
 	$(INSTALL) -m 0644 -D package/prosody/modules/mod_pinger.lua $(TARGET_DIR)/usr/lib/prosody/modules/
 	$(INSTALL) -m 0644 -D package/prosody/util/watchdog.lua $(TARGET_DIR)/usr/lib/prosody/util/
 	$(INSTALL) -m 0755 -D package/prosody/prosody.init $(TARGET_DIR)/etc/init.d/prosody
+	$(INSTALL) -m 0644 -D package/prosody/prosody.logrotate $(TARGET_DIR)/etc/logrotate.d/prosody
 	$(INSTALL) -m 0755 -D package/prosody/prosodycmd $(TARGET_DIR)/usr/bin/prosodycmd
 	ln -s /tmp/etc/prosody $(TARGET_DIR)/etc/prosody
 	ln -sf ../../init.d/prosody $(TARGET_DIR)/etc/runlevels/default/S58prosody

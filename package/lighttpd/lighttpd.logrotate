@@ -1,0 +1,14 @@
+#
+/var/log/lighttpd/*.log {
+  missingok
+  size 100k
+  copytruncate
+  rotate 1
+  sharedscripts
+  postrotate
+    if [ -f /var/run/lighttpd.pid ]; then
+      /bin/kill -HUP $(cat /var/run/lighttpd.pid) >/dev/null 2>&1
+    fi
+  endscript
+}
+
