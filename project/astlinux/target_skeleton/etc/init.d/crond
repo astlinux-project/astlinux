@@ -4,11 +4,21 @@
 
 init () {
 
-  mkdir /var/spool/cron
+  mkdir -p /var/spool/cron
   if [ -d /mnt/kd/crontabs ]; then
     ln -snf /mnt/kd/crontabs /var/spool/cron/crontabs
   else
     mkdir /var/spool/cron/crontabs
+  fi
+
+  # Automatically add daily cron entry for logrotate
+  if [ -x /usr/sbin/logrotate ]; then
+    if [ ! -f /var/spool/cron/crontabs/root ] || ! grep -q '/usr/sbin/logrotate ' /var/spool/cron/crontabs/root; then
+      echo "
+##
+## logrotate - Do not remove, comment-out to disable
+0 4 * * * /usr/sbin/logrotate /etc/logrotate.conf >/dev/null 2>&1" >> /var/spool/cron/crontabs/root
+    fi
   fi
 }
 
