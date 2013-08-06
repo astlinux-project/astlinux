@@ -7,13 +7,15 @@ KD="mnt/kd"
 ASTERISK_SOUNDS="stat/var/lib/asterisk/sounds"
 ASTERISK_MOH="stat/var/lib/asterisk/moh"
 PACKAGES="stat/var/packages"
+LOCALE="usr/lib/locale"
 
 system()
 {
   find $ASTURW | grep -v -e "^$ASTURW/$KD" \
                          -e "^$ASTURW/$ASTERISK_SOUNDS" \
                          -e "^$ASTURW/$ASTERISK_MOH" \
-                         -e "^$ASTURW/$PACKAGES"
+                         -e "^$ASTURW/$PACKAGES" \
+                         -e "^$ASTURW/$LOCALE"
 }
 
 kd()
@@ -48,6 +50,15 @@ packages()
   fi
 }
 
+locale()
+{
+  if [ -d $ASTURW/$LOCALE ]; then
+    find $ASTURW/$LOCALE
+  else
+    echo "No Installed Locale on ASTURW." >&2
+  fi
+}
+
 all()
 {
   find $ASTURW
@@ -78,12 +89,16 @@ packages)
   packages
   ;;
 
+locale)
+  locale
+  ;;
+
 all)
   all
   ;;
 
 *)
-  echo "Usage: show-union [ system|kd|asterisk_sounds|packages|all ]"
+  echo "Usage: show-union [ system|kd|asterisk_sounds|packages|locale|all ]"
   exit 1
   ;;
   
