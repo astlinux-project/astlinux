@@ -22,6 +22,10 @@ Released **TBD**
 
 -- ex-vi (vi), enable multi-byte (UTF-8) support, use set-locale to define locale if desired.
 
+-- logrotate, version 3.8.6, new package enabled by default to manage non-syslog log files.
+   logrotate is automatically called via cron, once a day at 04:00.  Packages whose logs are
+   managed by logrotate are: asterisk (not CDR's), lighttpd, openvpn and prosody.
+
 -- mysql_client, version bump to 5.1.70
 
 -- zlib, version bump to 1.2.8
