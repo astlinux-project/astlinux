@@ -285,6 +285,7 @@ $(TARGET_DIR)/$(ASTERISK_TARGET_BINARY): $(ASTERISK_DIR)/$(ASTERISK_BINARY)
 	   $(STAGING_DIR)/usr/include/
 	rm -Rf $(TARGET_DIR)/usr/share/man
 	$(INSTALL) -D -m 0755 package/asterisk/asterisk.init $(TARGET_DIR)/etc/init.d/asterisk
+	$(INSTALL) -D -m 0644 package/asterisk/asterisk.logrotate $(TARGET_DIR)/etc/logrotate.d/asterisk
 	$(INSTALL) -D -m 0755 package/asterisk/upgrade-asterisk-sounds $(TARGET_DIR)/usr/sbin/upgrade-asterisk-sounds
 	$(INSTALL) -D -m 0755 package/asterisk/safe_asterisk $(TARGET_DIR)/usr/sbin/safe_asterisk
 	$(INSTALL) -D -m 0755 package/asterisk/asterisk-sip-monitor $(TARGET_DIR)/usr/sbin/asterisk-sip-monitor
