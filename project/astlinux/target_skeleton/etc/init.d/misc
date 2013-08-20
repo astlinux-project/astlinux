@@ -7,6 +7,9 @@
 
 init () {
 
+  # Setup Hostname
+  hostname "$HOSTNAME"
+
   if [ -n "$VI_EDITOR_OPTIONS" ]; then
     echo -e "$VI_EDITOR_OPTIONS" > /root/.exrc
   fi

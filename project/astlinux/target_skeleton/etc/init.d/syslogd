@@ -2,29 +2,30 @@
 
 . /etc/rc.conf
 
+PIDFILE="/var/run/syslogd.pid"
+
 start () {
-  local -i LOGSIZE=1 NLOGS=2
+  local LOGSIZE NLOGS
 
   if [ "$PERSISTLOG" = "yes" ]; then
-    LOGSIZE=10
+    LOGSIZE=10240
     NLOGS=5
+  else
+    LOGSIZE=1024
+    NLOGS=2
   fi
-
-  let LOGSIZE*=1024
 
   echo "Starting syslogd..."
-  if [ -n "$SYSLOGHOST" ]; then
-    /sbin/syslogd -s $LOGSIZE -m 60 -b $NLOGS -L -R "$SYSLOGHOST"
-  else
-    /sbin/syslogd -s $LOGSIZE -m 60 -b $NLOGS
-  fi
+  syslogd -s $LOGSIZE -m 60 -b $NLOGS
   klogd
 }
 
 stop () {
-  if ps | grep -q -e '[ /]syslogd[ ]' -e '[ /]syslogd$'; then
+  if [ -f $PIDFILE ]; then
     echo "Stopping syslogd..."
-    killall syslogd >/dev/null 2>&1
+    kill $(cat $PIDFILE) >/dev/null 2>&1
+    rm -f $PIDFILE
+
     killall klogd >/dev/null 2>&1
   fi
 }

@@ -179,9 +179,6 @@ init () {
 start () {
   local IF
 
-  # set hostname
-  hostname "$HOSTNAME"
-
   # IPv6
   if [ "$IPV6" = "yes" ]; then
     modprobe ipv6
@@ -499,8 +496,8 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
 
   #DHCP
   if [ -n "$EXTIF" -a -z "$EXTIP" ] && ! isextppp extif; then
-    udhcpc -b -T2 -t6 -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXTIF.pid -i $EXTIF
-    ifplugd -apqs -t2 -u3 -d3 -i $EXTIF -r /etc/ifplugd/udhcpc.action
+    udhcpc -b -T2 -t6 -S -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXTIF.pid -i $EXTIF
+    ifplugd -apq -t2 -u3 -d3 -i $EXTIF -r /etc/ifplugd/udhcpc.action
 
     # No DHCPv6 - Static IPv6 if defined
     if [ "$IPV6" = "yes" -a -n "$EXTIPV6" -a -n "$EXTGWIPV6" ]; then
@@ -511,8 +508,8 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
 
   #DHCP
   if [ -n "$EXT2IF" -a -z "$EXT2IP" ] && ! isextppp ext2if; then
-    udhcpc -b -T2 -t6 -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXT2IF.pid -i $EXT2IF
-    ifplugd -apqs -t2 -u3 -d3 -i $EXT2IF -r /etc/ifplugd/udhcpc.action
+    udhcpc -b -T2 -t6 -S -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXT2IF.pid -i $EXT2IF
+    ifplugd -apq -t2 -u3 -d3 -i $EXT2IF -r /etc/ifplugd/udhcpc.action
 
     # No DHCPv6 - Static IPv6 if defined
     if [ "$IPV6" = "yes" -a -n "$EXT2IPV6" -a -n "$EXT2GWIPV6" ]; then

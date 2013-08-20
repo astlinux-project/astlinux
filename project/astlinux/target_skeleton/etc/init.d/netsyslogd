@@ -1,0 +1,58 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+# Gracefully exit if remote logging is not enabled.
+if [ -z "$SYSLOGHOST" ]; then
+  exit 0
+fi
+
+PIDFILE="/var/run/syslogd.pid"
+
+restart () {
+  local action="$1" LOGSIZE NLOGS
+
+  if [ "$PERSISTLOG" = "yes" ]; then
+    LOGSIZE=10240
+    NLOGS=5
+  else
+    LOGSIZE=1024
+    NLOGS=2
+  fi
+
+  if [ -f $PIDFILE ]; then
+    kill $(cat $PIDFILE) >/dev/null 2>&1
+    sleep 1
+  fi
+  if [ "$action" = "remote" ]; then
+    echo "Starting Remote syslogd..."
+    syslogd -s $LOGSIZE -m 60 -b $NLOGS -L -R "$SYSLOGHOST"
+  else
+    echo "Stopping Remote syslogd..."
+    syslogd -s $LOGSIZE -m 60 -b $NLOGS
+  fi
+}
+
+case $1 in 
+
+start)
+  restart remote
+  ;;
+
+stop)
+  restart local
+  ;;
+
+init)
+  restart remote
+  ;;
+
+restart)
+  restart remote
+  ;;
+
+*)
+  echo "Usage start|stop|restart"
+  ;;
+
+esac

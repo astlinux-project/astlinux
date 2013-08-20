@@ -16,13 +16,11 @@ case $action in
 
   up)
     kill_udhcpc
-    udhcpc -b -s /etc/udhcpc.script -H $(uname -n) -p /var/run/udhcpc-${interface}.pid -i ${interface}
-    logger -t udhcpc.action -p kern.info "udhcp up: ${interface}"
+    udhcpc -b -T2 -t6 -S -s /etc/udhcpc.script -H $(uname -n) -p /var/run/udhcpc-${interface}.pid -i ${interface}
     ;;
 
   down)
     kill_udhcpc
-    logger -t udhcpc.action -p kern.info "udhcp down: ${interface}"
     ;;
 
 esac
