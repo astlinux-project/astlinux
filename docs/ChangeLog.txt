@@ -26,6 +26,14 @@ Released **TBD**
    logrotate is automatically called via cron, once a day at 04:00.  Packages whose logs are
    managed by logrotate are: asterisk (not CDR's), lighttpd, openvpn and prosody.
 
+-- syslogd, added new netsyslogd service to handle SYSLOGHOST remote syslog when defined. The syslogd service
+   is now local only, syslogd is started earlier so network startup can log to syslog - such as udhcpc, ifplugd
+   and PPPoE's pppd.
+
+-- sox, version bump to 14.4.1, *much* newer from previous 12.17.9
+   Note: Some sox options have changed over the years, if you use sox in scripts adjust as needed.
+         For example, encoded sample size option '-w' is now '-b 16'
+
 -- mysql_client, version bump to 5.1.70
 
 -- zlib, version bump to 1.2.8
