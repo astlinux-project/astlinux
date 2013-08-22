@@ -5,7 +5,7 @@
 DEFAULT_MODULES="roster saslauth tls disco \
 private vcard \
 legacyauth version uptime time ping pep register adhoc \
-admin_adhoc admin_telnet"
+admin_adhoc admin_telnet log_auth"
 
 DEFAULT_MODULES_S2S="dialback"
 
@@ -25,8 +25,8 @@ mod_in_list()
 
 gen_xmpp_config()
 {
-  local m vh MODS ADD_MODS="" modules="" admins="" hostname cert key no_s2s log syslog error c2s_port s2s_port
-  local LOG_OK SYSLOG_OK ERROR_LOG GROUPS_OK IFS c2s_idle_timeout
+  local m vh MODS ADD_MODS="" modules="" admins="" hostname cert key log syslog error c2s_port s2s_port
+  local LOG_OK SYSLOG_OK ERROR_LOG GROUPS_OK IFS c2s_idle_timeout disable_core_mods="" no_s2s=""
 
   cert="${XMPP_CERT:-/etc/prosody/certs/server.crt}"
   key="${XMPP_KEY:-/etc/prosody/certs/server.key}"
@@ -39,11 +39,10 @@ gen_xmpp_config()
 
   if [ "$XMPP_ENABLE_S2S" = "yes" ]; then
     MODS="$DEFAULT_MODULES $DEFAULT_MODULES_S2S"
-    no_s2s="false"
     s2s_port="${XMPP_S2S_PORT:-5269}"
   else
     MODS="$DEFAULT_MODULES"
-    no_s2s="true"
+    no_s2s="s2s"
     s2s_port=""
   fi
 
@@ -73,6 +72,9 @@ gen_xmpp_config()
     if ! mod_in_list "$m" "$XMPP_DISABLE_MODULES"; then
       modules="$modules${modules:+, }\"$m\""
     fi
+  done
+  for m in $no_s2s; do
+    disable_core_mods="$disable_core_mods${disable_core_mods:+, }\"$m\""
   done
 
   for m in $XMPP_ADMIN_USERS; do
@@ -116,8 +118,6 @@ allow_registration = false
 
 authentication = \"internal_plain\"
 
-disallow_s2s = $no_s2s
-
 c2s_require_encryption = true${c2s_idle_timeout:+
 
 c2s_idle_timeout = $c2s_idle_timeout}
@@ -143,7 +143,7 @@ ssl = {
 
 modules_enabled = { \"posix\", $modules }
 
-modules_disabled = {  }
+modules_disabled = { $disable_core_mods }
 "
 
   unset IFS

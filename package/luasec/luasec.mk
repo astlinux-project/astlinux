@@ -4,24 +4,22 @@
 #
 #############################################################
 
-LUASEC_VERSION = 0.4.1
-LUASEC_SOURCE = luasec-$(LUASEC_VERSION).tar.gz
+LUASEC_VERSION = 0.5
+LUASEC_SOURCE = luasec-prosody-$(LUASEC_VERSION).tar.gz
 LUASEC_SITE = http://files.astlinux.org
 LUASEC_DEPENDENCIES = lua openssl luasocket
 
 define LUASEC_BUILD_CMDS
-	$(MAKE) -C $(@D)/src linux \
-		INCDIR="-I$(STAGING_DIR)/usr/include/" \
-		LIBDIR="-L$(STAGING_DIR)/usr/lib/" \
-		CFLAGS="$(TARGET_CFLAGS) -fpic" \
+	$(MAKE) -C $(@D) linux \
+		LIBDIR="-L$(STAGING_DIR)/usr/lib/ -L$(@D)/src/luasocket" \
 		CC="$(TARGET_CC)" \
 		LD="$(TARGET_LD) -shared"
 endef
 
 define LUASEC_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D)/src \
+	$(MAKE) -C $(@D) install \
 		LUACPATH="$(TARGET_DIR)/usr/lib/lua" \
-		LUAPATH="$(TARGET_DIR)/usr/share/lua" install
+		LUAPATH="$(TARGET_DIR)/usr/share/lua"
 endef
 
 define LUASEC_UNINSTALL_TARGET_CMDS

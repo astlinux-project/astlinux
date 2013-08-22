@@ -4,20 +4,21 @@
 #
 #############################################################
 
-LUASOCKET_VERSION = 2.0.2
-LUASOCKET_SITE = http://luaforge.net/frs/download.php/2664
+LUASOCKET_VERSION = 3.0-rc1
+LUASOCKET_SOURCE = luasocket-$(LUASOCKET_VERSION).tar.gz
+LUASOCKET_SITE = http://files.astlinux.org
+#LUASOCKET_SITE = http://github.com/diegonehab/luasocket/archive
 LUASOCKET_DEPENDENCIES = lua
 
 define LUASOCKET_BUILD_CMDS
 	$(MAKE) -C $(@D) -f makefile \
-		CC="$(TARGET_CC)" LD="$(TARGET_CC)" \
-		CFLAGS="$(TARGET_CFLAGS) -fPIC"
+		CC="$(TARGET_CC)" LD="$(TARGET_CC)"
 endef
 
 define LUASOCKET_INSTALL_TARGET_CMDS
 	$(MAKE) -C $(@D) -f makefile \
-		INSTALL_TOP_SHARE="$(TARGET_DIR)/usr/share/lua" \
-		INSTALL_TOP_LIB="$(TARGET_DIR)/usr/lib/lua" install
+		INSTALL_TOP_LDIR="$(TARGET_DIR)/usr/share/lua" \
+		INSTALL_TOP_CDIR="$(TARGET_DIR)/usr/lib/lua" install-unix
 endef
 
 define LUASOCKET_UNINSTALL_TARGET_CMDS
