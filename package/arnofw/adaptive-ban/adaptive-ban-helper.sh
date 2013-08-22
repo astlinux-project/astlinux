@@ -134,7 +134,7 @@ filter()
          ;;
       lighttpd) filter_lighttpd "$file" "$PREFIX" "$HOST"
          ;;
-      mini_httpd) filter_mini_httpd "$file" "$PREFIX" "$HOST"
+      prosody) filter_prosody "$file" "$PREFIX" "$HOST"
          ;;
       pptpd) filter_pptpd "$file" "$PREFIX" "$HOST"
          ;;
@@ -185,11 +185,11 @@ filter_lighttpd()
                "$file" >"$TEMPFILE"
 }
 
-filter_mini_httpd()
+filter_prosody()
 {
   local file="$1" PREFIX="$2" HOST="$3"
 
-  sed -n -r -e "s/^${PREFIX}${HOST} authentication failure - access denied$/\1/p" \
+  sed -n -r -e "s/^${PREFIX}.* Failed authentication attempt \(.*\) from IP: ${HOST}[[:space:]]*$/\1/p" \
                "$file" >"$TEMPFILE"
 }
 
