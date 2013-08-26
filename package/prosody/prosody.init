@@ -154,6 +154,25 @@ modules_disabled = { $disable_core_mods }
 
   if [ -n "$XMPP_CONFERENCE" ]; then
     echo "Component \"$XMPP_CONFERENCE\" \"muc\""
+    echo ""
+  fi
+
+  if [ -n "$XMPP_PUBSUB" ]; then
+    echo "Component \"$XMPP_PUBSUB\" \"pubsub\""
+    if [ -n "$XMPP_PUBSUB_ADMINS" ]; then
+      admins=""
+      for m in $XMPP_PUBSUB_ADMINS; do
+        admins="$admins${admins:+, }\"$m\""
+      done
+      echo "  admins = { $admins }"
+    fi
+    if [ "$XMPP_PUBSUB_AUTOCREATE" = "yes" -o "$XMPP_PUBSUB_AUTOCREATE" = "subscribe" ]; then
+      echo "  autocreate_on_subscribe = true"
+    fi
+    if [ "$XMPP_PUBSUB_AUTOCREATE" = "yes" -o "$XMPP_PUBSUB_AUTOCREATE" = "publish" ]; then
+      echo "  autocreate_on_publish = true"
+    fi
+    echo ""
   fi
 
   return 0
