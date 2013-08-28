@@ -48,7 +48,15 @@ Released **TBD**
    Previously the default was to try 3 times, 3 seconds apart, now we try 6 times, 2 seconds apart.
    Some NIC's take a few seconds to become available on startup.
 
+-- prosody, version bump to 0.9.0, IPv6 support, add log_auth for Adaptive Ban support.
+   Added pubsub support, new variables: XMPP_PUBSUB, XMPP_PUBSUB_ADMINS and XMPP_PUBSUB_AUTOCREATE
+
+-- luasec, version bump to 0.5 (luasec-prosody)
+
+-- luasocket, version bump to 3.0-rc1
+
 -- AIF, "adaptive-ban" plugin. Don't ban IPv4 127.0.0.1, the IPv6 ::1 was previously properly ignored.
+   Additionally, add support for 'prosody' and remove old 'mini_httpd' support.
 
 ** Asterisk
 
@@ -81,6 +89,8 @@ Released **TBD**
 -- Voicemail tab, support FOP2 UserEvent: FOP2RELOADVOICEMAIL to sync mailbox status.
 
 -- All tabs, use charset encoding 'utf-8' instead of 'iso-8859-1', allows Edit tab to edit UTF-8 characters.
+
+-- XMPP sub-tab, add support for XMPP_PUBSUB, XMPP_PUBSUB_ADMINS and XMPP_PUBSUB_AUTOCREATE variables.
 
 
 Additions for AstLinux 1.1.2:
