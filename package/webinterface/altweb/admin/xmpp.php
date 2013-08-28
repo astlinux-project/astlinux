@@ -32,6 +32,13 @@ $idle_timeout_menu = array (
   '600' => '10 minute'
 );
 
+$pubsub_autocreate_menu = array (
+  '' => 'disabled',
+  'yes' => 'Publish and Subscribe',
+  'publish' => 'Publish Only',
+  'subscribe' => 'Subscribe Only'
+);
+
 $myself = $_SERVER['PHP_SELF'];
 
 require_once '../common/functions.php';
@@ -115,6 +122,15 @@ function saveXMPPsettings($conf_dir, $conf_file) {
 
   $value = 'XMPP_CONFERENCE="'.tuq($_POST['xmpp_conference']).'"';
   fwrite($fp, "### Multi-User Chat Conference\n".$value."\n");
+
+  $value = 'XMPP_PUBSUB="'.tuq($_POST['xmpp_pubsub']).'"';
+  fwrite($fp, "### PubSub Service\n".$value."\n");
+
+  $value = 'XMPP_PUBSUB_ADMINS="'.tuq($_POST['xmpp_pubsub_admins']).'"';
+  fwrite($fp, "### PubSub Admins\n".$value."\n");
+
+  $value = 'XMPP_PUBSUB_AUTOCREATE="'.$_POST['xmpp_pubsub_autocreate'].'"';
+  fwrite($fp, "### PubSub Autocreate\n".$value."\n");
 
   $value = 'XMPP_CERT=""';
   fwrite($fp, "### Default Certificate Path\n".$value."\n");
@@ -488,6 +504,37 @@ if ($value === '') {
   putHtml('<i>conference.'.$hosts[0].'</i>');
   putHtml('</td></tr>');
 }
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  putHtml('PubSub Service:');
+  putHtml('</td><td style="text-align: left;">');
+  $value = getVARdef($vars, 'XMPP_PUBSUB');
+  putHtml('<input type="text" size="56" maxlength="200" name="xmpp_pubsub" value="'.$value.'" />');
+  putHtml('</td></tr>');
+if ($value === '') {
+  putHtml('<tr class="dtrow1"><td style="text-align: right;"><i>Example:</i></td><td style="text-align: left;">');
+  $hosts = explode(' ', $hostname);
+  putHtml('<i>pubsub.'.$hosts[0].'</i>');
+  putHtml('</td></tr>');
+}
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  putHtml('PubSub Admins:');
+  putHtml('</td><td style="text-align: left;">');
+  $value = getVARdef($vars, 'XMPP_PUBSUB_ADMINS');
+  putHtml('<input type="text" size="56" maxlength="200" name="xmpp_pubsub_admins" value="'.$value.'" />');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  putHtml('PubSub Autocreate:');
+  putHtml('</td><td style="text-align: left;">');
+  $pubsub_autocreate = getVARdef($vars, 'XMPP_PUBSUB_AUTOCREATE');
+  putHtml('<select name="xmpp_pubsub_autocreate">');
+  foreach ($pubsub_autocreate_menu as $key => $value) {
+    $sel = ($pubsub_autocreate === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
 
 if (is_file('/mnt/kd/prosody/prosody.cfg.lua')) {
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
