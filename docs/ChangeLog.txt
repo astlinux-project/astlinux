@@ -34,6 +34,8 @@ Released **TBD**
    Note: Some sox options have changed over the years, if you use sox in scripts adjust as needed.
          For example, encoded sample size option '-w' is now '-b 16'
 
+-- zabbix, version bump to 2.0.8
+
 -- mysql_client, version bump to 5.1.70
 
 -- zlib, version bump to 1.2.8
