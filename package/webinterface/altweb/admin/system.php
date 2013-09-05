@@ -213,6 +213,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $excludecmd = 'find /oldroot/mnt/asturw/ -type f | sed -e "s:^/oldroot/mnt/asturw/::" | sed -n';
       $excludecmd .= ' -e "s:^stat/var/lib/asterisk/sounds/.*$:&:p"';
       $excludecmd .= ' -e "s:^stat/var/lib/asterisk/moh/.*$:&:p"';
+      $excludecmd .= ' -e "s:^stat/var/packages/.*$:&:p"';
+      $excludecmd .= ' -e "s:^usr/lib/locale/.*$:&:p"';
       shell($excludecmd.' >'.$excludefile.' 2>/dev/null', $status);
       shell($tarcmd.$asturw.' -X '.$excludefile.' $(ls -1 /oldroot/mnt/asturw/ | sed -e "s/^mnt$//") -C /oldroot/mnt/asturw >/dev/null 2>/dev/null', $status);
       @unlink($excludefile);
