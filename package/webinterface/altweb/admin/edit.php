@@ -588,11 +588,29 @@ require_once '../common/header.php';
     }
     putHtml('</optgroup>');
   }
+
+  putHtml('</select>');
+  putHtml('</td><td width="20">&nbsp;</td><td style="text-align: left;">');
+  putHtml('<input type="submit" class="formbtn" value="&gt;&gt;&nbsp;Open File" name="submit_open" />');
+  putHtml('</td></tr></table>');
+
+  if (($shortcut_str = getPREFdef($global_prefs, 'edit_text_shortcut_cmdstr')) !== '') {
+    putHtml('<table width="100%" class="stdtable">');
+    putHtml('<tr><td width="400" style="text-align: center;">');
+    foreach (explode(' ', $shortcut_str) as $shortcut) {
+      if (trim($shortcut) !== '') {
+        if (($pos = strpos($shortcut, '~')) !== FALSE) {
+          $shortcut_label = substr($shortcut, $pos + 1);
+          $shortcut = substr($shortcut, 0, $pos);
+        } else {
+          $shortcut_label = basename($shortcut);
+        }
+        putHtml('<a href="'.$myself.'?file='.$shortcut.'" class="headerText">'.$shortcut_label.'</a>');
+      }
+    }
+    putHtml('</td></tr></table>');
+  }
 ?>
-  </select>
-  </td><td width="20">&nbsp;</td><td style="text-align: left;">
-  <input type="submit" class="formbtn" value="&gt;&gt;&nbsp;Open File" name="submit_open" />
-  </td></tr></table>
   <table width="100%" class="stdtable">
   <tr><td width="240" style="text-align: center;">
   <input type="submit" class="formbtn" value="Save Changes" name="submit_save" onclick="setOKhandler();" />

@@ -301,6 +301,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'edit_text_rows_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
     }
+    $value = 'edit_text_shortcut_cmdstr = "'.tuqp($_POST['edittext_shortcut']).'"';
+    fwrite($fp, $value."\n");
     
     if (isset($_POST['backup_hostname_domain'])) {
       $value = 'system_backup_hostname_domain = yes';
@@ -913,6 +915,10 @@ require_once '../common/header.php';
     $value = '30';
   }
   putHtml('<input type="text" size="6" maxlength="2" value="'.$value.'" name="text_rows" /></td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">Shortcuts:</td><td colspan="4">');
+  $value = getPREFdef($global_prefs, 'edit_text_shortcut_cmdstr');
+  putHtml('<input type="text" size="48" maxlength="900" value="'.$value.'" name="edittext_shortcut" /></td></tr>');
   
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
   
