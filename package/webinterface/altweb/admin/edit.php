@@ -10,6 +10,7 @@
 // 04-28-2008
 // 12-04-2008, Added Reload/Restart Menu
 // 02-18-2013, Added OpenVPN Client Config editing
+// 09-06-2013, Added Shortcut support
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -598,14 +599,14 @@ require_once '../common/header.php';
     putHtml('<table width="100%" class="stdtable">');
     putHtml('<tr><td width="400" style="text-align: center;">');
     foreach (explode(' ', $shortcut_str) as $shortcut) {
-      if (trim($shortcut) !== '') {
+      if ($shortcut !== '') {
         if (($pos = strpos($shortcut, '~')) !== FALSE) {
           $shortcut_label = substr($shortcut, $pos + 1);
           $shortcut = substr($shortcut, 0, $pos);
         } else {
           $shortcut_label = basename($shortcut);
         }
-        putHtml('<a href="'.$myself.'?file='.$shortcut.'" class="headerText">'.$shortcut_label.'</a>');
+        putHtml('<a href="'.$myself.'?file='.$shortcut.'" class="headerText">'.htmlspecialchars($shortcut_label).'</a>');
       }
     }
     putHtml('</td></tr></table>');

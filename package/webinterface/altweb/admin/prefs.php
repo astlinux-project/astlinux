@@ -16,6 +16,7 @@
 // 09-28-2012, Added Show Latest System Logs/Hide Log Words
 // 09-28-2012, Added Show Custom Asterisk Command
 // 01-20-2013, Added Show XMPP Server Status
+// 09-06-2013, Added Edit Tab Shortcut support
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -301,7 +302,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'edit_text_rows_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
     }
-    $value = 'edit_text_shortcut_cmdstr = "'.tuqp($_POST['edittext_shortcut']).'"';
+    $value = tuqp(str_replace(chr(13), ' ', $_POST['edittext_shortcut']));
+    $value = str_replace(chr(10), '', $value);
+    if (strlen($value) > 900) {  // 1024 total line limit for prefs
+      $value = substr($value, 0, 900);
+    }
+    $value = 'edit_text_shortcut_cmdstr = "'.$value.'"';
     fwrite($fp, $value."\n");
     
     if (isset($_POST['backup_hostname_domain'])) {
@@ -916,9 +922,17 @@ require_once '../common/header.php';
   }
   putHtml('<input type="text" size="6" maxlength="2" value="'.$value.'" name="text_rows" /></td></tr>');
 
-  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">Shortcuts:</td><td colspan="4">');
-  $value = getPREFdef($global_prefs, 'edit_text_shortcut_cmdstr');
-  putHtml('<input type="text" size="48" maxlength="900" value="'.$value.'" name="edittext_shortcut" /></td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">Shortcuts:<br /><i>(Path~Label)</i></td><td colspan="4">');
+  echo '<textarea name="edittext_shortcut" rows="4" cols="40" wrap="off" class="edititemText">';
+  if (($value = getPREFdef($global_prefs, 'edit_text_shortcut_cmdstr')) !== '') {
+    foreach (explode(' ', $value) as $shortcut) {
+      if ($shortcut !== '') {
+        echo htmlspecialchars($shortcut), chr(13);
+      }
+    }
+  }
+  putHtml('</textarea>');
+  putHtml('</td></tr>');
   
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
   
