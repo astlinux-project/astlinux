@@ -95,9 +95,12 @@ Released **TBD**
 
 -- XMPP sub-tab, add support for XMPP_PUBSUB, XMPP_PUBSUB_ADMINS and XMPP_PUBSUB_AUTOCREATE variables.
 
--- Edit tab, add shortcut support defined via Prefs tab.  Shortcuts: are defined as a space separated
-   list of filenames, optionally with a trailing ~Label .
-   Example: /etc/asterisk/sip.conf /etc/asterisk/extensions.conf~Asterisk_Dialplan
+-- Edit tab, add shortcut support defined via Prefs tab.  Shortcuts: are defined as a return (CR)
+   separated list of filenames, optionally with a trailing ~Label .
+   Example:
+      /mnt/kd/rc.conf.d/user.conf
+      /etc/asterisk/sip.conf
+      /etc/asterisk/extensions.conf~Asterisk_Dialplan
 
 
 Additions for AstLinux 1.1.2:
