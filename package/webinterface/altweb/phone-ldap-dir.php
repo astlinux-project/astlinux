@@ -8,6 +8,7 @@
 
 // phone-ldap-dir.php for AstLinux
 // 25-05-2013, Convert phone-dir.php for use with LDAP
+// 16-09-2013, Add Microsoft Active Directory custom variable
 //
 // Usage: https://pbx/phone-ldap-dir.php?tls&type=generic&search=
 // If 'tls' appears, regardless of value,  start_tls is enabled (defaults to disabled)
@@ -73,6 +74,7 @@ function LDAP_Client($start_tls, &$uri, &$base) {
   $user = '';
   $pass = '';
   $proto_version = 3;
+  $ms_ad = FALSE;       // Set to TRUE for Active Directory server
   // end
 
   $uri = '';
@@ -94,6 +96,9 @@ function LDAP_Client($start_tls, &$uri, &$base) {
   if (($client = ldap_connect($uri)) !== FALSE) {
     if ($proto_version > 0) {
       ldap_set_option($client, LDAP_OPT_PROTOCOL_VERSION, $proto_version);
+    }
+    if ($ms_ad) {
+      ldap_set_option($client, LDAP_OPT_REFERRALS, 0);
     }
     if ($start_tls && strncmp($uri, 'ldaps://', 8)) {  // Don't use together with ldaps://
       if (! ldap_start_tls($client)) {
