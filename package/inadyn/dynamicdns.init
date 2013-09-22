@@ -36,7 +36,7 @@ gen_ddclient_conf()
     'default@freedns.afraid.org') service="freedns" ;;
     'default@dnsomatic.com') service="dnsomatic" ;;
     'default@pairnic.com') service="pairnic" ;;
-     *) service="$DDSERVICE" ;;
+     *) service="$(echo "$DDSERVICE" | tr -d '^$*[]|"')" ;;  # sanitize for sed regex
   esac
 
   if [ -n "$DDUSER" -a -n "$DDPASS" -a -n "$DDHOST" ]; then
