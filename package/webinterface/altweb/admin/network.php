@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2012 Lonnie Abelbeck
+// Copyright (C) 2008-2013 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -31,6 +31,7 @@
 // 12-03-2011, Added HTTP_ACCESSLOG and HTTPS_ACCESSLOG support
 // 01-28-2012, Added LOCALDNS_LOCAL_DOMAIN support
 // 07-07-2012, Added Universal Plug & Play support
+// 09-23-2013, Added ddclient support
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -64,20 +65,21 @@ $select_ntp = array (
 
 $select_dyndns = array (
   'User Defined&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;' => '',
-  'ZoneEdit' => 'default@zoneedit.com',
-  'DynDNS' => 'dyndns@dyndns.org',
-  'DynDNS [static]' => 'statdns@dyndns.org',
-  'DynDNS [custom]' => 'custom@dyndns.org',
-  'No-IP' => 'default@no-ip.com',
-  'FreeDNS' => 'default@freedns.afraid.org',
   'DNS-O-Matic' => 'default@dnsomatic.com',
-  'pairNIC' => 'default@pairnic.com'
+  'DynDNS' => 'dyndns@dyndns.org',
+  'DynDNS [custom]' => 'custom@dyndns.org',
+  'DynDNS [static]' => 'statdns@dyndns.org',
+  'FreeDNS' => 'default@freedns.afraid.org',
+  'No-IP' => 'default@no-ip.com',
+  'pairNIC' => 'default@pairnic.com',
+  'ZoneEdit' => 'default@zoneedit.com'
 );
 
 $select_dyndns_getip = array (
   'User Defined&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;' => '',
-  'getip.krisk.org' => 'getip.krisk.org',
+  'myip.dnsomatic.com' => 'myip.dnsomatic.com',
   'checkip.dyndns.org' => 'checkip.dyndns.org',
+  'getip.krisk.org' => 'getip.krisk.org',
   'External Interface' => 'interface'
 );
 
@@ -523,6 +525,8 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   fwrite($fp, "### IPv6 Tunnel\n".$value."\n");
   
   fwrite($fp, "### Dynamic DNS\n");
+  $value = 'DDCLIENT="'.$_POST['dd_client'].'"';
+  fwrite($fp, $value."\n");
   if ($_POST['dd_service'] !== '') {
     $value = 'DDSERVICE="'.$_POST['dd_service'].'"';
   } else {
@@ -1685,6 +1689,12 @@ require_once '../common/header.php';
   
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Dynamic DNS Update:</strong>');
+  $dd_client = getVARdef($db, 'DDCLIENT', $cur_db);
+  putHtml('<select name="dd_client">');
+  putHtml('<option value="inadyn">inadyn</option>');
+  $sel = ($dd_client === 'ddclient') ? ' selected="selected"' : '';
+  putHtml('<option value="ddclient"'.$sel.'>ddclient</option>');
+  putHtml('</select>');
   putHtml('</td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
@@ -1708,7 +1718,7 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('DNS Get IPv4 Address:');
   if (($t_value = getVARdef($db, 'DDGETIP', $cur_db)) === '') {
-    $t_value = 'getip.krisk.org';
+    $t_value = 'myip.dnsomatic.com';
   }
   putHtml('<select name="dd_getip">');
   foreach ($select_dyndns_getip as $key => $value) {

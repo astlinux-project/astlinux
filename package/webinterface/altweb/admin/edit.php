@@ -45,6 +45,7 @@ if (is_addon_package('fop2')) {
 $select_reload['cron'] = 'Reload Cron for root';
 
 $sys_label = array (
+  'ddclient.conf' => 'DDclient Dynamic DNS Config',
   'dnsmasq.conf' => 'DNSmasq Configuration',
   'misdn-init.conf' => 'mISDN Configuration',
   'ntpd.conf' => 'NTP Time Client/Server',
