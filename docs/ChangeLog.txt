@@ -5,10 +5,35 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.1.3:
+Additions for AstLinux 1.1.4:
 =============================
 
 Released **TBD**
+
+** System
+
+** Networking
+
+-- ddclient, Dynamic DNS now adds "ddclient" support along with the old "inadyn" client.
+   The variable DDCLIENT="ddclient" enables it, the default is "inadyn".
+
+** Asterisk
+
+-- Asterisk 1.8.23.1 (no change) and 11.5.1 (no change)
+
+-- DAHDI, dahdi-linux 2.6.2 (no change) and dahdi-tools 2.6.2 (no change)
+
+** Web Interface
+
+-- Network tab, add support for both "inadyn" and "ddclient" Dynamic DNS.
+   In addition to the standard pre-defined services, ddclient also supports user defined
+   services for: easydns, dnspark, namecheap, changeip, and dtdns
+
+
+Additions for AstLinux 1.1.3:
+=============================
+
+Released 2013-09-27
 
 ** System
 
