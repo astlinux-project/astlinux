@@ -16,6 +16,10 @@ Released **TBD**
 
 -- ethtool, version bump to 3.11
 
+-- sqlite, version bump to 3.8.0.2
+
+-- sqliteodbc, version bump to 0.995
+
 ** Networking
 
 -- ddclient, Dynamic DNS now adds "ddclient" support along with the old "inadyn" client.
