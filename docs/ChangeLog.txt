@@ -16,6 +16,8 @@ Released **TBD**
 
 -- ethtool, version bump to 3.11
 
+-- openldap, version bump to 2.4.36
+
 -- sqlite, version bump to 3.8.0.2
 
 -- sqliteodbc, version bump to 0.995
