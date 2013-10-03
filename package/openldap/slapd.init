@@ -48,6 +48,7 @@ EOF
 
 gen_slapd_conf()
 {
+  local cert key
 
   echo "include /etc/openldap/schema/core.schema
 include /etc/openldap/schema/cosine.schema
@@ -55,8 +56,20 @@ include /etc/openldap/schema/inetorgperson.schema
 
 pidfile /var/run/slapd.pid
 argsfile /var/run/slapd.args
+"
 
-database sql
+  cert="${LDAP_SERVER_CERT:-/mnt/kd/ssl/sip-tls/keys/server.crt}"
+  key="${LDAP_SERVER_KEY:-/mnt/kd/ssl/sip-tls/keys/server.key}"
+  if [ -f "$cert" -a -f "$key" ]; then
+    echo "TLSCertificateFile $cert
+TLSCertificateKeyFile $key
+"
+  else
+    logger -t slapd -p kern.info "LDAP Server SSL configuration error, continuing..."
+    logger -t slapd -p kern.info "Try generating an Asterisk SIP-TLS Server Certificate, which LDAP Server will use by default."
+  fi
+
+  echo "database sql
 #suffix \"o=sql,c=RU\"
 #rootdn \"cn=root,o=sql,c=RU\"
 suffix \"dc=example,dc=com\"
@@ -69,8 +82,9 @@ insentry_stmt \"INSERT INTO ldap_entries (dn,oc_map_id,parent,keyval) VALUES (?,
 upper_func \"upper\"
 concat_pattern \"?||?\"
 has_ldapinfo_dn_ru no
+"
 
-#database ldif
+  echo "#database ldif
 #suffix \"dc=example,dc=com\"
 #rootdn \"cn=root,dc=example,dc=com\"
 #rootpw astlinux
