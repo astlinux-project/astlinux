@@ -2,52 +2,6 @@
 
 . /etc/rc.conf
 
-gen_sqlite3_schema()
-{
-
-  sqlite3 -batch /mnt/kd/ldap-odbc.sqlite3 <<EOF
-CREATE TABLE 'ldap_oc_mappings' (
-  'id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  'name' TEXT NOT NULL,
-  'keytbl' TEXT NOT NULL,
-  'keycol' TEXT NOT NULL,
-  'create_proc' TEXT,
-  'delete_proc' TEXT,
-  'expect_return' INTEGER NOT NULL
-);
-
-CREATE TABLE 'ldap_attr_mappings' (
-  'id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  'oc_map_id' INTEGER NOT NULL REFERENCES ldap_oc_mappings('id'),
-  'name' TEXT NOT NULL,
-  'sel_expr' TEXT NOT NULL,
-  'sel_expr_u' TEXT,
-  'from_tbls' TEXT NOT NULL,
-  'join_where' TEXT,
-  'add_proc' TEXT,
-  'delete_proc' TEXT,
-  'param_order' INTEGER NOT NULL,
-  'expect_return' INTEGER NOT NULL
-);
-
-CREATE TABLE 'ldap_entries' (
-  'id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  'dn' TEXT NOT NULL,
-  'oc_map_id' INTEGER NOT NULL REFERENCES ldap_oc_mappings('id'),
-  'parent' INTEGER NOT NULL,
-  'keyval' INTEGER NOT NULL,
-  UNIQUE ( oc_map_id, keyval ),
-  UNIQUE ( dn )
-);
-
-CREATE TABLE 'ldap_entry_objclasses' (
-  'entry_id' INTEGER NOT NULL REFERENCES ldap_entries('id'),
-  'oc_name' TEXT
-);
-
-EOF
-}
-
 gen_slapd_conf()
 {
   local cert key
@@ -71,26 +25,26 @@ TLSCertificateKeyFile $key
     logger -t slapd -p kern.info "Try generating an Asterisk SIP-TLS Server Certificate, which LDAP Server will use by default."
   fi
 
-  echo "database sql
-#suffix \"o=sql,c=RU\"
-#rootdn \"cn=root,o=sql,c=RU\"
-suffix \"dc=example,dc=com\"
-rootdn \"cn=root,dc=example,dc=com\"
-rootpw astlinux
-dbname ldap
-dbuser unused
-dbpasswd unused
-insentry_stmt \"INSERT INTO ldap_entries (dn,oc_map_id,parent,keyval) VALUES (?,?,?,?)\"
-upper_func \"upper\"
-concat_pattern \"?||?\"
-has_ldapinfo_dn_ru no
+  echo "disallow bind_anon
+access to *
+       by self write
+       by anonymous auth
+       by users read
+access to dn.subtree=\"ou=addressbook,dc=example,dc=com\"
+       by users write
 "
 
-  echo "#database ldif
-#suffix \"dc=example,dc=com\"
-#rootdn \"cn=root,dc=example,dc=com\"
-#rootpw astlinux
-#directory /var/lib/ldap
+  echo "database mdb
+suffix \"dc=example,dc=com\"
+rootdn \"cn=Manager,dc=example,dc=com\"
+rootpw astlinux
+
+directory /var/lib/ldap
+
+index objectClass eq,pres
+
+maxreaders 64
+maxsize 10485760
 "
 }
 
@@ -120,9 +74,11 @@ init () {
   if [ ! -d /var/lib/ldap ]; then
     mkdir -m 0700 -p /var/lib/ldap
   fi
-
-  if [ ! -f /mnt/kd/ldap-odbc.sqlite3 ]; then
-    gen_sqlite3_schema
+  if [ ! -d /mnt/kd/ldap ]; then
+    mkdir -m 0700 -p /mnt/kd/ldap
+  fi
+  if [ -d /mnt/kd/ldap ]; then
+    ln -sf /mnt/kd/ldap/data.mdb /var/lib/ldap/data.mdb
   fi
 }
 

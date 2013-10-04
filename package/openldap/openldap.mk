@@ -15,16 +15,15 @@ OPENLDAP_UNINSTALL_STAGING_OPT = --version
 OPENLDAP_CONF_OPT = \
 	--enable-shared \
 	--disable-static \
-	--enable-debug \
+	--disable-debug \
 	--enable-syslog \
 	--enable-ipv6 \
 	--with-tls \
-	--with-odbc=unixodbc \
 	--with-yielding_select=yes \
 	--without-fetch \
 	--without-cyrus-sasl \
 	--enable-slapd \
-	--enable-sql \
+	--enable-mdb \
 	--enable-null \
 	--disable-local \
 	--disable-bdb \

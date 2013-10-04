@@ -102,14 +102,6 @@ Database=/mnt/kd/cdr-sqlite3/cdr-odbc.sqlite3
 Timeout=2000
 "
   install_odbc_dsn "asterisk-cdr" "$DATA"
-
-  DATA="
-Description=LDAP database
-Driver=SQLite3
-Database=/mnt/kd/ldap-odbc.sqlite3
-Timeout=2000
-"
-  install_odbc_dsn "ldap" "$DATA"
 }
 
 stop () {
@@ -120,7 +112,6 @@ stop () {
   # Remove DSN's
   remove_odbc_dsn "asterisk"
   remove_odbc_dsn "asterisk-cdr"
-  remove_odbc_dsn "ldap"
 }
 
 case $1 in

@@ -99,9 +99,6 @@ if (is_file('/mnt/kd/cdr-sqlite3/cdr-odbc.sqlite3')) {
 if (is_file('/mnt/kd/cdr-sqlite3/master.db')) {
 	$databases[] = array( "path"=> "/mnt/kd/cdr-sqlite3/master.db", "name"=> "CDR SQLite3" );
 }
-if (is_file('/mnt/kd/ldap-odbc.sqlite3')) {
-	$databases[] = array( "path"=> "/mnt/kd/ldap-odbc.sqlite3", "name"=> "LDAP" );
-}
 //AstLinux// end of define database files
 
 
