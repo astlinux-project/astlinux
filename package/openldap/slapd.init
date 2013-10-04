@@ -32,10 +32,12 @@ CREATE TABLE 'ldap_attr_mappings' (
 
 CREATE TABLE 'ldap_entries' (
   'id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  'dn' TEXT UNIQUE NOT NULL,
-  'oc_map_id' INTEGER UNIQUE NOT NULL REFERENCES ldap_oc_mappings('id'),
+  'dn' TEXT NOT NULL,
+  'oc_map_id' INTEGER NOT NULL REFERENCES ldap_oc_mappings('id'),
   'parent' INTEGER NOT NULL,
-  'keyval' INTEGER UNIQUE NOT NULL
+  'keyval' INTEGER NOT NULL,
+  UNIQUE ( oc_map_id, keyval ),
+  UNIQUE ( dn )
 );
 
 CREATE TABLE 'ldap_entry_objclasses' (
