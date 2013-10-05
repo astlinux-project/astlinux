@@ -2,6 +2,8 @@
 
 . /etc/rc.conf
 
+LISTEN_URLS="ldap://"
+
 gen_slapd_conf()
 {
   local cert key
@@ -10,8 +12,8 @@ gen_slapd_conf()
 include /etc/openldap/schema/cosine.schema
 include /etc/openldap/schema/inetorgperson.schema
 
-pidfile /var/run/slapd.pid
-argsfile /var/run/slapd.args
+pidfile /var/run/slapd/slapd.pid
+argsfile /var/run/slapd/slapd.args
 "
 
   cert="${LDAP_SERVER_CERT:-/mnt/kd/ssl/sip-tls/keys/server.crt}"
@@ -20,6 +22,7 @@ argsfile /var/run/slapd.args
     echo "TLSCertificateFile $cert
 TLSCertificateKeyFile $key
 "
+    LISTEN_URLS="ldap:// ldaps://"
   else
     logger -t slapd -p kern.info "LDAP Server SSL configuration error, continuing..."
     logger -t slapd -p kern.info "Try generating an Asterisk SIP-TLS Server Certificate, which LDAP Server will use by default."
@@ -71,6 +74,8 @@ init () {
 
   chmod 600 /tmp/etc/openldap/slapd.conf
 
+  mkdir -p /var/run/slapd
+
   if [ ! -d /var/lib/ldap ]; then
     mkdir -m 0700 -p /var/lib/ldap
   fi
@@ -86,15 +91,15 @@ start () {
 
   if [ -f /etc/openldap/slapd.conf ]; then
     echo "Starting LDAP Server (slapd)..."
-    slapd
+    slapd -h "$LISTEN_URLS"
   fi
 }
 
 stop () {
 
-  if [ -f /var/run/slapd.pid ]; then
+  if [ -f /var/run/slapd/slapd.pid ]; then
     echo "Stopping LDAP Server (slapd)..."
-    kill $(cat /var/run/slapd.pid) >/dev/null 2>&1
+    kill $(cat /var/run/slapd/slapd.pid) >/dev/null 2>&1
   fi
 }
 
