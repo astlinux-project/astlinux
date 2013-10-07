@@ -10,7 +10,7 @@ add_system_default_users()
   local base="$1" user file IFS
 
   unset IFS
-  for user in zabbix prosody; do
+  for user in zabbix prosody ldap; do
     for file in passwd shadow group; do
       if ! grep -q "^${user}:" "/etc/${file}"; then
         grep "^${user}:" "${base}/etc/${file}" >> "/etc/${file}"

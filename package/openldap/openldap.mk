@@ -23,11 +23,11 @@ OPENLDAP_CONF_OPT = \
 	--without-fetch \
 	--without-cyrus-sasl \
 	--enable-slapd \
-	--enable-mdb \
 	--enable-null \
 	--disable-local \
 	--disable-bdb \
 	--disable-hdb \
+	--disable-mdb \
 	--disable-monitor \
 	--disable-relay
 

@@ -13,5 +13,6 @@ audio:x:29:
 video:x:44:
 users:x:100:
 prosody:x:130:
+ldap:x:439:
 zabbix:x:906:
 nobody:x:65535:

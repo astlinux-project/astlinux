@@ -2,8 +2,6 @@
 
 . /etc/rc.conf
 
-LISTEN_URLS="ldap://"
-
 gen_slapd_conf()
 {
   local cert key
@@ -14,15 +12,17 @@ include /etc/openldap/schema/inetorgperson.schema
 
 pidfile /var/run/slapd/slapd.pid
 argsfile /var/run/slapd/slapd.args
+
+logfile /var/log/slapd/slapd.log
+loglevel stats
 "
 
-  cert="${LDAP_SERVER_CERT:-/mnt/kd/ssl/sip-tls/keys/server.crt}"
-  key="${LDAP_SERVER_KEY:-/mnt/kd/ssl/sip-tls/keys/server.key}"
-  if [ -f "$cert" -a -f "$key" ]; then
+  cert="${LDAP_SERVER_CERT:-/mnt/kd/ldap/certs/server.crt}"
+  key="${LDAP_SERVER_KEY:-/mnt/kd/ldap/certs/server.key}"
+  if [ -f "$cert" -a -f "$key" ] && [ "$(stat -c '%U:%G' "$cert")" = "ldap:ldap" -a "$(stat -c '%U:%G' "$key")" = "ldap:ldap" ]; then
     echo "TLSCertificateFile $cert
 TLSCertificateKeyFile $key
 "
-    LISTEN_URLS="ldap:// ldaps://"
   else
     logger -t slapd -p kern.info "LDAP Server SSL configuration error, continuing..."
     logger -t slapd -p kern.info "Try generating an Asterisk SIP-TLS Server Certificate, which LDAP Server will use by default."
@@ -37,17 +37,11 @@ access to dn.subtree=\"ou=addressbook,dc=example,dc=com\"
        by users write
 "
 
-  echo "database mdb
+  echo "database ldif
 suffix \"dc=example,dc=com\"
 rootdn \"cn=Manager,dc=example,dc=com\"
 rootpw astlinux
-
 directory /var/lib/ldap
-
-index objectClass eq,pres
-
-maxreaders 64
-maxsize 10485760
 "
 }
 
@@ -58,6 +52,24 @@ init () {
       rm /tmp/etc/openldap/slapd.conf
     fi
     return
+  fi
+
+  if [ ! -d /mnt/kd/ldap/data ]; then
+    mkdir -m 0700 -p /mnt/kd/ldap/data
+    mkdir -m 0755 -p /mnt/kd/ldap/certs
+    chown -R ldap:ldap /mnt/kd/ldap
+  fi
+  ln -snf /mnt/kd/ldap/data /var/lib/ldap
+  chown ldap:ldap /var/lib/ldap
+
+  # Use SIP TLS certs if they exist and ours don't exist
+  if [ -f /mnt/kd/ssl/sip-tls/keys/server.crt ] && [ ! -f /mnt/kd/ldap/certs/server.crt ]; then
+    cp -a /mnt/kd/ssl/sip-tls/keys/server.crt /mnt/kd/ldap/certs/server.crt
+    chown ldap:ldap /mnt/kd/ldap/certs/server.crt
+  fi
+  if [ -f /mnt/kd/ssl/sip-tls/keys/server.key ] && [ ! -f /mnt/kd/ldap/certs/server.key ]; then
+    cp -a /mnt/kd/ssl/sip-tls/keys/server.key /mnt/kd/ldap/certs/server.key
+    chown ldap:ldap /mnt/kd/ldap/certs/server.key
   fi
 
   # Generate /etc/openldap/slapd.conf configuration file
@@ -73,25 +85,27 @@ init () {
   fi
 
   chmod 600 /tmp/etc/openldap/slapd.conf
+  chown ldap:ldap /tmp/etc/openldap/slapd.conf
 
   mkdir -p /var/run/slapd
+  chown ldap:ldap /var/run/slapd
 
-  if [ ! -d /var/lib/ldap ]; then
-    mkdir -m 0700 -p /var/lib/ldap
-  fi
-  if [ ! -d /mnt/kd/ldap ]; then
-    mkdir -m 0700 -p /mnt/kd/ldap
-  fi
-  if [ -d /mnt/kd/ldap ]; then
-    ln -sf /mnt/kd/ldap/data.mdb /var/lib/ldap/data.mdb
-  fi
+  mkdir -p /var/log/slapd
+  chown ldap:ldap /var/log/slapd
 }
 
 start () {
+  local LISTEN_URLS
 
   if [ -f /etc/openldap/slapd.conf ]; then
     echo "Starting LDAP Server (slapd)..."
-    slapd -h "$LISTEN_URLS"
+
+    if grep -q '^TLSCertificateKeyFile' /etc/openldap/slapd.conf; then
+      LISTEN_URLS="ldap:/// ldaps:///"
+    else
+      LISTEN_URLS="ldap:///"
+    fi
+    slapd -u ldap -g ldap -h "$LISTEN_URLS"
   fi
 }
 
