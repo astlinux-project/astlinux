@@ -23,11 +23,11 @@ OPENLDAP_CONF_OPT = \
 	--without-fetch \
 	--without-cyrus-sasl \
 	--enable-slapd \
+	--enable-mdb \
 	--enable-null \
 	--disable-local \
 	--disable-bdb \
 	--disable-hdb \
-	--disable-mdb \
 	--disable-monitor \
 	--disable-relay
 
@@ -37,6 +37,7 @@ define OPENLDAP_INSTALL_TARGET_SERVER
 	$(INSTALL) -D -m 0755 $(STAGING_DIR)/usr/libexec/slapd $(TARGET_DIR)/usr/sbin/
 	$(INSTALL) -D -m 0755 $(STAGING_DIR)/usr/bin/ldap* $(TARGET_DIR)/usr/bin/
 	$(INSTALL) -m 0755 -D package/openldap/slapd.init $(TARGET_DIR)/etc/init.d/slapd
+	$(INSTALL) -m 0444 -D package/openldap/schema/*.schema $(TARGET_DIR)/etc/openldap/schema/
 	ln -sf /tmp/etc/openldap/slapd.conf $(TARGET_DIR)/etc/openldap/slapd.conf
 	ln -sf ../../init.d/slapd $(TARGET_DIR)/etc/runlevels/default/S45slapd
 	ln -sf ../../init.d/slapd $(TARGET_DIR)/etc/runlevels/default/K16slapd

@@ -2,6 +2,15 @@
 
 . /etc/rc.conf
 
+gen_default_schema()
+{
+
+  slapd -T add <<EOF
+EOF
+
+  chown -H ldap:ldap /var/lib/ldap/*.mdb
+}
+
 gen_slapd_conf()
 {
   local cert key
@@ -9,6 +18,7 @@ gen_slapd_conf()
   echo "include /etc/openldap/schema/core.schema
 include /etc/openldap/schema/cosine.schema
 include /etc/openldap/schema/inetorgperson.schema
+include /etc/openldap/schema/mozillaOrgPerson.schema
 
 pidfile /var/run/slapd/slapd.pid
 argsfile /var/run/slapd/slapd.args
@@ -29,19 +39,31 @@ TLSCertificateKeyFile $key
   fi
 
   echo "disallow bind_anon
+access to attrs=userpassword
+      by self write
+      by anonymous auth
+      by * none
+access to dn.subtree="ou=addressbook,dc=example,dc=com"
+      by dn.exact="uid=directory,ou=users,dc=example,dc=com" read
+      by users write
+      by anonymous read
+      by * none
 access to *
-       by self write
-       by anonymous auth
-       by users read
-access to dn.subtree=\"ou=addressbook,dc=example,dc=com\"
-       by users write
+      by self write
+      by users read
+      by * none
 "
 
-  echo "database ldif
+  echo "database mdb
 suffix \"dc=example,dc=com\"
 rootdn \"cn=Manager,dc=example,dc=com\"
 rootpw astlinux
 directory /var/lib/ldap
+
+index objectClass eq,pres
+
+searchstack 8
+maxsize 10485760
 "
 }
 
@@ -54,13 +76,19 @@ init () {
     return
   fi
 
+  if [ ! -d /var/lib/ldap ]; then
+    mkdir -m 0700 -p /var/lib/ldap
+    chown ldap:ldap /var/lib/ldap
+  fi
   if [ ! -d /mnt/kd/ldap/data ]; then
     mkdir -m 0700 -p /mnt/kd/ldap/data
     mkdir -m 0755 -p /mnt/kd/ldap/certs
     chown -R ldap:ldap /mnt/kd/ldap
   fi
-  ln -snf /mnt/kd/ldap/data /var/lib/ldap
-  chown ldap:ldap /var/lib/ldap
+  ln -sf /mnt/kd/ldap/data/data.mdb /var/lib/ldap/data.mdb
+  if [ -f /mnt/kd/ldap/data/data.mdb ] && [ "$(stat -c '%U:%G' /mnt/kd/ldap/data/data.mdb)" != "ldap:ldap" ]; then
+    chown ldap:ldap /mnt/kd/ldap/data/data.mdb
+  fi
 
   # Use SIP TLS certs if they exist and ours don't exist
   if [ -f /mnt/kd/ssl/sip-tls/keys/server.crt ] && [ ! -f /mnt/kd/ldap/certs/server.crt ]; then
@@ -99,6 +127,11 @@ start () {
 
   if [ -f /etc/openldap/slapd.conf ]; then
     echo "Starting LDAP Server (slapd)..."
+
+    if [ ! -f /mnt/kd/ldap/data/data.mdb ]; then
+      echo "  Generating default LDAP schema..."
+      gen_default_schema
+    fi
 
     if grep -q '^TLSCertificateKeyFile' /etc/openldap/slapd.conf; then
       LISTEN_URLS="ldap:/// ldaps:///"
