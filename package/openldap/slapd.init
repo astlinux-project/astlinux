@@ -25,7 +25,7 @@ set_local_vars()
   if [ -n "$LDAP_SERVER_PASS" ]; then
     PASS="$(slapd -T passwd -s "$LDAP_SERVER_PASS")"
   else
-    pass="$(sed -n -r -e 's/^admin:(.*)$/\1/p' /var/www/admin/.htpasswd 2>/dev/null)"
+    pass="$(sed -n -r -e 's/^admin:(.*)$/\1/p' "${HTTPSDIR:-/stat/var/www}/admin/.htpasswd" 2>/dev/null)"
     if [ -n "$pass" ]; then
       PASS="{CRYPT}$pass"
     else
@@ -38,7 +38,7 @@ gen_default_schema()
 {
   local BASE="$1" pass dc STAFF_PW DIRECTORY_PW
 
-  pass="$(sed -n -r -e 's/^staff:(.*)$/\1/p' /var/www/admin/.htpasswd 2>/dev/null)"
+  pass="$(sed -n -r -e 's/^staff:(.*)$/\1/p' "${HTTPSDIR:-/stat/var/www}/admin/.htpasswd" 2>/dev/null)"
   if [ -n "$pass" ]; then
     STAFF_PW="{CRYPT}$pass"
   else
@@ -124,7 +124,6 @@ access to dn.subtree=\"ou=addressbook,${BASE}\"
       by * none
 access to *
       by self write
-      by users read
       by * none"
 
   echo "
