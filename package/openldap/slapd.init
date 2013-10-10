@@ -78,8 +78,6 @@ sn: Directory
 description: Addressbook read-only user
 userPassword: ${DIRECTORY_PW}
 " | slapd -T add
-
-  chown -H ldap:ldap /var/lib/ldap/*.mdb
 }
 
 gen_slapd_conf()
@@ -162,9 +160,6 @@ init () {
     chown -R ldap:ldap /mnt/kd/ldap
   fi
   ln -sf /mnt/kd/ldap/data/data.mdb /var/lib/ldap/data.mdb
-  if [ -f /mnt/kd/ldap/data/data.mdb ] && [ "$(stat -c '%U:%G' /mnt/kd/ldap/data/data.mdb)" != "ldap:ldap" ]; then
-    chown ldap:ldap /mnt/kd/ldap/data/data.mdb
-  fi
 
   # Use SIP TLS certs if they exist and ours don't exist
   if [ -f /mnt/kd/ssl/sip-tls/keys/server.crt ] && [ ! -f /mnt/kd/ldap/certs/server.crt ]; then
@@ -213,6 +208,14 @@ start () {
     if [ ! -f /mnt/kd/ldap/data/data.mdb ] || ! slapd -T cat -H "ldap:///???(ou=addressbook)" | grep -qi "^dn:.*ou=addressbook,${BASE}"; then
       echo "  Generating default LDAP schema for Base DN \"${BASE}\"..."
       gen_default_schema "$BASE"
+    fi
+
+    # Make sure MDB files have 'ldap' permissions
+    if [ -f /mnt/kd/ldap/data/data.mdb ] && [ "$(stat -c '%U:%G' /mnt/kd/ldap/data/data.mdb)" != "ldap:ldap" ]; then
+      chown ldap:ldap /mnt/kd/ldap/data/data.mdb
+    fi
+    if [ -f /var/lib/ldap/lock.mdb ]; then
+      chown ldap:ldap /var/lib/ldap/lock.mdb
     fi
 
     if grep -q '^TLSCertificateKeyFile' /etc/openldap/slapd.conf; then
