@@ -18,6 +18,7 @@ OPENLDAP_CONF_OPT = \
 	--disable-debug \
 	--enable-syslog \
 	--enable-ipv6 \
+	--enable-crypt \
 	--with-tls \
 	--with-yielding_select=yes \
 	--without-fetch \

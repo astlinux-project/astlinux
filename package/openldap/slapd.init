@@ -2,11 +2,82 @@
 
 . /etc/rc.conf
 
+set_local_vars()
+{
+  local i base pass IFS
+
+  if [ -n "$LDAP_SERVER_BASEDN" ]; then
+    BASE="$LDAP_SERVER_BASEDN"
+  else
+    if [ -n "$DOMAIN" ]; then
+      base=""
+      IFS='. '
+      for i in $DOMAIN; do
+        base="$base${base:+,}dc=$i"
+      done
+      unset IFS
+      BASE="$base"
+    else
+      BASE="astlinux"
+    fi
+  fi
+
+  if [ -n "$LDAP_SERVER_PASS" ]; then
+    PASS="$(slapd -T passwd -s "$LDAP_SERVER_PASS")"
+  else
+    pass="$(sed -n -r -e 's/^admin:(.*)$/\1/p' /var/www/admin/.htpasswd 2>/dev/null)"
+    if [ -n "$pass" ]; then
+      PASS="{CRYPT}$pass"
+    else
+      PASS=""
+    fi
+  fi
+}
+
 gen_default_schema()
 {
+  local BASE="$1" pass dc STAFF_PW DIRECTORY_PW
 
-  slapd -T add <<EOF
-EOF
+  pass="$(sed -n -r -e 's/^staff:(.*)$/\1/p' /var/www/admin/.htpasswd 2>/dev/null)"
+  if [ -n "$pass" ]; then
+    STAFF_PW="{CRYPT}$pass"
+  else
+    STAFF_PW="{SSHA}cCIf4iVXSEMZn5E/8xBMrSyggWmIIyOM"
+  fi
+
+  DIRECTORY_PW="{SSHA}cCIf4iVXSEMZn5E/8xBMrSyggWmIIyOM"
+
+  dc="$(echo "$BASE" | sed -n -r -e 's/^dc=([^,]*).*$/\1/p')"
+
+  echo "#
+dn: ${BASE}
+objectClass: dcObject
+objectClass: organization
+dc: ${dc}
+o: AstLinux LDAP Server
+
+dn: ou=addressbook,${BASE}
+objectClass: organizationalUnit
+ou: addressbook
+
+dn: ou=users,${BASE}
+objectClass: organizationalUnit
+ou: users
+
+dn: cn=staff,ou=users,${BASE}
+objectClass: person
+cn: staff
+sn: Staff
+description: Addressbook read/write user
+userPassword: ${STAFF_PW}
+
+dn: cn=directory,ou=users,${BASE}
+objectClass: person
+cn: directory
+sn: Directory
+description: Addressbook read-only user
+userPassword: ${DIRECTORY_PW}
+" | slapd -T add
 
   chown -H ldap:ldap /var/lib/ldap/*.mdb
 }
@@ -14,6 +85,8 @@ EOF
 gen_slapd_conf()
 {
   local cert key
+
+  set_local_vars
 
   echo "include /etc/openldap/schema/core.schema
 include /etc/openldap/schema/cosine.schema
@@ -24,40 +97,43 @@ pidfile /var/run/slapd/slapd.pid
 argsfile /var/run/slapd/slapd.args
 
 logfile /var/log/slapd/slapd.log
-loglevel stats
-"
+loglevel stats"
 
   cert="${LDAP_SERVER_CERT:-/mnt/kd/ldap/certs/server.crt}"
   key="${LDAP_SERVER_KEY:-/mnt/kd/ldap/certs/server.key}"
   if [ -f "$cert" -a -f "$key" ] && [ "$(stat -c '%U:%G' "$cert")" = "ldap:ldap" -a "$(stat -c '%U:%G' "$key")" = "ldap:ldap" ]; then
-    echo "TLSCertificateFile $cert
-TLSCertificateKeyFile $key
-"
+    echo "
+TLSCertificateFile $cert
+TLSCertificateKeyFile $key"
   else
     logger -t slapd -p kern.info "LDAP Server SSL configuration error, continuing..."
     logger -t slapd -p kern.info "Try generating an Asterisk SIP-TLS Server Certificate, which LDAP Server will use by default."
   fi
 
-  echo "disallow bind_anon
+  if [ "$LDAP_SERVER_ANONYMOUS" != "yes" ]; then
+    echo "
+disallow bind_anon"
+  fi
+  echo "
 access to attrs=userpassword
       by self write
       by anonymous auth
       by * none
-access to dn.subtree="ou=addressbook,dc=example,dc=com"
-      by dn.exact="uid=directory,ou=users,dc=example,dc=com" read
+access to dn.subtree=\"ou=addressbook,${BASE}\"
+      by dn.exact=\"cn=directory,ou=users,${BASE}\" read
       by users write
       by anonymous read
       by * none
 access to *
       by self write
       by users read
-      by * none
-"
+      by * none"
 
-  echo "database mdb
-suffix \"dc=example,dc=com\"
-rootdn \"cn=Manager,dc=example,dc=com\"
-rootpw astlinux
+  echo "
+database mdb
+suffix \"${BASE}\"
+rootdn \"cn=admin,${BASE}\"${PASS:+
+rootpw $PASS}
 directory /var/lib/ldap
 
 index objectClass eq,pres
@@ -123,14 +199,20 @@ init () {
 }
 
 start () {
-  local LISTEN_URLS
+  local LISTEN_URLS BASE
 
   if [ -f /etc/openldap/slapd.conf ]; then
     echo "Starting LDAP Server (slapd)..."
 
-    if [ ! -f /mnt/kd/ldap/data/data.mdb ]; then
-      echo "  Generating default LDAP schema..."
-      gen_default_schema
+    # Extract the first Base DN suffix
+    BASE="$(sed -n -r -e 's/^suffix.*"(.*)".*$/\1/p' /etc/openldap/slapd.conf | head -n1)"
+    if [ -z "$(echo "$BASE" | sed -n -r -e 's/^dc=([^,]*).*$/\1/p')" ]; then
+      echo "slapd: Invalid Base DN, slapd failed to start."
+      return;
+    fi
+    if [ ! -f /mnt/kd/ldap/data/data.mdb ] || ! slapd -T cat -H "ldap:///???(ou=addressbook)" | grep -qi "^dn:.*ou=addressbook,${BASE}"; then
+      echo "  Generating default LDAP schema for Base DN \"${BASE}\"..."
+      gen_default_schema "$BASE"
     fi
 
     if grep -q '^TLSCertificateKeyFile' /etc/openldap/slapd.conf; then
