@@ -89,6 +89,7 @@ gen_slapd_conf()
   echo "include /etc/openldap/schema/core.schema
 include /etc/openldap/schema/cosine.schema
 include /etc/openldap/schema/inetorgperson.schema
+include /etc/openldap/schema/mozillaAbPersonAlpha.schema
 include /etc/openldap/schema/mozillaOrgPerson.schema
 
 pidfile /var/run/slapd/slapd.pid
@@ -203,7 +204,7 @@ start () {
     BASE="$(sed -n -r -e 's/^suffix.*"(.*)".*$/\1/p' /etc/openldap/slapd.conf | head -n1)"
     if [ -z "$(echo "$BASE" | sed -n -r -e 's/^dc=([^,]*).*$/\1/p')" ]; then
       echo "slapd: Invalid Base DN, slapd failed to start."
-      return;
+      exit 1
     fi
     if [ ! -f /mnt/kd/ldap/data/data.mdb ] || ! slapd -T cat -H "ldap:///???(ou=addressbook)" | grep -qi "^dn:.*ou=addressbook,${BASE}"; then
       echo "  Generating default LDAP schema for Base DN \"${BASE}\"..."
