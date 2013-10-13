@@ -124,6 +124,7 @@ access to dn.subtree=\"ou=addressbook,${BASE}\"
       by * none
 access to *
       by self write
+      by dn.exact=\"cn=admin,${BASE}\" read
       by * none"
 
   echo "
