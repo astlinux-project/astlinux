@@ -3,7 +3,7 @@
 # libcurl
 #
 #############################################################
-LIBCURL_VERSION = 7.29.0
+LIBCURL_VERSION = 7.32.0
 LIBCURL_SOURCE = curl-$(LIBCURL_VERSION).tar.gz
 LIBCURL_SITE = http://curl.haxx.se/download
 LIBCURL_INSTALL_STAGING = YES
@@ -17,11 +17,15 @@ LIBCURL_CONF_ENV += ac_cv_lib_crypto_CRYPTO_lock=yes
 # Fix it by setting LD_LIBRARY_PATH to something sensible so those libs
 # are found first.
 LIBCURL_CONF_ENV += LD_LIBRARY_PATH=$$LD_LIBRARY_PATH:/lib:/usr/lib
-LIBCURL_CONF_OPT += --with-ssl=$(STAGING_DIR)/usr \
+LIBCURL_CONF_OPT += --with-ssl \
 	--with-random=/dev/urandom \
 	--with-ca-path=/usr/lib/ssl/certs
 else
 LIBCURL_CONF_OPT += --without-ssl
+endif
+
+ifeq ($(BR2_PACKAGE_OPENLDAP),y)
+LIBCURL_DEPENDENCIES += openldap
 endif
 
 LIBCURL_CONF_OPT += \
