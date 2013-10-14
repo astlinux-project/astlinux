@@ -4,7 +4,7 @@
 #
 #############################################################
 
-NANO_VERSION = 2.3.1
+NANO_VERSION = 2.3.2
 NANO_SITE = http://www.nano-editor.org/dist/v2.3
 NANO_MAKE_ENV = CURSES_LIB="-lncurses"
 NANO_DEPENDENCIES = ncurses
