@@ -1544,7 +1544,7 @@ class vcard_convert extends Contact_Vcard_Parse
 				$a_out['dn'] = sprintf("cn=%s,%s", $unique_cn_escaped, $identifier);
 			}
 
-			$a_out['objectclass'] = array('top', 'person', 'organizationalPerson', 'inetOrgPerson', 'mozillaOrgPerson');
+			$a_out['objectclass'] = array('top', 'person', 'organizationalPerson', 'inetOrgPerson', 'mozillaAbPersonAlpha');
 
 			if ($identifier == "") {
 				$a_out['cn'] = $card->displayname;
@@ -1607,9 +1607,9 @@ class vcard_convert extends Contact_Vcard_Parse
 			if ($card->work['phone'])
 				$a_out['telephoneNumber'] = $this->normalize_phone($card->work['phone']);
 			if ($card->work['fax'])
-				$a_out['fax'] = $this->normalize_phone($card->work['fax']);
+				$a_out['facsimileTelephoneNumber'] = $this->normalize_phone($card->work['fax']);
 			else if ($card->home['fax'])
-				$a_out['fax'] = $this->normalize_phone($card->home['fax']);
+				$a_out['facsimileTelephoneNumber'] = $this->normalize_phone($card->home['fax']);
 			if ($card->work['url'])
 				$a_out['mozillaWorkUrl'] = $card->work['url'];
 			if ($card->home['url'])
