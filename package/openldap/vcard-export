@@ -5,6 +5,7 @@
 //AstLinux// All code in one file, use name "vcard-export"
 //AstLinux// Default for 'ldap' format
 //AstLinux// Change -n option to -b for Base_DN
+//AstLinux// Add sanitize phone numbers option, -s
 
 /*
  +-----------------------------------------------------------------------+
@@ -922,6 +923,7 @@ class vcard_convert extends Contact_Vcard_Parse
 	var $mailonly = false;
 	var $phoneonly = false;
 	var $accesscode = null;
+	var $sanitize = false;  //AstLinux//
 	
 	
 	/**
@@ -1798,6 +1800,8 @@ class vcard_convert extends Contact_Vcard_Parse
 	{
 		if (strlen($this->accesscode))
 			$phone = preg_replace('/^[\+|00]+' . $this->accesscode . '[- ]*(\d+)/', '0\1', $phone);
+		if ($this->sanitize)
+			$phone = preg_replace('/[^0-9+]/', '', $phone);  //AstLinux//
 		return $phone;
 	}
 	
@@ -1990,21 +1994,24 @@ function get_args()
 // read commandline arguments
 $opt = get_args();
 $usage = <<<EOF
-Usage: vcard-export [-himpv] [-d delimiter] [-b Base_DN] [-o output_file] -f format file
-  -f Target format (ldif,*ldap*,csv,gmail,libdlusb,fritzbox)
-  -b Base LDAP identifier added to dn:
-  -o Output file (write to stdout by default)
-  -d CSV col delimiter
-  -h Include header line in CSV output
-  -i Convert CSV output to ISO-8859-1 encoding
-  -m Only convert cards with an e-mail address
-  -p Only convert cards with phone numbers
-  -v Verbose output
+Usage: vcard-export [-himpsv] [-d delimiter] [-b Base_DN] [-o output_file] [-f format] input_file
+
+Options:
+    -b  Base LDAP identifier added to dn:
+    -d  CSV col delimiter
+    -f  Target format (ldif,*ldap*,csv,gmail,libdlusb,fritzbox)
+    -h  Include header line in CSV output
+    -i  Convert CSV output to ISO-8859-1 encoding
+    -m  Only convert cards with an e-mail address
+    -o  Output file (write to stdout by default)
+    -p  Only convert cards with phone numbers
+    -s  Sanitize phone numbers to only include '0-9' and '+' characters
+    -v  Verbose output
 
 EOF;
 
 // show help
-if ($opt[0] == 'help')
+if ($opt[0] == 'help' || $opt[0] == '--help')
 	die($usage);
 
 // read arguments
@@ -2015,7 +2022,9 @@ if (empty($file))
 	die("Not enough arguments!\n$usage");
 
 // instantiate a parser object
-$conv = new vcard_convert(array('mailonly' => isset($opt['m']), 'phoneonly' => isset($opt['p'])));
+$conv = new vcard_convert(array('mailonly' => isset($opt['m']),
+				'phoneonly' => isset($opt['p']),
+				'sanitize' => isset($opt['s'])));
 
 // parse a vCard file
 if ($conv->fromFile($file))
