@@ -82,7 +82,7 @@ userPassword: ${DIRECTORY_PW}
 
 gen_slapd_conf()
 {
-  local cert key
+  local cert key ANONYMOUS
 
   set_local_vars
 
@@ -109,10 +109,24 @@ TLSCertificateKeyFile $key"
     logger -t slapd -p kern.info "Try generating an Asterisk SIP-TLS Server Certificate, which LDAP Server will use by default."
   fi
 
-  if [ "$LDAP_SERVER_ANONYMOUS" != "yes" ]; then
+  if [ "$LDAP_SERVER_ANONYMOUS" = "no" ]; then
+    ANONYMOUS=""
     echo "
 disallow bind_anon"
+  elif [ "$LDAP_SERVER_ANONYMOUS" = "yes" ]; then
+    ANONYMOUS="
+      by anonymous read"
+  elif [ "$IPV6" = "yes" ]; then     # "localhost"
+    ANONYMOUS="
+      by peername.ip=127.0.0.1 read
+      by peername.ipv6=::1 read
+      by anonymous none"
+  else
+    ANONYMOUS="
+      by peername.ip=127.0.0.1 read
+      by anonymous none"
   fi
+
   echo "
 access to attrs=userpassword
       by self write
@@ -120,8 +134,7 @@ access to attrs=userpassword
       by * none
 access to dn.subtree=\"ou=addressbook,${BASE}\"
       by dn.exact=\"cn=directory,ou=users,${BASE}\" read
-      by users write
-      by anonymous read
+      by users write${ANONYMOUS:+$ANONYMOUS}
       by * none
 access to *
       by self write
