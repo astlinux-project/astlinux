@@ -36,16 +36,19 @@ set_local_vars()
 
 gen_default_schema()
 {
-  local BASE="$1" pass dc STAFF_PW DIRECTORY_PW
+  local BASE="$1" pass dc STAFF_PW DIRECTORY_PW DEFAULT_PW
+
+  # Default password: astlinux
+  DEFAULT_PW="{SSHA}cCIf4iVXSEMZn5E/8xBMrSyggWmIIyOM"
 
   pass="$(sed -n -r -e 's/^staff:(.*)$/\1/p' "${HTTPSDIR:-/stat/var/www}/admin/.htpasswd" 2>/dev/null)"
   if [ -n "$pass" ]; then
     STAFF_PW="{CRYPT}$pass"
   else
-    STAFF_PW="{SSHA}cCIf4iVXSEMZn5E/8xBMrSyggWmIIyOM"
+    STAFF_PW="$DEFAULT_PW"
   fi
 
-  DIRECTORY_PW="{SSHA}cCIf4iVXSEMZn5E/8xBMrSyggWmIIyOM"
+  DIRECTORY_PW="$DEFAULT_PW"
 
   dc="$(echo "$BASE" | sed -n -r -e 's/^dc=([^,]*).*$/\1/p')"
 
@@ -208,10 +211,16 @@ init () {
 }
 
 start () {
-  local LISTEN_URLS BASE
+  local user LISTEN_URLS BASE
 
   if [ -f /etc/openldap/slapd.conf ]; then
     echo "Starting LDAP Server (slapd)..."
+
+    # Validate slapd.conf file
+    if ! slapd -T test -u >/dev/null 2>&1; then
+      echo "slapd: Invalid \"/etc/openldap/slapd.conf\" file, slapd failed to start."
+      exit 1
+    fi
 
     # Extract the first Base DN suffix
     BASE="$(sed -n -r -e 's/^suffix.*"(.*)".*$/\1/p' /etc/openldap/slapd.conf | head -n1)"
@@ -238,6 +247,14 @@ start () {
       LISTEN_URLS="ldap:///"
     fi
     slapd -u ldap -g ldap -h "$LISTEN_URLS"
+
+    # Check for default passwords
+    for user in staff directory; do
+      if ldapwhoami -D "cn=${user},ou=users,${BASE}" -w "astlinux" -H "ldap://127.0.0.1" >/dev/null 2>&1; then
+        echo "  WARNING: Default password in use for: cn=${user},ou=users,${BASE}"
+        echo "  Change password with: ldappasswd -D \"cn=${user},ou=users,${BASE}\" -W -S -H ldap://127.0.0.1"
+      fi
+    done
   fi
 }
 
