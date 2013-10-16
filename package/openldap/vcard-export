@@ -5,7 +5,7 @@
 //AstLinux// All code in one file, use name "vcard-export"
 //AstLinux// Default for 'ldap' format
 //AstLinux// Change -n option to -b for Base_DN
-//AstLinux// Add sanitize phone numbers option, -s
+//AstLinux// Add sanitize phone numbers option, -s and -S
 
 /*
  +-----------------------------------------------------------------------+
@@ -924,6 +924,7 @@ class vcard_convert extends Contact_Vcard_Parse
 	var $phoneonly = false;
 	var $accesscode = null;
 	var $sanitize = false;  //AstLinux//
+	var $sanitize_dash = false;  //AstLinux//
 	
 	
 	/**
@@ -1800,8 +1801,14 @@ class vcard_convert extends Contact_Vcard_Parse
 	{
 		if (strlen($this->accesscode))
 			$phone = preg_replace('/^[\+|00]+' . $this->accesscode . '[- ]*(\d+)/', '0\1', $phone);
-		if ($this->sanitize)
-			$phone = preg_replace('/[^0-9+]/', '', $phone);  //AstLinux//
+		//AstLinux//
+		if ($this->sanitize) {
+			$phone = preg_replace('/[^0-9+]/', '', $phone);
+		} elseif ($this->sanitize_dash) {
+			$phone = preg_replace('/[^0-9+]+/', '-', $phone);
+			$phone = preg_replace('/[^0-9+-]/', '', trim($phone, '-'));
+		}
+		//AstLinux//
 		return $phone;
 	}
 	
@@ -1994,7 +2001,7 @@ function get_args()
 // read commandline arguments
 $opt = get_args();
 $usage = <<<EOF
-Usage: vcard-export [-himpsv] [-d delimiter] [-b Base_DN] [-o output_file] [-f format] input_file
+Usage: vcard-export [-himpsSv] [-d delimiter] [-b Base_DN] [-o output_file] [-f format] input_file
 
 Options:
     -b  Base LDAP identifier added to dn:
@@ -2006,6 +2013,7 @@ Options:
     -o  Output file (write to stdout by default)
     -p  Only convert cards with phone numbers
     -s  Sanitize phone numbers to only include '0-9' and '+' characters
+    -S  Sanitize as with -s but also replace sequential non-numbers with a dash '-'
     -v  Verbose output
 
 EOF;
@@ -2024,7 +2032,8 @@ if (empty($file))
 // instantiate a parser object
 $conv = new vcard_convert(array('mailonly' => isset($opt['m']),
 				'phoneonly' => isset($opt['p']),
-				'sanitize' => isset($opt['s'])));
+				'sanitize' => isset($opt['s']),
+				'sanitize_dash' => isset($opt['S'])));
 
 // parse a vCard file
 if ($conv->fromFile($file))
