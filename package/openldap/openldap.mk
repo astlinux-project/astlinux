@@ -39,6 +39,7 @@ define OPENLDAP_INSTALL_TARGET_SERVER
 	$(INSTALL) -D -m 0755 $(STAGING_DIR)/usr/bin/ldap* $(TARGET_DIR)/usr/bin/
 	$(INSTALL) -m 0755 -D package/openldap/slapd.init $(TARGET_DIR)/etc/init.d/slapd
 	$(INSTALL) -m 0444 -D package/openldap/schema/*.schema $(TARGET_DIR)/etc/openldap/schema/
+	$(INSTALL) -m 0755 -D package/openldap/scripts/ldap* $(TARGET_DIR)/usr/bin/
 	$(INSTALL) -m 0755 -D package/openldap/vcard-export $(TARGET_DIR)/usr/sbin/
 	ln -sf /tmp/etc/openldap/slapd.conf $(TARGET_DIR)/etc/openldap/slapd.conf
 	ln -sf ../../init.d/slapd $(TARGET_DIR)/etc/runlevels/default/S45slapd

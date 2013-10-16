@@ -1,0 +1,120 @@
+#!/usr/bin/php -qC
+<?php
+
+// Function: LDAP_Client
+//
+function LDAP_Client($start_tls, &$uri, &$base) {
+
+  if (! function_exists('ldap_connect')) {
+    return(FALSE);
+  }
+
+  // begin - Custom variables
+  $user = '';
+  $pass = '';
+  $proto_version = 3;
+  $ms_ad = FALSE;       // Set to TRUE for Active Directory server
+  // end
+
+  $uri = '';
+  $base = '';
+  if (is_file($ldap_conf = '/etc/openldap/ldap.conf')) {
+    if (($lines = @file($ldap_conf, FILE_IGNORE_NEW_LINES)) !== FALSE) {
+      if (($grep = current(preg_grep('/^URI\s/', $lines))) !== FALSE) {
+        $uri = trim(substr($grep, 4));
+      }
+      if (($grep = current(preg_grep('/^BASE\s/', $lines))) !== FALSE) {
+        $base = trim(substr($grep, 5));
+      }
+    }
+  }
+  if ($uri === '') {
+    return(FALSE);
+  }
+
+  if (($client = ldap_connect($uri)) !== FALSE) {
+    if ($proto_version > 0) {
+      ldap_set_option($client, LDAP_OPT_PROTOCOL_VERSION, $proto_version);
+    }
+    if ($ms_ad) {
+      ldap_set_option($client, LDAP_OPT_REFERRALS, 0);
+    }
+    if ($start_tls && strncmp($uri, 'ldaps://', 8)) {  // Don't use together with ldaps://
+      if (! ldap_start_tls($client)) {
+        ldap_close($client);
+        return(FALSE);
+      }
+    }
+    if ($user !== '' && $pass !== '') {
+      $ok_bind = ldap_bind($client, $user, $pass);
+    } else {
+      $ok_bind = ldap_bind($client);
+    }
+    if (! $ok_bind) {
+      ldap_close($client);
+      return(FALSE);
+    }
+  }
+  return($client);
+}
+
+$rtn = 1;
+$tls = FALSE;    // Set to TRUE to not require --tls option, and default to TLS
+
+if ($argv[1] === '--tls') {
+  if ($argv[2] != '') {
+    $name = $argv[2];
+    $tls = TRUE;
+  } else {
+    exit($rtn);
+  }
+} elseif ($argv[1] != '') {
+  $name = $argv[1];
+} else {
+  exit($rtn);
+}
+
+if (($ldapconn = LDAP_Client($tls, $uri, $dn)) !== FALSE) {
+  
+  $filter = "(|(cn=$name)(displayname=$name))";
+  $justthese = array('cn', 'sn', 'givenname', 'displayname', 'telephonenumber', 'mobile', 'cellphone', 'homephone');
+
+  if (($sr = ldap_search($ldapconn, $dn, $filter, $justthese)) !== FALSE) {
+    $info = ldap_get_entries($ldapconn, $sr);
+
+    if (($n = $info['count']) > 0) {
+      $numbers = '';
+      for ($i = 0; $i < $n; $i++) {
+        if (($number = $info[$i]['telephonenumber'][0]) != '') {
+          $numbers .= ($numbers != '' ? '~' : '').$number;
+        }
+        if (($number = $info[$i]['mobile'][0]) != '') {
+          $numbers .= ($numbers != '' ? '~' : '').$number;
+        }
+        if (($number = $info[$i]['cellphone'][0]) != '') {
+          $numbers .= ($numbers != '' ? '~' : '').$number;
+        }
+        if (($number = $info[$i]['homephone'][0]) != '') {
+          $numbers .= ($numbers != '' ? '~' : '').$number;
+        }
+      }
+      if ($numbers != '') {
+        echo $numbers, "\n";
+        $rtn = 0;
+      }
+    } else {
+      // No Matches
+      $rtn = 4;
+    }
+  } else {
+    // LDAP Search Failed
+    $rtn = 3;
+  }
+  ldap_close($ldapconn);
+} else {
+  // LDAP Connection Failed
+  $rtn = 2;
+}
+
+exit($rtn);
+?>
