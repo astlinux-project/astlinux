@@ -49,6 +49,10 @@ dn: ou=addressbook,${BASE}
 objectClass: organizationalUnit
 ou: addressbook
 
+dn: ou=groups,${BASE}
+objectClass: organizationalUnit
+ou: groups
+
 dn: ou=users,${BASE}
 objectClass: organizationalUnit
 ou: users
@@ -121,7 +125,7 @@ access to attrs=userpassword
       by self write
       by anonymous auth
       by * none
-access to dn.subtree=\"ou=addressbook,${BASE}\"
+access to dn.regex=\"^([^,]+,)?ou=(groups|addressbook),${BASE}$\"
       by dn.exact=\"cn=directory,ou=users,${BASE}\" read
       by users write${ANONYMOUS:+$ANONYMOUS}
       by * none
