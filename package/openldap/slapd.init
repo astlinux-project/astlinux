@@ -4,23 +4,9 @@
 
 set_local_vars()
 {
-  local i base pass IFS
+  local i base pass
 
-  if [ -n "$LDAP_SERVER_BASEDN" ]; then
-    BASE="$LDAP_SERVER_BASEDN"
-  else
-    if [ -n "$DOMAIN" ]; then
-      base=""
-      IFS='. '
-      for i in $DOMAIN; do
-        base="$base${base:+,}dc=$i"
-      done
-      unset IFS
-      BASE="$base"
-    else
-      BASE="astlinux"
-    fi
-  fi
+  BASE="${LDAP_SERVER_BASEDN:-dc=ldap}"
 
   if [ -n "$LDAP_SERVER_PASS" ]; then
     PASS="$(slapd -T passwd -s "$LDAP_SERVER_PASS")"

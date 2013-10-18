@@ -1973,38 +1973,11 @@ function in_array_nc($needle, $haystack, $strict = false)
 // end of vcard_convert.php
 //
 
-/**
- * Parse commandline arguments into a hash array
- */
-function get_args()
-{
-	$args = array();
-	for ($i=1; $i<count($_SERVER['argv']); $i++)
-	{
-		$arg = $_SERVER['argv'][$i];
-		if ($arg{0} == '-' && $arg{1} != '-')
-		{
-			for ($j=1; $j < strlen($arg); $j++)
-			{
-				$key = $arg{$j};
-				$value = $_SERVER['argv'][$i+1]{0} != '-' ? preg_replace(array('/^["\']/', '/["\']$/'), '', $_SERVER['argv'][++$i]) : true;
-				$args[$key] = $value;
-			}
-		}
-		else
-			$args[] = $arg;
-	}
-
-	return $args;
-}
-
-// read commandline arguments
-$opt = get_args();
 $usage = <<<EOF
 Usage: vcard-export [-himpsSv] [-d delimiter] [-b Base_DN] [-o output_file] [-f format] input_file
 
 Options:
-    -b  Base LDAP identifier added to dn:
+    -b  Base LDAP identifier added to dn:, defaults to 'ou=addressbook,dc=ldap'
     -d  CSV col delimiter
     -f  Target format (ldif,*ldap*,csv,gmail,libdlusb,fritzbox)
     -h  Include header line in CSV output
@@ -2019,11 +1992,32 @@ Options:
 EOF;
 
 // show help
-if ($opt[0] == 'help' || $opt[0] == '--help')
+if ($argv[1] == 'help' || $argv[1] == '--help')
 	die($usage);
 
-// read arguments
-$file = array_pop($opt);
+// read commandline arguments
+$options = 'himpsSvd:b:o:f:';
+if (($opt = getopt($options)) === FALSE) {
+	die($usage);
+}
+foreach ($opt as $o => $a) {
+	foreach ($argv as $k => $aa) {
+		if (substr($aa, 0, 2) === '-'.$o) {
+			unset($argv[$k]);
+			if (strpos($options, $o.':') !== FALSE) {
+				if ($argv[$k + 1] === $a) {
+					unset($argv[$k + 1]);
+				}
+			}
+		}
+	}
+}
+$argv = array_merge($argv);
+if ($argv[1][0] === '-') {
+	die("Invalid option: ".$argv[1]."\n$usage");
+}
+
+$file = $argv[1];
 $format = $opt['f'] ? $opt['f'] : 'ldap';
 
 if (empty($file))
@@ -2048,7 +2042,7 @@ if ($conv->fromFile($file))
 
 		else if ($format == 'ldap')
 		{
-			$identifier = $opt['b'];
+			$identifier = $opt['b'] ? $opt['b'] : 'ou=addressbook,dc=ldap';
 			$out = $conv->toLdif($identifier);
 		}
 
