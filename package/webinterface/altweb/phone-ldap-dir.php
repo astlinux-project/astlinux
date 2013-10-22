@@ -163,17 +163,18 @@ if (($ldapconn = LDAP_Client($opts['tls'], $uri, $dn)) !== FALSE) {
 
     if (($n = $info['count']) > 0) {
       for ($i = 0; $i < $n; $i++) {
+        $numbers = array();
         if (($number = $info[$i]['telephonenumber'][0]) != '') {
-          ;
-        } elseif (($number = $info[$i]['mobile'][0]) != '') {
-          ;
-        } elseif (($number = $info[$i]['cellphone'][0]) != '') {
-          ;
-        } elseif (($number = $info[$i]['homephone'][0]) != '') {
-          ;
+          $numbers[] = extract_dialing_digits($number, $opts['type']);
         }
-        if ($number != '') {
-          $number = extract_dialing_digits($number, $opts['type']);
+        if (($number = $info[$i]['mobile'][0]) != '') {
+          $numbers[] = extract_dialing_digits($number, $opts['type']);
+        }
+        if (($number = $info[$i]['cellphone'][0]) != '') {
+          $numbers[] = extract_dialing_digits($number, $opts['type']);
+        }
+        if (($number = $info[$i]['homephone'][0]) != '') {
+          $numbers[] = extract_dialing_digits($number, $opts['type']);
         }
 
         if (($value = $info[$i]['displayname'][0]) != '') {
@@ -189,23 +190,31 @@ if (($ldapconn = LDAP_Client($opts['tls'], $uri, $dn)) !== FALSE) {
           $value = htmlspecialchars(ldap_utf8_decode($value, $opts['type']));
         }
 
-        if ($number != '' && $value != '') {
+        if (isset($numbers[0]) && $numbers[0] != '' && $value != '') {
           if ($opts['type'] === 'aastra') {
             buildData('<MenuItem>');
             buildData('<Prompt>'.$value.'</Prompt>');
-            buildData('<URI>'.$number.'</URI>');
+            buildData('<URI>'.$numbers[0].'</URI>');
             buildData('</MenuItem>');
-          } elseif ($opts['type'] === 'yealink' || $opts['type'] === 'snom') {
+          } elseif ($opts['type'] === 'yealink') {
             buildData('<DirectoryEntry>');
             buildData('<Name>'.$value.'</Name>');
-            buildData('<Telephone>'.$number.'</Telephone>');
+            foreach ($numbers as $number) {
+              buildData('<Telephone>'.$number.'</Telephone>');
+            }
+            buildData('</DirectoryEntry>');
+          } elseif ($opts['type'] === 'snom') {
+            buildData('<DirectoryEntry>');
+            buildData('<Name>'.$value.'</Name>');
+            buildData('<Telephone>'.$numbers[0].'</Telephone>');
             buildData('</DirectoryEntry>');
           } elseif ($opts['type'] === 'polycom') {
-            buildData('<p><a href="tel://'.$number.'">'.$number.'</a> '.$value.'</p>');
+            buildData('<p><a href="tel://'.$numbers[0].'">'.$numbers[0].'</a> '.$value.'</p>');
           } else {
-            buildData('<li><a href="tel://'.$number.'">'.$number.'</a> '.$value.'</li><br />');
+            buildData('<li><a href="tel://'.$numbers[0].'">'.$numbers[0].'</a> '.$value.'</li><br />');
           }
         }
+        unset($numbers);
       }
     } else {
       buildData('<p>No Matches</p>');
