@@ -30,6 +30,7 @@ $select_reload = array (
   'racoon' => 'Restart IPsec VPN',
   'pptpd' => 'Restart PPTP VPN Server',
   'ldap' => 'Reload LDAP Client',
+  'slapd' => 'Restart LDAP Server',
   'snmpd' => 'Restart SNMP Server',
   'stunnel' => 'Restart Stunnel Proxy',
   'miniupnpd' => 'Restart Univ. Plug\'n\'Play',
@@ -51,6 +52,7 @@ $sys_label = array (
   'ntpd.conf' => 'NTP Time Client/Server',
   'sshd.conf' => 'SSH Server sshd_config',
   'ldap.conf' => 'LDAP Client System Defaults',
+  'slapd.conf' => 'LDAP Server Configuration',
   'lighttpd.conf' => 'Web Server Configuration',
   'sensors.conf' => 'Lm_sensors Hardware Monitoring',
   'zaptel.conf' => 'Zaptel System Config',
@@ -234,6 +236,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 41, $result, 'init');
       } elseif ($process === 'FOP2') {
         $result = restartPROCESS('fop2', 42, $result, 'reload');
+      } elseif ($process === 'slapd') {
+        $result = restartPROCESS($process, 43, $result, 'init');
       } elseif ($process === 'cron') {
         $result = updateCRON('root', 30, $result);
       }
@@ -358,6 +362,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Asterisk Flash Operating Panel2 has Restarted.</p>');
     } elseif ($result == 42) {
       putHtml('<p style="color: green;">Asterisk Flash Operating Panel2 has been Reloaded.</p>');
+    } elseif ($result == 43) {
+      putHtml('<p style="color: green;">LDAP Server has Restarted.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {

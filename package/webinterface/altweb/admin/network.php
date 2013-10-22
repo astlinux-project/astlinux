@@ -32,6 +32,7 @@
 // 01-28-2012, Added LOCALDNS_LOCAL_DOMAIN support
 // 07-07-2012, Added Universal Plug & Play support
 // 09-23-2013, Added ddclient support
+// 10-21-2013, Added LDAP server support
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -824,6 +825,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/siptlscert.php');
     exit;
+  } elseif (isset($_POST['submit_slapd'])) {
+    $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
+    if (is_writable($file = '/mnt/kd/slapd.conf')) {
+      header('Location: /admin/edit.php?file='.$file);
+    } else {
+      header('Location: /admin/slapd.php');
+    }
+    exit;
   } elseif (isset($_POST['submit_xmpp'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/xmpp.php');
@@ -953,6 +962,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 41, $result, 'init');
       } elseif ($process === 'FOP2') {
         $result = restartPROCESS('fop2', 42, $result, 'reload');
+      } elseif ($process === 'slapd') {
+        $result = restartPROCESS($process, 43, $result, 'init');
       }
     } else {
       $result = 2;
@@ -1035,6 +1046,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Asterisk Flash Operating Panel2 has Restarted.</p>');
     } elseif ($result == 42) {
       putHtml('<p style="color: green;">Asterisk Flash Operating Panel2 has been Reloaded.</p>');
+    } elseif ($result == 43) {
+      putHtml('<p style="color: green;">LDAP Server has Restarted.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 100) {
@@ -1114,6 +1127,8 @@ require_once '../common/header.php';
   putHtml('<option value="pptpd"'.$sel.'>Restart PPTP VPN Server</option>');
   $sel = ($reboot_restart === 'ldap') ? ' selected="selected"' : '';
   putHtml('<option value="ldap"'.$sel.'>Reload LDAP Client</option>');
+  $sel = ($reboot_restart === 'slapd') ? ' selected="selected"' : '';
+  putHtml('<option value="slapd"'.$sel.'>Restart LDAP Server</option>');
   $sel = ($reboot_restart === 'snmpd') ? ' selected="selected"' : '';
   putHtml('<option value="snmpd"'.$sel.'>Restart SNMP Server</option>');
   $sel = ($reboot_restart === 'stunnel') ? ' selected="selected"' : '';
@@ -1507,6 +1522,11 @@ require_once '../common/header.php';
   putHtml('XMPP Server, Messaging and Presence:');
   putHtml('<input type="submit" value="Configure XMPP" name="submit_xmpp" class="button" /></td></tr>');
 
+  if (is_file('/etc/init.d/slapd')) {
+    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+    putHtml('LDAP Server, Directory Information:');
+    putHtml('<input type="submit" value="Configure LDAP Server" name="submit_slapd" class="button" /></td></tr>');
+  }
   if (is_file('/etc/init.d/snmpd') && is_file('/mnt/kd/snmp/snmpd.conf')) {
     putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
     putHtml('SNMP&nbsp;Agent&nbsp;Server:');

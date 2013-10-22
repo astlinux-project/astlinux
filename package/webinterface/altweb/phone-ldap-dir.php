@@ -154,7 +154,7 @@ if (($ldapconn = LDAP_Client($opts['tls'], $uri, $dn)) !== FALSE) {
   
   $name = $opts['search'];
   $filter = "(|(sn=$name*)(givenname=$name*))";
-  $justthese = array('cn', 'sn', 'givenname', 'displayname', 'telephonenumber', 'mobile', 'cellphone');
+  $justthese = array('cn', 'sn', 'givenname', 'displayname', 'telephonenumber', 'mobile', 'cellphone', 'homephone');
 
   if (($sr = ldap_search($ldapconn, $dn, $filter, $justthese)) !== FALSE) {
     ldap_sort($ldapconn, $sr, 'givenname');
@@ -168,6 +168,8 @@ if (($ldapconn = LDAP_Client($opts['tls'], $uri, $dn)) !== FALSE) {
         } elseif (($number = $info[$i]['mobile'][0]) != '') {
           ;
         } elseif (($number = $info[$i]['cellphone'][0]) != '') {
+          ;
+        } elseif (($number = $info[$i]['homephone'][0]) != '') {
           ;
         }
         if ($number != '') {
