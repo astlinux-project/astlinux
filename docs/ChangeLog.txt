@@ -34,7 +34,7 @@ Released **TBD**
 -- slapd, added LDAP server, automatic configuration for ou=addressbook to be used by IP Phones and various LDAP clients.
    Note: Admin user is cn=admin, Staff read/write user is cn=staff,ou=users and Directory read-only user is cn=directory,ou=users
          Be certain you understand the default password settings for the various users before deployment.
-   More Info: http://doc.astlinux.org/userdoc:tt_asterisk-fop2
+   More Info: http://doc.astlinux.org/userdoc:tt-ldap-server
 
 -- libcurl (curl) version bump to 7.32.0, (security fixes: CVE-2013-1944, CVE-2013-2174) and bug fixes.
 
