@@ -22,7 +22,7 @@ OpenVPN~Copyright (c) 2002-2012 OpenVPN Technologies, Inc. <sales@openvpn.net>
 PHP~Copyright (c) 1999-2013 The PHP Group. All rights reserved.
 ntpd~Copyright (c) 1992-2009 David L. Mills.
 vsftpd~Copyright (c) 2001 Daniel Jacobowitz. <dan@debian.org>
-lighttpd~Copyright (c) 2004-2012, Jan Kneschke.
+lighttpd~Copyright (c) 2004-2013, Jan Kneschke.
 radvd~Copyright (c) 1996-2012 by Lars Fenneberg <lf@elemental.net>
 msmtp~Copyright (c) 2000-2012 Martin Lambers <marlam@marlam.de>
 libxml2~Copyright (c) 1998-2012 Daniel Veillard. All Rights Reserved.
@@ -32,15 +32,17 @@ iptables~Copyright (c) 2000-2012 by the netfilter coreteam <coreteam@netfilter.o
 curl~Copyright (c) 1996-2011 Daniel Stenberg, <daniel@haxx.se>.
 mDNS~Copyright (c) 2002-2004 Apple Computer, Inc. All rights reserved.
 rp-pppoe~Copyright (c) 2001-2012 Roaring Penguin Software Inc.
-zabbix~Copyright (c) 2000-2012 SIA Zabbix.
+zabbix~Copyright (c) 2000-2013 SIA Zabbix.
 zlib~Copyright (c) 1995-2005 Jean-loup Gailly.
 MS-Win Installer~Copyright (c) 2010-2011 Tom Chadwin, Nullsoft, et al.
 SILK CODEC~Copyright (c) 2010-2012 Skype and/or Microsoft. All rights reserved. Licensed via Digium, Inc.
 SpanDSP~Copyright (c) 2003-2012 Steve Underwood <steveu@coppice.org>. All rights reserved.
-Prosody~Copyright (c) 2008-2010 Matthew Wild and Waqas Hussain.
+Prosody~Copyright (c) 2008-2013 Matthew Wild and Waqas Hussain.
 clix~Copyright (c) 2008-2013 Matthew Wild.
 Lua~Copyright (c) 1994-2012 Lua.org, PUC-Rio.  All rights reserved.
-perl~Copyright (c) 1987-2012 by Larry Wall, et al.
+perl~Copyright (c) 1987-2013 by Larry Wall, et al.
 phpliteadmin~Copyright (c) 2011-2013 phpLiteAdmin (http://phpliteadmin.googlecode.com)
 FOP2~Copyright (c) 2009-2013 House Internet S.R.L. (http://www.fop2.com)
 ddclient~Copyright (c) 1999-2013 Paul Burry, wimpunk, et al.
+vCard converter~Copyright (c) 2006-2013 Thomas Bruederli <thomas@brotherli.ch>
+OpenLDAP~Copyright (c) 1998-2013 The OpenLDAP Foundation. All rights reserved.
