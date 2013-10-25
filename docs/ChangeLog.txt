@@ -44,6 +44,8 @@ Released **TBD**
 
 -- lighttpd, version bump to 1.4.33, bug fixes
 
+-- radvd, version bump to 1.9.5
+
 ** Asterisk
 
 -- Asterisk 1.8.24.0 (version bump) and 11.6.0 (version bump)
