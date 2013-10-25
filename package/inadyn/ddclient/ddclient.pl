@@ -2992,7 +2992,7 @@ sub nic_zoneedit1_update {
 		    $status_text = $var{'TEXT'} if exists $var{'TEXT'};
 		    $status_ip   = $var{'IP'}   if exists $var{'IP'};
 
-		    if ($status eq 'SUCCESS' || ($status eq 'ERROR' && $var{'CODE'} eq '707')) {
+		    if ($status eq 'SUCCESS' || ($status eq 'ERROR' && ($var{'CODE'} eq '707' || $var{'CODE'} eq '702'))) {
 			$config{$h}{'ip'}     = $status_ip;
 			$config{$h}{'mtime'}  = $now;
 	    		$config{$h}{'status'} = 'good';
