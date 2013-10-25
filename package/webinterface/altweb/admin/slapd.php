@@ -26,6 +26,11 @@ $anonymous_menu = array (
   'no' => 'access disabled'
 );
 
+$users_menu = array (
+  'directory' => 'cn=directory,ou=users',
+  'staff' => 'cn=staff,ou=users'
+);
+
 // Function: saveSLAPDsettings
 //
 function saveSLAPDsettings($conf_dir, $conf_file) {
@@ -57,12 +62,57 @@ function saveSLAPDsettings($conf_dir, $conf_file) {
   return($result);
 }
 
+// Function set_LDAP_user_passwd()
+//
+function set_LDAP_user_passwd($rootpw, $pass1, $pass2, $user, $minlen) {
+  $result = 1;
+
+  if ($rootpw !== '') {
+    if (strlen($pass1) > $minlen) {
+      if ($pass1 === $pass2) {
+        $result = 21;
+        $admin = tempnam("/var/tmp", "PHP_");
+        $newpass = tempnam("/var/tmp", "PHP_");
+        $cmd = '. /etc/rc.conf; ';
+        $cmd .= '/usr/bin/ldappasswd -x -D "cn=admin,${LDAP_SERVER_BASEDN:-dc=ldap}" -H ldap://127.0.0.1 ';
+        $cmd .= '-y '.$admin.' -T '.$newpass.' "cn='.$user.',ou=users,${LDAP_SERVER_BASEDN:-dc=ldap}"';
+        @file_put_contents($admin, $rootpw);
+        @file_put_contents($newpass, $pass1);
+        shell($cmd.' >/dev/null 2>/dev/null', $status);
+        @unlink($newpass);
+        @unlink($admin);
+        if ($status == 0) {
+          syslog(LOG_WARNING, 'LDAP "cn='.$user.',ou=users" password changed.  Remote Address: '.$_SERVER['REMOTE_ADDR']);
+          $result = 20;
+        }
+      } else {
+        $result = 22;
+      }
+    } else {
+      $result = 23;
+    }
+  } else {
+    $result = 24;
+  }
+  return($result);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
     $result = 999;                                 
-  } elseif (isset($_POST['submit_save'])) {
+  } elseif (isset($_POST['submit_save']) || isset($_POST['submit_password'])) {
     $result = saveSLAPDsettings($SLAPDCONFDIR, $SLAPDCONFFILE);
+    if (isset($_POST['rootpw'], $_POST['pass1'], $_POST['pass2'])) {
+      $rootpw = tuqd($_POST['rootpw']);
+      $pass1 = tuqd($_POST['pass1']);
+      $pass2 = tuqd($_POST['pass2']);
+      if (isset($_POST['submit_password']) || ($pass1 !== '' && $pass2 !== '')) {
+        if (($user = $_POST['username']) !== '') {
+          $result = set_LDAP_user_passwd($rootpw, $pass1, $pass2, $user, 4);
+        }
+      }
+    }
   } elseif (isset($_POST['submit_restart'])) {
     $result = 99;
     if (isset($_POST['confirm_restart'])) {
@@ -98,6 +148,16 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">LDAP Server has Restarted.</p>');
     } elseif ($result == 11) {
       putHtml('<p style="color: green;">Settings saved, click "Restart LDAP" to apply any changed settings.</p>');
+    } elseif ($result == 20) {
+      putHtml('<p style="color: green;">"ou=users" password successfully changed.</p>');
+    } elseif ($result == 21) {
+      putHtml('<p style="color: red;">"ou=users" password failed to be changed.</p>');
+    } elseif ($result == 22) {
+      putHtml('<p style="color: red;">Passwords do not match.</p>');
+    } elseif ($result == 23) {
+      putHtml('<p style="color: red;">Password too short.</p>');
+    } elseif ($result == 24) {
+      putHtml('<p style="color: red;">"cn=admin" Password not specified.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {
@@ -124,7 +184,7 @@ require_once '../common/header.php';
   <input type="checkbox" value="restart" name="confirm_restart" />&nbsp;Confirm
   </td></tr></table>
   <table class="stdtable">
-  <tr class="dtrow0"><td width="60">&nbsp;</td><td width="100">&nbsp;</td><td width="100">&nbsp;</td><td>&nbsp;</td><td width="100">&nbsp;</td><td width="80">&nbsp;</td></tr>
+  <tr class="dtrow0"><td width="60">&nbsp;</td><td width="100">&nbsp;</td><td width="50">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td width="60">&nbsp;</td></tr>
 <?php
 if (! is_file('/mnt/kd/ssl/sip-tls/keys/server.crt') || ! is_file('/mnt/kd/ssl/sip-tls/keys/server.key')) {
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
@@ -175,13 +235,42 @@ if (! is_file('/mnt/kd/ssl/sip-tls/keys/server.crt') || ! is_file('/mnt/kd/ssl/s
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
-  putHtml('Admin Password<br />cn=admin:');
+  putHtml('Admin Password<br />"cn=admin":');
   putHtml('</td><td style="text-align: left;" colspan="4">');
-  $value = getVARdef($db, 'LDAP_SERVER_PASS');
-  $value = htmlspecialchars(RCconfig2string($value));
-  putHtml('<input type="password" size="56" maxlength="128" name="slapd_admin_pass" value="'.$value.'" />');
+  $rootpw = getVARdef($db, 'LDAP_SERVER_PASS');
+  $rootpw = htmlspecialchars(RCconfig2string($rootpw));
+  putHtml('<input type="password" size="56" maxlength="128" name="slapd_admin_pass" value="'.$rootpw.'" />');
   putHtml('<i><br />(defaults to web interface "admin" password)</i>');
   putHtml('</td></tr>');
+
+if (is_file('/var/run/slapd/slapd.pid')) {
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>Set "ou=users" Passwords:</strong>');
+  putHtml('</td></tr>');
+  putHtml('<tr><td style="text-align: right;" colspan="2">');
+  putHtml('"cn=admin" Password:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  putHtml('<input type="password" size="56" maxlength="128" name="rootpw" value="'.$rootpw.'" />');
+  putHtml('</td></tr>');
+  putHtml('<tr><td style="text-align: right;" colspan="2">');
+  putHtml('New Password:');
+  putHtml('</td><td style="text-align: left;" colspan="2">');
+  putHtml('<input type="password" size="18" maxlength="128" name="pass1" value="" />');
+  putHtml('</td><td style="text-align: center;" colspan="2">');
+  putHtml('<select name="username">');
+  foreach ($users_menu as $key => $value) {
+    putHtml('<option value="'.$key.'">'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+  putHtml('<tr><td style="text-align: right;" colspan="2">');
+  putHtml('Confirm Password:');
+  putHtml('</td><td style="text-align: left;" colspan="2">');
+  putHtml('<input type="password" size="18" maxlength="128" name="pass2" value="" />');
+  putHtml('</td><td style="text-align: center;" colspan="2">');
+  putHtml('<input type="submit" value="Set Password" name="submit_password" />');
+  putHtml('</td></tr>');
+}
 
   putHtml('</table>');
   putHtml('</form>');
