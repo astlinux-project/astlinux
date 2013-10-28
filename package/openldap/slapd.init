@@ -131,7 +131,7 @@ access to dn.regex=\"^([^,]+,)?ou=(groups|addressbook),${BASE}$\"
       by * none
 access to *
       by self write
-      by dn.exact=\"cn=admin,${BASE}\" read
+      by dn.exact=\"cn=admin,${BASE}\" write
       by * none"
 
   echo "
@@ -240,9 +240,9 @@ start () {
 
     # Check for default passwords
     for user in staff directory; do
-      if ldapwhoami -D "cn=${user},ou=users,${BASE}" -w "astlinux" -H "ldap://127.0.0.1" >/dev/null 2>&1; then
+      if ldapwhoami -x -D "cn=${user},ou=users,${BASE}" -w "astlinux" -H "ldap://127.0.0.1" >/dev/null 2>&1; then
         echo "  WARNING: Default password in use for: cn=${user},ou=users,${BASE}"
-        echo "  Change password with: ldappasswd -D \"cn=${user},ou=users,${BASE}\" -W -S -H ldap://127.0.0.1"
+        echo "  Change password with: ldappasswd -xW -D \"cn=admin,${BASE}\" -H ldap://127.0.0.1 -S \"cn=${user},ou=users,${BASE}\""
       fi
     done
   fi
