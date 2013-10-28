@@ -851,6 +851,7 @@ if (is_file('/usr/sbin/upgrade-RUNNIX-image')) {
           $var === 'DDPASS' ||
           $var === 'GUI_FIREWALL_RULES' ||
           $var === 'STATICHOSTS' ||
+          $var === 'LDAP_SERVER_PASS' ||
           $var === 'PPTP_USER_PASS' ||
           $var === 'OVPN_USER_PASS' ||
           $var === 'OVPNC_USER_PASS' ||

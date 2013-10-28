@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $pass2 = tuqd($_POST['pass2']);
       if (isset($_POST['submit_password']) || ($pass1 !== '' && $pass2 !== '')) {
         if (($user = $_POST['username']) !== '') {
-          $result = set_LDAP_user_passwd($rootpw, $pass1, $pass2, $user, 4);
+          $result = set_LDAP_user_passwd($rootpw, $pass1, $pass2, $user, 3);
         }
       }
     }
@@ -250,7 +250,12 @@ if (is_file('/var/run/slapd/slapd.pid')) {
   putHtml('<tr><td style="text-align: right;" colspan="2">');
   putHtml('"cn=admin" Password:');
   putHtml('</td><td style="text-align: left;" colspan="4">');
-  putHtml('<input type="password" size="56" maxlength="128" name="rootpw" value="'.$rootpw.'" />');
+  if ($rootpw !== '') {
+    putHtml('**********');
+    putHtml('<input type="hidden" name="rootpw" value="'.$rootpw.'" />');
+  } else {
+    putHtml('<input type="password" size="18" maxlength="128" name="rootpw" value="'.$rootpw.'" />');
+  }
   putHtml('</td></tr>');
   putHtml('<tr><td style="text-align: right;" colspan="2">');
   putHtml('New Password:');

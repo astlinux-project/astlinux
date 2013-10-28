@@ -419,6 +419,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'tab_sqldata_disable_staff = no';
       fwrite($fp, $value."\n");
     }
+    if (isset($_POST['tab_ldapab'])) {
+      $value = 'tab_ldapab_show = yes';
+      fwrite($fp, $value."\n");
+    }
     if (isset($_POST['tab_users'])) {
       $value = 'tab_users_show = yes';
       fwrite($fp, $value."\n");
@@ -1104,6 +1108,10 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td>&nbsp;</td><td colspan="5">');
   $sel = (getPREFdef($global_prefs, 'tab_sqldata_disable_staff') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="sqldata_disable_staff" name="sqldata_disable_staff"'.$sel.' />&nbsp;Disable SQL-Data Tab for &quot;staff&quot; user</td></tr>');
+  
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'tab_ldapab_show') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="tab_ldapab" name="tab_ldapab"'.$sel.' /></td><td colspan="5">Show LDAP-AB Tab</td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_users_show') === 'yes') ? ' checked="checked"' : '';
