@@ -64,6 +64,8 @@ Released **TBD**
 
 -- phone-ldap-dir.php, now supports multiple <Telephone> tags for type=yealink
 
+-- LDAP-AB tab, new addition for managing the LDAP Address Book, export LDIF files and import LDIF and vCard files.
+
 
 Additions for AstLinux 1.1.3:
 =============================
