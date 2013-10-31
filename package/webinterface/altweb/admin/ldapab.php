@@ -82,29 +82,25 @@ function revertLDIF($rootpw, $ou) {
   $admin = tempnam("/var/tmp", "PHP_");
   $auth = '-x -D "cn=admin,'.$bdn.'" -H ldap://127.0.0.1 -y '.$admin;
   $cmd  = '/usr/bin/ldapsearch '.$auth.' -b "ou='.$ou_old.','.$bdn.'" -LLL "(ou='.$ou_old.')"';
+  $cmd .= ' >/dev/null 2>/dev/null ; rtn=$? ; [ $rtn -ne 0 ] && exit $rtn ; ';
+  $cmd .= '/usr/bin/ldapdelete '.$auth.' -r "ou='.$ou_tmp.','.$bdn.'"';
+  $cmd .= ' >/dev/null 2>/dev/null ; ';
+  $cmd .= '/usr/bin/ldapmodrdn '.$auth.' -r "ou='.$ou.','.$bdn.'" "ou='.$ou_tmp.'"';
+  $cmd .= ' >/dev/null 2>/dev/null ; ';
+  $cmd .= '/usr/bin/ldapmodrdn '.$auth.' -r "ou='.$ou_old.','.$bdn.'" "ou='.$ou.'"';
+  $cmd .= ' >/dev/null 2>/dev/null ; ';
+  $cmd .= '/usr/bin/ldapmodrdn '.$auth.' -r "ou='.$ou_tmp.','.$bdn.'" "ou='.$ou_old.'"';
   @file_put_contents($admin, $rootpw);
-  shell($cmd.' >/dev/null 2>/dev/null', $status);
-  if ($status != 0) {
-    @unlink($admin);
-    if ($status == 49) {
-      return(28);
-    }
-    return(31);
-  } else {
-    $cmd  = '/usr/bin/ldapdelete '.$auth.' -r "ou='.$ou_tmp.','.$bdn.'"';
-    $cmd .= ' >/dev/null 2>/dev/null ; ';
-    $cmd .= '/usr/bin/ldapmodrdn '.$auth.' -r "ou='.$ou.','.$bdn.'" "ou='.$ou_tmp.'"';
-    $cmd .= ' >/dev/null 2>/dev/null ; ';
-    $cmd .= '/usr/bin/ldapmodrdn '.$auth.' -r "ou='.$ou_old.','.$bdn.'" "ou='.$ou.'"';
-    $cmd .= ' >/dev/null 2>/dev/null ; ';
-    $cmd .= '/usr/bin/ldapmodrdn '.$auth.' -r "ou='.$ou_tmp.','.$bdn.'" "ou='.$ou_old.'"';
-    $cmd .= ' >/dev/null 2>/dev/null ; ';
-    $rtn = 41;
-  }
   shell($cmd.' >/dev/null 2>/dev/null', $status);
   @unlink($admin);
   if ($status != 0) {
-    $rtn = 99;
+    if ($status == 49) {
+      $rtn = 28;
+    } else {
+      $rtn = 31;
+    }
+  } else {
+    $rtn = 41;
   }
   return($rtn);
 }
@@ -134,25 +130,21 @@ function importLDIF($rootpw, $ou, $name, &$count) {
   $cmd .= '/usr/bin/ldapmodrdn '.$auth.' -r "ou='.$ou.','.$bdn.'" "ou='.$ou_old.'"';
   $cmd .= ' >/dev/null 2>/dev/null ; ';
   $cmd .= '/usr/bin/ldapadd '.$auth.' -f '.$name;
+  $cmd .= ' >/dev/null 2>/dev/null ; rtn=$? ; [ $rtn -eq 0 -o $rtn -eq 49 ] && exit $rtn ; ';
+  $cmd .= '/usr/bin/ldapdelete '.$auth.' -r "ou='.$ou.','.$bdn.'"';
+  $cmd .= ' >/dev/null 2>/dev/null ; ';
+  $cmd .= '/usr/bin/ldapmodrdn '.$auth.' -r "ou='.$ou_old.','.$bdn.'" "ou='.$ou.'"';
   @file_put_contents($admin, $rootpw);
-  shell($cmd.' >/dev/null 2>/dev/null', $status);
-  if ($status != 0) {
-    if ($status == 49) {
-      @unlink($admin);
-      return(28);
-    }
-    $cmd  = '/usr/bin/ldapdelete '.$auth.' -r "ou='.$ou.','.$bdn.'"';
-    $cmd .= ' >/dev/null 2>/dev/null ; ';
-    $cmd .= '/usr/bin/ldapmodrdn '.$auth.' -r "ou='.$ou_old.','.$bdn.'" "ou='.$ou.'"';
-    $rtn = 30;
-  } else {
-    @unlink($admin);
-    return(40);
-  }
-  shell($cmd.' >/dev/null 2>/dev/null', $status);
+  shell($cmd.' >/dev/null 2>/dev/null ; exit $rtn', $status);
   @unlink($admin);
   if ($status != 0) {
-    $rtn = 99;
+    if ($status == 49) {
+      $rtn = 28;
+    } else {
+      $rtn = 30;
+    }
+  } else {
+    $rtn = 40;
   }
   return($rtn);
 }
