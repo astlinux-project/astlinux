@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2009 Lonnie Abelbeck
+// Copyright (C) 2008-2013 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -8,12 +8,15 @@
 
 // dialproxy.php for AstLinux
 // 09-03-2009
+// 10-31-2013, Add POST method
 //
-// With permissions 'nobody' (by default)
+// GET Method:
 // Usage: http://pbx/dialproxy.php?num=2223334444&ext=default
-//
-// With permissions 'root'
 // Usage: https://pbx/dialproxy.php?num=2223334444&ext=default
+//
+// POST Method:
+// Usage: curl --data-urlencode 'num=2223334444' --data-urlencode 'ext=default' http://pbx/dialproxy.php
+// Usage: curl --data-urlencode 'num=2223334444' --data-urlencode 'ext=default' --insecure https://pbx/dialproxy.php
 //
 // [webinterface] manager.conf context must contain
 // read = command,call,originate                               
@@ -171,8 +174,47 @@ function AMIoriginate($num, $channel, $opts) {
   return($info['timed_out'] ? 3 : 0);
 }
 
-$num = isset($_GET['num']) ? $_GET['num'] : '';
-$ext = isset($_GET['ext']) ? $_GET['ext'] : '';
+// Function: normalize_phone_number
+//
+function normalize_phone_number($num) {
+
+  if ($num !== '') {
+    if (($df = trim(shell_exec('. /etc/rc.conf; echo "$DIALING_PREFIX_NUMBERS"'))) !== '') {
+      $df_opts = explode('~', $df);
+      $internationalprefix = isset($df_opts[0]) ? $df_opts[0] : '';
+      $nationalprefix = isset($df_opts[1]) ? $df_opts[1] : '';
+      $countryprefix = isset($df_opts[2]) ? $df_opts[2] : '';
+
+      if ($nationalprefix !== '') {
+        $num = preg_replace('/\('.$nationalprefix.'\)/', '', $num);
+      }
+      $num = preg_replace('/[^0-9+]/', '', $num);
+      if ($countryprefix !== '') {
+        $match = '+'.$countryprefix;
+        if (strncmp($num, $match, strlen($match)) == 0) {
+          $num = $nationalprefix.substr($num, strlen($match));
+        }
+      }
+      if (strncmp($num, '+', 1) == 0) {
+        $num = $internationalprefix.substr($num, 1);
+      }
+    } else {
+      $num = preg_replace('/[^0-9]/', '', $num);
+    }
+  }
+  return($num);
+}
+
+if (isset($_POST['num'], $_POST['ext'])) {
+  $num = normalize_phone_number($_POST['num']);
+  $ext = $_POST['ext'];
+} elseif (isset($_GET['num'], $_GET['ext'])) {
+  $num = $_GET['num'];
+  $ext = $_GET['ext'];
+} else {
+  $num = '';
+  $ext = '';
+}
 
 if ($num === '' || $ext === '') {
   myexit(1, 'Error');
