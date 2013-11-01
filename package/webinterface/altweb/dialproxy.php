@@ -26,6 +26,11 @@
 // Required value channel, ie. SIP/1234
 // with ~ seprated options context=, timeout=, callerid=, localcallerid=, dialprefix= and allow=
 //
+// Debug Mode: (set debug=1)
+//             Useful for testing DIALING_PREFIX_NUMBERS prefix settings without dialing.
+// Usage: curl "http://pbx/dialproxy.php?num=2223334444&ext=default&debug=1"
+// Usage: curl --data-urlencode 'num=2223334444' --data-urlencode 'ext=default' -d 'debug=1' http://pbx/dialproxy.php
+//
 
 $remote_addr = $_SERVER['REMOTE_ADDR'];
 
@@ -221,7 +226,9 @@ if (isset($_POST['num'], $_POST['ext'])) {
   $num = '';
   $ext = '';
 }
-//myexit(0, "Debug: num=$num ext=$ext dialprefix=".$opts['dialprefix']);
+if (isset($_POST['debug']) || isset($_GET['debug'])) {
+  myexit(0, "Debug: num=$num ext=$ext dialprefix=".$opts['dialprefix']);
+}
 
 if ($num === '' || $ext === '') {
   myexit(1, 'Error');
