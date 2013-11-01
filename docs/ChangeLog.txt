@@ -66,6 +66,8 @@ Released **TBD**
 
 -- LDAP-AB tab, new addition for managing the LDAP Address Book, export LDIF files and import LDIF and vCard files.
 
+-- dialproxy.php, add support for POST method and number filtering using DIALING_PREFIX_NUMBERS.
+
 
 Additions for AstLinux 1.1.3:
 =============================
