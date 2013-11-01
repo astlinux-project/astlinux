@@ -176,7 +176,7 @@ function AMIoriginate($num, $channel, $opts) {
 
 // Function: normalize_phone_number
 //
-function normalize_phone_number($num) {
+function normalize_phone_number($num, &$opts) {
 
   if ($num !== '') {
     if (($df = trim(shell_exec('. /etc/rc.conf; echo "$DIALING_PREFIX_NUMBERS"'))) !== '') {
@@ -184,37 +184,44 @@ function normalize_phone_number($num) {
       $internationalprefix = isset($df_opts[0]) ? $df_opts[0] : '';
       $nationalprefix = isset($df_opts[1]) ? $df_opts[1] : '';
       $countryprefix = isset($df_opts[2]) ? $df_opts[2] : '';
+      $outgoinglineprefix = isset($df_opts[3]) ? $df_opts[3] : '';
 
+      if ($outgoinglineprefix !== '') {
+        $opts['dialprefix'] = $outgoinglineprefix;
+      }
       if ($nationalprefix !== '') {
         $num = preg_replace('/\('.$nationalprefix.'\)/', '', $num);
       }
-      $num = preg_replace('/[^0-9+]/', '', $num);
+      $num = preg_replace('/[^0-9*#+]/', '', $num);
       if ($countryprefix !== '') {
         $match = '+'.$countryprefix;
         if (strncmp($num, $match, strlen($match)) == 0) {
           $num = $nationalprefix.substr($num, strlen($match));
         }
       }
-      if (strncmp($num, '+', 1) == 0) {
-        $num = $internationalprefix.substr($num, 1);
+      if ($internationalprefix !== '') {
+        if (strncmp($num, '+', 1) == 0) {
+          $num = $internationalprefix.substr($num, 1);
+        }
       }
     } else {
-      $num = preg_replace('/[^0-9]/', '', $num);
+      $num = preg_replace('/[^0-9*#]/', '', $num);
     }
   }
   return($num);
 }
 
 if (isset($_POST['num'], $_POST['ext'])) {
-  $num = normalize_phone_number($_POST['num']);
+  $num = normalize_phone_number($_POST['num'], $opts);
   $ext = $_POST['ext'];
 } elseif (isset($_GET['num'], $_GET['ext'])) {
-  $num = $_GET['num'];
+  $num = normalize_phone_number($_GET['num'], $opts);
   $ext = $_GET['ext'];
 } else {
   $num = '';
   $ext = '';
 }
+//myexit(0, "Debug: num=$num ext=$ext dialprefix=".$opts['dialprefix']);
 
 if ($num === '' || $ext === '') {
   myexit(1, 'Error');
