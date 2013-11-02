@@ -174,6 +174,11 @@ function vcard_export($ou, $bdn, $in_file, $out_file) {
     'sanitize' => isset($_POST['opt_s']),
     'sanitize_dash' => isset($_POST['opt_S'])
   );
+  if (isset($_POST['opt_dialprefix'])) {
+    if (($dialprefix = preg_replace('/[^0-9+-]/', '', $_POST['opt_dialprefix'])) !== '') {
+      $options['dialprefix'] = $dialprefix;
+    }
+  }
 
   // parse a vCard file
   $conv = new vcard_convert($options);
@@ -386,6 +391,9 @@ if (is_file('/var/run/slapd/slapd.pid')) {
   putHtml('<input type="checkbox" value="opt_p" name="opt_p" /></td><td>Skip vCards without phone numbers</td></tr>');
   putHtml('<tr><td class="dialogText" style="text-align: right;">');
   putHtml('<input type="checkbox" value="opt_m" name="opt_m" /></td><td>Skip vCards without e-mail addresses</td></tr>');
+  putHtml('<tr><td class="dialogText" style="text-align: right;">');
+  putHtml('<input type="text" size="3" maxlength="8" name="opt_dialprefix" value="" />');
+  putHtml('</td><td>Dial Prefix added to all phone numbers</td></tr>');
   putHtml('<tr><td style="text-align: center;" colspan="2">');
   putHtml('<input type="file" name="import_vcard" />');
   putHtml('&ndash;');

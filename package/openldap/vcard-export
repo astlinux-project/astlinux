@@ -6,6 +6,7 @@
 //AstLinux// Default for 'ldap' format
 //AstLinux// Change -n option to -b for Base_DN
 //AstLinux// Add sanitize phone numbers option, -s and -S
+//AstLinux// Add -P dialprefix option
 
 /*
  +-----------------------------------------------------------------------+
@@ -26,7 +27,7 @@
 require_once '/stat/var/www/common/vcard-parse-convert.php';
 
 $usage = <<<EOF
-Usage: vcard-export [-himpsSv] [-d delimiter] [-b Base_DN] [-o output_file] [-f format] input_file
+Usage: vcard-export [-himpsSv] [-P dialprefix] [-d delimiter] [-b Base_DN] [-o output_file] [-f format] input_file
 
 Options:
     -b  Base LDAP identifier added to dn:, defaults to 'ou=addressbook,dc=ldap'
@@ -48,7 +49,7 @@ if ($argv[1] == 'help' || $argv[1] == '--help')
 	die($usage);
 
 // read commandline arguments
-$options = 'himpsSvd:b:o:f:';
+$options = 'himpsSvP:d:b:o:f:';
 if (($opt = getopt($options)) === FALSE) {
 	die($usage);
 }
@@ -76,12 +77,20 @@ if (empty($file))
 	die("Not enough arguments!\n$usage");
 
 // instantiate a parser object
-$conv = new vcard_convert(array('mailonly' => isset($opt['m']),
-				'phoneonly' => isset($opt['p']),
-				'sanitize' => isset($opt['s']),
-				'sanitize_dash' => isset($opt['S'])));
+$opt_array = array(
+	'mailonly' => isset($opt['m']),
+	'phoneonly' => isset($opt['p']),
+	'sanitize' => isset($opt['s']),
+	'sanitize_dash' => isset($opt['S'])
+);
+if (isset($opt['P'])) {
+	if (($dialprefix = preg_replace('/[^0-9+-]/', '', $opt['P'])) !== '') {
+		$opt_array['dialprefix'] = $dialprefix;
+	}
+}
 
 // parse a vCard file
+$conv = new vcard_convert($opt_array);
 if ($conv->fromFile($file))
 {
 	if (isset($opt['v']))

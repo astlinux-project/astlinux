@@ -924,6 +924,7 @@ class vcard_convert extends Contact_Vcard_Parse
 	var $accesscode = null;
 	var $sanitize = false;  //AstLinux//
 	var $sanitize_dash = false;  //AstLinux//
+	var $dialprefix = '';  //AstLinux//
 	
 	
 	/**
@@ -1806,6 +1807,9 @@ class vcard_convert extends Contact_Vcard_Parse
 		} elseif ($this->sanitize_dash) {
 			$phone = preg_replace('/[^0-9+]+/', '-', $phone);
 			$phone = preg_replace('/[^0-9+-]/', '', trim($phone, '-'));
+		}
+		if ($this->dialprefix !== '') {
+			$phone = $this->dialprefix.$phone;
 		}
 		//AstLinux//
 		return $phone;
