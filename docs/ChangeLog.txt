@@ -26,6 +26,9 @@ Released **TBD**
 
 -- vcard-export, new command to generate ldif files from vcard files, suitable to 'ldapadd' into the LDAP addressbook
 
+-- Added rc.conf variable DIALING_PREFIX_NUMBERS referenced by dialproxy.php for International E.164 numbering.
+   More Info: http://doc.astlinux.org/userdoc:tt_dialproxy
+
 ** Networking
 
 -- ddclient, Dynamic DNS now adds "ddclient" support along with the old "inadyn" client.
@@ -66,7 +69,8 @@ Released **TBD**
 
 -- LDAP-AB tab, new addition for managing the LDAP Address Book, export LDIF files and import LDIF and vCard files.
 
--- dialproxy.php, add support for POST method and number filtering using DIALING_PREFIX_NUMBERS.
+-- dialproxy.php, add support for POST method and number filtering using DIALING_PREFIX_NUMBERS user.conf variable.
+   More Info: http://doc.astlinux.org/userdoc:tt_dialproxy
 
 
 Additions for AstLinux 1.1.3:
