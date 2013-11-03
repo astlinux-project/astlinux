@@ -43,7 +43,7 @@ Released **TBD**
    Note: the "LDAP Client System Defaults" -> LDAP Server URI(s) must be defined for these scripts to be enabled.
    More Info: http://doc.astlinux.org/userdoc:tt_ldap_client
 
--- libcurl (curl) version bump to 7.32.0, (security fixes: CVE-2013-1944, CVE-2013-2174) and bug fixes.
+-- libcurl (curl) version bump to 7.33.0, (security fixes: CVE-2013-1944, CVE-2013-2174) and bug fixes.
 
 -- lighttpd, version bump to 1.4.33, bug fixes
 
