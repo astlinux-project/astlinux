@@ -174,6 +174,12 @@ function vcard_export($ou, $bdn, $in_file, $out_file) {
     'sanitize' => isset($_POST['opt_s']),
     'sanitize_dash' => isset($_POST['opt_S'])
   );
+  if (isset($_POST['opt_n'])) {
+    $df_opts = explode('~', $_POST['opt_n']);
+    $options['internationalprefix'] = isset($df_opts[0]) ? $df_opts[0] : '';
+    $options['nationalprefix'] = isset($df_opts[1]) ? $df_opts[1] : '';
+    $options['countryprefix'] = isset($df_opts[2]) ? $df_opts[2] : '';
+  }
   if (isset($_POST['opt_dialprefix'])) {
     if (($dialprefix = preg_replace('/[^0-9+-]/', '', $_POST['opt_dialprefix'])) !== '') {
       $options['dialprefix'] = $dialprefix;
@@ -387,6 +393,11 @@ if (is_file('/var/run/slapd/slapd.pid')) {
   putHtml('<input type="checkbox" value="opt_s" name="opt_s" /></td><td>Sanitize phone numbers to only<br />include "+0123456789" characters</td></tr>');
   putHtml('<tr><td class="dialogText" style="text-align: right;">');
   putHtml('<input type="checkbox" value="opt_S" name="opt_S" checked="checked" /></td><td>Sanitize as above but replace<br />sequential non-numbers with a dash "-"</td></tr>');
+  if (($df = trim(shell_exec('. /etc/rc.conf; echo "$DIALING_PREFIX_NUMBERS"'))) !== '') {
+    putHtml('<tr><td class="dialogText" style="text-align: right;">');
+    putHtml('<input type="checkbox" value="'.$df.'" name="opt_n" /></td><td>Normalize International E.164 prefixes');
+    putHtml('</td></tr>');
+  }
   putHtml('<tr><td class="dialogText" style="text-align: right;">');
   putHtml('<input type="checkbox" value="opt_p" name="opt_p" /></td><td>Skip vCards without phone numbers</td></tr>');
   putHtml('<tr><td class="dialogText" style="text-align: right;">');

@@ -5,6 +5,7 @@
 //AstLinux// Default for 'ldap' format
 //AstLinux// Change -n option to -b for Base_DN
 //AstLinux// Add sanitize phone numbers option, -s and -S
+//AstLinux// Add internationalprefix, nationalprefix, countryprefix and dialprefix to normalize_phone()
 
 /*
  +-----------------------------------------------------------------------+
@@ -924,6 +925,9 @@ class vcard_convert extends Contact_Vcard_Parse
 	var $accesscode = null;
 	var $sanitize = false;  //AstLinux//
 	var $sanitize_dash = false;  //AstLinux//
+	var $internationalprefix = '';  //AstLinux//
+	var $nationalprefix = '';  //AstLinux//
+	var $countryprefix = '';  //AstLinux//
 	var $dialprefix = '';  //AstLinux//
 	
 	
@@ -1802,14 +1806,30 @@ class vcard_convert extends Contact_Vcard_Parse
 		if (strlen($this->accesscode))
 			$phone = preg_replace('/^[\+|00]+' . $this->accesscode . '[- ]*(\d+)/', '0\1', $phone);
 		//AstLinux//
+		if ($this->nationalprefix !== '') {
+			$phone = preg_replace('/\('.$this->nationalprefix.'\)/', '', $phone);
+		}
 		if ($this->sanitize) {
 			$phone = preg_replace('/[^0-9+]/', '', $phone);
 		} elseif ($this->sanitize_dash) {
 			$phone = preg_replace('/[^0-9+]+/', '-', $phone);
 			$phone = preg_replace('/[^0-9+-]/', '', trim($phone, '-'));
 		}
-		if ($this->dialprefix !== '') {
-			$phone = $this->dialprefix.$phone;
+		if ($phone !== '') {
+			if ($this->countryprefix !== '') {
+				$match = '+'.$this->countryprefix;
+				if (strncmp($phone, $match, strlen($match)) == 0) {
+					$phone = $this->nationalprefix.substr($phone, strlen($match));
+				}
+			}
+			if ($this->internationalprefix !== '') {
+				if (strncmp($phone, '+', 1) == 0) {
+					$phone = $this->internationalprefix.substr($phone, 1);
+				}
+			}
+			if ($this->dialprefix !== '') {
+				$phone = $this->dialprefix.$phone;
+			}
 		}
 		//AstLinux//
 		return $phone;

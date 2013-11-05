@@ -6,6 +6,7 @@
 //AstLinux// Default for 'ldap' format
 //AstLinux// Change -n option to -b for Base_DN
 //AstLinux// Add sanitize phone numbers option, -s and -S
+//AstLinux// Add -n Normalize International E.164 prefixes option
 //AstLinux// Add -P dialprefix option
 
 /*
@@ -27,7 +28,7 @@
 require_once '/stat/var/www/common/vcard-parse-convert.php';
 
 $usage = <<<EOF
-Usage: vcard-export [-himpsSv] [-P dialprefix] [-d delimiter] [-b Base_DN] [-o output_file] [-f format] input_file
+Usage: vcard-export [-himnpsSv] [-P dialprefix] [-d delimiter] [-b Base_DN] [-o output_file] [-f format] input_file
 
 Options:
     -b  Base LDAP identifier added to dn:, defaults to 'ou=addressbook,dc=ldap'
@@ -36,6 +37,7 @@ Options:
     -h  Include header line in CSV output
     -i  Convert CSV output to ISO-8859-1 encoding
     -m  Only convert cards with an e-mail address
+    -n  Normalize International E.164 prefixes (using DIALING_PREFIX_NUMBERS)
     -o  Output file (write to stdout by default)
     -p  Only convert cards with phone numbers
     -s  Sanitize phone numbers to only include "+0123456789" characters
@@ -49,7 +51,7 @@ if ($argv[1] == 'help' || $argv[1] == '--help')
 	die($usage);
 
 // read commandline arguments
-$options = 'himpsSvP:d:b:o:f:';
+$options = 'himnpsSvP:d:b:o:f:';
 if (($opt = getopt($options)) === FALSE) {
 	die($usage);
 }
@@ -83,6 +85,12 @@ $opt_array = array(
 	'sanitize' => isset($opt['s']),
 	'sanitize_dash' => isset($opt['S'])
 );
+if (isset($opt['n']) && ($df = trim(shell_exec('. /etc/rc.conf; echo "$DIALING_PREFIX_NUMBERS"'))) !== '') {
+	$df_opts = explode('~', $df);
+	$opt_array['internationalprefix'] = isset($df_opts[0]) ? $df_opts[0] : '';
+	$opt_array['nationalprefix'] = isset($df_opts[1]) ? $df_opts[1] : '';
+	$opt_array['countryprefix'] = isset($df_opts[2]) ? $df_opts[2] : '';
+}
 if (isset($opt['P'])) {
 	if (($dialprefix = preg_replace('/[^0-9+-]/', '', $opt['P'])) !== '') {
 		$opt_array['dialprefix'] = $dialprefix;
