@@ -123,13 +123,18 @@ function importLDIF($rootpw, $ou, $name, &$count) {
   }
   $count = (int)trim(shell_exec('grep -ci "^dn:" '.$name));
 
+  $error_log = '/var/log/ldapadd-error.log';
+  if (is_file($error_log)) {
+    @unlink($error_log);
+  }
+
   $admin = tempnam("/var/tmp", "PHP_");
   $auth = '-x -D "cn=admin,'.$bdn.'" -H ldap://127.0.0.1 -y '.$admin;
   $cmd  = '/usr/bin/ldapdelete '.$auth.' -r "ou='.$ou_old.','.$bdn.'"';
   $cmd .= ' >/dev/null 2>/dev/null ; ';
   $cmd .= '/usr/bin/ldapmodrdn '.$auth.' -r "ou='.$ou.','.$bdn.'" "ou='.$ou_old.'"';
   $cmd .= ' >/dev/null 2>/dev/null ; ';
-  $cmd .= '/usr/bin/ldapadd '.$auth.' -f '.$name;
+  $cmd .= '/usr/bin/ldapadd '.$auth.' -c -S '.$error_log.' -f '.$name;
   $cmd .= ' >/dev/null 2>/dev/null ; rtn=$? ; [ $rtn -eq 0 -o $rtn -eq 49 ] && exit $rtn ; ';
   $cmd .= '/usr/bin/ldapdelete '.$auth.' -r "ou='.$ou.','.$bdn.'"';
   $cmd .= ' >/dev/null 2>/dev/null ; ';
@@ -309,8 +314,6 @@ require_once '../common/header.php';
       putHtml('<p style="color: red;">Invalid suffix, only LDIF files ending with .ldif.txt are allowed.</p>');
     } elseif ($result == 23) {
       putHtml('<p style="color: red;">Invalid file format, no data changed.</p>');
-    } elseif ($result == 24) {
-      putHtml('<p style="color: red;">Error importing LDAP data, no data changed.</p>');
     } elseif ($result == 26) {
       putHtml('<p style="color: red;">Invalid suffix, only vCard files ending with .vcf are allowed.</p>');
     } elseif ($result == 27) {
@@ -320,7 +323,7 @@ require_once '../common/header.php';
     } elseif ($result == 29) {
       putHtml('<p style="color: red;">Address Book export failed.</p>');
     } elseif ($result == 30) {
-      putHtml('<p style="color: red;">Address Book import failed.</p>');
+      putHtml('<p style="color: red;">Address Book Import failed, no data changed. More info click: <a href="/admin/view.php?file=/var/log/ldapadd-error.log" class="headerText">LDIF Import Errors</a></p>');
     } elseif ($result == 31) {
       putHtml('<p style="color: red;">No previous Address Book to revert to.</p>');
     } elseif ($result == 40) {
