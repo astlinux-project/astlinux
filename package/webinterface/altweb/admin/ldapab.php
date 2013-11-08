@@ -116,13 +116,13 @@ function importLDIF($rootpw, $ou, $name, &$count) {
   $cmd = 'grep -qi "^dn:[^,]*ou='.$ou.','.$bdn.'$" '.$name;
   shell($cmd.' >/dev/null 2>/dev/null', $status);
   if ($status != 0) {
-    # Add required organizationalUnit
+    // Add required organizationalUnit
     $ou_dn = "dn: ou=$ou,$bdn\nobjectClass: organizationalUnit\nou: $ou\n\n";
     $context = stream_context_create();
-    if (($fp = fopen($name, 'r', FALSE, $context)) !== FALSE) {
+    if (($fp = @fopen($name, 'r', FALSE, $context)) !== FALSE) {
       $tmp_name = tempnam("/mnt/kd", ".PHP_");
-      file_put_contents($tmp_name, $ou_dn);
-      file_put_contents($tmp_name, $fp, FILE_APPEND);
+      @file_put_contents($tmp_name, $ou_dn);
+      @file_put_contents($tmp_name, $fp, FILE_APPEND);
       fclose($fp);
       @unlink($name);
       @rename($tmp_name, $name);
