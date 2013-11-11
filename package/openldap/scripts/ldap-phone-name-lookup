@@ -58,25 +58,103 @@ function LDAP_Client($start_tls, &$uri, &$base) {
   return($client);
 }
 
+// Function: shift_argv
+//
+function shift_argv($opt, $options, $options_long, &$argv) {
+
+  foreach ($opt as $o => $a) {
+    foreach ($argv as $k => $aa) {
+      if (substr($aa, 0, 2) === '-'.$o) {
+        unset($argv[$k]);
+        if (strpos($options, $o.':') !== FALSE) {
+          if ($argv[$k + 1] === $a) {
+            unset($argv[$k + 1]);
+          }
+        }
+      } elseif (!is_null($options_long) && $aa === '--'.$o) {
+        unset($argv[$k]);
+        if (in_array($o.':', $options_long)) {
+          if ($argv[$k + 1] === $a) {
+            unset($argv[$k + 1]);
+          }
+        }
+      }
+    }
+  }
+  $argv = array_merge($argv);
+}
+
+// Function: getopt_argv
+//
+function getopt_argv($options, $options_long, &$argv) {
+
+  if (is_null($options_long)) {
+    $opt = getopt($options);
+  } else {
+    $opt = getopt($options, $options_long);
+  }
+  if ($opt !== FALSE) {
+    shift_argv($opt, $options, $options_long, $argv);
+    if ($argv[1][0] === '-') {
+      echo "Invalid option: ".$argv[1]."\n";
+      return(FALSE);
+    }
+  }
+  return($opt);
+}
+
 $rtn = 1;
 $tls = FALSE;    // Set to TRUE to not require --tls option, and default to TLS
 
-if ($argv[1] === '--tls') {
-  if ($argv[2] != '') {
-    $name = $argv[2];
-    $tls = TRUE;
-  } else {
-    exit($rtn);
-  }
-} elseif ($argv[1] != '') {
-  $name = $argv[1];
-} else {
+$usage = "
+Usage: ldap-phone-name-lookup [-ht] [--tls] [-m|--match-name list] [-o|--output-num list] name
+
+Options:
+    -h, --help             Show help
+    -t, --tls              Enable TLS using start_tls
+    -m, --match-name list  Comma separated list to match name. Default: cn,displayname
+    -o, --output-num list  Comma separated list to display numbers. Default: telephonenumber,mobile,cellphone,homephone
+
+";
+
+$options = 'htm:o:';
+$options_long = array('help', 'tls', 'match-name:', 'output-num:');
+if (($opt = getopt_argv($options, $options_long, $argv)) === FALSE) {
+  echo "$usage";
   exit($rtn);
+}
+if (isset($opt['h']) || isset($opt['help']) || $argv[1] == '') {
+  echo "$usage";
+  exit($rtn);
+}
+
+$name = $argv[1];
+
+if (isset($opt['t']) || isset($opt['tls'])) {
+  $tls = TRUE;
+}
+if (isset($opt['m']) && $opt['m'] !== '') {
+  $match_name = explode(',', $opt['m']);
+} elseif (isset($opt['match-name']) && $opt['match-name'] !== '') {
+  $match_name = explode(',', $opt['match-name']);
+} else {
+  $match_name = array('cn', 'displayname');
+}
+if (isset($opt['o'])) {
+  $output_num = explode(',', $opt['o']);
+} elseif (isset($opt['output-num'])) {
+  $output_num = explode(',', $opt['output-num']);
+} else {
+  $output_num = array('telephonenumber', 'mobile', 'cellphone', 'homephone');
 }
 
 if (($ldapconn = LDAP_Client($tls, $uri, $dn)) !== FALSE) {
   
-  $filter = "(|(cn=$name)(displayname=$name))";
+  $filter = '(|';
+  foreach ($match_name as $mn) {
+    $filter .= "($mn=$name)";
+  }
+  $filter .= ')';
   $justthese = array('cn', 'sn', 'givenname', 'displayname', 'telephonenumber', 'mobile', 'cellphone', 'homephone');
 
   if (($sr = ldap_search($ldapconn, $dn, $filter, $justthese)) !== FALSE) {
@@ -85,17 +163,10 @@ if (($ldapconn = LDAP_Client($tls, $uri, $dn)) !== FALSE) {
     if (($n = $info['count']) > 0) {
       $numbers = '';
       for ($i = 0; $i < $n; $i++) {
-        if (($number = $info[$i]['telephonenumber'][0]) != '') {
-          $numbers .= ($numbers != '' ? '~' : '').$number;
-        }
-        if (($number = $info[$i]['mobile'][0]) != '') {
-          $numbers .= ($numbers != '' ? '~' : '').$number;
-        }
-        if (($number = $info[$i]['cellphone'][0]) != '') {
-          $numbers .= ($numbers != '' ? '~' : '').$number;
-        }
-        if (($number = $info[$i]['homephone'][0]) != '') {
-          $numbers .= ($numbers != '' ? '~' : '').$number;
+        foreach ($output_num as $on) {
+          if (($number = $info[$i]["$on"][0]) != '') {
+            $numbers .= ($numbers != '' ? '~' : '').$number;
+          }
         }
       }
       if ($numbers != '') {

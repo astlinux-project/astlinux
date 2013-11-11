@@ -58,25 +58,103 @@ function LDAP_Client($start_tls, &$uri, &$base) {
   return($client);
 }
 
+// Function: shift_argv
+//
+function shift_argv($opt, $options, $options_long, &$argv) {
+
+  foreach ($opt as $o => $a) {
+    foreach ($argv as $k => $aa) {
+      if (substr($aa, 0, 2) === '-'.$o) {
+        unset($argv[$k]);
+        if (strpos($options, $o.':') !== FALSE) {
+          if ($argv[$k + 1] === $a) {
+            unset($argv[$k + 1]);
+          }
+        }
+      } elseif (!is_null($options_long) && $aa === '--'.$o) {
+        unset($argv[$k]);
+        if (in_array($o.':', $options_long)) {
+          if ($argv[$k + 1] === $a) {
+            unset($argv[$k + 1]);
+          }
+        }
+      }
+    }
+  }
+  $argv = array_merge($argv);
+}
+
+// Function: getopt_argv
+//
+function getopt_argv($options, $options_long, &$argv) {
+
+  if (is_null($options_long)) {
+    $opt = getopt($options);
+  } else {
+    $opt = getopt($options, $options_long);
+  }
+  if ($opt !== FALSE) {
+    shift_argv($opt, $options, $options_long, $argv);
+    if ($argv[1][0] === '-') {
+      echo "Invalid option: ".$argv[1]."\n";
+      return(FALSE);
+    }
+  }
+  return($opt);
+}
+
 $rtn = 1;
 $tls = FALSE;    // Set to TRUE to not require --tls option, and default to TLS
 
-if ($argv[1] === '--tls') {
-  if ($argv[2] != '') {
-    $num = $argv[2];
-    $tls = TRUE;
-  } else {
-    exit($rtn);
-  }
-} elseif ($argv[1] != '') {
-  $num = $argv[1];
-} else {
+$usage = "
+Usage: ldap-phone-num-lookup [-ht] [--tls] [-m|--match-num list] [-o|--output-name list] number
+
+Options:
+    -h, --help             Show help
+    -t, --tls              Enable TLS using start_tls
+    -m, --match-num list   Comma separated list to match number. Default: telephonenumber,mobile,cellphone,homephone
+    -o, --output-name list Comma separated list to display the name. Default: displayname,cn,sn,givenname
+
+";
+
+$options = 'htm:o:';
+$options_long = array('help', 'tls', 'match-num:', 'output-name:');
+if (($opt = getopt_argv($options, $options_long, $argv)) === FALSE) {
+  echo "$usage";
   exit($rtn);
+}
+if (isset($opt['h']) || isset($opt['help']) || $argv[1] == '') {
+  echo "$usage";
+  exit($rtn);
+}
+
+$num = $argv[1];
+
+if (isset($opt['t']) || isset($opt['tls'])) {
+  $tls = TRUE;
+}
+if (isset($opt['m']) && $opt['m'] !== '') {
+  $match_num = explode(',', $opt['m']);
+} elseif (isset($opt['match-num']) && $opt['match-num'] !== '') {
+  $match_num = explode(',', $opt['match-num']);
+} else {
+  $match_num = array('telephonenumber', 'mobile', 'cellphone', 'homephone');
+}
+if (isset($opt['o'])) {
+  $output_name = explode(',', $opt['o']);
+} elseif (isset($opt['output-name'])) {
+  $output_name = explode(',', $opt['output-name']);
+} else {
+  $output_name = array('displayname', 'cn', 'sn', 'givenname');
 }
 
 if (($ldapconn = LDAP_Client($tls, $uri, $dn)) !== FALSE) {
   
-  $filter = "(|(telephonenumber=$num)(mobile=$num)(cellphone=$num)(homephone=$num))";
+  $filter = '(|';
+  foreach ($match_num as $mn) {
+    $filter .= "($mn=$num)";
+  }
+  $filter .= ')';
   $justthese = array('cn', 'sn', 'givenname', 'displayname', 'telephonenumber', 'mobile', 'cellphone', 'homephone');
 
   if (($sr = ldap_search($ldapconn, $dn, $filter, $justthese)) !== FALSE) {
@@ -84,14 +162,11 @@ if (($ldapconn = LDAP_Client($tls, $uri, $dn)) !== FALSE) {
 
     if (($n = $info['count']) > 0) {
       for ($i = 0; $i < $n; $i++) {
-        if (($name = $info[$i]['displayname'][0]) != '') {
-          ;
-        } elseif (($name = $info[$i]['cn'][0]) != '') {
-          ;
-        } elseif (($name = $info[$i]['sn'][0]) != '') {
-          ;
-        } elseif (($name = $info[$i]['givenname'][0]) != '') {
-          ;
+        $name = '';
+        foreach ($output_name as $on) {
+          if (($name = $info[$i]["$on"][0]) != '') {
+            break;
+          }
         }
         if ($name != '') {
           echo $name, "\n";
