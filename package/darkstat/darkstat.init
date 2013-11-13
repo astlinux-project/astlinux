@@ -29,7 +29,7 @@ start () {
     fi
 
     darkstat -i $EXTIF --chroot $CHROOT_DIR --pidfile $PIDFILE --syslog ${promisc} ${filter:+-f "$filter"} \
-             -b 127.0.0.1 -p 667
+             -b 127.0.0.1 -p 667 $NETSTAT_OPTIONS
   fi
 }
 
