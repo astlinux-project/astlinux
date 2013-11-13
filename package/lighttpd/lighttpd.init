@@ -71,11 +71,11 @@ init () {
   else
     cli_proxy_server="#"
   fi
-  if [ "$NETSTAT_SERVER" = "darkstat" ]; then
-    netstat_server=""
-  else
-    netstat_server="#"
-  fi
+
+  # Always enable /admin/netstat/ proxy so darkstat can be
+  # enabled/disabled without requiring a reboot via the web interface.
+  netstat_server=""
+
   if [ -d /mnt/kd/phoneprov ]; then
     phoneprov=""
   else
