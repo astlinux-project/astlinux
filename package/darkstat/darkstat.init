@@ -1,0 +1,72 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+PIDFILE="/var/run/darkstat.pid"
+
+CHROOT_DIR="/var/lib/darkstat"
+
+init () {
+  :
+}
+
+start () {
+  local filter="" promisc=""
+
+  if [ "$NETSTAT_SERVER" = "darkstat" ]; then
+    echo "Starting darkstat..."
+
+    mkdir -p $CHROOT_DIR
+    if [ -f $PIDFILE ]; then
+      rm $PIDFILE
+    fi
+
+    if [ -n "$NETSTAT_FILTER" ]; then
+      filter="$NETSTAT_FILTER"
+    fi
+    if [ "$NETSTAT_PROMISCUOUS" != "yes" ]; then
+      promisc="--no-promisc"
+    fi
+
+    darkstat -i $EXTIF --chroot $CHROOT_DIR --pidfile $PIDFILE --syslog ${promisc} ${filter:+-f "$filter"} \
+             -b 127.0.0.1 -p 667
+  fi
+}
+
+stop () {
+
+  if [ -f $PIDFILE ]; then
+    echo "Stopping darkstat..."
+
+    kill $(cat $PIDFILE) >/dev/null 2>&1
+    rm -f $PIDFILE
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+

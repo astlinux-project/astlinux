@@ -1,0 +1,11 @@
+--- darkstat-3.0.717/html.c.orig	2013-11-12 12:08:13.000000000 -0600
++++ darkstat-3.0.717/html.c	2013-11-12 12:12:41.000000000 -0600
+@@ -51,7 +51,7 @@
+          "<li class=\"label\">" PACKAGE_STRING "</li>"
+          "<li><a href=\"%s/\">graphs</a></li>"
+          "<li><a href=\"%s/hosts/\">hosts</a></li>"
+-         "<li><a href=\"" PACKAGE_URL "\">homepage</a></li>"
++         "<li class=\"label\">" PACKAGE_URL "</li>"
+         "</ul>\n"
+         "</div>\n"
+         "<div class=\"content\">\n"

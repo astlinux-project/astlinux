@@ -1,0 +1,16 @@
+--- darkstat-3.0.717/http.c.orig	2013-11-12 12:15:44.000000000 -0600
++++ darkstat-3.0.717/http.c	2013-11-12 12:41:24.000000000 -0600
+@@ -250,6 +250,13 @@
+     assert(pos <= urilen);
+     out[pos] = '\0';
+ 
++    char *proxy_base = "/admin/netstat/"; /* str must begin and end with '/' */
++    if ((i = strlen(proxy_base)) > 1) {
++      if (str_starts_with(out, proxy_base)) {
++        memmove(out, out+i-1, strlen(out)-i+2);
++      }
++    }
++
+ #if 0
+     /* don't really need to do this and it's probably a performance hit: */
+     /* shorten buffer if necessary */
