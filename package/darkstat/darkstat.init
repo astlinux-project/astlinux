@@ -6,12 +6,37 @@ PIDFILE="/var/run/darkstat.pid"
 
 CHROOT_DIR="/var/lib/darkstat"
 
+is_darkstat_enabled()
+{
+  # args: IF_Name
+  local ifname IFS
+
+  unset IFS
+  for ifname in $NETSTAT_CAPTURE; do
+    if [ "$ifname" = "$1" ]; then
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+is_interface_enabled()
+{
+  # args: IF, IP, NM
+  if [ -n "$1" -a "$1" != "none" -a -n "$2" -a -n "$3" ]; then
+    return 0
+  fi
+  return 1
+}
+
+
 init () {
   :
 }
 
 start () {
-  local filter="" promisc=""
+  local promisc="" interfaces="" f_ext="" f_lan="" f_lan2="" f_lan3="" f_dmz=""
 
   if [ "$NETSTAT_SERVER" = "darkstat" ]; then
     echo "Starting darkstat..."
@@ -21,14 +46,37 @@ start () {
       rm $PIDFILE
     fi
 
-    if [ -n "$NETSTAT_FILTER" ]; then
-      filter="$NETSTAT_FILTER"
-    fi
     if [ "$NETSTAT_PROMISCUOUS" != "yes" ]; then
       promisc="--no-promisc"
     fi
 
-    darkstat -i $EXTIF --chroot $CHROOT_DIR --pidfile $PIDFILE --syslog ${promisc} ${filter:+-f "$filter"} \
+    if is_darkstat_enabled EXTIF; then
+      interfaces="$interfaces${interfaces:+ }-i $EXTIF"
+      f_ext="$NETSTAT_FILTER"
+    fi
+    if is_darkstat_enabled INTIF && is_interface_enabled "$INTIF" "$INTIP" "$INTNM"; then
+      interfaces="$interfaces${interfaces:+ }-i $INTIF"
+      f_int="$NETSTAT_FILTER"
+    fi
+    if is_darkstat_enabled INT2IF && is_interface_enabled "$INT2IF" "$INT2IP" "$INT2NM"; then
+      interfaces="$interfaces${interfaces:+ }-i $INT2IF"
+      f_int2="$NETSTAT_FILTER"
+    fi
+    if is_darkstat_enabled INT3IF && is_interface_enabled "$INT3IF" "$INT3IP" "$INT3NM"; then
+      interfaces="$interfaces${interfaces:+ }-i $INT3IF"
+      f_int3="$NETSTAT_FILTER"
+    fi
+    if is_darkstat_enabled DMZIF && is_interface_enabled "$DMZIF" "$DMZIP" "$DMZNM"; then
+      interfaces="$interfaces${interfaces:+ }-i $DMZIF"
+      f_dmz="$NETSTAT_FILTER"
+    fi
+    if [ -z "$interfaces" ]; then
+      echo "darkstat: No available interfaces for NETSTAT_CAPTURE variable."
+      exit 1
+    fi
+
+    darkstat ${interfaces} --chroot $CHROOT_DIR --pidfile $PIDFILE --syslog ${promisc}${f_ext:+ -f "$f_ext"} \
+             ${f_int:+ -f "$f_int"}${f_int2:+ -f "$f_int2"}${f_int3:+ -f "$f_int3"}${f_dmz:+ -f "$f_dmz"} \
              -b 127.0.0.1 -p 667 $NETSTAT_OPTIONS
   fi
 }
