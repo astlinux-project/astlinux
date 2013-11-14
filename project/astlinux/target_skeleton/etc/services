@@ -377,10 +377,13 @@ lmtp		2003/tcp			# Local Mail Transfer Protocol
 fud		4201/udp			# finger support
 
 # Local services
+submission	587/tcp				# Submission [RFC4409]
+submission	587/udp				# Submission [RFC4409]
 ipp		631/tcp				# Internet Printing Protocol
 ipp		631/udp				# Internet Printing Protocol
 openvpn		1194/tcp			# OpenVPN
 openvpn		1194/udp			# OpenVPN
+ssdp		1900/udp			# Simple Service Discovery Protocol (SSDP)
 apcupsd		3551/tcp			# apcupsd UPS daemon
 fop2		4445/tcp			# Flash Operator Panel (FOP2)
 iax2		4569/udp			# Inter-Asterisk eXchange (IAX2)
