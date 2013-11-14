@@ -41,7 +41,11 @@ start () {
   if [ "$NETSTAT_SERVER" = "darkstat" ]; then
     echo "Starting darkstat..."
 
-    mkdir -p $CHROOT_DIR
+    mkdir -p $CHROOT_DIR/etc
+    if [ ! -f $CHROOT_DIR/etc/localtime ]; then  # Allow localtime() to work
+      cp /etc/localtime $CHROOT_DIR/etc/localtime
+      chown -R nobody:nobody $CHROOT_DIR/etc
+    fi
     if [ -f $PIDFILE ]; then
       rm $PIDFILE
     fi
