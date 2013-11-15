@@ -20,6 +20,22 @@ add_system_default_users()
   done
 }
 
+update_system_default_users()
+{
+  local base="$1" user file current IFS
+
+  unset IFS
+  for user in nobody; do
+    for file in passwd group; do
+      current="$(grep "^${user}:" "${base}/etc/${file}")"
+      if [ -n "$current" -a "$current" != "$(grep "^${user}:" "/etc/${file}")" ]; then
+        sed -i -e "s|^${user}:.*$|${current}|" "/etc/${file}"
+        echo "FIRSTRUN: Updated system default '${user}' user/group in '/etc/${file}'"
+      fi
+    done
+  done
+}
+
 init () {
   local new old=""
   
@@ -44,8 +60,10 @@ init () {
     # Update system default user/group files to ASTURW files
     if [ -d /oldroot/mnt/asturo ]; then
       add_system_default_users /oldroot/mnt/asturo
+      update_system_default_users /oldroot/mnt/asturo
     elif [ -d /oldroot/image ]; then
       add_system_default_users /oldroot/image
+      update_system_default_users /oldroot/image
     fi
 
     case $old in
