@@ -261,6 +261,9 @@ header('Content-Type: text/html; charset=utf-8');
       if ($global_admin && (getPREFdef($global_prefs, 'tab_cli_show') === 'yes')) {
         putHtml('<li><a href="/admin/cli.php"><span>CLI</span></a></li>');
       }
+      if ($global_admin && (getPREFdef($global_prefs, 'tab_netstat_show') === 'yes')) {
+        putHtml('<li><a href="/admin/netstat.php"><span>NetStat</span></a></li>');
+      }
       if ($global_admin && (getPREFdef($global_prefs, 'tab_prefs_show') !== 'no')) {
         putHtml('<li><a href="/admin/prefs.php"><span>Prefs</span></a></li>');
       }

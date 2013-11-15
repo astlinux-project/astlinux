@@ -46,3 +46,4 @@ FOP2~Copyright (c) 2009-2013 House Internet S.R.L. (http://www.fop2.com)
 ddclient~Copyright (c) 1999-2013 Paul Burry, wimpunk, et al.
 vCard converter~Copyright (c) 2006-2013 Thomas Bruederli <thomas@brotherli.ch>
 OpenLDAP~Copyright (c) 1998-2013 The OpenLDAP Foundation. All rights reserved.
+darkstat~Copyright (c) 2001-2013 Emil Mikulic, et al.

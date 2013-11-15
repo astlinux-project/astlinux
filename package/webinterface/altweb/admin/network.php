@@ -413,6 +413,31 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $value = 'CLI_PROXY_SERVER="'.$_POST['cli_proxy'].'"';
   fwrite($fp, "### CLI Proxy Server\n".$value."\n");
   
+  $value = 'NETSTAT_SERVER="'.$_POST['netstat_server'].'"';
+  fwrite($fp, "### NetStat Server\n".$value."\n");
+  
+  $x_value = '';
+  if (isset($_POST['netstat_EXTIF'])) {
+    $x_value .= ' EXTIF';
+  }
+  if (isset($_POST['netstat_INTIF'])) {
+    $x_value .= ' INTIF';
+  }
+  if (isset($_POST['netstat_INT2IF'])) {
+    $x_value .= ' INT2IF';
+  }
+  if (isset($_POST['netstat_INT3IF'])) {
+    $x_value .= ' INT3IF';
+  }
+  if (isset($_POST['netstat_DMZIF'])) {
+    $x_value .= ' DMZIF';
+  }
+  if ($x_value === '') {  // set default
+    $x_value = 'EXTIF';
+  }
+  $value = 'NETSTAT_CAPTURE="'.trim($x_value).'"';
+  fwrite($fp, "### NetStat Capture Interfaces\n".$value."\n");
+
   $x_value = $_POST['upnp'];
   $tokens = explode(':', $x_value);
   $value = 'UPNP_ENABLE_NATPMP="'.$tokens[0].'"';
@@ -964,6 +989,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS('fop2', 42, $result, 'reload');
       } elseif ($process === 'slapd') {
         $result = restartPROCESS($process, 43, $result, 'init');
+      } elseif ($process === 'darkstat') {
+        $result = restartPROCESS($process, 44, $result, 'init');
       }
     } else {
       $result = 2;
@@ -1048,6 +1075,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Asterisk Flash Operating Panel2 has been Reloaded.</p>');
     } elseif ($result == 43) {
       putHtml('<p style="color: green;">LDAP Server has Restarted.</p>');
+    } elseif ($result == 44) {
+      putHtml('<p style="color: green;">NetStat Server (darkstat) has Restarted.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 100) {
@@ -1129,6 +1158,8 @@ require_once '../common/header.php';
   putHtml('<option value="ldap"'.$sel.'>Reload LDAP Client</option>');
   $sel = ($reboot_restart === 'slapd') ? ' selected="selected"' : '';
   putHtml('<option value="slapd"'.$sel.'>Restart LDAP Server</option>');
+  $sel = ($reboot_restart === 'darkstat') ? ' selected="selected"' : '';
+  putHtml('<option value="darkstat"'.$sel.'>Restart NetStat Server</option>');
   $sel = ($reboot_restart === 'snmpd') ? ' selected="selected"' : '';
   putHtml('<option value="snmpd"'.$sel.'>Restart SNMP Server</option>');
   $sel = ($reboot_restart === 'stunnel') ? ' selected="selected"' : '';
@@ -1563,6 +1594,31 @@ require_once '../common/header.php';
   putHtml('<option value="shellinaboxd"'.$sel.'>enabled</option>');
   putHtml('</select>');
   putHtml('&nbsp;<i>(https://'.$_SERVER['HTTP_HOST'].'/admin/cli/ or CLI Tab)</i>');
+  putHtml('</td></tr>');
+  
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml('NetStat&nbsp;Server:');
+  putHtml('<select name="netstat_server">');
+  putHtml('<option value="">disabled</option>');
+  $value = getVARdef($db, 'NETSTAT_SERVER', $cur_db);
+  $sel = ($value === 'darkstat') ? ' selected="selected"' : '';
+  putHtml('<option value="darkstat"'.$sel.'>enabled</option>');
+  putHtml('</select>');
+  putHtml('&nbsp;<i>(https://'.$_SERVER['HTTP_HOST'].'/admin/netstat/ or NetStat Tab)</i>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml('NetStat&nbsp;Interfaces:');
+  $sel = isVARtype('NETSTAT_CAPTURE', $db, $cur_db, 'EXTIF') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="netstat_EXTIF" name="netstat_EXTIF"'.$sel.' />&nbsp;External');
+  $sel = isVARtype('NETSTAT_CAPTURE', $db, $cur_db, 'INTIF') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="netstat_INTIF" name="netstat_INTIF"'.$sel.' />&nbsp;1st LAN');
+  $sel = isVARtype('NETSTAT_CAPTURE', $db, $cur_db, 'INT2IF') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="netstat_INT2IF" name="netstat_INT2IF"'.$sel.' />&nbsp;2nd LAN');
+  $sel = isVARtype('NETSTAT_CAPTURE', $db, $cur_db, 'INT3IF') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="netstat_INT3IF" name="netstat_INT3IF"'.$sel.' />&nbsp;3rd LAN');
+  $sel = isVARtype('NETSTAT_CAPTURE', $db, $cur_db, 'DMZIF') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="netstat_DMZIF" name="netstat_DMZIF"'.$sel.' />&nbsp;DMZ');
   putHtml('</td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');

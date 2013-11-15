@@ -31,6 +31,7 @@ $select_reload = array (
   'pptpd' => 'Restart PPTP VPN Server',
   'ldap' => 'Reload LDAP Client',
   'slapd' => 'Restart LDAP Server',
+  'darkstat' => 'Restart NetStat Server',
   'snmpd' => 'Restart SNMP Server',
   'stunnel' => 'Restart Stunnel Proxy',
   'miniupnpd' => 'Restart Univ. Plug\'n\'Play',
@@ -238,6 +239,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS('fop2', 42, $result, 'reload');
       } elseif ($process === 'slapd') {
         $result = restartPROCESS($process, 43, $result, 'init');
+      } elseif ($process === 'darkstat') {
+        $result = restartPROCESS($process, 44, $result, 'init');
       } elseif ($process === 'cron') {
         $result = updateCRON('root', 30, $result);
       }
@@ -364,6 +367,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Asterisk Flash Operating Panel2 has been Reloaded.</p>');
     } elseif ($result == 43) {
       putHtml('<p style="color: green;">LDAP Server has Restarted.</p>');
+    } elseif ($result == 44) {
+      putHtml('<p style="color: green;">NetStat Server (darkstat) has Restarted.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {
