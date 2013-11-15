@@ -15,4 +15,4 @@ users:x:100:
 prosody:x:130:
 ldap:x:439:
 zabbix:x:906:
-nobody:x:65535:
+nobody:x:65534:

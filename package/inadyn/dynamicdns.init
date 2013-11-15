@@ -119,7 +119,7 @@ alias $DDHOST
 update_period_sec $update_period_sec
 forced_update_period 2419200
 syslog
-change_persona 65535:65535
+change_persona 65534:65534
 background" > /tmp/etc/inadyn.conf
   fi
 }
