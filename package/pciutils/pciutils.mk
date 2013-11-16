@@ -4,13 +4,16 @@
 #
 #############################################################
 
-PCIUTILS_VERSION = 3.1.10
+PCIUTILS_VERSION = 3.2.1
 PCIUTILS_SITE = ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci
 PCIUTILS_INSTALL_STAGING = YES
+# Depend on linux to define LINUX_VERSION_PROBED
+PCIUTILS_DEPENDENCIES = linux
 
 PCIUTILS_ZLIB=no
 PCIUTILS_DNS=no
 PCIUTILS_SHARED=yes
+PCIUTILS_KMOD = no
 
 # Build after busybox since it's got a lightweight lspci
 ifeq ($(BR2_PACKAGE_BUSYBOX),y)
@@ -20,7 +23,7 @@ endif
 define PCIUTILS_CONFIGURE_CMDS
 	$(SED) 's/wget --no-timestamping/wget/' $(PCIUTILS_DIR)/update-pciids.sh
 	$(SED) 's/uname -s/echo Linux/' \
-		-e 's/uname -r/echo $(LINUX_HEADERS_VERSION)/' \
+		-e 's/uname -r/echo $(LINUX_VERSION_PROBED)/' \
 		$(PCIUTILS_DIR)/lib/configure
 	$(SED) 's/^STRIP/#STRIP/' $(PCIUTILS_DIR)/Makefile
 endef
@@ -36,6 +39,7 @@ define PCIUTILS_BUILD_CMDS
 		SHARED=$(PCIUTILS_SHARED) \
 		ZLIB=$(PCIUTILS_ZLIB) \
 		DNS=$(PCIUTILS_DNS) \
+		LIBKMOD=$(PCIUTILS_KMOD) \
 		PREFIX=/usr
 endef
 
