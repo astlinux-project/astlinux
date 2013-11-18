@@ -244,6 +244,9 @@ header('Content-Type: text/html; charset=utf-8');
       if ($global_staff && (getPREFdef($global_prefs, 'tab_users_show') === 'yes')) {
         putHtml('<li><a href="/admin/users.php"><span>Users</span></a></li>');
       }
+      if ($global_staff && (getPREFdef($global_prefs, 'tab_netstat_show') === 'yes')) {
+        putHtml('<li><a href="/admin/netstat.php"><span>NetStat</span></a></li>');
+      }
       if (! is_null($custom_tabs = getCUSTOMtabs($global_prefs))) {
         foreach ($custom_tabs as $tab) {
           if ($tab['access'] === 'all' || ($global_staff && $tab['access'] === 'staff')
@@ -260,9 +263,6 @@ header('Content-Type: text/html; charset=utf-8');
       }
       if ($global_admin && (getPREFdef($global_prefs, 'tab_cli_show') === 'yes')) {
         putHtml('<li><a href="/admin/cli.php"><span>CLI</span></a></li>');
-      }
-      if ($global_admin && (getPREFdef($global_prefs, 'tab_netstat_show') === 'yes')) {
-        putHtml('<li><a href="/admin/netstat.php"><span>NetStat</span></a></li>');
       }
       if ($global_admin && (getPREFdef($global_prefs, 'tab_prefs_show') !== 'no')) {
         putHtml('<li><a href="/admin/prefs.php"><span>Prefs</span></a></li>');

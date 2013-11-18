@@ -1122,6 +1122,10 @@ require_once '../common/header.php';
   putHtml('<input type="checkbox" value="tab_users" name="tab_users"'.$sel.' /></td><td colspan="5">Show Users Tab</td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'tab_netstat_show') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="tab_netstat" name="tab_netstat"'.$sel.' /></td><td colspan="5">Show NetStat Tab</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_network_show') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="tab_network" name="tab_network"'.$sel.' /></td><td colspan="5">Show Network Tab</td></tr>');
   
@@ -1132,10 +1136,6 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_cli_show') === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="tab_cli" name="tab_cli"'.$sel.' /></td><td colspan="5">Show CLI Tab</td></tr>');
-  
-  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  $sel = (getPREFdef($global_prefs, 'tab_netstat_show') === 'yes') ? ' checked="checked"' : '';
-  putHtml('<input type="checkbox" value="tab_netstat" name="tab_netstat"'.$sel.' /></td><td colspan="5">Show NetStat Tab</td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_staff_disable_staff') !== 'yes') ? ' checked="checked"' : '';

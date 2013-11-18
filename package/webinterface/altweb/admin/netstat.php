@@ -16,13 +16,13 @@ require_once '../common/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
-  if (! $global_admin) {
+  if (! $global_staff) {
     $result = 999;                                 
   }
   header('Location: '.$myself.'?result='.$result);
   exit;
 } else { // Start of HTTP GET
-$ACCESS_RIGHTS = 'admin';
+$ACCESS_RIGHTS = 'staff';
 require_once '../common/header.php';
 
   putHtml("<center>");
