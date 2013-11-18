@@ -84,8 +84,8 @@ Released **TBD**
 -- dialproxy.php, add support for POST method and number filtering using DIALING_PREFIX_NUMBERS user.conf variable.
    More Info: http://doc.astlinux.org/userdoc:tt_dialproxy
 
--- Added "NetStat Tab" using darkstat, Show/Hide in Prefs tab.  Requires 'admin' permissions.  The new Network tab
-   option "NetStat Server" must be enabled for the NetStat tab to function, restart via "Restart NetStat Server".
+-- Added "NetStat Tab" using darkstat, Show/Hide in Prefs tab.  Requires 'admin' or 'staff' permissions.  The new
+   Network tab option "NetStat Server" must be enabled for the NetStat tab to function, restart via "Restart NetStat Server".
    The option "NetStat Interfaces" determines which interface(s) capture statistics, "External" by default.
 
 
