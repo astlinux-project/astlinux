@@ -30,6 +30,7 @@ stop () {
   if [ -f /var/run/snmpd.pid ]; then
     echo "Stopping snmpd..."
     kill $(cat /var/run/snmpd.pid)
+    rm -f /var/run/snmpd.pid
   fi
 }
 

@@ -253,6 +253,14 @@ stop () {
     echo "Stopping XMPP Server..."
 
     kill $(cat /var/run/prosody/prosody.pid) >/dev/null 2>&1
+
+    # Wait for prosody to stop
+    cnt=5
+    while [ $cnt -gt 0 ] && [ -f /var/run/prosody/prosody.pid ]; do
+      cnt=$((cnt - 1))
+      sleep 1
+    done
+    rm -f /var/run/prosody/prosody.pid
   fi
 }
 

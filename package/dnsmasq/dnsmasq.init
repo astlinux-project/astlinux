@@ -72,12 +72,12 @@ addDNSMASQnet()
 
   if [ -n "$1" -a "$1" != "none" -a -n "$2" -a -n "$3" ]; then
     if isDHCPinterface $1; then
-      eval `ipcalc -n "$2" "$3"`
+      eval $(ipcalc -n "$2" "$3")
       ipbase=$(_isdottedquad $NETWORK)
 
       if [ -n "$DHCPRANGE" ]; then
-        dstart=`echo $DHCPRANGE | cut -d: -f1`
-        dend=`echo $DHCPRANGE | cut -d: -f2`
+        dstart=$(echo $DHCPRANGE | cut -d: -f1)
+        dend=$(echo $DHCPRANGE | cut -d: -f2)
       else
         dstart=100
         dend=220
@@ -295,7 +295,8 @@ start () {
 stop () {
   if [ -f /var/run/dnsmasq.pid ]; then
     echo "Stopping dnsmasq..."
-    kill `cat /var/run/dnsmasq.pid`
+    kill $(cat /var/run/dnsmasq.pid)
+    rm -f /var/run/dnsmasq.pid
   fi
 }
 

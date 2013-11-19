@@ -146,6 +146,13 @@ WARNING WARNING WARNING
     else
       asterisk -p -I
     fi
+
+    # Wait for asterisk to startup
+    cnt=10
+    while [ $cnt -gt 0 ] && [ ! -f /var/run/asterisk/asterisk.pid ]; do
+      cnt=$((cnt - 1))
+      sleep 1
+    done
   fi
 
   if [ -n "$ASTVERBOSE" ]; then

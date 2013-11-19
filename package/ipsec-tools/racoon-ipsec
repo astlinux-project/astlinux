@@ -691,6 +691,13 @@ start()
 
   echo "Starting racoon..."
   /tmp/etc/tunnel.sh
+
+  # Wait for racoon to startup
+  cnt=10
+  while [ $cnt -gt 0 ] && [ ! -f /var/run/racoon.pid ]; do
+    cnt=$((cnt - 1))
+    sleep 1
+  done
 }
 
 stop()
@@ -718,6 +725,7 @@ stop()
 
   if [ -f /var/run/racoon.pid ]; then
     kill $(cat /var/run/racoon.pid)
+    rm -f /var/run/racoon.pid
   fi
 
   setkey -F
