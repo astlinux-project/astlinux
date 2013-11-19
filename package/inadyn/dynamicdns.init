@@ -150,6 +150,7 @@ start () {
   if [ -f /etc/inadyn.conf ]; then
     echo "Starting dynamicdns (inadyn)..."
     inadyn
+    touch /var/run/inadyn.pid
   fi
 }
 
@@ -165,6 +166,7 @@ stop () {
   if [ -f /etc/inadyn.conf ]; then
     echo "Stopping dynamicdns (inadyn)..."
     killall inadyn 2>/dev/null
+    rm -f /var/run/inadyn.pid
   fi
 }
 
