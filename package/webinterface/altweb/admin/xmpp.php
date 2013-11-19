@@ -312,7 +312,7 @@ require_once '../common/header.php';
     } elseif ($result == 4) {
       putHtml('<p style="color: red;">Invalid username, specify a JID, including a host. Example: alice@example.com</p>');
     } elseif ($result == 10) {
-      putHtml('<p style="color: green;">XMPP Server has Restarted.</p>');
+      putHtml('<p style="color: green;">XMPP Server'.statusPROCESS('prosody').'.</p>');
     } elseif ($result == 11) {
       putHtml('<p style="color: green;">Settings saved, click "Restart Server" to apply any changed settings.</p>');
     } elseif ($result == 12) {

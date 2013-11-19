@@ -324,51 +324,51 @@ require_once '../common/header.php';
     } elseif ($result == 11) {
       putHtml('<p style="color: green;">Asterisk Modules Reloaded.</p>');
     } elseif ($result == 22) {
-      putHtml('<p style="color: green;">NTP Time has Restarted.</p>');
+      putHtml('<p style="color: green;">NTP Time'.statusPROCESS('ntpd').'.</p>');
     } elseif ($result == 23) {
-      putHtml('<p style="color: green;">IPsec VPN has Restarted.</p>');
+      putHtml('<p style="color: green;">IPsec VPN'.statusPROCESS('racoon').'.</p>');
     } elseif ($result == 24) {
-      putHtml('<p style="color: green;">OpenVPN Server has Restarted.</p>');
+      putHtml('<p style="color: green;">OpenVPN Server'.statusPROCESS('openvpn').'.</p>');
     } elseif ($result == 25) {
-      putHtml('<p style="color: green;">Asterisk has Restarted.</p>');
+      putHtml('<p style="color: green;">Asterisk'.statusPROCESS('asterisk').'.</p>');
     } elseif ($result == 26) {
       putHtml('<p style="color: green;">Firewall has Restarted.</p>');
     } elseif ($result == 27) {
-      putHtml('<p style="color: green;">Dynamic DNS has Restarted.</p>');
+      putHtml('<p style="color: green;">Dynamic DNS'.statusPROCESS('dynamicdns').'.</p>');
     } elseif ($result == 28) {
-      putHtml('<p style="color: green;">DNS &amp; DHCP Server has Restarted.</p>');
+      putHtml('<p style="color: green;">DNS &amp; DHCP Server'.statusPROCESS('dnsmasq').'.</p>');
     } elseif ($result == 29) {
-      putHtml('<p style="color: green;">OpenVPN Client has Restarted.</p>');
+      putHtml('<p style="color: green;">OpenVPN Client'.statusPROCESS('openvpnclient').'.</p>');
     } elseif ($result == 30) {
       putHtml('<p style="color: green;">Cron Jobs for root will be reloaded within a minute.</p>');
     } elseif ($result == 31) {
       putHtml('<p style="color: green;">SMTP Mail has Restarted.</p>');
     } elseif ($result == 32) {
-      putHtml('<p style="color: green;">IPv6 Autoconfig (radvd) has Restarted.</p>');
+      putHtml('<p style="color: green;">IPv6 Autoconfig (radvd)'.statusPROCESS('radvd').'.</p>');
     } elseif ($result == 33) {
-      putHtml('<p style="color: green;">PPTP VPN Server has Restarted.</p>');
+      putHtml('<p style="color: green;">PPTP VPN Server'.statusPROCESS('pptpd').'.</p>');
     } elseif ($result == 34) {
-      putHtml('<p style="color: green;">Universal Plug\'n\'Play has Restarted.</p>');
+      putHtml('<p style="color: green;">Universal Plug\'n\'Play'.statusPROCESS('miniupnpd').'.</p>');
     } elseif ($result == 35) {
-      putHtml('<p style="color: green;">UPS Daemon has Restarted.</p>');
+      putHtml('<p style="color: green;">UPS Daemon'.statusPROCESS('apcupsd').'.</p>');
     } elseif ($result == 36) {
-      putHtml('<p style="color: green;">Zabbix Monitoring has Restarted.</p>');
+      putHtml('<p style="color: green;">Zabbix Monitoring'.statusPROCESS('zabbix').'.</p>');
     } elseif ($result == 37) {
-      putHtml('<p style="color: green;">Stunnel Proxy has Restarted.</p>');
+      putHtml('<p style="color: green;">Stunnel Proxy'.statusPROCESS('stunnel').'.</p>');
     } elseif ($result == 38) {
-      putHtml('<p style="color: green;">XMPP Server has Restarted.</p>');
+      putHtml('<p style="color: green;">XMPP Server'.statusPROCESS('prosody').'.</p>');
     } elseif ($result == 39) {
-      putHtml('<p style="color: green;">SNMP Server has Restarted.</p>');
+      putHtml('<p style="color: green;">SNMP Server'.statusPROCESS('snmpd').'.</p>');
     } elseif ($result == 40) {
       putHtml('<p style="color: green;">LDAP Client Defaults has been Reloaded.</p>');
     } elseif ($result == 41) {
-      putHtml('<p style="color: green;">Asterisk Flash Operating Panel2 has Restarted.</p>');
+      putHtml('<p style="color: green;">Asterisk Flash Operating Panel2'.statusPROCESS('fop2').'.</p>');
     } elseif ($result == 42) {
       putHtml('<p style="color: green;">Asterisk Flash Operating Panel2 has been Reloaded.</p>');
     } elseif ($result == 43) {
-      putHtml('<p style="color: green;">LDAP Server has Restarted.</p>');
+      putHtml('<p style="color: green;">LDAP Server'.statusPROCESS('slapd').'.</p>');
     } elseif ($result == 44) {
-      putHtml('<p style="color: green;">NetStat Server (darkstat) has Restarted.</p>');
+      putHtml('<p style="color: green;">NetStat Server (darkstat)'.statusPROCESS('darkstat').'.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {

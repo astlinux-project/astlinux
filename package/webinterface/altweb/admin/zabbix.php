@@ -151,7 +151,7 @@ require_once '../common/header.php';
     } elseif ($result == 3) {
       putHtml('<p style="color: red;">Error creating file.</p>');
     } elseif ($result == 10) {
-      putHtml('<p style="color: green;">Zabbix Monitoring has Restarted.</p>');
+      putHtml('<p style="color: green;">Zabbix Monitoring'.statusPROCESS('zabbix').'.</p>');
     } elseif ($result == 11) {
       putHtml('<p style="color: green;">Settings saved, click "Restart Zabbix" to apply any changed settings.</p>');
     } elseif ($result == 99) {

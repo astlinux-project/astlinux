@@ -367,7 +367,7 @@ require_once '../common/header.php';
     } elseif ($result == 5) {
       putHtml('<p style="color: red;">File Not Found.</p>');
     } elseif ($result == 10) {
-      putHtml('<p style="color: green;">IPsec has Restarted.</p>');
+      putHtml('<p style="color: green;">IPsec VPN'.statusPROCESS('racoon').'.</p>');
     } elseif ($result == 11) {
       putHtml('<p style="color: green;">Settings saved, click "Restart IPsec" to apply any changed settings.</p>');
     } elseif ($result == 30) {

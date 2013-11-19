@@ -176,7 +176,7 @@ require_once '../common/header.php';
     } elseif ($result == 5) {
       putHtml('<p style="color: red;">Not a valid MAC Address, format ff:ff:ff:ff:ff:ff</p>');
     } elseif ($result == 10) {
-      putHtml('<p style="color: green;">DNS &amp; DHCP Server has Restarted.</p>');
+      putHtml('<p style="color: green;">DNS &amp; DHCP Server'.statusPROCESS('dnsmasq').'.</p>');
     } elseif ($result == 11) {
       putHtml('<p style="color: green;">Settings saved, click "Restart DNS" to apply any changed settings.</p>');
     } elseif ($result == 99) {

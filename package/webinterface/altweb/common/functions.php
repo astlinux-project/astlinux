@@ -92,6 +92,46 @@ function restartPROCESS($process, $ret_good, $ret_fail, $start = 'start', $wait 
   return($result);
 }
 
+// Function: statusPROCESS
+//
+function statusPROCESS($process) {
+
+  $str = '';
+  $path = '/var/run/';
+  $running = ' has Restarted and is Running';
+  $stopped = ' is Stopped';
+
+  if ($process === 'asterisk' || $process === 'prosody' || $process === 'slapd') {
+    $path .= $process.'/';
+  } elseif ($process === 'dynamicdns') {
+    if (is_file($path.'ddclient.pid') || is_file($path.'inadyn.pid')) {
+      $str = $running;
+    } else {
+      $str = $stopped;
+    }
+  } elseif ($process === 'stunnel') {
+    if (is_file($path.$process.'/server.pid') || is_file($path.$process.'/client.pid')) {
+      $str = $running;
+    } else {
+      $str = $stopped;
+    }
+  } elseif ($process === 'zabbix') {
+    if (is_file($path.'zabbix_agentd.pid')) {
+      $str = $running;
+    } else {
+      $str = $stopped;
+    }
+  }
+  if ($str === '') {
+    if (is_file($path.$process.'.pid')) {
+      $str = $running;
+    } else {
+      $str = $stopped;
+    }
+  }
+  return($str);
+}
+
 // Function: systemSHUTDOWN
 //
 function systemSHUTDOWN($myself, $result) {

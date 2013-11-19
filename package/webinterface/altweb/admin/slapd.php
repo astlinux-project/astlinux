@@ -145,7 +145,7 @@ require_once '../common/header.php';
     } elseif ($result == 3) {
       putHtml('<p style="color: red;">Error creating file.</p>');
     } elseif ($result == 10) {
-      putHtml('<p style="color: green;">LDAP Server has Restarted.</p>');
+      putHtml('<p style="color: green;">LDAP Server'.statusPROCESS('slapd').'.</p>');
     } elseif ($result == 11) {
       putHtml('<p style="color: green;">Settings saved, click "Restart LDAP" to apply any changed settings.</p>');
     } elseif ($result == 20) {

@@ -186,7 +186,7 @@ require_once '../common/header.php';
     } elseif ($result == 15) {
       putHtml('<p style="color: red;">Backup Failed, error archiving unionfs partition.</p>');
     } elseif ($result == 25) {
-      putHtml('<p style="color: green;">Asterisk has Restarted.</p>');
+      putHtml('<p style="color: green;">Asterisk'.statusPROCESS('asterisk').'.</p>');
     } elseif ($result == 40) {
       putHtml('<p style="color: green;">Reboot Scheduled within 24 hours.</p>');
     } elseif ($result == 41) {
