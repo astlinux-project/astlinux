@@ -88,6 +88,8 @@ Released **TBD**
    Network tab option "NetStat Server" must be enabled for the NetStat tab to function, restart via "Restart NetStat Server".
    The option "NetStat Interfaces" determines which interface(s) capture statistics, "External" by default.
 
+-- "Restart" services now displays "is Running" or "is Stopped" results when possible.
+
 
 Additions for AstLinux 1.1.3:
 =============================
