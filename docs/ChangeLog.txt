@@ -35,6 +35,10 @@ Released **TBD**
 
 -- Update /etc/services entries.
 
+-- mac2vendor, database update at 2013-11-20
+
+-- Time Zone Database update, tzdata2013h and tzcode2013h
+
 ** Networking
 
 -- ddclient, Dynamic DNS now adds "ddclient" support along with the old "inadyn" client.
@@ -53,7 +57,7 @@ Released **TBD**
    and a new NetStat tab in the web interface.  This feature is disabled by default.
    Variables: NETSTAT_SERVER, NETSTAT_CAPTURE, and advanced NETSTAT_FILTER, NETSTAT_PROMISCUOUS
 
--- libcurl (curl) version bump to 7.33.0, (security fixes: CVE-2013-1944, CVE-2013-2174) and bug fixes.
+-- libcurl (curl) version bump to 7.33.0, (security fixes: CVE-2013-1944, CVE-2013-2174, CVE-2013-4545) and bug fixes.
 
 -- lighttpd, version bump to 1.4.33, bug fixes
 
