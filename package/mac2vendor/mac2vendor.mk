@@ -3,7 +3,7 @@
 # mac2vendor
 #
 ##############################################################
-MAC2VENDOR_VERSION := 2013-01-12
+MAC2VENDOR_VERSION := 2013-11-20
 MAC2VENDOR_DATA := oui-$(MAC2VENDOR_VERSION).txt
 MAC2VENDOR_DATA_ORIG := oui.txt
 MAC2VENDOR_SITE := http://standards.ieee.org/develop/regauth/oui
@@ -12,12 +12,13 @@ MAC2VENDOR_BINARY := usr/sbin/mac2vendor
 
 $(DL_DIR)/$(MAC2VENDOR_DATA):
 	$(WGET) -P $(DL_DIR) $(MAC2VENDOR_SITE)/$(MAC2VENDOR_DATA_ORIG)
-	mv $(DL_DIR)/$(MAC2VENDOR_DATA_ORIG) $(DL_DIR)/$(MAC2VENDOR_DATA)
+	cp -a $(DL_DIR)/$(MAC2VENDOR_DATA_ORIG) $(DL_DIR)/$(MAC2VENDOR_DATA)
 
 $(MAC2VENDOR_DIR)/.data: $(DL_DIR)/$(MAC2VENDOR_DATA)
 	mkdir -p $(MAC2VENDOR_DIR)/oui-db
 	for i in 0 1 2 3 4 5 6 7 8 9 A B C D E F; do \
-	  grep "^[0-9A-F]\{5\}$$i " $(DL_DIR)/$(MAC2VENDOR_DATA) | \
+	  sed 's/^ *//' $(DL_DIR)/$(MAC2VENDOR_DATA) | \
+	  grep "^[0-9A-F]\{5\}$$i " | \
 	  sed 's/ [^(]*.base 16.[^0-9a-zA-Z]*/~/' > $(MAC2VENDOR_DIR)/oui-db/xxxxx$$i ; \
 	  chmod a-w $(MAC2VENDOR_DIR)/oui-db/xxxxx$$i ; \
 	done
