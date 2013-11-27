@@ -94,6 +94,8 @@ Released **TBD**
 
 -- "Restart" services now displays "is Running" or "is Stopped" results when possible.
 
+-- SQL-Data tab, for 'staff' user, disable actions: table_create, view_create, table_drop, view_drop, table_empty
+
 
 Additions for AstLinux 1.1.3:
 =============================
