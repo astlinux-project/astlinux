@@ -2181,6 +2181,9 @@ else //user is authorized - display the main application
 			//table actions
 			/////////////////////////////////////////////// create table
 			case "table_create":
+			if ($global_user === 'staff') {  //AstLinux//
+				$completed = "Failed: Insufficient 'staff' user privileges for action: ".$_GET['action'];
+			} else {
 				$num = intval($_POST['rows']);
 				$name = $_POST['tablename'];
 				$primary_keys = array();
@@ -2236,9 +2239,13 @@ else //user is authorized - display the main application
 				if(!$result)
 					$error = true;
 				$completed = $lang['tbl']." '".htmlencode($_POST['tablename'])."' ".$lang['created'].".<br/><span style='font-size:11px;'>".htmlencode($query)."</span>";
+			}
 				break;
 			/////////////////////////////////////////////// empty table
 			case "table_empty":
+			if ($global_user === 'staff') {  //AstLinux//
+				$completed = "Failed: Insufficient 'staff' user privileges for action: ".$_GET['action'];
+			} else {
 				$query = "DELETE FROM ".$db->quote_id($_POST['tablename']);
 				$result = $db->query($query);
 				if(!$result)
@@ -2248,30 +2255,43 @@ else //user is authorized - display the main application
 				if(!$result)
 					$error = true;
 				$completed = $lang['tbl']." '".htmlencode($_POST['tablename'])."' ".$lang['emptied'].".<br/><span style='font-size:11px;'>".htmlencode($query)."</span>";
+			}
 				break;
 			/////////////////////////////////////////////// create view
 			case "view_create":
+			if ($global_user === 'staff') {  //AstLinux//
+				$completed = "Failed: Insufficient 'staff' user privileges for action: ".$_GET['action'];
+			} else {
 				$query = "CREATE VIEW ".$db->quote($_POST['viewname'])." AS ".$_POST['select'];
 				$result = $db->query($query);
 				if(!$result)
 					$error = true;
 				$completed = $lang['view']." '".htmlencode($_POST['viewname'])."' ".$lang['created'].".<br/><span style='font-size:11px;'>".htmlencode($query)."</span>";
+			}
 				break;
 			/////////////////////////////////////////////// drop table
 			case "table_drop":
+			if ($global_user === 'staff') {  //AstLinux//
+				$completed = "Failed: Insufficient 'staff' user privileges for action: ".$_GET['action'];
+			} else {
 				$query = "DROP TABLE ".$db->quote_id($_POST['tablename']);
 				$result=$db->query($query);
 				if(!$result)
 					$error = true;
 				$completed = $lang['tbl']." '".htmlencode($_POST['tablename'])."' ".$lang['dropped'].".";
+			}
 				break;
 			/////////////////////////////////////////////// drop view
 			case "view_drop":
+			if ($global_user === 'staff') {  //AstLinux//
+				$completed = "Failed: Insufficient 'staff' user privileges for action: ".$_GET['action'];
+			} else {
 				$query = "DROP VIEW ".$db->quote_id($_POST['viewname']);
 				$result=$db->query($query);
 				if(!$result)
 					$error = true;
 				$completed = $lang['view']." '".htmlencode($_POST['viewname'])."' ".$lang['dropped'].".";
+			}
 				break;
 			/////////////////////////////////////////////// rename table
 			case "table_rename":
