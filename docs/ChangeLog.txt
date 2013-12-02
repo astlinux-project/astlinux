@@ -59,7 +59,7 @@ Released **TBD**
 
 -- libcurl (curl) version bump to 7.33.0, (security fixes: CVE-2013-1944, CVE-2013-2174, CVE-2013-4545) and bug fixes.
 
--- lighttpd, version bump to 1.4.33, bug fixes
+-- lighttpd, version bump to 1.4.33, (upstream security fixes: CVE-2013-4559, CVE-2013-4560) and bug fixes.
 
 -- radvd, version bump to 1.9.5
 
