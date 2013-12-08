@@ -61,6 +61,8 @@ Released **TBD**
 
 -- lighttpd, version bump to 1.4.33, (upstream security fixes: CVE-2013-4559, CVE-2013-4560) and bug fixes.
 
+-- dnsmasq, version bump to 2.68
+
 -- radvd, version bump to 1.9.5
 
 -- libpcap / tcpdump, version bump to 1.4.0 / 4.4.0
