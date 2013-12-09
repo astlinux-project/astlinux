@@ -63,7 +63,7 @@ Released **TBD**
 
 -- dnsmasq, version bump to 2.68
 
--- radvd, version bump to 1.9.5
+-- radvd, version bump to 1.9.7
 
 -- libpcap / tcpdump, version bump to 1.4.0 / 4.4.0
 
