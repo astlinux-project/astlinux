@@ -3,13 +3,17 @@
 # dahdi-tools
 #
 ##############################################################
-ifeq ($(BR2_PACKAGE_RHINO),y)
+ifeq ($(BR2_PACKAGE_DAHDI_HFCS),y)
 DAHDI_TOOLS_VERSION := 2.6.2
 else
- ifeq ($(BR2_PACKAGE_WANPIPE),y)
+ ifeq ($(BR2_PACKAGE_RHINO),y)
 DAHDI_TOOLS_VERSION := 2.6.2
  else
+  ifeq ($(BR2_PACKAGE_WANPIPE),y)
 DAHDI_TOOLS_VERSION := 2.6.2
+  else
+DAHDI_TOOLS_VERSION := 2.8.0
+  endif
  endif
 endif
 DAHDI_TOOLS_SOURCE := dahdi-tools-$(DAHDI_TOOLS_VERSION).tar.gz
@@ -21,12 +25,22 @@ PERLLIBDIR := /usr/local/share/perl
 DAHDI_TOOLS_PREREQS := libusb newt dahdi-linux
 DAHDI_TOOLS_CONFIGURE_ARGS :=
 
+# $(call ndots start,end,dotted-string)
+dot:=.
+empty:=
+space:=$(empty) $(empty)
+ndots = $(subst $(space),$(dot),$(wordlist $(1),$(2),$(subst $(dot),$(space),$3)))
+##
+DAHDI_TOOLS_VERSION_SINGLE := $(call ndots,1,1,$(DAHDI_TOOLS_VERSION))
+DAHDI_TOOLS_VERSION_TUPLE := $(call ndots,1,2,$(DAHDI_TOOLS_VERSION))
+
 $(DL_DIR)/$(DAHDI_TOOLS_SOURCE):
 	$(WGET) -P $(DL_DIR) $(DAHDI_TOOLS_SITE)/$(DAHDI_TOOLS_SOURCE)
 
 $(DAHDI_TOOLS_DIR)/.source: $(DL_DIR)/$(DAHDI_TOOLS_SOURCE)
 	zcat $(DL_DIR)/$(DAHDI_TOOLS_SOURCE) | tar -C $(BUILD_DIR) $(TAR_OPTIONS) -
-	toolchain/patch-kernel.sh $(DAHDI_TOOLS_DIR) package/dahdi-tools/ dahdi-tools\*.patch
+	toolchain/patch-kernel.sh $(DAHDI_TOOLS_DIR) package/dahdi-tools/ dahdi-tools-$(DAHDI_TOOLS_VERSION_SINGLE)-\*.patch
+	toolchain/patch-kernel.sh $(DAHDI_TOOLS_DIR) package/dahdi-tools/ dahdi-tools-$(DAHDI_TOOLS_VERSION_TUPLE)-\*.patch
 	touch $@
 
 $(DAHDI_TOOLS_DIR)/.configured: $(DAHDI_TOOLS_DIR)/.source | $(DAHDI_TOOLS_PREREQS)
@@ -54,7 +68,11 @@ $(DAHDI_TOOLS_DIR)/.configured: $(DAHDI_TOOLS_DIR)/.source | $(DAHDI_TOOLS_PRERE
 	touch $@
 
 $(DAHDI_TOOLS_DIR)/menuselect.makeopts: $(DAHDI_TOOLS_DIR)/.configured
+ifeq ($(DAHDI_TOOLS_VERSION_TUPLE),2.6)
 	$(MAKE) -C $(DAHDI_TOOLS_DIR) CC=gcc menuselect.makeopts
+else
+	touch $@
+endif
 
 $(DAHDI_TOOLS_DIR)/$(DAHDI_TOOLS_BINARY): $(DAHDI_TOOLS_DIR)/menuselect.makeopts
 	$(MAKE) -C $(DAHDI_TOOLS_DIR) HOSTCC=gcc CC=$(TARGET_CC)
@@ -69,6 +87,9 @@ $(TARGET_DIR)/$(DAHDI_TOOLS_TARGET_BINARY): $(DAHDI_TOOLS_DIR)/$(DAHDI_TOOLS_BIN
 	mv $(TARGET_DIR)/etc/dahdi $(TARGET_DIR)/stat/etc/dahdi
 	ln -snf /tmp/etc/dahdi $(TARGET_DIR)/etc/dahdi
 	$(INSTALL) -D -m 755 package/dahdi-tools/dahdi.init $(TARGET_DIR)/etc/init.d/dahdi
+	if [ -f $(DAHDI_TOOLS_DIR)/dahdi.rules ]; then \
+		$(INSTALL) -D -m 644 $(DAHDI_TOOLS_DIR)/dahdi.rules $(TARGET_DIR)/etc/udev/rules.d/ ; \
+	fi
 
 $(STAGING_DIR)/usr/lib/libtonezone.a: $(TARGET_DIR)/$(DAHDI_TOOLS_TARGET_BINARY)
 	$(MAKE) -C $(DAHDI_TOOLS_DIR) HOSTCC=gcc CC=$(TARGET_CC) \

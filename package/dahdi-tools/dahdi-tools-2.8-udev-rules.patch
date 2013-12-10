@@ -1,0 +1,11 @@
+--- dahdi-tools-2.8.0/dahdi.rules.orig	2013-12-09 18:36:22.000000000 -0600
++++ dahdi-tools-2.8.0/dahdi.rules	2013-12-09 18:37:39.000000000 -0600
+@@ -2,7 +2,7 @@
+ ACTION!="add",	GOTO="dahdi_add_end"
+ 
+ # DAHDI devices with ownership/permissions for running as non-root
+-SUBSYSTEM=="dahdi",		OWNER="asterisk", GROUP="asterisk", MODE="0660"
++#SUBSYSTEM=="dahdi",		OWNER="asterisk", GROUP="asterisk", MODE="0660"
+ 
+ # Backward compat names: /dev/dahdi/<channo>
+ SUBSYSTEM=="dahdi_channels",	SYMLINK+="dahdi/%m"

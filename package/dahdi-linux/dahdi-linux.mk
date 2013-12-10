@@ -3,13 +3,17 @@
 # dahdi-linux
 #
 ##############################################################
-ifeq ($(BR2_PACKAGE_RHINO),y)
+ifeq ($(BR2_PACKAGE_DAHDI_HFCS),y)
 DAHDI_LINUX_VERSION := 2.6.2
 else
- ifeq ($(BR2_PACKAGE_WANPIPE),y)
+ ifeq ($(BR2_PACKAGE_RHINO),y)
 DAHDI_LINUX_VERSION := 2.6.2
  else
+  ifeq ($(BR2_PACKAGE_WANPIPE),y)
 DAHDI_LINUX_VERSION := 2.6.2
+  else
+DAHDI_LINUX_VERSION := 2.8.0
+  endif
  endif
 endif
 DAHDI_LINUX_SOURCE := dahdi-linux-$(DAHDI_LINUX_VERSION).tar.gz
@@ -17,11 +21,20 @@ DAHDI_LINUX_SITE := http://downloads.asterisk.org/pub/telephony/dahdi-linux/rele
 DAHDI_LINUX_DIR := $(BUILD_DIR)/dahdi-linux-$(DAHDI_LINUX_VERSION)
 DAHDI_LINUX_DRIVERS_DIR := $(DAHDI_LINUX_DIR)/drivers/dahdi
 DAHDI_LINUX_BINARY := dahdi.ko
-DAHDI_LINUX_TARGET_BINARY := etc/udev/rules.d/dahdi.rules
+DAHDI_LINUX_TARGET_BINARY := usr/share/dahdi/XppConfig.pm
 PERLLIBDIR := /usr/local/share/perl
 DAHDI_LINUX_PREREQS := linux libusb udev
 DAHDI_LINUX_CONFIGURE_ARGS :=
 DEPMOD := $(HOST_DIR)/usr/sbin/depmod
+
+# $(call ndots start,end,dotted-string)
+dot:=.
+empty:=
+space:=$(empty) $(empty)
+ndots = $(subst $(space),$(dot),$(wordlist $(1),$(2),$(subst $(dot),$(space),$3)))
+##
+DAHDI_LINUX_VERSION_SINGLE := $(call ndots,1,1,$(DAHDI_LINUX_VERSION))
+DAHDI_LINUX_VERSION_TUPLE := $(call ndots,1,2,$(DAHDI_LINUX_VERSION))
 
 $(DL_DIR)/$(DAHDI_LINUX_SOURCE):
 	$(WGET) -P $(DL_DIR) $(DAHDI_LINUX_SITE)/$(DAHDI_LINUX_SOURCE)
@@ -31,18 +44,15 @@ $(DAHDI_LINUX_DIR)/.source: $(DL_DIR)/$(DAHDI_LINUX_SOURCE)  | $(DAHDI_LINUX_PRE
 ifeq ($(strip $(BR2_PACKAGE_DAHDI_OSLEC)),y)
 	mkdir -p $(DAHDI_LINUX_DIR)/drivers/staging/echo
 	cp -a $(BUILD_DIR)/linux-$(LINUX_VERSION)/drivers/staging/echo/* $(DAHDI_LINUX_DIR)/drivers/staging/echo
- ifeq ($(strip $(DAHDI_LINUX_VERSION)),2.5.0.2)
-	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ oslec-pre2.6.1\*.patch
- else
-	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ oslec-2.6.1\*.patch
- endif
+	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ oslec-$(DAHDI_LINUX_VERSION_TUPLE)-\*.patch
 endif
-ifeq ($(strip $(BR2_PACKAGE_DAHDI_HFCS)),y)
+ifeq ($(BR2_PACKAGE_DAHDI_HFCS),y)
 	mkdir -p $(DAHDI_LINUX_DIR)/drivers/dahdi/hfcs
-	cp -a package/dahdi-linux/hfcs/* $(DAHDI_LINUX_DIR)/drivers/dahdi/hfcs
-	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ hfcs\*.patch
+	cp -a package/dahdi-linux/hfcs-$(DAHDI_LINUX_VERSION_TUPLE)/* $(DAHDI_LINUX_DIR)/drivers/dahdi/hfcs
+	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ hfcs-$(DAHDI_LINUX_VERSION_TUPLE)-\*.patch
 endif
-	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ dahdi-linux\*.patch
+	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ dahdi-linux-$(DAHDI_LINUX_VERSION_SINGLE)-\*.patch
+	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ dahdi-linux-$(DAHDI_LINUX_VERSION_TUPLE)-\*.patch
 	touch $@
 
 $(DAHDI_LINUX_DRIVERS_DIR)/$(DAHDI_LINUX_BINARY): $(DAHDI_LINUX_DIR)/.source
