@@ -61,7 +61,8 @@ Released **TBD**
 
 -- lighttpd, version bump to 1.4.33, (upstream security fixes: CVE-2013-4559, CVE-2013-4560) and bug fixes.
 
--- dnsmasq, version bump to 2.68
+-- dnsmasq, version bump to 2.68, new feature allows "enable-tftp=" to define allowed interfaces for TFTP.
+   More Info: View file "/stat/etc/dnsmasq.static" for syntax and make changes to "/mnt/kd/dnsmasq.static".
 
 -- radvd, version bump to 1.9.7
 
