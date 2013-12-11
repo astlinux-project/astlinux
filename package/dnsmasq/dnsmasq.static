@@ -13,6 +13,11 @@
 #dhcp-option=lan3,44,192.168.102.2
 #dhcp-option=dmz,44,192.168.200.2
 
+## Set allowed TFTP interfaces, defaults to DHCP interfaces when enabled with "enable-tftp".
+## (Note: AstLinux 1.1.4 or later is required)
+#enable-tftp=eth1,eth2,eth3
+#enable-tftp=eth*
+
 ## Set the boot filename for netboot/PXE using internal TFTP server
 ## ( files placed in /tftpboot/ )
 #dhcp-boot=pxelinux.0
