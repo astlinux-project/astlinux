@@ -3,17 +3,13 @@
 # dahdi-linux
 #
 ##############################################################
-ifeq ($(BR2_PACKAGE_DAHDI_HFCS),y)
+ifeq ($(BR2_PACKAGE_RHINO),y)
 DAHDI_LINUX_VERSION := 2.6.2
 else
- ifeq ($(BR2_PACKAGE_RHINO),y)
+ ifeq ($(BR2_PACKAGE_WANPIPE),y)
 DAHDI_LINUX_VERSION := 2.6.2
  else
-  ifeq ($(BR2_PACKAGE_WANPIPE),y)
-DAHDI_LINUX_VERSION := 2.6.2
-  else
 DAHDI_LINUX_VERSION := 2.8.0
-  endif
  endif
 endif
 DAHDI_LINUX_SOURCE := dahdi-linux-$(DAHDI_LINUX_VERSION).tar.gz
