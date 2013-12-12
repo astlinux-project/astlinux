@@ -74,6 +74,10 @@ $(TARGET_DIR)/$(DAHDI_LINUX_TARGET_BINARY): $(DAHDI_LINUX_DRIVERS_DIR)/$(DAHDI_L
 		PERLLIBDIR=$(PERLLIBDIR) \
 		install
 	rm -rf $(TARGET_DIR)/usr/include
+	# Remove duplicate dahdi firmware files in target /usr/lib/hotplug/firmware
+	if [ -d $(TARGET_DIR)/usr/lib/hotplug/firmware ]; then \
+		find $(TARGET_DIR)/usr/lib/hotplug/firmware/ -type f -name "*dahdi-fw-*" -print0 | xargs -0 rm -f ; \
+	fi
 	$(DEPMOD) -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) -r $(LINUX_VERSION_PROBED)
 
 dahdi-linux: $(TARGET_DIR)/$(DAHDI_LINUX_TARGET_BINARY) \
