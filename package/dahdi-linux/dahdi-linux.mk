@@ -78,6 +78,9 @@ $(TARGET_DIR)/$(DAHDI_LINUX_TARGET_BINARY): $(DAHDI_LINUX_DRIVERS_DIR)/$(DAHDI_L
 	if [ -d $(TARGET_DIR)/usr/lib/hotplug/firmware ]; then \
 		find $(TARGET_DIR)/usr/lib/hotplug/firmware/ -type f -name "*dahdi-fw-*" -print0 | xargs -0 rm -f ; \
 	fi
+ifeq ($(BR2_PACKAGE_DAHDI_NO_CARD_FIRMWARE),y)
+	find $(TARGET_DIR)/lib/firmware/ -type f -name "*dahdi-fw-*" -print0 | xargs -0 rm -f
+endif
 	$(DEPMOD) -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) -r $(LINUX_VERSION_PROBED)
 
 dahdi-linux: $(TARGET_DIR)/$(DAHDI_LINUX_TARGET_BINARY) \

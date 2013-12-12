@@ -30,3 +30,12 @@ config BR2_PACKAGE_DAHDI_HFCS
 
 		http://sourceforge.net/projects/dahdi-hfcs/
 
+config BR2_PACKAGE_DAHDI_NO_CARD_FIRMWARE
+	bool "dahdi_no_card_firmware"
+	default n
+	depends on BR2_PACKAGE_DAHDI_LINUX
+	help
+		Reduce image size by removing PCI / PCI-e card firmware files.
+
+		It saves 3 MB (DAHDI 2.6) or 8 MB (DAHDI 2.8) of uncompressed space.
+
