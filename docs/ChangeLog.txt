@@ -14,6 +14,8 @@ Released **TBD**
 
 -- r8168 version bump to 8.037.00 RealTek PCI-Express Gigabit Ethernet Linux driver
 
+-- php, version bump to 5.3.28, (security fixes: CVE-2013-4073, CVE-2013-6420)
+
 -- ethtool, version bump to 3.12.1
 
 -- openldap, version bump to 2.4.36
@@ -22,7 +24,7 @@ Released **TBD**
 
 -- sqliteodbc, version bump to 0.995
 
--- mysql_client, version bump to 5.1.72
+-- mysql_client, version bump to 5.1.73
 
 -- nano, version bump to 2.3.2
 
@@ -73,6 +75,7 @@ Released **TBD**
 -- Asterisk 1.8.24.0 (version bump) and 11.6.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.6.2 (no change) and dahdi-tools 2.6.2 (no change)
+   Note: dahdi-linux / dahdi-tools 2.8.0 is available via a custom build without wanpipe and without rhino.
 
 ** Web Interface
 
