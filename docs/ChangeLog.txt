@@ -72,7 +72,7 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.8.24.0 (version bump) and 11.6.0 (version bump)
+-- Asterisk 1.8.25.0 (version bump) and 11.7.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.6.2 (no change) and dahdi-tools 2.6.2 (no change)
    Note: dahdi-linux / dahdi-tools 2.8.0 is available via a custom build without wanpipe and without rhino.
