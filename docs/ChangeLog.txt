@@ -59,7 +59,7 @@ Released **TBD**
    and a new NetStat tab in the web interface.  This feature is disabled by default.
    Variables: NETSTAT_SERVER, NETSTAT_CAPTURE, and advanced NETSTAT_FILTER, NETSTAT_PROMISCUOUS
 
--- libcurl (curl) version bump to 7.33.0, (security fixes: CVE-2013-1944, CVE-2013-2174, CVE-2013-4545) and bug fixes.
+-- libcurl (curl) version bump to 7.34.0, (security fixes: CVE-2013-1944, CVE-2013-2174, CVE-2013-4545) and bug fixes.
 
 -- lighttpd, version bump to 1.4.33, (upstream security fixes: CVE-2013-4559, CVE-2013-4560) and bug fixes.
 
@@ -75,7 +75,7 @@ Released **TBD**
 -- Asterisk 1.8.25.0 (version bump) and 11.7.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.6.2 (no change) and dahdi-tools 2.6.2 (no change)
-   Note: dahdi-linux / dahdi-tools 2.8.0 is available via a custom build without wanpipe and without rhino.
+   Note: dahdi-linux 2.8.0.1 / dahdi-tools 2.8.0 is available via a custom build without wanpipe and without rhino.
 
 ** Web Interface
 
