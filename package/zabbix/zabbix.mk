@@ -22,7 +22,7 @@ ZABBIX_CONF_OPT += \
  ifeq ($(strip $(BR2_PACKAGE_CURL)),y)
 ZABBIX_DEPENDENCIES += libcurl
 ZABBIX_CONF_OPT += \
-	--with-libcurl="$(STAGING_DIR)/usr/bin/curl-config"
+	--with-libcurl="$(STAGING_DIR)/usr" LIBCURL_LIBS="-lcurl"
  endif
 
  ifeq ($(strip $(BR2_PACKAGE_NETSNMP)),y)
