@@ -384,6 +384,7 @@ ipp		631/udp				# Internet Printing Protocol
 openvpn		1194/tcp			# OpenVPN
 openvpn		1194/udp			# OpenVPN
 ssdp		1900/udp			# Simple Service Discovery Protocol (SSDP)
+nut		3493/tcp			# Network UPS Tools
 apcupsd		3551/tcp			# apcupsd UPS daemon
 fop2		4445/tcp			# Flash Operator Panel (FOP2)
 iax2		4569/udp			# Inter-Asterisk eXchange (IAX2)
