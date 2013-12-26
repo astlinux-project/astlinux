@@ -3,18 +3,10 @@
 # asterisk
 #
 ##############################################################
-ifeq ($(BR2_PACKAGE_ASTERISK_v1_4),y)
-ASTERISK_VERSION := 1.4.44
-else
- ifeq ($(BR2_PACKAGE_ASTERISK_v1_6),y)
-ASTERISK_VERSION := 1.6.2.21
- else
-  ifeq ($(BR2_PACKAGE_ASTERISK_v1_8),y)
+ifeq ($(BR2_PACKAGE_ASTERISK_v1_8),y)
 ASTERISK_VERSION := 1.8.25.0
-  else
+else
 ASTERISK_VERSION := 11.7.0
-  endif
- endif
 endif
 ASTERISK_SOURCE := asterisk-$(ASTERISK_VERSION).tar.gz
 ASTERISK_SITE := http://downloads.asterisk.org/pub/telephony/asterisk/releases
@@ -55,24 +47,23 @@ ifeq ($(strip $(BR2_PACKAGE_ZLIB)),y)
 ASTERISK_LIBS += -lz
 endif
 
-ifneq ($(ASTERISK_VERSION_TUPLE),1.4)
 TARGET_CONFIGURE_OPTS+=ac_cv_pthread_rwlock_timedwrlock=no
 
 ASTERISK_CONFIGURE_ARGS+= \
 			--without-sdl
- ifeq ($(strip $(BR2_PACKAGE_LIBXML2)),y)
+
+ifeq ($(strip $(BR2_PACKAGE_LIBXML2)),y)
 ASTERISK_EXTRAS+=libxml2
 ASTERISK_CONFIGURE_ARGS+= \
 			--with-libxml2="$(STAGING_DIR)/usr" 
- else
+else
 ASTERISK_CONFIGURE_ARGS+= \
 			--disable-xmldoc
- endif
+endif
 
 ASTERISK_CONFIGURE_ARGS+= \
 			--without-ldap \
 			--without-lua
-endif
 
 ifeq ($(strip $(BR2_PACKAGE_IKSEMEL)),y)
 ASTERISK_EXTRAS+=iksemel
@@ -87,13 +78,9 @@ ASTERISK_CONFIGURE_ARGS+= \
 endif
 
 ifeq ($(strip $(BR2_PACKAGE_LIBSRTP)),y)
- ifneq ($(ASTERISK_VERSION_TUPLE),1.4)
- ifneq ($(ASTERISK_VERSION_TUPLE),1.6)
 ASTERISK_EXTRAS+=libsrtp
 ASTERISK_CONFIGURE_ARGS+= \
 			--with-srtp="$(STAGING_DIR)/usr" 
- endif
- endif
 endif
 
 ifeq ($(strip $(BR2_PACKAGE_UW_IMAP)),y)
@@ -102,15 +89,10 @@ ASTERISK_CONFIGURE_ARGS+= \
 			--with-imap="$(BUILD_DIR)/uw-imap-2007e" 
 endif
 
-ifneq ($(ASTERISK_VERSION_TUPLE),1.4)
- ifeq ($(strip $(BR2_PACKAGE_NETSNMP)),y)
+ifeq ($(strip $(BR2_PACKAGE_NETSNMP)),y)
 ASTERISK_EXTRAS+=netsnmp
 ASTERISK_CONFIGURE_ARGS+= \
 			--with-netsnmp="$(STAGING_DIR)/usr"
- else
-ASTERISK_CONFIGURE_ARGS+= \
-			--without-netsnmp
- endif
 else
 ASTERISK_CONFIGURE_ARGS+= \
 			--without-netsnmp
@@ -145,12 +127,10 @@ ASTERISK_CONFIGURE_ARGS+= \
 			--with-tonezone="$(STAGING_DIR)/usr"
 endif
 
-ifneq ($(ASTERISK_VERSION_TUPLE),1.4)
-  ifeq ($(strip $(BR2_PACKAGE_SQLITE)),y)
-  ASTERISK_EXTRAS+=sqlite
-  ASTERISK_CONFIGURE_ARGS+= \
+ifeq ($(strip $(BR2_PACKAGE_SQLITE)),y)
+ASTERISK_EXTRAS+=sqlite
+ASTERISK_CONFIGURE_ARGS+= \
                         --with-sqlite3="$(STAGING_DIR)/usr"
-  endif
 endif
 
 ifeq ($(strip $(BR2_PACKAGE_CURL)),y)
@@ -190,22 +170,6 @@ else
 	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/ asterisk-$(ASTERISK_VERSION_SINGLE)-\*.patch
 	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/ asterisk-$(ASTERISK_VERSION_TUPLE)-\*.patch
 endif
-
-ifeq ($(strip $(BR2_PACKAGE_SPANDSP)),y)
- ifeq ($(strip $(BR2_PACKAGE_SPANDSP_APP_FAX)),y)
-	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/ spandsp.patch
-	cp -p package/asterisk/app_fax.c $(ASTERISK_DIR)/apps
- endif
-endif
-
-ifeq ($(strip $(BR2_PACKAGE_ASTERISK_ILBC)),y)
-	zcat package/asterisk/ilbc-codec.tar.gz | tar -C $(ASTERISK_DIR) $(TAR_OPTIONS) -
-	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/ ilbc-codec-\*.patch
-	$(SED) 's:<defaultenabled>no</defaultenabled>:<defaultenabled>yes</defaultenabled>:' \
-		$(ASTERISK_DIR)/codecs/codec_ilbc.c
-endif
-
-	cp -p package/asterisk/Makefile.module $(ASTERISK_DIR)/Makefile.module
 
 	touch $@
 
@@ -290,11 +254,7 @@ $(TARGET_DIR)/$(ASTERISK_TARGET_BINARY): $(ASTERISK_DIR)/$(ASTERISK_BINARY)
 	$(INSTALL) -D -m 0755 package/asterisk/safe_asterisk $(TARGET_DIR)/usr/sbin/safe_asterisk
 	$(INSTALL) -D -m 0755 package/asterisk/asterisk-sip-monitor $(TARGET_DIR)/usr/sbin/asterisk-sip-monitor
 	$(INSTALL) -D -m 0755 package/asterisk/asterisk-sip-monitor-ctrl $(TARGET_DIR)/usr/sbin/asterisk-sip-monitor-ctrl
-ifneq ($(ASTERISK_VERSION_TUPLE),1.4)
-ifneq ($(ASTERISK_VERSION_TUPLE),1.6)
 	$(INSTALL) -D -m 0755 $(ASTERISK_DIR)/contrib/scripts/ast_tls_cert $(TARGET_DIR)/usr/sbin/ast_tls_cert
-endif
-endif
 	mkdir -p $(TARGET_DIR)/stat/var/lib/asterisk
 	mv $(TARGET_DIR)/var/lib/asterisk/* $(TARGET_DIR)/stat/var/lib/asterisk/
 	rmdir $(TARGET_DIR)/var/lib/asterisk

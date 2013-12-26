@@ -14,19 +14,9 @@ config BR2_PACKAGE_ASTERISK
 choice
 	prompt "Asterisk Version"
 	depends on BR2_PACKAGE_ASTERISK
-	default BR2_PACKAGE_ASTERISK_v1_4
+	default BR2_PACKAGE_ASTERISK_v1_8
 	help
 		Select which version of Asterisk to compile and install.
-
-	config BR2_PACKAGE_ASTERISK_v1_4
-		bool "Asterisk v1.4.x"
-		help
-			Asterisk Long Term Stable Release.
-
-	config BR2_PACKAGE_ASTERISK_v1_6
-		bool "Asterisk v1.6.x"
-		help
-			Deprecated Branch
 
 	config BR2_PACKAGE_ASTERISK_v1_8
 		bool "Asterisk v1.8.x"
@@ -55,13 +45,4 @@ config BR2_PACKAGE_ASTERISK_MENUSELECT
 	depends on BR2_PACKAGE_ASTERISK
 	help
 	  Run interactive menuselect to select custom Asterisk options
-
-config BR2_PACKAGE_ASTERISK_ILBC
-	bool "Asterisk iLBC CODEC"
-	default n
-	depends on BR2_PACKAGE_ASTERISK && (BR2_PACKAGE_ASTERISK_v1_4 || BR2_PACKAGE_ASTERISK_v1_6)
-	help
-	  iLBC CODEC for Asterisk
-
-	  http://www.ietf.org/rfc/rfc3951.txt
 

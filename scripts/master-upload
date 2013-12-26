@@ -71,12 +71,6 @@ upload_flash_images()
 set_asterisk_version()
 {
   case $1 in
-    ast14)
-      FIRMWARE="firmware-1.x"
-      IMG="img"
-      MIRROR_FIRMWARE="$FIRMWARE"
-      MIRROR_IMG="downloads/img"
-      ;;
     ast18)
       FIRMWARE="ast18-firmware-1.x"
       IMG="ast18-img"

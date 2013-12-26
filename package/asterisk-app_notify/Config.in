@@ -1,7 +1,7 @@
 config BR2_PACKAGE_ASTERISK_APP_NOTIFY
         bool "asterisk-app_notify"
         default n
-        depends on BR2_PACKAGE_ASTERISK && (BR2_PACKAGE_ASTERISK_v1_4 || BR2_PACKAGE_ASTERISK_v1_6 || BR2_PACKAGE_ASTERISK_v1_8)
+        depends on BR2_PACKAGE_ASTERISK && BR2_PACKAGE_ASTERISK_v1_8
         help
                 Network Notification Application Module for Asterisk
 

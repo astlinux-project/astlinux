@@ -24,6 +24,7 @@ $(APPNOTIFY_DIR)/.patched: $(APPNOTIFY_DIR)/.unpacked
 	touch $@
 
 $(APPNOTIFY_DIR)/app_notify.so: $(APPNOTIFY_DIR)/.patched | asterisk
+	cp -p package/asterisk-app_notify/Makefile.module $(ASTERISK_DIR)/Makefile.module
 	$(MAKE) -C $(APPNOTIFY_DIR) -f $(ASTERISK_DIR)/Makefile.module \
 		all \
 		ASTSRC=$(ASTERISK_DIR) \
@@ -36,6 +37,7 @@ $(APPNOTIFY_TARGET_DIR)/app_notify.so: $(APPNOTIFY_DIR)/app_notify.so
 		ASTSRC=$(ASTERISK_DIR) \
 		LOADABLE_MODS=app_notify LIBS= \
 		DESTDIR=$(TARGET_DIR)
+	rm -rf $(ASTERISK_DIR)/Makefile.module
 
 asterisk-app_notify: $(APPNOTIFY_TARGET_DIR)/app_notify.so
 

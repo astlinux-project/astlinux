@@ -1,7 +1,0 @@
-config BR2_PACKAGE_ASTERISK_APP_NVFAX
-	bool "asterisk-app_nvfax"
-	default n
-	depends on BR2_PACKAGE_ASTERISK && BR2_PACKAGE_ASTERISK_v1_4
-	help
-	  Detect fax tone on incoming calls.
-

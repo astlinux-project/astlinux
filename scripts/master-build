@@ -52,13 +52,6 @@ set_smp_kernel()
 set_asterisk_version()
 {
   case $1 in
-    ast14)
-      CONFIG="astlinux.config"
-      ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *1.4/) {print $2; exit} }' package/asterisk/asterisk.mk)"
-      ASTERISK_VERSION="asterisk-${ASTERISK_VERSION// /}"
-      FIRMWARE="firmware-1.x"
-      IMG="img"
-      ;;
     ast18)
       CONFIG="astlinux18.config"
       ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *1.8/) {print $2; exit} }' package/asterisk/asterisk.mk)"

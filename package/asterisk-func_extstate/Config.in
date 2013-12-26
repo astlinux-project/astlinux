@@ -1,9 +1,0 @@
-config BR2_PACKAGE_ASTERISK_FUNC_EXTSTATE
-	bool "asterisk-func_extstate"
-	default n
-	depends on BR2_PACKAGE_ASTERISK && BR2_PACKAGE_ASTERISK_v1_4
-	help
-	  Backport of func_extstate from Asterisk 1.6
-
-	  See:
-           https://issues.asterisk.org/view.php?id=10635
