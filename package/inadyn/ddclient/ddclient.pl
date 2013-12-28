@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 ######################################################################
-# $Id: ddclient 153 2013-07-08 13:20:35Z wimpunk $
+# $Id: ddclient 157 2013-12-26 09:02:05Z wimpunk $
 #
 # DDCLIENT - a Perl client for updating DynDNS information
 #
@@ -19,9 +19,9 @@ use Getopt::Long;
 use Sys::Hostname;
 use IO::Socket;
 
-my ($VERSION) = q$Revision: 153 $ =~ /(\d+)/;
+my ($VERSION) = q$Revision: 157 $ =~ /(\d+)/;
 
-my $version  = "3.8.0-r". $VERSION;
+my $version  = "3.8.2";
 my $programd  = $0; 
 $programd =~ s%^.*/%%;
 my $program   = $programd;
@@ -732,6 +732,10 @@ do {
 
 		$0 = sprintf("%s - sleeping for %s seconds", $program, $left);
         	$left -= sleep $delay;
+		# preventing deep sleep - see [bugs:#46]
+		if ($left > $daemon) {
+			$left = $daemon;
+		}
 	}
 	$caught_hup = 0;
 	$result = 0;
@@ -1953,6 +1957,7 @@ sub get_ip {
     } elsif ($use eq 'if') {
 	$skip  = opt('if-skip', $h)  || '';
 	$reply = `ifconfig $arg 2> /dev/null`;
+	$reply = `ip addr list dev $arg 2> /dev/null` if $?;
 	$reply = '' if $?;
 
     } elsif ($use eq 'cmd') {
