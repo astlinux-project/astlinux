@@ -6,15 +6,15 @@
 ## 3) Lines beginning with a '#' are treated as comments
 ##
 ex-vi~Copyright (c) 2001-2002 Caldera International Inc. All rights reserved.
-RUNNIX~Copyright (c) 2006-2013 by Kristian Kielhofner.
+RUNNIX~Copyright (c) 2006-2014 by Kristian Kielhofner.
 libSRTP~Copyright (c) 2001-2005 Cisco Systems, Inc. All rights reserved.
 iLBC CODEC~Copyright (c) 2011 The WebRTC project authors. All rights reserved.
-Web Interface~Copyright (c) 2008-2013 Lonnie Abelbeck.
+Web Interface~Copyright (c) 2008-2014 Lonnie Abelbeck.
 shellinabox~Copyright (c) 2008-2010 Markus Gutschke.
-Asterisk~Copyright (c) 1999-2013 Digium, Inc.
-DAHDI~Copyright (c) 2001-2013 Digium, Inc.
+Asterisk~Copyright (c) 1999-2014 Digium, Inc.
+DAHDI~Copyright (c) 2001-2014 Digium, Inc.
 libPRI~Copyright (c) 2001-2012 Digium, Inc.
-Arno's Firewall~Copyright (c) 2001-2013 by Arno van Amersfoort.
+Arno's Firewall~Copyright (c) 2001-2014 by Arno van Amersfoort.
 dnsmasq~Copyright (c) 2000-2012 Simon Kelley.
 OpenSSL~Copyright (c) 1998-2012 The OpenSSL Project. All rights reserved.
 OpenSSH~Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland. All rights reserved.
@@ -42,7 +42,7 @@ clix~Copyright (c) 2008-2013 Matthew Wild.
 Lua~Copyright (c) 1994-2012 Lua.org, PUC-Rio.  All rights reserved.
 perl~Copyright (c) 1987-2013 by Larry Wall, et al.
 phpliteadmin~Copyright (c) 2011-2013 phpLiteAdmin (http://phpliteadmin.googlecode.com)
-FOP2~Copyright (c) 2009-2013 House Internet S.R.L. (http://www.fop2.com)
+FOP2~Copyright (c) 2009-2014 House Internet S.R.L. (http://www.fop2.com)
 ddclient~Copyright (c) 1999-2013 Paul Burry, wimpunk, et al.
 vCard converter~Copyright (c) 2006-2013 Thomas Bruederli <thomas@brotherli.ch>
 OpenLDAP~Copyright (c) 1998-2013 The OpenLDAP Foundation. All rights reserved.
