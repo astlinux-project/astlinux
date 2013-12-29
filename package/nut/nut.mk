@@ -26,8 +26,14 @@ ifeq ($(BR2_TOOLCHAIN_USES_UCLIBC),y)
 NUT_CONF_ENV += LDFLAGS="$(TARGET_LDFLAGS) -lm"
 endif
 
-# All drivers without serial
+# serial driver optional support
+ifeq ($(BR2_PACKAGE_NUT_SERIAL_DRIVERS),y)
+NUT_CONF_OPT += --with-serial
+else
 NUT_CONF_OPT += --without-serial
+endif
+
+# Build all applicable drivers
 NUT_CONF_OPT += --with-drivers=all
 
 ifeq ($(BR2_PACKAGE_AVAHI)$(BR2_PACKAGE_DBUS),yy)
