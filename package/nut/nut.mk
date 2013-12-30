@@ -12,10 +12,13 @@ NUT_DEPENDENCIES = host-pkg-config
 # Our patch changes m4 macros, so we need to autoreconf
 NUT_AUTORECONF = YES
 
-# Put the PID files in a read-write place (/var/run is a tmpfs)
-# since the default location (/var/state/ups) maybe readonly.
 NUT_CONF_OPT = \
-	--with-altpidpath=/var/run/upsd
+	--with-drvpath=/usr/lib/ups \
+	--with-altpidpath=/var/run/ups \
+	--with-user=nobody \
+	--with-group=nobody \
+	--datadir=/usr/share/ups \
+	--sysconfdir=/etc/ups
 
 NUT_CONF_ENV = \
 	GDLIB_CONFIG=$(STAGING_DIR)/usr/bin/gdlib-config \
@@ -88,14 +91,29 @@ NUT_CONF_OPT += --without-ssl
 endif
 
 define NUT_INSTALL_SCRIPT
-	#$(INSTALL) -D -m 755 package/nut/upsd.init $(TARGET_DIR)/etc/init.d/upsd
-	mkdir -p $(TARGET_DIR)/stat/etc/upsd
+	#$(INSTALL) -D -m 755 package/nut/ups.init $(TARGET_DIR)/etc/init.d/ups
+	mkdir -p $(TARGET_DIR)/stat/etc/ups
 	for i in upsd.conf upsd.users ups.conf upsmon.conf upssched.conf; do \
-	  mv $(TARGET_DIR)/etc/$$i.sample $(TARGET_DIR)/stat/etc/upsd/$$i ; \
-       	  ln -sf /tmp/etc/$$i $(TARGET_DIR)/etc/$$i ; \
+	  cp $(TARGET_DIR)/etc/ups/$$i.sample $(TARGET_DIR)/stat/etc/ups/$$i ; \
 	done
+	rm -rf $(TARGET_DIR)/etc/ups
+	ln -s /tmp/etc/ups $(TARGET_DIR)/etc/ups
+	ln -sf ../../init.d/slapd $(TARGET_DIR)/etc/runlevels/default/S35ups
+	ln -sf ../../init.d/slapd $(TARGET_DIR)/etc/runlevels/default/K21ups
 endef
 
 NUT_POST_INSTALL_TARGET_HOOKS += NUT_INSTALL_SCRIPT
+
+NUT_UNINSTALL_STAGING_OPT = --version
+
+define NUT_UNINSTALL_TARGET_CMDS
+	rm -f $(TARGET_DIR)/etc/init.d/ups
+	rm -f $(TARGET_DIR)/etc/ups
+	rm -rf $(TARGET_DIR)/stat/etc/ups
+	rm -rf $(TARGET_DIR)/usr/lib/ups
+	rm -rf $(TARGET_DIR)/usr/share/ups
+	rm -f $(TARGET_DIR)/etc/runlevels/default/S35ups
+	rm -f $(TARGET_DIR)/etc/runlevels/default/K21ups
+endef
 
 $(eval $(call AUTOTARGETS,package,nut))
