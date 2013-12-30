@@ -98,8 +98,8 @@ define NUT_INSTALL_SCRIPT
 	done
 	rm -rf $(TARGET_DIR)/etc/ups
 	ln -s /tmp/etc/ups $(TARGET_DIR)/etc/ups
-	ln -sf ../../init.d/slapd $(TARGET_DIR)/etc/runlevels/default/S35ups
-	ln -sf ../../init.d/slapd $(TARGET_DIR)/etc/runlevels/default/K21ups
+	ln -sf ../../init.d/ups $(TARGET_DIR)/etc/runlevels/default/S35ups
+	ln -sf ../../init.d/ups $(TARGET_DIR)/etc/runlevels/default/K21ups
 endef
 
 NUT_POST_INSTALL_TARGET_HOOKS += NUT_INSTALL_SCRIPT
