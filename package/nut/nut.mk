@@ -91,8 +91,8 @@ NUT_CONF_OPT += --without-ssl
 endif
 
 define NUT_INSTALL_SCRIPT
-	#$(INSTALL) -D -m 755 package/nut/ups.init $(TARGET_DIR)/etc/init.d/ups
-	mkdir -p $(TARGET_DIR)/stat/etc/ups
+	$(INSTALL) -D -m 755 package/nut/ups.init $(TARGET_DIR)/etc/init.d/ups
+	$(INSTALL) -D -m 755 package/nut/upsnotify.sh $(TARGET_DIR)/stat/etc/ups/upsnotify
 	for i in upsd.conf upsd.users ups.conf upsmon.conf upssched.conf; do \
 	  cp $(TARGET_DIR)/etc/ups/$$i.sample $(TARGET_DIR)/stat/etc/ups/$$i ; \
 	done
