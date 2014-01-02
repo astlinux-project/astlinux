@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# Disable if ups or upsmon is running
+if [ -f /var/run/ups/upsd.pid -o -f /var/run/upsmon.pid ]; then
+  exit 0
+fi
+
 . /etc/rc.conf
 
 MANUAL_CONF="/mnt/kd/apcupsd/apcupsd.conf"

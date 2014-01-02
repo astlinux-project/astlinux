@@ -62,12 +62,16 @@ $(TARGET_DIR)/$(APCUPSD_TARGET_BINARY): $(APCUPSD_DIR)/$(APCUPSD_BINARY)
 	#
 	$(INSTALL) -D -m 0755 package/apcupsd/apcupsd.init $(TARGET_DIR)/etc/init.d/apcupsd
 	ln -sf /tmp/etc/apcupsd $(TARGET_DIR)/etc/apcupsd
+	ln -sf ../../init.d/apcupsd $(TARGET_DIR)/etc/runlevels/default/S35apcupsd
+	ln -sf ../../init.d/apcupsd $(TARGET_DIR)/etc/runlevels/default/K21apcupsd
 
 apcupsd: $(TARGET_DIR)/$(APCUPSD_TARGET_BINARY)
 
 apcupsd-source: $(APCUPSD_DIR)/.unpacked
 
 apcupsd-clean:
+	rm -f $(TARGET_DIR)/etc/runlevels/default/S35apcupsd
+	rm -f $(TARGET_DIR)/etc/runlevels/default/K21apcupsd
 	$(MAKE1) -C $(APCUPSD_DIR) uninstall DESTDIR=$(TARGET_DIR)
 	-$(MAKE) -C $(APCUPSD_DIR) clean DESTDIR=$(TARGET_DIR)
 
