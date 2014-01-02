@@ -175,6 +175,8 @@ $fstab_var
   mkdir -m 0700 /var/tmp/asterisk-gui
 
   /sbin/udevd --daemon
+  # Trigger udev USB subsystem in case USB events occured before udev was started.
+  /sbin/udevadm trigger --action=add --subsystem-match=usb
 
   case $ASTLINUX in
 
