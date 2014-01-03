@@ -64,7 +64,19 @@ upsmon master
 
 gen_upsmon_conf()
 {
-  local notify
+  local notify host user pass type
+
+  if [ -n "$UPS_MONITOR_HOST" -a -n "$UPS_MONITOR_USER" -a -n "$UPS_MONITOR_PASS" ]; then
+    host="$UPS_MONITOR_HOST"
+    user="$UPS_MONITOR_USER"
+    pass="$UPS_MONITOR_PASS"
+    type="slave"
+  else
+    host="ups@localhost"
+    user="monuser"
+    pass="${UPS_MONITOR_PASS:-astlinux}"
+    type="master"
+  fi
 
   if [ -f /mnt/kd/ups/upssched.conf ]; then
     notify="/usr/sbin/upssched"
@@ -75,7 +87,7 @@ gen_upsmon_conf()
   fi
 
   echo "RUN_AS_USER root
-MONITOR ups@localhost 1 monuser ${UPS_MONITOR_PASS:-astlinux} master
+MONITOR ${host} 1 ${user} ${pass} ${type}
 MINSUPPLIES 1
 POLLFREQ 5
 POLLFREQALERT 5
@@ -112,9 +124,10 @@ gen_upssched_conf()
 
 init ()
 {
-  local i conf_f man_conf_f man_conf
+  local i conf_f man_conf_f man_conf enable_server
 
-  if [ -n "$UPS_DRIVER" -o -f /mnt/kd/ups/ups.conf ]; then
+  if [ -n "$UPS_DRIVER" -o -f /mnt/kd/ups/ups.conf ] || \
+     [ -n "$UPS_MONITOR_HOST" -a -n "$UPS_MONITOR_USER" -a -n "$UPS_MONITOR_PASS" ]; then
 
     mkdir -p /var/state/ups
     chown nobody:nobody /var/state/ups
@@ -141,10 +154,19 @@ init ()
       fi
       case $i in
         ups.conf)
+          enable_server=1
           if [ $man_conf -eq 0 ]; then
-            gen_ups_conf >> $conf_f
+            if [ -n "$UPS_DRIVER" ]; then
+              gen_ups_conf >> $conf_f
+            else
+              enable_server=0
+            fi
           fi
-          chmod 644 $conf_f
+          if [ $enable_server -eq 0 ]; then
+            rm -f $conf_f
+          else
+            chmod 644 $conf_f
+          fi
           ;;
         upsd.conf)
           if [ $man_conf -eq 0 ]; then
@@ -163,7 +185,7 @@ init ()
           if [ $man_conf -eq 0 ]; then
             gen_upsmon_conf >> $conf_f
           fi
-          chmod 644 $conf_f
+          chmod 640 $conf_f
           ;;
         upssched.conf)
           if [ $man_conf -eq 0 ]; then
@@ -173,19 +195,30 @@ init ()
           ;;
       esac
     done
-  elif [ -f /etc/ups/ups.conf ]; then
-    rm -f /tmp/etc/ups/ups.conf
+  elif [ -f /etc/ups/ups.conf -o -f /etc/ups/upsmon.conf ]; then
+    rm -f /tmp/etc/ups/ups.conf /tmp/etc/ups/upsmon.conf
   fi
 }
 
 start ()
 {
+
+  if [ -f /etc/ups/ups.conf -o -f /etc/ups/upsmon.conf ]; then
+    echo "$(date "+%Y-%m-%d %H:%M:%S") - started" > $LOGFILE
+  fi
+
   if [ -f /etc/ups/ups.conf ]; then
-    echo "Starting ups and upsmon..."
-    echo "Starting ups and upsmon..." > $LOGFILE
+    echo "Starting ups..."
+    echo "Starting ups..." >> $LOGFILE
 
     /usr/lib/ups/upsdrvctl start >> $LOGFILE 2>&1
     upsd >> $LOGFILE 2>&1
+  fi
+
+  if [ -f /etc/ups/upsmon.conf ]; then
+    echo "Starting upsmon..."
+    echo "Starting upsmon..." >> $LOGFILE
+
     upsmon >> $LOGFILE 2>&1
 
     echo "$(date "+%Y-%m-%d %H:%M:%S") - upsmon started" >/var/log/ups-status.log
