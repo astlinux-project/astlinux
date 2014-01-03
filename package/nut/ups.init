@@ -1,10 +1,5 @@
 #!/bin/sh
 
-# Disable if apcupsd is running
-if [ -f /var/run/apcupsd.pid ]; then
-  exit 0
-fi
-
 . /etc/rc.conf
 
 UPSD_PIDFILE="/var/run/ups/upsd.pid"
