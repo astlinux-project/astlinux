@@ -43,11 +43,17 @@ port = ${UPS_DRIVER_PORT:-auto}
 
 gen_upsd_conf()
 {
-  local port
+  local address port
+
+  if [ "$UPS_LISTEN_ALL" = "yes" ]; then
+    address="0.0.0.0"
+  else
+    address="127.0.0.1"
+  fi
 
   port="${UPS_LISTEN_PORT:-3493}"
 
-  echo "LISTEN 0.0.0.0 ${port}"
+  echo "LISTEN ${address} ${port}"
   if [ "$IPV6" = "yes" ]; then
     echo "LISTEN ::1 ${port}"
   fi
@@ -56,26 +62,28 @@ gen_upsd_conf()
 gen_upsd_users()
 {
 
-  echo "[monuser]
-password  = ${UPS_MONITOR_PASS:-astlinux}
+  echo "[${UPS_MONITOR_USER:-monuser}]
+password = ${UPS_MONITOR_PASS:-astlinux}
 upsmon master
 "
 }
 
 gen_upsmon_conf()
 {
-  local notify host user pass type
+  local notify host user pass type pollfreq
 
   if [ -n "$UPS_MONITOR_HOST" -a -n "$UPS_MONITOR_USER" -a -n "$UPS_MONITOR_PASS" ]; then
     host="$UPS_MONITOR_HOST"
     user="$UPS_MONITOR_USER"
     pass="$UPS_MONITOR_PASS"
     type="slave"
+    pollfreq=10
   else
     host="ups@localhost"
-    user="monuser"
+    user="${UPS_MONITOR_USER:-monuser}"
     pass="${UPS_MONITOR_PASS:-astlinux}"
     type="master"
+    pollfreq=5
   fi
 
   if [ -f /mnt/kd/ups/upssched.conf ]; then
@@ -89,10 +97,10 @@ gen_upsmon_conf()
   echo "RUN_AS_USER root
 MONITOR ${host} 1 ${user} ${pass} ${type}
 MINSUPPLIES 1
-POLLFREQ 5
+POLLFREQ ${pollfreq}
 POLLFREQALERT 5
 HOSTSYNC 15
-DEADTIME 15
+DEADTIME $((pollfreq*3))
 SHUTDOWNCMD /sbin/poweroff
 POWERDOWNFLAG /etc/ups/killpower
 NOTIFYCMD ${notify}
