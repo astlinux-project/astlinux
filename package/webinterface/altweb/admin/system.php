@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2013 Lonnie Abelbeck
+// Copyright (C) 2008-2014 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -189,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $srcfile .= ' -e "s/^blocked-hosts$/&/p" -e "s/^dnsmasq.static$/&/p" -e "s/^hosts$/&/p" -e "s/^ethers$/&/p"';
       $srcfile .= ' -e "s/^rc.local$/&/p" -e "s/^rc.local.stop$/&/p" -e "s/^rc.elocal$/&/p" -e "s/^rc.ledcontrol$/&/p"';
       $srcfile .= ' -e "s/^crontabs$/&/p" -e "s/^snmp$/&/p" -e "s/^fop2$/&/p"';
-      $srcfile .= ' -e "s/^openvpn$/&/p" -e "s/^ipsec$/&/p" -e "s/^dahdi$/&/p" -e "s/^ssl$/&/p" -e "s/^apcupsd$/&/p")';
+      $srcfile .= ' -e "s/^openvpn$/&/p" -e "s/^ipsec$/&/p" -e "s/^dahdi$/&/p" -e "s/^ssl$/&/p" -e "s/^ups$/&/p")';
       $srcfile .= $firewall;
     } elseif ($backup_type === 'cdr') {
       $srcfile = '$(ls -1 /mnt/kd/ | sed -n -e "s/^cdr-.*/&/p")';
@@ -591,6 +591,9 @@ require_once '../common/header.php';
   if (is_file($file = '/var/log/openvpnclient.log')) {
     putHtml('<option value="'.$file.'">OpenVPN Client log</option>');
   }
+  if (is_file($file = '/var/log/ups.log')) {
+    putHtml('<option value="'.$file.'">UPS Daemon Startup log</option>');
+  }
   if (is_file($file = '/var/log/zabbix_agentd.log')) {
     putHtml('<option value="'.$file.'">Zabbix Agent log</option>');
   }
@@ -855,6 +858,7 @@ if (is_file('/usr/sbin/upgrade-RUNNIX-image')) {
           $var === 'PPTP_USER_PASS' ||
           $var === 'OVPN_USER_PASS' ||
           $var === 'OVPNC_USER_PASS' ||
+          $var === 'UPS_MONITOR_PASS' ||
           $var === 'IPSECM_XAUTH_USER_PASS' ||
           $var === 'IPSEC_PSK_ASSOCIATIONS') {
         $value = '********';

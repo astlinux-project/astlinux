@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2013 Lonnie Abelbeck
+// Copyright (C) 2008-2014 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -30,6 +30,7 @@
 // 09-28-2012, Added Latest System Logs/Hide Log Words
 // 09-28-2012, Added Custom Asterisk Command
 // 01-20-2013, Added XMPP Server Status
+// 01-03-2014, Added NUT UPS Monitoring Status
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -72,7 +73,7 @@ function getDaemons() {
   $status['openvpn'] = 0;
   $status['racoon'] = 0;
   $status['pptpd'] = 0;
-  $status['apcupsd'] = 0;
+  $status['upsmon'] = 0;
   $status['syslogd'] = 0;
   $status['zabbix_agentd'] = 0;
   $status['zabbix_proxy'] = 0;
@@ -99,8 +100,8 @@ function getDaemons() {
       	$status['racoon']++;
       } elseif (strpos($line, ' pptpd') !== FALSE || strpos($line, '/pptpd') !== FALSE) {
       	$status['pptpd']++;
-      } elseif (strpos($line, ' apcupsd') !== FALSE || strpos($line, '/apcupsd') !== FALSE) {
-      	$status['apcupsd']++;
+      } elseif (strpos($line, ' upsmon') !== FALSE || strpos($line, '/upsmon') !== FALSE) {
+      	$status['upsmon']++;
       } elseif (strpos($line, ' zabbix_agentd ') !== FALSE || strpos($line, '/zabbix_agentd ') !== FALSE) {
       	$status['zabbix_agentd']++;
       } elseif (strpos($line, ' zabbix_proxy ') !== FALSE || strpos($line, '/zabbix_proxy ') !== FALSE) {
@@ -124,15 +125,15 @@ function parseUPSstatus($log) {
   if (($ph = @fopen($log, "r")) !== FALSE) {
     while (! feof($ph)) {
       if ($line = rtrim(fgets($ph, 1024))) {
-        if (preg_match('/^([A-Z][A-Z]*)[ :]*(.*)$/', $line, $ips)) {
+        if (preg_match('/^([a-z][a-z.]*)[ :]*(.*)$/', $line, $ips)) {
           switch ($ips[1]) {
-          case 'MODEL':
-          case 'STATUS':
-          case 'LINEV':
-          case 'LOADPCT':
-          case 'BCHARGE':
-          case 'TIMELEFT':
-            $status['status'][$cid]["$ips[1]"] = str_replace('Percent', '%', $ips[2]);
+          case 'ups.model':
+          case 'ups.status':
+          case 'input.voltage':
+          case 'ups.load':
+          case 'battery.charge':
+          case 'battery.runtime':
+            $status['status'][$cid]["$ips[1]"] = $ips[2];
             break;
           }
         }
@@ -1127,20 +1128,20 @@ if (is_file($CONNTRACK)) {
   }
 }
 
-if ($daemon['apcupsd'] > 0) {
+if ($daemon['upsmon'] > 0) {
   if (getPREFdef($global_prefs, 'status_ups_show_status') !== 'no') {
-    putHtml("<h2>APC UPS Status:</h2>");
+    putHtml("<h2>UPS Monitoring Status:</h2>");
     putHtml("<pre>");
     $tmpfile = tempnam("/tmp", "PHP_");
-    shell('/usr/sbin/apcaccess status >'.$tmpfile, $status);
+    shell('/usr/bin/upsc $(awk \'/^MONITOR / { print $2; nextfile; }\' /etc/ups/upsmon.conf) >'.$tmpfile, $status);
     
-    if (is_null($apcupsd = parseUPSstatus($tmpfile))) {
+    if (is_null($upsmon = parseUPSstatus($tmpfile))) {
       putText('No UPS Status available');
       putText('');
     } else {
       putHtml('<table class="statusdatatable">');
       putHtml("<tr>");
-      if (($n = count($apcupsd['status'])) > 0) {
+      if (($n = count($upsmon['status'])) > 0) {
         echo "<td>", "Model", "</td>";
         echo "<td>", "Status", "</td>";
         echo "<td>", "Utility", "</td>";
@@ -1149,12 +1150,12 @@ if ($daemon['apcupsd'] > 0) {
         echo "<td>", "Batt. Runtime", "</td>";
         for ($i = 0; $i < $n; $i++) {
           putHtml("</tr><tr>");
-          echo "<td>", $apcupsd['status'][$i]['MODEL'], "</td>";
-          echo "<td>", $apcupsd['status'][$i]['STATUS'], "</td>";
-          echo "<td>", $apcupsd['status'][$i]['LINEV'], "</td>";
-          echo "<td>", $apcupsd['status'][$i]['LOADPCT'], "</td>";
-          echo "<td>", $apcupsd['status'][$i]['BCHARGE'], "</td>";
-          echo "<td>", $apcupsd['status'][$i]['TIMELEFT'], "</td>";
+          echo "<td>", $upsmon['status'][$i]['ups.model'], "</td>";
+          echo "<td>", $upsmon['status'][$i]['ups.status'], "</td>";
+          echo "<td>", $upsmon['status'][$i]['input.voltage'].' Volts', "</td>";
+          echo "<td>", $upsmon['status'][$i]['ups.load'].' %', "</td>";
+          echo "<td>", $upsmon['status'][$i]['battery.charge'].' %', "</td>";
+          echo "<td>", (int)(((int)$upsmon['status'][$i]['battery.runtime'] + 30) / 60).' Minutes', "</td>";
         }
       }
       putHtml("</tr>");
@@ -1163,7 +1164,7 @@ if ($daemon['apcupsd'] > 0) {
     
     putText('Recent UPS Events:');
     putText('==================');
-    shell('tail -n4 /var/log/apcupsd.events >'.$tmpfile, $status);
+    shell('tail -n4 /var/log/ups-status.log >'.$tmpfile, $status);
   
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {

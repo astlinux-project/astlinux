@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2013 Lonnie Abelbeck
+// Copyright (C) 2008-2014 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -33,6 +33,7 @@
 // 07-07-2012, Added Universal Plug & Play support
 // 09-23-2013, Added ddclient support
 // 10-21-2013, Added LDAP server support
+// 01-04-2014, Added NUT UPS Monitoring support
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -98,22 +99,16 @@ $select_ldap_tls_reqcert = array (
   'demand' => 'demand'
 );
 
-$select_ups_type = array (
-  'disabled' => '',
-  'usb' => 'usb',
-  'net' => 'net',
-  'pcnet' => 'pcnet',
-  'snmp' => 'snmp',
-  'apcsmart' => 'apcsmart',
-  'dumb' => 'dumb'
-);
-
-$select_ups_cable = array (
-  'disabled' => '',
-  'usb' => 'usb',
-  'ethernet' => 'ether',
-  'smart' => 'smart',
-  'simple' => 'simple'
+$select_ups_driver = array (
+  'No direct connected "master" UPS' => '',
+  '[usbhid-ups] Generic USB HID' => 'usbhid-ups',
+  '[bcmxcp_usb] BCM/XCP protocol over USB' => 'bcmxcp_usb',
+  '[blazer_usb] Megatec/Q1 protocol USB' => 'blazer_usb',
+  '[richcomm_usb] Richcomm contact to USB' => 'richcomm_usb',
+  '[riello_usb] Riello USB' => 'riello_usb',
+  '[tripplite_usb] Tripp Lite OMNIVS/SMARTPRO' => 'tripplite_usb',
+  '[snmp-ups] Generic SNMP' => 'snmp-ups',
+  '[netxml-ups] Network XML' => 'netxml-ups'
 );
 
 $select_upnp = array (
@@ -611,26 +606,35 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
     fwrite($fp, $value."\n");
   }
 
-  fwrite($fp, "### APC UPS Monitoring - Shutdown\n");
-  if (isset($_POST['ups_type'], $_POST['ups_cable'], $_POST['ups_device'])) {
-    $value = 'UPSTYPE="'.$_POST['ups_type'].'"';
+  fwrite($fp, "### UPS Monitoring - Shutdown\n");
+  if (isset($_POST['ups_driver'], $_POST['ups_driver_port'])) {
+    $value = 'UPS_DRIVER="'.$_POST['ups_driver'].'"';
     fwrite($fp, $value."\n");
-    $value = 'UPSCABLE="'.$_POST['ups_cable'].'"';
-    fwrite($fp, $value."\n");
-    if ($_POST['ups_type'] === 'usb') {
-      $value = 'UPSDEVICE=""';
+    if ($_POST['ups_driver'] === 'snmp-ups' || $_POST['ups_driver'] === 'netxml-ups' || $_POST['ups_driver'] === '') {
+      $value = 'UPS_DRIVER_PORT="'.tuq($_POST['ups_driver_port']).'"';
     } else {
-      $value = 'UPSDEVICE="'.tuq($_POST['ups_device']).'"';
+      $value = 'UPS_DRIVER_PORT=""';
     }
     fwrite($fp, $value."\n");
   } else {
-    $value = 'UPSTYPE=""';
+    $value = 'UPS_DRIVER=""';
     fwrite($fp, $value."\n");
-    $value = 'UPSCABLE=""';
-    fwrite($fp, $value."\n");
-    $value = 'UPSDEVICE=""';
+    $value = 'UPS_DRIVER_PORT=""';
     fwrite($fp, $value."\n");
   }
+  $value = 'UPS_LISTEN_ALL="'.$_POST['ups_listen_all'].'"';
+  fwrite($fp, $value."\n");
+  if (isset($_POST['ups_driver']) && $_POST['ups_driver'] === '') {
+    $value = 'UPS_MONITOR_HOST="'.tuq($_POST['ups_monitor_host']).'"';
+  } else {
+    $value = 'UPS_MONITOR_HOST=""';
+  }
+  fwrite($fp, $value."\n");
+  $value = 'UPS_MONITOR_USER="'.tuq($_POST['ups_monitor_user']).'"';
+  fwrite($fp, $value."\n");
+  $value = 'UPS_MONITOR_PASS="'.string2RCconfig(trim($_POST['ups_monitor_pass'])).'"';
+  fwrite($fp, $value."\n");
+
   $value = 'UPS_NOTIFY="'.tuq($_POST['ups_notify']).'"';
   fwrite($fp, $value."\n");
   $value = 'UPS_NOTIFY_FROM="'.tuq($_POST['ups_notify_from']).'"';
@@ -904,7 +908,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } elseif (isset($_POST['submit_edit_ups'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
-    if (is_writable($file = '/mnt/kd/apcupsd/apcupsd.conf')) {
+    if (is_writable($file = '/mnt/kd/ups/ups.conf')) {
       header('Location: /admin/edit.php?file='.$file);
       exit;
     }
@@ -971,7 +975,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 33, $result, 'init');
       } elseif ($process === 'miniupnpd') {
         $result = restartPROCESS($process, 34, $result, 'init');
-      } elseif ($process === 'apcupsd') {
+      } elseif ($process === 'ups') {
         $result = restartPROCESS($process, 35, $result, 'init');
       } elseif ($process === 'zabbix') {
         $result = restartPROCESS($process, 36, $result, 'init', 4);
@@ -1058,7 +1062,7 @@ require_once '../common/header.php';
     } elseif ($result == 34) {
       putHtml('<p style="color: green;">Universal Plug\'n\'Play'.statusPROCESS('miniupnpd').'.</p>');
     } elseif ($result == 35) {
-      putHtml('<p style="color: green;">UPS Daemon'.statusPROCESS('apcupsd').'.</p>');
+      putHtml('<p style="color: green;">UPS Daemon'.statusPROCESS('ups').'.</p>');
     } elseif ($result == 36) {
       putHtml('<p style="color: green;">Zabbix Monitoring'.statusPROCESS('zabbix').'.</p>');
     } elseif ($result == 37) {
@@ -1166,8 +1170,8 @@ require_once '../common/header.php';
   putHtml('<option value="stunnel"'.$sel.'>Restart Stunnel Proxy</option>');
   $sel = ($reboot_restart === 'miniupnpd') ? ' selected="selected"' : '';
   putHtml('<option value="miniupnpd"'.$sel.'>Restart Univ. Plug\'n\'Play</option>');
-  $sel = ($reboot_restart === 'apcupsd') ? ' selected="selected"' : '';
-  putHtml('<option value="apcupsd"'.$sel.'>Restart UPS Daemon</option>');
+  $sel = ($reboot_restart === 'ups') ? ' selected="selected"' : '';
+  putHtml('<option value="ups"'.$sel.'>Restart UPS Daemon</option>');
   $sel = ($reboot_restart === 'prosody') ? ' selected="selected"' : '';
   putHtml('<option value="prosody"'.$sel.'>Restart XMPP Server</option>');
   $sel = ($reboot_restart === 'zabbix') ? ' selected="selected"' : '';
@@ -1901,31 +1905,50 @@ require_once '../common/header.php';
   
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   
-  putHtml('<strong>APC UPS Monitoring &amp; Shutdown:</strong>');
+  putHtml('<strong>UPS Monitoring &amp; Shutdown:</strong>');
   putHtml('</td></tr>');
-  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
-  putHtml('UPS Type:');
-  if (! is_file('/mnt/kd/apcupsd/apcupsd.conf')) {
-    $ups_type = getVARdef($db, 'UPSTYPE', $cur_db);
-    putHtml('<select name="ups_type">');
-    foreach ($select_ups_type as $key => $value) {
-      $sel = ($ups_type === $value) ? ' selected="selected"' : '';
+  if (! is_file('/mnt/kd/ups/ups.conf')) {
+    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
+    putHtml('UPS Driver:');
+    $ups_driver = getVARdef($db, 'UPS_DRIVER', $cur_db);
+    putHtml('<select name="ups_driver">');
+    foreach ($select_ups_driver as $key => $value) {
+      $sel = ($ups_driver === $value) ? ' selected="selected"' : '';
       putHtml('<option value="'.$value.'"'.$sel.'>'.$key.'</option>');
     }
     putHtml('</select>');
-    putHtml('&ndash;&nbsp;UPS Cable:');
-    $ups_cable = getVARdef($db, 'UPSCABLE', $cur_db);
-    putHtml('<select name="ups_cable">');
-    foreach ($select_ups_cable as $key => $value) {
-      $sel = ($ups_cable === $value) ? ' selected="selected"' : '';
-      putHtml('<option value="'.$value.'"'.$sel.'>'.$key.'</option>');
-    }
-    putHtml('</select>');
-    $value = getVARdef($db, 'UPSDEVICE', $cur_db);
-    putHtml('&ndash;&nbsp;Device:<input type="text" size="36" maxlength="200" value="'.$value.'" name="ups_device" /></td></tr>');
+    putHtml('</td><td style="text-align: left;" colspan="3">');
+    $value = getVARdef($db, 'UPS_DRIVER_PORT', $cur_db);
+    putHtml('Driver Data:<input type="text" size="36" maxlength="200" value="'.$value.'" name="ups_driver_port" />');
+    putHtml('</td></tr>');
   } else {
+    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+    putHtml('UPS Driver Configuration File:');
     putHtml('<input type="submit" value="UPS Configuration" name="submit_edit_ups" class="button" /></td></tr>');
   }
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
+  putHtml('Network UPS Server:');
+  putHtml('<select name="ups_listen_all">');
+  putHtml('<option value="no">disabled</option>');
+  $sel = (getVARdef($db, 'UPS_LISTEN_ALL', $cur_db) === 'yes') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>enabled</option>');
+  putHtml('</select>');
+  putHtml('</td><td style="text-align: left;" colspan="3">');
+  $value = getVARdef($db, 'UPS_MONITOR_HOST', $cur_db);
+  putHtml('Slave ups@host:<input type="text" size="36" maxlength="256" value="'.$value.'" name="ups_monitor_host" /></td></tr>');
+  
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
+  if (($value = getVARdef($db, 'UPS_MONITOR_USER', $cur_db)) === '') {
+    $value = 'monuser';
+  }
+  putHtml('UPS Username:<input type="text" size="24" maxlength="64" value="'.$value.'" name="ups_monitor_user" /></td>');
+  putHtml('<td style="text-align: left;" colspan="3">');
+  if (($value = getVARdef($db, 'UPS_MONITOR_PASS', $cur_db)) === '') {
+    $value = 'astlinux';
+  }
+  $value = htmlspecialchars(RCconfig2string($value));
+  putHtml('UPS Password:<input type="password" size="24" maxlength="64" value="'.$value.'" name="ups_monitor_pass" /></td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   $value = getVARdef($db, 'UPS_NOTIFY', $cur_db);
   putHtml('Notify Email Addresses To:<input type="text" size="72" maxlength="256" value="'.$value.'" name="ups_notify" /></td></tr>');

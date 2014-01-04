@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2013 Lonnie Abelbeck
+// Copyright (C) 2008-2014 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -35,7 +35,7 @@ $select_reload = array (
   'snmpd' => 'Restart SNMP Server',
   'stunnel' => 'Restart Stunnel Proxy',
   'miniupnpd' => 'Restart Univ. Plug\'n\'Play',
-  'apcupsd' => 'Restart UPS Daemon',
+  'ups' => 'Restart UPS Daemon',
   'prosody' => 'Restart XMPP Server',
   'zabbix' => 'Restart Zabbix Monitor',
   'asterisk' => 'Restart Asterisk'
@@ -221,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 33, $result, 'init');
       } elseif ($process === 'miniupnpd') {
         $result = restartPROCESS($process, 34, $result, 'init');
-      } elseif ($process === 'apcupsd') {
+      } elseif ($process === 'ups') {
         $result = restartPROCESS($process, 35, $result, 'init');
       } elseif ($process === 'zabbix') {
         $result = restartPROCESS($process, 36, $result, 'init', 4);
@@ -282,7 +282,7 @@ require_once '../common/header.php';
       $dir === '/mnt/kd/crontabs' ||
       $dir === '/mnt/kd/snmp' ||
       $dir === '/mnt/kd/fop2' ||
-      $dir === '/mnt/kd/apcupsd' ||
+      $dir === '/mnt/kd/ups' ||
       $dir === '/mnt/kd/prosody' ||
       $dir === '/mnt/kd/docs' ||
       $dir === '/mnt/kd/arno-iptables-firewall' ||
@@ -350,7 +350,7 @@ require_once '../common/header.php';
     } elseif ($result == 34) {
       putHtml('<p style="color: green;">Universal Plug\'n\'Play'.statusPROCESS('miniupnpd').'.</p>');
     } elseif ($result == 35) {
-      putHtml('<p style="color: green;">UPS Daemon'.statusPROCESS('apcupsd').'.</p>');
+      putHtml('<p style="color: green;">UPS Daemon'.statusPROCESS('ups').'.</p>');
     } elseif ($result == 36) {
       putHtml('<p style="color: green;">Zabbix Monitoring'.statusPROCESS('zabbix').'.</p>');
     } elseif ($result == 37) {
@@ -475,10 +475,6 @@ require_once '../common/header.php';
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
     putHtml('<option value="'.$file.'"'.$sel.'>crontabs/'.basename($file).' - Cron Jobs for root</option>');
   }
-  if (is_writable($file = '/mnt/kd/apcupsd/apcupsd.conf')) {
-    $sel = ($file === $openfile) ? ' selected="selected"' : '';
-    putHtml('<option value="'.$file.'"'.$sel.'>apcupsd/'.basename($file).' - APC UPS Configuration</option>');
-  }
   if (is_writable($file = '/mnt/kd/ast-crash')) {
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
     putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - Safe Asterisk Crash Shell Script</option>');
@@ -530,6 +526,20 @@ require_once '../common/header.php';
         $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
         putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - X509 CN of OpenVPN Client</option>');
       }
+    }
+    putHtml('</optgroup>');
+  }
+  if (is_dir('/mnt/kd/ups') && count($globfiles = glob('/mnt/kd/ups/*.conf')) > 0) {
+    putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; UPS Monitoring Configs &mdash;&mdash;&mdash;&mdash;">');
+    foreach ($globfiles as $globfile) {
+      if (is_file($globfile) && is_writable($globfile)) {
+        $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
+        putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - NUT UPS Configuration</option>');
+      }
+    }
+    if (is_writable($file = '/mnt/kd/ups/upsd.users')) {
+      $sel = ($file === $openfile) ? ' selected="selected"' : '';
+      putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - NUT UPS Configuration</option>');
     }
     putHtml('</optgroup>');
   }

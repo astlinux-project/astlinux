@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2012 Lonnie Abelbeck
+// Copyright (C) 2008-2014 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -16,6 +16,7 @@
 // 09-06-2008, Added restartPROCESS()
 // 12-12-2009, Added systemSHUTDOWN()
 // 01-12-2012, Added asteriskURLrepo()
+// 01-04-2014, Added statusPROCESS()
 //
 // System location of prefs file                                 
 $KD_PREFS_LOCATION = '/mnt/kd/webgui-prefs.txt';           
@@ -111,6 +112,12 @@ function statusPROCESS($process) {
     }
   } elseif ($process === 'stunnel') {
     if (is_file($path.$process.'/server.pid') || is_file($path.$process.'/client.pid')) {
+      $str = $running;
+    } else {
+      $str = $stopped;
+    }
+  } elseif ($process === 'ups') {
+    if (is_file($path.'upsmon.pid')) {
       $str = $running;
     } else {
       $str = $stopped;
@@ -522,9 +529,9 @@ function parseRCconf($conffile) {
             $value = '#NTP server is specified in /mnt/kd/ntpd.conf';
           }
         }
-        if ($var === 'UPSTYPE' || $var === 'UPSCABLE' || $var === 'UPSDEVICE') {
-          if (is_file('/mnt/kd/apcupsd/apcupsd.conf')) {
-            $value = '#UPS is specified in /mnt/kd/apcupsd/apcupsd.conf';
+        if ($var === 'UPS_DRIVER' || $var === 'UPS_DRIVER_PORT') {
+          if (is_file('/mnt/kd/ups/ups.conf')) {
+            $value = '#UPS driver is specified in /mnt/kd/ups/ups.conf';
           }
         }
         if ($var === 'ASTBACK_PATHS' ||

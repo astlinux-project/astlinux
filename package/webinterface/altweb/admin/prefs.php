@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2013 Lonnie Abelbeck
+// Copyright (C) 2008-2014 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -639,7 +639,7 @@ require_once '../common/header.php';
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_ups_show_status') !== 'no') ? ' checked="checked"' : '';
-  putHtml('<input type="checkbox" value="ups_status" name="ups_status"'.$sel.' /></td><td colspan="5">Show APC UPS Status</td></tr>');
+  putHtml('<input type="checkbox" value="ups_status" name="ups_status"'.$sel.' /></td><td colspan="5">Show UPS Monitoring Status</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_show_hardware_monitoring') === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="hardware_monitoring" name="hardware_monitoring"'.$sel.' /></td><td colspan="5">Show Hardware Monitoring</td></tr>');
