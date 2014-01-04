@@ -130,7 +130,8 @@ init ()
   local i conf_f man_conf_f man_conf enable_server
 
   if [ -n "$UPS_DRIVER" -o -f /mnt/kd/ups/ups.conf ] || \
-     [ -n "$UPS_MONITOR_HOST" -a -n "$UPS_MONITOR_USER" -a -n "$UPS_MONITOR_PASS" ]; then
+     [ -n "$UPS_MONITOR_HOST" -a -n "$UPS_MONITOR_USER" -a -n "$UPS_MONITOR_PASS" ] || \
+     [ -f /mnt/kd/ups/upsmon.conf ]; then
 
     mkdir -p /var/state/ups
     chown nobody:nobody /var/state/ups
@@ -222,9 +223,11 @@ start ()
     echo "Starting upsmon..."
     echo "Starting upsmon..." >> $LOGFILE
 
+    upsmon_ver="$(upsmon -V)"
+
     upsmon >> $LOGFILE 2>&1
 
-    echo "$(date "+%Y-%m-%d %H:%M:%S") - upsmon started" >/var/log/ups-status.log
+    echo "$(date "+%Y-%m-%d %H:%M:%S") - $upsmon_ver started" >/var/log/ups-status.log
   fi
 }
 
