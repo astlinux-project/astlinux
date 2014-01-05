@@ -34,7 +34,7 @@ Event: $event
 "
   if [ -n "$ups" ]; then
     echo "======== $ups ========"
-    upsc $ups
+    upsc $ups 2>&1
     echo "========"
   fi
   ) | sendmail -t
