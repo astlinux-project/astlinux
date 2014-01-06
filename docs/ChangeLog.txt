@@ -73,6 +73,8 @@ Released **TBD**
 ** Asterisk
 
 -- Asterisk 1.8.25.0 (version bump) and 11.7.0 (version bump)
+   Note: New "live_dangerously" option in asterisk.conf, consider setting "live_dangerously = no".
+         https://issues.asterisk.org/jira/browse/ASTERISK-22905
 
 -- DAHDI, dahdi-linux 2.6.2 (no change) and dahdi-tools 2.6.2 (no change)
    Note: dahdi-linux 2.8.0.1 / dahdi-tools 2.8.0 is available via a custom build without wanpipe and without rhino.
