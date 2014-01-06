@@ -32,6 +32,11 @@ Released **TBD**
 
 -- vcard-export, new command to generate ldif files from vcard files, suitable to 'ldapadd' into the LDAP addressbook
 
+-- nut, version 2.7.1, new package to monitor uninterruptible power supplies.  This package replaces the previous apcupsd package.
+   New rc.conf variables: UPS_DRIVER, UPS_DRIVER_PORT, UPS_LISTEN_ALL, UPS_LISTEN_PORT,
+                          UPS_MONITOR_HOST, UPS_MONITOR_USER, UPS_MONITOR_PASS
+   More Info: http://doc.astlinux.org/userdoc:tt_ups_monitoring
+
 -- Added rc.conf variable DIALING_PREFIX_NUMBERS referenced by dialproxy.php for International E.164 numbering.
    More Info: http://doc.astlinux.org/userdoc:tt_dialproxy
 
@@ -103,6 +108,10 @@ Released **TBD**
 -- "Restart" services now displays "is Running" or "is Stopped" results when possible.
 
 -- SQL-Data tab, for 'staff' user, disable actions: table_create, view_create, table_drop, view_drop, table_empty
+
+-- Network tab, UPS Monitoring now uses NUT instead of apcupsd.  New added options support APC plus many other manufacturers.
+   Note: UPS Monitoring must be re-enabled if it was previously enabled.
+   More Info: http://doc.astlinux.org/userdoc:tt_ups_monitoring
 
 
 Additions for AstLinux 1.1.3:
