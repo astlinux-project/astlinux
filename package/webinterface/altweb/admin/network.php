@@ -1935,7 +1935,7 @@ require_once '../common/header.php';
   putHtml('</select>');
   putHtml('</td><td style="text-align: left;" colspan="3">');
   $value = getVARdef($db, 'UPS_MONITOR_HOST', $cur_db);
-  putHtml('Slave ups@host:<input type="text" size="36" maxlength="256" value="'.$value.'" name="ups_monitor_host" /></td></tr>');
+  putHtml('Network NUT ups@host:<input type="text" size="24" maxlength="256" value="'.$value.'" name="ups_monitor_host" /></td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
   if (($value = getVARdef($db, 'UPS_MONITOR_USER', $cur_db)) === '') {
