@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PROSODY_VERSION = 0.9.1
+PROSODY_VERSION = 0.9.2
 PROSODY_SOURCE = prosody-$(PROSODY_VERSION).tar.gz
 PROSODY_SITE = http://prosody.im/downloads/source
 PROSODY_DEPENDENCIES = lua libidn openssl luafilesystem luaexpat luasocket luasec
@@ -22,6 +22,7 @@ define PROSODY_CONFIGURE_CMDS
 		--datadir="/etc/prosody/data" \
 		--c-compiler='$(TARGET_CC)' \
 		--linker='$(TARGET_LD)' \
+		--no-example-certs \
         )
 endef
 
