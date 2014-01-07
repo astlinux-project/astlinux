@@ -71,6 +71,8 @@ Released **TBD**
 -- dnsmasq, version bump to 2.68, new feature allows "enable-tftp=" to define allowed interfaces for TFTP.
    More Info: View file "/stat/etc/dnsmasq.static" for syntax and make changes to "/mnt/kd/dnsmasq.static".
 
+-- prosody, version bump to 0.9.2
+
 -- radvd, version bump to 1.9.7
 
 -- libpcap / tcpdump, version bump to 1.4.0 / 4.4.0
