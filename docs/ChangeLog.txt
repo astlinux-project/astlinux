@@ -86,6 +86,11 @@ Released **TBD**
 -- DAHDI, dahdi-linux 2.6.2 (no change) and dahdi-tools 2.6.2 (no change)
    Note: dahdi-linux 2.8.0.1 / dahdi-tools 2.8.0 is available via a custom build without wanpipe and without rhino.
 
+-- FOP2, our mirror has been updated to the latest fop2-2.27 "final".  Use the web interface "System tab -> Add-On Packages:"
+   or the CLI command "upgrade-package fop2 upgrade" to upgrade to the latest version if you previously installed it.
+   Note: If you purchased a license, you will need to re-apply your registration code via the FOP2 Panel or after you upgrade,
+         using the CLI: cp /stat/var/packages/fop2-OLD/server/fop2.lic /stat/var/packages/fop2/server/
+
 ** Web Interface
 
 -- Network tab, add support for both "inadyn" and "ddclient" Dynamic DNS.
