@@ -56,16 +56,24 @@ gen_upsd_conf()
 
 gen_upsd_users()
 {
+  local master_pass="$1"
+
+  if [ -n "$master_pass" ]; then
+    echo "[master]
+password = ${master_pass}
+upsmon master
+"
+  fi
 
   echo "[${UPS_MONITOR_USER:-monuser}]
 password = ${UPS_MONITOR_PASS:-astlinux}
-upsmon master
+upsmon slave
 "
 }
 
 gen_upsmon_conf()
 {
-  local notify host user pass type pollfreq
+  local master_pass="$1" notify host user pass type pollfreq
 
   if [ -n "$UPS_MONITOR_HOST" -a -n "$UPS_MONITOR_USER" -a -n "$UPS_MONITOR_PASS" ]; then
     host="$UPS_MONITOR_HOST"
@@ -73,12 +81,14 @@ gen_upsmon_conf()
     pass="$UPS_MONITOR_PASS"
     type="slave"
     pollfreq=10
-  else
+  elif [ -n "$master_pass" ]; then
     host="ups@localhost"
-    user="${UPS_MONITOR_USER:-monuser}"
-    pass="${UPS_MONITOR_PASS:-astlinux}"
+    user="master"
+    pass="$master_pass"
     type="master"
     pollfreq=5
+  else
+    return
   fi
 
   if [ -f /mnt/kd/ups/upssched.conf ]; then
@@ -127,7 +137,7 @@ gen_upssched_conf()
 
 init ()
 {
-  local i conf_f man_conf_f man_conf enable_server
+  local i conf_f man_conf_f man_conf master_pass=""
 
   if [ -n "$UPS_DRIVER" -o -f /mnt/kd/ups/ups.conf ] || \
      [ -n "$UPS_MONITOR_HOST" -a -n "$UPS_MONITOR_USER" -a -n "$UPS_MONITOR_PASS" ] || \
@@ -158,15 +168,15 @@ init ()
       fi
       case $i in
         ups.conf)
-          enable_server=1
+          master_pass="$(openssl rand -base64 24)"
           if [ $man_conf -eq 0 ]; then
             if [ -n "$UPS_DRIVER" ]; then
               gen_ups_conf >> $conf_f
             else
-              enable_server=0
+              master_pass=""
             fi
           fi
-          if [ $enable_server -eq 0 ]; then
+          if [ -z "$master_pass" ]; then
             rm -f $conf_f
           else
             chmod 644 $conf_f
@@ -180,14 +190,18 @@ init ()
           ;;
         upsd.users)
           if [ $man_conf -eq 0 ]; then
-            gen_upsd_users >> $conf_f
+            gen_upsd_users "$master_pass" >> $conf_f
+          else
+            sed -i -e "s|@MASTER_PASS@|${master_pass}|" $conf_f
           fi
           chown root:nobody $conf_f
           chmod 640 $conf_f
           ;;
         upsmon.conf)
           if [ $man_conf -eq 0 ]; then
-            gen_upsmon_conf >> $conf_f
+            gen_upsmon_conf "$master_pass" >> $conf_f
+          else
+            sed -i -e "s|@MASTER_PASS@|${master_pass}|" $conf_f
           fi
           chmod 640 $conf_f
           ;;
