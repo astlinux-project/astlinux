@@ -17,8 +17,8 @@ PERL_MODULES += Digest/MD5 Digest/SHA Getopt/Std Getopt/Long Time/Local File/Glo
 
 PERL_CROSS_VERSION = 0.8.3
 PERL_CROSS_BASE_VERSION = 5.$(PERL_VERSION_MAJOR).1
-PERL_CROSS_SITE    = http://download.berlios.de/perlcross
-#PERL_CROSS_SITE    = http://files.astlinux.org
+#PERL_CROSS_SITE    = http://download.berlios.de/perlcross
+PERL_CROSS_SITE    = http://files.astlinux.org
 PERL_CROSS_SOURCE  = perl-$(PERL_CROSS_BASE_VERSION)-cross-$(PERL_CROSS_VERSION).tar.gz
 PERL_CROSS_OLD_POD = perl$(subst .,,$(PERL_CROSS_BASE_VERSION))delta.pod
 PERL_CROSS_NEW_POD = perl$(subst .,,$(PERL_VERSION))delta.pod
