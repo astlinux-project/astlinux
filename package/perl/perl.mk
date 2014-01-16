@@ -4,8 +4,8 @@
 #
 #############################################################
 
-PERL_VERSION_MAJOR = 16
-PERL_VERSION = 5.$(PERL_VERSION_MAJOR).3
+PERL_VERSION_MAJOR = 18
+PERL_VERSION = 5.$(PERL_VERSION_MAJOR).2
 PERL_SITE = http://www.cpan.org/src/5.0
 PERL_SOURCE = perl-$(PERL_VERSION).tar.bz2
 PERL_INSTALL_STAGING = YES
@@ -15,10 +15,10 @@ PERL_DEPENDENCIES = linux
 PERL_MODULES = constant Carp Errno Fcntl Cwd POSIX Digest Socket IO XSLoader
 PERL_MODULES += Digest/MD5 Digest/SHA Getopt/Std Getopt/Long Time/Local File/Glob Sys/Hostname
 
-PERL_CROSS_VERSION = 0.7.4
-PERL_CROSS_BASE_VERSION = 5.$(PERL_VERSION_MAJOR).3
-#PERL_CROSS_SITE    = http://download.berlios.de/perlcross
-PERL_CROSS_SITE    = http://files.astlinux.org
+PERL_CROSS_VERSION = 0.8.3
+PERL_CROSS_BASE_VERSION = 5.$(PERL_VERSION_MAJOR).1
+PERL_CROSS_SITE    = http://download.berlios.de/perlcross
+#PERL_CROSS_SITE    = http://files.astlinux.org
 PERL_CROSS_SOURCE  = perl-$(PERL_CROSS_BASE_VERSION)-cross-$(PERL_CROSS_VERSION).tar.gz
 PERL_CROSS_OLD_POD = perl$(subst .,,$(PERL_CROSS_BASE_VERSION))delta.pod
 PERL_CROSS_NEW_POD = perl$(subst .,,$(PERL_VERSION))delta.pod
@@ -84,14 +84,12 @@ define PERL_CONFIGURE_CMDS
 	$(SED) 's/UNKNOWN-/Buildroot $(BR2_VERSION_FULL) /' $(@D)/patchlevel.h
 endef
 
-# perlcross's miniperl_top forgets base, which is required by mktables.
-# Instead of patching, it's easier to just set PERL5LIB
 define PERL_BUILD_CMDS
-	PERL5LIB=$(@D)/dist/base/lib $(MAKE1) -C $(@D) perl modules unidatafiles
+	$(MAKE1) -C $(@D) all
 endef
 
 define PERL_INSTALL_STAGING_CMDS
-	PERL5LIB=$(@D)/dist/base/lib $(MAKE1) -C $(@D) DESTDIR="$(STAGING_DIR)" install.perl
+	$(MAKE1) -C $(@D) DESTDIR="$(STAGING_DIR)" install.perl
 endef
 
 PERL_INSTALL_TARGET_GOALS = install.perl
@@ -101,13 +99,13 @@ endif
 
 
 define PERL_INSTALL_TARGET_CMDS
-	PERL5LIB=$(@D)/dist/base/lib $(MAKE1) -C $(@D) DESTDIR="$(TARGET_DIR)" $(PERL_INSTALL_TARGET_GOALS)
+	$(MAKE1) -C $(@D) DESTDIR="$(TARGET_DIR)" $(PERL_INSTALL_TARGET_GOALS)
 	# Remove all .pod files
 	find $(TARGET_DIR)/usr/lib/perl5/ -name "*.pod" -print0 | xargs -0 rm -f
 	# Remove many unicore files
-	rm -rf $(TARGET_DIR)/usr/lib/perl5/unicore/lib/
-	rm -rf $(TARGET_DIR)/usr/lib/perl5/unicore/To/
-	rm -f $(TARGET_DIR)/usr/lib/perl5/unicore/Name.pl
+	rm -rf $(TARGET_DIR)/usr/lib/perl5/$(PERL_VERSION)/unicore/lib/
+	rm -rf $(TARGET_DIR)/usr/lib/perl5/$(PERL_VERSION)/unicore/To/
+	rm -f $(TARGET_DIR)/usr/lib/perl5/$(PERL_VERSION)/unicore/Name.pl
 	#
 	ln -sf perl$(PERL_VERSION) $(TARGET_DIR)/usr/bin/perl
 endef
