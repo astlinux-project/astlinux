@@ -9,25 +9,28 @@ config BR2_PACKAGE_OPENSSL
 
 	  http://www.openssl.org/
 
+if BR2_PACKAGE_OPENSSL
+
 config BR2_PACKAGE_OPENSSL_BIN
 	bool "openssl binary"
-	depends on BR2_PACKAGE_OPENSSL
 	help
 	  Install the openssl binary to the target file system. This is a
 	  command line tool for doing various crypthographic stuff.
 
 config BR2_PACKAGE_OPENSSL_ENGINES
 	bool "openssl additional engines"
-	depends on BR2_PACKAGE_OPENSSL
 	help
 	  Install additional encryption engine libraries.
 
 config BR2_PACKAGE_OPENSSL_OCF
 	bool "openssl ocf support"
-	depends on BR2_PACKAGE_OPENSSL
 	help
 	  Enable openssl cryptodev (OCF) hardware acceleration support.
 	  This requires kernel patches from the ocf-linux project otherwise
 	  you'll just have a bigger openssl library that works as usual.
+	  Note:  This needs to be moved to a separate package to work
+	         as per upstream Buildroot using package "ocf-linux".
 
 	  http://ocf-linux.sourceforge.net/
+
+endif
