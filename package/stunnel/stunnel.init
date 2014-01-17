@@ -21,6 +21,7 @@ socket = r:TCP_NODELAY=1
 setgid = $SUSER
 setuid = $SUSER
 debug = $SDEBUG
+fips = no
 pid = /var/run/stunnel/${type}.pid
 "
 
