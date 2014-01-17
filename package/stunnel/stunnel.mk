@@ -12,6 +12,7 @@ STUNNEL_CONF_OPT += \
 	--with-ssl=$(STAGING_DIR)/usr \
 	--localstatedir=/var \
 	--disable-libwrap \
+	--disable-fips \
 	--with-threads=fork
 
 define STUNNEL_INSTALL_TARGET_CMDS
