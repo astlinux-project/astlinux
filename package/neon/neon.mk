@@ -3,12 +3,13 @@
 # neon
 #
 #############################################################
-NEON_VERSION:=0.29.6
-NEON_SITE:=http://www.webdav.org/neon/
-NEON_INSTALL_STAGING:=YES
-NEON_CONF_OPT:=--without-gssapi --disable-rpath
 
-NEON_DEPENDENCIES:=host-pkg-config
+NEON_VERSION = 0.30.0
+NEON_SITE = http://www.webdav.org/neon/
+NEON_INSTALL_STAGING = YES
+NEON_CONF_OPT = --without-gssapi --disable-rpath
+
+NEON_DEPENDENCIES = host-pkg-config
 
 ifeq ($(BR2_PACKAGE_NEON_ZLIB),y)
 NEON_CONF_OPT += --with-zlib=yes
@@ -44,11 +45,10 @@ ifeq ($(BR2_PACKAGE_NEON_NOXML),y)
 NEON_CONF_OPT += --disable-webdav
 endif
 
-define NEON_REMOVE_CONFIG_SCRIPTS
-	$(RM) -f $(TARGET_DIR)/usr/bin/neon-config
-endef
-
 ifneq ($(BR2_HAVE_DEVFILES),y)
+define NEON_REMOVE_CONFIG_SCRIPTS
+	rm -f $(TARGET_DIR)/usr/bin/neon-config
+endef
 NEON_POST_INSTALL_TARGET_HOOKS += NEON_REMOVE_CONFIG_SCRIPTS
 endif
 
@@ -57,7 +57,6 @@ define NEON_STAGING_NEON_CONFIG_FIXUP
 		-e "s,^exec_prefix=.*,exec_prefix=\'$(STAGING_DIR)/usr\',g" \
 		$(STAGING_DIR)/usr/bin/neon-config
 endef
-
 NEON_POST_INSTALL_STAGING_HOOKS += NEON_STAGING_NEON_CONFIG_FIXUP
 
 $(eval $(call AUTOTARGETS,package,neon))
