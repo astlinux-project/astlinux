@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LIBXML2_VERSION = 2.9.0
+LIBXML2_VERSION = 2.9.1
 LIBXML2_SITE = ftp://xmlsoft.org/libxml2
 LIBXML2_INSTALL_STAGING = YES
 
@@ -19,23 +19,36 @@ define LIBXML2_STAGING_LIBXML2_CONFIG_FIXUP
 	$(SED) "s,^exec_prefix=.*,exec_prefix=\'$(STAGING_DIR)/usr\',g" $(STAGING_DIR)/usr/bin/xml2-config
 	ln -snf $(STAGING_DIR)/usr/include/libxml2/libxml $(STAGING_DIR)/usr/include/libxml
 endef
-
 LIBXML2_POST_INSTALL_STAGING_HOOKS += LIBXML2_STAGING_LIBXML2_CONFIG_FIXUP
 
 HOST_LIBXML2_DEPENDENCIES = host-pkg-config
 
 HOST_LIBXML2_CONF_OPT = --without-debug --without-python
 
-define LIBXML2_REMOVE_CONFIG_SCRIPTS
-	$(RM) -f $(TARGET_DIR)/usr/bin/xml2-config
-endef
-
 ifneq ($(BR2_HAVE_DEVFILES),y)
+define LIBXML2_REMOVE_CONFIG_SCRIPTS
+	rm -f $(TARGET_DIR)/usr/bin/xml2-config
+endef
 LIBXML2_POST_INSTALL_TARGET_HOOKS += LIBXML2_REMOVE_CONFIG_SCRIPTS
+endif
+
+ifeq ($(BR2_PACKAGE_ZLIB),y)
+LIBXML2_DEPENDENCIES += zlib
+LIBXML2_CONF_OPT += --with-zlib
+else
+LIBXML2_CONF_OPT += --without-zlib
+endif
+
+LIBXML2_DEPENDENCIES += $(if $(BR2_PACKAGE_LIBICONV),libiconv)
+
+ifeq ($(BR2_ENABLE_LOCALE)$(BR2_PACKAGE_LIBICONV),y)
+LIBXML2_CONF_OPT += --with-iconv
+else
+LIBXML2_CONF_OPT += --without-iconv
 endif
 
 $(eval $(call AUTOTARGETS,package,libxml2))
 $(eval $(call AUTOTARGETS,package,libxml2,host))
 
 # libxml2 for the host
-LIBXML2_HOST_BINARY:=$(HOST_DIR)/usr/bin/xmllint
+LIBXML2_HOST_BINARY = $(HOST_DIR)/usr/bin/xmllint
