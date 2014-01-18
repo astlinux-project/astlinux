@@ -78,7 +78,11 @@ define NETSNMP_STAGING_NETSNMP_CONFIG_FIXUP
 		-e "s,^libdir=.*,libdir=\'$(STAGING_DIR)/usr/lib\',g" \
 		$(STAGING_DIR)/usr/bin/net-snmp-config
 endef
-
 NETSNMP_POST_INSTALL_STAGING_HOOKS += NETSNMP_STAGING_NETSNMP_CONFIG_FIXUP
+
+define NETSNMP_TARGET_REMOVE_NETSNMP_CONFIG
+        rm -f $(TARGET_DIR)/usr/bin/net-snmp-config
+endef
+NETSNMP_POST_INSTALL_TARGET_HOOKS += NETSNMP_TARGET_REMOVE_NETSNMP_CONFIG
 
 $(eval $(call AUTOTARGETS,package,netsnmp))
