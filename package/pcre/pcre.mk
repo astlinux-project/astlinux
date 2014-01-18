@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PCRE_VERSION = 8.33
+PCRE_VERSION = 8.34
 PCRE_SITE = ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre
 PCRE_INSTALL_STAGING = YES
 
@@ -18,14 +18,12 @@ define PCRE_STAGING_PCRE_CONFIG_FIXUP
 		-e 's,^exec_prefix=.*,exec_prefix=$(STAGING_DIR)/usr,' \
 		$(STAGING_DIR)/usr/bin/pcre-config
 endef
-
 PCRE_POST_INSTALL_STAGING_HOOKS += PCRE_STAGING_PCRE_CONFIG_FIXUP
 
+ifneq ($(BR2_HAVE_DEVFILES),y)
 define PCRE_TARGET_REMOVE_PCRE_CONFIG
 	rm -f $(TARGET_DIR)/usr/bin/pcre-config
 endef
-
-ifneq ($(BR2_HAVE_DEVFILES),y)
 PCRE_POST_INSTALL_TARGET_HOOKS += PCRE_TARGET_REMOVE_PCRE_CONFIG
 endif
 
