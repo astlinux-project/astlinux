@@ -4,10 +4,10 @@
 #
 ##############################################################
 ifeq ($(BR2_PACKAGE_RHINO),y)
-DAHDI_LINUX_VERSION := 2.6.2
+DAHDI_LINUX_VERSION := 2.8.0.1
 else
  ifeq ($(BR2_PACKAGE_WANPIPE),y)
-DAHDI_LINUX_VERSION := 2.6.2
+DAHDI_LINUX_VERSION := 2.8.0.1
  else
 DAHDI_LINUX_VERSION := 2.8.0.1
  endif
