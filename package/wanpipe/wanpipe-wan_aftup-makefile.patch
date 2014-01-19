@@ -1,5 +1,5 @@
---- wanpipe-3.5.24/util/wan_aftup/Makefile.orig	2008-08-01 08:00:00.000000000 -0500
-+++ wanpipe-3.5.24/util/wan_aftup/Makefile	2012-01-09 14:54:06.000000000 -0600
+--- wanpipe-7.0.9/util/wan_aftup/Makefile.orig	2008-08-01 08:00:00.000000000 -0500
++++ wanpipe-7.0.9/util/wan_aftup/Makefile	2012-01-09 14:54:06.000000000 -0600
 @@ -23,7 +23,7 @@
  
  PROD=wan_aftup
@@ -9,16 +9,16 @@
  ifndef SYSINC
  	SYSINC=/usr/include/wanpipe
  endif
-@@ -39,7 +39,7 @@
- SRCS	+= wan_usb_fwupdate.cpp mem.cpp
- CFLAGS  = -Wall -O2 -D$(OS_TYPE) -D_DEBUG_=$(DEBUG) -lstdc++
+@@ -40,7 +40,7 @@
+ SRC2	+= wan_usb_fwupdate.cpp mem.cpp
+ CFLAGS  = -Wall -O0 -g -D$(OS_TYPE) -D_DEBUG_=$(DEBUG) 
  CFLAGS += $(EXTRA_FLAGS)
 -CFLAGS += -I/usr/include -I$(WANINCDIR) -I$(SYSINC)
 +CFLAGS += -I$(SYSINC)
  
  BINS=`ls *.BIN`
  
-@@ -60,10 +60,10 @@
+@@ -69,10 +69,10 @@
  	install -m755 update_aft_firm.sh $(WAN_VIRTUAL)/etc/wanpipe/util/wan_aftup/update_aft_firm.sh
  	install -m755 scripts/load.sh $(WAN_VIRTUAL)/etc/wanpipe/util/wan_aftup/scripts/load.sh
  	install -m755 scripts/unload.sh $(WAN_VIRTUAL)/etc/wanpipe/util/wan_aftup/scripts/unload.sh
