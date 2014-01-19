@@ -4,7 +4,7 @@
 #
 #############################################################
 
-RHINO_VERSION := 0.99.6b3
+RHINO_VERSION := 0.99.6b4
 RHINO_SOURCE := rhino-linux-$(RHINO_VERSION).tbz2
 RHINO_SITE := http://downloads.rhinoequipment.com/Rhino%20Downloads/Drivers/Beta
 RHINO_DIR := $(BUILD_DIR)/rhino-linux-$(RHINO_VERSION)
