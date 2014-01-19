@@ -5,10 +5,46 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.1.4:
+Additions for AstLinux 1.1.5:
 =============================
 
 Released **TBD**
+
+** System
+
+-- perl, version bump to 5.18.2 using perlcross 0.8.3
+
+-- pcre, version bump to 8.34
+
+-- libxml2, version bump to 2.9.1
+
+** Networking
+
+-- OpenSSL, major version bump to 1.0.1f
+
+-- OpenSSH 6.4p1 (security and bug fixes)
+
+-- AIF, include upstream 2.0.1e patch to remove the TRACE feature, results in an 8% speed improvement
+
+** Asterisk
+
+-- Asterisk 1.8.25.0 (no change) and 11.7.0 (no change)
+
+-- DAHDI, dahdi-linux 2.8.0.1 (version bump) and dahdi-tools 2.8.0 (version bump)
+
+-- wanpipe, version bump to 7.0.9
+
+-- rhino, version bump to 0.99.6b4
+
+** Web Interface
+
+-- no change
+
+
+Additions for AstLinux 1.1.4:
+=============================
+
+Released 2014-01-22
 
 ** System
 
