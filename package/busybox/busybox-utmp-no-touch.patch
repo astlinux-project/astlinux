@@ -1,8 +1,8 @@
---- busybox-1.18.5/libbb/utmp.c.orig	2012-01-25 13:44:40.000000000 -0600
-+++ busybox-1.18.5/libbb/utmp.c	2012-01-25 18:05:29.000000000 -0600
-@@ -9,12 +9,6 @@
+--- busybox-1.19.4/libbb/utmp.c.orig	2012-02-04 13:24:55.000000000 -0600
++++ busybox-1.19.4/libbb/utmp.c	2014-01-20 17:25:27.000000000 -0600
+@@ -8,12 +8,6 @@
+  */
  #include "libbb.h"
- #include <utmp.h>
  
 -static void touch(const char *filename)
 -{
@@ -13,7 +13,7 @@
  void FAST_FUNC write_new_utmp(pid_t pid, int new_type, const char *tty_name, const char *username, const char *hostname)
  {
  	struct utmp utent;
-@@ -46,12 +46,13 @@
+@@ -45,12 +39,13 @@
  		tty_name += 3;
  	strncpy(id, tty_name, width);
  
@@ -33,7 +33,7 @@
  
  #if ENABLE_FEATURE_WTMP
  	/* "man utmp" says wtmp file should *not* be created automagically */
-@@ -68,7 +69,9 @@
+@@ -67,7 +62,9 @@
  	struct utmp utent;
  	struct utmp *utp;
  

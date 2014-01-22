@@ -68,16 +68,10 @@ define BUSYBOX_SET_IPV6
 endef
 endif
 
-# If RPC is enabled then enable nfs mounts
-ifeq ($(BR2_INET_RPC),y)
-define BUSYBOX_SET_RPC
-	$(call KCONFIG_ENABLE_OPT,CONFIG_FEATURE_MOUNT_NFS,$(BUSYBOX_BUILD_CONFIG))
-endef
-else
+# Disable RPC and disable nfs mounts
 define BUSYBOX_SET_RPC
 	$(call KCONFIG_DISABLE_OPT,CONFIG_FEATURE_MOUNT_NFS,$(BUSYBOX_BUILD_CONFIG))
 endef
-endif
 
 # If we're using static libs do the same for busybox
 ifeq ($(BR2_PREFER_STATIC_LIB),y)

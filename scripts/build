@@ -109,7 +109,11 @@ if [ -z "$board" ] || [ ! -d "project/astlinux/board/$board" ]; then
   exit_error "Unknown Board type."
 fi
 
-if [ ! -d "$HOME/astlinux/x-tools" ]; then
+x_tools_dir="$(awk -F'"' '/^BR2_TOOLCHAIN_EXTERNAL_PATH=/ { print $2; nextfile }' .config | sed 's:^[^/]*::')"
+if [ -z "$x_tools_dir" ]; then
+  exit_error "BR2_TOOLCHAIN_EXTERNAL_PATH not found in .config file."
+fi
+if [ ! -d "$HOME$x_tools_dir" ]; then
   cat "crosstool-ng-src/README"
   exit_error "Toolchain not found, see instructions above."
 fi

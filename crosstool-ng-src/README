@@ -1,28 +1,29 @@
 #########################################################################
-## Crosstool-NG
+## Crosstool-NG 1.19.0
 ## http://crosstool-ng.org
 ##
-## Building the eglibc toolchain for AstLinux 1.x using Buildroot 2011-08
-## The resulting toolchain is output to $HOME/astlinux/x-tools
+## Building the eglibc toolchain for AstLinux 1.x using Buildroot
+## The resulting toolchain is output to $HOME/astlinux/x-tools-1.19.0
 ## Make sure you have a $HOME/astlinux/ directory.
 ##
 # mkdir ~/source-control # used as example folder for these configs
 cd ~/source-control
-wget -O - http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.12.3.tar.bz2 | tar xj
-cd crosstool-ng-1.12.3
+wget -O - http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.19.0.tar.bz2 | tar xj
+cd crosstool-ng-1.19.0
 ./configure
+# Note: the 'gperf' package may need to be added to your system.
 make
 sudo make install
 cd ~/source-control
-mkdir ctng
-cd ctng
-# then copy the "crosstool-ng-src/ct-ng.config" file from the SVN to ".config" here
-cp ~/astlinux/1.0/crosstool-ng-src/ct-ng.config .config
+mkdir ctng-1.19.0
+cd ctng-1.19.0
+# then copy the "crosstool-ng-src/ct-ng-1.19.0.config" file from the SVN to ".config" here
+cp ~/astlinux/1.0/crosstool-ng-src/ct-ng-1.19.0.config .config
 # leave as configured, just look, don't make any changes
 ct-ng menuconfig
 # then install linux kernel for the header includes
 wget http://files.astlinux.org/linux-2.6.35.14.tar.gz
 # finally, start the toolchain build process
 ct-ng build
-# takes 40-60 min.
+# takes 50-70 min.
 #########################################################################

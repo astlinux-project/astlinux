@@ -15,6 +15,10 @@ DARKSTAT_CONF_OPT = \
         --disable-debug \
         --with-chroot-dir=/var/empty
 
+DARKSTAT_MAKE_ENV = \
+	HOSTCC="$(HOSTCC)" \
+	HOSTCFLAGS="$(HOST_CFLAGS)"
+
 define DARKSTAT_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/darkstat $(TARGET_DIR)/usr/sbin/
 	$(INSTALL) -D -m 0755 package/darkstat/darkstat.init $(TARGET_DIR)/etc/init.d/darkstat

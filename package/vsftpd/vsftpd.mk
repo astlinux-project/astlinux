@@ -7,7 +7,7 @@ VSFTPD_VERSION = 3.0.2
 VSFTPD_SOURCE = vsftpd-$(VSFTPD_VERSION).tar.gz
 VSFTPD_SITE = https://security.appspot.com/downloads
 
-VSFTPD_LIBS = -lcrypt
+VSFTPD_LIBS = -lcrypt -lcrypto
 
 define VSFTPD_ENABLE_SSL
 	$(SED) 's/.*VSF_BUILD_SSL/#define VSF_BUILD_SSL/' $(@D)/builddefs.h
