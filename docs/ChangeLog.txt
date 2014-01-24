@@ -12,17 +12,30 @@ Released **TBD**
 
 ** System
 
+-- Build system update: crosstool-NG 1.19.0, gcc 4.4.7, eglibc 2.15
+
+-- RUNNIX, version bump to runnix-0.4-6376, Linux Kernel 2.6.35.14, gcc 4.4.7, eglibc 2.15 and package upgrades.
+
+-- busybox version bump to 1.19.4, new setserial command
+   Note: Mounting remote NFS shares is no longer supported
+
 -- perl, version bump to 5.18.2 using perlcross 0.8.3
+
+-- php, enable SimpleXML support for default builds
 
 -- pcre, version bump to 8.34
 
 -- libxml2, version bump to 2.9.1
+
+-- dosfstools, version bump to 3.0.25
 
 ** Networking
 
 -- OpenSSL, major version bump to 1.0.1f
 
 -- OpenSSH 6.4p1 (security and bug fixes)
+
+-- lighttpd, version bump to 1.4.34, (security fixes: CVE-2013-4508, CVE-2013-4559, CVE-2013-4560) and bug fixes.
 
 -- AIF, include upstream 2.0.1e patch to remove the TRACE feature, results in an 8% speed improvement
 
