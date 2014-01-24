@@ -11,6 +11,6 @@
 
 xrunnix)  Use previous RUNNIX image (if any)
 
-memtest)  Run Memtest86+ v4.20
+memtest)  Run Memtest86+
 
 

@@ -23,7 +23,7 @@ $(MEMTEST_DIR)/.configured: $(MEMTEST_DIR)/.unpacked
 	touch $@
 
 $(MEMTEST_DIR)/$(MEMTEST_BIN): $(MEMTEST_DIR)/.configured
-	$(MAKE1) -C $(MEMTEST_DIR) CC=$(TARGET_CC)
+	$(MAKE1) -C $(MEMTEST_DIR) CC=$(TARGET_CC) memtest.bin
 
 memtest: $(MEMTEST_DIR)/$(MEMTEST_BIN)
 
