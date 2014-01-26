@@ -39,6 +39,8 @@ Released **TBD**
 
 -- AIF, include upstream 2.0.1e patch to remove the TRACE feature, results in an 8% speed improvement
 
+-- darkstat, version bump to 3.0.718
+
 ** Asterisk
 
 -- Asterisk 1.8.25.0 (no change) and 11.7.0 (no change)
