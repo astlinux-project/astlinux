@@ -81,7 +81,7 @@ start () {
 
     darkstat ${interfaces} --chroot $CHROOT_DIR --pidfile $PIDFILE --syslog ${promisc}${f_ext:+ -f "$f_ext"} \
              ${f_int:+ -f "$f_int"}${f_int2:+ -f "$f_int2"}${f_int3:+ -f "$f_int3"}${f_dmz:+ -f "$f_dmz"} \
-             -b 127.0.0.1 -p 667 $NETSTAT_OPTIONS
+             -b 127.0.0.1 -p 667 --base /admin/netstat/ $NETSTAT_OPTIONS
   fi
 }
 
