@@ -53,8 +53,8 @@ Released **TBD**
 
 ** Web Interface
 
--- Network -> Firewall sub-tab, add "Log Denied DMZ interface packets" option, defaults to off to
-   not log denied packets (IPv4 broadcasts for example) in the DMZ.
+-- Network -> Firewall sub-tab, add "Log Denied DMZ interface packets" option, defaults to "unchecked"
+   to not log denied packets (IPv4 broadcasts for example) in the DMZ.
 
 
 Additions for AstLinux 1.1.4:
