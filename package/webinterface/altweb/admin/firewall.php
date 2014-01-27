@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2009 Lonnie Abelbeck
+// Copyright (C) 2008-2014 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -18,6 +18,7 @@
 // 10-14-2010, Added IPv6 support
 // 03-28-2012, Added NAT EXT support
 // 07-16-2012, Added "Pass LAN->EXT" and "Pass DMZ->EXT" actions
+// 01-27-2014, Added "Log Denied DMZ interface packets"
 //
 // System location of /mnt/kd/rc.conf.d directory
 $FIREWALLCONFDIR = '/mnt/kd/rc.conf.d';
@@ -296,6 +297,10 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   fwrite($fp, $value."\n");
   
   fwrite($fp, "### Logging\n");
+  $value = 'DMZ_INPUT_DENY_LOG='.(isset($_POST['log_dmz']) ? '1' : '0');
+  fwrite($fp, $value."\n");
+  $value = 'DMZ_OUTPUT_DENY_LOG='.(isset($_POST['log_dmz']) ? '1' : '0');
+  fwrite($fp, $value."\n");
   $value = 'ICMP_REQUEST_LOG='.(isset($_POST['log_icmp']) ? '1' : '0');
   fwrite($fp, $value."\n");
   $value = 'PRIV_TCP_LOG='.(isset($_POST['log_tcp']) ? '1' : '0');
@@ -1016,6 +1021,11 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
   $value = getVARdef($vars, 'OPEN_ICMPV6');
   $sel = ($value == 1 || $value === '') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="allow_icmpv6" name="allow_icmpv6"'.$sel.' /></td><td>Allow IPv6 ICMPv6 on External (EXT) Interface</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getVARdef($vars, 'DMZ_INPUT_DENY_LOG') == 1) ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="log_dmz" name="log_dmz"'.$sel.' /></td><td>Log Denied DMZ interface packets</td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getVARdef($vars, 'ICMP_REQUEST_LOG') == 1) ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="log_icmp" name="log_icmp"'.$sel.' /></td><td>Log Denied ICMP (ping) attempts</td></tr>');
