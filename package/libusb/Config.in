@@ -3,4 +3,4 @@ config BR2_PACKAGE_LIBUSB
 	help
 	  Userspace library for accessing USB devices
 
-	  http://libusb.sourceforge.net/
+	  http://libusb.info/

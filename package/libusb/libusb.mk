@@ -3,11 +3,16 @@
 # libusb
 #
 #############################################################
-LIBUSB_VERSION = 1.0.9
+LIBUSB_VERSION = 1.0.18
 LIBUSB_SOURCE = libusb-$(LIBUSB_VERSION).tar.bz2
-LIBUSB_SITE = http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/project/libusb/libusb-1.0/libusb-$(LIBUSB_VERSION)
+LIBUSB_SITE = http://downloads.sourceforge.net/project/libusb/libusb-1.0/libusb-$(LIBUSB_VERSION)
 LIBUSB_DEPENDENCIES = host-pkg-config
 LIBUSB_INSTALL_STAGING = YES
-LIBUSB_INSTALL_TARGET = YES
+
+ifeq ($(BR2_ROOTFS_DEVICE_CREATION_DYNAMIC_UDEV),y)
+LIBUSB_DEPENDENCIES += udev
+else
+LIBUSB_CONF_OPT += --disable-udev
+endif
 
 $(eval $(call AUTOTARGETS,package,libusb))
