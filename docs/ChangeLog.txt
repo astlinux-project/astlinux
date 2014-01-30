@@ -27,6 +27,10 @@ Released **TBD**
 
 -- libxml2, version bump to 2.9.1
 
+-- lm-sensors, version bump to 3.3.5
+
+-- libusb / libusb-compat, version bump to 1.0.18 / 0.1.5 respectively
+
 -- dosfstools, version bump to 3.0.25
 
 ** Networking
@@ -37,9 +41,13 @@ Released **TBD**
 
 -- lighttpd, version bump to 1.4.34, (security fixes: CVE-2013-4508, CVE-2013-4559, CVE-2013-4560) and bug fixes.
 
+-- libcurl (curl) version bump to 7.35.0, (security fix: CVE-2014-0015) and bug fixes.
+
 -- AIF, include upstream 2.0.1e patch to remove the TRACE feature, results in an 8% speed improvement
 
 -- darkstat, version bump to 3.0.718
+
+-- radvd, version bump to 1.9.8
 
 ** Asterisk
 
