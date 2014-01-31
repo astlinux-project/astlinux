@@ -45,6 +45,8 @@ Released **TBD**
 
 -- AIF, include upstream 2.0.1e patch to remove the TRACE feature, results in an 8% speed improvement
 
+-- openldap, version bump to 2.4.39
+
 -- darkstat, version bump to 3.0.718
 
 -- radvd, version bump to 1.9.8
