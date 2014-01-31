@@ -49,6 +49,8 @@ Released **TBD**
 
 -- radvd, version bump to 1.9.8
 
+-- fping, version bump to 3.8
+
 ** Asterisk
 
 -- Asterisk 1.8.25.0 (no change) and 11.7.0 (no change)
