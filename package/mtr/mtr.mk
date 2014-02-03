@@ -3,14 +3,15 @@
 # mtr
 #
 #############################################################
-MTR_VERSION = 0.82
+MTR_VERSION = 0.85
 MTR_SITE = ftp://ftp.bitwizard.nl/mtr
 MTR_SOURCE = mtr-$(MTR_VERSION).tar.gz
 
-MTR_DEPENDENCIES = ncurses
+MTR_DEPENDENCIES = host-pkg-config ncurses
 
 MTR_CONF_OPT = \
-        --without-gtk
+	--without-glib \
+	--without-gtk
 
 define MTR_INSTALL_TARGET_CMDS
 	$(INSTALL) -D $(@D)/mtr $(TARGET_DIR)/usr/bin/
