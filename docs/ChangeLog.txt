@@ -53,6 +53,8 @@ Released **TBD**
 
 -- fping, version bump to 3.8
 
+-- mtr, version bump to 0.85
+
 ** Asterisk
 
 -- Asterisk 1.8.25.0 (no change) and 11.7.0 (no change)
