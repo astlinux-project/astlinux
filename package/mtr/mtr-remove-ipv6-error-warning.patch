@@ -1,0 +1,17 @@
+--- mtr-0.85.1/dns.c.orig	2014-02-03 19:06:21.000000000 -0600
++++ mtr-0.85.1/dns.c	2014-02-03 19:09:48.000000000 -0600
+@@ -528,14 +528,6 @@
+   }
+ #ifdef ENABLE_IPV6
+   resfd6 = socket(AF_INET6, SOCK_DGRAM, 0);
+-  if (resfd6 == -1) {
+-    // consider making removing this warning. For now leave it in to see 
+-    // new code activated. -- REW
+-    fprintf(stderr,
+-            "Unable to allocate IPv6 socket for nameserver communication: %s\n",
+-	    strerror(errno));
+-    //    exit(-1);
+-  }
+ #endif
+   option = 1;
+   if (setsockopt(resfd,SOL_SOCKET,SO_BROADCAST,(char *)&option,sizeof(option))) {

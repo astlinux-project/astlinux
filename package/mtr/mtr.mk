@@ -3,8 +3,9 @@
 # mtr
 #
 #############################################################
-MTR_VERSION = 0.85
-MTR_SITE = ftp://ftp.bitwizard.nl/mtr
+MTR_VERSION = 0.85.1
+#MTR_SITE = ftp://ftp.bitwizard.nl/mtr
+MTR_SITE = http://files.astlinux.org
 MTR_SOURCE = mtr-$(MTR_VERSION).tar.gz
 
 MTR_DEPENDENCIES = host-pkg-config ncurses
