@@ -53,7 +53,7 @@ Released **TBD**
 
 -- fping, version bump to 3.8
 
--- mtr, version bump to 0.85
+-- mtr, version bump to 0.85 plus upstream fixes, unofficial 0.85.1
 
 ** Asterisk
 
