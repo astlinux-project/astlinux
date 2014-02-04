@@ -1,0 +1,11 @@
+--- iftop-1.0pre4/iftop.c.orig	2014-02-04 12:35:45.000000000 -0600
++++ iftop-1.0pre4/iftop.c	2014-02-04 12:37:01.000000000 -0600
+@@ -713,7 +713,7 @@
+     if(have_hw_addr) {
+       fprintf(stderr, "MAC address is:");
+       for (i = 0; i < 6; ++i)
+-	fprintf(stderr, "%c%02x", i ? ':' : ' ', (unsigned int)if_hw_addr[i]);
++	fprintf(stderr, "%c%02x", i ? ':' : ' ', (unsigned int)(unsigned char)if_hw_addr[i]);
+       fprintf(stderr, "\n");
+     }
+     
