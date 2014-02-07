@@ -1,0 +1,58 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+PIDFILE="/var/run/dnscrypt-proxy.pid"
+
+init () {
+  :
+}
+
+start () {
+
+  if [ "$DNSCRYPT_PROXY" = "yes" ]; then
+    echo "Starting dnscrypt..."
+
+    dnscrypt-proxy -d --local-address 127.0.0.1:2053 -n 128 -p $PIDFILE \
+                   ${DNSCRYPT_SERVER_ADDRESS:+--resolver-address "$DNSCRYPT_SERVER_ADDRESS"} \
+                   ${DNSCRYPT_PROVIDER_KEY:+--provider-key "$DNSCRYPT_PROVIDER_KEY"} \
+                   ${DNSCRYPT_PROVIDER_NAME:+--provider-name "$DNSCRYPT_PROVIDER_NAME"}
+  fi
+}
+
+stop () {
+
+  if [ -f $PIDFILE ]; then
+    echo "Stopping dnscrypt..."
+
+    kill $(cat $PIDFILE) >/dev/null 2>&1
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+

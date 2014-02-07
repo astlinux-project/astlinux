@@ -1,0 +1,11 @@
+config BR2_PACKAGE_DNSCRYPT_PROXY
+	bool "dnscrypt-proxy"
+	select BR2_PACKAGE_LIBSODIUM
+	default n
+	help
+	  dnscrypt-proxy is a slight variation on DNSCurve.
+	  DNSCurve improves the confidentiality and integrity of DNS requests using 
+	  high-speed high-security elliptic-curve cryptography. Best of all, DNSCurve 
+	  has very low overhead and adds virtually no latency to queries.
+
+	  http://dnscrypt.org/

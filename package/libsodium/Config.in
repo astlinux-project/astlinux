@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBSODIUM
+	bool "libsodium"
+	default n
+	help
+	  Sodium is a portable, cross-compilable, installable, packageable
+	  fork of the NaCl Cryptograpy & Networking library, with a compatible API.
+
+	  http://github.com/jedisct1/libsodium

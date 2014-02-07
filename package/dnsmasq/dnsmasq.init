@@ -4,6 +4,17 @@
 
 . /etc/init.d/functions
 
+dnscrypt_proxy_check()
+{
+  if [ -f /etc/init.d/dnscrypt ]; then
+    if [ "$DNSCRYPT_PROXY" = "yes" ]; then
+      return 0
+    fi
+  fi
+
+  return 1
+}
+
 tftpd_check()
 {
   if [ -f /etc/init.d/tftpd ]; then
@@ -123,8 +134,14 @@ ${local_domain}bogus-priv
 ${local_domain}local=/$DOMAIN/
 expand-hosts
 domain=$DOMAIN
-resolv-file=/etc/resolv-extern.conf
 cache-size=2048"
+
+  if dnscrypt_proxy_check; then
+    echo "no-resolv
+server=127.0.0.1#2053"
+  else
+    echo "resolv-file=/etc/resolv-extern.conf"
+  fi
 
   # TFTP options
   if tftpd_check; then
