@@ -13,7 +13,7 @@ start () {
   if [ "$DNSCRYPT_PROXY" = "yes" ]; then
     echo "Starting dnscrypt..."
 
-    dnscrypt-proxy -d --local-address 127.0.0.1:2053 -n 128 -p $PIDFILE \
+    dnscrypt-proxy -d --local-address 127.0.0.1:2053 -n 128 -m ${DNSCRYPT_VERBOSITY:-5} -p $PIDFILE \
                    ${DNSCRYPT_SERVER_ADDRESS:+--resolver-address "$DNSCRYPT_SERVER_ADDRESS"} \
                    ${DNSCRYPT_PROVIDER_KEY:+--provider-key "$DNSCRYPT_PROVIDER_KEY"} \
                    ${DNSCRYPT_PROVIDER_NAME:+--provider-name "$DNSCRYPT_PROVIDER_NAME"}

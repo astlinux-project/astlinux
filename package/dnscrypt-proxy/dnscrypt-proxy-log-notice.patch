@@ -1,0 +1,20 @@
+--- dnscrypt-proxy-1.3.3/src/proxy/app.c.orig	2014-02-07 21:50:46.000000000 -0600
++++ dnscrypt-proxy-1.3.3/src/proxy/app.c	2014-02-07 21:52:44.000000000 -0600
+@@ -224,7 +224,7 @@
+     evutil_format_sockaddr_port((const struct sockaddr *)
+                                 &proxy_context->resolver_sockaddr,
+                                 resolver_addr_s, sizeof resolver_addr_s);
+-    logger(proxy_context, LOG_INFO, "Proxying from %s to %s",
++    logger(proxy_context, LOG_NOTICE, "Proxying from %s to %s",
+            local_addr_s, resolver_addr_s);
+ 
+     proxy_context->listeners_started = 1;
+@@ -264,7 +264,7 @@
+ #ifdef USE_ONLY_PORTABLE_IMPLEMENTATIONS
+     randombytes_stir();
+ #else
+-    logger_noformat(&proxy_context, LOG_INFO,
++    logger_noformat(&proxy_context, LOG_NOTICE,
+                     "Initializing libsodium for optimal performance");
+     if (sodium_init() != 0) {
+         exit(1);
