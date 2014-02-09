@@ -49,3 +49,5 @@ OpenLDAP~Copyright (c) 1998-2013 The OpenLDAP Foundation. All rights reserved.
 darkstat~Copyright (c) 2001-2014 Emil Mikulic, et al.
 NUT~Copyright (c) 1999-2013  Russell Kroll, Arnaud Quette, et al.
 iftop~Copyright (c) 2002-2014 Paul Warren, Chris Lightfoot, et al.
+dnscrypt-proxy~Copyright (c) 2011-2014 Frank Denis
+libsodium~Copyright (c) 2013-2014 Frank Denis

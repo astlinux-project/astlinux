@@ -518,17 +518,23 @@ if ($line !== '') {
 }
 putHtml('</tr>');
 // DNS
-$rconf = is_file('/etc/resolv-extern.conf') ? '/etc/resolv-extern.conf' : '/etc/resolv.conf';
-if (($fp = @fopen($rconf, 'r')) !== FALSE) {
-  while (! feof($fp)) {
-    if ($line = trim(fgets($fp, 1024))) {
-      echo '<tr ', ($i++ % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
-      echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', 'DNS:', '</td>';
-      echo '<td style="text-align: left;" colspan="3">', $line, '</td>';
-      putHtml('</tr>');
+if (isDNSCRYPT()) {
+  echo '<tr ', ($i++ % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
+  echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', 'DNS:', '</td>';
+  putHtml('<td style="text-align: left;" colspan="3">DNSCrypt Proxy Server Enabled</td></tr>');
+} else {
+  $rconf = is_file('/etc/resolv-extern.conf') ? '/etc/resolv-extern.conf' : '/etc/resolv.conf';
+  if (($fp = @fopen($rconf, 'r')) !== FALSE) {
+    while (! feof($fp)) {
+      if ($line = trim(fgets($fp, 1024))) {
+        echo '<tr ', ($i++ % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
+        echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', 'DNS:', '</td>';
+        echo '<td style="text-align: left;" colspan="3">', $line, '</td>';
+        putHtml('</tr>');
+      }
     }
+    fclose($fp);
   }
-  fclose($fp);
 }
 // System Time
 echo '<tr ', ($i++ % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';

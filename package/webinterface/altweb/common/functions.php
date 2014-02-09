@@ -128,6 +128,12 @@ function statusPROCESS($process) {
     } else {
       $str = $stopped;
     }
+  } elseif ($process === 'dnscrypt') {
+    if (is_file($path.'dnscrypt-proxy.pid')) {
+      $str = $running;
+    } else {
+      $str = $stopped;
+    }
   }
   if ($str === '') {
     if (is_file($path.$process.'.pid')) {
@@ -844,6 +850,13 @@ function getPREFdef($db, $var)
 function noASTLINUX()
 {
   return(is_file('/etc/astlinux-no'));
+}
+
+// Function: isDNSCRYPT
+//
+function isDNSCRYPT()
+{
+  return(is_file('/var/run/dnscrypt-proxy.pid'));
 }
 
 // Function: getTABname

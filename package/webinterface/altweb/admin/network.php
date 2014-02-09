@@ -850,6 +850,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/dnshosts.php');
     exit;
+  } elseif (isset($_POST['submit_dnscrypt'])) {
+    $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
+    header('Location: /admin/dnscrypt.php');
+    exit;
   } elseif (isset($_POST['submit_sip_tls'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/siptlscert.php');
@@ -1237,7 +1241,11 @@ require_once '../common/header.php';
 
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   $value = getVARdef($db, 'DNS', $cur_db);
-  putHtml('DNS:<input type="text" size="72" maxlength="256" value="'.$value.'" name="dns" />&nbsp;<i>(IPv4 and/or IPv6)</i></td></tr>');
+  if (isDNSCRYPT()) {
+    putHtml('DNS:&nbsp;[DNSCrypt Proxy Server Enabled]<input type="hidden" value="'.$value.'" name="dns" /></td></tr>');
+  } else {
+    putHtml('DNS:<input type="text" size="72" maxlength="256" value="'.$value.'" name="dns" />&nbsp;<i>(IPv4 and/or IPv6)</i></td></tr>');
+  }
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="4">');
   $value = getVARdef($db, 'VLANS', $cur_db);
   putHtml('VLANS:<input type="text" size="36" maxlength="64" value="'.$value.'" name="vlans" />&nbsp;<i>(ethN.NN&nbsp;ethN.NN)</i></td>');
@@ -1549,6 +1557,11 @@ require_once '../common/header.php';
   putHtml('DNS&nbsp;Forwarder &amp; DHCP Server:');
   putHtml('<input type="submit" value="Configure DNS Hosts" name="submit_dns_hosts" class="button" /></td></tr>');
 
+  if (is_file('/etc/init.d/dnscrypt')) {
+    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+    putHtml('DNSCrypt Proxy Server:');
+    putHtml('<input type="submit" value="Configure DNSCrypt" name="submit_dnscrypt" class="button" /></td></tr>');
+  }
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('Asterisk&nbsp;SIP-TLS Server Certificate:');
   putHtml('<input type="submit" value="SIP-TLS Certificate" name="submit_sip_tls" class="button" /></td></tr>');
