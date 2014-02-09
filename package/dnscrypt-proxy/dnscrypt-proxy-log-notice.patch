@@ -9,12 +9,20 @@
             local_addr_s, resolver_addr_s);
  
      proxy_context->listeners_started = 1;
-@@ -264,7 +264,7 @@
+@@ -261,6 +261,7 @@
+         logger_noformat(NULL, LOG_ERR, "Unable to start the proxy");
+         exit(1);
+     }
++    logger_noformat(&proxy_context, LOG_NOTICE, "Starting " PACKAGE_STRING);
  #ifdef USE_ONLY_PORTABLE_IMPLEMENTATIONS
      randombytes_stir();
  #else
--    logger_noformat(&proxy_context, LOG_INFO,
-+    logger_noformat(&proxy_context, LOG_NOTICE,
-                     "Initializing libsodium for optimal performance");
-     if (sodium_init() != 0) {
-         exit(1);
+@@ -301,7 +301,7 @@
+     if (skip_dispatch == 0) {
+         event_base_dispatch(proxy_context.event_loop);
+     }
+-    logger_noformat(&proxy_context, LOG_INFO, "Stopping proxy");
++    logger_noformat(&proxy_context, LOG_NOTICE, "Stopping proxy");
+     cert_updater_free(&proxy_context);
+     udp_listener_stop(&proxy_context);
+     tcp_listener_stop(&proxy_context);
