@@ -33,6 +33,8 @@ Released **TBD**
 
 -- dosfstools, version bump to 3.0.25
 
+-- kexec-tools, version bump to 2.0.4
+
 ** Networking
 
 -- OpenSSL, major version bump to 1.0.1f
@@ -44,6 +46,12 @@ Released **TBD**
 -- libcurl (curl) version bump to 7.35.0, (security fix: CVE-2014-0015) and bug fixes.
 
 -- AIF, version bump to 2.0.1e, added DMZ logging options, the TRACE feature is removed resulting in an 8% speed improvement.
+
+-- dnscrypt-proxy, version 1.3.3, new package together with new libsodium 0.4.5 package, implements an optional feature
+   providing an encrypted tunnel for upstream DNS. Useful with OpenDNS and others supporting DNSCrypt (dnscrypt-wrapper).
+   New rc.conf variables: DNSCRYPT_PROXY, DNSCRYPT_VERBOSITY, DNSCRYPT_SERVER_ADDRESS,
+                          DNSCRYPT_PROVIDER_NAME, DNSCRYPT_PROVIDER_KEY
+   More Info: http://doc.astlinux.org/userdoc:tt_dnscrypt_proxy
 
 -- openldap, version bump to 2.4.39
 
@@ -71,6 +79,9 @@ Released **TBD**
 
 -- Network -> Firewall sub-tab, add "Log Denied DMZ interface packets" option, defaults to "unchecked"
    to not log denied packets (IPv4 broadcasts for example) in the DMZ.
+
+-- Network tab, added Network Services: DNSCrypt Proxy Server: { Configure DNSCrypt }, to support dnscrypt-proxy.
+   More Info: http://doc.astlinux.org/userdoc:tt_dnscrypt_proxy
 
 
 Additions for AstLinux 1.1.4:
