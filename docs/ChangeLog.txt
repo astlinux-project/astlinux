@@ -53,6 +53,8 @@ Released **TBD**
                           DNSCRYPT_PROVIDER_NAME, DNSCRYPT_PROVIDER_KEY
    More Info: http://doc.astlinux.org/userdoc:tt_dnscrypt_proxy
 
+-- prosody, version bump to 0.9.3
+
 -- openldap, version bump to 2.4.39
 
 -- darkstat, version bump to 3.0.718
