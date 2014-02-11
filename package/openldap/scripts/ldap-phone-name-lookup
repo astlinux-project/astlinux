@@ -114,11 +114,12 @@ Options:
     -t, --tls              Enable TLS using start_tls
     -m, --match-name list  Comma separated list to match name. Default: cn,displayname
     -o, --output-num list  Comma separated list to display numbers. Default: telephonenumber,mobile,cellphone,homephone
+    -d, --debug            Debug, show warnings
 
 ";
 
-$options = 'htm:o:';
-$options_long = array('help', 'tls', 'match-name:', 'output-num:');
+$options = 'htm:o:d';
+$options_long = array('help', 'tls', 'match-name:', 'output-num:', 'debug');
 if (($opt = getopt_argv($options, $options_long, $argv)) === FALSE) {
   echo "$usage";
   exit($rtn);
@@ -129,6 +130,12 @@ if (isset($opt['h']) || isset($opt['help']) || $argv[1] == '') {
 }
 
 $name = $argv[1];
+
+if (isset($opt['d']) || isset($opt['debug'])) {
+  error_reporting(E_STRICT | E_ALL);
+} else {
+  error_reporting(0);
+}
 
 if (isset($opt['t']) || isset($opt['tls'])) {
   $tls = TRUE;
