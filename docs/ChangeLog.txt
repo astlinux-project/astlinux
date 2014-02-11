@@ -56,6 +56,7 @@ Released **TBD**
 -- prosody, version bump to 0.9.3
 
 -- openldap, version bump to 2.4.39
+   ldap-phone-name-lookup and ldap-phone-num-lookup scripts, added debug option so that by default no PHP errors are displayed.
 
 -- darkstat, version bump to 3.0.718
 
