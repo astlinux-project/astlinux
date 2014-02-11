@@ -9,6 +9,11 @@ DNSCRYPT_PROXY_SITE = http://download.dnscrypt.org/dnscrypt-proxy
 
 DNSCRYPT_PROXY_DEPENDENCIES += libsodium
 
+# libltdl (libtool)
+ifeq ($(BR2_PACKAGE_LIBTOOL),y)
+DNSCRYPT_PROXY_DEPENDENCIES += libtool
+endif
+
 define DNSCRYPT_PROXY_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/src/proxy/dnscrypt-proxy $(TARGET_DIR)/usr/sbin/
 	$(INSTALL) -D -m 0755 package/dnscrypt-proxy/dnscrypt-proxy.init $(TARGET_DIR)/etc/init.d/dnscrypt
