@@ -5,7 +5,7 @@
 #############################################################
 LIBSODIUM_VERSION = 0.4.5
 LIBSODIUM_SOURCE = libsodium-$(LIBSODIUM_VERSION).tar.gz
-LIBSODIUM_SITE = http://download.dnscrypt.org/libsodium/releases/
+LIBSODIUM_SITE = http://download.dnscrypt.org/libsodium/releases
 
 LIBSODIUM_INSTALL_STAGING = YES
 
