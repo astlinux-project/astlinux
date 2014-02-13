@@ -5,8 +5,7 @@
 #############################################################
 LIBSODIUM_VERSION = 0.4.5
 LIBSODIUM_SOURCE = libsodium-$(LIBSODIUM_VERSION).tar.gz
-#LIBSODIUM_SITE = http://github.com/jedisct1/libsodium/releases/download/$(LIBSODIUM_VERSION)
-LIBSODIUM_SITE = http://files.astlinux.org
+LIBSODIUM_SITE = http://download.dnscrypt.org/libsodium/releases/
 
 LIBSODIUM_INSTALL_STAGING = YES
 
