@@ -70,13 +70,15 @@ Released **TBD**
 
 -- mtr, version bump to 0.85 plus upstream fixes, unofficial 0.85.1
 
+-- rsync, version bump to 3.0.9
+
 ** Asterisk
 
 -- Asterisk 1.8.25.0 (no change) and 11.7.0 (no change)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (version bump) and dahdi-tools 2.8.0 (version bump)
 
--- wanpipe, version bump to 7.0.9
+-- wanpipe, version bump to 7.0.10
 
 -- rhino, version bump to 0.99.6b4
 
