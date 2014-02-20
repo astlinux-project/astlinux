@@ -18,6 +18,8 @@ Released **TBD**
 
 -- e1000e version bump to 3.0.4 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
+-- tg3, version bump to 3.133d Broadcom NetLink 10/100/1000 Mbps PCI/PCI-X/PCI Express Ethernet Linux driver
+
 -- busybox version bump to 1.19.4, new setserial command
    Note: Mounting remote NFS shares is no longer supported
 
