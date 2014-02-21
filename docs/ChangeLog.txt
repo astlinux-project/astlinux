@@ -23,7 +23,7 @@ Released **TBD**
 -- busybox version bump to 1.19.4, new setserial command
    Note: Mounting remote NFS shares is no longer supported
 
--- perl, version bump to 5.18.2 using perlcross 0.8.3
+-- perl, version bump to 5.18.2 using perlcross 0.8.4
 
 -- php, enable SimpleXML support for default builds
 
