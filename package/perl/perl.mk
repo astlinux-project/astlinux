@@ -15,13 +15,10 @@ PERL_DEPENDENCIES = linux
 PERL_MODULES = constant Carp Errno Fcntl Cwd POSIX Digest Socket IO XSLoader
 PERL_MODULES += Digest/MD5 Digest/SHA Getopt/Std Getopt/Long Time/Local File/Glob Sys/Hostname
 
-PERL_CROSS_VERSION = 0.8.3
-PERL_CROSS_BASE_VERSION = 5.$(PERL_VERSION_MAJOR).1
-#PERL_CROSS_SITE    = http://download.berlios.de/perlcross
-PERL_CROSS_SITE    = http://files.astlinux.org
+PERL_CROSS_VERSION = 0.8.4
+PERL_CROSS_BASE_VERSION = 5.$(PERL_VERSION_MAJOR).2
+PERL_CROSS_SITE    = https://raw.github.com/arsv/perl-cross/releases
 PERL_CROSS_SOURCE  = perl-$(PERL_CROSS_BASE_VERSION)-cross-$(PERL_CROSS_VERSION).tar.gz
-PERL_CROSS_OLD_POD = perl$(subst .,,$(PERL_CROSS_BASE_VERSION))delta.pod
-PERL_CROSS_NEW_POD = perl$(subst .,,$(PERL_VERSION))delta.pod
 
 # We use the perlcross hack to cross-compile perl. It should
 # be extracted over the perl sources, so we don't define that
@@ -39,10 +36,10 @@ define PERL_CROSS_EXTRACT
 endef
 PERL_POST_EXTRACT_HOOKS += PERL_CROSS_EXTRACT
 
-define PERL_CROSS_SET_POD
-	$(SED) s/$(PERL_CROSS_OLD_POD)/$(PERL_CROSS_NEW_POD)/g $(@D)/Makefile
+define PERL_CROSS_EDITS
+	$(SED) 's/patch --follow-symlinks/patch/g' $(@D)/Makefile
 endef
-PERL_POST_PATCH_HOOKS += PERL_CROSS_SET_POD
+PERL_POST_PATCH_HOOKS += PERL_CROSS_EDITS
 
 ifeq ($(BR2_PACKAGE_BERKELEYDB),y)
     PERL_DEPENDENCIES += berkeleydb
