@@ -15,7 +15,7 @@ PERL_DEPENDENCIES = linux
 PERL_MODULES = constant Carp Errno Fcntl Cwd POSIX Digest Socket IO XSLoader
 PERL_MODULES += Digest/MD5 Digest/SHA Getopt/Std Getopt/Long Time/Local File/Glob Sys/Hostname
 
-PERL_CROSS_VERSION = 0.8.4
+PERL_CROSS_VERSION = 0.8.5
 PERL_CROSS_BASE_VERSION = 5.$(PERL_VERSION_MAJOR).2
 PERL_CROSS_SITE    = https://raw.github.com/arsv/perl-cross/releases
 PERL_CROSS_SOURCE  = perl-$(PERL_CROSS_BASE_VERSION)-cross-$(PERL_CROSS_VERSION).tar.gz
@@ -35,11 +35,6 @@ define PERL_CROSS_EXTRACT
 	$(TAR) $(TAR_STRIP_COMPONENTS)=1 -C $(@D) $(TAR_OPTIONS) -
 endef
 PERL_POST_EXTRACT_HOOKS += PERL_CROSS_EXTRACT
-
-define PERL_CROSS_EDITS
-	$(SED) 's/patch --follow-symlinks/patch/g' $(@D)/Makefile
-endef
-PERL_POST_PATCH_HOOKS += PERL_CROSS_EDITS
 
 ifeq ($(BR2_PACKAGE_BERKELEYDB),y)
     PERL_DEPENDENCIES += berkeleydb

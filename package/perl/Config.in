@@ -6,10 +6,10 @@ config BR2_PACKAGE_PERL
 	  Larry Wall's Practical Extraction and Report Language
 	  An interpreted scripting language, known among some as "Unix's Swiss
 	  Army Chainsaw".
-
-	Perl:
+	  
+	  Perl:
 	  http://www.perl.org/
-
-	Perl-Cross:
+	  
+	  Perl-Cross:
 	  http://arsv.github.io/perl-cross/
 
