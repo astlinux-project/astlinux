@@ -16,7 +16,7 @@ Released **TBD**
 
 -- RUNNIX, version bump to runnix-0.4-6376, Linux Kernel 2.6.35.14, gcc 4.4.7, eglibc 2.15 and package upgrades.
 
--- e1000e version bump to 3.0.4 Intel PCI-Express PRO/1000 Ethernet Linux driver
+-- e1000e version bump to 3.0.4.1 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
 -- tg3, version bump to 3.133d Broadcom NetLink 10/100/1000 Mbps PCI/PCI-X/PCI Express Ethernet Linux driver
 
