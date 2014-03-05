@@ -1,0 +1,277 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+usage()
+{
+  echo '
+Usage: phoneprov-build [options...] phone_model mac_addr extension[/CID_Name] username password
+
+Options:
+  -f, --force-overwrite   Overwrite existing files
+  -h, --help              Show this help text
+  -i, --if-name           Interface Name: INTIF, INT2IF, INT3IF, EXTIF, defaults to INTIF
+'
+  exit 1
+}
+
+find_ipv4_from_if()
+{
+  ip -o addr show dev "$1" \
+    | awk '$3 == "inet" { split($4, field, "/"); print field[1]; nextfile; }'
+}
+
+is_context() {
+  local context="$1" file="$2"
+
+  grep -q "^\[${context}\]" "$file"
+}
+
+extract_context() {
+  local context="$1" file="$2" match_ext
+
+  # Properly match if '*' exists in the extension
+  match_ext="$(echo "$ext" | sed 's/*/\\*/g')"
+
+  sed -n "/^\[${context}\]/,/^\[/ p" "$file" | sed -e 's/^\[.*//' -e "s/^#<${match_ext}>//" -e 's/^#.*//' -e '/^$/ d'
+}
+
+extract_var() {
+  local var="$1"
+
+  echo "$OPTIONS" | sed -n -r -e "s/^${var} *= *([^ ]*).*$/\1/p"
+}
+
+exit_no_overwrite() {
+  local file="$1"
+
+  if [ $force_overwrite -eq 0 -a -f "$file" ]; then
+    echo "phoneprov-build: File \"$file\" exists." >&2
+    exit 2
+  fi
+}
+
+merge_variables()
+{
+  sed -e 's/^\\#/#/' \
+      -e 's/^\\\[/\[/' \
+      -e "s|@MODEL@|${model}|g" \
+      -e "s|@VENDOR@|${vendor}|g" \
+      -e "s|@MAC_ADDR@|${mac_addr}|g" \
+      -e "s|@MAC@|${mac}|g" \
+      -e "s|@EXT@|${ext}|g" \
+      -e "s|@CID_NAME@|${cid_name}|g" \
+      -e "s|@USERNAME@|${username}|g" \
+      -e "s|@PASSWORD@|${password}|g" \
+      -e "s|@SIP_SERVER_IPV4@|${sip_server_ipv4}|g"
+}
+
+ARGS="$(getopt --name phoneprov-build \
+               --long force-overwrite,help,if-name: \
+               --options fhi: \
+               -- "$@")"
+if [ $? -ne 0 ]; then
+  usage
+fi
+eval set -- $ARGS
+
+force_overwrite=0
+if_name="INTIF"
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -f|--force-overwrite)  force_overwrite=1 ;;
+    -h|--help)             usage ;;
+    -i|--if-name)          if_name="$2"; shift ;;
+    --) shift; break ;;
+  esac
+  shift
+done
+
+model="$1"
+mac_addr="$2"
+ext="$(echo "$3" | cut -d'/' -f1)"
+cid_name="$(echo "$3" | cut -s -d'/' -f2- | tr '_' ' ')"
+username="$4"
+password="$5"
+
+PHONEPROV_DIR="${PHONEPROV_BASE_DIR:-/mnt/kd/phoneprov}"
+TEMPLATE_DIR="$PHONEPROV_DIR/templates"
+
+DIALPLAN_DIR="/mnt/kd/asterisk/includes"
+SIP_DIR="/mnt/kd/asterisk/includes"
+
+case $if_name in
+  INTIF)
+    sip_server_if="$INTIF"
+    sip_server_ipv4="$INTIP"
+    ;;
+  INT2IF)
+    sip_server_if="$INT2IF"
+    sip_server_ipv4="$INT2IP"
+    ;;
+  INT3IF)
+    sip_server_if="$INT3IF"
+    sip_server_ipv4="$INT3IP"
+    ;;
+  EXTIF)
+    sip_server_if="$EXTIF"
+    sip_server_ipv4="$(find_ipv4_from_if $EXTIF)"
+    ;;
+  *)
+    usage
+    ;;
+esac
+
+if [ -z "$mac_addr" -o -z "$ext" ]; then
+  usage
+fi
+
+if [ -z "$cid_name" ]; then
+  cid_name="$ext"
+fi
+
+case $mac_addr in
+  ??:??:??:??:??:??)
+    ;;
+  *)
+    echo "phoneprov-build: Invalid MAC address: $mac_addr" >&2
+    exit 1
+    ;;
+esac
+mac="$(echo "$mac_addr" | tr -d ':')"
+
+if [ ! -f "$TEMPLATE_DIR/$model.conf" ]; then
+  echo "phoneprov-build: Template file \"$TEMPLATE_DIR/$model.conf\" not found." >&2
+  exit 1
+fi
+
+if ! is_context "general" "$TEMPLATE_DIR/$model.conf"; then
+  echo "phoneprov-build: No [general] context defined, invalid template file." >&2
+  exit 1
+fi
+
+# Extract General Definitions
+OPTIONS="$(extract_context "general" "$TEMPLATE_DIR/$model.conf")"
+
+macaddress_case="$(extract_var macaddress_case)"
+case $macaddress_case in
+  upper) mac="$(echo "$mac" | tr '[:lower:]' '[:upper:]')"
+    ;;
+  lower) mac="$(echo "$mac" | tr '[:upper:]' '[:lower:]')"
+    ;;
+esac
+OPTIONS="$(echo "$OPTIONS" | merge_variables)"
+
+vendor="$(extract_var vendor)"
+if [ -z "$vendor" ]; then
+  vendor="$model"
+fi
+prov_path="$(extract_var prov_path)"
+if [ -z "$prov_path" ]; then
+  prov_path="$PHONEPROV_DIR/$vendor"
+fi
+prov_file="$(extract_var prov_file)"
+if [ -z "$prov_file" ]; then
+  prov_file="$mac.cfg"
+fi
+dialplan_path="$(extract_var dialplan_path)"
+if [ -z "$dialplan_path" ]; then
+  dialplan_path="$DIALPLAN_DIR"
+fi
+dialplan_file="$(extract_var dialplan_file)"
+if [ -z "$dialplan_file" ]; then
+  dialplan_file="astlinux-phoneprov-exten.conf"
+fi
+dialplan_context="$(extract_var dialplan_context)"
+sip_path="$(extract_var sip_path)"
+if [ -z "$sip_path" ]; then
+  sip_path="$SIP_DIR"
+fi
+sip_file="$(extract_var sip_file)"
+if [ -z "$sip_file" ]; then
+  sip_file="astlinux-phoneprov-sip.conf"
+fi
+
+# Special case to initialize dialplan and sip output files
+if [ "$ext" = "init" -o "$ext" = "init-dialplan" -o "$ext" = "init-sip" ]; then
+  if [ "$ext" = "init" -o "$ext" = "init-dialplan" ]; then
+    if is_context "dialplan" "$TEMPLATE_DIR/$model.conf"; then
+      exit_no_overwrite "$dialplan_path/$dialplan_file"
+      echo ";
+; ####################################################
+; ### AstLinux auto-provisioned IP-Phone dialplan ####
+; ####################################################
+;
+; Include in your extensions.conf file by using:
+; #include $dialplan_path/$dialplan_file
+${dialplan_context:+
+[$dialplan_context]}
+" > "$dialplan_path/$dialplan_file"
+    fi
+  fi
+  if [ "$ext" = "init" -o "$ext" = "init-sip" ]; then
+    if is_context "sip" "$TEMPLATE_DIR/$model.conf"; then
+      exit_no_overwrite "$sip_path/$sip_file"
+      echo ";
+; ##############################################################
+; ### AstLinux auto-provisioned IP-Phone SIP configurations ####
+; ##############################################################
+;
+; Include in your sip.conf file by using:
+; #include $sip_path/$sip_file
+
+" > "$sip_path/$sip_file"
+    fi
+  fi
+  exit 0
+fi
+
+if [ -z "$username" ]; then
+  echo "phoneprov-build: no username defined." >&2
+  exit 3
+fi
+if [ -z "$password" ]; then
+  echo "phoneprov-build: no password defined." >&2
+  exit 3
+fi
+
+is_context_dialplan=0
+if is_context "dialplan" "$TEMPLATE_DIR/$model.conf"; then
+  is_context_dialplan=1
+fi
+is_context_sip=0
+if is_context "sip" "$TEMPLATE_DIR/$model.conf"; then
+  is_context_sip=1
+fi
+is_context_phoneprov=0
+if is_context "phoneprov" "$TEMPLATE_DIR/$model.conf"; then
+  exit_no_overwrite "$prov_path/$prov_file"
+  is_context_phoneprov=1
+fi
+
+if [ $is_context_dialplan -eq 1 ]; then
+  if [ ! -d "$dialplan_path" ]; then
+    mkdir -p "$dialplan_path"
+  fi
+  extract_context "dialplan" "$TEMPLATE_DIR/$model.conf" | \
+    merge_variables >> "$dialplan_path/$dialplan_file"
+fi
+
+if [ $is_context_sip -eq 1 ]; then
+  if [ ! -d "$sip_path" ]; then
+    mkdir -p "$sip_path"
+  fi
+  extract_context "sip" "$TEMPLATE_DIR/$model.conf" | \
+    merge_variables >> "$sip_path/$sip_file"
+  # Add an empty line
+  echo "" >> "$sip_path/$sip_file"
+fi
+
+if [ $is_context_phoneprov -eq 1 ]; then
+  if [ ! -d "$prov_path" ]; then
+    mkdir -p "$prov_path"
+  fi
+  extract_context "phoneprov" "$TEMPLATE_DIR/$model.conf" | \
+    merge_variables > "$prov_path/$prov_file"
+fi
+

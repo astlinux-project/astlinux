@@ -1,0 +1,12 @@
+config BR2_PACKAGE_PHONEPROV_TOOLS
+	bool "phoneprov-tools"
+	depends on BR2_PACKAGE_ASTERISK
+	default n
+	help
+	  A set of scripts and configuration templates designed to
+	  generate IP Phone provisioning files as well as Asterisk
+	  sip.conf and extensions.conf includes files.
+
+	  Lonnie Abelbeck and Michael Keuter
+	  http://www.astlinux.org/
+

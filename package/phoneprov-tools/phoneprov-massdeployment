@@ -1,0 +1,180 @@
+#!/bin/sh
+##
+## Mass Deployment of IP Phones
+##
+
+usage()
+{
+  echo '
+Usage: phoneprov-massdeployment [options...] in_file
+
+Options:
+  -a, --auto-user-pass    Automatically generate missing username/password(s)
+  -A, --only-user-pass    Same as "-a, --auto-user-pass" without further processing
+  -f, --force-overwrite   Overwrite existing files
+  -h, --help              Show this help text
+  -i, --if-name           Interface Name: INTIF, INT2IF, INT3IF, EXTIF, defaults to INTIF
+  -p, --partial           Partial input, append "dialplan" and "sip" entries to existing
+'
+  exit 1
+}
+
+error_info() {
+  local result="$1"
+
+  if [ $result -eq 2 ]; then
+    echo "phoneprov-massdeployment: Use -f or --force-overwrite option to overwrite."
+    echo "Files left unchanged."
+  elif [ $result -eq 3 ]; then
+    echo "phoneprov-massdeployment: Use -a or --auto-user-pass option to automatically"
+    echo "                          generate any missing username/password(s)."
+  fi
+}
+
+extract_file() {
+  local file="$1"
+
+  cat "$file" | sed -e 's/[#;].*//' -e 's/ *$//' -e '/^$/d'
+}
+
+init_args() {
+  local args="$1" model
+
+  model="$(echo "$args" | awk -F' ' '{ print $1; }')"
+
+  echo "$model 00:00:00:00:00:00 init"
+}
+
+gen_user_pass() {
+  local data="$1" model mac_addr ext_cid ext user pass
+
+  model="$(echo "$data" | awk -F' ' '{ print $1; }')"
+  mac_addr="$(echo "$data" | awk -F' ' '{ print $2; }')"
+  ext_cid="$(echo "$data" | awk -F' ' '{ print $3; }')"
+  user="$(echo "$data" | awk -F' ' '{ print $4; }')"
+  pass="$(echo "$data" | awk -F' ' '{ print $5; }')"
+
+  ext="$(echo "$ext_cid" | cut -d'/' -f1)"
+
+  if [ -n "$model" -a -n "$mac_addr" -a -n "$ext" ]; then
+    if [ -z "$user" -o -z "$pass" ]; then
+      if [ -z "$user" ]; then
+        user="${model}_$(echo "$mac_addr" | cut -d':' -f5)$(echo "$mac_addr" | cut -d':' -f6)_${ext}"
+      fi
+      if [ -z "$pass" ]; then
+        pass="$(openssl rand -base64 12)"
+      fi
+      # Properly match if '*' exists in the extension/cid
+      ext_cid="$(echo "$ext_cid" | sed 's/*/\\*/g')"
+
+      sed -i -e "s|^${model} *${mac_addr} *${ext_cid}.*$|${model} ${mac_addr} ${ext_cid} ${user} ${pass}|" "$in_file"
+    fi
+  fi
+}
+
+ARGS="$(getopt --name phoneprov-massdeployment \
+               --long auto-user-pass,only-user-pass,force-overwrite,help,if-name:,partial \
+               --options aAfhi:p \
+               -- "$@")"
+if [ $? -ne 0 ]; then
+  usage
+fi
+eval set -- $ARGS
+
+auto_user_pass=0
+only_user_pass=0
+force_overwrite=0
+partial=0
+if_name="INTIF"
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -a|--auto-user-pass)   auto_user_pass=1 ;;
+    -A|--only-user-pass)   auto_user_pass=1 ; only_user_pass=1 ;;
+    -f|--force-overwrite)  force_overwrite=1 ;;
+    -h|--help)             usage ;;
+    -i|--if-name)          if_name="$2"; shift ;;
+    -p|--partial)          partial=1 ;;
+    --) shift; break ;;
+  esac
+  shift
+done
+in_file="$1"
+
+if [ -z "$in_file" -o "$in_file" = "--" ]; then
+  usage
+fi
+if [ ! -f "$in_file" ]; then
+  echo "phoneprov-massdeployment: file not found: $in_file" >&2
+  exit 1
+fi
+
+if [ $auto_user_pass -eq 1 ]; then
+  echo "Auto-generating username/password(s):"
+
+  temp_file="$(mktemp "${in_file}.XXXXXX")"
+  cp "$in_file" "$temp_file"
+
+  IFS=$'\n'
+  extract_file "$temp_file" | while read data; do
+    unset IFS
+    gen_user_pass "$data"
+  done
+  unset IFS
+
+  if cmp -s "$temp_file" "$in_file"; then
+    echo "No missing username/password(s), input file left unchanged."
+  else
+    echo "Missing username/password(s) were added to input file."
+  fi
+  rm "$temp_file"
+
+  if [ $only_user_pass -eq 1 ]; then
+    exit 0
+  fi
+fi
+
+options=""
+if [ $force_overwrite -eq 1 ]; then
+  options="$options${options:+ }-f"
+fi
+if [ -n "$if_name" ]; then
+  options="$options${options:+ }-i $if_name"
+fi
+
+echo "Generating Phone Provisioning files:"
+
+if [ $partial -eq 1 ]; then
+  first=0
+else
+  first=1
+fi
+IFS=$'\n'
+extract_file "$in_file" | while read data; do
+  unset IFS
+  if [ $first -eq 1 ]; then
+    phoneprov-build $options $(init_args $data)
+    result=$?
+    if [ $result -ne 0 ]; then
+      error_info $result
+      exit $result
+    fi
+    first=0
+  fi
+  phoneprov-build $options $data
+  result=$?
+  if [ $result -ne 0 ]; then
+    error_info $result
+    exit $result
+  fi
+  printf "."
+done
+result=$?
+unset IFS
+
+if [ $result -ne 0 ]; then
+  exit $result
+fi
+
+echo "Done"
+exit 0
+
