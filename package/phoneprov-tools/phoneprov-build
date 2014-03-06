@@ -39,7 +39,7 @@ extract_context() {
 extract_var() {
   local var="$1"
 
-  echo "$OPTIONS" | sed -n -r -e "s/^${var} *= *([^ ]*).*$/\1/p"
+  echo "$OPTIONS" | sed -n -r -e "s/^${var} *= *([^ ]*).*$/\1/p" | tail -n1
 }
 
 exit_no_overwrite() {
