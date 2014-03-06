@@ -197,6 +197,9 @@ if [ "$ext" = "init" -o "$ext" = "init-dialplan" -o "$ext" = "init-sip" ]; then
   if [ "$ext" = "init" -o "$ext" = "init-dialplan" ]; then
     if is_context "dialplan" "$TEMPLATE_DIR/$model.conf"; then
       exit_no_overwrite "$dialplan_path/$dialplan_file"
+      if [ ! -d "$dialplan_path" ]; then
+        mkdir -p "$dialplan_path"
+      fi
       echo ";
 ; ####################################################
 ; ### AstLinux auto-provisioned IP-Phone dialplan ####
@@ -212,6 +215,9 @@ ${dialplan_context:+
   if [ "$ext" = "init" -o "$ext" = "init-sip" ]; then
     if is_context "sip" "$TEMPLATE_DIR/$model.conf"; then
       exit_no_overwrite "$sip_path/$sip_file"
+      if [ ! -d "$sip_path" ]; then
+        mkdir -p "$sip_path"
+      fi
       echo ";
 ; ##############################################################
 ; ### AstLinux auto-provisioned IP-Phone SIP configurations ####
