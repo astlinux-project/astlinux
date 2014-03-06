@@ -34,7 +34,7 @@ error_info() {
 extract_file() {
   local file="$1"
 
-  cat "$file" | sed -e 's/[#;].*//' -e 's/ *$//' -e '/^$/d'
+  cat "$file" | sed -e 's/^#.*//' -e 's/\t/ /g' -e 's/ *$//' -e '/^$/d'
 }
 
 init_args() {
@@ -57,17 +57,19 @@ gen_user_pass() {
   ext="$(echo "$ext_cid" | cut -d'/' -f1)"
 
   if [ -n "$model" -a -n "$mac_addr" -a -n "$ext" ]; then
-    if [ -z "$user" -o -z "$pass" ]; then
-      if [ -z "$user" ]; then
-        user="${model}_$(echo "$mac_addr" | cut -d':' -f5)$(echo "$mac_addr" | cut -d':' -f6)_${ext}"
-      fi
-      if [ -z "$pass" ]; then
-        pass="$(openssl rand -base64 12)"
-      fi
-      # Properly match if '*' exists in the extension/cid
-      ext_cid="$(echo "$ext_cid" | sed 's/*/\\*/g')"
+    if [ "$ext" != "init" -a "$ext" != "init-dialplan" -a "$ext" != "init-sip" ]; then
+      if [ -z "$user" -o -z "$pass" ]; then
+        if [ -z "$user" ]; then
+          user="${model}_$(echo "$mac_addr" | cut -d':' -f5)$(echo "$mac_addr" | cut -d':' -f6)_${ext}"
+        fi
+        if [ -z "$pass" ]; then
+          pass="$(openssl rand -base64 12)"
+        fi
+        # Properly match if '*' exists in the extension/cid
+        ext_cid="$(echo "$ext_cid" | sed 's/*/\\*/g')"
 
-      sed -i -e "s|^${model} *${mac_addr} *${ext_cid}.*$|${model} ${mac_addr} ${ext_cid} ${user} ${pass}|" "$in_file"
+        sed -i -e "s|^${model}[ \t]*${mac_addr}[ \t]*${ext_cid}.*$|${model} ${mac_addr} ${ext_cid} ${user} ${pass}|" "$in_file"
+      fi
     fi
   fi
 }
