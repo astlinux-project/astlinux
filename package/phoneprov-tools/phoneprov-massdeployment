@@ -13,7 +13,7 @@ Options:
   -A, --only-user-pass    Same as "-a, --auto-user-pass" without further processing
   -f, --force-overwrite   Overwrite existing files
   -h, --help              Show this help text
-  -i, --if-name           Interface Name: INTIF, INT2IF, INT3IF, EXTIF, defaults to INTIF
+  -i, --if-name           Interface Name: INTIF, INT2IF, INT3IF, EXTIF, ethN, brN, defaults to INTIF
   -p, --partial           Partial input, append "dialplan" and "sip" entries to existing
 '
   exit 1

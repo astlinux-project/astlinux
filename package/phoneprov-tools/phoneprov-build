@@ -10,7 +10,7 @@ Usage: phoneprov-build [options...] phone_model mac_addr extension[/CID_Name] us
 Options:
   -f, --force-overwrite   Overwrite existing files
   -h, --help              Show this help text
-  -i, --if-name           Interface Name: INTIF, INT2IF, INT3IF, EXTIF, defaults to INTIF
+  -i, --if-name           Interface Name: INTIF, INT2IF, INT3IF, EXTIF, ethN, brN, defaults to INTIF
 '
   exit 1
 }
@@ -117,10 +117,19 @@ case $if_name in
     sip_server_if="$EXTIF"
     sip_server_ipv4="$(find_ipv4_from_if $EXTIF)"
     ;;
+  eth*[0-9]|br*[0-9])
+    sip_server_if="$if_name"
+    sip_server_ipv4="$(find_ipv4_from_if $if_name)"
+    ;;
   *)
     usage
     ;;
 esac
+
+if [ -z "$sip_server_ipv4" ]; then
+  echo "phoneprov-build: Invalid Interface: $sip_server_if" >&2
+  exit 1
+fi
 
 if [ -z "$mac_addr" -o -z "$ext" ]; then
   usage
