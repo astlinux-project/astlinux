@@ -4,9 +4,9 @@
 #
 ##############################################################
 ifeq ($(BR2_PACKAGE_ASTERISK_v1_8),y)
-ASTERISK_VERSION := 1.8.25.0
+ASTERISK_VERSION := 1.8.26.0
 else
-ASTERISK_VERSION := 11.7.0
+ASTERISK_VERSION := 11.8.0
 endif
 ASTERISK_SOURCE := asterisk-$(ASTERISK_VERSION).tar.gz
 ASTERISK_SITE := http://downloads.asterisk.org/pub/telephony/asterisk/releases
