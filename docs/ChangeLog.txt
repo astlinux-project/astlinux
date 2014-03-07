@@ -20,6 +20,8 @@ Released **TBD**
 
 -- tg3, version bump to 3.133d Broadcom NetLink 10/100/1000 Mbps PCI/PCI-X/PCI Express Ethernet Linux driver
 
+-- r8168 version bump to 8.038.00 RealTek PCI-Express Gigabit Ethernet Linux driver
+
 -- busybox version bump to 1.19.4, new setserial command
    Note: Mounting remote NFS shares is no longer supported
 
@@ -76,13 +78,18 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.8.25.0 (no change) and 11.7.0 (no change)
+-- Asterisk 1.8.26.0 (version bump) and 11.8.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (version bump) and dahdi-tools 2.8.0 (version bump)
 
 -- wanpipe, version bump to 7.0.10
 
 -- rhino, version bump to 0.99.6b4
+
+-- phoneprov-tools, new package. A set of scripts and configuration templates designed to generate IP Phone provisioning
+   files as well as Asterisk sip.conf and extensions.conf includes files. Special thanks to Michael Keuter.
+   New rc.conf variable: PHONEPROV_BASE_DIR
+   More Info: http://doc.astlinux.org/userdoc:tt_ip_phone_provisioning
 
 ** Web Interface
 
