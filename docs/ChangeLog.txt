@@ -99,6 +99,8 @@ Released **TBD**
 -- Network tab, added Network Services: DNSCrypt Proxy Server: { Configure DNSCrypt }, to support dnscrypt-proxy.
    More Info: http://doc.astlinux.org/userdoc:tt_dnscrypt_proxy
 
+-- Edit tab, support to edit /mnt/kd/phoneprov/templates/*.conf files.
+
 
 Additions for AstLinux 1.1.4:
 =============================
