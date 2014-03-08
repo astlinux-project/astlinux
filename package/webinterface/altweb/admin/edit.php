@@ -59,6 +59,7 @@ $sys_label = array (
   'zaptel.conf' => 'Zaptel System Config',
   'redfone.conf' => 'Redfone foneBRIDGE',
   'webgui-staff-backup.conf' => 'Staff Backup Password',
+  'massdeployment.conf' => 'IP Phone Deployment Data',
   'vsftpd.conf' => 'Standalone FTPd Configuration'
 );
 
@@ -287,6 +288,7 @@ require_once '../common/header.php';
       $dir === '/mnt/kd/docs' ||
       $dir === '/mnt/kd/arno-iptables-firewall' ||
       $dir === '/mnt/kd/arno-iptables-firewall/plugins' ||
+      $dir === '/mnt/kd/phoneprov/templates' ||
       $dir === '/etc/asterisk' ||
       $dir === '/etc/asterisk/includes' ||
       $openfile === '/etc/rc.modules' ||
@@ -564,6 +566,16 @@ require_once '../common/header.php';
     if (is_writable($file = '/stat/var/packages/fop2/html/js/presence.js')) {
       $sel = ($file === $openfile) ? ' selected="selected"' : '';
       putHtml('<option value="'.$file.'"'.$sel.'>html/js/'.basename($file).' - FOP2 Global Options</option>');
+    }
+    putHtml('</optgroup>');
+  }
+  if (is_dir('/mnt/kd/phoneprov/templates') && count($globfiles = glob('/mnt/kd/phoneprov/templates/*.conf')) > 0) {
+    putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; IP Phone Provisioning Templates &mdash;&mdash;&mdash;&mdash;">');
+    foreach ($globfiles as $globfile) {
+      if (is_file($globfile) && is_writable($globfile)) {
+        $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
+        putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - IP Phone Template Config</option>');
+      }
     }
     putHtml('</optgroup>');
   }
