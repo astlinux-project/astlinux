@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 . /etc/rc.conf
 
@@ -66,6 +66,65 @@ merge_variables()
       -e "s|@SIP_SERVER_IPV4@|${sip_server_ipv4}|g"
 }
 
+merge_indexed_variables()
+{
+  sed -e "s|@EXT1@|${EXT[1]}|g" \
+      -e "s|@CID_NAME1@|${CID_NAME[1]}|g" \
+      -e "s|@USERNAME1@|${USERNAME[1]}|g" \
+      -e "s|@PASSWORD1@|${PASSWORD[1]}|g" \
+      -e "s|@EXT2@|${EXT[2]}|g" \
+      -e "s|@CID_NAME2@|${CID_NAME[2]}|g" \
+      -e "s|@USERNAME2@|${USERNAME[2]}|g" \
+      -e "s|@PASSWORD2@|${PASSWORD[2]}|g" \
+      -e "s|@EXT3@|${EXT[3]}|g" \
+      -e "s|@CID_NAME3@|${CID_NAME[3]}|g" \
+      -e "s|@USERNAME3@|${USERNAME[3]}|g" \
+      -e "s|@PASSWORD3@|${PASSWORD[3]}|g" \
+      -e "s|@EXT4@|${EXT[4]}|g" \
+      -e "s|@CID_NAME4@|${CID_NAME[4]}|g" \
+      -e "s|@USERNAME4@|${USERNAME[4]}|g" \
+      -e "s|@PASSWORD4@|${PASSWORD[4]}|g" \
+      -e "s|@EXT5@|${EXT[5]}|g" \
+      -e "s|@CID_NAME5@|${CID_NAME[5]}|g" \
+      -e "s|@USERNAME5@|${USERNAME[5]}|g" \
+      -e "s|@PASSWORD5@|${PASSWORD[5]}|g" \
+      -e "s|@EXT6@|${EXT[6]}|g" \
+      -e "s|@CID_NAME6@|${CID_NAME[6]}|g" \
+      -e "s|@USERNAME6@|${USERNAME[6]}|g" \
+      -e "s|@PASSWORD6@|${PASSWORD[6]}|g"
+}
+
+index_var() {
+  local index="$1" var="$2"
+
+  if [ $index -gt 1 ]; then
+    echo "$var" | cut -s -d';' -f"$index"
+  else
+    echo "$var" | cut -d';' -f"$index"
+  fi
+}
+
+define_indexed_vars() {
+  local i="$1"
+
+  EXT[$i]="$(index_var $i "$raw_ext" | cut -d'/' -f1)"
+  if [ -z "${EXT[$i]}" ]; then
+    EXT[$i]="$ext"
+  fi
+  CID_NAME[$i]="$(index_var $i "$raw_ext" | cut -s -d'/' -f2- | tr '_' ' ')"
+  if [ -z "${CID_NAME[$i]}" ]; then
+    CID_NAME[$i]="$cid_name"
+  fi
+  USERNAME[$i]="$(index_var $i "$raw_username")"
+  if [ -z "${USERNAME[$i]}" ]; then
+    USERNAME[$i]="$username"
+  fi
+  PASSWORD[$i]="$(index_var $i "$raw_password")"
+  if [ -z "${PASSWORD[$i]}" ]; then
+    PASSWORD[$i]="$password"
+  fi
+}
+
 ARGS="$(getopt --name phoneprov-build \
                --long force-overwrite,help,if-name: \
                --options fhi: \
@@ -89,10 +148,14 @@ done
 
 model="$1"
 mac_addr="$2"
-ext="$(echo "$3" | cut -d'/' -f1)"
-cid_name="$(echo "$3" | cut -s -d'/' -f2- | tr '_' ' ')"
-username="$4"
-password="$5"
+raw_ext="$3"
+raw_username="$4"
+raw_password="$5"
+
+ext="$(index_var 1 "$raw_ext" | cut -d'/' -f1)"
+cid_name="$(index_var 1 "$raw_ext" | cut -s -d'/' -f2- | tr '_' ' ')"
+username="$(index_var 1 "$raw_username")"
+password="$(index_var 1 "$raw_password")"
 
 PHONEPROV_DIR="${PHONEPROV_BASE_DIR:-/mnt/kd/phoneprov}"
 TEMPLATE_DIR="$PHONEPROV_DIR/templates"
@@ -250,6 +313,19 @@ if [ -z "$password" ]; then
   exit 3
 fi
 
+# Define indexed variables
+
+EXT[1]="$ext"
+CID_NAME[1]="$cid_name"
+USERNAME[1]="$username"
+PASSWORD[1]="$password"
+
+for index in 2 3 4 5 6; do
+  define_indexed_vars $index
+done
+
+# main
+
 is_context_dialplan=0
 if is_context "dialplan" "$TEMPLATE_DIR/$model.conf"; then
   is_context_dialplan=1
@@ -269,7 +345,7 @@ if [ $is_context_dialplan -eq 1 ]; then
     mkdir -p "$dialplan_path"
   fi
   extract_context "dialplan" "$TEMPLATE_DIR/$model.conf" | \
-    merge_variables >> "$dialplan_path/$dialplan_file"
+    merge_variables | merge_indexed_variables >> "$dialplan_path/$dialplan_file"
 fi
 
 if [ $is_context_sip -eq 1 ]; then
@@ -277,7 +353,7 @@ if [ $is_context_sip -eq 1 ]; then
     mkdir -p "$sip_path"
   fi
   extract_context "sip" "$TEMPLATE_DIR/$model.conf" | \
-    merge_variables >> "$sip_path/$sip_file"
+    merge_variables | merge_indexed_variables >> "$sip_path/$sip_file"
   # Add an empty line
   echo "" >> "$sip_path/$sip_file"
 fi
@@ -287,6 +363,6 @@ if [ $is_context_phoneprov -eq 1 ]; then
     mkdir -p "$prov_path"
   fi
   extract_context "phoneprov" "$TEMPLATE_DIR/$model.conf" | \
-    merge_variables > "$prov_path/$prov_file"
+    merge_variables | merge_indexed_variables > "$prov_path/$prov_file"
 fi
 
