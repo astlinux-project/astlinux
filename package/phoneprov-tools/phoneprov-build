@@ -113,7 +113,7 @@ define_indexed_vars() {
   fi
   CID_NAME[$i]="$(index_var $i "$raw_ext" | cut -s -d'/' -f2- | tr '_' ' ')"
   if [ -z "${CID_NAME[$i]}" ]; then
-    CID_NAME[$i]="$cid_name"
+    CID_NAME[$i]="${EXT[$i]}"
   fi
   USERNAME[$i]="$(index_var $i "$raw_username")"
   if [ -z "${USERNAME[$i]}" ]; then
