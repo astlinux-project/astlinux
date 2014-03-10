@@ -54,7 +54,7 @@ gen_user_pass() {
   user="$(echo "$data" | awk -F' ' '{ print $4; }')"
   pass="$(echo "$data" | awk -F' ' '{ print $5; }')"
 
-  ext="$(echo "$ext_cid" | cut -d'/' -f1)"
+  ext="$(echo "$ext_cid" | cut -d';' -f1 | cut -d'/' -f1)"
 
   if [ -n "$model" -a -n "$mac_addr" -a -n "$ext" ]; then
     if [ "$ext" != "init" -a "$ext" != "init-dialplan" -a "$ext" != "init-sip" ]; then
