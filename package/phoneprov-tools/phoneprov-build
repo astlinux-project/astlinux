@@ -289,7 +289,7 @@ fi
 # Special case to initialize dialplan and sip output files
 if [ "$ext" = "init" -o "$ext" = "init-dialplan" -o "$ext" = "init-sip" ]; then
   if [ "$ext" = "init" -o "$ext" = "init-dialplan" ]; then
-    if is_context "dialplan" "$TEMPLATE_DIR/$model.conf"; then
+    if is_context "dialplan" "$TEMPLATE_DIR/$template.conf"; then
       exit_no_overwrite "$dialplan_path/$dialplan_file"
       if [ ! -d "$dialplan_path" ]; then
         mkdir -p "$dialplan_path"
@@ -307,7 +307,7 @@ ${dialplan_context:+
     fi
   fi
   if [ "$ext" = "init" -o "$ext" = "init-sip" ]; then
-    if is_context "sip" "$TEMPLATE_DIR/$model.conf"; then
+    if is_context "sip" "$TEMPLATE_DIR/$template.conf"; then
       exit_no_overwrite "$sip_path/$sip_file"
       if [ ! -d "$sip_path" ]; then
         mkdir -p "$sip_path"
@@ -353,15 +353,15 @@ done
 # main
 
 is_context_dialplan=0
-if is_context "dialplan" "$TEMPLATE_DIR/$model.conf"; then
+if is_context "dialplan" "$TEMPLATE_DIR/$template.conf"; then
   is_context_dialplan=1
 fi
 is_context_sip=0
-if is_context "sip" "$TEMPLATE_DIR/$model.conf"; then
+if is_context "sip" "$TEMPLATE_DIR/$template.conf"; then
   is_context_sip=1
 fi
 is_context_phoneprov=0
-if is_context "phoneprov" "$TEMPLATE_DIR/$model.conf"; then
+if is_context "phoneprov" "$TEMPLATE_DIR/$template.conf"; then
   exit_no_overwrite "$prov_path/$prov_file"
   is_context_phoneprov=1
 fi
@@ -370,7 +370,7 @@ if [ $is_context_dialplan -eq 1 ]; then
   if [ ! -d "$dialplan_path" ]; then
     mkdir -p "$dialplan_path"
   fi
-  extract_context "dialplan" "$TEMPLATE_DIR/$model.conf" | \
+  extract_context "dialplan" "$TEMPLATE_DIR/$template.conf" | \
     merge_variables | merge_indexed_variables >> "$dialplan_path/$dialplan_file"
 fi
 
@@ -378,7 +378,7 @@ if [ $is_context_sip -eq 1 ]; then
   if [ ! -d "$sip_path" ]; then
     mkdir -p "$sip_path"
   fi
-  extract_context "sip" "$TEMPLATE_DIR/$model.conf" | \
+  extract_context "sip" "$TEMPLATE_DIR/$template.conf" | \
     merge_variables | merge_indexed_variables >> "$sip_path/$sip_file"
   # Add an empty line
   echo "" >> "$sip_path/$sip_file"
@@ -388,7 +388,7 @@ if [ $is_context_phoneprov -eq 1 ]; then
   if [ ! -d "$prov_path" ]; then
     mkdir -p "$prov_path"
   fi
-  extract_context "phoneprov" "$TEMPLATE_DIR/$model.conf" | \
+  extract_context "phoneprov" "$TEMPLATE_DIR/$template.conf" | \
     merge_variables | merge_indexed_variables > "$prov_path/$prov_file"
 fi
 
