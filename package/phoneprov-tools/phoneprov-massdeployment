@@ -38,17 +38,17 @@ extract_file() {
 }
 
 init_args() {
-  local args="$1" model
+  local args="$1" template
 
-  model="$(echo "$args" | awk -F' ' '{ print $1; }')"
+  template="$(echo "$args" | awk -F' ' '{ print $1; }')"
 
-  echo "$model 00:00:00:00:00:00 init"
+  echo "$template 00:00:00:00:00:00 init"
 }
 
 gen_user_pass() {
-  local data="$1" model mac_addr ext_cid ext user pass
+  local data="$1" template mac_addr ext_cid ext user pass
 
-  model="$(echo "$data" | awk -F' ' '{ print $1; }')"
+  template="$(echo "$data" | awk -F' ' '{ print $1; }')"
   mac_addr="$(echo "$data" | awk -F' ' '{ print $2; }')"
   ext_cid="$(echo "$data" | awk -F' ' '{ print $3; }')"
   user="$(echo "$data" | awk -F' ' '{ print $4; }')"
@@ -56,11 +56,11 @@ gen_user_pass() {
 
   ext="$(echo "$ext_cid" | cut -d';' -f1 | cut -d'/' -f1)"
 
-  if [ -n "$model" -a -n "$mac_addr" -a -n "$ext" ]; then
+  if [ -n "$template" -a -n "$mac_addr" -a -n "$ext" ]; then
     if [ "$ext" != "init" -a "$ext" != "init-dialplan" -a "$ext" != "init-sip" ]; then
       if [ -z "$user" -o -z "$pass" ]; then
         if [ -z "$user" ]; then
-          user="${model}_$(echo "$mac_addr" | cut -d':' -f5)$(echo "$mac_addr" | cut -d':' -f6)_${ext}"
+          user="${ext}_$(echo "$mac_addr" | cut -d':' -f4- | tr -d ':')"
         fi
         if [ -z "$pass" ]; then
           pass="$(openssl rand -base64 12)"
@@ -68,7 +68,7 @@ gen_user_pass() {
         # Properly match if '*' exists in the extension/cid
         ext_cid="$(echo "$ext_cid" | sed 's/*/\\*/g')"
 
-        sed -i -e "s|^${model}[ \t]*${mac_addr}[ \t]*${ext_cid}.*$|${model} ${mac_addr} ${ext_cid} ${user} ${pass}|" "$in_file"
+        sed -i -e "s|^${template}[ \t]*${mac_addr}[ \t]*${ext_cid}.*$|${template} ${mac_addr} ${ext_cid} ${user} ${pass}|" "$in_file"
       fi
     fi
   fi

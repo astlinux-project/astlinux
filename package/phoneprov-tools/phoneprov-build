@@ -55,14 +55,18 @@ merge_variables()
 {
   sed -e 's/^\\#/#/' \
       -e 's/^\\\[/\[/' \
+      -e "s|@TEMPLATE@|${template}|g" \
       -e "s|@MODEL@|${model}|g" \
       -e "s|@VENDOR@|${vendor}|g" \
       -e "s|@MAC_ADDR@|${mac_addr}|g" \
       -e "s|@MAC@|${mac}|g" \
+      -e "s|@MAC4@|${mac4}|g" \
+      -e "s|@MAC6@|${mac6}|g" \
       -e "s|@EXT@|${ext}|g" \
       -e "s|@CID_NAME@|${cid_name}|g" \
       -e "s|@USERNAME@|${username}|g" \
       -e "s|@PASSWORD@|${password}|g" \
+      -e "s|@ACCOUNT@|${account}|g" \
       -e "s|@SIP_SERVER_IPV4@|${sip_server_ipv4}|g"
 }
 
@@ -72,26 +76,32 @@ merge_indexed_variables()
       -e "s|@CID_NAME1@|${CID_NAME[1]}|g" \
       -e "s|@USERNAME1@|${USERNAME[1]}|g" \
       -e "s|@PASSWORD1@|${PASSWORD[1]}|g" \
+      -e "s|@ACCOUNT1@|${ACCOUNT[1]}|g" \
       -e "s|@EXT2@|${EXT[2]}|g" \
       -e "s|@CID_NAME2@|${CID_NAME[2]}|g" \
       -e "s|@USERNAME2@|${USERNAME[2]}|g" \
       -e "s|@PASSWORD2@|${PASSWORD[2]}|g" \
+      -e "s|@ACCOUNT2@|${ACCOUNT[2]}|g" \
       -e "s|@EXT3@|${EXT[3]}|g" \
       -e "s|@CID_NAME3@|${CID_NAME[3]}|g" \
       -e "s|@USERNAME3@|${USERNAME[3]}|g" \
       -e "s|@PASSWORD3@|${PASSWORD[3]}|g" \
+      -e "s|@ACCOUNT3@|${ACCOUNT[3]}|g" \
       -e "s|@EXT4@|${EXT[4]}|g" \
       -e "s|@CID_NAME4@|${CID_NAME[4]}|g" \
       -e "s|@USERNAME4@|${USERNAME[4]}|g" \
       -e "s|@PASSWORD4@|${PASSWORD[4]}|g" \
+      -e "s|@ACCOUNT4@|${ACCOUNT[4]}|g" \
       -e "s|@EXT5@|${EXT[5]}|g" \
       -e "s|@CID_NAME5@|${CID_NAME[5]}|g" \
       -e "s|@USERNAME5@|${USERNAME[5]}|g" \
       -e "s|@PASSWORD5@|${PASSWORD[5]}|g" \
+      -e "s|@ACCOUNT5@|${ACCOUNT[5]}|g" \
       -e "s|@EXT6@|${EXT[6]}|g" \
       -e "s|@CID_NAME6@|${CID_NAME[6]}|g" \
       -e "s|@USERNAME6@|${USERNAME[6]}|g" \
-      -e "s|@PASSWORD6@|${PASSWORD[6]}|g"
+      -e "s|@PASSWORD6@|${PASSWORD[6]}|g" \
+      -e "s|@ACCOUNT6@|${ACCOUNT[6]}|g"
 }
 
 index_var() {
@@ -123,6 +133,7 @@ define_indexed_vars() {
   if [ -z "${PASSWORD[$i]}" ]; then
     PASSWORD[$i]="$password"
   fi
+  ACCOUNT[$i]="${EXT[$i]}${account_suffix}"
 }
 
 ARGS="$(getopt --name phoneprov-build \
@@ -146,7 +157,7 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-model="$1"
+template="$1"
 mac_addr="$2"
 raw_ext="$3"
 raw_username="$4"
@@ -212,18 +223,18 @@ case $mac_addr in
 esac
 mac="$(echo "$mac_addr" | tr -d ':')"
 
-if [ ! -f "$TEMPLATE_DIR/$model.conf" ]; then
-  echo "phoneprov-build: Template file \"$TEMPLATE_DIR/$model.conf\" not found." >&2
+if [ ! -f "$TEMPLATE_DIR/$template.conf" ]; then
+  echo "phoneprov-build: Template file \"$TEMPLATE_DIR/$template.conf\" not found." >&2
   exit 1
 fi
 
-if ! is_context "general" "$TEMPLATE_DIR/$model.conf"; then
+if ! is_context "general" "$TEMPLATE_DIR/$template.conf"; then
   echo "phoneprov-build: No [general] context defined, invalid template file." >&2
   exit 1
 fi
 
 # Extract General Definitions
-OPTIONS="$(extract_context "general" "$TEMPLATE_DIR/$model.conf")"
+OPTIONS="$(extract_context "general" "$TEMPLATE_DIR/$template.conf")"
 
 macaddress_case="$(extract_var macaddress_case)"
 case $macaddress_case in
@@ -232,12 +243,23 @@ case $macaddress_case in
   lower) mac="$(echo "$mac" | tr '[:upper:]' '[:lower:]')"
     ;;
 esac
-OPTIONS="$(echo "$OPTIONS" | merge_variables)"
+mac4="${mac:8}"
+mac6="${mac:6}"
 
+model="$(extract_var model)"
+if [ -z "$model" ]; then
+  model="$template"
+fi
 vendor="$(extract_var vendor)"
 if [ -z "$vendor" ]; then
   vendor="$model"
 fi
+
+OPTIONS="$(echo "$OPTIONS" | merge_variables)"
+
+account_suffix="$(extract_var account_suffix)"
+account=${ext}${account_suffix}
+
 prov_path="$(extract_var prov_path)"
 if [ -z "$prov_path" ]; then
   prov_path="$PHONEPROV_DIR/$vendor"
@@ -319,6 +341,7 @@ EXT[1]="$ext"
 CID_NAME[1]="$cid_name"
 USERNAME[1]="$username"
 PASSWORD[1]="$password"
+ACCOUNT[1]="$account"
 
 for index in 2 3 4 5 6; do
   define_indexed_vars $index
