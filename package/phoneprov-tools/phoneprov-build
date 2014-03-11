@@ -5,7 +5,7 @@
 usage()
 {
   echo '
-Usage: phoneprov-build [options...] phone_model mac_addr extension[/CID_Name] username password
+Usage: phoneprov-build [options...] template mac_addr extension[/CID_Name][;ext2[/cid2];...] password [ account ]
 
 Options:
   -f, --force-overwrite   Overwrite existing files
@@ -64,9 +64,9 @@ merge_variables()
       -e "s|@MAC6@|${mac6}|g" \
       -e "s|@EXT@|${ext}|g" \
       -e "s|@CID_NAME@|${cid_name}|g" \
-      -e "s|@USERNAME@|${username}|g" \
       -e "s|@PASSWORD@|${password}|g" \
       -e "s|@ACCOUNT@|${account}|g" \
+      -e "s|@USERNAME@|${username}|g" \
       -e "s|@SIP_SERVER_IPV4@|${sip_server_ipv4}|g"
 }
 
@@ -74,34 +74,34 @@ merge_indexed_variables()
 {
   sed -e "s|@EXT1@|${EXT[1]}|g" \
       -e "s|@CID_NAME1@|${CID_NAME[1]}|g" \
-      -e "s|@USERNAME1@|${USERNAME[1]}|g" \
       -e "s|@PASSWORD1@|${PASSWORD[1]}|g" \
       -e "s|@ACCOUNT1@|${ACCOUNT[1]}|g" \
+      -e "s|@USERNAME1@|${USERNAME[1]}|g" \
       -e "s|@EXT2@|${EXT[2]}|g" \
       -e "s|@CID_NAME2@|${CID_NAME[2]}|g" \
-      -e "s|@USERNAME2@|${USERNAME[2]}|g" \
       -e "s|@PASSWORD2@|${PASSWORD[2]}|g" \
       -e "s|@ACCOUNT2@|${ACCOUNT[2]}|g" \
+      -e "s|@USERNAME2@|${USERNAME[2]}|g" \
       -e "s|@EXT3@|${EXT[3]}|g" \
       -e "s|@CID_NAME3@|${CID_NAME[3]}|g" \
-      -e "s|@USERNAME3@|${USERNAME[3]}|g" \
       -e "s|@PASSWORD3@|${PASSWORD[3]}|g" \
       -e "s|@ACCOUNT3@|${ACCOUNT[3]}|g" \
+      -e "s|@USERNAME3@|${USERNAME[3]}|g" \
       -e "s|@EXT4@|${EXT[4]}|g" \
       -e "s|@CID_NAME4@|${CID_NAME[4]}|g" \
-      -e "s|@USERNAME4@|${USERNAME[4]}|g" \
       -e "s|@PASSWORD4@|${PASSWORD[4]}|g" \
       -e "s|@ACCOUNT4@|${ACCOUNT[4]}|g" \
+      -e "s|@USERNAME4@|${USERNAME[4]}|g" \
       -e "s|@EXT5@|${EXT[5]}|g" \
       -e "s|@CID_NAME5@|${CID_NAME[5]}|g" \
-      -e "s|@USERNAME5@|${USERNAME[5]}|g" \
       -e "s|@PASSWORD5@|${PASSWORD[5]}|g" \
       -e "s|@ACCOUNT5@|${ACCOUNT[5]}|g" \
+      -e "s|@USERNAME5@|${USERNAME[5]}|g" \
       -e "s|@EXT6@|${EXT[6]}|g" \
       -e "s|@CID_NAME6@|${CID_NAME[6]}|g" \
-      -e "s|@USERNAME6@|${USERNAME[6]}|g" \
       -e "s|@PASSWORD6@|${PASSWORD[6]}|g" \
-      -e "s|@ACCOUNT6@|${ACCOUNT[6]}|g"
+      -e "s|@ACCOUNT6@|${ACCOUNT[6]}|g" \
+      -e "s|@USERNAME6@|${USERNAME[6]}|g"
 }
 
 index_var() {
@@ -125,15 +125,15 @@ define_indexed_vars() {
   if [ -z "${CID_NAME[$i]}" ]; then
     CID_NAME[$i]="${EXT[$i]}"
   fi
-  USERNAME[$i]="$(index_var $i "$raw_username")"
-  if [ -z "${USERNAME[$i]}" ]; then
-    USERNAME[$i]="$username"
-  fi
   PASSWORD[$i]="$(index_var $i "$raw_password")"
   if [ -z "${PASSWORD[$i]}" ]; then
     PASSWORD[$i]="$password"
   fi
-  ACCOUNT[$i]="${EXT[$i]}${account_suffix}"
+  ACCOUNT[$i]="$(index_var $i "$raw_account")"
+  if [ -z "${ACCOUNT[$i]}" ]; then
+    ACCOUNT[$i]="${auto_account_prefix}${EXT[$i]}${auto_account_suffix}"
+  fi
+  USERNAME[$i]="${ACCOUNT[$i]}"
 }
 
 ARGS="$(getopt --name phoneprov-build \
@@ -160,13 +160,13 @@ done
 template="$1"
 mac_addr="$2"
 raw_ext="$3"
-raw_username="$4"
-raw_password="$5"
+raw_password="$4"
+raw_account="$5"
 
 ext="$(index_var 1 "$raw_ext" | cut -d'/' -f1)"
 cid_name="$(index_var 1 "$raw_ext" | cut -s -d'/' -f2- | tr '_' ' ')"
-username="$(index_var 1 "$raw_username")"
 password="$(index_var 1 "$raw_password")"
+account="$(index_var 1 "$raw_account")"
 
 PHONEPROV_DIR="${PHONEPROV_BASE_DIR:-/mnt/kd/phoneprov}"
 TEMPLATE_DIR="$PHONEPROV_DIR/templates"
@@ -257,8 +257,8 @@ fi
 
 OPTIONS="$(echo "$OPTIONS" | merge_variables)"
 
-account_suffix="$(extract_var account_suffix)"
-account=${ext}${account_suffix}
+auto_account_prefix="$(extract_var auto_account_prefix)"
+auto_account_suffix="$(extract_var auto_account_suffix)"
 
 prov_path="$(extract_var prov_path)"
 if [ -z "$prov_path" ]; then
@@ -326,22 +326,25 @@ ${dialplan_context:+
   exit 0
 fi
 
-if [ -z "$username" ]; then
-  echo "phoneprov-build: no username defined." >&2
-  exit 3
-fi
 if [ -z "$password" ]; then
   echo "phoneprov-build: no password defined." >&2
   exit 3
 fi
 
+if [ -z "$account" ]; then
+  account="${auto_account_prefix}${ext}${auto_account_suffix}"
+fi
+
+# Same as account
+username="$account"
+
 # Define indexed variables
 
 EXT[1]="$ext"
 CID_NAME[1]="$cid_name"
-USERNAME[1]="$username"
 PASSWORD[1]="$password"
 ACCOUNT[1]="$account"
+USERNAME[1]="$username"
 
 for index in 2 3 4 5 6; do
   define_indexed_vars $index

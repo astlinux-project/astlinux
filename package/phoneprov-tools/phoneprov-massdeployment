@@ -9,8 +9,8 @@ usage()
 Usage: phoneprov-massdeployment [options...] in_file
 
 Options:
-  -a, --auto-user-pass    Automatically generate missing username/password(s)
-  -A, --only-user-pass    Same as "-a, --auto-user-pass" without further processing
+  -a, --auto-pass         Automatically generate missing password(s)
+  -A, --only-pass         Same as "-a, --auto-pass" without further processing
   -f, --force-overwrite   Overwrite existing files
   -h, --help              Show this help text
   -i, --if-name           Interface Name: INTIF, INT2IF, INT3IF, EXTIF, ethN, brN, defaults to INTIF
@@ -26,8 +26,8 @@ error_info() {
     echo "phoneprov-massdeployment: Use -f or --force-overwrite option to overwrite."
     echo "Files left unchanged."
   elif [ $result -eq 3 ]; then
-    echo "phoneprov-massdeployment: Use -a or --auto-user-pass option to automatically"
-    echo "                          generate any missing username/password(s)."
+    echo "phoneprov-massdeployment: Use -a or --auto-pass option to automatically"
+    echo "                          generate any missing password(s)."
   fi
 }
 
@@ -45,37 +45,32 @@ init_args() {
   echo "$template 00:00:00:00:00:00 init"
 }
 
-gen_user_pass() {
-  local data="$1" template mac_addr ext_cid ext user pass
+gen_pass() {
+  local data="$1" template mac_addr ext_cid ext pass
 
   template="$(echo "$data" | awk -F' ' '{ print $1; }')"
   mac_addr="$(echo "$data" | awk -F' ' '{ print $2; }')"
   ext_cid="$(echo "$data" | awk -F' ' '{ print $3; }')"
-  user="$(echo "$data" | awk -F' ' '{ print $4; }')"
-  pass="$(echo "$data" | awk -F' ' '{ print $5; }')"
+  pass="$(echo "$data" | awk -F' ' '{ print $4; }')"
 
   ext="$(echo "$ext_cid" | cut -d';' -f1 | cut -d'/' -f1)"
 
   if [ -n "$template" -a -n "$mac_addr" -a -n "$ext" ]; then
     if [ "$ext" != "init" -a "$ext" != "init-dialplan" -a "$ext" != "init-sip" ]; then
-      if [ -z "$user" -o -z "$pass" ]; then
-        if [ -z "$user" ]; then
-          user="${ext}_$(echo "$mac_addr" | cut -d':' -f4- | tr -d ':')"
-        fi
-        if [ -z "$pass" ]; then
-          pass="$(openssl rand -base64 12)"
-        fi
+      if [ -z "$pass" ]; then
+        pass="$(openssl rand -base64 12)"
+
         # Properly match if '*' exists in the extension/cid
         ext_cid="$(echo "$ext_cid" | sed 's/*/\\*/g')"
 
-        sed -i -e "s|^${template}[ \t]*${mac_addr}[ \t]*${ext_cid}.*$|${template} ${mac_addr} ${ext_cid} ${user} ${pass}|" "$in_file"
+        sed -i -e "s|^${template}[ \t]*${mac_addr}[ \t]*${ext_cid}.*$|${template} ${mac_addr} ${ext_cid} ${pass}|" "$in_file"
       fi
     fi
   fi
 }
 
 ARGS="$(getopt --name phoneprov-massdeployment \
-               --long auto-user-pass,only-user-pass,force-overwrite,help,if-name:,partial \
+               --long auto-pass,only-pass,force-overwrite,help,if-name:,partial \
                --options aAfhi:p \
                -- "$@")"
 if [ $? -ne 0 ]; then
@@ -83,15 +78,15 @@ if [ $? -ne 0 ]; then
 fi
 eval set -- $ARGS
 
-auto_user_pass=0
-only_user_pass=0
+auto_pass=0
+only_pass=0
 force_overwrite=0
 partial=0
 if_name="INTIF"
 while [ $# -gt 0 ]; do
   case "$1" in
-    -a|--auto-user-pass)   auto_user_pass=1 ;;
-    -A|--only-user-pass)   auto_user_pass=1 ; only_user_pass=1 ;;
+    -a|--auto-pass)   auto_pass=1 ;;
+    -A|--only-pass)   auto_pass=1 ; only_pass=1 ;;
     -f|--force-overwrite)  force_overwrite=1 ;;
     -h|--help)             usage ;;
     -i|--if-name)          if_name="$2"; shift ;;
@@ -110,8 +105,8 @@ if [ ! -f "$in_file" ]; then
   exit 1
 fi
 
-if [ $auto_user_pass -eq 1 ]; then
-  echo "Auto-generating username/password(s):"
+if [ $auto_pass -eq 1 ]; then
+  echo "Auto-generating password(s):"
 
   temp_file="$(mktemp "${in_file}.XXXXXX")"
   cp "$in_file" "$temp_file"
@@ -119,18 +114,18 @@ if [ $auto_user_pass -eq 1 ]; then
   IFS=$'\n'
   extract_file "$temp_file" | while read data; do
     unset IFS
-    gen_user_pass "$data"
+    gen_pass "$data"
   done
   unset IFS
 
   if cmp -s "$temp_file" "$in_file"; then
-    echo "No missing username/password(s), input file left unchanged."
+    echo "No missing password(s), input file left unchanged."
   else
-    echo "Missing username/password(s) were added to input file."
+    echo "Missing password(s) were added to input file."
   fi
   rm "$temp_file"
 
-  if [ $only_user_pass -eq 1 ]; then
+  if [ $only_pass -eq 1 ]; then
     exit 0
   fi
 fi
