@@ -88,7 +88,7 @@ Released **TBD**
 
 -- phoneprov-tools, new package. A set of scripts and configuration templates designed to generate IP Phone provisioning
    files as well as Asterisk sip.conf and extensions.conf includes files. Special thanks to Michael Keuter.
-   New rc.conf variable: PHONEPROV_BASE_DIR
+   New rc.conf variables: PHONEPROV_BASE_DIR, PHONEPROV_GW_IF
    More Info: http://doc.astlinux.org/userdoc:tt_ip_phone_provisioning
 
 ** Web Interface
