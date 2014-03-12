@@ -48,14 +48,6 @@ extract_file() {
   cat "$file" | sed -e 's/^#.*//' -e 's/\t/ /g' -e 's/ *$//' -e '/^$/d'
 }
 
-init_args() {
-  local args="$1" template
-
-  template="$(echo "$args" | awk -F' ' '{ print $1; }')"
-
-  echo "$template 00:00:00:00:00:00 init"
-}
-
 gen_pass() {
   local data="$1" template mac_addr ext_cid ext pass
 
@@ -160,23 +152,39 @@ fi
 
 echo "Generating Phone Provisioning files:"
 
-if [ $partial -eq 1 ]; then
-  first=0
-else
+if [ $partial -eq 0 ]; then
   first=1
+  template_list=" "
+  IFS=$'\n'
+  extract_file "$in_file" | while read data; do
+    unset IFS
+    template="$(echo "$data" | awk -F' ' '{ print $1; }')"
+    if ! echo "$template_list" | grep -q " $template "; then
+      if [ $first -eq 1 ]; then
+        init="init"
+      else
+        init="init-dialplan"
+      fi
+      phoneprov-build $options $template 00:00:00:00:00:00 $init
+      result=$?
+      if [ $result -ne 0 ]; then
+        error_info $result
+        exit $result
+      fi
+      template_list="$template_list$template "
+      first=0
+    fi
+  done
+  result=$?
+  unset IFS
+  if [ $result -ne 0 ]; then
+    exit $result
+  fi
 fi
+
 IFS=$'\n'
 extract_file "$in_file" | while read data; do
   unset IFS
-  if [ $first -eq 1 ]; then
-    phoneprov-build $options $(init_args $data)
-    result=$?
-    if [ $result -ne 0 ]; then
-      error_info $result
-      exit $result
-    fi
-    first=0
-  fi
   phoneprov-build $options $data
   result=$?
   if [ $result -ne 0 ]; then
