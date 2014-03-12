@@ -13,10 +13,21 @@ Options:
   -A, --only-pass         Same as "-a, --auto-pass" without further processing
   -f, --force-overwrite   Overwrite existing files
   -h, --help              Show this help text
-  -i, --if-name           Interface Name: INTIF, INT2IF, INT3IF, EXTIF, ethN, brN, defaults to INTIF
+  -i, --if-name           Interface Name: INTIF, INT2IF, INT3IF, EXTIF, ethN, brN
+                                          Defaults to config variable PHONEPROV_GW_IF
   -p, --partial           Partial input, append "dialplan" and "sip" entries to existing
+  -r, --auto-reload       Automatically reload Asterisk "dialplan" and "sip" on success
+  -R, --only-reload       Same as "-r, --auto-reload" without further processing
 '
   exit 1
+}
+
+reload_asterisk()
+{
+  echo "Auto-reloading Asterisk 'dialplan' and 'sip'."
+
+  asterisk -rx "dialplan reload" >/dev/null
+  asterisk -rx "sip reload" >/dev/null
 }
 
 error_info() {
@@ -70,8 +81,8 @@ gen_pass() {
 }
 
 ARGS="$(getopt --name phoneprov-massdeployment \
-               --long auto-pass,only-pass,force-overwrite,help,if-name:,partial \
-               --options aAfhi:p \
+               --long auto-pass,only-pass,force-overwrite,help,if-name:,partial,auto-reload,only-reload \
+               --options aAfhi:prR \
                -- "$@")"
 if [ $? -ne 0 ]; then
   usage
@@ -82,20 +93,29 @@ auto_pass=0
 only_pass=0
 force_overwrite=0
 partial=0
-if_name="INTIF"
+auto_reload=0
+only_reload=0
+if_name=""
 while [ $# -gt 0 ]; do
   case "$1" in
-    -a|--auto-pass)   auto_pass=1 ;;
-    -A|--only-pass)   auto_pass=1 ; only_pass=1 ;;
+    -a|--auto-pass)        auto_pass=1 ;;
+    -A|--only-pass)        auto_pass=1 ; only_pass=1 ;;
     -f|--force-overwrite)  force_overwrite=1 ;;
     -h|--help)             usage ;;
     -i|--if-name)          if_name="$2"; shift ;;
     -p|--partial)          partial=1 ;;
+    -r|--auto-reload)      auto_reload=1 ;;
+    -R|--only-reload)      auto_reload=1 ; only_reload=1 ;;
     --) shift; break ;;
   esac
   shift
 done
 in_file="$1"
+
+if [ $auto_reload -eq 1 -a $only_reload -eq 1 ]; then
+  reload_asterisk
+  exit 0
+fi
 
 if [ -z "$in_file" -o "$in_file" = "--" ]; then
   usage
@@ -173,5 +193,10 @@ if [ $result -ne 0 ]; then
 fi
 
 echo "Done"
+
+if [ $auto_reload -eq 1 ]; then
+  reload_asterisk
+fi
+
 exit 0
 

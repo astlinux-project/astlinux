@@ -10,7 +10,8 @@ Usage: phoneprov-build [options...] template mac_addr extension[/CID_Name][;ext2
 Options:
   -f, --force-overwrite   Overwrite existing files
   -h, --help              Show this help text
-  -i, --if-name           Interface Name: INTIF, INT2IF, INT3IF, EXTIF, ethN, brN, defaults to INTIF
+  -i, --if-name           Interface Name: INTIF, INT2IF, INT3IF, EXTIF, ethN, brN
+                                          Defaults to config variable PHONEPROV_GW_IF
 '
   exit 1
 }
@@ -146,7 +147,7 @@ fi
 eval set -- $ARGS
 
 force_overwrite=0
-if_name="INTIF"
+if_name="${PHONEPROV_GW_IF:-INTIF}"
 while [ $# -gt 0 ]; do
   case "$1" in
     -f|--force-overwrite)  force_overwrite=1 ;;
