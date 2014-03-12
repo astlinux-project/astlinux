@@ -153,26 +153,19 @@ fi
 echo "Generating Phone Provisioning files:"
 
 if [ $partial -eq 0 ]; then
-  first=1
   template_list=" "
   IFS=$'\n'
   extract_file "$in_file" | while read data; do
     unset IFS
     template="$(echo "$data" | awk -F' ' '{ print $1; }')"
     if ! echo "$template_list" | grep -q " $template "; then
-      if [ $first -eq 1 ]; then
-        init="init"
-      else
-        init="init-dialplan"
-      fi
-      phoneprov-build $options $template 00:00:00:00:00:00 $init
+      phoneprov-build $options $template 00:00:00:00:00:00 init
       result=$?
       if [ $result -ne 0 ]; then
         error_info $result
         exit $result
       fi
       template_list="$template_list$template "
-      first=0
     fi
   done
   result=$?
