@@ -47,7 +47,8 @@ Released **TBD**
 
 -- OpenSSH 6.4p1 (security and bug fixes)
 
--- lighttpd, version bump to 1.4.34, (security fixes: CVE-2013-4508, CVE-2013-4559, CVE-2013-4560) and bug fixes.
+-- lighttpd, version bump to 1.4.35, (security fixes: CVE-2013-4508, CVE-2013-4559, CVE-2013-4560, CVE-2014-2323, CVE-2014-2324)
+             and bug fixes.
 
 -- libcurl (curl) version bump to 7.35.0, (security fix: CVE-2014-0015) and bug fixes.
 
@@ -59,6 +60,10 @@ Released **TBD**
                           DNSCRYPT_PROVIDER_NAME, DNSCRYPT_PROVIDER_KEY
    More Info: http://doc.astlinux.org/userdoc:tt_dnscrypt_proxy
 
+-- netsnmp, version bump to 5.7.2.1, (security fix: CVE-2014-2284) and bug fixes.
+
+-- ipsec-tools, version bump to 0.8.2
+
 -- prosody, version bump to 0.9.3
 
 -- openldap, version bump to 2.4.39
@@ -66,15 +71,17 @@ Released **TBD**
 
 -- darkstat, version bump to 3.0.718
 
--- radvd, version bump to 1.9.8
+-- radvd, version bump to 1.9.9
 
--- fping, version bump to 3.8
+-- fping, version bump to 3.9
 
--- iftop, version bump to 1.0, Note: now installed in the standard location of /usr/sbin/iftop instead of /usr/bin/iftop .
+-- iftop, version bump to 1.0pre4, Note: now installed in the standard location of /usr/sbin/iftop instead of /usr/bin/iftop .
 
 -- mtr, version bump to 0.85 plus upstream fixes, unofficial 0.85.1
 
 -- rsync, version bump to 3.0.9
+
+-- msmtp, version bump to 1.4.32
 
 ** Asterisk
 
