@@ -1,11 +1,11 @@
 Replaces sysv3 legacy functions with modern equivalents.
 
 Signed-off-by: Julien Boibessot <julien.boibessot@armadeus.com>
-Index: ipsec-tools-0.7.3/src/racoon/pfkey.c
+Index: ipsec-tools-0.8.2/src/racoon/pfkey.c
 ===================================================================
---- ipsec-tools-0.7.3.orig/src/racoon/pfkey.c	2010-07-12 14:46:52.000000000 +0200
-+++ ipsec-tools-0.7.3/src/racoon/pfkey.c	2010-07-12 15:01:39.000000000 +0200
-@@ -3008,12 +3008,12 @@
+--- ipsec-tools-0.8.2.orig/src/racoon/pfkey.c	2010-07-12 14:46:52.000000000 +0200
++++ ipsec-tools-0.8.2/src/racoon/pfkey.c	2010-07-12 15:01:39.000000000 +0200
+@@ -3855,12 +3855,12 @@
  				struct sockaddr *paddr;
  
  				paddr = (struct sockaddr *)(xisr + 1);
@@ -20,11 +20,11 @@ Index: ipsec-tools-0.7.3/src/racoon/pfkey.c
  					sysdep_sa_len(paddr));
  			}
  
-Index: ipsec-tools-0.7.3/src/racoon/racoonctl.c
+Index: ipsec-tools-0.8.2/src/racoon/racoonctl.c
 ===================================================================
---- ipsec-tools-0.7.3.orig/src/racoon/racoonctl.c	2010-07-12 14:49:51.000000000 +0200
-+++ ipsec-tools-0.7.3/src/racoon/racoonctl.c	2010-07-12 15:00:52.000000000 +0200
-@@ -785,7 +785,7 @@
+--- ipsec-tools-0.8.2.orig/src/racoon/racoonctl.c	2010-07-12 14:49:51.000000000 +0200
++++ ipsec-tools-0.8.2/src/racoon/racoonctl.c	2010-07-12 15:00:52.000000000 +0200
+@@ -693,7 +693,7 @@
  		errx(1, "cannot read source address");
  
  	/* We get "ip[port]" strip the port */

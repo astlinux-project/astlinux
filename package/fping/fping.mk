@@ -3,7 +3,7 @@
 # fping
 #
 #############################################################
-FPING_VERSION = 3.8
+FPING_VERSION = 3.9
 FPING_SITE = http://fping.org/dist
 FPING_SOURCE = fping-$(FPING_VERSION).tar.gz
 

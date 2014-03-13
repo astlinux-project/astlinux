@@ -1,6 +1,6 @@
---- ipsec-tools-0.8.0/src/racoon/isakmp_xauth.c.orig	2011-03-14 16:50:36.000000000 +0100
-+++ ipsec-tools-0.8.0/src/racoon/isakmp_xauth.c	2011-10-27 09:45:08.000000000 +0200
-@@ -1261,6 +1261,39 @@
+--- ipsec-tools-0.8.2/src/racoon/isakmp_xauth.c.orig	2011-03-14 16:50:36.000000000 +0100
++++ ipsec-tools-0.8.2/src/racoon/isakmp_xauth.c	2011-10-27 09:45:08.000000000 +0200
+@@ -1270,6 +1270,39 @@
  	char *usr;
  	char *pwd;
  {

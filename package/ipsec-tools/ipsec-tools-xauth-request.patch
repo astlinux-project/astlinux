@@ -1,6 +1,6 @@
---- ipsec-tools-0.7.3/src/racoon/isakmp_xauth.c.orig	2009-04-20 10:35:36.000000000 -0300
-+++ ipsec-tools-0.7.3/src/racoon/isakmp_xauth.c	2009-09-05 17:23:16.000000000 -0300
-@@ -172,6 +172,11 @@ xauth_sendreq(iph1)
+--- ipsec-tools-0.8.2/src/racoon/isakmp_xauth.c.orig	2009-04-20 10:35:36.000000000 -0300
++++ ipsec-tools-0.8.2/src/racoon/isakmp_xauth.c	2009-09-05 17:23:16.000000000 -0300
+@@ -173,6 +173,11 @@ xauth_sendreq(iph1)
  	pwdattr->type = htons(XAUTH_USER_PASSWORD | ISAKMP_GEN_TLV);
  	pwdattr->lorv = htons(0);
  

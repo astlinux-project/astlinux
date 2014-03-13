@@ -4,7 +4,7 @@
 #
 #############################################################
 
-IPSEC_TOOLS_VERSION = 0.8.0
+IPSEC_TOOLS_VERSION = 0.8.2
 IPSEC_TOOLS_SOURCE = ipsec-tools-$(IPSEC_TOOLS_VERSION).tar.bz2
 IPSEC_TOOLS_SITE = http://ftp.sunet.se/pub/NetBSD/misc/ipsec-tools/0.8/
 IPSEC_TOOLS_INSTALL_STAGING = YES
