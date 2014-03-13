@@ -313,9 +313,9 @@ if [ "$ext" = "init" -o "$ext" = "init-dialplan" -o "$ext" = "init-sip" ]; then
           mkdir -p "$dialplan_path"
         fi
         echo ";
-; ####################################################
-; ### AstLinux auto-provisioned IP-Phone dialplan ####
-; ####################################################
+; ###################################################
+; ### AstLinux auto-provisioned IP-Phone dialplan ###
+; ###################################################
 ;
 ; Include in your extensions.conf file by using:
 ; #include $dialplan_path/${dialplan_file[$d]}
@@ -333,9 +333,9 @@ if [ "$ext" = "init" -o "$ext" = "init-dialplan" -o "$ext" = "init-sip" ]; then
         mkdir -p "$sip_path"
       fi
       echo ";
-; ##############################################################
-; ### AstLinux auto-provisioned IP-Phone SIP configurations ####
-; ##############################################################
+; #############################################################
+; ### AstLinux auto-provisioned IP-Phone SIP configurations ###
+; #############################################################
 ;
 ; Include in your sip.conf file by using:
 ; #include $sip_path/$sip_file
