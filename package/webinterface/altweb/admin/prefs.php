@@ -275,6 +275,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       fwrite($fp, $value."\n");
     }
 
+    $value = 'phoneprov_extensions_displayed = "'.$_POST['phoneprov_maxnum'].'"';
+    fwrite($fp, $value."\n");
+
     if (isset($_POST['users_hide_pass'])) {
       $value = 'users_voicemail_hide_pass = yes';
       fwrite($fp, $value."\n");
@@ -421,6 +424,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (isset($_POST['tab_ldapab'])) {
       $value = 'tab_ldapab_show = yes';
+      fwrite($fp, $value."\n");
+    }
+    if (isset($_POST['tab_phoneprov'])) {
+      $value = 'tab_phoneprov_show = yes';
       fwrite($fp, $value."\n");
     }
     if (isset($_POST['tab_users'])) {
@@ -890,6 +897,24 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
   
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>PhoneProv Tab Options:</strong>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="3">Ext / CID Name(s) Displayed:</td><td colspan="3">');
+  if (($value = getPREFdef($global_prefs, 'phoneprov_extensions_displayed')) === '') {
+    $value = '2';
+  }
+  putHtml('<select name="phoneprov_maxnum">');
+  for ($i = 1; $i <= 6; $i++) {
+    $sel = ($i == $value) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$i.'"'.$sel.'>&nbsp;'.$i.'&nbsp;</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+  
+  putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
+  
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Users Tab Options:</strong>');
   putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
@@ -1116,6 +1141,10 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_ldapab_show') === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="tab_ldapab" name="tab_ldapab"'.$sel.' /></td><td colspan="5">Show LDAP-AB Tab</td></tr>');
+  
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'tab_phoneprov_show') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="tab_phoneprov" name="tab_phoneprov"'.$sel.' /></td><td colspan="5">Show PhoneProv Tab</td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_users_show') === 'yes') ? ' checked="checked"' : '';

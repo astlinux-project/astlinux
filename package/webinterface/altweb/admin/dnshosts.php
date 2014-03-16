@@ -135,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (filter_var(tuq($_POST['ip']), FILTER_VALIDATE_IP) !== FALSE) {
       $mac = tuq($_POST['mac']);
-      if ($mac === '' || preg_match('/^[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}$/', $mac)) {
+      if ($mac === '' || preg_match('/^([0-9a-fA-F]{2}:){5}([0-9a-fA-F]{2})$/', $mac)) {
         if (addDNSHOST($db, $id)) {
           $result = saveDNSHOSTSsettings($DNSHOSTSCONFDIR, $DNSHOSTSCONFFILE, $db);
         }

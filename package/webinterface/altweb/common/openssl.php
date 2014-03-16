@@ -204,7 +204,9 @@ function opensslCREATEhttpsCert($countryName, $stateName, $localityName, $orgNam
 function opensslRANDOMpass($length = 6) {
   $pass = '';
 
-  $data = trim(shell_exec('openssl rand -base64 24 2>/dev/null'));
+  // Old Method:
+  // $data = trim(shell_exec('openssl rand -base64 24 2>/dev/null'));
+  $data = base64_encode(openssl_random_pseudo_bytes(24));
   $dataLen = strlen($data);
   
   $mask = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

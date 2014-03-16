@@ -241,6 +241,9 @@ header('Content-Type: text/html; charset=utf-8');
       if ($global_staff && (getPREFdef($global_prefs, 'tab_ldapab_show') === 'yes')) {
         putHtml('<li><a href="/admin/ldapab.php"><span>LDAP-AB</span></a></li>');
       }
+      if ($global_staff && (getPREFdef($global_prefs, 'tab_phoneprov_show') === 'yes')) {
+        putHtml('<li><a href="/admin/phoneprov.php"><span>PhoneProv</span></a></li>');
+      }
       if ($global_staff && (getPREFdef($global_prefs, 'tab_users_show') === 'yes')) {
         putHtml('<li><a href="/admin/users.php"><span>Users</span></a></li>');
       }

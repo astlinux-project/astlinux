@@ -60,6 +60,7 @@ $sys_label = array (
   'redfone.conf' => 'Redfone foneBRIDGE',
   'webgui-staff-backup.conf' => 'Staff Backup Password',
   'massdeployment.conf' => 'IP Phone Deployment Data',
+  'webgui-massdeployment.conf' => 'IP Phone Deployment Data',
   'vsftpd.conf' => 'Standalone FTPd Configuration'
 );
 
