@@ -7,8 +7,15 @@
 # The target_dir will typically be "/mnt/kd"
 #
 #
+
+. /etc/rc.conf
+
 RESTORE="$1"
 TARGET="$2"
+
+phoneprov_templates="${PHONEPROV_BASE_DIR:-/mnt/kd/phoneprov}"
+phoneprov_templates="${phoneprov_templates%/}/templates"
+phoneprov_templates="${phoneprov_templates#/mnt/kd/}"
 
 restore_dirs()
 {
@@ -69,7 +76,7 @@ fi
 
 # Restore basic configuration directories, overlaying target directory
 #
-if ! restore_files ssl arno-iptables-firewall/plugins; then
+if ! restore_files ssl arno-iptables-firewall/plugins ${phoneprov_templates}; then
   exit 2
 fi
 
