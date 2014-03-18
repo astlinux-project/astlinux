@@ -458,9 +458,7 @@ require_once '../common/header.php';
   <table class="layout"><tr><td><center>
   <form method="post" action="<?php echo $myself;?>">
 <?php
-  if (($phoneprov_base_dir = trim(shell_exec('. /etc/rc.conf; echo "$PHONEPROV_BASE_DIR"'))) === '') {
-    $phoneprov_base_dir = '/mnt/kd/phoneprov';
-  }
+  $phoneprov_base_dir = trim(shell_exec('. /etc/rc.conf; echo "${PHONEPROV_BASE_DIR:-/mnt/kd/phoneprov}"'));
 
   if (is_file($PHONEPROVCONFFILE)) {
     $vars = parseRCconf($PHONEPROVCONFFILE);
