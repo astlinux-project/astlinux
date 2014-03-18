@@ -16,6 +16,8 @@ Released **TBD**
 
 -- RUNNIX, version bump to runnix-0.4-6376, Linux Kernel 2.6.35.14, gcc 4.4.7, eglibc 2.15 and package upgrades.
 
+-- linux, build the SENSORS_K10TEMP module 'k10temp' for the PC Engines APU board
+
 -- e1000e version bump to 3.0.4.1 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
 -- tg3, version bump to 3.133d Broadcom NetLink 10/100/1000 Mbps PCI/PCI-X/PCI Express Ethernet Linux driver
@@ -105,6 +107,9 @@ Released **TBD**
 
 -- Network tab, added Network Services: DNSCrypt Proxy Server: { Configure DNSCrypt }, to support dnscrypt-proxy.
    More Info: http://doc.astlinux.org/userdoc:tt_dnscrypt_proxy
+
+-- Added "PhoneProv Tab" using phoneprov-tools, Show/Hide and number of Extensions Displayed in Prefs tab.
+   More Info: http://doc.astlinux.org/userdoc:tt_ip_phone_provisioning
 
 -- Edit tab, support to edit /mnt/kd/phoneprov/templates/*.conf files.
 
