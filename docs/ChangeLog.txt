@@ -109,7 +109,7 @@ Released **TBD**
    More Info: http://doc.astlinux.org/userdoc:tt_dnscrypt_proxy
 
 -- Added "PhoneProv Tab" using phoneprov-tools, Show/Hide and number of Extensions Displayed in Prefs tab.
-   More Info: http://doc.astlinux.org/userdoc:tt_ip_phone_provisioning
+   More Info: http://doc.astlinux.org/userdoc:tt_ip_phoneprov_howto
 
 -- Edit tab, support to edit /mnt/kd/phoneprov/templates/*.conf files.
 
