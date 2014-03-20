@@ -222,13 +222,15 @@ function importPHONEPROVfiles($family) {
     if ($line = trim(fgets($fp, 1024))) {
       if ($line[0] !== '#') {
         if (preg_match('/^([^ \t]+)[ \t]+([^ \t]+)[ \t]+([^ \t]+)[ \t]+([^ \t]+)(.*)$/', $line, $tokens)) {
-          $enabled = '1';
-          $template = $tokens[1];
-          $mac = $tokens[2];
-          $ext_cid = $tokens[3];
-          $password = $tokens[4];
-          $account = trim($tokens[5]);
-          $result = addPHONEPROVmac($family, $mac, $enabled, $template, $ext_cid, $password, $account);
+          $mac = strtolower($tokens[2]);
+          if (preg_match('/^([0-9a-f]{2}:){5}([0-9a-f]{2})$/', $mac)) {
+            $enabled = '1';
+            $template = $tokens[1];
+            $ext_cid = $tokens[3];
+            $password = $tokens[4];
+            $account = trim($tokens[5]);
+            $result = addPHONEPROVmac($family, $mac, $enabled, $template, $ext_cid, $password, $account);
+          }
         }
       }
     }
