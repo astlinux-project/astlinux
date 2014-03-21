@@ -275,6 +275,16 @@ OPTIONS="$(echo "$OPTIONS" | merge_variables)"
 auto_account_prefix="$(extract_var auto_account_prefix)"
 auto_account_suffix="$(extract_var auto_account_suffix)"
 
+auto_account_case="$(extract_var auto_account_case)"
+case $auto_account_case in
+  upper) auto_account_prefix="$(echo "$auto_account_prefix" | tr '[:lower:]' '[:upper:]')"
+         auto_account_suffix="$(echo "$auto_account_suffix" | tr '[:lower:]' '[:upper:]')"
+         ;;
+  lower) auto_account_prefix="$(echo "$auto_account_prefix" | tr '[:upper:]' '[:lower:]')"
+         auto_account_suffix="$(echo "$auto_account_suffix" | tr '[:upper:]' '[:lower:]')"
+         ;;
+esac
+
 prov_path="$(extract_var prov_path)"
 if [ -z "$prov_path" ]; then
   prov_path="$PHONEPROV_DIR/$vendor"
