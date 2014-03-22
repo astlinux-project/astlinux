@@ -113,6 +113,8 @@ Released **TBD**
 
 -- Edit tab, support to edit /mnt/kd/phoneprov/templates/*.conf files.
 
+-- ConfBridge tab, fully support user mute with latest Asterisk 11 fixes.
+
 
 Additions for AstLinux 1.1.4:
 =============================
