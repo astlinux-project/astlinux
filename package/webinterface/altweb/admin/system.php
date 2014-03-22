@@ -46,6 +46,7 @@ $sounds_type_menu = array (
 $sounds_lang_menu = array (
   'en' => 'english',
   'en_AU' => 'english-au',
+  'en_GB' => 'english-gb',
   'es' => 'spanish',
   'fr' => 'french',
   'ru' => 'russian',
