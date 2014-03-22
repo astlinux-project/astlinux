@@ -176,12 +176,13 @@ function parseCONFBRIDGEdata($room_list) {
       }
       while (! feof($ph)) {
         if ($line = trim(fgets($ph, 1024))) {
-          if (preg_match('/^([^ ]+) +([^ ]+) +([^ ]+) .* ([^ ]+) *$/', $line, $ips)) {
+          if (preg_match('/^([^ ]+) +([^ ]+) +([^ ]+) .* ([^ ]+) +([^ ]+) *$/', $line, $ips)) {
             $db['data'][$id]['room'] = $room_list[$i]['room'];
             $db['data'][$id]['channel'] = $ips[1];
             $db['data'][$id]['user_profile'] = $ips[2];
             $db['data'][$id]['bridge_profile'] = $ips[3];
             $db['data'][$id]['cidnum'] = $ips[4];
+            $db['data'][$id]['mute'] = $ips[5];
             $id++;
           }
         }
@@ -350,8 +351,11 @@ require_once '../common/header.php';
         }
 
         echo '<td style="text-align: right; padding-top: 8px; padding-bottom: 8px;">';
-        echo '<a href="'.$myself.'?mute='.$room_user.$autorefresh.'" onclick="stop_refresh()" class="actionText">Mute</a>';
-        echo '&nbsp;<a href="'.$myself.'?unmute='.$room_user.$autorefresh.'" onclick="stop_refresh()" class="actionText">Unmute</a>';
+        if ($data['mute'] === 'No') {
+          echo '<a href="'.$myself.'?mute='.$room_user.$autorefresh.'" onclick="stop_refresh()" class="actionText">Mute</a>';
+        } else {
+          echo '<a href="'.$myself.'?unmute='.$room_user.$autorefresh.'" onclick="stop_refresh()" class="actionText">Unmute</a>';
+        }
         echo '&nbsp;<a href="'.$myself.'?redirect='.rawurlencode($data['channel']).$autorefresh.'" onclick="stop_refresh()" class="actionText">Redirect</a>';
         echo '&nbsp;<a href="/admin/blacklist.php?num='.$data['cidnum'].'" onclick="stop_refresh()" class="actionText">Blacklist</a>';
         echo '&nbsp;<a href="'.$myself.'?kick='.$room_user.$autorefresh.'" onclick="stop_refresh()" class="actionText">Kick</a>';
