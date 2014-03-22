@@ -89,6 +89,8 @@ Released **TBD**
 
 -- Asterisk 1.8.26.1 (version bump) and 11.8.1 (version bump)
 
+-- Asterisk Sounds 1.4.25 (version bump) available, as well as 'it' and 'en_GB' core sound files.
+
 -- DAHDI, dahdi-linux 2.8.0.1 (version bump) and dahdi-tools 2.8.0 (version bump)
 
 -- wanpipe, version bump to 7.0.10
@@ -114,6 +116,8 @@ Released **TBD**
 -- Edit tab, support to edit /mnt/kd/phoneprov/templates/*.conf files.
 
 -- ConfBridge tab, fully support user mute with latest Asterisk 11 fixes.
+
+-- System tab, add "english-gb" (Great Britain) sound language.
 
 
 Additions for AstLinux 1.1.4:
