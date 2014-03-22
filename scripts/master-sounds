@@ -1,0 +1,151 @@
+#!/bin/bash
+
+ACTION="$1"
+
+if [ "$ACTION" != "test" -a "$ACTION" != "upload" ]; then
+  echo "Usage: master-sounds test|upload"
+  exit 1
+fi
+
+sounds="
+asterisk-core-sounds-en-alaw
+asterisk-core-sounds-en-g722
+asterisk-core-sounds-en-g729
+asterisk-core-sounds-en-gsm
+asterisk-core-sounds-en-ulaw
+asterisk-core-sounds-en-wav
+
+asterisk-core-sounds-en_AU-alaw
+asterisk-core-sounds-en_AU-g722
+asterisk-core-sounds-en_AU-g729
+asterisk-core-sounds-en_AU-gsm
+asterisk-core-sounds-en_AU-ulaw
+asterisk-core-sounds-en_AU-wav
+
+asterisk-core-sounds-en_GB-alaw
+asterisk-core-sounds-en_GB-g722
+asterisk-core-sounds-en_GB-g729
+asterisk-core-sounds-en_GB-gsm
+asterisk-core-sounds-en_GB-ulaw
+asterisk-core-sounds-en_GB-wav
+
+asterisk-core-sounds-es-alaw
+asterisk-core-sounds-es-g722
+asterisk-core-sounds-es-g729
+asterisk-core-sounds-es-gsm
+asterisk-core-sounds-es-ulaw
+asterisk-core-sounds-es-wav
+
+asterisk-core-sounds-fr-alaw
+asterisk-core-sounds-fr-g722
+asterisk-core-sounds-fr-g729
+asterisk-core-sounds-fr-gsm
+asterisk-core-sounds-fr-ulaw
+asterisk-core-sounds-fr-wav
+
+asterisk-core-sounds-it-alaw
+asterisk-core-sounds-it-g722
+asterisk-core-sounds-it-g729
+asterisk-core-sounds-it-gsm
+asterisk-core-sounds-it-ulaw
+asterisk-core-sounds-it-wav
+
+asterisk-core-sounds-ru-alaw
+asterisk-core-sounds-ru-g722
+asterisk-core-sounds-ru-g729
+asterisk-core-sounds-ru-gsm
+asterisk-core-sounds-ru-ulaw
+asterisk-core-sounds-ru-wav
+
+asterisk-extra-sounds-en-alaw
+asterisk-extra-sounds-en-g722
+asterisk-extra-sounds-en-g729
+asterisk-extra-sounds-en-gsm
+asterisk-extra-sounds-en-ulaw
+asterisk-extra-sounds-en-wav
+
+asterisk-extra-sounds-en_GB-alaw
+asterisk-extra-sounds-en_GB-g722
+asterisk-extra-sounds-en_GB-g729
+asterisk-extra-sounds-en_GB-gsm
+asterisk-extra-sounds-en_GB-ulaw
+asterisk-extra-sounds-en_GB-wav
+
+asterisk-extra-sounds-fr-alaw
+asterisk-extra-sounds-fr-g722
+asterisk-extra-sounds-fr-g729
+asterisk-extra-sounds-fr-gsm
+asterisk-extra-sounds-fr-ulaw
+asterisk-extra-sounds-fr-wav
+
+asterisk-moh-opsound-alaw
+asterisk-moh-opsound-g722
+asterisk-moh-opsound-g729
+asterisk-moh-opsound-gsm
+asterisk-moh-opsound-ulaw
+asterisk-moh-opsound-wav
+"
+
+SOUNDS_URL="http://downloads.asterisk.org/pub/telephony/sounds"
+
+SUFFIX="current.tar.gz"
+
+TMP_SND_FILE="/tmp/master-sounds-$SUFFIX"
+
+download_sound() {
+  local sound="$1"
+
+  cleanup
+
+  if ! wget -c4 -O "$TMP_SND_FILE" "$SOUNDS_URL/${sound}-$SUFFIX" >/dev/null; then
+    return 1
+  fi
+  if ! wget -c4 -q -O "$TMP_SND_FILE.sha1" "$SOUNDS_URL/${sound}-$SUFFIX.sha1" >/dev/null; then
+    return 1
+  fi
+
+  return 0
+}
+
+cleanup()
+{
+  rm -f "$TMP_SND_FILE" "$TMP_SND_FILE.sha1"
+}
+
+err_cnt=0
+
+unset IFS
+for i in $sounds; do
+  echo "Sound: $i"
+  download_sound $i
+  if [ $? -eq 0 ]; then
+    if [ "$ACTION" = "upload" ]; then
+      s3cmd put --acl-public "$TMP_SND_FILE" "s3://astlinuxmirror/asterisk-sounds/${i}-${SUFFIX}"
+      if [ $? -ne 0 ]; then
+        cleanup
+        exit 1
+      fi
+      s3cmd put --acl-public "$TMP_SND_FILE.sha1" "s3://astlinuxmirror/asterisk-sounds/${i}-${SUFFIX}.sha1"
+      if [ $? -ne 0 ]; then
+        cleanup
+        exit 1
+      fi
+    else
+      echo "s3cmd put --acl-public $TMP_SND_FILE s3://astlinuxmirror/asterisk-sounds/${i}-${SUFFIX}"
+      echo "s3cmd put --acl-public $TMP_SND_FILE.sha1 s3://astlinuxmirror/asterisk-sounds/${i}-${SUFFIX}.sha1"
+    fi
+  else
+    err_cnt=$((err_cnt+1))
+  fi
+done
+
+if [ $err_cnt -gt 0 ]; then
+  echo "master-sounds: Error Count: $err_cnt" >&2
+else
+  echo "Successful upload."
+fi
+
+cleanup
+
+exit 0
+
