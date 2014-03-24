@@ -42,10 +42,16 @@ is_context() {
 extract_context() {
   local context="$1" file="$2" match_ext
 
-  # Properly match if '*' exists in the extension
-  match_ext="$(echo "$ext" | sed 's/*/\\*/g')"
+  # Properly match if '*' exists in the extension, replace * with \*
+  match_ext="${ext//\*/\*}"
 
-  sed -n "/^\[${context}\]/,/^\[/ p" "$file" | sed -e 's/^\[.*//' -e "s/^#<${match_ext}>//" -e 's/^#.*//' -e '/^$/ d'
+  sed -n "/^\[${context}\]/,/^\[/ p" "$file" | \
+  sed -e 's/^\[.*//' \
+      -e "/^#<.*!${match_ext}!.*>/ d" \
+      -e "s/^#<${match_ext}>//" \
+      -e 's/^#<!.*!>//' \
+      -e 's/^#.*//' \
+      -e '/^$/ d'
 }
 
 extract_var() {
