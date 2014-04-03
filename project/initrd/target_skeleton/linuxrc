@@ -108,7 +108,7 @@ of RAM. You should consider getting more."
 
     # check fsck here... (toss stdout, but keep stderr)
 
-    e2fsck -p $ASTURW >/dev/null
+    e2fsck -y $ASTURW >/dev/null
     status=$?
 
     case $status in
