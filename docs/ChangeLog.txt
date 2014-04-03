@@ -43,6 +43,9 @@ Released **TBD**
 
 -- kexec-tools, version bump to 2.0.4
 
+-- initrd and /etc/rc, On boot use 'e2fsck -y' instead of 'e2fsck -p' since common disk corruption will not be
+   automatically fixed with '-p'.  Thanks to Martin Sunstrum for demonstrating the problem and testing.
+
 ** Networking
 
 -- OpenSSL, major version bump to 1.0.1f
