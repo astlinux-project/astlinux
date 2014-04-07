@@ -5,7 +5,7 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.1.5:
+Additions for AstLinux 1.1.6:
 =============================
 
 Released **TBD**
@@ -48,7 +48,7 @@ Released **TBD**
 
 ** Networking
 
--- OpenSSL, major version bump to 1.0.1f
+-- OpenSSL, major version bump to 1.0.1g including security fix: CVE-2014-0160
 
 -- OpenSSH 6.4p1 (security and bug fixes)
 
@@ -121,6 +121,14 @@ Released **TBD**
 -- ConfBridge tab, fully support user mute with latest Asterisk 11 fixes.
 
 -- System tab, add "english-gb" (Great Britain) sound language.
+
+
+Additions for AstLinux 1.1.5:
+=============================
+
+Not released due to the OpenSSL security fix: CVE-2014-0160
+
+Since AstLinux 1.1.5 was already tagged before the fix, 1.1.5 was not released to eliminate any possibly confusion.
 
 
 Additions for AstLinux 1.1.4:
