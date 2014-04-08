@@ -4,16 +4,15 @@
 #
 #############################################################
 
-LUAEXPAT_VERSION      = 1.2.0
+LUAEXPAT_VERSION      = 1.3.0
 LUAEXPAT_SITE         = http://matthewwild.co.uk/projects/luaexpat
 LUAEXPAT_DEPENDENCIES = lua expat
 
 
-LUAEXPAT_MFLAGS += LUA_VERSION_NUM=501
-LUAEXPAT_MFLAGS += LUA_INC=$(STAGING_DIR)/usr/include/lua
-LUAEXPAT_MFLAGS += EXPAT_INC=$(STAGING_DIR)/usr/include
-LUAEXPAT_MFLAGS += LIBNAME=lxp.so
-LUAEXPAT_MFLAGS += LIB_OPTION="-shared -fPIC $(TARGET_CFLAGS)"
+LUAEXPAT_MFLAGS += LUA_LDIR=$(TARGET_DIR)/usr/share/lua
+LUAEXPAT_MFLAGS += LUA_CDIR=$(TARGET_DIR)/usr/lib/lua
+LUAEXPAT_MFLAGS += LUA_INC=-I$(STAGING_DIR)/usr/include
+LUAEXPAT_MFLAGS += EXPAT_INC=-I$(STAGING_DIR)/usr/include
 LUAEXPAT_MFLAGS += CC="$(TARGET_CC) -fPIC $(TARGET_CFLAGS)"
 
 
