@@ -48,14 +48,15 @@ Released **TBD**
 
 ** Networking
 
--- OpenSSL, major version bump to 1.0.1g including security fix: CVE-2014-0160
+-- OpenSSL, major version bump to 1.0.1g including "heartbleed" security fix: CVE-2014-0160
 
 -- OpenSSH 6.4p1 (security and bug fixes)
 
 -- lighttpd, version bump to 1.4.35, (security fixes: CVE-2013-4508, CVE-2013-4559, CVE-2013-4560, CVE-2014-2323, CVE-2014-2324)
              and bug fixes.
 
--- libcurl (curl) version bump to 7.35.0, (security fix: CVE-2014-0015) and bug fixes.
+-- libcurl (curl) version bump to 7.36.0, (security fixes: CVE-2014-0015, CVE-2014-0005, CVE-2014-0319, CVE-2014-1263, CVE-2014-2522)
+                  and bug fixes.
 
 -- AIF, version bump to 2.0.1e, added DMZ logging options, the TRACE feature is removed resulting in an 8% speed improvement.
 
@@ -69,7 +70,7 @@ Released **TBD**
 
 -- ipsec-tools, version bump to 0.8.2
 
--- prosody, version bump to 0.9.3
+-- prosody, version bump to 0.9.4 with luaexpat version bump to 1.3.0
 
 -- openldap, version bump to 2.4.39
    ldap-phone-name-lookup and ldap-phone-num-lookup scripts, added debug option so that by default no PHP errors are displayed.
@@ -126,9 +127,11 @@ Released **TBD**
 Additions for AstLinux 1.1.5:
 =============================
 
-Not released due to the OpenSSL security fix: CVE-2014-0160
+Not released due to the OpenSSL "heartbleed" security issue: CVE-2014-0160
 
-Since AstLinux 1.1.5 was already tagged before the fix, 1.1.5 was not released to eliminate any possibly confusion.
+Since AstLinux 1.1.5 was already tagged and vulnerable before the fix, 1.1.5 was not released to eliminate any possible confusion.
+
+AstLinux versions 1.1.4 and earlier used the OpenSSL 0.9.8 series which is not affected by the "heartbleed" security vulnerability.
 
 
 Additions for AstLinux 1.1.4:
