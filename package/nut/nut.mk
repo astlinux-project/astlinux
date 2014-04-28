@@ -5,7 +5,7 @@
 ################################################################################
 
 NUT_VERSION_MAJOR = 2.7
-NUT_VERSION = $(NUT_VERSION_MAJOR).1
+NUT_VERSION = $(NUT_VERSION_MAJOR).2
 NUT_SITE = http://www.networkupstools.org/source/$(NUT_VERSION_MAJOR)/
 NUT_DEPENDENCIES = host-pkg-config
 

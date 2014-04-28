@@ -229,7 +229,7 @@ start ()
     echo "Starting ups..."
     echo "Starting ups..." >> $LOGFILE
 
-    /usr/lib/ups/upsdrvctl start >> $LOGFILE 2>&1
+    upsdrvctl start >> $LOGFILE 2>&1
     upsd >> $LOGFILE 2>&1
   fi
 
@@ -277,7 +277,7 @@ stop ()
     fi
 
     upsd -c stop >> $LOGFILE 2>&1
-    /usr/lib/ups/upsdrvctl stop >> $LOGFILE 2>&1
+    upsdrvctl stop >> $LOGFILE 2>&1
     
     if [ "$UPS_KILL_POWER" = "yes" -a -f /etc/ups/killpower ]; then
       cnt=5
@@ -286,7 +286,7 @@ stop ()
         echo -n "."
         sleep 1
       done
-      if /usr/lib/ups/upsdrvctl shutdown >/dev/null 2>&1; then
+      if upsdrvctl shutdown >/dev/null 2>&1; then
         echo "UPS Ordered to Kill Power"
       else
         echo "Kill Power Failed"
