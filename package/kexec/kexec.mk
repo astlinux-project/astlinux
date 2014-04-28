@@ -3,8 +3,8 @@
 # kexec
 #
 #############################################################
-KEXEC_VERSION = 2.0.4
-KEXEC_SOURCE = kexec-tools-$(KEXEC_VERSION).tar.bz2
+KEXEC_VERSION = 2.0.6
+KEXEC_SOURCE = kexec-tools-$(KEXEC_VERSION).tar.gz
 KEXEC_SITE = $(BR2_KERNEL_MIRROR)/linux/utils/kernel/kexec
 
 KEXEC_UNINSTALL_STAGING_OPT = --version
