@@ -5,10 +5,34 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.1.6:
+Additions for AstLinux 1.1.7:
 =============================
 
 Released **TBD**
+
+** System
+
+-- No changes
+
+** Networking
+
+-- No changes
+
+** Asterisk
+
+-- Asterisk 1.8.26.1 (no change) and 11.8.1 (no change)
+
+-- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
+
+** Web Interface
+
+-- No changes
+
+
+Additions for AstLinux 1.1.6:
+=============================
+
+Released 2014-04-24
 
 ** System
 
