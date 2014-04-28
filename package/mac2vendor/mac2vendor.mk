@@ -3,7 +3,7 @@
 # mac2vendor
 #
 ##############################################################
-MAC2VENDOR_VERSION := 2013-11-20
+MAC2VENDOR_VERSION := 2014-04-28
 MAC2VENDOR_DATA := oui-$(MAC2VENDOR_VERSION).txt
 MAC2VENDOR_DATA_ORIG := oui.txt
 MAC2VENDOR_SITE := http://standards.ieee.org/develop/regauth/oui
@@ -11,6 +11,7 @@ MAC2VENDOR_DIR := $(BUILD_DIR)/mac2vendor
 MAC2VENDOR_BINARY := usr/sbin/mac2vendor
 
 $(DL_DIR)/$(MAC2VENDOR_DATA):
+	rm -f $(DL_DIR)/$(MAC2VENDOR_DATA_ORIG)
 	$(WGET) -P $(DL_DIR) $(MAC2VENDOR_SITE)/$(MAC2VENDOR_DATA_ORIG)
 	cp -a $(DL_DIR)/$(MAC2VENDOR_DATA_ORIG) $(DL_DIR)/$(MAC2VENDOR_DATA)
 
