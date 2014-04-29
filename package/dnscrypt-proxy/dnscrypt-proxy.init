@@ -13,10 +13,13 @@ start () {
   if [ "$DNSCRYPT_PROXY" = "yes" ]; then
     echo "Starting dnscrypt..."
 
+    # Default to OpenDNS
+    address="${DNSCRYPT_SERVER_ADDRESS:-208.67.220.220:443}"
+    name="${DNSCRYPT_PROVIDER_NAME:-2.dnscrypt-cert.opendns.com}"
+    key="${DNSCRYPT_PROVIDER_KEY:-B735:1140:206F:225D:3E2B:D822:D7FD:691E:A1C3:3CC8:D666:8D0C:BE04:BFAB:CA43:FB79}"
+
     dnscrypt-proxy -d --local-address 127.0.0.1:2053 -n 128 -m ${DNSCRYPT_VERBOSITY:-5} -p $PIDFILE \
-                   ${DNSCRYPT_SERVER_ADDRESS:+--resolver-address "$DNSCRYPT_SERVER_ADDRESS"} \
-                   ${DNSCRYPT_PROVIDER_KEY:+--provider-key "$DNSCRYPT_PROVIDER_KEY"} \
-                   ${DNSCRYPT_PROVIDER_NAME:+--provider-name "$DNSCRYPT_PROVIDER_NAME"}
+                   --resolver-address "$address" --provider-name "$name" --provider-key "$key"
   fi
 }
 
