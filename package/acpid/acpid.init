@@ -2,6 +2,8 @@
 
 . /etc/rc.conf
 
+PIDFILE="/var/run/acpid.pid"
+
 init () {
   :
 }
@@ -10,15 +12,17 @@ start () {
 
   if [ -x /usr/sbin/acpid -a -f /proc/acpi/event ]; then
     echo "Starting acpid..."
-    /usr/sbin/acpid
+
+    /usr/sbin/acpid -p $PIDFILE
   fi
 }
 
 stop () {
 
-  if ps | grep -q -e '[ /]acpid[ ]' -e '[ /]acpid$'; then
+  if [ -f $PIDFILE ]; then
     echo "Stopping acpid..."
-    killall acpid >/dev/null 2>&1
+
+    kill $(cat $PIDFILE) >/dev/null 2>&1
   fi
 }
 

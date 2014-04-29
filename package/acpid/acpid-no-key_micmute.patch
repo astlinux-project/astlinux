@@ -1,0 +1,14 @@
+--- acpid-2.0.22/input_layer.c.orig	2014-04-29 10:23:08.000000000 -0500
++++ acpid-2.0.22/input_layer.c	2014-04-29 10:25:15.000000000 -0500
+@@ -112,8 +112,11 @@
+  		"button/volumeup VOLUP 00000080 00000000"},
+ 	{{{0,0}, EV_KEY, KEY_MUTE, 1},
+  		"button/mute MUTE 00000080 00000000"},
++/* Kernel 3.1 or later required for KEY_MICMUTE */
++#ifdef KEY_MICMUTE
+ 	{{{0,0}, EV_KEY, KEY_MICMUTE, 1},
+ 		"button/micmute MICMUTE 00000080 00000000"},
++#endif
+  	/* cd play/pause buttons */
+  	{{{0,0}, EV_KEY, KEY_NEXTSONG, 1},
+  		"cd/next CDNEXT 00000080 00000000"},
