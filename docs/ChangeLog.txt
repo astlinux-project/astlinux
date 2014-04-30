@@ -12,15 +12,27 @@ Released **TBD**
 
 ** System
 
--- No changes
+-- ethtool, version bump to 3.14
+
+-- kexec-tools, version bump to 2.0.6
+
+-- pcre, version bump to 8.35
+
+-- nut, version bump to 2.7.2
+
+-- acpid, version bump to 2.0.22
+
+-- mac2vendor, database update at 2014-04-28
 
 ** Networking
 
--- No changes
+-- OpenVPN, version bump to 2.3.3
+
+-- dnscrypt-proxy, version bump to 1.4.0
 
 ** Asterisk
 
--- Asterisk 1.8.26.1 (no change) and 11.8.1 (no change)
+-- Asterisk 1.8.27.0 (version bump) and 11.9.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
