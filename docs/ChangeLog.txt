@@ -12,6 +12,9 @@ Released **TBD**
 
 ** System
 
+-- initrd, increase the tmpfs asturo limit from 128 MB to 192 MB. Additionally, resize the asturo mount
+   to match the 'used' space so no free space remains.
+
 -- ethtool, version bump to 3.14
 
 -- kexec-tools, version bump to 2.0.6
