@@ -3,7 +3,8 @@
 # build [ board ]
 #
 
-IMAGEFS_SIZE=128
+# Max image size in 1024 (k) bytes
+MAX_IMAGEFS_SIZE=196608   # 192m
 
 REQUIRED_CMDS="which zcat bzcat make gcc bison flex msgfmt makeinfo autoconf nasm wget rsync sed"
 
@@ -48,9 +49,9 @@ make_release()
   )
   touch ${ASTVER}/astflag
   sed -e "s/ASTVER/${ASTVER}/g" project/astlinux/board/${board}/runnix.conf > ${ASTVER}/${ASTVER}.run.conf
-  image_size=$(du -s -m "${ROOTFS_EXT2}" | awk '{ print $1 }')
-  if [ "$image_size" -gt ${IMAGEFS_SIZE} ]; then
-    echo "build: WARNING -- Image Size is larger then ${IMAGEFS_SIZE}MB, 'noram' is set"
+  image_size=$(du -s -k "${ROOTFS_EXT2}" | awk '{ print $1 }')
+  if [ $image_size -gt $MAX_IMAGEFS_SIZE ]; then
+    echo "build: WARNING -- Image Size is larger then ${MAX_IMAGEFS_SIZE}KB, 'noram' is set"
     sed -i 's/ astlive / astlive noram /' ${ASTVER}/${ASTVER}.run.conf
   fi
 

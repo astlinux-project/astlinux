@@ -5,10 +5,28 @@ export PATH=/usr/bin:/usr/sbin:/bin:/sbin
 # when reverted to an older version that still uses IDE
 DRIVES="hda hdb hdc hdd sda sdb sdc sdd sde sdf sdg sdh"
 
-# Max image size in megabytes
-IMAGEFS_SIZE=128
+# Max image size in 1024 (k) bytes
+MAX_IMAGEFS_SIZE=196608   # 192m
 
 #functions
+
+image_to_tmpfs() {
+  local mp="$1" used
+
+  mount -t tmpfs -o size=${MAX_IMAGEFS_SIZE}k none $mp
+
+  echo "Copying AstLinux files to RAM..."
+  cp -a /image/. $mp/
+
+  mount -o ro,remount $mp
+
+  # Reduce total size to 'used'
+  used="$(df -k -P $mp | awk '/^none/ { print $3; }')"
+  if [ -n "$used" ] && [ $used -lt $MAX_IMAGEFS_SIZE ]; then
+    mount -o remount,size=${used}k $mp
+  fi
+}
+
 geninstall () {
 
   echo "
@@ -138,16 +156,7 @@ of RAM. You should consider getting more."
 
       mount -t ext2 -o noatime $ASTURW /mnt/asturw
 
-      # no longer needed with new version of unionfs
-      # rm -rf /mnt/asturw/lib/modules
-
-      mount -t tmpfs -o size=${IMAGEFS_SIZE}m none /mnt/asturo
-
-      echo "Copying AstLinux files to RAM..."
-
-      cp -a /image/. /mnt/asturo/
-
-      mount -o ro,remount /mnt/asturo
+      image_to_tmpfs /mnt/asturo
 
       mount -t unionfs -o dirs=/mnt/asturw=rw:/mnt/asturo=ro none /new
 
@@ -170,21 +179,13 @@ of RAM. You should consider getting more."
 
       mount -t ext2 -o noatime $ASTURW /mnt/asturw
 
-      # no longer needed since new unionfs version
-      # rm -rf /mnt/asturw/lib/modules
-
       mount -t unionfs -o dirs=/mnt/asturw=rw:/image=ro none /new
     fi
 
   else
     # non unionfs stuff
     if [ "$RAMFS" = "yes" ]; then
-      mount -t tmpfs -o size=${IMAGEFS_SIZE}m none /new
-
-      echo "Copying AstLinux files to RAM..."
-
-      cp -a /image/. /new/
-      mount -o ro,remount /new
+      image_to_tmpfs /new
 
       # unmount the loop device
       cd /
