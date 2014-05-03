@@ -29,7 +29,7 @@ Released **TBD**
 
 ** Networking
 
--- OpenVPN, version bump to 2.3.3
+-- OpenVPN, version bump to 2.3.4
 
 -- dnscrypt-proxy, version bump to 1.4.0
 
