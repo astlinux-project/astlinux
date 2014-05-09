@@ -1,4 +1,5 @@
 #!/usr/bin/perl -w
+#!/usr/local/bin/perl -w
 ######################################################################
 # $Id: ddclient 157 2013-12-26 09:02:05Z wimpunk $
 #
@@ -2997,7 +2998,7 @@ sub nic_zoneedit1_update {
 		    $status_text = $var{'TEXT'} if exists $var{'TEXT'};
 		    $status_ip   = $var{'IP'}   if exists $var{'IP'};
 
-		    if ($status eq 'SUCCESS' || ($status eq 'ERROR' && ($var{'CODE'} eq '707' || $var{'CODE'} eq '702'))) {
+		    if ($status eq 'SUCCESS' || ($status eq 'ERROR' && $var{'CODE'} eq '707')) {
 			$config{$h}{'ip'}     = $status_ip;
 			$config{$h}{'mtime'}  = $now;
 	    		$config{$h}{'status'} = 'good';
