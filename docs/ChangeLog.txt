@@ -33,6 +33,9 @@ Released **TBD**
 
 -- dnscrypt-proxy, version bump to 1.4.0
 
+-- ddclient (dynamicdns), add support for 'ssl=yes' by using /usr/bin/curl since the perl module Net/SSLeay
+   does not cross-compile.  By default ZoneEdit, DNS-O-MATIC and pairNIC now use HTTPS for updates.
+
 ** Asterisk
 
 -- Asterisk 1.8.27.0 (version bump) and 11.9.0 (version bump)
