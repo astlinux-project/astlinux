@@ -46,7 +46,8 @@ Released **TBD**
 
 ** Web Interface
 
--- No changes
+-- Network -> Dynamic DNS Update: [ disabled ] option added to provide a simple method
+   to disable Dynamic DNS without deleteing a working configuration.
 
 
 Additions for AstLinux 1.1.6:
