@@ -1782,9 +1782,15 @@ require_once '../common/header.php';
   
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Dynamic DNS Update:</strong>');
-  $dd_client = getVARdef($db, 'DDCLIENT', $cur_db);
+  if (($dd_client = getVARdef($db, 'DDCLIENT', $cur_db)) === '') {
+    if (getVARdef($db, 'DDUSER', $cur_db) !== '' && getVARdef($db, 'DDPASS', $cur_db) !== '') {
+      $dd_client = 'inadyn';
+    }
+  }
   putHtml('<select name="dd_client">');
-  putHtml('<option value="inadyn">inadyn</option>');
+  putHtml('<option value="none">disabled</option>');
+  $sel = ($dd_client === 'inadyn') ? ' selected="selected"' : '';
+  putHtml('<option value="inadyn"'.$sel.'>inadyn</option>');
   $sel = ($dd_client === 'ddclient') ? ' selected="selected"' : '';
   putHtml('<option value="ddclient"'.$sel.'>ddclient</option>');
   putHtml('</select>');
