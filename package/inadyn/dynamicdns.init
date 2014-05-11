@@ -135,7 +135,7 @@ init () {
 
   if [ "$DDCLIENT" = "ddclient" ]; then
     gen_ddclient_conf
-  else
+  elif [ "$DDCLIENT" = "inadyn" -o -z "$DDCLIENT" ]; then  # unset default for backward compatibility
     gen_inadyn_conf
   fi
 }
