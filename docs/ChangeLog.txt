@@ -12,6 +12,8 @@ Released **TBD**
 
 ** System
 
+-- linux, n_tty: Fix n_tty_write crash when echoing in raw mode, (security fixe: CVE-2014-0196)
+
 -- initrd, increase the tmpfs asturo limit from 128 MB to 192 MB. Additionally, resize the asturo mount
    to match the 'used' space so no free space remains.
 
@@ -35,8 +37,8 @@ Released **TBD**
 
 -- fping, version bump to 3.10
 
--- ddclient (dynamicdns), add support for 'ssl=yes' by using /usr/bin/curl since the perl module Net/SSLeay
-   does not cross-compile.  By default ZoneEdit, DNS-O-MATIC and pairNIC now use HTTPS for updates.
+-- ddclient (dynamicdns), add support for 'ssl=yes' by using /usr/bin/curl instead of the perl module Net/SSLeay.
+   By default ZoneEdit, DNS-O-MATIC and pairNIC now use HTTPS for updates.
 
 ** Asterisk
 
