@@ -12,6 +12,8 @@ Released **TBD**
 
 ** System
 
+-- RUNNIX, version bump to 0.4-6527, enable ACPI and APIC in kernel, use IO-APIC for interrupt routing
+
 -- linux, n_tty: Fix n_tty_write crash when echoing in raw mode, (security fixe: CVE-2014-0196)
 
 -- initrd, increase the tmpfs asturo limit from 128 MB to 192 MB. Additionally, resize the asturo mount
@@ -45,6 +47,9 @@ Released **TBD**
 -- Asterisk 1.8.27.0 (version bump) and 11.9.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
+
+-- phoneprov-tools, new default templates:
+   == Grandstream GXP1400, gxp1400.conf, thanks to Michael Keuter.
 
 ** Web Interface
 
