@@ -39,6 +39,8 @@ Released **TBD**
 
 -- fping, version bump to 3.10
 
+-- libcurl (curl) version bump to 7.37.0, bug fixes.
+
 -- ddclient (dynamicdns), add support for 'ssl=yes' by using /usr/bin/curl instead of the perl module Net/SSLeay.
    By default ZoneEdit, DNS-O-MATIC and pairNIC now use HTTPS for updates.
 
