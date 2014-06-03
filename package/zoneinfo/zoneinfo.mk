@@ -4,8 +4,8 @@
 #
 ##############################################################
 ZONEINFO_VERSION :=
-ZONEINFO_DATA := tzdata2013h.tar.gz
-ZONEINFO_SOURCE := tzcode2013h.tar.gz
+ZONEINFO_DATA := tzdata2014d.tar.gz
+ZONEINFO_SOURCE := tzcode2014d.tar.gz
 ZONEINFO_SITE := ftp://ftp.iana.org/tz/releases
 ZONEINFO_DIR := $(BUILD_DIR)/zoneinfo
 ZONEINFO_BINARY := usr/share/zoneinfo/.tzcompiled
