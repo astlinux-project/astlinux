@@ -31,6 +31,8 @@ Released **TBD**
 
 -- mac2vendor, database update at 2014-04-28
 
+-- Time Zone Database update, tzdata2014d and tzcode2014d
+
 ** Networking
 
 -- OpenVPN, version bump to 2.3.4
@@ -46,7 +48,7 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.8.27.0 (version bump) and 11.9.0 (version bump)
+-- Asterisk 1.8.28.0 (version bump) and 11.10.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
