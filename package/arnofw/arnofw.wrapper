@@ -1,26 +1,11 @@
 #
 # In this shim, we're invoked after /etc/arno-iptables-firewall/firewall.conf
 # has been read.  We then read /etc/rc.conf, and paste in variables from
-# the latter file that should override whatever values were configured in
-# firewall.conf.  Reason being that it should be easy to swap between
-# arno-iptables-firewall and astfw (and back again) with fewer values to
-# reconfigure.
-#
-# You could argue that this will be confusing, and I wouldn't disagree.
-#
-# Ideally, we should have the values in /etc/rc.conf and firewall.conf
-# converge... and possibly finalize on a single firewall project for
-# AstLinux.
+# the latter file that will override whatever values were configured in
+# firewall.conf.
 #
 
 . /etc/rc.conf
-
-#
-# the attrocious logic below is to make sure that if INTIF='' and INT2IF=''
-# and INT3IF='', then INT_IF='' as well (and not a string of spaces).
-#
-# this is so that tests for [ -n "$INT_IF" ] do exactly what they should.
-#
 
 isVPNtype()
 {
@@ -229,13 +214,18 @@ if isVPNtype openvpn; then
       ovpnIF="$OVPN_DEV"
     fi
     addINTERNALnet "$ovpnIF" "$ovpnIP" "$ovpnNM"
-    allowif="$(getLANinterface "$OVPN_ALLOWLAN")"
-    if [ $? -eq 0 ]; then
-      IFS=' ,'
-      for intf in $INT_IF; do
-        if [ "$intf" = "$allowif" ]; then
-          IF_TRUSTS="$IF_TRUSTS${IF_TRUSTS:+|}$allowif $ovpnIF"
-          break;
+    if [ -n "$OVPN_ALLOWLAN" ]; then
+      unset IFS
+      for lan in $OVPN_ALLOWLAN; do
+        allowif="$(getLANinterface "$lan")"
+        if [ $? -eq 0 ]; then
+          IFS=' ,'
+          for intf in $INT_IF; do
+            if [ "$intf" = "$allowif" ]; then
+              IF_TRUSTS="$IF_TRUSTS${IF_TRUSTS:+|}$allowif $ovpnIF"
+              break;
+            fi
+          done
         fi
       done
     fi
@@ -256,13 +246,18 @@ if isVPNtype openvpnclient; then
       ovpnIF="$OVPNC_DEV"
     fi
     addNOnatINTERNALnet "$ovpnIF" "$ovpnIP" "$ovpnNM"
-    allowif="$(getLANinterface "$OVPNC_ALLOWLAN")"
-    if [ $? -eq 0 ]; then
-      IFS=' ,'
-      for intf in $INT_IF; do
-        if [ "$intf" = "$allowif" ]; then
-          IF_TRUSTS="$IF_TRUSTS${IF_TRUSTS:+|}$allowif $ovpnIF"
-          break;
+    if [ -n "$OVPNC_ALLOWLAN" ]; then
+      unset IFS
+      for lan in $OVPNC_ALLOWLAN; do
+        allowif="$(getLANinterface "$lan")"
+        if [ $? -eq 0 ]; then
+          IFS=' ,'
+          for intf in $INT_IF; do
+            if [ "$intf" = "$allowif" ]; then
+              IF_TRUSTS="$IF_TRUSTS${IF_TRUSTS:+|}$allowif $ovpnIF"
+              break;
+            fi
+          done
         fi
       done
     fi
