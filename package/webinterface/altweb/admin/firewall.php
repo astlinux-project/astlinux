@@ -19,6 +19,7 @@
 // 03-28-2012, Added NAT EXT support
 // 07-16-2012, Added "Pass LAN->EXT" and "Pass DMZ->EXT" actions
 // 01-27-2014, Added "Log Denied DMZ interface packets"
+// 06-08-2014, Added support for multiple "Allow OpenVPN" LAN interfaces
 //
 // System location of /mnt/kd/rc.conf.d directory
 $FIREWALLCONFDIR = '/mnt/kd/rc.conf.d';
@@ -91,10 +92,14 @@ $allowlans_label = array (
   'INTIF INT2IF INT3IF' => '1st and 2nd and 3rd'
 );
 
-$allowlan_label = array (
-  'INTIF' => '1st LAN Interface',
-  'INT2IF' => '2nd LAN Interface',
-  'INT3IF' => '3rd LAN Interface'
+$vpn_allowlan_label = array (
+  'INTIF' => '1st',
+  'INT2IF' => '2nd',
+  'INT3IF' => '3rd',
+  'INTIF INT2IF' => '1st and 2nd',
+  'INTIF INT3IF' => '1st and 3rd',
+  'INT2IF INT3IF' => '2nd and 3rd',
+  'INTIF INT2IF INT3IF' => '1st and 2nd and 3rd'
 );
 
 $lan_default_policy_label = array (
@@ -994,26 +999,31 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
   }
   putHtml('</select>');
   putHtml('LAN Interfaces</td></tr>');
+
   putHtml('<tr class="dtrow1"><td width="75" style="text-align: right;">');
   $ovpn_allowlan = getVARdef($vars, 'OVPNC_ALLOWLAN');
   $sel = ($ovpn_allowlan !== '') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="is_ovpnc_allowlan" name="is_ovpnc_allowlan"'.$sel.' /></td><td>Allow OpenVPN Client tunnel to the');
   putHtml('<select name="ovpnc_allowlan">');
-  foreach ($allowlan_label as $key => $value) {
+  foreach ($vpn_allowlan_label as $key => $value) {
     $sel = ($ovpn_allowlan === $key) ? ' selected="selected"' : '';
     putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
   }
-  putHtml('</select></td></tr>');
+  putHtml('</select>');
+  putHtml('LAN Interface(s)</td></tr>');
+
   putHtml('<tr class="dtrow1"><td width="75" style="text-align: right;">');
   $ovpn_allowlan = getVARdef($vars, 'OVPN_ALLOWLAN');
   $sel = ($ovpn_allowlan !== '') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="is_ovpn_allowlan" name="is_ovpn_allowlan"'.$sel.' /></td><td>Allow OpenVPN Server tunnel to the');
   putHtml('<select name="ovpn_allowlan">');
-  foreach ($allowlan_label as $key => $value) {
+  foreach ($vpn_allowlan_label as $key => $value) {
     $sel = ($ovpn_allowlan === $key) ? ' selected="selected"' : '';
     putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
   }
-  putHtml('</select></td></tr>');
+  putHtml('</select>');
+  putHtml('LAN Interface(s)</td></tr>');
+
   putHtml('<tr class="dtrow1"><td width="75" style="text-align: right;">');
   $sel = (getVARdef($vars, 'OPEN_ICMP') == 1) ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="allow_icmp" name="allow_icmp"'.$sel.' /></td><td>Allow IPv4 ICMP (ping) on External (EXT) Interface</td></tr>');
