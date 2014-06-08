@@ -63,6 +63,8 @@ Released **TBD**
 -- Network -> Dynamic DNS Update: [ disabled ] option added to provide a simple method
    to disable Dynamic DNS without deleteing a working configuration.
 
+-- Network -> Firewall sub-tab, add support for multiple "Allow OpenVPN" LAN interfaces.
+
 
 Additions for AstLinux 1.1.6:
 =============================
