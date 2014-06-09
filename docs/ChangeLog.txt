@@ -29,6 +29,8 @@ Released **TBD**
 
 -- acpid, version bump to 2.0.22
 
+-- unixodbc, version bump to 2.3.2
+
 -- mac2vendor, database update at 2014-04-28
 
 -- Time Zone Database update, tzdata2014d and tzcode2014d
