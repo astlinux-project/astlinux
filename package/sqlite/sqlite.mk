@@ -4,9 +4,9 @@
 #
 #############################################################
 
-SQLITE_VERSION = 3080002
+SQLITE_VERSION = 3080402
 SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VERSION).tar.gz
-SQLITE_SITE = http://www.sqlite.org/2013
+SQLITE_SITE = http://www.sqlite.org/2014
 SQLITE_INSTALL_STAGING = YES
 
 ifneq ($(BR2_LARGEFILE),y)
