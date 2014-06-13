@@ -44,9 +44,14 @@ Released **TBD**
 -- OpenSSL, version bump to 1.0.1h (security fixes: CVE-2014-0224, CVE-2014-0221, CVE-2014-0195, CVE-2014-3470,
                                                     CVE-2014-0198, CVE-2010-5298)
 
+-- OpenSSH, version bump to 6.6p1 (security fix: CVE-2014-2532). Adds new "Ed25519" public key type, based on
+   Daniel Bernstein's Curve25519.
+
 -- OpenVPN, version bump to 2.3.4
 
 -- dnscrypt-proxy, version bump to 1.4.0
+
+-- p910nd, version bump to 0.97
 
 -- fping, version bump to 3.10
 
