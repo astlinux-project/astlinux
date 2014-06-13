@@ -53,7 +53,7 @@ Subsystem       sftp    /usr/libexec/sftp-server" >> /tmp/etc/ssh/sshd_config
 
   # Generate server keys
   unset IFS
-  for i in ssh_host_rsa_key ssh_host_dsa_key ssh_host_ecdsa_key; do
+  for i in ssh_host_rsa_key ssh_host_dsa_key ssh_host_ecdsa_key ssh_host_ed25519_key; do
     file="/tmp/etc/ssh/$i"
     if [ ! -f "$file" ]; then
       msg="Generating ssh server public/private key type:"
@@ -69,6 +69,10 @@ Subsystem       sftp    /usr/libexec/sftp-server" >> /tmp/etc/ssh/sshd_config
         ssh_host_ecdsa_key)
           echo -n "$msg ecdsa..."
           /usr/bin/ssh-keygen -q -t ecdsa -f "$file" -N ''
+          ;;
+        ssh_host_ed25519_key)
+          echo -n "$msg ed25519..."
+          /usr/bin/ssh-keygen -q -t ed25519 -f "$file" -N ''
           ;;
       esac
       echo " done."
@@ -105,7 +109,7 @@ Subsystem       sftp    /usr/libexec/sftp-server" >> /tmp/etc/ssh/sshd_config
 
   # Generate root user keys
   if [ -d /mnt/kd/ssh_root_keys ]; then
-    for i in id_rsa id_ecdsa; do
+    for i in id_rsa id_ecdsa id_ed25519; do
       file="/mnt/kd/ssh_root_keys/$i"
       if [ ! -f "$file" ]; then
         msg="Generating ssh root user public/private key type:"
@@ -124,13 +128,17 @@ Subsystem       sftp    /usr/libexec/sftp-server" >> /tmp/etc/ssh/sshd_config
             echo -n "$msg ecdsa..."
             /usr/bin/ssh-keygen -q -t ecdsa -f "$file" -N ''
             ;;
+          id_ed25519)
+            echo -n "$msg ed25519..."
+            /usr/bin/ssh-keygen -q -t ed25519 -f "$file" -N ''
+            ;;
         esac
         echo " done."
       fi
     done
   fi
 
-  for i in rsa dsa ecdsa; do
+  for i in rsa dsa ecdsa ed25519; do
     if [ ! -f "/root/.ssh/id_${i}" ]; then
       if [ -f "/mnt/kd/ssh_root_keys/id_${i}" ]; then
         cp -p "/mnt/kd/ssh_root_keys/id_${i}"* /root/.ssh/
