@@ -66,6 +66,8 @@ Released **TBD**
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
+-- LibPRI, version bump to 1.4.15
+
 -- phoneprov-tools, new default templates:
    == Grandstream GXP1400, gxp1400.conf, thanks to Michael Keuter.
 
