@@ -35,6 +35,11 @@ Released **TBD**
 
 -- unixodbc, version bump to 2.3.2
 
+-- libusb, version bump to 1.0.19
+
+-- zabbix, version bump to 2.2.3
+   Note: The remote zabbix_server must be version 2.2.x or greater.
+
 -- mac2vendor, database update at 2014-04-28
 
 -- Time Zone Database update, tzdata2014d and tzcode2014d
@@ -50,6 +55,8 @@ Released **TBD**
 -- OpenVPN, version bump to 2.3.4
 
 -- dnscrypt-proxy, version bump to 1.4.0
+
+-- stunnel, version bump to 5.02
 
 -- p910nd, version bump to 0.97
 
