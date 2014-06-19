@@ -3,7 +3,7 @@
 # libusb
 #
 #############################################################
-LIBUSB_VERSION = 1.0.18
+LIBUSB_VERSION = 1.0.19
 LIBUSB_SOURCE = libusb-$(LIBUSB_VERSION).tar.bz2
 LIBUSB_SITE = http://downloads.sourceforge.net/project/libusb/libusb-1.0/libusb-$(LIBUSB_VERSION)
 LIBUSB_DEPENDENCIES = host-pkg-config
