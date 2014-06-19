@@ -102,9 +102,9 @@ function getDaemons() {
       	$status['pptpd']++;
       } elseif (strpos($line, ' upsmon') !== FALSE || strpos($line, '/upsmon') !== FALSE) {
       	$status['upsmon']++;
-      } elseif (strpos($line, ' zabbix_agentd ') !== FALSE || strpos($line, '/zabbix_agentd ') !== FALSE) {
+      } elseif (strpos($line, ' zabbix_agentd ') !== FALSE || strpos($line, ' zabbix_agentd: ') !== FALSE) {
       	$status['zabbix_agentd']++;
-      } elseif (strpos($line, ' zabbix_proxy ') !== FALSE || strpos($line, '/zabbix_proxy ') !== FALSE) {
+      } elseif (strpos($line, ' zabbix_proxy ') !== FALSE || strpos($line, ' zabbix_proxy: ') !== FALSE) {
       	$status['zabbix_proxy']++;
       } elseif (strpos($line, 'reboot -d') !== FALSE) {
       	$status['reboot']++;
