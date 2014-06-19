@@ -1,6 +1,6 @@
---- zabbix-2.0.2/configure.in.orig	2012-08-28 16:44:23.000000000 -0500
-+++ zabbix-2.0.2/configure.in	2012-08-28 16:50:02.000000000 -0500
-@@ -802,24 +802,6 @@
+--- zabbix-2.2.3/configure.ac.orig	2012-08-28 16:44:23.000000000 -0500
++++ zabbix-2.2.3/configure.ac	2012-08-28 16:50:02.000000000 -0500
+@@ -805,24 +805,6 @@
  
  dnl Check for %qu format (FreeBSD 4.x)
  dnl FreeBSD 4.x does not support %llu
