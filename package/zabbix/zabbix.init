@@ -64,6 +64,11 @@ init () {
   proxyserver="$(echo $server | cut -d',' -f1)"  # Only use first server for proxy
   proxyhostname="${ZABBIX_PROXY_HOSTNAME:-proxy-$HOSTNAME}"
   proxylistenport="${ZABBIX_PROXY_LISTENPORT:-10051}"
+  if [ -f /mnt/kd/zabbix_proxy.general.conf ]; then
+    proxy_include="/mnt/kd/zabbix_proxy.general.conf"
+  else
+    proxy_include=""
+  fi
 
   if [ $proxy_enabled -eq 1 ]; then
 
@@ -83,7 +88,8 @@ DebugLevel=$debuglevel
 Timeout=$timeout
 DBName=/var/db/zabbix/zabbix_proxy.db
 PidFile=/var/run/zabbix_proxy.pid
-LogFile=/var/log/zabbix_proxy.log
+LogFile=/var/log/zabbix_proxy.log${proxy_include:+
+Include=$proxy_include}
 " >/tmp/etc/zabbix_proxy.conf
     fi
     chown zabbix:zabbix /tmp/etc/zabbix_proxy.conf
