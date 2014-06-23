@@ -139,12 +139,12 @@ WARNING WARNING WARNING
   fi
 
   if [ -f /etc/asterisk/extensions.conf ]; then
-    # Work around uclibc bug
+
     ulimit -s unlimited
     if [ "$SAFE_ASTERISK" = "yes" ]; then
-      safe_asterisk -p -I
+      safe_asterisk -p
     else
-      asterisk -p -I
+      asterisk -p
     fi
 
     # Wait for asterisk to startup
