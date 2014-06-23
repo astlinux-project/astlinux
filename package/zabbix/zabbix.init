@@ -149,6 +149,9 @@ start () {
     chown zabbix:zabbix /var/run/zabbix_proxy.pid
 
     zabbix_proxy -c /etc/zabbix_proxy.conf
+
+    # Wait for zabbix_proxy to startup
+    sleep 1
   fi
 
   if [ -f /etc/zabbix_agentd.conf ]; then
