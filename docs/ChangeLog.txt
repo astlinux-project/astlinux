@@ -39,6 +39,8 @@ Released **TBD**
 
 -- libusb, version bump to 1.0.19
 
+-- libsodium, version bump to 0.5.0
+
 -- zabbix, version bump to 2.2.3
    Note: The remote zabbix_server must be version 2.2.x or greater.
 
