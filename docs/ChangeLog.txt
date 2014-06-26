@@ -89,6 +89,8 @@ Released **TBD**
 
 -- Network -> Firewall sub-tab, add support for multiple "Allow OpenVPN" LAN interfaces.
 
+-- Actionlist tab, added larger User Data field.
+
 
 Additions for AstLinux 1.1.6:
 =============================
