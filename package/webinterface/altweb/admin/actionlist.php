@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2009 Lonnie Abelbeck
+// Copyright (C) 2008-2014 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -8,6 +8,7 @@
 
 // actionlist.php for AstLinux
 // 08-03-2009
+// 06-26-2014, Added larger User Data field
 //
 // -- extensions.conf snippet --
 // 
@@ -200,12 +201,12 @@ require_once '../common/header.php';
   putHtml('<input type="submit" class="formbtn" value="Delete Checked" name="submit_delete" />');
   putHtml('</td></tr>');
   putHtml('</table><table class="stdtable">');
-  putHtml('<tr><td class="dialogText" style="text-align: right;">');
-  putHtml('Action&nbsp;Key:<input type="text" size="18" maxlength="64" name="actionkey" value="'.$ldb['key'].'" />');
+  putHtml('<tr><td class="dialogText" style="text-align: left;">');
+  putHtml('Action&nbsp;Key:<input type="text" size="22" maxlength="64" name="actionkey" value="'.$ldb['key'].'" />');
   putHtml('</td><td class="dialogText" style="text-align: right;">');
   putHtml('&nbsp;Action:');
   putHtml('<select name="action">');
-  putHtml('<option value="">Data&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;</option>');
+  putHtml('<option value="">User Data&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;</option>');
 
   $i = 0;
   foreach ($ACTIONLISTMENU as $value) {                                     
@@ -222,8 +223,10 @@ require_once '../common/header.php';
     }
   }                                                                                  
   putHtml('</select>');
+  putHtml('</td></tr>');
+  putHtml('<tr><td class="dialogText" style="text-align: right;" colspan="2">');
   $sel = is_actiondata($ldb['value']) ? htmlspecialchars($ldb['value']) : '';
-  putHtml('<input type="text" size="26" maxlength="128" name="actiondata" value="'.$sel.'" />');
+  putHtml('User&nbsp;Data:<input type="text" size="70" maxlength="128" name="actiondata" value="'.$sel.'" />');
   putHtml('</td></tr>');
   putHtml('<tr><td class="dialogText" style="text-align: right;" colspan="2">');
   putHtml('Comment<i>(optional)</i>:<input type="text" size="42" maxlength="42" name="comment" value="'.htmlspecialchars($ldb['comment']).'" />');
