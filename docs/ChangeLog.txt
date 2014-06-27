@@ -14,12 +14,14 @@ Released **TBD**
 
 -- RUNNIX, version bump to 0.4-6527, enable ACPI and APIC in kernel, use IO-APIC for interrupt routing
 
--- linux, n_tty: Fix n_tty_write crash when echoing in raw mode, (security fixe: CVE-2014-0196)
+-- linux, n_tty: Fix n_tty_write crash when echoing in raw mode, (security fix: CVE-2014-0196)
 
 -- initrd, increase the tmpfs asturo limit from 128 MB to 192 MB. Additionally, resize the asturo mount
    to match the 'used' space so no free space remains.
 
--- e1000e version bump to 3.1.0 Intel PCI-Express PRO/1000 Ethernet Linux driver
+-- lzo, version bump to 2.07, potential integer overflow (security fix: CVE-2014-4608)
+
+-- e1000e version bump to 3.1.0.2 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
 -- ethtool, version bump to 3.14
 
