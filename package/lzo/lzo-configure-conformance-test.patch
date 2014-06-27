@@ -1,0 +1,89 @@
+--- lzo-2.07/configure.orig	2014-06-27 11:52:43.000000000 -0500
++++ lzo-2.07/configure	2014-06-27 11:54:36.000000000 -0500
+@@ -13942,86 +13942,6 @@
+ # ************************************************************************/
+ 
+ 
+-mfx_tmp="-I$srcdir"
+-mfx_save_CPPFLAGS=$CPPFLAGS
+-test "X$mfx_tmp" = "X" || CPPFLAGS="$mfx_tmp $CPPFLAGS"
+-
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether your compiler passes the LZO conformance test" >&5
+-$as_echo_n "checking whether your compiler passes the LZO conformance test... " >&6; }
+-
+-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+-/* end confdefs.h.  */
+-#define LZO_CFG_NO_CONFIG_HEADER 1
+-#define LZO_WANT_ACC_INCD_H 1
+-#include "include/lzo/lzodefs.h"
+-#include "src/lzo_supp.h"
+-
+-#undef  LZOCHK_ASSERT
+-#define LZOCHK_ASSERT(expr)     LZO_COMPILE_TIME_ASSERT_HEADER(expr)
+-#define LZO_WANT_ACC_CHK_CH 1
+-#include "src/lzo_supp.h"
+-
+-#undef  LZOCHK_ASSERT
+-#define LZOCHK_ASSERT(expr)     LZO_COMPILE_TIME_ASSERT(expr)
+-static void test_lzo_compile_time_assert(void) {
+-#define LZO_WANT_ACC_CHK_CH 1
+-#include "src/lzo_supp.h"
+-}
+-
+-#undef NDEBUG
+-#include <assert.h>
+-#undef  LZOCHK_ASSERT
+-#define LZOCHK_ASSERT(expr)     assert(expr);
+-static int test_lzo_run_time_assert(int r) {
+-#define LZO_WANT_ACC_CHK_CH 1
+-#include "src/lzo_supp.h"
+-return r;
+-}
+-
+-int
+-main ()
+-{
+-
+-test_lzo_compile_time_assert();
+-if (test_lzo_run_time_assert(1) != 1) return 1;
+-
+-
+-  ;
+-  return 0;
+-}
+-_ACEOF
+-
+-mfx_tmp=FAILED
+-if ac_fn_c_try_compile "$LINENO"; then :
+-  mfx_tmp=yes
+-fi
+-rm -f core conftest.err conftest.$ac_objext
+-rm -f conftest.$ac_ext conftest.$ac_objext
+-
+-CPPFLAGS=$mfx_save_CPPFLAGS
+-
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $mfx_tmp" >&5
+-$as_echo "$mfx_tmp" >&6; }
+-case x$mfx_tmp in
+-  xpassed | xyes) ;;
+-  *)
+-    { $as_echo "$as_me:${as_lineno-$LINENO}: " >&5
+-$as_echo "$as_me: " >&6;}
+-    { $as_echo "$as_me:${as_lineno-$LINENO}: Your compiler failed the LZO conformance test - for details see " >&5
+-$as_echo "$as_me: Your compiler failed the LZO conformance test - for details see " >&6;}
+-    { $as_echo "$as_me:${as_lineno-$LINENO}: \`config.log'. Please check that log file and consider sending" >&5
+-$as_echo "$as_me: \`config.log'. Please check that log file and consider sending" >&6;}
+-    { $as_echo "$as_me:${as_lineno-$LINENO}: a patch or bug-report to <${PACKAGE_BUGREPORT}>." >&5
+-$as_echo "$as_me: a patch or bug-report to <${PACKAGE_BUGREPORT}>." >&6;}
+-    { $as_echo "$as_me:${as_lineno-$LINENO}: Thanks for your support." >&5
+-$as_echo "$as_me: Thanks for your support." >&6;}
+-    { $as_echo "$as_me:${as_lineno-$LINENO}: " >&5
+-$as_echo "$as_me: " >&6;}
+-    as_fn_error $? "LZO conformance test failed. Stop." "$LINENO" 5
+-    ;;
+-esac
+-
+-
+ if test -r .Conf.settings2; then
+     . ./.Conf.settings2
+ fi
