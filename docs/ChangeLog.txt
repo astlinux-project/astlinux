@@ -19,7 +19,7 @@ Released **TBD**
 -- initrd, increase the tmpfs asturo limit from 128 MB to 192 MB. Additionally, resize the asturo mount
    to match the 'used' space so no free space remains.
 
--- lzo, version bump to 2.07, potential integer overflow (security fix: CVE-2014-4608)
+-- lzo, version bump to 2.07, potential integer overflow (security fix: CVE-2014-4607)
 
 -- e1000e version bump to 3.1.0.2 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
