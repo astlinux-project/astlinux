@@ -4,7 +4,7 @@
 #
 #############################################################
 
-ZABBIX_VERSION = 2.2.3
+ZABBIX_VERSION = 2.2.4
 ZABBIX_SOURCE = zabbix-$(ZABBIX_VERSION).tar.gz
 ZABBIX_SITE = http://downloads.sourceforge.net/sourceforge/zabbix
 ZABBIX_AUTORECONF = YES
