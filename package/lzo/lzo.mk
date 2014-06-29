@@ -3,7 +3,7 @@
 # lzo
 #
 #############################################################
-LZO_VERSION = 2.07
+LZO_VERSION = 2.08
 LZO_SITE = http://www.oberhumer.com/opensource/lzo/download
 LZO_INSTALL_STAGING = YES
 
