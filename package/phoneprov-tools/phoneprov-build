@@ -154,6 +154,59 @@ define_indexed_vars() {
   USERNAME[$i]="${ACCOUNT[$i]}"
 }
 
+sql_init()
+{
+  sqlite3 -batch "$ASTERISK_ODBC_SQLITE3" <<EOF
+DROP TABLE IF EXISTS 'phoneprov';
+CREATE TABLE 'phoneprov' (
+  'id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  'ext' TEXT DEFAULT '',
+  'cid_name' TEXT DEFAULT '',
+  'account' TEXT DEFAULT '',
+  'line' INTEGER DEFAULT 1,
+  'mac_addr' TEXT DEFAULT '',
+  'template' TEXT DEFAULT '',
+  'model' TEXT DEFAULT '',
+  'vendor' TEXT DEFAULT ''
+);
+EOF
+}
+
+sql_add_extensions() {
+  local i
+
+  for i in 1 2 3 4 5 6; do
+    # Only add unique extensions
+    if [ "$i" = "1" -o "${EXT[$i]}" != "$ext" ]; then
+      echo "INSERT INTO 'phoneprov' (
+'ext',
+'cid_name',
+'account',
+'line',
+'mac_addr',
+'template',
+'model',
+'vendor'
+)
+VALUES (
+'${EXT[$i]}',
+'${CID_NAME[$i]}',
+'${ACCOUNT[$i]}',
+'${i}',
+'${mac_addr}',
+'${template}',
+'${model}',
+'${vendor}'
+);"
+    fi
+  done
+}
+
+sql_add()
+{
+  sql_add_extensions | sqlite3 -batch "$ASTERISK_ODBC_SQLITE3"
+}
+
 ARGS="$(getopt --name phoneprov-build \
                --long force-overwrite,help,if-name: \
                --options fhi: \
@@ -191,6 +244,8 @@ TEMPLATE_DIR="$PHONEPROV_DIR/templates"
 
 DIALPLAN_DIR="/mnt/kd/asterisk/includes"
 SIP_DIR="/mnt/kd/asterisk/includes"
+
+ASTERISK_ODBC_SQLITE3="/mnt/kd/asterisk-odbc.sqlite3"
 
 DIALPLANS=(dialplan dialplan2 dialplan3 dialplan4 dialplan5 dialplan6)
 EXTENS=(exten exten2 exten3 exten4 exten5 exten6)
@@ -359,6 +414,9 @@ if [ "$ext" = "init" -o "$ext" = "init-dialplan" -o "$ext" = "init-sip" ]; then
 " > "$sip_path/$sip_file"
     fi
   fi
+
+  # Initialize SQL table entry
+  sql_init
   exit 0
 fi
 
@@ -422,3 +480,7 @@ if [ $is_context_phoneprov -eq 1 ]; then
     merge_variables | merge_indexed_variables > "$prov_path/$prov_file"
 fi
 
+# Add SQL table entry
+sql_add
+
+exit 0
