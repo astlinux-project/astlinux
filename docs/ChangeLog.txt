@@ -84,6 +84,10 @@ Released **TBD**
 -- phoneprov-tools, new default templates:
    == Grandstream GXP1400, gxp1400.conf, thanks to Michael Keuter.
 
+-- phoneprov-tools, new "sql_enable=yes" (default) template option, automatically creates a 'phoneprov' SQLite3 table
+   in the file "/mnt/kd/asterisk-odbc.sqlite3" which can be used for func_odbc dialplan functions.
+   More Info: http://doc.astlinux.org/userdoc:tt_asterisk-odbc
+
 ** Web Interface
 
 -- Network -> Dynamic DNS Update: [ disabled ] option added to provide a simple method
@@ -92,6 +96,8 @@ Released **TBD**
 -- Network -> Firewall sub-tab, add support for multiple "Allow OpenVPN" LAN interfaces.
 
 -- Actionlist tab, added larger User Data field.
+
+-- Status tab, add "Show PPPoE Logs" button to display filtered pppd logs.
 
 
 Additions for AstLinux 1.1.6:
