@@ -31,6 +31,7 @@
 // 09-28-2012, Added Custom Asterisk Command
 // 01-20-2013, Added XMPP Server Status
 // 01-03-2014, Added NUT UPS Monitoring Status
+// 07-02-2014, Added "Show PPPoE Logs" button
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -465,6 +466,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (isset($_POST['submit_pppoe'])) {
     $result = restartPROCESS('pppoe', 10, 99);
+  } elseif (isset($_POST['show_pppoe_logs'])) {
+    header('Location: '.$myself.'?show_pppoe_logs');
+    exit;
   }
   header('Location: '.$myself.'?result='.$result);
   exit;
@@ -614,6 +618,9 @@ if (is_file('/etc/ppp/pppoe.conf')) {
     putHtml('<form method="post" action="'.$myself.'">');
     putHtml("<h2>PPPoE Connection Status:");
     putHtml('<input type="submit" value="Restart PPPoE" name="submit_pppoe" />');
+    if (! isset($_GET['show_pppoe_logs'])) {
+      putHtml('<input type="submit" value="Show PPPoE Logs" name="show_pppoe_logs" />');
+    }
     putHtml("</h2>");
     putHtml("</form>");
     putHtml("<pre>");
@@ -629,6 +636,23 @@ if (is_file('/etc/ppp/pppoe.conf')) {
       fclose($ph);
     } else {
       putText('No pppoe-status available.');
+    }
+    if (isset($_GET['show_pppoe_logs'])) {
+      putText('');
+      putText('Recent PPPoE Logs:');
+      putText('==================');
+      $cmd = 'grep -e "pppd\[[0-9]*]:" /var/log/messages';
+      $cmd .= ' | grep -v -i -e "pado packets" -e "pppoe discovery"';
+      $cmd .= ' | tail -n 30';
+      shell($cmd.' >'.$tmpfile, $status);
+
+      $ph = @fopen($tmpfile, "r");
+      while (! feof($ph)) {
+        if ($line = trim(fgets($ph, 1024))) {
+          putText($line);
+        }
+      }
+      fclose($ph);
     }
     @unlink($tmpfile);
     putHtml("</pre>");
