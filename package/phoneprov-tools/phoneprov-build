@@ -157,8 +157,8 @@ define_indexed_vars() {
 sql_init()
 {
   sqlite3 -batch "$ASTERISK_ODBC_SQLITE3" <<EOF
-DROP TABLE IF EXISTS 'phoneprov';
-CREATE TABLE 'phoneprov' (
+DROP TABLE IF EXISTS 'phoneprov_build';
+CREATE TABLE 'phoneprov_build' (
   'id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   'ext' TEXT DEFAULT '',
   'cid_name' TEXT DEFAULT '',
@@ -178,7 +178,7 @@ sql_add_extensions() {
   for i in 1 2 3 4 5 6; do
     # Only add unique extensions
     if [ "$i" = "1" -o "${EXT[$i]}" != "$ext" ]; then
-      echo "INSERT INTO 'phoneprov' (
+      echo "INSERT INTO 'phoneprov_build' (
 'ext',
 'cid_name',
 'account',
@@ -373,6 +373,12 @@ sip_file="$(extract_var sip_file)"
 if [ -z "$sip_file" ]; then
   sip_file="astlinux-phoneprov-sip.conf"
 fi
+sql_enable="$(extract_var sql_enable)"
+if [ -z "$sql_enable" ]; then
+  sql_enable="yes"
+else
+  sql_enable="$(echo "$sql_enable" | tr '[:upper:]' '[:lower:]')"
+fi
 
 # Special case to initialize dialplan and sip output files
 if [ "$ext" = "init" -o "$ext" = "init-dialplan" -o "$ext" = "init-sip" ]; then
@@ -416,7 +422,9 @@ if [ "$ext" = "init" -o "$ext" = "init-dialplan" -o "$ext" = "init-sip" ]; then
   fi
 
   # Initialize SQL table entry
-  sql_init
+  if [ "$sql_enable" = "yes" ]; then
+    sql_init
+  fi
   exit 0
 fi
 
@@ -481,6 +489,8 @@ if [ $is_context_phoneprov -eq 1 ]; then
 fi
 
 # Add SQL table entry
-sql_add
+if [ "$sql_enable" = "yes" ]; then
+  sql_add
+fi
 
 exit 0

@@ -80,6 +80,27 @@ gen_pass() {
   fi
 }
 
+sql_apply() {
+  local ASTERISK_ODBC_SQLITE3 phoneprov_build
+
+  ASTERISK_ODBC_SQLITE3="/mnt/kd/asterisk-odbc.sqlite3"
+
+  phoneprov_build=$(sqlite3 -batch "$ASTERISK_ODBC_SQLITE3" <<EOF
+SELECT count(*) FROM sqlite_master WHERE type='table' AND name='phoneprov_build';
+EOF
+  )
+  if [ "$phoneprov_build" = "1" ]; then
+    sqlite3 -batch "$ASTERISK_ODBC_SQLITE3" <<EOF
+DROP TABLE IF EXISTS 'phoneprov';
+ALTER TABLE 'phoneprov_build' RENAME TO 'phoneprov';
+EOF
+  else
+    sqlite3 -batch "$ASTERISK_ODBC_SQLITE3" <<EOF
+DROP TABLE IF EXISTS 'phoneprov';
+EOF
+  fi
+}
+
 ARGS="$(getopt --name phoneprov-massdeployment \
                --long auto-pass,only-pass,force-overwrite,help,if-name:,partial,auto-reload,only-reload \
                --options aAfhi:prR \
@@ -200,6 +221,8 @@ unset IFS
 if [ $result -ne 0 ]; then
   exit $result
 fi
+
+sql_apply
 
 echo "Done"
 
