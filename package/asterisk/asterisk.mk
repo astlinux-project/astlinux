@@ -4,9 +4,9 @@
 #
 ##############################################################
 ifeq ($(BR2_PACKAGE_ASTERISK_v1_8),y)
-ASTERISK_VERSION := 1.8.28.2
+ASTERISK_VERSION := 1.8.29.0
 else
-ASTERISK_VERSION := 11.10.2
+ASTERISK_VERSION := 11.11.0
 endif
 ASTERISK_SOURCE := asterisk-$(ASTERISK_VERSION).tar.gz
 ASTERISK_SITE := http://downloads.asterisk.org/pub/telephony/asterisk/releases
@@ -55,7 +55,9 @@ ASTERISK_CONFIGURE_ARGS+= \
 ifeq ($(strip $(BR2_PACKAGE_LIBXML2)),y)
 ASTERISK_EXTRAS+=libxml2
 ASTERISK_CONFIGURE_ARGS+= \
-			--with-libxml2="$(STAGING_DIR)/usr" 
+			--with-libxml2
+ASTERISK_CONFIGURE_ENV+= \
+			CONFIG_LIBXML2="$(STAGING_DIR)/usr/bin/xml2-config"
 else
 ASTERISK_CONFIGURE_ARGS+= \
 			--disable-xmldoc
@@ -92,7 +94,9 @@ endif
 ifeq ($(strip $(BR2_PACKAGE_NETSNMP)),y)
 ASTERISK_EXTRAS+=netsnmp
 ASTERISK_CONFIGURE_ARGS+= \
-			--with-netsnmp="$(STAGING_DIR)/usr"
+			--with-netsnmp
+ASTERISK_CONFIGURE_ENV+= \
+			CONFIG_NETSNMP="$(STAGING_DIR)/usr/bin/net-snmp-config"
 else
 ASTERISK_CONFIGURE_ARGS+= \
 			--without-netsnmp
@@ -101,7 +105,9 @@ endif
 ifeq ($(strip $(BR2_PACKAGE_MYSQL_CLIENT)),y)
 ASTERISK_EXTRAS+=mysql_client
 ASTERISK_CONFIGURE_ARGS+= \
-			--with-mysqlclient="$(STAGING_DIR)/usr"
+			--with-mysqlclient
+ASTERISK_CONFIGURE_ENV+= \
+			CONFIG_MYSQLCLIENT="$(STAGING_DIR)/usr/bin/mysql_config"
 endif
 
 ifeq ($(strip $(BR2_PACKAGE_UNIXODBC)),y)
