@@ -4,12 +4,13 @@
 #
 #############################################################
 
-E2FSPROGS_VERSION = 1.42.8
+E2FSPROGS_VERSION = 1.42.11
 E2FSPROGS_SITE = http://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v$(E2FSPROGS_VERSION)
+E2FSPROGS_INSTALL_STAGING = YES
+E2FSPROGS_INSTALL_STAGING_OPT = DESTDIR=$(STAGING_DIR) install-libs
 
 E2FSPROGS_CONF_OPT = \
-	--disable-tls \
-	--enable-elf-shlibs \
+	$(if $(BR2_PREFER_STATIC_LIB),,--enable-elf-shlibs) \
 	$(if $(BR2_PACKAGE_E2FSPROGS_DEBUGFS),,--disable-debugfs) \
 	$(if $(BR2_PACKAGE_E2FSPROGS_E2IMAGE),,--disable-imager) \
 	--disable-defrag \
@@ -19,7 +20,8 @@ E2FSPROGS_CONF_OPT = \
 	--disable-libuuid \
 	--enable-fsck \
 	--disable-e2initrd-helper \
-	--disable-testio-debug
+	--disable-testio-debug \
+	--disable-rpath
 
 E2FSPROGS_DEPENDENCIES = host-pkg-config util-linux
 
