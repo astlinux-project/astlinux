@@ -4,12 +4,13 @@
 #
 #############################################################
 
-NANO_VERSION = 2.3.2
+NANO_VERSION = 2.3.5
 NANO_SITE = http://www.nano-editor.org/dist/v2.3
 NANO_MAKE_ENV = CURSES_LIB="-lncurses"
 NANO_DEPENDENCIES = ncurses
 NANO_CONF_OPT = \
 	--without-slang \
+	--disable-utf8 \
 	--enable-tiny
 
 define NANO_INSTALL_TARGET_CMDS
