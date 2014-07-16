@@ -1,0 +1,9 @@
+config BR2_PACKAGE_IGB
+	bool "igb"
+	depends on BR2_LINUX_KERNEL
+	default n
+	help
+	  Newer stable igb Intel Gigabit Ethernet Network Driver
+
+	  http://sourceforge.net/projects/e1000/
+

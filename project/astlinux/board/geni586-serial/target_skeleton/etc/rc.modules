@@ -1,9 +1,9 @@
-# These modules get modprobe'd when the system starts up.
+## These modules get modprobe'd when the system starts up.
 rtc
-#Comment out the modules you don't need, and change the order to
-#move eth0 to eth1, etc.
-#Ethernet support
-#10/100 first, then Gigabit
+## Comment out any modules you don't need.
+##
+## Ethernet support
+## 10/100 first, then Gigabit
 3c59x
 typhoon
 tulip
@@ -18,6 +18,7 @@ pcnet32
 acenic
 e1000
 e1000e
+igb
 ns83820
 r8168
 r8169
