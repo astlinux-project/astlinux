@@ -5,10 +5,51 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.1.7:
+Additions for AstLinux 1.1.8:
 =============================
 
 Released **TBD**
+
+** System
+
+-- igb, version 5.2.5, Intel Gigabit Ethernet Network Driver, including Intel i210 and i354 support.
+
+-- libsodium, version bump to 0.6.1
+
+-- spandsp, version bump to 0.0.6 (official)
+
+-- jpeg, version bump to 9a
+
+-- e2fsprogs, version bump to 1.42.11
+
+-- dosfstools, version bump to 3.0.26
+
+-- nano, version bump to 2.3.5
+
+-- Time Zone Database update, tzdata2014e and tzcode2014e
+
+** Networking
+
+-- OpenSSL, use 'linux-elf' configure option for i586 and i686 architectures, adds run-time optimizations
+   for CPU features including AES-NI.
+
+-- rsync, version bump to 3.1.1
+
+** Asterisk
+
+-- Asterisk 1.8.29.0 (version bump) and 11.11.0 (version bump)
+
+-- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
+
+** Web Interface
+
+-- No change
+
+
+Additions for AstLinux 1.1.7:
+=============================
+
+Released 2014-07-19
 
 ** System
 
