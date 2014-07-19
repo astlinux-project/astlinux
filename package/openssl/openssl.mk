@@ -38,6 +38,12 @@ endif
 ifeq ($(ARCH),x86_64)
 	OPENSSL_TARGET_ARCH = x86_64
 endif
+ifeq ($(ARCH),i686)
+	OPENSSL_TARGET_ARCH = elf
+endif
+ifeq ($(ARCH),i586)
+	OPENSSL_TARGET_ARCH = elf
+endif
 
 # Workaround for bug #3445
 ifeq ($(BR2_x86_i386),y)
