@@ -26,6 +26,10 @@ Released **TBD**
 
 -- nano, version bump to 2.3.5
 
+-- sqlite, version bump to 3.8.5
+
+-- sqliteodbc, version bump to 0.998
+
 -- Time Zone Database update, tzdata2014e and tzcode2014e
 
 ** Networking
@@ -34,6 +38,8 @@ Released **TBD**
    for CPU features including AES-NI.
 
 -- libcurl (curl) version bump to 7.37.1, bug fixes.
+
+-- radvd, version bump to 2.1 + upsteam fixes
 
 -- rsync, version bump to 3.1.1
 
