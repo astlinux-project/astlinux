@@ -1,0 +1,425 @@
+From a79451fa20e5aa6f9f224b137328ed2213762117 Mon Sep 17 00:00:00 2001
+From: Reuben Hawkins <reubenhwk@gmail.com>
+Date: Sun, 27 Jul 2014 18:17:47 -0700
+Subject: [PATCH] ensure if_index gets set and setup_iface is called
+
+If radvd 2.1 is started with a configured interface not connected (link down), using...
+
+IgnoreIfMissing on;
+
+when the link goes up, that interface does not work until radvd is restarted.
+
+The primary change is in radvd.c, function setup_iface() swap the occurrence of calling
+check_device() and update_device_index(), calling update_device_index() first always
+creates a 'slot' that can be indexed later when the link goes up.
+
+There's also a change in send.c which will ensure setup_iface is allways called on an
+interface that is not ready.
+
+This commit also moves setup_iface to interface.c from radvd.c.
+---
+ interface.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ netlink.c   |  2 ++
+ radvd.c     | 47 -----------------------------------------------
+ radvd.h     |  2 +-
+ send.c      | 17 ++++++++---------
+ 5 files changed, 59 insertions(+), 57 deletions(-)
+
+diff --git a/interface.c b/interface.c
+index d874232..5baf919 100644
+--- a/interface.c
++++ b/interface.c
+@@ -48,6 +48,54 @@ void iface_init_defaults(struct Interface *iface)
+ 
+ }
+ 
++int setup_iface(int sock, struct Interface *iface)
++{
++	iface->state_info.ready = 0;
++
++	/* The device index must be setup first so we can search it later */
++	if (update_device_index(iface) < 0) {
++		return -1;
++	}
++
++	/* Check IFF_UP, IFF_RUNNING and IFF_MULTICAST */
++	if (check_device(sock, iface) < 0) {
++		return -1;
++	}
++
++	/* Set iface->if_index, iface->max_mtu and iface hardware address */
++	if (update_device_info(sock, iface) < 0) {
++		return -1;
++	}
++
++	/* Make sure the settings in the config file for this interface are ok (this depends
++	 * on iface->max_mtu already being set). */
++	if (check_iface(iface) < 0) {
++		return -1;
++	}
++
++	/* Make sure this is diabled.  We don't want this interface to autoconfig using its
++	 * own advert messages. */
++	if (disable_ipv6_autoconfig(iface->props.name)) {
++		return -1;
++	}
++
++	/* Save the first link local address seen on the specified interface to iface->if_addr */
++	if (setup_linklocal_addr(iface) < 0) {
++		return -1;
++	}
++
++	/* join the allrouters multicast group so we get the solicitations */
++	if (setup_allrouters_membership(sock, iface) < 0) {
++		return -1;
++	}
++
++	iface->state_info.ready = 1;
++
++	dlog(LOG_DEBUG, 4, "interface definition for %s is ok", iface->props.name);
++
++	return 0;
++}
++
+ void prefix_init_defaults(struct AdvPrefix *prefix)
+ {
+ 	memset(prefix, 0, sizeof(struct AdvPrefix));
+diff --git a/netlink.c b/netlink.c
+index dfdbf3c..474e867 100644
+--- a/netlink.c
++++ b/netlink.c
+@@ -79,6 +79,7 @@ void process_netlink_msg(int sock, struct Interface * ifaces)
+ 			/* Reinit the interfaces which needs it. */
+ 			struct Interface *iface = find_iface_by_index(ifaces, ifinfo->ifi_index);
+ 			if (iface) {
++				iface->state_info.ready = 0;
+ 				iface->state_info.racount = 0;
+ 				reschedule_iface(iface, 0);
+ 			}
+@@ -106,6 +107,7 @@ void process_netlink_msg(int sock, struct Interface * ifaces)
+ 
+ 			struct Interface *iface = find_iface_by_index(ifaces, ifaddr->ifa_index);
+ 			if (iface) {
++				iface->state_info.ready = 0;
+ 				iface->state_info.racount = 0;
+ 				reschedule_iface(iface, 0);
+ 			}
+diff --git a/radvd.c b/radvd.c
+index 69f97c4..b4f1ca5 100644
+--- a/radvd.c
++++ b/radvd.c
+@@ -549,53 +549,6 @@ static void stop_adverts(int sock, struct Interface *ifaces)
+ 	for_each_iface(ifaces, stop_advert_foo, &sock);
+ }
+ 
+-int setup_iface(int sock, struct Interface *iface)
+-{
+-	iface->state_info.ready = 0;
+-
+-	/* Check IFF_UP, IFF_RUNNING and IFF_MULTICAST */
+-	if (check_device(sock, iface) < 0) {
+-		return -1;
+-	}
+-
+-	if (update_device_index(iface) < 0) {
+-		return -1;
+-	}
+-
+-	/* Set iface->if_index, iface->max_mtu and iface hardware address */
+-	if (update_device_info(sock, iface) < 0) {
+-		return -1;
+-	}
+-
+-	/* Make sure the settings in the config file for this interface are ok (this depends
+-	 * on iface->max_mtu already being set). */
+-	if (check_iface(iface) < 0) {
+-		return -1;
+-	}
+-
+-	/* Make sure this is diabled.  We don't want this interface to autoconfig using its
+-	 * own advert messages. */
+-	if (disable_ipv6_autoconfig(iface->props.name)) {
+-		return -1;
+-	}
+-
+-	/* Save the first link local address seen on the specified interface to iface->if_addr */
+-	if (setup_linklocal_addr(iface) < 0) {
+-		return -1;
+-	}
+-
+-	/* join the allrouters multicast group so we get the solicitations */
+-	if (setup_allrouters_membership(sock, iface) < 0) {
+-		return -1;
+-	}
+-
+-	iface->state_info.ready = 1;
+-
+-	dlog(LOG_DEBUG, 4, "interface definition for %s is ok", iface->props.name);
+-
+-	return 0;
+-}
+-
+ static void setup_iface_foo(struct Interface *iface, void *data)
+ {
+ 	int sock = *(int *)data;
+diff --git a/radvd.h b/radvd.h
+index 15e25c0..2840d9e 100644
+--- a/radvd.h
++++ b/radvd.h
+@@ -254,7 +254,6 @@ struct Interface *readin_config(char const *fname);
+ 
+ /* radvd.c */
+ int disable_ipv6_autoconfig(char const *iface);
+-int setup_iface(int sock, struct Interface *iface);
+ 
+ /* timer.c */
+ struct timespec next_timespec(double next);
+@@ -283,6 +282,7 @@ void route_init_defaults(struct AdvRoute *, struct Interface *);
+ void rdnss_init_defaults(struct AdvRDNSS *, struct Interface *);
+ void dnssl_init_defaults(struct AdvDNSSL *, struct Interface *);
+ int check_iface(struct Interface *);
++int setup_iface(int sock, struct Interface *iface);
+ void free_ifaces(struct Interface *ifaces);
+ struct Interface *find_iface_by_index(struct Interface *iface, int index);
+ struct Interface *find_iface_by_time(struct Interface *iface_list);
+diff --git a/send.c b/send.c
+index c05d6aa..df9aa94 100644
+--- a/send.c
++++ b/send.c
+@@ -53,6 +53,12 @@ static void add_abro(struct safe_buffer * sb, struct AdvAbro const *abroo);
+  */
+ int send_ra_forall(int sock, struct Interface *iface, struct in6_addr *dest)
+ {
++	/* when netlink is not available (disabled or BSD), ensure_iface_setup is necessary. */
++	if (ensure_iface_setup(sock, iface) < 0) {
++		dlog(LOG_DEBUG, 3, "Not sending RA for %s, interface is not ready", iface->props.name);
++		return 0;
++	}
++
+ 	if (iface->state_info.racount < MAX_INITIAL_RTR_ADVERTISEMENTS)
+ 		iface->state_info.racount++;
+ 
+@@ -100,9 +106,8 @@ int send_ra_forall(int sock, struct Interface *iface, struct in6_addr *dest)
+ 
+ static int ensure_iface_setup(int sock, struct Interface *iface)
+ {
+-#ifndef HAVE_NETLINK
+-	setup_iface(sock, iface);
+-#endif
++	if (!iface->state_info.ready)
++		setup_iface(sock, iface);
+ 
+ 	return (iface->state_info.ready ? 0 : -1);
+ }
+@@ -615,12 +620,6 @@ static int send_ra(int sock, struct Interface *iface, struct in6_addr const *des
+ 		return 0;
+ 	}
+ 
+-	/* when netlink is not available (disabled or BSD), ensure_iface_setup is necessary. */
+-	if (ensure_iface_setup(sock, iface) < 0) {
+-		dlog(LOG_DEBUG, 3, "Not sending RA for %s, interface is not ready", iface->props.name);
+-		return 0;
+-	}
+-
+ 	if (dest == NULL) {
+ 		static uint8_t const all_hosts_addr[] = { 0xff, 0x02, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
+ 		dest = (struct in6_addr const *)all_hosts_addr;
+-- 
+1.9.3
+
+From b7e670959c4e889f055a93e3926b4387358537c1 Mon Sep 17 00:00:00 2001
+From: Reuben Hawkins <reubenhwk@gmail.com>
+Date: Mon, 28 Jul 2014 07:40:31 -0700
+Subject: [PATCH] fix logging flood created by setup_iface
+
+The fix to setup iface causes a bit of a flood to the logging.  This
+change uses dlog rather than flog to log output from setup_iface and
+the loglevels have been changed from 3 to 4.
+---
+ device-common.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/device-common.c b/device-common.c
+index 209cf17..5312ef0 100644
+--- a/device-common.c
++++ b/device-common.c
+@@ -32,24 +32,24 @@ int check_device(int sock, struct Interface *iface)
+ 	}
+ 
+ 	if (!(ifr.ifr_flags & IFF_UP)) {
+-		flog(LOG_ERR, "interface %s is not up", iface->props.name);
++		dlog(LOG_ERR, 4, "interface %s is not up", iface->props.name);
+ 		return -1;
+ 	} else {
+-		dlog(LOG_ERR, 3, "interface %s is up", iface->props.name);
++		dlog(LOG_ERR, 4, "interface %s is up", iface->props.name);
+ 	}
+ 
+ 	if (!(ifr.ifr_flags & IFF_RUNNING)) {
+-		flog(LOG_ERR, "interface %s is not running", iface->props.name);
++		dlog(LOG_ERR, 4, "interface %s is not running", iface->props.name);
+ 		return -1;
+ 	} else {
+-		dlog(LOG_ERR, 3, "interface %s is running", iface->props.name);
++		dlog(LOG_ERR, 4, "interface %s is running", iface->props.name);
+ 	}
+ 
+ 	if (!iface->UnicastOnly && !(ifr.ifr_flags & IFF_MULTICAST)) {
+ 		flog(LOG_INFO, "interface %s does not support multicast, forcing UnicastOnly", iface->props.name);
+ 		iface->UnicastOnly = 1;
+ 	} else {
+-		dlog(LOG_ERR, 3, "interface %s supports multicast", iface->props.name);
++		dlog(LOG_ERR, 4, "interface %s supports multicast", iface->props.name);
+ 	}
+ 
+ 	return 0;
+-- 
+2.0.3
+
+From 99e8d1f1b49f1dc29a6239200f55740fc43e789f Mon Sep 17 00:00:00 2001
+From: Reuben Hawkins <reubenhwk@gmail.com>
+Date: Mon, 28 Jul 2014 07:58:37 -0700
+Subject: [PATCH] process.c: use dlog for RS on unknown interface
+
+It's not unexpected for an unknown interface to get an RA.  This can
+happen if the WAN gets RA's from the ISP.
+---
+ process.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/process.c b/process.c
+index 759fd4b..82d810e 100644
+--- a/process.c
++++ b/process.c
+@@ -88,7 +88,7 @@ void process(int sock, struct Interface *interfaces, unsigned char *msg, int len
+ 	struct Interface *iface = find_iface_by_index(interfaces, pkt_info->ipi6_ifindex);
+ 
+ 	if (iface == NULL) {
+-		flog(LOG_WARNING, "received icmpv6 RS/RA packet on an unknown interface with index %d",
++		dlog(LOG_WARNING, 4, "received icmpv6 RS/RA packet on an unknown interface with index %d",
+ 		     pkt_info->ipi6_ifindex);
+ 		return;
+ 	}
+-- 
+2.0.3
+
+From 07e3f9361ecba310ca1a5bf78c8734c94c8e6fda Mon Sep 17 00:00:00 2001
+From: Reuben Hawkins <reubenhwk@gmail.com>
+Date: Mon, 28 Jul 2014 08:00:49 -0700
+Subject: [PATCH] add state_info.changed to avoid calling setup_iface too much
+
+setup_iface will not be called over and over for interfaces that are not
+ready with this change.  If an interface is marked as changes in netlink
+or in set_interface_defaults, setup_iface will be called.
+---
+ interface.c | 13 +++++++++++--
+ netlink.c   |  8 ++------
+ radvd.h     |  4 +++-
+ send.c      |  6 +++++-
+ 4 files changed, 21 insertions(+), 10 deletions(-)
+
+diff --git a/interface.c b/interface.c
+index 9bbcc6d..4fc3687 100644
+--- a/interface.c
++++ b/interface.c
+@@ -21,9 +21,8 @@ void iface_init_defaults(struct Interface *iface)
+ {
+ 	memset(iface, 0, sizeof(struct Interface));
+ 
+-	iface->state_info.cease_adv = 0;
++	iface->state_info.changed = 1;
+ 
+-	iface->state_info.ready = 0;
+ 	iface->IgnoreIfMissing = DFLT_IgnoreIfMissing;
+ 	iface->AdvSendAdvert = DFLT_AdvSendAdv;
+ 	iface->MaxRtrAdvInterval = DFLT_MaxRtrAdvInterval;
+@@ -48,8 +47,18 @@ void iface_init_defaults(struct Interface *iface)
+ 
+ }
+ 
++
++void touch_iface(struct Interface * iface)
++{
++	iface->state_info.changed = 1;
++	iface->state_info.ready = 0;
++	iface->state_info.racount = 0;
++	reschedule_iface(iface, 0);
++}
++
+ int setup_iface(int sock, struct Interface *iface)
+ {
++	iface->state_info.changed = 0;
+ 	iface->state_info.ready = 0;
+ 
+ 	/* The device index must be setup first so we can search it later */
+diff --git a/netlink.c b/netlink.c
+index 474e867..7685f86 100644
+--- a/netlink.c
++++ b/netlink.c
+@@ -79,9 +79,7 @@ void process_netlink_msg(int sock, struct Interface * ifaces)
+ 			/* Reinit the interfaces which needs it. */
+ 			struct Interface *iface = find_iface_by_index(ifaces, ifinfo->ifi_index);
+ 			if (iface) {
+-				iface->state_info.ready = 0;
+-				iface->state_info.racount = 0;
+-				reschedule_iface(iface, 0);
++				touch_iface(iface);
+ 			}
+ 
+ 		} else if (nh->nlmsg_type == RTM_NEWADDR || nh->nlmsg_type == RTM_DELADDR) {
+@@ -107,9 +105,7 @@ void process_netlink_msg(int sock, struct Interface * ifaces)
+ 
+ 			struct Interface *iface = find_iface_by_index(ifaces, ifaddr->ifa_index);
+ 			if (iface) {
+-				iface->state_info.ready = 0;
+-				iface->state_info.racount = 0;
+-				reschedule_iface(iface, 0);
++				touch_iface(iface);
+ 			}
+ 		}
+ 	}
+diff --git a/radvd.h b/radvd.h
+index 2840d9e..1cebdc4 100644
+--- a/radvd.h
++++ b/radvd.h
+@@ -57,9 +57,10 @@ struct Interface {
+ 	struct Clients *ClientList;
+ 
+ 	struct state_info {
+-		uint32_t racount;
+ 		int ready;	/* Info whether this interface has been initialized successfully */
++		int changed;	/* Info whether this interface's settings have changed */
+ 		int cease_adv;
++		uint32_t racount;
+ 	} state_info;
+ 
+ 	struct properties {
+@@ -282,6 +283,7 @@ void route_init_defaults(struct AdvRoute *, struct Interface *);
+ void rdnss_init_defaults(struct AdvRDNSS *, struct Interface *);
+ void dnssl_init_defaults(struct AdvDNSSL *, struct Interface *);
+ int check_iface(struct Interface *);
++void touch_iface(struct Interface * iface);
+ int setup_iface(int sock, struct Interface *iface);
+ void free_ifaces(struct Interface *ifaces);
+ struct Interface *find_iface_by_index(struct Interface *iface, int index);
+diff --git a/send.c b/send.c
+index df9aa94..ec6b93b 100644
+--- a/send.c
++++ b/send.c
+@@ -106,8 +106,12 @@ int send_ra_forall(int sock, struct Interface *iface, struct in6_addr *dest)
+ 
+ static int ensure_iface_setup(int sock, struct Interface *iface)
+ {
+-	if (!iface->state_info.ready)
++#ifdef HAVE_NETLINK
++	if (iface->state_info.changed)
+ 		setup_iface(sock, iface);
++#else
++	setup_iface(sock, iface);
++#endif
+ 
+ 	return (iface->state_info.ready ? 0 : -1);
+ }
+-- 
+2.0.3
+

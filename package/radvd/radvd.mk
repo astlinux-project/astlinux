@@ -3,10 +3,12 @@
 # radvd
 #
 #############################################################
-RADVD_VERSION = 1.9.9
+RADVD_VERSION = 2.1
 RADVD_SOURCE = radvd-$(RADVD_VERSION).tar.gz
 RADVD_SITE = http://www.litech.org/radvd/dist/
-RADVD_DEPENDENCIES:=flex libdaemon host-flex host-pkg-config
+RADVD_DEPENDENCIES:=flex host-flex host-pkg-config
+# For radvd-drop-check.patch
+RADVD_AUTORECONF = YES
 
 define RADVD_INSTALL_INITSCRIPT
 	$(INSTALL) -D -m 0755 package/radvd/radvd.init $(TARGET_DIR)/etc/init.d/radvd

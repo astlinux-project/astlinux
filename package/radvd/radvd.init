@@ -149,7 +149,7 @@ interface $interface
 start () {
   if [ -f "$config_file" ]; then
     echo "Starting radvd..."
-    radvd
+    radvd --logmethod syslog
   fi
 }
 
