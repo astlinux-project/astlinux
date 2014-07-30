@@ -12,7 +12,7 @@ Released **TBD**
 
 ** System
 
--- igb, version 5.2.9.2, Intel Gigabit Ethernet Network Driver, including Intel i210 and i354 support.
+-- igb, version 5.2.9.3, Intel Gigabit Ethernet Network Driver, including Intel i210 and i354 support.
 
 -- libsodium, version bump to 0.6.1
 
