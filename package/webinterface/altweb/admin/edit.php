@@ -50,6 +50,7 @@ $sys_label = array (
   'ddclient.conf' => 'DDclient Dynamic DNS Config',
   'dnsmasq.conf' => 'DNSmasq Configuration',
   'misdn-init.conf' => 'mISDN Configuration',
+  'msmtp-aliases.conf' => 'SMTP Local Aliases',
   'ntpd.conf' => 'NTP Time Client/Server',
   'sshd.conf' => 'SSH Server sshd_config',
   'ldap.conf' => 'LDAP Client System Defaults',

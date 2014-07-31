@@ -846,6 +846,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/testmail.php');
     exit;
+  } elseif (isset($_POST['submit_smtp_aliases'])) {
+    $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
+    if (is_writable($file = '/mnt/kd/msmtp-aliases.conf')) {
+      header('Location: /admin/edit.php?file='.$file);
+      exit;
+    }
   } elseif (isset($_POST['submit_dns_hosts'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/dnshosts.php');
@@ -1547,6 +1553,11 @@ require_once '../common/header.php';
   $value = getVARdef($db, 'SMTP_PASS', $cur_db);
   $value = htmlspecialchars(RCconfig2string($value));
   putHtml('SMTP Password:<input type="password" size="24" maxlength="64" value="'.$value.'" name="smtp_pass" /></td></tr>');
+  if (is_file('/mnt/kd/msmtp-aliases.conf')) {
+    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+    putHtml('SMTP Local Aliases:');
+    putHtml('<input type="submit" value="Edit Local Aliases" name="submit_smtp_aliases" class="button" /></td></tr>');
+  }
   
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
   
