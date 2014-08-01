@@ -39,7 +39,10 @@ Released **TBD**
 
 -- libcurl (curl) version bump to 7.37.1, bug fixes.
 
--- radvd, version bump to 2.2
+-- msmtp, added configuration support for "aliases" when the file /mnt/kd/msmtp-aliases.conf exists.
+   More Info: http://doc.astlinux.org/userdoc:tt_smtp_aliases
+
+-- radvd, version bump to 2.4
 
 -- rsync, version bump to 3.1.1
 
@@ -51,7 +54,9 @@ Released **TBD**
 
 ** Web Interface
 
--- No change
+-- Network -> Outbound SMTP Mail Relay: SMTP Local Aliases: { Edit Local Aliases }
+   is shown if the file /mnt/kd/msmtp-aliases.conf exists.
+   More Info: http://doc.astlinux.org/userdoc:tt_smtp_aliases
 
 
 Additions for AstLinux 1.1.7:
