@@ -42,7 +42,7 @@ Released **TBD**
 -- msmtp, added configuration support for "aliases" when the file /mnt/kd/msmtp-aliases.conf exists.
    More Info: http://doc.astlinux.org/userdoc:tt_smtp_aliases
 
--- radvd, version bump to 2.4
+-- radvd, version bump to 2.5
 
 -- rsync, version bump to 3.1.1
 
