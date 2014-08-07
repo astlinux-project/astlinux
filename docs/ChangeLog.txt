@@ -34,6 +34,8 @@ Released **TBD**
 
 ** Networking
 
+-- OpenSSL, version bump to 1.0.1i (security fixes: CVE-2014-3512, CVE-2014-3511, CVE-2014-3510, CVE-2014-3507,
+                                     CVE-2014-3506, CVE-2014-3505, CVE-2014-3509, CVE-2014-5139, CVE-2014-3508)
 -- OpenSSL, use 'linux-elf' configure option for i586 and i686 architectures, adds run-time optimizations
    for CPU features including AES-NI.
 
