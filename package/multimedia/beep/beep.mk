@@ -22,4 +22,4 @@ define BEEP_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/bin/beep
 endef
 
-$(eval $(call AUTOTARGETS,package,beep))
+$(eval $(call AUTOTARGETS,package/multimedia,beep))
