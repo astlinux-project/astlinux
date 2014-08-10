@@ -271,7 +271,7 @@ require_once '../common/header.php';
   putHtml('Name:<input type="text" size="32" maxlength="64" name="name" value="'.$ldb['name'].'" />');
   putHtml('</td></tr>');
   putHtml('<tr><td class="dialogText" style="text-align: right;" colspan="3">');
-  putHtml('Email:<input type="text" size="80" maxlength="256" name="email" value="'.$ldb['email'].'" />');
+  putHtml('Email(s):<input type="text" size="80" maxlength="256" name="email" value="'.$ldb['email'].'" />');
   putHtml('</td></tr>');
   putHtml('<tr><td class="dialogText" style="text-align: right;" colspan="3">');
   putHtml('Pager:<input type="text" size="80" maxlength="128" name="pager" value="'.$ldb['pager'].'" />');
@@ -292,7 +292,7 @@ require_once '../common/header.php';
       echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Password", "</td>";
     }
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Name", "</td>";
-    echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Email", "</td>";
+    echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Email(s)", "</td>";
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Pager", "</td>";
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Delete", "</td>";
     for ($i = 0; $i < $n; $i++) {
