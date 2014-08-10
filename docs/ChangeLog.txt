@@ -46,6 +46,8 @@ Released **TBD**
 
 -- dnsmasq, version bump to 2.71, automatically set 'proxy-dnssec' when DNSCrypt is enabled.
 
+-- stunnel, version bump to 5.03
+
 -- radvd, version bump to 2.5
 
 -- rsync, version bump to 3.1.1
