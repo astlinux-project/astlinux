@@ -54,6 +54,8 @@ Released **TBD**
 
 -- Asterisk 1.8.29.0 (version bump) and 11.11.0 (version bump)
 
+-- Asterisk Voicemail, back-port Asterisk 13 patch to support multiple email entries separated by |'s
+
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
 ** Web Interface
@@ -61,6 +63,9 @@ Released **TBD**
 -- Network -> Outbound SMTP Mail Relay: SMTP Local Aliases: { Edit Local Aliases }
    is shown if the file /mnt/kd/msmtp-aliases.conf exists.
    More Info: http://doc.astlinux.org/userdoc:tt_smtp_aliases
+
+-- Users tab, add support for multiple email entries separated by |'s, longer email entries
+   and sanitize input more strictly.
 
 
 Additions for AstLinux 1.1.7:
