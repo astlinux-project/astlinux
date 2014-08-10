@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2012 Lonnie Abelbeck
+// Copyright (C) 2008-2014 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -9,6 +9,7 @@
 // users.php for AstLinux
 // 07-29-2008
 // 09-05-2012, Support Prefs option to remove user VM data when mailbox is deleted
+// 08-09-2014, Support |'s in email, longer email and sanitize input more strictly
 //
 // System location of the asterisk voicemail.conf
 $VOICEMAILCONF = '/etc/asterisk/voicemail.conf';
@@ -145,9 +146,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (preg_match('/^[0-9][0-9]*$/', $mailbox)) {
       if (preg_match('/^[-*0-9][*0-9]*$/', $password)) {
         $name = tuq($_POST['name']);
-        $email = tuq($_POST['email']);
+        $name = preg_replace('/[,]+/', '', $name);
+        $email = trim(tuq($_POST['email']), '|, ');
+        $email = preg_replace('/[|, ]+/', '|', $email);
         $pager = tuq($_POST['pager']);
-        $options = tuq($_POST['options']);
+        $pager = preg_replace('/[|, ]+/', '', $pager);
+        $options = trim(tuq($_POST['options']), '|, ');
+        $options = preg_replace('/[|,]+/', '|', $options);
         if (addVMmailbox($context, $mailbox, $password, $name, $email, $pager, $options, $VOICEMAILCONF) == 0) {
           $result = 10;
         } else {
@@ -265,10 +270,11 @@ require_once '../common/header.php';
   putHtml('</td><td class="dialogText" style="text-align: right;">');
   putHtml('Name:<input type="text" size="32" maxlength="64" name="name" value="'.$ldb['name'].'" />');
   putHtml('</td></tr>');
-  putHtml('<tr><td class="dialogText" style="text-align: right;" colspan="2">');
-  putHtml('Email:<input type="text" size="32" maxlength="64" name="email" value="'.$ldb['email'].'" />');
-  putHtml('</td><td class="dialogText" style="text-align: right;">');
-  putHtml('Pager:<input type="text" size="32" maxlength="64" name="pager" value="'.$ldb['pager'].'" />');
+  putHtml('<tr><td class="dialogText" style="text-align: right;" colspan="3">');
+  putHtml('Email:<input type="text" size="80" maxlength="256" name="email" value="'.$ldb['email'].'" />');
+  putHtml('</td></tr>');
+  putHtml('<tr><td class="dialogText" style="text-align: right;" colspan="3">');
+  putHtml('Pager:<input type="text" size="80" maxlength="128" name="pager" value="'.$ldb['pager'].'" />');
   putHtml('</td></tr>');
   putHtml('<tr><td class="dialogText" style="text-align: right;" colspan="3">');
   putHtml('Options:<input type="text" size="80" maxlength="128" name="options" value="'.$ldb['opts'].'" />');
@@ -297,7 +303,7 @@ require_once '../common/header.php';
         echo '<td>', $db['data'][$i]['pass'], '</td>';
       }
       echo '<td>', $db['data'][$i]['name'], '</td>';
-      echo '<td>', $db['data'][$i]['email'], '</td>';
+      echo '<td>', str_replace('|', '<br />', $db['data'][$i]['email']), '</td>';
       echo '<td>', $db['data'][$i]['pager'], '</td>';
       echo '<td style="text-align: center;">', '<input type="checkbox" name="delete[]" value="', $db['data'][$i]['mbox'], '" />', '</td>';
       if (isset($db['data'][$i]['opts']) && $db['data'][$i]['opts'] !== '') {
