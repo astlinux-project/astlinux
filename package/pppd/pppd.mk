@@ -4,12 +4,12 @@
 #
 #############################################################
 
-PPPD_VERSION = 2.4.5
+PPPD_VERSION = 2.4.7
 PPPD_SOURCE = ppp-$(PPPD_VERSION).tar.gz
 PPPD_SITE = ftp://ftp.samba.org/pub/ppp
+
+PPPD_INSTALL_STAGING = YES
 PPPD_TARGET_BINS = chat pppd pppdump pppstats
-PPPD_MANPAGES = $(if $(BR2_HAVE_DOCUMENTATION),chat pppd pppdump pppstats)
-PPPD_RADIUS_MANPAGES = $(if $(BR2_HAVE_DOCUMENTATION),pppd-radattr pppd-radius)
 PPPD_RADIUS_CONF = dictionary dictionary.ascend dictionary.compat \
 			dictionary.merit dictionary.microsoft \
 			issue port-id-map realms server radiusclient.conf
@@ -26,7 +26,7 @@ endif
 define PPPD_CONFIGURE_CMDS
 	$(SED) 's/FILTER=y/#FILTER=y/' $(PPPD_DIR)/pppd/Makefile.linux
 	$(SED) 's/ifneq ($$(wildcard \/usr\/include\/pcap-bpf.h),)/ifdef FILTER/' $(PPPD_DIR)/*/Makefile.linux
-	( cd $(@D); ./configure )
+	( cd $(@D); ./configure --prefix=/usr )
 endef
 
 define PPPD_BUILD_CMDS
@@ -39,12 +39,6 @@ define PPPD_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/sbin/pppoe-discovery
 	rm -rf $(TARGET_DIR)/usr/lib/pppd
 	rm -rf $(TARGET_DIR)/etc/ppp/radius
-	for m in $(PPPD_MANPAGES); do \
-		rm -f $(TARGET_DIR)/usr/share/man/man8/$$m.8; \
-	done
-	for m in $(PPPD_RADIUS_MANPAGES); do \
-		rm -f $(TARGET_DIR)/usr/share/man/man8/$$m.8; \
-	done
 endef
 
 ifeq ($(BR2_PACKAGE_PPPD_RADIUS),y)
@@ -65,10 +59,6 @@ define PPPD_INSTALL_RADIUS
 		$(TARGET_DIR)/etc/ppp/radius/radiusclient.conf
 	$(SED) 's:/etc/radiusclient:/etc/ppp/radius:g' \
 		$(TARGET_DIR)/etc/ppp/radius/*
-	for m in $(PPPD_RADIUS_MANPAGES); do \
-		$(INSTALL) -m 644 -D $(PPPD_DIR)/pppd/plugins/radius/$$m.8 \
-			$(TARGET_DIR)/usr/share/man/man8/$$m.8; \
-	done
 endef
 endif
 
@@ -96,11 +86,11 @@ define PPPD_INSTALL_TARGET_CMDS
 	$(INSTALL) -D $(PPPD_DIR)/pppd/plugins/pppol2tp/pppol2tp.so \
 		$(TARGET_DIR)/usr/lib/pppd/$(PPPD_VERSION)/pppol2tp.so
 	$(PPPD_INSTALL_RADIUS)
-	for m in $(PPPD_MANPAGES); do \
-		$(INSTALL) -m 644 -D $(PPPD_DIR)/$$m/$$m.8 \
-			$(TARGET_DIR)/usr/share/man/man8/$$m.8; \
-	done
 	ln -snf /tmp/etc/ppp $(TARGET_DIR)/etc/ppp
+endef
+
+define PPPD_INSTALL_STAGING_CMDS
+	$(MAKE) INSTROOT=$(STAGING_DIR)/ -C $(@D) $(PPPD_MAKE_OPT) install-devel
 endef
 
 $(eval $(call GENTARGETS,package,pppd))
