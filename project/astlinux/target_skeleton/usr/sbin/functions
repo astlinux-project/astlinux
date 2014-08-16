@@ -61,25 +61,6 @@ gen_kd_files()
   fi
 }
 
-errorled_net5501()
-{
-  local GPIO=6 sys_gpio="/sys/class/gpio" value
-
-  case $1 in
-    off|low|0) value=0 ;;
-    *) value=1 ;;
-  esac
-
-  if [ -e "${sys_gpio}/export" ]; then
-    echo $GPIO > "${sys_gpio}/export"
-    echo "out" > "${sys_gpio}/GPIO${GPIO}/direction"
-    echo $value > "${sys_gpio}/GPIO${GPIO}/value"
-    echo $GPIO > "${sys_gpio}/unexport"
-  else
-    echo "errorled_net5501: No '${sys_gpio}/export' exixts." >&2
-  fi
-}
-
 # main
 
 case $1 in
@@ -91,15 +72,7 @@ gen_kd_files)
   fi
   gen_kd_files "$2"
   ;;
-  
-errorled_net5501)
-  if [ -z "$2" ]; then
-    echo "Usage: /usr/sbin/functions errorled_net5501 on|off"
-    exit 1
-  fi
-  errorled_net5501 "$2"
-  ;;
-  
+
 *)
   echo "Usage: /usr/sbin/functions function_selector [args]"
   exit 1

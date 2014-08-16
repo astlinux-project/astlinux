@@ -182,6 +182,7 @@ $fstab_var
 
   net4801)
     modprobe leds_net48xx
+    sleep 1
     echo 1 >/sys/class/leds/net48xx::error/brightness
     ;;
 
@@ -190,24 +191,26 @@ $fstab_var
     modprobe leds_wrap
     modprobe ledtrig-heartbeat
     modprobe ledtrig-netdev
+    sleep 1
     echo 1 >/sys/class/leds/wrap::error/brightness
     ;;
 
   net5501)
-    # CS5535/CS5536 high-res timer (MFGPT) events
-    #modprobe cs5535-clockevt irq=6
-
+    modprobe cs5535_mfd
     modprobe gpio_cs5535
-    /usr/sbin/functions errorled_net5501 on
+    modprobe leds_net5501
+    sleep 1
+    echo 1 >/sys/class/leds/error/brightness
     ;;
 
   alix)
-    # CS5535/CS5536 high-res timer (MFGPT) events
-    #modprobe cs5535-clockevt irq=5
-
+    modprobe cs5535_mfd
     modprobe gpio_cs5535
+    modprobe leds_gpio
     modprobe ledtrig-heartbeat
     modprobe ledtrig-netdev
+    sleep 1
+    echo 1 >/sys/class/leds/alix:1/brightness
     echo 1 >/sys/class/leds/alix:2/brightness
     ;;
 
