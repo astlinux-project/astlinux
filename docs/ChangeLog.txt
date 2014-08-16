@@ -5,12 +5,14 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.1.8:
+Additions for AstLinux 1.2.0:
 =============================
 
 Released **TBD**
 
 ** System
+
+-- Linux Kernel 3.2.62 (major bump)
 
 -- igb, version 5.2.9.3, Intel Gigabit Ethernet Network Driver, including Intel i210 and i354 support.
 
