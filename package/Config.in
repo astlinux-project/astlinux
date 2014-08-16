@@ -167,7 +167,6 @@ endmenu
 menu "Hardware handling"
 
 comment "Network Interface Kernel Drivers"
-source "package/e1000/Config.in"
 source "package/e1000e/Config.in"
 source "package/igb/Config.in"
 source "package/r8168/Config.in"

@@ -1,0 +1,30 @@
+--- wanpipe-7.0.10/patches/kdrivers/src/wanrouter/af_wanpipe.c.orig	2014-08-14 17:16:30.000000000 -0500
++++ wanpipe-7.0.10/patches/kdrivers/src/wanrouter/af_wanpipe.c	2014-08-14 17:29:20.000000000 -0500
+@@ -1736,13 +1736,7 @@
+ 	}	
+ 
+ 	read_lock(&wanpipe_sklist_lock);
+-#if defined(LINUX_3_0)
+-	sk_for_each(sk, &wanpipe_sklist) {
+-#elif defined(LINUX_2_6)
+ 	sk_for_each(sk, node, &wanpipe_sklist) {
+-#else
+-	for (sk = wanpipe_sklist; sk; sk = sk->next) {
+-#endif
+ 		switch (msg) {
+ 		case NETDEV_DOWN:
+ 		case NETDEV_UNREGISTER:
+--- wanpipe-7.0.10/patches/kdrivers/src/wanrouter/af_wanpipe_datascope.c.orig	2014-08-14 17:16:51.000000000 -0500
++++ wanpipe-7.0.10/patches/kdrivers/src/wanrouter/af_wanpipe_datascope.c	2014-08-14 17:28:04.000000000 -0500
+@@ -152,11 +152,7 @@
+ #ifdef LINUX_2_6
+ 	{
+ 	struct hlist_node *node;
+-#ifdef LINUX_3_0
+-	sk_for_each(parent_sk, &wanpipe_parent_sklist) {
+-#else
+ 	sk_for_each(parent_sk, node, &wanpipe_parent_sklist) {
+-#endif
+ 		if (SK_PRIV((parent_sk))->dev == dev) {
+ 			break;
+ 		}

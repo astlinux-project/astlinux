@@ -197,7 +197,7 @@ $fstab_var
     # CS5535/CS5536 high-res timer (MFGPT) events
     #modprobe cs5535-clockevt irq=6
 
-    modprobe cs5535_gpio
+    modprobe gpio_cs5535
     /usr/sbin/functions errorled_net5501 on
     ;;
 
@@ -205,7 +205,7 @@ $fstab_var
     # CS5535/CS5536 high-res timer (MFGPT) events
     #modprobe cs5535-clockevt irq=5
 
-    modprobe leds_alix2
+    modprobe gpio_cs5535
     modprobe ledtrig-heartbeat
     modprobe ledtrig-netdev
     echo 1 >/sys/class/leds/alix:2/brightness

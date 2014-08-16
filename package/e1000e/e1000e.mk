@@ -27,12 +27,12 @@ define E1000E_CONFIGURE_CMDS
 endef
 
 define E1000E_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 644 -D $(@D)/src/e1000e.ko $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/kernel/drivers/net/e1000e/e1000e.ko
+	$(INSTALL) -m 644 -D $(@D)/src/e1000e.ko $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/kernel/drivers/net/ethernet/intel/e1000e/e1000e.ko
 	$(HOST_DIR)/usr/sbin/depmod -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) -r $(LINUX_VERSION_PROBED)
 endef
 
 define E1000E_UNINSTALL_TARGET_CMDS
-	rm -rf $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/kernel/drivers/net/e1000e/e1000e.ko
+	rm -rf $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/kernel/drivers/net/ethernet/intel/e1000e/e1000e.ko
 	$(HOST_DIR)/usr/sbin/depmod -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) -r $(LINUX_VERSION_PROBED)
 endef
 

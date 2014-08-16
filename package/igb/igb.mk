@@ -27,12 +27,12 @@ define IGB_CONFIGURE_CMDS
 endef
 
 define IGB_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 644 -D $(@D)/src/igb.ko $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/kernel/drivers/net/igb/igb.ko
+	$(INSTALL) -m 644 -D $(@D)/src/igb.ko $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/kernel/drivers/net/ethernet/intel/igb/igb.ko
 	$(HOST_DIR)/usr/sbin/depmod -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) -r $(LINUX_VERSION_PROBED)
 endef
 
 define IGB_UNINSTALL_TARGET_CMDS
-	rm -rf $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/kernel/drivers/net/igb/igb.ko
+	rm -rf $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/kernel/drivers/net/ethernet/intel/igb/igb.ko
 	$(HOST_DIR)/usr/sbin/depmod -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) -r $(LINUX_VERSION_PROBED)
 endef
 

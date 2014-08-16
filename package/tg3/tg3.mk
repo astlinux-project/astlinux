@@ -17,7 +17,7 @@ TG3_MAKE_OPT += \
 	KVER=$(LINUX_VERSION_PROBED) \
 	BCMPROC=$(KERNEL_ARCH) \
 	BCMCFGDIR=$(LINUX_DIR) \
-	BCMMODDIR=$(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/kernel/drivers/net \
+	BCMMODDIR=$(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/kernel/drivers/net/ethernet/broadcom \
 	BCMSRCDIR=$(LINUX_DIR) \
 	ARCH=$(KERNEL_ARCH)
 
@@ -26,12 +26,12 @@ define TG3_CONFIGURE_CMDS
 endef
 
 define TG3_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 644 -D $(@D)/tg3.ko $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/kernel/drivers/net/tg3.ko
+	$(INSTALL) -m 644 -D $(@D)/tg3.ko $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/kernel/drivers/net/ethernet/broadcom/tg3.ko
 	$(HOST_DIR)/usr/sbin/depmod -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) -r $(LINUX_VERSION_PROBED)
 endef
 
 define TG3_UNINSTALL_TARGET_CMDS
-	rm -f $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/kernel/drivers/net/tg3.ko
+	rm -f $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/kernel/drivers/net/ethernet/broadcom/tg3.ko
 	$(HOST_DIR)/usr/sbin/depmod -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) -r $(LINUX_VERSION_PROBED)
 endef
 

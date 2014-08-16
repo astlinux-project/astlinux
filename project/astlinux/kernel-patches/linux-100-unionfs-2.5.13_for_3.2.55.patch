@@ -1,8 +1,8 @@
 diff --git a/Documentation/filesystems/00-INDEX b/Documentation/filesystems/00-INDEX
-index 4303614..5ade4a8 100644
+index 8c624a1..4aa288b 100644
 --- a/Documentation/filesystems/00-INDEX
 +++ b/Documentation/filesystems/00-INDEX
-@@ -112,6 +112,8 @@ udf.txt
+@@ -110,6 +110,8 @@ udf.txt
  	- info and mount options for the UDF filesystem.
  ufs.txt
  	- info on the ufs filesystem.
@@ -532,10 +532,10 @@ index 0000000..1adde69
 +
 +For more information, see <http://unionfs.filesystems.org/>.
 diff --git a/MAINTAINERS b/MAINTAINERS
-index d0cdb2f..eacc093 100644
+index 8659eba..da599e0 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -5771,6 +5771,14 @@ F:	Documentation/cdrom/
+@@ -6756,6 +6756,14 @@ F:	Documentation/cdrom/
  F:	drivers/cdrom/cdrom.c
  F:	include/linux/cdrom.h
  
@@ -551,10 +551,10 @@ index d0cdb2f..eacc093 100644
  M:	Artem Bityutskiy <dedekind1@gmail.com>
  W:	http://www.linux-mtd.infradead.org/
 diff --git a/fs/Kconfig b/fs/Kconfig
-index 5f85b59..7b4501b 100644
+index 6ad58a5..4699ff1 100644
 --- a/fs/Kconfig
 +++ b/fs/Kconfig
-@@ -169,6 +169,7 @@ if MISC_FILESYSTEMS
+@@ -194,6 +194,7 @@ if MISC_FILESYSTEMS
  source "fs/adfs/Kconfig"
  source "fs/affs/Kconfig"
  source "fs/ecryptfs/Kconfig"
@@ -563,10 +563,10 @@ index 5f85b59..7b4501b 100644
  source "fs/hfsplus/Kconfig"
  source "fs/befs/Kconfig"
 diff --git a/fs/Makefile b/fs/Makefile
-index e6ec1d3..787332e 100644
+index d2c3353..6fb7641 100644
 --- a/fs/Makefile
 +++ b/fs/Makefile
-@@ -84,6 +84,7 @@ obj-$(CONFIG_ISO9660_FS)	+= isofs/
+@@ -82,6 +82,7 @@ obj-$(CONFIG_ISO9660_FS)	+= isofs/
  obj-$(CONFIG_HFSPLUS_FS)	+= hfsplus/ # Before hfs to find wrapped HFS+
  obj-$(CONFIG_HFS_FS)		+= hfs/
  obj-$(CONFIG_ECRYPT_FS)		+= ecryptfs/
@@ -575,22 +575,73 @@ index e6ec1d3..787332e 100644
  obj-$(CONFIG_NFS_FS)		+= nfs/
  obj-$(CONFIG_EXPORTFS)		+= exportfs/
 diff --git a/fs/namei.c b/fs/namei.c
-index 868d0cb..b5e09e1 100644
+index 9680cef..46b6904b 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -386,6 +386,7 @@ void release_open_intent(struct nameidata *nd)
- 	else
- 		fput(nd->intent.open.file);
+@@ -492,6 +492,7 @@ void release_open_intent(struct nameidata *nd)
+ 			fput(file);
+ 	}
  }
 +EXPORT_SYMBOL_GPL(release_open_intent);
  
- static inline struct dentry *
- do_revalidate(struct dentry *dentry, struct nameidata *nd)
+ static inline int d_revalidate(struct dentry *dentry, struct nameidata *nd)
+ {
+@@ -1805,6 +1806,42 @@ struct dentry *lookup_one_len(const char *name, struct dentry *base, int len)
+ 	return __lookup_hash(&this, base, NULL);
+ }
+ 
++/* pass nameidata from caller (useful for NFS) */
++struct dentry *lookup_one_len_nd(const char *name, struct dentry *base,
++				 int len, struct nameidata *nd)
++{
++	struct qstr this;
++	unsigned long hash;
++	unsigned int c;
++
++	WARN_ON_ONCE(!mutex_is_locked(&base->d_inode->i_mutex));
++
++	this.name = name;
++	this.len = len;
++	if (!len)
++		return ERR_PTR(-EACCES);
++
++	hash = init_name_hash();
++	while (len--) {
++		c = *(const unsigned char *)name++;
++		if (c == '/' || c == '\0')
++			return ERR_PTR(-EACCES);
++		hash = partial_name_hash(c, hash);
++	}
++	this.hash = end_name_hash(hash);
++	/*
++	 * See if the low-level filesystem might want
++	 * to use its own hash..
++	 */
++	if (base->d_flags & DCACHE_OP_HASH) {
++		int err = base->d_op->d_hash(base, base->d_inode, &this);
++		if (err < 0)
++			return ERR_PTR(err);
++	}
++
++	return __lookup_hash(&this, base, nd);
++}
++
+ int user_path_at_empty(int dfd, const char __user *name, unsigned flags,
+ 		 struct path *path, int *empty)
+ {
+@@ -3385,6 +3422,7 @@ EXPORT_SYMBOL(get_write_access); /* binfmt_aout */
+ EXPORT_SYMBOL(getname);
+ EXPORT_SYMBOL(lock_rename);
+ EXPORT_SYMBOL(lookup_one_len);
++EXPORT_SYMBOL(lookup_one_len_nd);
+ EXPORT_SYMBOL(page_follow_link_light);
+ EXPORT_SYMBOL(page_put_link);
+ EXPORT_SYMBOL(page_readlink);
 diff --git a/fs/splice.c b/fs/splice.c
-index 188f61a..b6216deb 100644
+index 58ab918..de1688c 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
-@@ -1104,8 +1104,8 @@ EXPORT_SYMBOL(generic_splice_sendpage);
+@@ -1094,8 +1094,8 @@ EXPORT_SYMBOL(generic_splice_sendpage);
  /*
   * Attempt to initiate a splice from pipe to file.
   */
@@ -601,7 +652,7 @@ index 188f61a..b6216deb 100644
  {
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *,
  				loff_t *, size_t, unsigned int);
-@@ -1128,13 +1128,14 @@ static long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
+@@ -1118,13 +1118,14 @@ static long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
  
  	return splice_write(pipe, out, ppos, len, flags);
  }
@@ -619,7 +670,7 @@ index 188f61a..b6216deb 100644
  {
  	ssize_t (*splice_read)(struct file *, loff_t *,
  			       struct pipe_inode_info *, size_t, unsigned int);
-@@ -1154,6 +1155,7 @@ static long do_splice_to(struct file *in, loff_t *ppos,
+@@ -1144,6 +1145,7 @@ static long do_splice_to(struct file *in, loff_t *ppos,
  
  	return splice_read(in, ppos, pipe, len, flags);
  }
@@ -627,7 +678,7 @@ index 188f61a..b6216deb 100644
  
  /**
   * splice_direct_to_actor - splices data directly between two non-pipes
-@@ -1223,7 +1225,7 @@ ssize_t splice_direct_to_actor(struct file *in, struct splice_desc *sd,
+@@ -1213,7 +1215,7 @@ ssize_t splice_direct_to_actor(struct file *in, struct splice_desc *sd,
  		size_t read_len;
  		loff_t pos = sd->pos, prev_pos = pos;
  
@@ -636,7 +687,7 @@ index 188f61a..b6216deb 100644
  		if (unlikely(ret <= 0))
  			goto out_release;
  
-@@ -1282,8 +1284,8 @@ static int direct_splice_actor(struct pipe_inode_info *pipe,
+@@ -1272,8 +1274,8 @@ static int direct_splice_actor(struct pipe_inode_info *pipe,
  {
  	struct file *file = sd->u.file;
  
@@ -647,7 +698,7 @@ index 188f61a..b6216deb 100644
  }
  
  /**
-@@ -1368,7 +1370,7 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+@@ -1358,7 +1360,7 @@ static long do_splice(struct file *in, loff_t __user *off_in,
  		} else
  			off = &out->f_pos;
  
@@ -656,7 +707,7 @@ index 188f61a..b6216deb 100644
  
  		if (off_out && copy_to_user(off_out, off, sizeof(loff_t)))
  			ret = -EFAULT;
-@@ -1388,7 +1390,7 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+@@ -1378,7 +1380,7 @@ static long do_splice(struct file *in, loff_t __user *off_in,
  		} else
  			off = &in->f_pos;
  
@@ -666,7 +717,7 @@ index 188f61a..b6216deb 100644
  		if (off_in && copy_to_user(off_in, off, sizeof(loff_t)))
  			ret = -EFAULT;
 diff --git a/fs/stack.c b/fs/stack.c
-index 4a6f7f4..7eeef12 100644
+index 9c11519..9e7dbfe 100644
 --- a/fs/stack.c
 +++ b/fs/stack.c
 @@ -1,8 +1,20 @@
@@ -723,11 +774,11 @@ index 0000000..f3c1ac4
 +	  If you say Y here, you can turn on debugging output from Unionfs.
 diff --git a/fs/unionfs/Makefile b/fs/unionfs/Makefile
 new file mode 100644
-index 0000000..ba7546a
+index 0000000..df0f665
 --- /dev/null
 +++ b/fs/unionfs/Makefile
 @@ -0,0 +1,17 @@
-+UNIONFS_VERSION="2.5.11 (for 2.6.35.14)"
++UNIONFS_VERSION="2.5.13 (for 3.2.55)"
 +
 +EXTRA_CFLAGS += -DUNIONFS_VERSION=\"$(UNIONFS_VERSION)\"
 +
@@ -746,12 +797,12 @@ index 0000000..ba7546a
 +endif
 diff --git a/fs/unionfs/commonfops.c b/fs/unionfs/commonfops.c
 new file mode 100644
-index 0000000..0d2146c
+index 0000000..a06bf38
 --- /dev/null
 +++ b/fs/unionfs/commonfops.c
-@@ -0,0 +1,899 @@
+@@ -0,0 +1,901 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005-2006 Junjiro Okajima
@@ -760,8 +811,8 @@ index 0000000..0d2146c
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -1190,31 +1241,36 @@ index 0000000..0d2146c
 +}
 +
 +/* unionfs_open helper function: open a directory */
-+static int __open_dir(struct inode *inode, struct file *file)
++static int __open_dir(struct inode *inode, struct file *file,
++		      struct dentry *parent)
 +{
 +	struct dentry *lower_dentry;
 +	struct file *lower_file;
 +	int bindex, bstart, bend;
-+	struct vfsmount *mnt;
++	struct vfsmount *lower_mnt;
++	struct dentry *dentry = file->f_path.dentry;
 +
-+	bstart = fbstart(file) = dbstart(file->f_path.dentry);
-+	bend = fbend(file) = dbend(file->f_path.dentry);
++	bstart = fbstart(file) = dbstart(dentry);
++	bend = fbend(file) = dbend(dentry);
 +
 +	for (bindex = bstart; bindex <= bend; bindex++) {
 +		lower_dentry =
-+			unionfs_lower_dentry_idx(file->f_path.dentry, bindex);
++			unionfs_lower_dentry_idx(dentry, bindex);
 +		if (!lower_dentry)
 +			continue;
 +
 +		dget(lower_dentry);
-+		unionfs_mntget(file->f_path.dentry, bindex);
-+		mnt = unionfs_lower_mnt_idx(file->f_path.dentry, bindex);
-+		lower_file = dentry_open(lower_dentry, mnt, file->f_flags,
++		lower_mnt = unionfs_mntget(dentry, bindex);
++		if (!lower_mnt)
++			lower_mnt = unionfs_mntget(parent, bindex);
++		lower_file = dentry_open(lower_dentry, lower_mnt, file->f_flags,
 +					 current_cred());
 +		if (IS_ERR(lower_file))
 +			return PTR_ERR(lower_file);
 +
 +		unionfs_set_lower_file_idx(file, bindex, lower_file);
++		if (!unionfs_lower_mnt_idx(dentry, bindex))
++			unionfs_set_lower_mnt_idx(dentry, bindex, lower_mnt);
 +
 +		/*
 +		 * The branchget goes after the open, because otherwise
@@ -1234,18 +1290,20 @@ index 0000000..0d2146c
 +	struct file *lower_file;
 +	int lower_flags;
 +	int bindex, bstart, bend;
++	struct dentry *dentry = file->f_path.dentry;
++	struct vfsmount *lower_mnt;
 +
-+	lower_dentry = unionfs_lower_dentry(file->f_path.dentry);
++	lower_dentry = unionfs_lower_dentry(dentry);
 +	lower_flags = file->f_flags;
 +
-+	bstart = fbstart(file) = dbstart(file->f_path.dentry);
-+	bend = fbend(file) = dbend(file->f_path.dentry);
++	bstart = fbstart(file) = dbstart(dentry);
++	bend = fbend(file) = dbend(dentry);
 +
 +	/*
 +	 * check for the permission for lower file.  If the error is
 +	 * COPYUP_ERR, copyup the file.
 +	 */
-+	if (lower_dentry->d_inode && is_robranch(file->f_path.dentry)) {
++	if (lower_dentry->d_inode && is_robranch(dentry)) {
 +		/*
 +		 * if the open will change the file, copy it up otherwise
 +		 * defer it.
@@ -1280,11 +1338,9 @@ index 0000000..0d2146c
 +	 * dentry_open will decrement mnt refcnt if err.
 +	 * otherwise fput() will do an mntput() for us upon file close.
 +	 */
-+	unionfs_mntget(file->f_path.dentry, bstart);
-+	lower_file =
-+		dentry_open(lower_dentry,
-+			    unionfs_lower_mnt_idx(file->f_path.dentry, bstart),
-+			    lower_flags, current_cred());
++	lower_mnt = unionfs_mntget(dentry, bstart);
++	lower_file = dentry_open(lower_dentry, lower_mnt, lower_flags,
++				 current_cred());
 +	if (IS_ERR(lower_file))
 +		return PTR_ERR(lower_file);
 +
@@ -1353,7 +1409,7 @@ index 0000000..0d2146c
 +	 * these lower file structs
 +	 */
 +	if (S_ISDIR(inode->i_mode))
-+		err = __open_dir(inode, file);	/* open a dir */
++		err = __open_dir(inode, file, parent); /* open a dir */
 +	else
 +		err = __open_file(inode, file, parent);	/* open a file */
 +
@@ -1403,7 +1459,7 @@ index 0000000..0d2146c
 +	struct dentry *dentry = file->f_path.dentry;
 +	struct dentry *parent;
 +	int bindex, bstart, bend;
-+	int fgen, err = 0;
++	int err = 0;
 +
 +	/*
 +	 * Since mm/memory.c:might_fault() (under PROVE_LOCKING) was
@@ -1439,7 +1495,6 @@ index 0000000..0d2146c
 +	inodeinfo = UNIONFS_I(inode);
 +
 +	/* fput all the lower files */
-+	fgen = atomic_read(&fileinfo->generation);
 +	bstart = fbstart(file);
 +	bend = fbend(file);
 +
@@ -1494,12 +1549,10 @@ index 0000000..0d2146c
 +		goto out;
 +	if (lower_file->f_op->unlocked_ioctl) {
 +		err = lower_file->f_op->unlocked_ioctl(lower_file, cmd, arg);
-+	} else if (lower_file->f_op->ioctl) {
-+		lock_kernel();
-+		err = lower_file->f_op->ioctl(
-+			lower_file->f_path.dentry->d_inode,
-+			lower_file, cmd, arg);
-+		unlock_kernel();
++#ifdef CONFIG_COMPAT
++	} else if (lower_file->f_op->compat_ioctl) {
++		err = lower_file->f_op->compat_ioctl(lower_file, cmd, arg);
++#endif
 +	}
 +
 +out:
@@ -1651,12 +1704,12 @@ index 0000000..0d2146c
 +}
 diff --git a/fs/unionfs/copyup.c b/fs/unionfs/copyup.c
 new file mode 100644
-index 0000000..37c2654
+index 0000000..0d7503b
 --- /dev/null
 +++ b/fs/unionfs/copyup.c
-@@ -0,0 +1,896 @@
+@@ -0,0 +1,899 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005-2006 Junjiro Okajima
@@ -1665,8 +1718,8 @@ index 0000000..37c2654
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -1982,8 +2035,11 @@ index 0000000..37c2654
 +
 +	kfree(buf);
 +
++#if 0
++	/* XXX: code no longer needed? */
 +	if (!err)
 +		err = output_file->f_op->fsync(output_file, 0);
++#endif
 +
 +	if (err)
 +		goto out_close_out;
@@ -2553,15 +2609,15 @@ index 0000000..37c2654
 +}
 diff --git a/fs/unionfs/debug.c b/fs/unionfs/debug.c
 new file mode 100644
-index 0000000..f34e512
+index 0000000..cc15d60
 --- /dev/null
 +++ b/fs/unionfs/debug.c
-@@ -0,0 +1,533 @@
+@@ -0,0 +1,549 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -3002,6 +3058,22 @@ index 0000000..f34e512
 +	}
 +}
 +
++static unsigned int __mnt_get_count(struct vfsmount *mnt)
++{
++#ifdef CONFIG_SMP
++	unsigned int count = 0;
++	int cpu;
++
++	for_each_possible_cpu(cpu) {
++		count += per_cpu_ptr(mnt->mnt_pcp, cpu)->mnt_count;
++	}
++
++	return count;
++#else
++	return mnt->mnt_count;
++#endif
++}
++
 +/* useful to track vfsmount leaks that could cause EBUSY on unmount */
 +void __show_branch_counts(const struct super_block *sb,
 +			  const char *file, const char *fxn, int line)
@@ -3016,7 +3088,7 @@ index 0000000..f34e512
 +		else
 +			mnt = NULL;
 +		printk(KERN_CONT "%d:",
-+		       (mnt ? atomic_read(&mnt->mnt_count) : -99));
++		       (mnt ? __mnt_get_count(mnt) : -99));
 +	}
 +	printk(KERN_CONT "%s:%s:%d\n", file, fxn, line);
 +}
@@ -3092,12 +3164,12 @@ index 0000000..f34e512
 +}
 diff --git a/fs/unionfs/dentry.c b/fs/unionfs/dentry.c
 new file mode 100644
-index 0000000..1be7946
+index 0000000..3bf8845
 --- /dev/null
 +++ b/fs/unionfs/dentry.c
-@@ -0,0 +1,397 @@
+@@ -0,0 +1,409 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005-2006 Junjiro Okajima
@@ -3106,8 +3178,8 @@ index 0000000..1be7946
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -3290,6 +3362,9 @@ index 0000000..1be7946
 +	bend = dbend(dentry);
 +	BUG_ON(bstart == -1);
 +	for (bindex = bstart; bindex <= bend; bindex++) {
++		int err;
++		struct nameidata lower_nd;
++
 +		lower_dentry = unionfs_lower_dentry_idx(dentry, bindex);
 +		if (!lower_dentry || !lower_dentry->d_op
 +		    || !lower_dentry->d_op->d_revalidate)
@@ -3302,8 +3377,14 @@ index 0000000..1be7946
 +		 * invariants).  We will open lower files as and when needed
 +		 * later on.
 +		 */
-+		if (!lower_dentry->d_op->d_revalidate(lower_dentry, NULL))
++		err = init_lower_nd(&lower_nd, LOOKUP_OPEN);
++		if (unlikely(err < 0)) {
 +			valid = false;
++			break;
++		}
++		if (!lower_dentry->d_op->d_revalidate(lower_dentry, &lower_nd))
++			valid = false;
++		release_lower_nd(&lower_nd, err);
 +	}
 +
 +	if (!dentry->d_inode ||
@@ -3404,11 +3485,14 @@ index 0000000..1be7946
 +}
 +
 +static int unionfs_d_revalidate(struct dentry *dentry,
-+				struct nameidata *nd_unused)
++				struct nameidata *nd)
 +{
 +	bool valid = true;
 +	int err = 1;		/* 1 means valid for the VFS */
 +	struct dentry *parent;
++
++	if (nd && nd->flags & LOOKUP_RCU)
++		return -ECHILD;
 +
 +	unionfs_read_lock(dentry->d_sb, UNIONFS_SMUTEX_CHILD);
 +	parent = unionfs_lock_parent(dentry, UNIONFS_DMUTEX_PARENT);
@@ -3495,12 +3579,12 @@ index 0000000..1be7946
 +};
 diff --git a/fs/unionfs/dirfops.c b/fs/unionfs/dirfops.c
 new file mode 100644
-index 0000000..72a9c1a
+index 0000000..b79b437
 --- /dev/null
 +++ b/fs/unionfs/dirfops.c
 @@ -0,0 +1,302 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005-2006 Junjiro Okajima
@@ -3509,8 +3593,8 @@ index 0000000..72a9c1a
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -3803,12 +3887,12 @@ index 0000000..72a9c1a
 +};
 diff --git a/fs/unionfs/dirhelper.c b/fs/unionfs/dirhelper.c
 new file mode 100644
-index 0000000..62ec9af
+index 0000000..2922d3f
 --- /dev/null
 +++ b/fs/unionfs/dirhelper.c
 @@ -0,0 +1,158 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005-2006 Junjiro Okajima
@@ -3817,8 +3901,8 @@ index 0000000..62ec9af
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -3967,12 +4051,12 @@ index 0000000..62ec9af
 +}
 diff --git a/fs/unionfs/fanout.h b/fs/unionfs/fanout.h
 new file mode 100644
-index 0000000..ae1b86a
+index 0000000..1e5e996
 --- /dev/null
 +++ b/fs/unionfs/fanout.h
 @@ -0,0 +1,407 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005      Arun M. Krishnakumar
@@ -3980,8 +4064,8 @@ index 0000000..ae1b86a
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -4380,12 +4464,12 @@ index 0000000..ae1b86a
 +#endif	/* not _FANOUT_H */
 diff --git a/fs/unionfs/file.c b/fs/unionfs/file.c
 new file mode 100644
-index 0000000..e6abd5c
+index 0000000..0c07a81
 --- /dev/null
 +++ b/fs/unionfs/file.c
-@@ -0,0 +1,379 @@
+@@ -0,0 +1,386 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005-2006 Junjiro Okajima
@@ -4394,8 +4478,8 @@ index 0000000..e6abd5c
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -4574,7 +4658,7 @@ index 0000000..e6abd5c
 +	return err;
 +}
 +
-+int unionfs_fsync(struct file *file, int datasync)
++int unionfs_fsync(struct file *file, loff_t start, loff_t end, int datasync)
 +{
 +	int bindex, bstart, bend;
 +	struct file *lower_file;
@@ -4584,6 +4668,7 @@ index 0000000..e6abd5c
 +	struct inode *lower_inode, *inode;
 +	int err = -EINVAL;
 +
++	lockdep_off();
 +	unionfs_read_lock(dentry->d_sb, UNIONFS_SMUTEX_PARENT);
 +	parent = unionfs_lock_parent(dentry, UNIONFS_DMUTEX_PARENT);
 +	unionfs_lock_dentry(dentry, UNIONFS_DMUTEX_CHILD);
@@ -4592,6 +4677,10 @@ index 0000000..e6abd5c
 +	if (unlikely(err))
 +		goto out;
 +	unionfs_check_file(file);
++
++	err = generic_file_fsync(file, start, end, datasync);
++	if (err)
++		goto out;
 +
 +	bstart = fbstart(file);
 +	bend = fbend(file);
@@ -4610,11 +4699,9 @@ index 0000000..e6abd5c
 +			continue;
 +		lower_file = unionfs_lower_file_idx(file, bindex);
 +		lower_dentry = unionfs_lower_dentry_idx(dentry, bindex);
-+		mutex_lock(&lower_inode->i_mutex);
-+		err = lower_inode->i_fop->fsync(lower_file, datasync);
++		err = vfs_fsync_range(lower_file, start, end, datasync);
 +		if (!err && bindex == bstart)
 +			fsstack_copy_attr_times(inode, lower_inode);
-+		mutex_unlock(&lower_inode->i_mutex);
 +		if (err)
 +			goto out;
 +	}
@@ -4625,6 +4712,7 @@ index 0000000..e6abd5c
 +	unionfs_unlock_dentry(dentry);
 +	unionfs_unlock_parent(dentry, parent);
 +	unionfs_read_unlock(dentry->d_sb);
++	lockdep_on();
 +	return err;
 +}
 +
@@ -4754,6 +4842,9 @@ index 0000000..e6abd5c
 +	.write		= unionfs_write,
 +	.readdir	= unionfs_file_readdir,
 +	.unlocked_ioctl	= unionfs_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl	= unionfs_ioctl,
++#endif
 +	.mmap		= unionfs_mmap,
 +	.open		= unionfs_open,
 +	.flush		= unionfs_flush,
@@ -4765,12 +4856,12 @@ index 0000000..e6abd5c
 +};
 diff --git a/fs/unionfs/inode.c b/fs/unionfs/inode.c
 new file mode 100644
-index 0000000..74b0ead
+index 0000000..7a6d747
 --- /dev/null
 +++ b/fs/unionfs/inode.c
-@@ -0,0 +1,1089 @@
+@@ -0,0 +1,1085 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005-2006 Junjiro Okajima
@@ -4779,8 +4870,8 @@ index 0000000..74b0ead
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -4913,7 +5004,7 @@ index 0000000..74b0ead
 +			fsstack_copy_inode_size(dir,
 +						lower_parent_dentry->d_inode);
 +			/* update no. of links on parent directory */
-+			dir->i_nlink = unionfs_get_nlinks(dir);
++			set_nlink(dir, unionfs_get_nlinks(dir));
 +		}
 +	}
 +
@@ -5024,7 +5115,7 @@ index 0000000..74b0ead
 +		lower_dir_dentry = dget_parent(lower_new_dentry);
 +		fsstack_copy_attr_times(dir, lower_dir_dentry->d_inode);
 +		dput(lower_dir_dentry);
-+		dir->i_nlink = unionfs_get_nlinks(dir);
++		set_nlink(dir, unionfs_get_nlinks(dir));
 +		err = 0;
 +	}
 +	if (err)
@@ -5099,7 +5190,8 @@ index 0000000..74b0ead
 +	fsstack_copy_inode_size(dir, lower_new_dentry->d_parent->d_inode);
 +
 +	/* propagate number of hard-links */
-+	old_dentry->d_inode->i_nlink = unionfs_get_nlinks(old_dentry->d_inode);
++	set_nlink(old_dentry->d_inode,
++		  unionfs_get_nlinks(old_dentry->d_inode));
 +	/* new dentry's ctime may have changed due to hard-link counts */
 +	unionfs_copy_attr_times(new_dentry->d_inode);
 +
@@ -5173,7 +5265,7 @@ index 0000000..74b0ead
 +			fsstack_copy_inode_size(dir,
 +						lower_parent_dentry->d_inode);
 +			/* update no. of links on parent directory */
-+			dir->i_nlink = unionfs_get_nlinks(dir);
++			set_nlink(dir, unionfs_get_nlinks(dir));
 +		}
 +	}
 +
@@ -5285,7 +5377,7 @@ index 0000000..74b0ead
 +						lower_parent_dentry->d_inode);
 +
 +			/* update number of links on parent directory */
-+			dir->i_nlink = unionfs_get_nlinks(dir);
++			set_nlink(dir, unionfs_get_nlinks(dir));
 +		}
 +
 +		err = make_dir_opaque(dentry, dbstart(dentry));
@@ -5365,7 +5457,7 @@ index 0000000..74b0ead
 +			fsstack_copy_inode_size(dir,
 +						lower_parent_dentry->d_inode);
 +			/* update no. of links on parent directory */
-+			dir->i_nlink = unionfs_get_nlinks(dir);
++			set_nlink(dir, unionfs_get_nlinks(dir));
 +		}
 +	}
 +
@@ -5538,7 +5630,7 @@ index 0000000..74b0ead
 +				return -EACCES;
 +		}
 +	} else {
-+		retval = generic_permission(inode, mask, NULL);
++		retval = generic_permission(inode, mask);
 +	}
 +	if (retval)
 +		return retval;
@@ -5560,13 +5652,12 @@ index 0000000..74b0ead
 +	struct inode *lower_inode = NULL;
 +	int err = 0;
 +	int bindex, bstart, bend;
-+	const int is_file = !S_ISDIR(inode->i_mode);
++	int is_file;
 +	const int write_mask = (mask & MAY_WRITE) && !(mask & MAY_READ);
-+	struct inode *inode_grabbed = igrab(inode);
-+	struct dentry *dentry = d_find_alias(inode);
++	struct inode *inode_grabbed;
 +
-+	if (dentry)
-+		unionfs_lock_dentry(dentry, UNIONFS_DMUTEX_CHILD);
++	inode_grabbed = igrab(inode);
++	is_file = !S_ISDIR(inode->i_mode);
 +
 +	if (!UNIONFS_I(inode)->lower_inodes) {
 +		if (is_file)	/* dirs can be unlinked but chdir'ed to */
@@ -5631,7 +5722,7 @@ index 0000000..74b0ead
 +		if (err && err == -EACCES &&
 +		    is_robranch_super(inode->i_sb, bindex) &&
 +		    lower_inode->i_sb->s_magic == NFS_SUPER_MAGIC)
-+			err = generic_permission(lower_inode, mask, NULL);
++			err = generic_permission(lower_inode, mask);
 +
 +		/*
 +		 * The permissions are an intersection of the overall directory
@@ -5655,10 +5746,6 @@ index 0000000..74b0ead
 +
 +out:
 +	unionfs_check_inode(inode);
-+	if (dentry) {
-+		unionfs_unlock_dentry(dentry);
-+		dput(dentry);
-+	}
 +	iput(inode_grabbed);
 +	return err;
 +}
@@ -5860,12 +5947,12 @@ index 0000000..74b0ead
 +};
 diff --git a/fs/unionfs/lookup.c b/fs/unionfs/lookup.c
 new file mode 100644
-index 0000000..3cbde56
+index 0000000..48c88b1
 --- /dev/null
 +++ b/fs/unionfs/lookup.c
-@@ -0,0 +1,569 @@
+@@ -0,0 +1,570 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005-2006 Junjiro Okajima
@@ -5874,8 +5961,8 @@ index 0000000..3cbde56
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -5896,17 +5983,17 @@ index 0000000..3cbde56
 +			    const char *name, struct vfsmount **new_mnt)
 +{
 +	struct dentry *dentry = NULL;
-+	struct nameidata lower_nd;
++	struct path lower_path = {NULL, NULL};
 +	int err;
 +
 +	/* we use flags=0 to get basic lookup */
-+	err = vfs_path_lookup(base, mnt, name, 0, &lower_nd);
++	err = vfs_path_lookup(base, mnt, name, 0, &lower_path);
 +
 +	switch (err) {
 +	case 0: /* no error */
-+		dentry = lower_nd.path.dentry;
++		dentry = lower_path.dentry;
 +		if (new_mnt)
-+			*new_mnt = lower_nd.path.mnt; /* rc already inc'ed */
++			*new_mnt = lower_path.mnt; /* rc already inc'ed */
 +		break;
 +	case -ENOENT:
 +		 /*
@@ -5918,7 +6005,7 @@ index 0000000..3cbde56
 +		  */
 +		dentry = lookup_lck_len(name, base, strlen(name));
 +		if (new_mnt)
-+			*new_mnt = mntget(lower_nd.path.mnt);
++			*new_mnt = mntget(lower_path.mnt);
 +		break;
 +	default: /* all other real errors */
 +		dentry = ERR_PTR(err);
@@ -6177,7 +6264,8 @@ index 0000000..3cbde56
 +	verify_locked(parent);
 +
 +	/* must initialize dentry operations */
-+	dentry->d_op = &unionfs_dops;
++	if (lookupmode == INTERPOSE_LOOKUP)
++		d_set_d_op(dentry, &unionfs_dops);
 +
 +	/* We never partial lookup the root directory. */
 +	if (IS_ROOT(dentry))
@@ -6435,12 +6523,12 @@ index 0000000..3cbde56
 +}
 diff --git a/fs/unionfs/main.c b/fs/unionfs/main.c
 new file mode 100644
-index 0000000..1a43571
+index 0000000..4224c5a
 --- /dev/null
 +++ b/fs/unionfs/main.c
-@@ -0,0 +1,762 @@
+@@ -0,0 +1,752 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005-2006 Junjiro Okajima
@@ -6449,8 +6537,8 @@ index 0000000..1a43571
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -6586,7 +6674,7 @@ index 0000000..1a43571
 +			 * properly.  Finally we must return this new
 +			 * dentry.
 +			 */
-+			spliced->d_op = &unionfs_dops;
++			d_set_d_op(spliced, &unionfs_dops);
 +			spliced->d_fsdata = dentry->d_fsdata;
 +			dentry->d_fsdata = NULL;
 +			dentry = spliced;
@@ -6656,14 +6744,14 @@ index 0000000..1a43571
 + * 2) it exists
 + * 3) is a directory
 + */
-+int check_branch(struct nameidata *nd)
++int check_branch(const struct path *path)
 +{
 +	/* XXX: remove in ODF code -- stacking unions allowed there */
-+	if (!strcmp(nd->path.dentry->d_sb->s_type->name, UNIONFS_NAME))
++	if (!strcmp(path->dentry->d_sb->s_type->name, UNIONFS_NAME))
 +		return -EINVAL;
-+	if (!nd->path.dentry->d_inode)
++	if (!path->dentry->d_inode)
 +		return -ENOENT;
-+	if (!S_ISDIR(nd->path.dentry->d_inode->i_mode))
++	if (!S_ISDIR(path->dentry->d_inode->i_mode))
 +		return -ENOTDIR;
 +	return 0;
 +}
@@ -6715,7 +6803,7 @@ index 0000000..1a43571
 +static int parse_dirs_option(struct super_block *sb, struct unionfs_dentry_info
 +			     *lower_root_info, char *options)
 +{
-+	struct nameidata nd;
++	struct path path;
 +	char *name;
 +	int err = 0;
 +	int branches = 1;
@@ -6791,7 +6879,7 @@ index 0000000..1a43571
 +			goto out;
 +		}
 +
-+		err = path_lookup(name, LOOKUP_FOLLOW, &nd);
++		err = kern_path(name, LOOKUP_FOLLOW, &path);
 +		if (err) {
 +			printk(KERN_ERR "unionfs: error accessing "
 +			       "lower directory '%s' (error %d)\n",
@@ -6799,16 +6887,16 @@ index 0000000..1a43571
 +			goto out;
 +		}
 +
-+		err = check_branch(&nd);
++		err = check_branch(&path);
 +		if (err) {
 +			printk(KERN_ERR "unionfs: lower directory "
 +			       "'%s' is not a valid branch\n", name);
-+			path_put(&nd.path);
++			path_put(&path);
 +			goto out;
 +		}
 +
-+		lower_root_info->lower_paths[bindex].dentry = nd.path.dentry;
-+		lower_root_info->lower_paths[bindex].mnt = nd.path.mnt;
++		lower_root_info->lower_paths[bindex].dentry = path.dentry;
++		lower_root_info->lower_paths[bindex].mnt = path.mnt;
 +
 +		set_branchperms(sb, bindex, perms);
 +		set_branch_count(sb, bindex, 0);
@@ -6967,32 +7055,6 @@ index 0000000..1a43571
 +}
 +
 +/*
-+ * our custom d_alloc_root work-alike
-+ *
-+ * we can't use d_alloc_root if we want to use our own interpose function
-+ * unchanged, so we simply call our own "fake" d_alloc_root
-+ */
-+static struct dentry *unionfs_d_alloc_root(struct super_block *sb)
-+{
-+	struct dentry *ret = NULL;
-+
-+	if (sb) {
-+		static const struct qstr name = {
-+			.name = "/",
-+			.len = 1
-+		};
-+
-+		ret = d_alloc(NULL, &name);
-+		if (likely(ret)) {
-+			ret->d_op = &unionfs_dops;
-+			ret->d_sb = sb;
-+			ret->d_parent = ret;
-+		}
-+	}
-+	return ret;
-+}
-+
-+/*
 + * There is no need to lock the unionfs_super_info's rwsem as there is no
 + * way anyone can have a reference to the superblock at this point in time.
 + */
@@ -7002,6 +7064,7 @@ index 0000000..1a43571
 +	int err = 0;
 +	struct unionfs_dentry_info *lower_root_info = NULL;
 +	int bindex, bstart, bend;
++	struct inode *inode = NULL;
 +
 +	if (!raw_data) {
 +		printk(KERN_ERR
@@ -7059,18 +7122,26 @@ index 0000000..1a43571
 +
 +	sb->s_op = &unionfs_sops;
 +
-+	/* See comment next to the definition of unionfs_d_alloc_root */
-+	sb->s_root = unionfs_d_alloc_root(sb);
-+	if (unlikely(!sb->s_root)) {
-+		err = -ENOMEM;
++	/* get a new inode and allocate our root dentry */
++	inode = unionfs_iget(sb, iunique(sb, UNIONFS_ROOT_INO));
++	if (IS_ERR(inode)) {
++		err = PTR_ERR(inode);
 +		goto out_dput;
 +	}
++	sb->s_root = d_alloc_root(inode);
++	if (unlikely(!sb->s_root)) {
++		err = -ENOMEM;
++		goto out_iput;
++	}
++	d_set_d_op(sb->s_root, &unionfs_dops);
 +
 +	/* link the upper and lower dentries */
 +	sb->s_root->d_fsdata = NULL;
 +	err = new_dentry_private_data(sb->s_root, UNIONFS_DMUTEX_ROOT);
 +	if (unlikely(err))
 +		goto out_freedpd;
++
++	/* if get here: cannot have error */
 +
 +	/* Set the lower dentries for s_root */
 +	for (bindex = bstart; bindex <= bend; bindex++) {
@@ -7089,15 +7160,18 @@ index 0000000..1a43571
 +	/* Set the generation number to one, since this is for the mount. */
 +	atomic_set(&UNIONFS_D(sb->s_root)->generation, 1);
 +
++	if (atomic_read(&inode->i_count) <= 1)
++		unionfs_fill_inode(sb->s_root, inode);
++
 +	/*
-+	 * Call interpose to create the upper level inode.  Only
-+	 * INTERPOSE_LOOKUP can return a value other than 0 on err.
++	 * No need to call interpose because we already have a positive
++	 * dentry, which was instantiated by d_alloc_root.  Just need to
++	 * d_rehash it.
 +	 */
-+	err = PTR_ERR(unionfs_interpose(sb->s_root, sb, 0));
++	d_rehash(sb->s_root);
++
 +	unionfs_unlock_dentry(sb->s_root);
-+	if (!err)
-+		goto out;
-+	/* else fall through */
++	goto out; /* all is well */
 +
 +out_freedpd:
 +	if (UNIONFS_D(sb->s_root)) {
@@ -7105,6 +7179,9 @@ index 0000000..1a43571
 +		free_dentry_private_data(sb->s_root);
 +	}
 +	dput(sb->s_root);
++
++out_iput:
++	iput(inode);
 +
 +out_dput:
 +	if (lower_root_info && !IS_ERR(lower_root_info)) {
@@ -7134,22 +7211,23 @@ index 0000000..1a43571
 +	return err;
 +}
 +
-+static int unionfs_get_sb(struct file_system_type *fs_type,
-+			  int flags, const char *dev_name,
-+			  void *raw_data, struct vfsmount *mnt)
++static struct dentry *unionfs_mount(struct file_system_type *fs_type,
++				    int flags, const char *dev_name,
++				    void *raw_data)
 +{
-+	int err;
-+	err = get_sb_nodev(fs_type, flags, raw_data, unionfs_read_super, mnt);
-+	if (!err)
-+		UNIONFS_SB(mnt->mnt_sb)->dev_name =
++	struct dentry *dentry;
++
++	dentry = mount_nodev(fs_type, flags, raw_data, unionfs_read_super);
++	if (!IS_ERR(dentry))
++		UNIONFS_SB(dentry->d_sb)->dev_name =
 +			kstrdup(dev_name, GFP_KERNEL);
-+	return err;
++	return dentry;
 +}
 +
 +static struct file_system_type unionfs_fs_type = {
 +	.owner		= THIS_MODULE,
 +	.name		= UNIONFS_NAME,
-+	.get_sb		= unionfs_get_sb,
++	.mount		= unionfs_mount,
 +	.kill_sb	= generic_shutdown_super,
 +	.fs_flags	= FS_REVAL_DOT,
 +};
@@ -7203,12 +7281,12 @@ index 0000000..1a43571
 +module_exit(exit_unionfs_fs);
 diff --git a/fs/unionfs/mmap.c b/fs/unionfs/mmap.c
 new file mode 100644
-index 0000000..bcc5652
+index 0000000..28b6ce8
 --- /dev/null
 +++ b/fs/unionfs/mmap.c
 @@ -0,0 +1,89 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005-2006 Junjiro Okajima
@@ -7218,8 +7296,8 @@ index 0000000..bcc5652
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -7298,12 +7376,12 @@ index 0000000..bcc5652
 +};
 diff --git a/fs/unionfs/rdstate.c b/fs/unionfs/rdstate.c
 new file mode 100644
-index 0000000..6f215a6
+index 0000000..732cc2b
 --- /dev/null
 +++ b/fs/unionfs/rdstate.c
 @@ -0,0 +1,285 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005-2006 Junjiro Okajima
@@ -7312,8 +7390,8 @@ index 0000000..6f215a6
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -7466,7 +7544,7 @@ index 0000000..6f215a6
 +
 +static void free_filldir_node(struct filldir_node *node)
 +{
-+	if (node->namelen >= DNAME_INLINE_LEN_MIN)
++	if (node->namelen >= DNAME_INLINE_LEN)
 +		kfree(node->name);
 +	kmem_cache_free(unionfs_filldir_cachep, node);
 +}
@@ -7567,7 +7645,7 @@ index 0000000..6f215a6
 +	new->bindex = bindex;
 +	new->whiteout = whiteout;
 +
-+	if (namelen < DNAME_INLINE_LEN_MIN) {
++	if (namelen < DNAME_INLINE_LEN) {
 +		new->name = new->iname;
 +	} else {
 +		new->name = kmalloc(namelen + 1, GFP_KERNEL);
@@ -7589,12 +7667,12 @@ index 0000000..6f215a6
 +}
 diff --git a/fs/unionfs/rename.c b/fs/unionfs/rename.c
 new file mode 100644
-index 0000000..f55bf6e
+index 0000000..4db8fcc
 --- /dev/null
 +++ b/fs/unionfs/rename.c
-@@ -0,0 +1,517 @@
+@@ -0,0 +1,522 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005-2006 Junjiro Okajima
@@ -7603,8 +7681,8 @@ index 0000000..f55bf6e
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -7623,6 +7701,7 @@ index 0000000..f55bf6e
 +	struct dentry *lower_dentry;
 +	struct dentry *lower_parent;
 +	int err = 0;
++	struct nameidata lower_nd;
 +
 +	verify_locked(dentry);
 +
@@ -7630,8 +7709,12 @@ index 0000000..f55bf6e
 +
 +	BUG_ON(!S_ISDIR(lower_parent->d_inode->i_mode));
 +
-+	lower_dentry = lookup_one_len(dentry->d_name.name, lower_parent,
-+				      dentry->d_name.len);
++	err = init_lower_nd(&lower_nd, LOOKUP_OPEN);
++	if (unlikely(err < 0))
++		goto out;
++	lower_dentry = lookup_one_len_nd(dentry->d_name.name, lower_parent,
++					 dentry->d_name.len, &lower_nd);
++	release_lower_nd(&lower_nd, err);
 +	if (IS_ERR(lower_dentry)) {
 +		err = PTR_ERR(lower_dentry);
 +		goto out;
@@ -7802,8 +7885,8 @@ index 0000000..f55bf6e
 +		fsstack_copy_attr_times(new_parent->d_inode,
 +					unlink_dir_dentry->d_inode);
 +		/* propagate number of hard-links */
-+		new_parent->d_inode->i_nlink =
-+			unionfs_get_nlinks(new_parent->d_inode);
++		set_nlink(new_parent->d_inode,
++			  unionfs_get_nlinks(new_parent->d_inode));
 +
 +		unlock_dir(unlink_dir_dentry);
 +		if (!err) {
@@ -8112,18 +8195,18 @@ index 0000000..f55bf6e
 +}
 diff --git a/fs/unionfs/sioq.c b/fs/unionfs/sioq.c
 new file mode 100644
-index 0000000..b923742
+index 0000000..4bd1e80
 --- /dev/null
 +++ b/fs/unionfs/sioq.c
 @@ -0,0 +1,101 @@
 +/*
-+ * Copyright (c) 2006-2011 Erez Zadok
++ * Copyright (c) 2006-2014 Erez Zadok
 + * Copyright (c) 2006      Charles P. Wright
 + * Copyright (c) 2006-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2006      Junjiro Okajima
 + * Copyright (c) 2006      David P. Quigley
-+ * Copyright (c) 2006-2011 Stony Brook University
-+ * Copyright (c) 2006-2011 The Research Foundation of SUNY
++ * Copyright (c) 2006-2014 Stony Brook University
++ * Copyright (c) 2006-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -8219,18 +8302,18 @@ index 0000000..b923742
 +}
 diff --git a/fs/unionfs/sioq.h b/fs/unionfs/sioq.h
 new file mode 100644
-index 0000000..c2dfb94
+index 0000000..7b2af31
 --- /dev/null
 +++ b/fs/unionfs/sioq.h
 @@ -0,0 +1,91 @@
 +/*
-+ * Copyright (c) 2006-2011 Erez Zadok
++ * Copyright (c) 2006-2014 Erez Zadok
 + * Copyright (c) 2006      Charles P. Wright
 + * Copyright (c) 2006-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2006      Junjiro Okajima
 + * Copyright (c) 2006      David P. Quigley
-+ * Copyright (c) 2006-2011 Stony Brook University
-+ * Copyright (c) 2006-2011 The Research Foundation of SUNY
++ * Copyright (c) 2006-2014 Stony Brook University
++ * Copyright (c) 2006-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -8316,12 +8399,12 @@ index 0000000..c2dfb94
 +#endif /* not _SIOQ_H */
 diff --git a/fs/unionfs/subr.c b/fs/unionfs/subr.c
 new file mode 100644
-index 0000000..bdca2f7
+index 0000000..01794d5
 --- /dev/null
 +++ b/fs/unionfs/subr.c
 @@ -0,0 +1,95 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005-2006 Junjiro Okajima
@@ -8330,8 +8413,8 @@ index 0000000..bdca2f7
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -8413,16 +8496,16 @@ index 0000000..bdca2f7
 +	 * Update the nlinks AFTER updating the above fields, because the
 +	 * get_links callback may depend on them.
 +	 */
-+	dest->i_nlink = unionfs_get_nlinks(dest);
++	set_nlink(dest, unionfs_get_nlinks(dest));
 +}
 diff --git a/fs/unionfs/super.c b/fs/unionfs/super.c
 new file mode 100644
-index 0000000..fdeec51
+index 0000000..95acce6
 --- /dev/null
 +++ b/fs/unionfs/super.c
-@@ -0,0 +1,1048 @@
+@@ -0,0 +1,1030 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005-2006 Junjiro Okajima
@@ -8431,8 +8514,8 @@ index 0000000..fdeec51
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -8497,31 +8580,6 @@ index 0000000..fdeec51
 +}
 +
 +/*
-+ * we now define delete_inode, because there are two VFS paths that may
-+ * destroy an inode: one of them calls clear inode before doing everything
-+ * else that's needed, and the other is fine.  This way we truncate the inode
-+ * size (and its pages) and then clear our own inode, which will do an iput
-+ * on our and the lower inode.
-+ *
-+ * No need to lock sb info's rwsem.
-+ */
-+static void unionfs_delete_inode(struct inode *inode)
-+{
-+#if BITS_PER_LONG == 32 && defined(CONFIG_SMP)
-+	spin_lock(&inode->i_lock);
-+#endif
-+	i_size_write(inode, 0);	/* every f/s seems to do that */
-+#if BITS_PER_LONG == 32 && defined(CONFIG_SMP)
-+	spin_unlock(&inode->i_lock);
-+#endif
-+
-+	if (inode->i_data.nrpages)
-+		truncate_inode_pages(&inode->i_data, 0);
-+
-+	clear_inode(inode);
-+}
-+
-+/*
 + * final actions when unmounting a file system
 + *
 + * No need to lock rwsem.
@@ -8574,6 +8632,7 @@ index 0000000..fdeec51
 +	struct super_block *sb;
 +	struct dentry *lower_dentry;
 +	struct dentry *parent;
++	struct path lower_path;
 +	bool valid;
 +
 +	sb = dentry->d_sb;
@@ -8590,7 +8649,10 @@ index 0000000..fdeec51
 +	unionfs_check_dentry(dentry);
 +
 +	lower_dentry = unionfs_lower_dentry(sb->s_root);
-+	err = vfs_statfs(lower_dentry, buf);
++	lower_path.dentry = lower_dentry;
++	lower_path.mnt = unionfs_mntget(sb->s_root, 0);
++	err = vfs_statfs(&lower_path, buf);
++	mntput(lower_path.mnt);
 +
 +	/* set return buf to our f/s to avoid confusing user-level utils */
 +	buf->f_type = UNIONFS_SUPER_MAGIC;
@@ -8627,7 +8689,7 @@ index 0000000..fdeec51
 +	int err = -EINVAL;
 +	int perms, idx;
 +	char *modename = strchr(optarg, '=');
-+	struct nameidata nd;
++	struct path path;
 +
 +	/* by now, optarg contains the branch name */
 +	if (!*optarg) {
@@ -8654,7 +8716,7 @@ index 0000000..fdeec51
 +	 * and cache-coherency resolved, we'll address the branch-path
 +	 * uniqueness.
 +	 */
-+	err = path_lookup(optarg, LOOKUP_FOLLOW, &nd);
++	err = kern_path(optarg, LOOKUP_FOLLOW, &path);
 +	if (err) {
 +		printk(KERN_ERR "unionfs: error accessing "
 +		       "lower directory \"%s\" (error %d)\n",
@@ -8662,10 +8724,10 @@ index 0000000..fdeec51
 +		goto out;
 +	}
 +	for (idx = 0; idx < cur_branches; idx++)
-+		if (nd.path.mnt == new_lower_paths[idx].mnt &&
-+		    nd.path.dentry == new_lower_paths[idx].dentry)
++		if (path.mnt == new_lower_paths[idx].mnt &&
++		    path.dentry == new_lower_paths[idx].dentry)
 +			break;
-+	path_put(&nd.path);	/* no longer needed */
++	path_put(&path);	/* no longer needed */
 +	if (idx == cur_branches) {
 +		err = -ENOENT;	/* err may have been reset above */
 +		printk(KERN_ERR "unionfs: branch \"%s\" "
@@ -8688,7 +8750,7 @@ index 0000000..fdeec51
 +{
 +	int err = -EINVAL;
 +	int idx;
-+	struct nameidata nd;
++	struct path path;
 +
 +	/* optarg contains the branch name to delete */
 +
@@ -8698,7 +8760,7 @@ index 0000000..fdeec51
 +	 * and cache-coherency resolved, we'll address the branch-path
 +	 * uniqueness.
 +	 */
-+	err = path_lookup(optarg, LOOKUP_FOLLOW, &nd);
++	err = kern_path(optarg, LOOKUP_FOLLOW, &path);
 +	if (err) {
 +		printk(KERN_ERR "unionfs: error accessing "
 +		       "lower directory \"%s\" (error %d)\n",
@@ -8706,10 +8768,10 @@ index 0000000..fdeec51
 +		goto out;
 +	}
 +	for (idx = 0; idx < cur_branches; idx++)
-+		if (nd.path.mnt == new_lower_paths[idx].mnt &&
-+		    nd.path.dentry == new_lower_paths[idx].dentry)
++		if (path.mnt == new_lower_paths[idx].mnt &&
++		    path.dentry == new_lower_paths[idx].dentry)
 +			break;
-+	path_put(&nd.path);	/* no longer needed */
++	path_put(&path);	/* no longer needed */
 +	if (idx == cur_branches) {
 +		printk(KERN_ERR "unionfs: branch \"%s\" "
 +		       "not found\n", optarg);
@@ -8755,7 +8817,7 @@ index 0000000..fdeec51
 +	int perms;
 +	int idx = 0;		/* default: insert at beginning */
 +	char *new_branch , *modename = NULL;
-+	struct nameidata nd;
++	struct path path;
 +
 +	/*
 +	 * optarg can be of several forms:
@@ -8783,7 +8845,7 @@ index 0000000..fdeec51
 +	 * and cache-coherency resolved, we'll address the branch-path
 +	 * uniqueness.
 +	 */
-+	err = path_lookup(optarg, LOOKUP_FOLLOW, &nd);
++	err = kern_path(optarg, LOOKUP_FOLLOW, &path);
 +	if (err) {
 +		printk(KERN_ERR "unionfs: error accessing "
 +		       "lower directory \"%s\" (error %d)\n",
@@ -8791,10 +8853,10 @@ index 0000000..fdeec51
 +		goto out;
 +	}
 +	for (idx = 0; idx < cur_branches; idx++)
-+		if (nd.path.mnt == new_lower_paths[idx].mnt &&
-+		    nd.path.dentry == new_lower_paths[idx].dentry)
++		if (path.mnt == new_lower_paths[idx].mnt &&
++		    path.dentry == new_lower_paths[idx].dentry)
 +			break;
-+	path_put(&nd.path);	/* no longer needed */
++	path_put(&path);	/* no longer needed */
 +	if (idx == cur_branches) {
 +		printk(KERN_ERR "unionfs: branch \"%s\" "
 +		       "not found\n", optarg);
@@ -8823,7 +8885,7 @@ index 0000000..fdeec51
 +		       "branch \"%s\"\n", modename, new_branch);
 +		goto out;
 +	}
-+	err = path_lookup(new_branch, LOOKUP_FOLLOW, &nd);
++	err = kern_path(new_branch, LOOKUP_FOLLOW, &path);
 +	if (err) {
 +		printk(KERN_ERR "unionfs: error accessing "
 +		       "lower directory \"%s\" (error %d)\n",
@@ -8837,11 +8899,11 @@ index 0000000..fdeec51
 +	 * because this code base doesn't support stacking unionfs: the ODF
 +	 * code base supports that correctly.
 +	 */
-+	err = check_branch(&nd);
++	err = check_branch(&path);
 +	if (err) {
 +		printk(KERN_ERR "unionfs: lower directory "
 +		       "\"%s\" is not a valid branch\n", optarg);
-+		path_put(&nd.path);
++		path_put(&path);
 +		goto out;
 +	}
 +
@@ -8858,10 +8920,10 @@ index 0000000..fdeec51
 +		memmove(&new_lower_paths[idx+1], &new_lower_paths[idx],
 +			(cur_branches - idx) * sizeof(struct path));
 +	}
-+	new_lower_paths[idx].dentry = nd.path.dentry;
-+	new_lower_paths[idx].mnt = nd.path.mnt;
++	new_lower_paths[idx].dentry = path.dentry;
++	new_lower_paths[idx].mnt = path.mnt;
 +
-+	new_data[idx].sb = nd.path.dentry->d_sb;
++	new_data[idx].sb = path.dentry->d_sb;
 +	atomic_set(&new_data[idx].open_files, 0);
 +	new_data[idx].branchperms = perms;
 +	new_data[idx].branch_id = ++*high_branch_id; /* assign new branch ID */
@@ -9013,10 +9075,10 @@ index 0000000..fdeec51
 +		path_get(&tmp_lower_paths[i]); /* drop refs at end of fxn */
 +
 +	/*******************************************************************
-+	 * For each branch command, do path_lookup on the requested branch,
++	 * For each branch command, do kern_path on the requested branch,
 +	 * and apply the change to a temp branch list.  To handle errors, we
 +	 * already dup'ed the old arrays (above), and increased the refcnts
-+	 * on various f/s objects.  So now we can do all the path_lookups
++	 * on various f/s objects.  So now we can do all the kern_path'ss
 +	 * and branch-management commands on the new arrays.  If it fail mid
 +	 * way, we free the tmp arrays and *put all objects.  If we succeed,
 +	 * then we free old arrays and *put its objects, and then replace
@@ -9271,12 +9333,15 @@ index 0000000..fdeec51
 + *
 + * No need to lock sb info's rwsem.
 + */
-+static void unionfs_clear_inode(struct inode *inode)
++static void unionfs_evict_inode(struct inode *inode)
 +{
 +	int bindex, bstart, bend;
 +	struct inode *lower_inode;
 +	struct list_head *pos, *n;
 +	struct unionfs_dir_state *rdstate;
++
++	truncate_inode_pages(&inode->i_data, 0);
++	end_writeback(inode);
 +
 +	list_for_each_safe(pos, n, &UNIONFS_I(inode)->readdircache) {
 +		rdstate = list_entry(pos, struct unionfs_dir_state, cache);
@@ -9415,8 +9480,9 @@ index 0000000..fdeec51
 +	int bindex, bstart, bend;
 +	int perms;
 +
++	/* to prevent a silly lockdep warning with namespace_sem */
++	lockdep_off();
 +	unionfs_read_lock(sb, UNIONFS_SMUTEX_CHILD);
-+
 +	unionfs_lock_dentry(sb->s_root, UNIONFS_DMUTEX_CHILD);
 +
 +	tmp_page = (char *) __get_free_page(GFP_KERNEL);
@@ -9451,18 +9517,17 @@ index 0000000..fdeec51
 +	free_page((unsigned long) tmp_page);
 +
 +	unionfs_unlock_dentry(sb->s_root);
-+
 +	unionfs_read_unlock(sb);
++	lockdep_on();
 +
 +	return ret;
 +}
 +
 +struct super_operations unionfs_sops = {
-+	.delete_inode	= unionfs_delete_inode,
 +	.put_super	= unionfs_put_super,
 +	.statfs		= unionfs_statfs,
 +	.remount_fs	= unionfs_remount_fs,
-+	.clear_inode	= unionfs_clear_inode,
++	.evict_inode	= unionfs_evict_inode,
 +	.umount_begin	= unionfs_umount_begin,
 +	.show_options	= unionfs_show_options,
 +	.write_inode	= unionfs_write_inode,
@@ -9471,12 +9536,12 @@ index 0000000..fdeec51
 +};
 diff --git a/fs/unionfs/union.h b/fs/unionfs/union.h
 new file mode 100644
-index 0000000..9397f40
+index 0000000..70d79a8
 --- /dev/null
 +++ b/fs/unionfs/union.h
-@@ -0,0 +1,670 @@
+@@ -0,0 +1,681 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005      Arun M. Krishnakumar
@@ -9484,8 +9549,8 @@ index 0000000..9397f40
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -9510,7 +9575,6 @@ index 0000000..9397f40
 +#include <linux/seq_file.h>
 +#include <linux/slab.h>
 +#include <linux/spinlock.h>
-+#include <linux/smp_lock.h>
 +#include <linux/statfs.h>
 +#include <linux/string.h>
 +#include <linux/vmalloc.h>
@@ -9524,6 +9588,7 @@ index 0000000..9397f40
 +#include <linux/mman.h>
 +#include <linux/backing-dev.h>
 +#include <linux/splice.h>
++#include <linux/sched.h>
 +
 +#include <asm/system.h>
 +
@@ -9667,7 +9732,7 @@ index 0000000..9397f40
 +	int whiteout;
 +
 +	/* Inline name, so we don't need to separately kmalloc small ones */
-+	char iname[DNAME_INLINE_LEN_MIN];
++	char iname[DNAME_INLINE_LEN];
 +};
 +
 +/* Directory hash table. */
@@ -9893,7 +9958,8 @@ index 0000000..9397f40
 +extern int unionfs_flush(struct file *file, fl_owner_t id);
 +extern long unionfs_ioctl(struct file *file, unsigned int cmd,
 +			  unsigned long arg);
-+extern int unionfs_fsync(struct file *file, int datasync);
++extern int unionfs_fsync(struct file *file, loff_t start, loff_t end,
++			 int datasync);
 +extern int unionfs_fasync(int fd, struct file *file, int flag);
 +
 +/* Inode operations */
@@ -10014,7 +10080,7 @@ index 0000000..9397f40
 +/*
 + * EXTERNALS:
 + */
-+extern int check_branch(struct nameidata *nd);
++extern int check_branch(const struct path *path);
 +extern int parse_branch_mode(const char *name, int *perms);
 +
 +/* locking helpers */
@@ -10043,9 +10109,19 @@ index 0000000..9397f40
 +					    struct dentry *base, int len)
 +{
 +	struct dentry *d;
++	struct nameidata lower_nd;
++	int err;
++
++	err = init_lower_nd(&lower_nd, LOOKUP_OPEN);
++	if (unlikely(err < 0)) {
++		d = ERR_PTR(err);
++		goto out;
++	}
 +	mutex_lock(&base->d_inode->i_mutex);
-+	d = lookup_one_len(name, base, len);
++	d = lookup_one_len_nd(name, base, len, &lower_nd);
++	release_lower_nd(&lower_nd, err);
 +	mutex_unlock(&base->d_inode->i_mutex);
++out:
 +	return d;
 +}
 +
@@ -10147,12 +10223,12 @@ index 0000000..9397f40
 +#endif	/* not _UNION_H_ */
 diff --git a/fs/unionfs/unlink.c b/fs/unionfs/unlink.c
 new file mode 100644
-index 0000000..bf447bb
+index 0000000..60b2e26
 --- /dev/null
 +++ b/fs/unionfs/unlink.c
 @@ -0,0 +1,278 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005-2006 Junjiro Okajima
@@ -10161,8 +10237,8 @@ index 0000000..bf447bb
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -10343,7 +10419,7 @@ index 0000000..bf447bb
 +
 +	fsstack_copy_attr_times(dir, lower_dir_dentry->d_inode);
 +	/* propagate number of hard-links */
-+	dentry->d_inode->i_nlink = unionfs_get_nlinks(dentry->d_inode);
++	set_nlink(dentry->d_inode, unionfs_get_nlinks(dentry->d_inode));
 +
 +out:
 +	if (lower_dir_dentry)
@@ -10431,12 +10507,12 @@ index 0000000..bf447bb
 +}
 diff --git a/fs/unionfs/whiteout.c b/fs/unionfs/whiteout.c
 new file mode 100644
-index 0000000..022a3ea
+index 0000000..b45380e
 --- /dev/null
 +++ b/fs/unionfs/whiteout.c
-@@ -0,0 +1,581 @@
+@@ -0,0 +1,601 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005-2006 Junjiro Okajima
@@ -10445,8 +10521,8 @@ index 0000000..022a3ea
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -10918,6 +10994,7 @@ index 0000000..022a3ea
 +	struct dentry *wh_lower_dentry;
 +	struct inode *lower_inode;
 +	struct sioq_args args;
++	struct nameidata lower_nd;
 +
 +	lower_dentry = unionfs_lower_dentry_idx(dentry, bindex);
 +	lower_inode = lower_dentry->d_inode;
@@ -10927,9 +11004,16 @@ index 0000000..022a3ea
 +	mutex_lock(&lower_inode->i_mutex);
 +
 +	if (!inode_permission(lower_inode, MAY_EXEC)) {
++		err = init_lower_nd(&lower_nd, LOOKUP_OPEN);
++		if (unlikely(err < 0)) {
++			mutex_unlock(&lower_inode->i_mutex);
++			goto out;
++		}
 +		wh_lower_dentry =
-+			lookup_one_len(UNIONFS_DIR_OPAQUE, lower_dentry,
-+				       sizeof(UNIONFS_DIR_OPAQUE) - 1);
++			lookup_one_len_nd(UNIONFS_DIR_OPAQUE, lower_dentry,
++					  sizeof(UNIONFS_DIR_OPAQUE) - 1,
++					  &lower_nd);
++		release_lower_nd(&lower_nd, err);
 +	} else {
 +		args.is_opaque.dentry = lower_dentry;
 +		run_sioq(__is_opaque_dir, &args);
@@ -10954,9 +11038,17 @@ index 0000000..022a3ea
 +void __is_opaque_dir(struct work_struct *work)
 +{
 +	struct sioq_args *args = container_of(work, struct sioq_args, work);
++	struct nameidata lower_nd;
++	int err;
 +
-+	args->ret = lookup_one_len(UNIONFS_DIR_OPAQUE, args->is_opaque.dentry,
-+				   sizeof(UNIONFS_DIR_OPAQUE) - 1);
++	err = init_lower_nd(&lower_nd, LOOKUP_OPEN);
++	if (unlikely(err < 0))
++		return;
++	args->ret = lookup_one_len_nd(UNIONFS_DIR_OPAQUE,
++				      args->is_opaque.dentry,
++				      sizeof(UNIONFS_DIR_OPAQUE) - 1,
++				      &lower_nd);
++	release_lower_nd(&lower_nd, err);
 +	complete(&args->comp);
 +}
 +
@@ -10992,8 +11084,12 @@ index 0000000..022a3ea
 +	       !S_ISDIR(lower_dir->i_mode));
 +
 +	mutex_lock(&lower_dir->i_mutex);
-+	diropq = lookup_one_len(UNIONFS_DIR_OPAQUE, lower_dentry,
-+				sizeof(UNIONFS_DIR_OPAQUE) - 1);
++	err = init_lower_nd(&nd, LOOKUP_OPEN);
++	if (unlikely(err < 0))
++		goto out;
++	diropq = lookup_one_len_nd(UNIONFS_DIR_OPAQUE, lower_dentry,
++				   sizeof(UNIONFS_DIR_OPAQUE) - 1, &nd);
++	release_lower_nd(&nd, err);
 +	if (IS_ERR(diropq)) {
 +		err = PTR_ERR(diropq);
 +		goto out;
@@ -11018,12 +11114,12 @@ index 0000000..022a3ea
 +}
 diff --git a/fs/unionfs/xattr.c b/fs/unionfs/xattr.c
 new file mode 100644
-index 0000000..a93d803
+index 0000000..504b2eb
 --- /dev/null
 +++ b/fs/unionfs/xattr.c
 @@ -0,0 +1,173 @@
 +/*
-+ * Copyright (c) 2003-2011 Erez Zadok
++ * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
 + * Copyright (c) 2005-2006 Junjiro Okajima
@@ -11032,8 +11128,8 @@ index 0000000..a93d803
 + * Copyright (c) 2003-2004 Mohammad Nayyer Zubair
 + * Copyright (c) 2003      Puja Gupta
 + * Copyright (c) 2003      Harikesavan Krishnan
-+ * Copyright (c) 2003-2011 Stony Brook University
-+ * Copyright (c) 2003-2011 The Research Foundation of SUNY
++ * Copyright (c) 2003-2014 Stony Brook University
++ * Copyright (c) 2003-2014 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -11221,10 +11317,10 @@ index da317c7..64f1ced 100644
   */
  
 diff --git a/include/linux/magic.h b/include/linux/magic.h
-index eb9800f..9770154 100644
+index 2d4beab..39f5798 100644
 --- a/include/linux/magic.h
 +++ b/include/linux/magic.h
-@@ -47,6 +47,8 @@
+@@ -50,6 +50,8 @@
  #define REISER2FS_SUPER_MAGIC_STRING	"ReIsEr2Fs"
  #define REISER2FS_JR_SUPER_MAGIC_STRING	"ReIsEr3Fs"
  
@@ -11234,22 +11330,26 @@ index eb9800f..9770154 100644
  #define USBDEVICE_SUPER_MAGIC	0x9fa2
  #define CGROUP_SUPER_MAGIC	0x27e0eb
 diff --git a/include/linux/namei.h b/include/linux/namei.h
-index 05b441d..dca6f9a 100644
+index ffc0213..99802c3 100644
 --- a/include/linux/namei.h
 +++ b/include/linux/namei.h
-@@ -72,6 +72,7 @@ extern int vfs_path_lookup(struct dentry *, struct vfsmount *,
+@@ -84,8 +84,11 @@ extern int vfs_path_lookup(struct dentry *, struct vfsmount *,
  
  extern struct file *lookup_instantiate_filp(struct nameidata *nd, struct dentry *dentry,
  		int (*open)(struct inode *, struct file *));
 +extern void release_open_intent(struct nameidata *);
  
  extern struct dentry *lookup_one_len(const char *, struct dentry *, int);
++extern struct dentry *lookup_one_len_nd(const char *, struct dentry *, int,
++				      struct nameidata *nd);
  
+ extern int follow_down_one(struct path *);
+ extern int follow_down(struct path *);
 diff --git a/include/linux/splice.h b/include/linux/splice.h
-index 997c3b4..54f5501 100644
+index 09a545a..ebe231a 100644
 --- a/include/linux/splice.h
 +++ b/include/linux/splice.h
-@@ -81,6 +81,11 @@ extern ssize_t splice_to_pipe(struct pipe_inode_info *,
+@@ -82,6 +82,11 @@ extern ssize_t splice_to_pipe(struct pipe_inode_info *,
  			      struct splice_pipe_desc *);
  extern ssize_t splice_direct_to_actor(struct file *, struct splice_desc *,
  				      splice_direct_actor *);
@@ -11263,15 +11363,15 @@ index 997c3b4..54f5501 100644
   * for dynamic pipe sizing
 diff --git a/include/linux/union_fs.h b/include/linux/union_fs.h
 new file mode 100644
-index 0000000..c84d97e
+index 0000000..e3e0959
 --- /dev/null
 +++ b/include/linux/union_fs.h
 @@ -0,0 +1,22 @@
 +/*
-+ * Copyright (c) 2003-2009 Erez Zadok
++ * Copyright (c) 2003-2013 Erez Zadok
 + * Copyright (c) 2005-2007 Josef 'Jeff' Sipek
-+ * Copyright (c) 2003-2009 Stony Brook University
-+ * Copyright (c) 2003-2009 The Research Foundation of SUNY
++ * Copyright (c) 2003-2013 Stony Brook University
++ * Copyright (c) 2003-2013 The Research Foundation of SUNY
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -11290,10 +11390,10 @@ index 0000000..c84d97e
 +#endif /* _LINUX_UNIONFS_H */
 +
 diff --git a/security/security.c b/security/security.c
-index 351942a..69505f7 100644
+index e2f684a..23ab419 100644
 --- a/security/security.c
 +++ b/security/security.c
-@@ -529,6 +529,7 @@ int security_inode_permission(struct inode *inode, int mask)
+@@ -558,6 +558,7 @@ int security_inode_permission(struct inode *inode, int mask)
  		return 0;
  	return security_ops->inode_permission(inode, mask);
  }
