@@ -14,7 +14,11 @@ Released **TBD**
 
 -- Linux Kernel 3.2.62 (major bump)
 
+-- RUNNIX, version bump to runnix-0.4-6630, with Linux Kernel 3.2.62
+
 -- igb, version 5.2.9.3, Intel Gigabit Ethernet Network Driver, including Intel i210 and i354 support.
+
+-- php, version bump to 5.3.29, bug and security fixes
 
 -- libsodium, version bump to 0.6.1
 
@@ -47,6 +51,8 @@ Released **TBD**
    More Info: http://doc.astlinux.org/userdoc:tt_smtp_aliases
 
 -- dnsmasq, version bump to 2.71, automatically set 'proxy-dnssec' when DNSCrypt is enabled.
+
+-- pppd, version bump to 2.4.7, security fix CVE-2014-3158
 
 -- stunnel, version bump to 5.03
 
