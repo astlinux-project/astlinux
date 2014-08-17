@@ -344,28 +344,24 @@ function getARNOplugins() {
 //
 function getETHinterfaces() {
   $id = 0;
-  $tmpfile = tempnam("/tmp", "PHP_");
-  @exec('grep "^ *[a-z0-9.]*:" /proc/net/dev >'.$tmpfile);
-  $ph = @fopen($tmpfile, "r");
-  while (! feof($ph)) {
-    if ($line = trim(fgets($ph, 1024))) {
-      if (($pos = strpos($line, ':')) !== FALSE) {
-        $eth = substr($line, 0, $pos);
-        if ($eth !== 'lo' &&
-            strncmp($eth, 'ppp', 3) != 0 &&
-            strncmp($eth, 'tun', 3) != 0 &&
-            strncmp($eth, 'sit', 3) != 0 &&
-            strncmp($eth, 'ip6tun', 6) != 0 &&
-            strncmp($eth, 'dummy', 5) != 0) {
+  $output = array();
+  $cmd = '/sbin/ip -o link show 2>/dev/null | cut -d\':\' -f2';
+  @exec($cmd, $output);
+  foreach ($output as $line) {
+    $eth = trim($line);
+    if (($pos = strpos($eth, '@')) !== FALSE) {
+      $eth = substr($eth, 0, $pos);
+    }
+    if ($eth !== 'lo' &&
+        strncmp($eth, 'ppp', 3) &&
+        strncmp($eth, 'tun', 3) &&
+        strncmp($eth, 'sit', 3) &&
+        strncmp($eth, 'ip6tun', 6) &&
+        strncmp($eth, 'dummy', 5)) {
           $eth_R[$id] = $eth;
           $id++;
-        }
-      }
     }
   }
-  fclose($ph);
-  @unlink($tmpfile);
-  
   return($eth_R);
 }
 
