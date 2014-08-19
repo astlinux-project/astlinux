@@ -426,14 +426,16 @@ define('PROJECT_BUGTRACKER_LINK','<a href="http://code.google.com/p/phpliteadmin
 // don't mess with this - required for the login session
 ini_set('session.cookie_httponly', '1');
 session_start();
-//AstLinux// Use /etc/timezone for the timezone
+//AstLinux// Use /etc/timezone for the timezone if not in php.ini
 function system_timezone() {
   if (($tz = trim(@file_get_contents('/etc/timezone'))) === '') {
     $tz = @date_default_timezone_get();
   }
   return ($tz);
 }
-date_default_timezone_set(system_timezone());
+if (ini_get('date.timezone') == '') {
+  date_default_timezone_set(system_timezone());
+}
 //AstLinux// end of timezone additions
 
 if($debug==true)

@@ -966,8 +966,10 @@ function system_timezone() {
   return ($tz);
 }
 
-// Set system timezone
-date_default_timezone_set(system_timezone());
+// Set system timezone if not in php.ini
+if (ini_get('date.timezone') == '') {
+  date_default_timezone_set(system_timezone());
+}
 
 // Set globals
 $global_prefs = parsePrefs(getPREFSlocation());
