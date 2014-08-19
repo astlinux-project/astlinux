@@ -333,6 +333,7 @@ $fstab_var
   if [ -f "/usr/share/zoneinfo/$TIMEZONE" ]; then
     ln -sf "/usr/share/zoneinfo/$TIMEZONE" /tmp/etc/localtime
     echo "$TIMEZONE" > /tmp/etc/timezone
+    echo "date.timezone = $TIMEZONE" > /tmp/etc/php.ini
   else
     echo "Invalid Timezone: $TIMEZONE" >&2
   fi
