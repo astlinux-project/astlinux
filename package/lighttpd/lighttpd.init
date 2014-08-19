@@ -15,6 +15,10 @@ gen_php_ini() {
     cat /stat/etc/php.ini.conf >>/tmp/etc/php.ini
   fi
 
+  if [ -z "$TIMEZONE" ]; then
+    TIMEZONE="UTC"
+  fi
+
   sed -i -e "s|@TIMEZONE@|${TIMEZONE}|g" \
             /tmp/etc/php.ini
 }
