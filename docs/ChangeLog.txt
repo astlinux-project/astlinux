@@ -20,6 +20,15 @@ Released **TBD**
 
 -- php, version bump to 5.3.29, bug and security fixes
 
+-- php, dynamically define /etc/php.ini so 'date.timezone' is always specified using the TIMEZONE variable.
+   The php.ini can be manually defined if /mnt/kd/php.ini.conf exists, copy from /stat/etc/php.ini.conf if desired.
+   Changes to /mnt/kd/php.ini.conf must be applied using the CLI with the commands:
+   ==
+     service lighttpd stop
+     service lighttpd init
+   ==
+   Additionally, 'display_errors' is now "Off" by default.
+
 -- libsodium, version bump to 0.6.1
 
 -- spandsp, version bump to 0.0.6 (official)
