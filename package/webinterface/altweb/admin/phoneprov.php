@@ -130,7 +130,7 @@ function phoneprovDBtoDATA($db) {
       $data[$id]['template'] = $datatokens[1];
       $exttokens = explode(';', $datatokens[2]);
       for ($j = 0; $j < $MAXNUM; $j++) {
-        $ext_cid = explode('/', $exttokens[$j], 2);  // Include any /'s in 'cid'
+        $ext_cid = explode('/', (isset($exttokens[$j]) ? $exttokens[$j] : ''), 2);  // Include any /'s in 'cid'
         $data[$id]['ext'][$j] = (isset($ext_cid[0]) ? $ext_cid[0] : '');
         $data[$id]['cid'][$j] = (isset($ext_cid[1]) ? $ext_cid[1] : '');
       }

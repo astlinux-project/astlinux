@@ -30,7 +30,7 @@ function getCUSTOMtabs($g_prefs) {
       }
     }
   }
-  return($list);
+  return(isset($list) ? $list : NULL);
 }
 
 // Function: getTITLEname

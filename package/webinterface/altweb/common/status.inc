@@ -142,7 +142,7 @@ function parseUPSstatus($log) {
     }
     fclose($ph);
   }
-  return($status);
+  return(isset($status) ? $status : NULL);
 }
 
 // Function: parseIPSECstates
@@ -179,7 +179,7 @@ function parseIPSECstates($log) {
     }
     fclose($ph);
   }
-  return($status);
+  return(isset($status) ? $status : NULL);
 }
 
 // Function: parseFIREWALLstates
@@ -358,7 +358,7 @@ function parseMINIUPNPDleases($log) {
     }
     array_multisort($p_port, SORT_ASC, SORT_STRING, $status['clients']);
   }
-  return($status);
+  return(isset($status) ? $status : NULL);
 }
 
 // Function: parseDNSMASQleases
@@ -388,7 +388,7 @@ function parseDNSMASQleases($log) {
     }
     array_multisort($ip, SORT_ASC, SORT_STRING, $status['clients']);
   }
-  return($status);
+  return(isset($status) ? $status : NULL);
 }
 
 // Function: parseOpenVPNClog
@@ -420,7 +420,7 @@ function parseOpenVPNClog($log) {
       $status['remote'] = $remote;
     }
   }
-  return($status);
+  return(isset($status) ? $status : NULL);
 }
 
 // Function: parseOpenVPNlog
@@ -459,7 +459,7 @@ function parseOpenVPNlog($log) {
     }
     fclose($ph);
   }
-  return($status);
+  return(isset($status) ? $status : NULL);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -797,7 +797,7 @@ if ($daemon['openvpn'] > 0 && getPREFdef($global_prefs, 'status_openvpn_client_s
   if (is_file('/var/run/openvpn.pid') && !is_null($openvpn = parseOpenVPNlog($OVPNLOGFILE))) {
     putHtml("<h2>OpenVPN Server Status:</h2>");
 
-    if (($n = count($openvpn['clients'])) > 0) {
+    if (isset($openvpn['clients']) && ($n = count($openvpn['clients'])) > 0) {
       putHtml('<pre><table class="statusdatatable">');
       putHtml("<tr>");
       echo "<td>", $openvpn['header']['CommonName'], "</td>";

@@ -56,6 +56,7 @@ $sys_label = array (
   'ldap.conf' => 'LDAP Client System Defaults',
   'slapd.conf' => 'LDAP Server Configuration',
   'lighttpd.conf' => 'Web Server Configuration',
+  'php.ini.conf' => 'PHP Runtime Configuration',
   'sensors.conf' => 'Lm_sensors Hardware Monitoring',
   'zaptel.conf' => 'Zaptel System Config',
   'redfone.conf' => 'Redfone foneBRIDGE',

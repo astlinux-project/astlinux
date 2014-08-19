@@ -1783,9 +1783,9 @@ require_once '../common/header.php';
   putHtml('<option value="6to4-relay"'.$sel.'>6to4-relay</option>');
   putHtml('</select></td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
-  $value = $ipv6_tunnel[1];
+  $value = isset($ipv6_tunnel[1]) ? $ipv6_tunnel[1] : '';
   putHtml('Remote Server IPv4:<input type="text" size="16" maxlength="15" value="'.$value.'" name="ipv6_tunnel_server" />');
-  $value = $ipv6_tunnel[2];
+  $value = isset($ipv6_tunnel[2]) ? $ipv6_tunnel[2] : '';
   putHtml('&ndash;&nbsp;Endpoint IPv6/nn:<input type="text" size="45" maxlength="43" value="'.$value.'" name="ipv6_tunnel_endpoint" />');
   putHtml('</td></tr>');
   
