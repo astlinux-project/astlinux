@@ -1,0 +1,9 @@
+config BR2_PACKAGE_OPENSIPS
+	bool "opensips"
+	default n
+	select BR2_PACKAGE_OPENSSL
+	help
+	  OpenSIPS is a mature and flexible open source SIP server (RFC3261).
+
+	  http://www.opensips.org
+
