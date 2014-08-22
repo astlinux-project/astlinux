@@ -17,6 +17,16 @@ init () {
 start () {
 
   if [ -f /etc/opensips/opensips.cfg ]; then
+
+    if [ -x /usr/bin/rtpproxy -a -n "$RTPPROXY_IP" ]; then
+      echo "Starting rtpproxy..."
+
+      rtpproxy_socket="${RTPPROXY_SOCKET:-udp:127.0.0.1:7890}"
+      rtpproxy_tos="${RTPPROXY_TOS:-0x18}"
+
+      rtpproxy -l "$RTPPROXY_IP" -s "$rtpproxy_socket" -t "$rtpproxy_tos" -u "nobody:nobody"
+    fi
+
     echo "Starting opensips..."
     opensips -u nobody -g nobody -P /var/run/opensips.pid
   fi
@@ -28,6 +38,12 @@ stop () {
     echo "Stopping opensips..."
     kill $(cat /var/run/opensips.pid)
     rm -f /var/run/opensips.pid
+  fi
+
+  if [ -f /var/run/rtpproxy.pid ]; then
+    echo "Stopping rtpproxy..."
+    kill $(cat /var/run/rtpproxy.pid)
+    rm -f /var/run/rtpproxy.pid
   fi
 }
 

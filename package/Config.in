@@ -18,6 +18,7 @@ source "package/freeswitch/Config.in"
 source "package/clix/Config.in"
 source "package/opensips/Config.in"
 source "package/prosody/Config.in"
+source "package/rtpproxy/Config.in"
 source "package/rhino/Config.in"
 source "package/wanpipe/Config.in"
 endmenu

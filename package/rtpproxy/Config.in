@@ -1,0 +1,9 @@
+config BR2_PACKAGE_RTPPROXY
+	bool "rtpproxy"
+	default n
+	help
+	  RTPProxy enables VoIP traverse NAT firewalls,
+	  Relaying of voice, video or any RTP stream of data.
+
+	  http://www.rtpproxy.org/
+
