@@ -51,8 +51,8 @@ define OPENSIPS_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0640 $(@D)/scripts/opensipsctl.base $(TARGET_DIR)/usr/lib/opensips/opensipsctl/opensipsctl.base
 	$(SED) 's:/usr/local/etc/opensips:/etc/opensips:g' \
 		$(TARGET_DIR)/usr/lib/opensips/opensipsctl/opensipsctl.base
-	$(INSTALL) -D -m 0640 $(@D)/scripts/opensipsctl.base $(TARGET_DIR)/usr/lib/opensips/opensipsctl/opensipsctl.ctlbase
-	$(INSTALL) -D -m 0640 $(@D)/scripts/opensipsctl.base $(TARGET_DIR)/usr/lib/opensips/opensipsctl/opensipsctl.fifo
+	$(INSTALL) -D -m 0640 $(@D)/scripts/opensipsctl.ctlbase $(TARGET_DIR)/usr/lib/opensips/opensipsctl/opensipsctl.ctlbase
+	$(INSTALL) -D -m 0640 $(@D)/scripts/opensipsctl.fifo $(TARGET_DIR)/usr/lib/opensips/opensipsctl/opensipsctl.fifo
 	$(INSTALL) -D -m 0755 $(@D)/scripts/opensipsctl $(TARGET_DIR)/usr/sbin/opensipsctl
 	$(SED) 's:/bin/sh:/bin/bash:' \
 	    -e 's:/usr/local/etc/opensips:/etc/opensips:g' \
