@@ -102,16 +102,6 @@ Database=/mnt/kd/cdr-sqlite3/cdr-odbc.sqlite3
 Timeout=2000
 "
   install_odbc_dsn "asterisk-cdr" "$DATA"
-
-  if [ -x /usr/sbin/opensips ]; then
-    DATA="
-Description=OpenSIPS database
-Driver=SQLite3
-Database=/mnt/kd/opensips-odbc.sqlite3
-Timeout=2000
-"
-    install_odbc_dsn "opensips" "$DATA"
-  fi
 }
 
 stop () {
@@ -122,9 +112,6 @@ stop () {
   # Remove DSN's
   remove_odbc_dsn "asterisk"
   remove_odbc_dsn "asterisk-cdr"
-  if [ -x /usr/sbin/opensips ]; then
-    remove_odbc_dsn "opensips"
-  fi
 }
 
 case $1 in
