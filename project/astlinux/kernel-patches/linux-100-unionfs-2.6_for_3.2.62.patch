@@ -532,16 +532,15 @@ index 0000000..1adde69
 +
 +For more information, see <http://unionfs.filesystems.org/>.
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 8659eba..da599e0 100644
+index 8659eba..9a6a6bd 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -6756,6 +6756,14 @@ F:	Documentation/cdrom/
+@@ -6756,6 +6756,13 @@ F:	Documentation/cdrom/
  F:	drivers/cdrom/cdrom.c
  F:	include/linux/cdrom.h
  
 +UNIONFS
-+P:	Erez Zadok
-+M:	ezk@cs.sunysb.edu
++M:	Erez Zadok <ezk@cs.sunysb.edu>
 +L:	unionfs@filesystems.org
 +W:	http://unionfs.filesystems.org/
 +T:	git git.kernel.org/pub/scm/linux/kernel/git/ezk/unionfs.git
@@ -638,10 +637,10 @@ index 9680cef..46b6904b 100644
  EXPORT_SYMBOL(page_put_link);
  EXPORT_SYMBOL(page_readlink);
 diff --git a/fs/splice.c b/fs/splice.c
-index 58ab918..de1688c 100644
+index 714471d..78dbb4c 100644
 --- a/fs/splice.c
 +++ b/fs/splice.c
-@@ -1094,8 +1094,8 @@ EXPORT_SYMBOL(generic_splice_sendpage);
+@@ -1112,8 +1112,8 @@ EXPORT_SYMBOL(generic_splice_sendpage);
  /*
   * Attempt to initiate a splice from pipe to file.
   */
@@ -652,7 +651,7 @@ index 58ab918..de1688c 100644
  {
  	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *,
  				loff_t *, size_t, unsigned int);
-@@ -1118,13 +1118,14 @@ static long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
+@@ -1136,13 +1136,14 @@ static long do_splice_from(struct pipe_inode_info *pipe, struct file *out,
  
  	return splice_write(pipe, out, ppos, len, flags);
  }
@@ -670,7 +669,7 @@ index 58ab918..de1688c 100644
  {
  	ssize_t (*splice_read)(struct file *, loff_t *,
  			       struct pipe_inode_info *, size_t, unsigned int);
-@@ -1144,6 +1145,7 @@ static long do_splice_to(struct file *in, loff_t *ppos,
+@@ -1162,6 +1163,7 @@ static long do_splice_to(struct file *in, loff_t *ppos,
  
  	return splice_read(in, ppos, pipe, len, flags);
  }
@@ -678,7 +677,7 @@ index 58ab918..de1688c 100644
  
  /**
   * splice_direct_to_actor - splices data directly between two non-pipes
-@@ -1213,7 +1215,7 @@ ssize_t splice_direct_to_actor(struct file *in, struct splice_desc *sd,
+@@ -1231,7 +1233,7 @@ ssize_t splice_direct_to_actor(struct file *in, struct splice_desc *sd,
  		size_t read_len;
  		loff_t pos = sd->pos, prev_pos = pos;
  
@@ -687,7 +686,7 @@ index 58ab918..de1688c 100644
  		if (unlikely(ret <= 0))
  			goto out_release;
  
-@@ -1272,8 +1274,8 @@ static int direct_splice_actor(struct pipe_inode_info *pipe,
+@@ -1290,8 +1292,8 @@ static int direct_splice_actor(struct pipe_inode_info *pipe,
  {
  	struct file *file = sd->u.file;
  
@@ -698,7 +697,7 @@ index 58ab918..de1688c 100644
  }
  
  /**
-@@ -1358,7 +1360,7 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+@@ -1376,7 +1378,7 @@ static long do_splice(struct file *in, loff_t __user *off_in,
  		} else
  			off = &out->f_pos;
  
@@ -707,7 +706,7 @@ index 58ab918..de1688c 100644
  
  		if (off_out && copy_to_user(off_out, off, sizeof(loff_t)))
  			ret = -EFAULT;
-@@ -1378,7 +1380,7 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+@@ -1396,7 +1398,7 @@ static long do_splice(struct file *in, loff_t __user *off_in,
  		} else
  			off = &in->f_pos;
  
@@ -774,11 +773,11 @@ index 0000000..f3c1ac4
 +	  If you say Y here, you can turn on debugging output from Unionfs.
 diff --git a/fs/unionfs/Makefile b/fs/unionfs/Makefile
 new file mode 100644
-index 0000000..df0f665
+index 0000000..99fd7df
 --- /dev/null
 +++ b/fs/unionfs/Makefile
 @@ -0,0 +1,17 @@
-+UNIONFS_VERSION="2.5.13 (for 3.2.55)"
++UNIONFS_VERSION="2.6 (for 3.2.62)"
 +
 +EXTRA_CFLAGS += -DUNIONFS_VERSION=\"$(UNIONFS_VERSION)\"
 +
@@ -3164,10 +3163,10 @@ index 0000000..cc15d60
 +}
 diff --git a/fs/unionfs/dentry.c b/fs/unionfs/dentry.c
 new file mode 100644
-index 0000000..3bf8845
+index 0000000..1e388e2
 --- /dev/null
 +++ b/fs/unionfs/dentry.c
-@@ -0,0 +1,409 @@
+@@ -0,0 +1,415 @@
 +/*
 + * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
@@ -3498,6 +3497,11 @@ index 0000000..3bf8845
 +	parent = unionfs_lock_parent(dentry, UNIONFS_DMUTEX_PARENT);
 +	unionfs_lock_dentry(dentry, UNIONFS_DMUTEX_CHILD);
 +
++	if (!unionfs_lower_dentry(dentry)) {
++		err = 0;
++		goto out;
++	}
++
 +	valid = __unionfs_d_revalidate(dentry, parent, false);
 +	if (valid) {
 +		unionfs_postcopyup_setmnt(dentry);
@@ -3506,6 +3510,7 @@ index 0000000..3bf8845
 +		d_drop(dentry);
 +		err = valid;
 +	}
++out:
 +	unionfs_unlock_dentry(dentry);
 +	unionfs_unlock_parent(dentry, parent);
 +	unionfs_read_unlock(dentry->d_sb);
@@ -4464,10 +4469,10 @@ index 0000000..1e5e996
 +#endif	/* not _FANOUT_H */
 diff --git a/fs/unionfs/file.c b/fs/unionfs/file.c
 new file mode 100644
-index 0000000..0c07a81
+index 0000000..00b20dd
 --- /dev/null
 +++ b/fs/unionfs/file.c
-@@ -0,0 +1,386 @@
+@@ -0,0 +1,471 @@
 +/*
 + * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
@@ -4548,6 +4553,89 @@ index 0000000..0c07a81
 +		unionfs_check_file(file);
 +	}
 +
++out:
++	unionfs_unlock_dentry(dentry);
++	unionfs_unlock_parent(dentry, parent);
++	unionfs_read_unlock(dentry->d_sb);
++	return err;
++}
++
++static ssize_t unionfs_aio_read(struct kiocb *iocb, const struct iovec
++				*iov, unsigned long nr_segs, loff_t pos)
++{
++	int err = -EINVAL;
++	struct file *file = iocb->ki_filp, *lower_file;
++	struct dentry *dentry = file->f_path.dentry;
++	struct dentry *parent;
++
++	unionfs_read_lock(dentry->d_sb, UNIONFS_SMUTEX_PARENT);
++	parent = unionfs_lock_parent(dentry, UNIONFS_DMUTEX_PARENT);
++	unionfs_lock_dentry(dentry, UNIONFS_DMUTEX_CHILD);
++
++	err = unionfs_file_revalidate(file, parent, true);
++	if (unlikely(err))
++		goto out;
++
++	lower_file = unionfs_lower_file(file);
++	if (!lower_file->f_op->aio_read)
++		goto out;
++
++	get_file(lower_file);
++	iocb->ki_filp = lower_file;
++	err = lower_file->f_op->aio_read(iocb, iov, nr_segs, pos);
++	iocb->ki_filp = file;
++	fput(lower_file);
++
++	/* update our inode atime upon a successful lower read */
++	/* XXX: need to update upper inode atime when AIO completes */
++	if (err >= 0) {
++		fsstack_copy_attr_atime(dentry->d_inode,
++					lower_file->f_path.dentry->d_inode);
++		unionfs_check_file(file);
++	}
++out:
++	unionfs_unlock_dentry(dentry);
++	unionfs_unlock_parent(dentry, parent);
++	unionfs_read_unlock(dentry->d_sb);
++	return err;
++}
++
++static ssize_t unionfs_aio_write(struct kiocb *iocb, const struct iovec
++		*iov, unsigned long nr_segs, loff_t pos)
++{
++	int err = -EINVAL;
++	struct file *file = iocb->ki_filp, *lower_file;
++	struct dentry *dentry = file->f_path.dentry;
++	struct dentry *parent;
++
++	unionfs_read_lock(dentry->d_sb, UNIONFS_SMUTEX_PARENT);
++	parent = unionfs_lock_parent(dentry, UNIONFS_DMUTEX_PARENT);
++	unionfs_lock_dentry(dentry, UNIONFS_DMUTEX_CHILD);
++
++	err = unionfs_file_revalidate(file, parent, true);
++	if (unlikely(err))
++		goto out;
++
++	lower_file = unionfs_lower_file(file);
++	if (!lower_file->f_op->aio_write)
++		goto out;
++
++	get_file(lower_file);
++	iocb->ki_filp = lower_file;
++	err = lower_file->f_op->aio_write(iocb, iov, nr_segs, pos);
++	iocb->ki_filp = file;
++	fput(lower_file);
++
++	/* update our inode times+sizes upon a successful lower write */
++	/* XXX: need to update upper inode times/sizes when AIO completes */
++	if (err >= 0) {
++		fsstack_copy_inode_size(dentry->d_inode,
++					lower_file->f_path.dentry->d_inode);
++		fsstack_copy_attr_times(dentry->d_inode,
++					lower_file->f_path.dentry->d_inode);
++		UNIONFS_F(file)->wrote_to_file = true; /* for delayed copyup */
++		unionfs_check_file(file);
++	}
 +out:
 +	unionfs_unlock_dentry(dentry);
 +	unionfs_unlock_parent(dentry, parent);
@@ -4840,6 +4928,8 @@ index 0000000..0c07a81
 +	.llseek		= generic_file_llseek,
 +	.read		= unionfs_read,
 +	.write		= unionfs_write,
++	.aio_read	= unionfs_aio_read,
++	.aio_write	= unionfs_aio_write,
 +	.readdir	= unionfs_file_readdir,
 +	.unlocked_ioctl	= unionfs_ioctl,
 +#ifdef CONFIG_COMPAT
@@ -7281,10 +7371,10 @@ index 0000000..4224c5a
 +module_exit(exit_unionfs_fs);
 diff --git a/fs/unionfs/mmap.c b/fs/unionfs/mmap.c
 new file mode 100644
-index 0000000..28b6ce8
+index 0000000..7db21bf
 --- /dev/null
 +++ b/fs/unionfs/mmap.c
-@@ -0,0 +1,89 @@
+@@ -0,0 +1,131 @@
 +/*
 + * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
@@ -7352,13 +7442,54 @@ index 0000000..28b6ce8
 +	return err;
 +}
 +
++static int unionfs_page_mkwrite(struct vm_area_struct *vma,
++				struct vm_fault *vmf)
++{
++	int err = 0;
++	struct file *file, *lower_file;
++	const struct vm_operations_struct *lower_vm_ops;
++	struct vm_area_struct lower_vma;
++
++	BUG_ON(!vma);
++	memcpy(&lower_vma, vma, sizeof(struct vm_area_struct));
++	file = lower_vma.vm_file;
++	lower_vm_ops = UNIONFS_F(file)->lower_vm_ops;
++	BUG_ON(!lower_vm_ops);
++	if (!lower_vm_ops->page_mkwrite)
++		goto out;
++
++	lower_file = unionfs_lower_file(file);
++	BUG_ON(!lower_file);
++	/*
++	 * XXX: vm_ops->page_mkwrite may be called in parallel.
++	 * Because we have to resort to temporarily changing the
++	 * vma->vm_file to point to the lower file, a concurrent
++	 * invocation of unionfs_page_mkwrite could see a different
++	 * value.  In this workaround, we keep a different copy of the
++	 * vma structure in our stack, so we never expose a different
++	 * value of the vma->vm_file called to us, even temporarily.
++	 * A better fix would be to change the calling semantics of
++	 * ->page_mkwrite to take an explicit file pointer.
++	 */
++	lower_vma.vm_file = lower_file;
++	err = lower_vm_ops->page_mkwrite(&lower_vma, vmf);
++out:
++	return err;
++}
++
 +/*
-+ * XXX: the default address_space_ops for unionfs is empty.  We cannot set
-+ * our inode->i_mapping->a_ops to NULL because too many code paths expect
-+ * the a_ops vector to be non-NULL.
++ * This function should never be called directly.
++ * It's here only for the check a_ops->direct_IO during vfs_open.
 + */
++static ssize_t unionfs_direct_IO(int rw, struct kiocb *iocb,
++				 const struct iovec *iov, loff_t offset,
++				 unsigned long nr_segs)
++{
++	return -EINVAL;
++}
++
 +struct address_space_operations unionfs_aops = {
-+	/* empty on purpose */
++	.direct_IO	= unionfs_direct_IO,
 +};
 +
 +/*
@@ -7373,6 +7504,7 @@ index 0000000..28b6ce8
 +
 +struct vm_operations_struct unionfs_vm_ops = {
 +	.fault		= unionfs_fault,
++	.page_mkwrite	= unionfs_page_mkwrite,
 +};
 diff --git a/fs/unionfs/rdstate.c b/fs/unionfs/rdstate.c
 new file mode 100644
@@ -9536,10 +9668,10 @@ index 0000000..95acce6
 +};
 diff --git a/fs/unionfs/union.h b/fs/unionfs/union.h
 new file mode 100644
-index 0000000..70d79a8
+index 0000000..3a7335d
 --- /dev/null
 +++ b/fs/unionfs/union.h
-@@ -0,0 +1,681 @@
+@@ -0,0 +1,682 @@
 +/*
 + * Copyright (c) 2003-2014 Erez Zadok
 + * Copyright (c) 2003-2006 Charles P. Wright
@@ -9564,6 +9696,7 @@ index 0000000..70d79a8
 +#include <linux/file.h>
 +#include <linux/list.h>
 +#include <linux/fs.h>
++#include <linux/aio.h>
 +#include <linux/mm.h>
 +#include <linux/module.h>
 +#include <linux/mount.h>
