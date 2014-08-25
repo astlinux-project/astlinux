@@ -6,12 +6,31 @@ init () {
 
   if [ -d /mnt/kd/kamailio ]; then
     ln -snf /mnt/kd/kamailio /tmp/etc/kamailio
+    chown kamailio:kamailio /tmp/etc/kamailio
   else
     if [ -L /tmp/etc/kamailio ]; then
       rm -f /tmp/etc/kamailio
     fi
     exit
   fi
+
+  if [ ! -d /mnt/kd/kamailio/certs ]; then
+    mkdir /mnt/kd/kamailio/certs
+    chown kamailio:kamailio /mnt/kd/kamailio/certs
+  fi
+
+  # Use SIP TLS certs if they exist and ours don't exist
+  if [ -f /mnt/kd/ssl/sip-tls/keys/server.crt ] && [ ! -f /mnt/kd/kamailio/certs/server.crt ]; then
+    cp -a /mnt/kd/ssl/sip-tls/keys/server.crt /mnt/kd/kamailio/certs/server.crt
+    chown kamailio:kamailio /mnt/kd/kamailio/certs/server.crt
+  fi
+  if [ -f /mnt/kd/ssl/sip-tls/keys/server.key ] && [ ! -f /mnt/kd/kamailio/certs/server.key ]; then
+    cp -a /mnt/kd/ssl/sip-tls/keys/server.key /mnt/kd/kamailio/certs/server.key
+    chown kamailio:kamailio /mnt/kd/kamailio/certs/server.key
+  fi
+
+  mkdir -p /var/run/kamailio
+  chown kamailio:kamailio /var/run/kamailio
 }
 
 start () {
@@ -28,16 +47,16 @@ start () {
     fi
 
     echo "Starting kamailio..."
-    kamailio -u nobody -g nobody -P /var/run/kamailio.pid
+    kamailio -u kamailio -g kamailio -P /var/run/kamailio/kamailio.pid
   fi
 }
 
 stop () {
 
-  if [ -f /var/run/kamailio.pid ]; then
+  if [ -f /var/run/kamailio/kamailio.pid ]; then
     echo "Stopping kamailio..."
-    kill $(cat /var/run/kamailio.pid)
-    rm -f /var/run/kamailio.pid
+    kill $(cat /var/run/kamailio/kamailio.pid)
+    rm -f /var/run/kamailio/kamailio.pid
   fi
 
   if [ -f /var/run/rtpproxy.pid ]; then

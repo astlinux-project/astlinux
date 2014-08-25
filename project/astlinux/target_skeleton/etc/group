@@ -15,4 +15,5 @@ users:x:100:
 prosody:x:130:
 ldap:x:439:
 zabbix:x:906:
+kamailio:x:973:
 nobody:x:65534:

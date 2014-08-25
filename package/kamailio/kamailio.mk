@@ -10,8 +10,8 @@ KAMAILIO_SITE = http://kamailio.org/pub/kamailio/$(KAMAILIO_VERSION)/src
 KAMAILIO_DEPENDENCIES = openssl
 
 KAMAILIO_GROUP_MODULES = standard
-KAMAILIO_INCLUDE_MODULES = acc registrar usrloc
-KAMAILIO_EXCLUDE_MODULES =
+KAMAILIO_INCLUDE_MODULES = acc auth_db outbound registrar tls usrloc
+KAMAILIO_EXCLUDE_MODULES = rtpproxy-ng
 
 ifeq ($(strip $(BR2_PACKAGE_SQLITE)),y)
 KAMAILIO_DEPENDENCIES += sqlite
@@ -65,7 +65,13 @@ define KAMAILIO_INSTALL_TARGET_CMDS
 		install
 
 	mv $(TARGET_DIR)/etc/kamailio $(TARGET_DIR)/stat/etc/
-	$(INSTALL) -D -m 0644 package/kamailio/kamailio.cfg $(TARGET_DIR)/stat/etc/kamailio/kamailio.cfg
+	rm -f $(TARGET_DIR)/stat/etc/kamailio/kamailio-selfsigned.*
+	rsync -a --exclude=".svn" package/kamailio/etc/ $(TARGET_DIR)/stat/etc/kamailio/
+	$(SED) 's:^[# ]*DBENGINE=.*$$:DBENGINE=SQLITE:' \
+	    -e 's:^[# ]*DB_PATH=.*$$:DB_PATH="/mnt/kd/kamailio.sqlite3":' \
+	    -e 's:^[# ]*PID_FILE=.*$$:PID_FILE="/var/run/kamailio/kamailio.pid":' \
+	    -e 's:^[# ]*STARTOPTIONS=.*$$:STARTOPTIONS="-u kamailio -g kamailio":' \
+		$(TARGET_DIR)/stat/etc/kamailio/kamctlrc
 	$(INSTALL) -D -m 0755 package/kamailio/kamailio.init $(TARGET_DIR)/etc/init.d/kamailio
 	ln -s /tmp/etc/kamailio $(TARGET_DIR)/etc/kamailio
 	ln -sf ../../init.d/kamailio $(TARGET_DIR)/etc/runlevels/default/S58kamailio
