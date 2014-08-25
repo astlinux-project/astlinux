@@ -43,7 +43,7 @@ start () {
       rtpproxy_socket="${RTPPROXY_SOCKET:-udp:127.0.0.1:7722}"
       rtpproxy_tos="${RTPPROXY_TOS:-0x18}"
 
-      rtpproxy -l "$RTPPROXY_IP" -s "$rtpproxy_socket" -t "$rtpproxy_tos" -u "nobody:nobody"
+      rtpproxy -l "$RTPPROXY_IP" -s "$rtpproxy_socket" -t "$rtpproxy_tos" -u "kamailio:kamailio"
     fi
 
     echo "Starting kamailio..."
