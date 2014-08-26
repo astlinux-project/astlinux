@@ -10,12 +10,17 @@ KAMAILIO_SITE = http://kamailio.org/pub/kamailio/$(KAMAILIO_VERSION)/src
 KAMAILIO_DEPENDENCIES = openssl
 
 KAMAILIO_GROUP_MODULES = standard
-KAMAILIO_INCLUDE_MODULES = acc auth_db outbound registrar tls usrloc
+KAMAILIO_INCLUDE_MODULES = acc auth_db domain htable outbound registrar tls usrloc
 KAMAILIO_EXCLUDE_MODULES = rtpproxy-ng
 
 ifeq ($(strip $(BR2_PACKAGE_SQLITE)),y)
 KAMAILIO_DEPENDENCIES += sqlite
 KAMAILIO_INCLUDE_MODULES += db_sqlite
+endif
+
+ifeq ($(strip $(BR2_PACKAGE_LIBXML2)),y)
+KAMAILIO_DEPENDENCIES += libxml2
+KAMAILIO_INCLUDE_MODULES += presence presence_xml
 endif
 
 KAMAILIO_ENV_ARGS = \
