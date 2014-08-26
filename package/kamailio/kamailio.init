@@ -56,6 +56,13 @@ stop () {
   if [ -f /var/run/kamailio/kamailio.pid ]; then
     echo "Stopping kamailio..."
     kill $(cat /var/run/kamailio/kamailio.pid)
+
+    # Wait for kamailio to stop
+    cnt=5
+    while [ $cnt -gt 0 ] && [ -f /var/run/kamailio/kamailio.pid ]; do
+      cnt=$((cnt - 1))
+      sleep 1
+    done
     rm -f /var/run/kamailio/kamailio.pid
   fi
 
