@@ -64,8 +64,8 @@ define KAMAILIO_INSTALL_TARGET_CMDS
 		DESTDIR="$(TARGET_DIR)" \
 		install
 
-	mv $(TARGET_DIR)/etc/kamailio $(TARGET_DIR)/stat/etc/
-	rm -f $(TARGET_DIR)/stat/etc/kamailio/kamailio-selfsigned.*
+	$(INSTALL) -D -m 0644 $(TARGET_DIR)/etc/kamailio/kamctlrc $(TARGET_DIR)/stat/etc/kamailio/kamctlrc
+	rm -rf $(TARGET_DIR)/etc/kamailio
 	rsync -a --exclude=".svn" package/kamailio/etc/ $(TARGET_DIR)/stat/etc/kamailio/
 	$(SED) 's:^[# ]*DBENGINE=.*$$:DBENGINE=SQLITE:' \
 	    -e 's:^[# ]*DB_PATH=.*$$:DB_PATH="/mnt/kd/kamailio.sqlite3":' \
