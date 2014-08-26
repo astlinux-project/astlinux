@@ -2,6 +2,20 @@
 
 . /etc/rc.conf
 
+set_db_permissions()
+{
+  local db_path DB_PATH
+
+  if [ -f /etc/kamailio/kamctlrc ]; then
+    . /etc/kamailio/kamctlrc
+  fi
+  db_path="${DB_PATH:-/mnt/kd/kamailio.sqlite3}"
+
+  if [ -f "$db_path" ]; then
+    chown kamailio:kamailio "$db_path"
+  fi
+}
+
 init () {
 
   if [ -d /mnt/kd/kamailio ]; then
@@ -47,6 +61,8 @@ start () {
     fi
 
     echo "Starting kamailio..."
+    set_db_permissions
+
     kamailio -u kamailio -g kamailio -P /var/run/kamailio/kamailio.pid
   fi
 }
@@ -55,6 +71,7 @@ stop () {
 
   if [ -f /var/run/kamailio/kamailio.pid ]; then
     echo "Stopping kamailio..."
+    set_db_permissions
     kill $(cat /var/run/kamailio/kamailio.pid)
 
     # Wait for kamailio to stop
