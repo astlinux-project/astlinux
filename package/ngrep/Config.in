@@ -2,7 +2,8 @@ config BR2_PACKAGE_NGREP
 	bool "ngrep"
 	default n
 	select BR2_PACKAGE_LIBPCAP
+	select BR2_PACKAGE_PCRE
 	help
-	  Apply GNU grep features to the network layer
+	  Network grep.
 
 	  http://ngrep.sourceforge.net/
