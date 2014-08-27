@@ -67,6 +67,7 @@ if (getPREFdef($global_prefs, 'status_require_auth') === 'yes') {
 // Find running daemons
 //
 function getDaemons() {
+
   $status['asterisk'] = 0;
   $status['ntpd'] = 0;
   $status['miniupnpd'] = 0;
@@ -79,42 +80,18 @@ function getDaemons() {
   $status['zabbix_agentd'] = 0;
   $status['zabbix_proxy'] = 0;
   $status['reboot'] = 0;
-  
-  $tmpfile = tempnam("/tmp", "PHP_");
-  @exec('ps >'.$tmpfile);
-  $ph = @fopen($tmpfile, "r");
-  while (! feof($ph)) {
-    if ($line = trim(fgets($ph, 1024))) {
-      if (strpos($line, ' asterisk') !== FALSE || strpos($line, '/asterisk') !== FALSE) {
-      	$status['asterisk']++;
-      } elseif (strpos($line, ' ntpd') !== FALSE || strpos($line, '/ntpd') !== FALSE) {
-      	$status['ntpd']++;
-      } elseif (strpos($line, ' miniupnpd') !== FALSE || strpos($line, '/miniupnpd') !== FALSE) {
-      	$status['miniupnpd']++;
-      } elseif (strpos($line, ' dnsmasq') !== FALSE || strpos($line, '/dnsmasq') !== FALSE) {
-      	$status['dnsmasq']++;
-      } elseif (strpos($line, ' syslogd') !== FALSE || strpos($line, '/syslogd') !== FALSE) {
-      	$status['syslogd']++;
-      } elseif (strpos($line, ' openvpn') !== FALSE || strpos($line, '/openvpn') !== FALSE) {
-      	$status['openvpn']++;
-      } elseif (strpos($line, ' racoon') !== FALSE || strpos($line, '/racoon') !== FALSE) {
-      	$status['racoon']++;
-      } elseif (strpos($line, ' pptpd') !== FALSE || strpos($line, '/pptpd') !== FALSE) {
-      	$status['pptpd']++;
-      } elseif (strpos($line, ' upsmon') !== FALSE || strpos($line, '/upsmon') !== FALSE) {
-      	$status['upsmon']++;
-      } elseif (strpos($line, ' zabbix_agentd ') !== FALSE || strpos($line, ' zabbix_agentd: ') !== FALSE) {
-      	$status['zabbix_agentd']++;
-      } elseif (strpos($line, ' zabbix_proxy ') !== FALSE || strpos($line, ' zabbix_proxy: ') !== FALSE) {
-      	$status['zabbix_proxy']++;
-      } elseif (strpos($line, 'reboot -d') !== FALSE) {
-      	$status['reboot']++;
+
+  $output = array();
+  @exec('ps -o comm=""', $output);
+
+  foreach ($output as $line) {
+    foreach ($status as $key => $value) {
+      if ($key === $line) {
+        $status["$key"]++;
+        break;
       }
     }
   }
-  fclose($ph);
-  @unlink($tmpfile);
-  
   return($status);
 }
 
