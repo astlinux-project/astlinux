@@ -9,8 +9,11 @@ set_db_permissions()
   if [ -f /etc/kamailio/kamctlrc ]; then
     . /etc/kamailio/kamctlrc
   fi
-  db_path="${DB_PATH:-/mnt/kd/kamailio.sqlite3}"
+  db_path="${DB_PATH:-/mnt/kd/kamailio/data/kamailio.sqlite3}"
 
+  if [ -d /mnt/kd/kamailio/data ]; then
+    chown kamailio:kamailio /mnt/kd/kamailio/data
+  fi
   if [ -f "$db_path" ]; then
     chown kamailio:kamailio "$db_path"
   fi
@@ -28,6 +31,10 @@ init () {
     exit
   fi
 
+  if [ ! -d /mnt/kd/kamailio/data ]; then
+    mkdir /mnt/kd/kamailio/data
+    chown kamailio:kamailio /mnt/kd/kamailio/data
+  fi
   if [ ! -d /mnt/kd/kamailio/certs ]; then
     mkdir /mnt/kd/kamailio/certs
     chown kamailio:kamailio /mnt/kd/kamailio/certs

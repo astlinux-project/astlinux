@@ -74,7 +74,7 @@ define KAMAILIO_INSTALL_TARGET_CMDS
 	rm -rf $(TARGET_DIR)/etc/kamailio
 	rsync -a --exclude=".svn" package/kamailio/etc/ $(TARGET_DIR)/stat/etc/kamailio/
 	$(SED) 's:^[# ]*DBENGINE=.*$$:DBENGINE=SQLITE:' \
-	    -e 's:^[# ]*DB_PATH=.*$$:DB_PATH="/mnt/kd/kamailio.sqlite3":' \
+	    -e 's:^[# ]*DB_PATH=.*$$:DB_PATH="/mnt/kd/kamailio/data/kamailio.sqlite3":' \
 	    -e 's:^[# ]*PID_FILE=.*$$:PID_FILE="/var/run/kamailio/kamailio.pid":' \
 	    -e 's:^[# ]*STARTOPTIONS=.*$$:STARTOPTIONS="-u kamailio -g kamailio":' \
 		$(TARGET_DIR)/stat/etc/kamailio/kamctlrc
