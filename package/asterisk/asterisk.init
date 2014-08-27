@@ -178,6 +178,11 @@ stop () {
   fi
 }
 
+if [ "$ASTERISK_DAHDI_DISABLE" = "yes" ]; then
+  echo "Disabled: Asterisk"
+  exit
+fi
+
 case $1 in
 
 init)
