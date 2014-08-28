@@ -1,0 +1,51 @@
+--- kamailio-4.1.5/utils/kamctl/kamctl.orig	2014-08-27 22:19:13.000000000 -0500
++++ kamailio-4.1.5/utils/kamctl/kamctl	2014-08-27 22:19:28.000000000 -0500
+@@ -487,8 +487,8 @@
+ $DA_DOMAIN_COLUMN='$OSERDOMAIN'"
+ 				mecho "Dumping aliases for user=<$2>"
+ 				echo
+-				QUERY="SELECT CONCAT($DA_ALIAS_USER_COLUMN,\
+-'@',$DA_ALIAS_DOMAIN_COLUMN) AS ALIAS FROM $DA_TABLE $CLAUSE;"
++				QUERY="SELECT ($DA_ALIAS_USER_COLUMN || \
++'@' || $DA_ALIAS_DOMAIN_COLUMN) AS ALIAS FROM $DA_TABLE $CLAUSE;"
+ 				$DBROCMD "$QUERY"
+ 									# | $AWK 'BEGIN {line=0;}
+ 									#		/^\+/ { next }
+@@ -538,7 +538,7 @@
+ 			
+ 			CLAUSE="WHERE $DA_ALIAS_USER_COLUMN='$OSERUSER' AND \
+ $DA_ALIAS_DOMAIN_COLUMN='$OSERDOMAIN'"
+-			QUERY="SELECT CONCAT($DA_USER_COLUMN,'@',$DA_DOMAIN_COLUMN) \
++			QUERY="SELECT ($DA_USER_COLUMN || '@' || $DA_DOMAIN_COLUMN) \
+ AS 'SIP-ID' FROM $DA_TABLE $CLAUSE ; "
+ 			$DBROCMD "$QUERY"
+ 			#TMP_UUID=`sql_ro_query "$QUERY" | $AWK 'BEGIN {line=0;}
+@@ -1970,7 +1970,7 @@
+ $SD_DOMAIN_COLUMN='$OSERDOMAIN'"
+ 				mecho "Dumping speed-dials for user=<$2>"
+ 				echo
+-				QUERY="SELECT CONCAT($SD_SD_USER_COLUMN,'@',\
++				QUERY="SELECT ($SD_SD_USER_COLUMN || '@' || \
+ $SD_SD_DOMAIN_COLUMN) AS 'Short number', $SD_NEW_URI_COLUMN AS 'New URI',\
+ $SD_DESC_COLUMN FROM $SD_TABLE $CLAUSE;"
+ 				$DBROCMD "$QUERY"
+@@ -1996,8 +1996,8 @@
+ 				else
+ 					exit 1
+ 				fi
+-				QUERY="SELECT CONCAT($SD_SD_USER_COLUMN,'@',\
+-$SD_SD_DOMAIN_COLUMN) AS 'Short number', CONCAT($SD_USER_COLUMN,'@',\
++				QUERY="SELECT ($SD_SD_USER_COLUMN || '@' || \
++$SD_SD_DOMAIN_COLUMN) AS 'Short number', ($SD_USER_COLUMN || '@' || \
+ $SD_DOMAIN_COLUMN) AS 'Owner', $SD_NEW_URI_COLUMN AS 'New URI',\
+ $SD_DESC_COLUMN FROM $SD_TABLE;"
+ 				$DBROCMD "$QUERY"
+@@ -2039,7 +2039,7 @@
+ 			
+ 			CLAUSE="WHERE $SD_SD_USER_COLUMN='$OSERUSER' AND \
+ $SD_SD_DOMAIN_COLUMN='$OSERDOMAIN'"
+-			QUERY="SELECT CONCAT($SD_USER_COLUMN,'@',$SD_DOMAIN_COLUMN) \
++			QUERY="SELECT ($SD_USER_COLUMN || '@' || $SD_DOMAIN_COLUMN) \
+ AS 'Owner', $SD_NEW_URI_COLUMN AS 'New URI', $SD_DESC_COLUMN FROM \
+ $SD_TABLE $CLAUSE ; "
+ 			mecho "Details for speeddial <$2>"
