@@ -38,12 +38,12 @@ KAMAILIO_MAKEFLAGS = \
 	cfg_dir=etc/kamailio/ \
 	data_dir=usr/share/kamailio \
 	lib_dir=usr/lib/kamailio \
-	module_dir=usr/lib/kamailio \
 	cfg_target=/etc/kamailio/ \
 	group_include="$(KAMAILIO_GROUP_MODULES)" \
 	include_modules="$(KAMAILIO_INCLUDE_MODULES)" \
 	exclude_modules="$(KAMAILIO_EXCLUDE_MODULES)" \
 	modules_dirs="modules" \
+	LIBDIR=usr/lib \
 	ARCH="i386" \
 	OS="linux"
 
@@ -86,7 +86,6 @@ endef
 
 define KAMAILIO_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/sbin/kamailio
-	rm -rf $(TARGET_DIR)/lib/kamailio
 	rm -rf $(TARGET_DIR)/usr/lib/kamailio
 	rm -rf $(TARGET_DIR)/usr/share/kamailio
 	rm -rf $(TARGET_DIR)/stat/etc/kamailio
