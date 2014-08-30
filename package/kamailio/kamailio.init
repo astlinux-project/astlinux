@@ -19,6 +19,26 @@ set_db_permissions()
   fi
 }
 
+rtpproxy_enabled()
+{
+  local WITH_NAT='^#!define[ ][ ]*WITH_NAT[ ]*$'
+
+  if [ ! -x /usr/bin/rtpproxy ]; then
+    return 1
+  fi
+
+  if [ -f /etc/kamailio/kamailio-local.cfg ]; then
+    if grep -q -e "$WITH_NAT" /etc/kamailio/kamailio-local.cfg; then
+      return 0
+    fi
+  fi
+  if grep -q -e "$WITH_NAT" /etc/kamailio/kamailio.cfg; then
+    return 0
+  fi
+
+  return 1
+}
+
 init () {
 
   if [ -d /mnt/kd/kamailio ]; then
@@ -58,13 +78,18 @@ start () {
 
   if [ -f /etc/kamailio/kamailio.cfg ]; then
 
-    if [ -x /usr/bin/rtpproxy -a -n "$RTPPROXY_IP" ]; then
+    if rtpproxy_enabled; then
       echo "Starting rtpproxy..."
 
       rtpproxy_socket="${RTPPROXY_SOCKET:-udp:127.0.0.1:7722}"
-      rtpproxy_tos="${RTPPROXY_TOS:-0x18}"
+      min_port="$(echo "$RTPPROXY_PORT_RANGE" | cut -s -d':' -f1)"
+      min_port="${min_port:-16384}"
+      max_port="$(echo "$RTPPROXY_PORT_RANGE" | cut -s -d':' -f2)"
+      max_port="${max_port:-16639}"
 
-      rtpproxy -l "$RTPPROXY_IP" -s "$rtpproxy_socket" -t "$rtpproxy_tos" -u "kamailio:kamailio"
+      rtpproxy -u "kamailio:kamailio" -s "$rtpproxy_socket" -m "$min_port" -M "$max_port" \
+               ${RTPPROXY_LISTEN_IP:+-l "$RTPPROXY_LISTEN_IP"} \
+               ${RTPPROXY_LISTEN_IPV6:+-6 "$RTPPROXY_LISTEN_IPV6"}
     fi
 
     echo "Starting kamailio..."
