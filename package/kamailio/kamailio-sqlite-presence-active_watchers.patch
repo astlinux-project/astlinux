@@ -1,0 +1,11 @@
+--- kamailio-4.1.5/utils/kamctl/db_sqlite/presence-create.sql.orig	2014-08-31 08:21:54.000000000 -0500
++++ kamailio-4.1.5/utils/kamctl/db_sqlite/presence-create.sql	2014-08-31 08:22:50.000000000 -0500
+@@ -34,7 +34,7 @@
+     record_route TEXT,
+     expires INTEGER NOT NULL,
+     status INTEGER DEFAULT 2 NOT NULL,
+-    reason VARCHAR(64) NOT NULL,
++    reason VARCHAR(64),
+     version INTEGER DEFAULT 0 NOT NULL,
+     socket_info VARCHAR(64) NOT NULL,
+     local_contact VARCHAR(128) NOT NULL,
