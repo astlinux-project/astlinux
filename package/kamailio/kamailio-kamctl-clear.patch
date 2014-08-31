@@ -1,0 +1,39 @@
+--- kamailio-4.1.5/utils/kamctl/kamctl.fifo.orig	2014-08-31 08:39:09.000000000 -0500
++++ kamailio-4.1.5/utils/kamctl/kamctl.fifo	2014-08-31 08:39:27.000000000 -0500
+@@ -138,8 +138,8 @@
+ 	clear
+ 	while [ $loops -ne $attempt ] ; do
+ 		attempt=`$EXPR $attempt + 1`
+-		#clear
+-		tput clear
++		clear
++		#tput clear
+ 		
+ 		# print_stats $name $path $attempt
+ 		mecho "[cycle #: $attempt; if constant make sure server lives]"
+--- kamailio-4.1.5/utils/kamctl/kamctl.ser_mi.orig	2014-08-31 08:42:54.000000000 -0500
++++ kamailio-4.1.5/utils/kamctl/kamctl.ser_mi	2014-08-31 08:43:48.000000000 -0500
+@@ -65,8 +65,8 @@
+ 	clear
+ 	while [ $loops -ne $attempt ] ; do
+ 		attempt=`$EXPR $attempt + 1`
+-		#clear
+-		tput clear
++		clear
++		#tput clear
+ 		
+ 		# print_stats $name $path $attempt
+ 		mecho "[cycle #: $attempt; if constant make sure server lives]"
+--- kamailio-4.1.5/utils/kamctl/kamctl.unixsock.orig	2014-08-31 08:52:58.000000000 -0500
++++ kamailio-4.1.5/utils/kamctl/kamctl.unixsock	2014-08-31 08:53:22.000000000 -0500
+@@ -81,8 +81,8 @@
+ 		clear
+ 		while [ $loops -ne $attempt ] ; do
+ 			attempt=$(($attempt + 1))
+-			#clear
+-			tput cup 0 0
++			clear
++			#tput cup 0 0
+ 
+ 			# print_stats $attempt
+ 			mecho "[cycle #: $attempt; if constant make sure server lives]"
