@@ -4,19 +4,25 @@
 #
 #############################################################
 
-NANO_VERSION = 2.3.5
+NANO_VERSION = 2.3.6
 NANO_SITE = http://www.nano-editor.org/dist/v2.3
 NANO_MAKE_ENV = CURSES_LIB="-lncurses"
-NANO_DEPENDENCIES = ncurses
+NANO_CONF_ENV = ac_cv_prog_NCURSESW_CONFIG=false
 NANO_CONF_OPT = \
 	--without-slang \
 	--disable-utf8 \
 	--enable-tiny
 
+NANO_DEPENDENCIES = ncurses
+
+ifeq ($(BR2_PACKAGE_FILE),y)
+	NANO_DEPENDENCIES += file
+else
+	NANO_CONF_ENV += ac_cv_lib_magic_magic_open=no
+endif
+
 define NANO_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 $(@D)/src/nano $(TARGET_DIR)/usr/bin/nano
-	#$(INSTALL) -m 444 -D package/nano/etc.nanorc $(TARGET_DIR)/etc/nanorc
-	#$(INSTALL) -m 444 -D package/nano/asterisk.nanorc $(TARGET_DIR)/usr/share/nano/asterisk.nanorc
 endef
 
 define NANO_UNINSTALL_TARGET_CMDS
