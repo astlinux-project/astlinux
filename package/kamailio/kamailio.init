@@ -89,7 +89,8 @@ start () {
 
       rtpproxy -u "kamailio:kamailio" -s "$rtpproxy_socket" -m "$min_port" -M "$max_port" \
                ${RTPPROXY_LISTEN_IP:+-l "$RTPPROXY_LISTEN_IP"} \
-               ${RTPPROXY_LISTEN_IPV6:+-6 "$RTPPROXY_LISTEN_IPV6"}
+               ${RTPPROXY_LISTEN_IPV6:+-6 "$RTPPROXY_LISTEN_IPV6"} \
+               ${RTPPROXY_ADVERTISE_IP:+-A "$RTPPROXY_ADVERTISE_IP"}
     fi
 
     echo "Starting kamailio..."
