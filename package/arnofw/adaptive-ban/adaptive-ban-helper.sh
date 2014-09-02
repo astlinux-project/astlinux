@@ -132,6 +132,8 @@ filter()
          ;;
       asterisk) filter_asterisk "$file" "$PREFIX" "$HOST"
          ;;
+      kamailio) filter_kamailio "$file" "$PREFIX" "$HOST"
+         ;;
       lighttpd) filter_lighttpd "$file" "$PREFIX" "$HOST"
          ;;
       prosody) filter_prosody "$file" "$PREFIX" "$HOST"
@@ -173,6 +175,14 @@ filter_asterisk()
             -e "s/^${PREFIX}NOTICE.* ${HOST} failed to authenticate as '.*'$/\1/p" \
             -e "s/^${PREFIX}NOTICE.* .*: No registration for peer '.*' \(from ${HOST}\)$/\1/p" \
             -e "s/^${PREFIX}NOTICE.* .*: Host ${HOST} failed MD5 authentication for '.*' \(.*\)$/\1/p" \
+               "$file" >"$TEMPFILE"
+}
+
+filter_kamailio()
+{
+  local file="$1" PREFIX="$2" HOST="$3"
+
+  sed -n -r -e "s/^${PREFIX}.* pike blocking .* from .* \(IP:${HOST}:[0-9]+\)$/\1/p" \
                "$file" >"$TEMPFILE"
 }
 
