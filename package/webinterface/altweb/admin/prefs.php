@@ -17,6 +17,7 @@
 // 09-28-2012, Added Show Custom Asterisk Command
 // 01-20-2013, Added Show XMPP Server Status
 // 09-06-2013, Added Edit Tab Shortcut support
+// 09-04-2014, Added Show Kamailio SIP Server Status
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -111,6 +112,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (($value = tuqp($_POST['asterisk_cmd'])) !== '') {
       $value = 'status_custom_asterisk_cmdstr = "'.$value.'"';
+      fwrite($fp, $value."\n");
+    }
+    if (! isset($_POST['kamailio_server'])) {
+      $value = 'status_show_kamailio_server = no';
       fwrite($fp, $value."\n");
     }
     if (! isset($_POST['xmpp_server'])) {
@@ -626,6 +631,10 @@ require_once '../common/header.php';
   $value = getPREFdef($global_prefs, 'status_custom_asterisk_cmdstr');
   putHtml('<input type="text" size="28" maxlength="64" value="'.$value.'" name="asterisk_cmd" /></td></tr>');
 
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'status_show_kamailio_server') !== 'no') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="kamailio_server" name="kamailio_server"'.$sel.' /></td><td colspan="5">Show Kamailio SIP Server Status</td></tr>');
+ 
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_show_xmpp_server') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="xmpp_server" name="xmpp_server"'.$sel.' /></td><td colspan="5">Show XMPP Server Status</td></tr>');

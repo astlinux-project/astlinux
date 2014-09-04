@@ -32,6 +32,7 @@
 // 01-20-2013, Added XMPP Server Status
 // 01-03-2014, Added NUT UPS Monitoring Status
 // 07-02-2014, Added "Show PPPoE Logs" button
+// 09-04-2014, Added Kamailio SIP Server Status
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -79,6 +80,7 @@ function getDaemons() {
   $status['syslogd'] = 0;
   $status['zabbix_agentd'] = 0;
   $status['zabbix_proxy'] = 0;
+  $status['kamailio'] = 0;
   $status['reboot'] = 0;
 
   $output = array();
@@ -1040,6 +1042,27 @@ if ($daemon['asterisk'] > 0) {
       fclose($ph);
       @unlink($tmpfile);
     }
+    putHtml("</pre>");
+  }
+}
+
+if ($daemon['kamailio'] > 0) {
+  if (getPREFdef($global_prefs, 'status_show_kamailio_server') !== 'no') {
+    putHtml("<h2>Kamailio SIP Server Status:</h2>");
+    putHtml("<pre>");
+
+    $output = array();
+    @exec('kamcmd core.version; kamcmd tm.stats', $output);
+    foreach ($output as $line) {
+      $line = trim($line);
+      if ($line === '{') {
+        $line = '==============================';
+      } elseif ($line === '}') {
+        continue;
+      }
+      putText($line);
+    }
+    unset($output);
     putHtml("</pre>");
   }
 }
