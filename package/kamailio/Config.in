@@ -2,6 +2,8 @@ config BR2_PACKAGE_KAMAILIO
 	bool "kamailio"
 	default n
 	select BR2_PACKAGE_OPENSSL
+	# rtpproxy is only a runtime dependency
+	select BR2_PACKAGE_RTPPROXY
 	help
 	  Kamailio (formerly OpenSER) is an Open Source, rock solid, SIP Server
 
