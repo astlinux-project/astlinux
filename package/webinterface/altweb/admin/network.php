@@ -864,6 +864,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/siptlscert.php');
     exit;
+  } elseif (isset($_POST['submit_kamailio'])) {
+    $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
+    if (is_writable($file = '/mnt/kd/kamailio/kamailio-local.cfg')) {
+      header('Location: /admin/edit.php?file='.$file);
+      exit;
+    } elseif (is_writable($file = '/mnt/kd/kamailio/kamailio.cfg')) {
+      header('Location: /admin/edit.php?file='.$file);
+      exit;
+    }
   } elseif (isset($_POST['submit_slapd'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     if (is_writable($file = '/mnt/kd/slapd.conf')) {
@@ -1005,6 +1014,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 43, $result, 'init');
       } elseif ($process === 'darkstat') {
         $result = restartPROCESS($process, 44, $result, 'init');
+      } elseif ($process === 'kamailio') {
+        $result = restartPROCESS($process, 45, $result, 'init');
       }
     } else {
       $result = 2;
@@ -1091,6 +1102,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">LDAP Server'.statusPROCESS('slapd').'.</p>');
     } elseif ($result == 44) {
       putHtml('<p style="color: green;">NetStat Server (darkstat)'.statusPROCESS('darkstat').'.</p>');
+    } elseif ($result == 45) {
+      putHtml('<p style="color: green;">Kamailio SIP Server'.statusPROCESS('kamailio').'.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 100) {
@@ -1193,6 +1206,10 @@ require_once '../common/header.php';
     putHtml('<option value="fop2"'.$sel.'>Restart Asterisk FOP2</option>');
     $sel = ($reboot_restart === 'FOP2') ? ' selected="selected"' : '';
     putHtml('<option value="FOP2"'.$sel.'>Reload Asterisk FOP2</option>');
+  }
+  if (is_file('/etc/init.d/kamailio')) {
+    $sel = ($reboot_restart === 'kamailio') ? ' selected="selected"' : '';
+    putHtml('<option value="kamailio"'.$sel.'>Restart Kamailio</option>');
   }
   putHtml('</select>');
   putHtml('&ndash;');
@@ -1573,6 +1590,13 @@ require_once '../common/header.php';
     putHtml('DNSCrypt Proxy Server:');
     putHtml('<input type="submit" value="Configure DNSCrypt" name="submit_dnscrypt" class="button" /></td></tr>');
   }
+  if (is_file('/etc/init.d/kamailio') && 
+     (is_file('/mnt/kd/kamailio/kamailio.cfg') || is_file('/mnt/kd/kamailio/kamailio-local.cfg'))) {
+    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+    putHtml('Kamailio&nbsp;SIP&nbsp;Server:');
+    putHtml('<input type="submit" value="Configure Kamailio" name="submit_kamailio" class="button" /></td></tr>');
+  }
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('Asterisk&nbsp;SIP-TLS Server Certificate:');
   putHtml('<input type="submit" value="SIP-TLS Certificate" name="submit_sip_tls" class="button" /></td></tr>');
