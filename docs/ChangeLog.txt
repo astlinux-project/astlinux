@@ -100,6 +100,11 @@ Released **TBD**
 -- Users tab, add support for multiple email entries separated by |'s, longer email entries
    and sanitize input more strictly.
 
+-- Network and Edit tabs, add "Kamailio SIP Server" support for /mnt/kd/kamailio/ .
+   Additionally, added "Restart Kamailio" menu entries.
+
+-- Status tab, added "Kamailio SIP Server Status", and can be hidden via the Prefs tab.
+
 
 Additions for AstLinux 1.1.7:
 =============================
