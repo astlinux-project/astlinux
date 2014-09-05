@@ -18,6 +18,8 @@ Released **TBD**
 
 -- igb, version 5.2.9.3, Intel Gigabit Ethernet Network Driver, including Intel i210 and i354 support.
 
+-- tg3, version bump to 3.136h Broadcom NetLink 10/100/1000 Mbps PCI/PCI-X/PCI Express Ethernet Linux driver
+
 -- unionfs, version bump to 2.6
 
 -- php, version bump to 5.3.29, bug and security fixes
