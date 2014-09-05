@@ -37,7 +37,7 @@ Released **TBD**
 
 -- jpeg, version bump to 9a
 
--- e2fsprogs, version bump to 1.42.11
+-- e2fsprogs, version bump to 1.42.12
 
 -- dosfstools, version bump to 3.0.26
 
