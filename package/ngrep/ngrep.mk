@@ -12,7 +12,7 @@ NGREP_DEPENDENCIES = libpcap pcre
 NGREP_UNINSTALL_STAGING_OPT = --version
 
 NGREP_CONF_OPT += \
-	--with-pcap-includes=$(STAGING_DIR)/usr/include \
+	--with-pcap-includes=$(STAGING_DIR)/usr/include/pcap \
 	--with-pcre=$(STAGING_DIR)/usr \
 	--enable-pcre \
 	--enable-ipv6

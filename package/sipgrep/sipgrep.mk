@@ -13,7 +13,7 @@ SIPGREP_DEPENDENCIES = libpcap pcre
 SIPGREP_UNINSTALL_STAGING_OPT = --version
 
 SIPGREP_CONF_OPT += \
-	--with-pcap-includes=$(STAGING_DIR)/usr/include \
+	--with-pcap-includes=$(STAGING_DIR)/usr/include/pcap \
 	--enable-ipv6
 
 define SIPGREP_INSTALL_TARGET_CMDS
