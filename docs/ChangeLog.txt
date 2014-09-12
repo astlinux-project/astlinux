@@ -65,7 +65,7 @@ Released **TBD**
 
 -- sipgrep, version 2.0.0, new package very similar to 'ngrep' but tweaked for viewing SIP packets.
 
--- libcurl (curl) version bump to 7.37.1, bug fixes.
+-- libcurl (curl) version bump to 7.38.0, bug and security fixes: CVE-2014-3613, CVE-2014-3620
 
 -- msmtp, added configuration support for "aliases" when the file /mnt/kd/msmtp-aliases.conf exists.
    More Info: http://doc.astlinux.org/userdoc:tt_smtp_aliases
@@ -79,7 +79,7 @@ Released **TBD**
 
 -- stunnel, version bump to 5.03
 
--- radvd, version bump to 2.5
+-- radvd, version bump to 2.7
 
 -- rsync, version bump to 3.1.1
 
