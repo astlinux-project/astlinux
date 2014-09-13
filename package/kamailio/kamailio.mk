@@ -10,7 +10,7 @@ KAMAILIO_SITE = http://kamailio.org/pub/kamailio/$(KAMAILIO_VERSION)/src
 KAMAILIO_DEPENDENCIES = openssl
 
 KAMAILIO_GROUP_MODULES = standard
-KAMAILIO_INCLUDE_MODULES = acc htable outbound permissions registrar tls uac usrloc
+KAMAILIO_INCLUDE_MODULES = acc dispatcher htable outbound permissions registrar tls uac usrloc
 KAMAILIO_EXCLUDE_MODULES = rtpproxy-ng xhttp xhttp_rpc
 
 ifeq ($(strip $(BR2_PACKAGE_SQLITE)),y)
