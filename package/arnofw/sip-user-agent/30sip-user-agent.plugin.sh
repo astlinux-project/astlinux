@@ -33,7 +33,7 @@ PLUGIN_CONF_FILE="sip-user-agent.conf"
 # Plugin start function
 plugin_start()
 {
-  local user_agent user_agents mode ACTION port ports_udp ports_tcp IFS
+  local user_agent user_agents mode match ACTION port ports_udp ports_tcp IFS
 
   # Create new chains:
   iptables -N SIP_USER_AGENT 2>/dev/null
@@ -44,11 +44,11 @@ plugin_start()
 
   if [ -n "$SIP_USER_AGENT_PASS_TYPES" ]; then
     user_agents="$SIP_USER_AGENT_PASS_TYPES"
-    mode="pass"
+    mode="whitelist"
     ACTION="RETURN"
   else
     user_agents="${SIP_USER_AGENT_DROP_TYPES:-friendly-scanner sipcli}"
-    mode="drop"
+    mode="blacklist"
     ACTION="SIP_USER_AGENT_DROP"
   fi
 
@@ -59,7 +59,7 @@ plugin_start()
     ports_udp="5060"
   fi
 
-  echo "${INDENT}SIP User-Agent(s): $user_agents ($mode mode)"
+  echo "${INDENT}SIP User-Agent(s): $user_agents ($mode)"
   if [ -n "$ports_udp" ]; then
     echo "${INDENT}SIP User-Agent for EXT->Local UDP Port(s): $ports_udp"
   fi
@@ -78,10 +78,11 @@ plugin_start()
 
   unset IFS
   for user_agent in $user_agents; do
-    iptables -A SIP_USER_AGENT -m string --string "User-Agent: $user_agent" --algo bm --icase -j $ACTION
+    match="$(echo "$user_agent" | tr '~' ' ')"
+    iptables -A SIP_USER_AGENT -m string --string "User-Agent: $match" --algo bm --icase -j $ACTION
   done
 
-  if [ "$mode" = "pass" ]; then
+  if [ "$mode" = "whitelist" ]; then
     iptables -A SIP_USER_AGENT -j SIP_USER_AGENT_DROP
   fi
 
