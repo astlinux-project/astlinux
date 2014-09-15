@@ -126,6 +126,13 @@ $(TARGET_DIR)$(ARNOFW_TARGET_BINARY): $(ARNOFW_DIR)/.patched
 	$(INSTALL) -m 0644 package/arnofw/time-schedule-host-block/time-schedule-host-block.conf \
 		$(TARGET_DIR)/stat$(ARNOFW_PLUGIN_CONFIG_DIR)/time-schedule-host-block.conf
 	@echo
+	@echo "Install local version of SIP User-Agent plugin."
+	@echo
+	$(INSTALL) -m 0644 package/arnofw/sip-user-agent/30sip-user-agent.plugin.sh \
+		$(TARGET_DIR)$(ARNOFW_PLUGIN_SCRIPT_DIR)/30sip-user-agent.plugin
+	$(INSTALL) -m 0644 package/arnofw/sip-user-agent/sip-user-agent.conf \
+		$(TARGET_DIR)/stat$(ARNOFW_PLUGIN_CONFIG_DIR)/sip-user-agent.conf
+	@echo
 	@echo "Install local version of PPTP VPN plugin."
 	@echo
 	$(INSTALL) -m 0644 package/arnofw/pptp-vpn/50pptp-vpn.plugin.sh \
