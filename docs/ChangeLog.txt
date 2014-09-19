@@ -58,7 +58,7 @@ Released **TBD**
 -- OpenSSL, use 'linux-elf' configure option for i586 and i686 architectures, adds run-time optimizations
    for CPU features including AES-NI.
 
--- (Custom Build Only) kamailio, version 4.1.5, new package to support a very powerful, full featured SIP server.
+-- (Custom Build Only) kamailio, version 4.1.6, new package to support a very powerful, full featured SIP server.
    Includes rtpproxy for use when WITH_NAT is defined in the kamailio configuration.
    More info: http://doc.astlinux.org/userdoc:tt_kamailio
 
