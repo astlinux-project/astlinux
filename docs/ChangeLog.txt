@@ -20,6 +20,8 @@ Released **TBD**
 
 -- tg3, version bump to 3.136h, Broadcom NetLink 10/100/1000 Mbps PCI/PCI-X/PCI Express Ethernet Linux driver
 
+-- r8168 version bump to 8.039.00 RealTek PCI-Express Gigabit Ethernet Linux driver
+
 -- unionfs, version bump to 2.6
 
 -- php, version bump to 5.3.29, bug and security fixes
@@ -75,6 +77,8 @@ Released **TBD**
 
 -- AIF, "adaptive-ban" plugin, added 'kamailio' analysis type.
    Note: Requires 'WITH_ANTIFLOOD' enabled in kamailio for the logs to be generated
+
+-- dnscrypt-proxy, version bump to 1.4.1
 
 -- dnsmasq, version bump to 2.71, automatically set 'proxy-dnssec' when DNSCrypt is enabled.
 
