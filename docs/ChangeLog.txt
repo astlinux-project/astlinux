@@ -47,9 +47,11 @@ Released **TBD**
 
 -- nano, version bump to 2.3.6
 
--- sqlite, version bump to 3.8.5
+-- acpid, version bump to 2.0.23
 
--- sqliteodbc, version bump to 0.998
+-- sqlite, version bump to 3.8.6
+
+-- sqliteodbc, version bump to 0.999
 
 -- Time Zone Database update, tzdata2014g and tzcode2014g
 
