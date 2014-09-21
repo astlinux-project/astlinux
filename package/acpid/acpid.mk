@@ -4,7 +4,7 @@
 #
 #############################################################
 
-ACPID_VERSION = 2.0.22
+ACPID_VERSION = 2.0.23
 ACPID_SOURCE = acpid-$(ACPID_VERSION).tar.xz
 ACPID_SITE = http://downloads.sourceforge.net/project/acpid2
 
