@@ -45,6 +45,8 @@ Released **TBD**
 
 -- dosfstools, version bump to 3.0.26
 
+-- ethtool, version bump to 3.16
+
 -- nano, version bump to 2.3.6
 
 -- acpid, version bump to 2.0.23
