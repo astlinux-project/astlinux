@@ -47,7 +47,7 @@ plugin_start()
     mode="whitelist"
     ACTION="RETURN"
   else
-    user_agents="${SIP_USER_AGENT_DROP_TYPES:-friendly-scanner sipcli}"
+    user_agents="${SIP_USER_AGENT_DROP_TYPES:-friendly-scanner sipcli VaxSIPUserAgent}"
     mode="blacklist"
     ACTION="SIP_USER_AGENT_DROP"
   fi
