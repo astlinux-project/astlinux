@@ -24,6 +24,8 @@ Released **TBD**
 
 -- unionfs, version bump to 2.6
 
+-- bash, version bump to 4.1.12, security fix: CVE-2014-6271
+
 -- php, version bump to 5.3.29, bug and security fixes
 
 -- php, dynamically define /etc/php.ini so 'date.timezone' is always specified using the TIMEZONE variable.
