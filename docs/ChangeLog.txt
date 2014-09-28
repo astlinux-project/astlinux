@@ -24,7 +24,7 @@ Released **TBD**
 
 -- unionfs, version bump to 2.6
 
--- bash, version bump to 4.1.13, including "ShellShock" security fix: CVE-2014-6271, CVE-2014-7169
+-- bash, version bump to 4.1.14, including "ShellShock" security fix: CVE-2014-6271, CVE-2014-7169
    Note: AstLinux's bash now includes an additional patch to disable importing functions by default
          as NetBSD (original patch by Christos Zoulas) and FreeBSD, et al. .
 
