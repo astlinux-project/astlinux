@@ -100,6 +100,8 @@ Released **TBD**
 
 -- libpcap / tcpdump, version bump to 1.6.2 / 4.6.2
 
+-- openldap, ldap-phone-name-lookup and ldap-phone-num-lookup scripts, added 'o' (organization) as a searchable entry.
+
 ** Asterisk
 
 -- Asterisk 1.8.30.0 (version bump) and 11.12.1 (version bump)
