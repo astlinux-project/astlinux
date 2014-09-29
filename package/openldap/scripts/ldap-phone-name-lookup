@@ -162,7 +162,7 @@ if (($ldapconn = LDAP_Client($tls, $uri, $dn)) !== FALSE) {
     $filter .= "($mn=$name)";
   }
   $filter .= ')';
-  $justthese = array('cn', 'sn', 'givenname', 'displayname', 'telephonenumber', 'mobile', 'cellphone', 'homephone');
+  $justthese = array('cn', 'sn', 'givenname', 'displayname', 'o', 'telephonenumber', 'mobile', 'cellphone', 'homephone');
 
   if (($sr = ldap_search($ldapconn, $dn, $filter, $justthese)) !== FALSE) {
     $info = ldap_get_entries($ldapconn, $sr);
