@@ -5,10 +5,38 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.2.0:
+Additions for AstLinux 1.2.1:
 =============================
 
 Released **TBD**
+
+** System
+
+-- bash, version bump to 4.1.15 (security fixes: CVE-2014-7186, CVE-2014-7187)
+
+-- libsodium, version bump to 1.0.0
+
+-- pcre, version bump to 8.36
+
+** Networking
+
+-- openldap, version bump to 2.4.40
+
+** Asterisk
+
+-- Asterisk 1.8.31.0 (version bump) and 11.13.0 (version bump)
+
+-- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
+
+** Web Interface
+
+-- No change
+
+
+Additions for AstLinux 1.2.0:
+=============================
+
+Released 2014-10-02
 
 ** System
 
