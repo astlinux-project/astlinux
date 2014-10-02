@@ -1,8 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 
 . /etc/rc.conf
 
-. /etc/init.d/functions
+. /etc/init.d/functions.d/network
+. /etc/init.d/functions.d/misc
+
+nthfield()
+{
+  echo "${!1}" | cut "-d$2" "-f$3"
+}
 
 create_nasX()
 {

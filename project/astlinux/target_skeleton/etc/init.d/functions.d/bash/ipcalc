@@ -1,0 +1,147 @@
+#
+# Function include file for init.d/ 
+#
+# IP Calc Tools
+#
+# Requires: bash
+#
+
+_inordinal()
+{
+  if [ $# -lt 1 ]; then
+    echo "_ismember: wrong number of args" >&2
+    exit 1
+  fi
+
+  local ARG="$1" ELEM
+  shift
+
+  local -i nth=1
+
+  for ELEM in "$@"; do
+    if [ "$ARG" = "$ELEM" ]; then
+      echo $nth
+      return
+    fi
+    let nth++
+  done
+
+  echo 0
+}
+
+_ismember()
+{
+  [ `_inordinal "$@"` != 0 ]
+}
+
+declare -ir UINT_MAX=4294967295
+declare -ir UCHAR_MAX=255
+
+_isnum()
+{
+  if [ $# -ne 1 ]; then
+    echo "_isnum: wrong number of args" >&2
+    exit 1
+  fi
+
+  [ $(expr "$1" : "[0-9][0-9]*$") -ne 0 ]
+}
+
+_ishexnum()
+{
+  if [ $# -ne 1 ]; then
+    echo "_isnum: wrong number of args" >&2
+    exit 1
+  fi
+
+  [ $(expr "$1" : "0x[0-9a-fA-F][0-9a-fA-F]*$") -ne 0 ]
+}
+
+_ispowerof2()
+{
+  if [ $# -ne 1 ]; then
+    echo "_ispowerof2: wrong number of args" >&2
+    exit 1
+  elif ! _isnum "$1"; then
+    echo "_ispowerof2: not an integer" >&2
+    exit 1
+  fi
+
+  local -i NUM="$1" DEC
+
+  DEC=$(($NUM - 1))
+
+  [ $(($NUM & $DEC)) -eq 0 ]
+}
+
+_isvalidmask()
+{
+  if [ $# -ne 1 ]; then
+    echo "_isvalidmask: wrong number of args" >&2
+    exit 1
+  elif ! _isnum "$1" && ! _ishexnum "$1"; then
+    echo "_isvalidmask: not an integer" >&2
+    exit 1
+  fi
+
+  # the assignment will take care of radix conversion
+  local -i NUM="$1"
+
+  # can't use ~$NUM so we XOR it with UINT_MAX
+  _ispowerof2 $((($NUM ^ $UINT_MAX) + 1))
+}
+
+_isdottedquad()
+{
+  if [ $# -ne 1 ]; then
+    echo "_isdottedquad: wrong number of args" >&2
+    exit 1
+  fi
+
+  local ARG="$1" IFS INT VAL=0
+
+  if [ $(expr "$ARG" : '[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*$') -eq 0 ]; then
+    return 1
+  fi
+
+  IFS='.'
+  for INT in $ARG; do
+    if [ "$INT" -gt $UCHAR_MAX ]; then
+      return 1
+    fi
+    VAL=$((($VAL << 8) + $INT))
+  done
+
+  # send me to /dev/null if you only want to syntax-check
+  echo $VAL
+
+  return 0
+}
+
+_mkdottedquad()
+{
+  if [ $# -ne 1 ]; then
+    echo "_mkdottedquad: wrong number of args" >&2
+    exit 1
+  elif ! _isnum "$1"; then
+    echo "_mkdottedquad: not an integer" >&2
+    exit 1
+  fi
+
+  local -i INT="$1" VAL=0 UNIT
+  local STR=
+
+  if [ $INT -gt $UINT_MAX ]; then
+    echo "_mkdottedquad: out-of-bounds" >&2
+    exit 1
+  fi
+
+  for UNIT in 16777216 65536 256 1; do
+    VAL=$(($INT / $UNIT))
+    STR="$STR${STR:+.}$VAL"
+    INT=$(($INT % $UNIT))
+  done
+
+  echo $STR
+}
+

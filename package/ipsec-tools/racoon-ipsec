@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 gen_dynamic_preamble()
 {
@@ -569,7 +569,9 @@ bad_config()
 
 . /etc/rc.conf
 
-. /etc/init.d/functions
+. /etc/init.d/functions.d/bash/ipcalc
+. /etc/init.d/functions.d/network
+. /etc/init.d/functions.d/misc
 
 prog="$(basename $0)"
 

@@ -1,8 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
 . /etc/rc.conf
 
-. /etc/init.d/functions
+. /etc/init.d/functions.d/bash/ipcalc
+. /etc/init.d/functions.d/network
+. /etc/init.d/functions.d/misc
 
 dnscrypt_proxy_check()
 {

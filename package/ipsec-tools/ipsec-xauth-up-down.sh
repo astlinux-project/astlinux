@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # IPsec XAuth Phase1 Up / Down script
 

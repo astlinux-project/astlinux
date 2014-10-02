@@ -1,0 +1,75 @@
+#
+# Function include file for init.d/ 
+#
+# Miscellaneous Tools
+#
+# Convention, begin included functions with SYS_
+# SYS_function_name()
+#
+
+SYS_gen_etc_hosts() {
+  local ip hostip hostipv6 IFS
+
+  # we deliberately leave out EXTIP
+  for ip in $INTIP/$INTIPV6 $INT2IP/$INT2IPV6 $INT3IP/$INT3IPV6; do
+    hostip="$(echo $ip | cut -d'/' -f1)"
+    hostipv6="$(echo $ip | cut -d'/' -f2)"
+    if [ -n "$hostip" ]; then
+      # we only need the first non-empty one...
+      break
+    fi
+  done
+
+  echo "# Automatically generated from internal state.
+127.0.0.1	localhost${hostip:+
+$hostip	$HOSTNAME.$DOMAIN $HOSTNAME}"
+
+  if [ "$IPV6" = "yes" ]; then
+    echo "
+::1	localhost ip6-localhost ip6-loopback${hostipv6:+
+$hostipv6	$HOSTNAME.$DOMAIN $HOSTNAME}
+"
+  fi
+
+  # DDHOST may not be a pure DNS Name, purify it
+  if [ -n "$DDHOST" ]; then
+    echo "$INTIP	$(echo "$DDHOST" | sed 's/[, ].*//')"
+  fi
+
+  if [ -f /stat/etc/hosts ]; then
+    echo ""
+    cat /stat/etc/hosts
+  fi
+
+  if [ -f /mnt/kd/hosts ]; then
+    echo ""
+    cat /mnt/kd/hosts
+  fi
+
+  if [ -n "$STATICHOSTS" ]; then
+
+    echo "
+# generated from STATICHOSTS in rc.conf"
+
+    IFS=$'\n'
+    for i in $STATICHOSTS; do
+      echo "$i" | awk -F~ '{ print $2 "\t" $1 ($4 == "" ? "" : "\t# "$4); }'
+    done
+  fi
+}
+
+SYS_is_vpn_type()
+{
+  # args: vpn_type
+  local vpn IFS
+
+  unset IFS
+  for vpn in $VPN; do
+    if [ "$vpn" = "$1" ]; then
+      return 0
+    fi
+  done
+
+  return 1
+}
+

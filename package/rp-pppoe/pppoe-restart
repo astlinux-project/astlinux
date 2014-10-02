@@ -13,7 +13,7 @@ fi
 
 . /etc/rc.conf
 
-. /etc/init.d/functions
+. /etc/init.d/functions.d/network
 
 delay=${PPPOE_RESTART_DELAY:-2}
 

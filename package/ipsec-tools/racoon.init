@@ -2,7 +2,7 @@
 
 . /etc/rc.conf
 
-. /etc/init.d/functions
+. /etc/init.d/functions.d/misc
 
 init()
 {
