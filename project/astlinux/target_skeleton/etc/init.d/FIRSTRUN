@@ -36,6 +36,17 @@ update_system_default_users()
   done
 }
 
+update_root_passwd_default()
+{
+  local base="$1" current
+
+  current="$(grep "^root:" "${base}/etc/passwd")"
+  if [ -n "$current" -a "$current" != "$(grep "^root:" "/etc/passwd")" ]; then
+    sed -i -e "s|^root:.*$|${current}|" "/etc/passwd"
+    echo "FIRSTRUN: Updated system default 'root' user in '/etc/passwd'"
+  fi
+}
+
 init () {
   local new old=""
   
@@ -61,9 +72,11 @@ init () {
     if [ -d /oldroot/mnt/asturo ]; then
       add_system_default_users /oldroot/mnt/asturo
       update_system_default_users /oldroot/mnt/asturo
+      update_root_passwd_default /oldroot/mnt/asturo
     elif [ -d /oldroot/image ]; then
       add_system_default_users /oldroot/image
       update_system_default_users /oldroot/image
+      update_root_passwd_default /oldroot/image
     fi
 
     case $old in
