@@ -12,7 +12,7 @@ Released **TBD**
 
 ** System
 
--- bash, version bump to 4.1.15 (security fixes: CVE-2014-7186, CVE-2014-7187)
+-- bash, version bump to 4.1.16, bug and security fixes
 
 -- libsodium, version bump to 1.0.0
 
@@ -27,6 +27,8 @@ Released **TBD**
 -- Asterisk 1.8.31.0 (version bump) and 11.13.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
+
+-- wanpipe, version bump to 7.0.12
 
 ** Web Interface
 
