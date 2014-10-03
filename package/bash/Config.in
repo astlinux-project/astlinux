@@ -5,3 +5,13 @@ config BR2_PACKAGE_BASH
 	  The standard GNU Bourne again shell.
 
 	  http://tiswww.case.edu/php/chet/bash/bashtop.html
+
+if BR2_PACKAGE_BASH
+
+config BR2_PACKAGE_BASH_DEFAULT_SHELL
+	bool "bash default shell"
+	default y
+	help
+	  Link /bin/sh to bash
+
+endif
