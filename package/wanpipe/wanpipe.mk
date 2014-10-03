@@ -3,7 +3,7 @@
 # wanpipe
 #
 #############################################################
-WANPIPE_VER:= 7.0.10
+WANPIPE_VER:= 7.0.12
 WANPIPE_SITE:= ftp://ftp.sangoma.com/linux/current_wanpipe
 WANPIPE_SOURCE:=wanpipe-$(WANPIPE_VER).tgz
 WANPIPE_DIR:=$(BUILD_DIR)/wanpipe-$(WANPIPE_VER)
