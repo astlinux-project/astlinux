@@ -20,6 +20,8 @@ Released **TBD**
 
 ** Networking
 
+-- prosody, version bump to 0.9.5
+
 -- openldap, version bump to 2.4.40
 
 ** Asterisk
