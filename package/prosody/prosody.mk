@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PROSODY_VERSION = 0.9.4
+PROSODY_VERSION = 0.9.5
 PROSODY_SOURCE = prosody-$(PROSODY_VERSION).tar.gz
 PROSODY_SITE = http://prosody.im/downloads/source
 PROSODY_DEPENDENCIES = lua libidn openssl luafilesystem luaexpat luasocket luasec
@@ -17,7 +17,7 @@ define PROSODY_CONFIGURE_CMDS
 		--with-lua="$(HOST_DIR)/usr" \
 		--with-lua-include="$(STAGING_DIR)/usr/include" \
 		--with-lua-lib="$(STAGING_DIR)/usr/lib" \
-		--cflags="$(TARGET_CFLAGS) $(TARGET_CPPFLAGS) -fPIC -std=gnu99" \
+		--cflags="$(TARGET_CFLAGS) $(TARGET_CPPFLAGS) -fPIC -std=gnu99 -D_GNU_SOURCE" \
 		--ldflags="$(TARGET_LDFLAGS) -shared" \
 		--datadir="/etc/prosody/data" \
 		--c-compiler='$(TARGET_CC)' \
