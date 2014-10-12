@@ -12,6 +12,8 @@ Released **TBD**
 
 ** System
 
+-- RUNNIX, version bump to runnix-0.4-6752
+
 -- bash, version bump to 4.1.17, bug and security fixes
 
 -- libsodium, version bump to 1.0.0
