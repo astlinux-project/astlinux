@@ -20,11 +20,15 @@ Released **TBD**
 
 -- pcre, version bump to 8.36
 
+-- Time Zone Database update, tzdata2014h and tzcode2014h
+
 ** Networking
 
 -- prosody, version bump to 0.9.5
 
 -- openldap, version bump to 2.4.40
+
+-- radvd, version bump to 2.8
 
 ** Asterisk
 
