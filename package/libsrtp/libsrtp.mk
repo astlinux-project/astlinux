@@ -3,16 +3,25 @@
 # libsrtp
 #
 #############################################################
-LIBSRTP_VERSION:=1.4.4
-LIBSRTP_SITE:=http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/sourceforge/srtp
-LIBSRTP_SOURCE:=srtp-$(LIBSRTP_VERSION).tgz
+LIBSRTP_VERSION = 1.5.0
+LIBSRTP_SITE = http://files.astlinux.org
+#LIBSRTP_SITE = https://github.com/cisco/libsrtp/releases
+LIBSRTP_SOURCE = libsrtp-$(LIBSRTP_VERSION).tar.gz
 LIBSRTP_INSTALL_STAGING = YES
-LIBSRTP_INSTALL_TARGET = YES
+LIBSRTP_DEPENDENCIES = openssl
+
 LIBSRTP_CONF_OPT = \
 	--prefix=/usr \
+	--enable-openssl \
+	--enable-syslog \
+	--disable-stdout \
 	--disable-debug
 
-LIBSRTP_MAKE_OPT = CC='$(TARGET_CC)' LD='$(TARGET_LD)' -C $(@D) libsrtp.so
+LIBSRTP_MAKE_OPT = \
+	CC='$(TARGET_CC)' \
+	LD='$(TARGET_LD)' \
+	CFLAGS='$(TARGET_CFLAGS) -fPIC' \
+	-C $(@D) libsrtp.so
 
 define LIBSRTP_INSTALL_TARGET_CMDS
 	cp -a $(STAGING_DIR)/usr/lib/libsrtp.so* $(TARGET_DIR)/usr/lib/
