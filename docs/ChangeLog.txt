@@ -16,6 +16,8 @@ Released **TBD**
 
 -- bash, version bump to 4.1.17, bug and security fixes
 
+-- libsrtp, version bump to 1.5.0, now using the Cisco repo with OpenSSL support
+
 -- libsodium, version bump to 1.0.0
 
 -- pcre, version bump to 8.36
