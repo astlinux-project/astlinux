@@ -136,7 +136,9 @@ ${SYSLOG_OK}  { levels = { min = \"$syslog\" }, to = \"syslog\" };
 ${ERROR_LOG}  error = \"/var/log/prosody/prosody.err\";
 }
 
+-- Don't include ssl option \"no_sslv3\" since Asterisk 1.8 and 11 use SSLv3
 ssl = {
+  options = { \"no_sslv2\", \"no_ticket\", \"no_compression\", \"cipher_server_preference\", \"single_dh_use\", \"single_ecdh_use\" };
   certificate = \"$cert\";
   key = \"$key\";
 }
