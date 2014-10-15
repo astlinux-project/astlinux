@@ -28,6 +28,7 @@ HOST_LIBXML2_CONF_OPT = --without-debug --without-python
 ifneq ($(BR2_HAVE_DEVFILES),y)
 define LIBXML2_REMOVE_CONFIG_SCRIPTS
 	rm -f $(TARGET_DIR)/usr/bin/xml2-config
+	rm -f $(TARGET_DIR)/usr/lib/xml2Conf.sh
 endef
 LIBXML2_POST_INSTALL_TARGET_HOOKS += LIBXML2_REMOVE_CONFIG_SCRIPTS
 endif
