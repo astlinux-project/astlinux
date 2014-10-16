@@ -14,6 +14,8 @@ Released **TBD**
 
 -- RUNNIX, version bump to runnix-0.4-6752
 
+-- r8168 revert to previous 8.038.00 RealTek PCI-Express Gigabit Ethernet Linux driver
+
 -- bash, version bump to 4.1.17, bug and security fixes
 
 -- libsrtp, version bump to 1.5.0, now using the Cisco repo with OpenSSL support
@@ -26,11 +28,15 @@ Released **TBD**
 
 ** Networking
 
+-- OpenSSL, version bump to 1.0.1j (security fixes: CVE-2014-3513, CVE-2014-3567, CVE-2014-3568)
+
 -- prosody, version bump to 0.9.6
 
 -- openldap, version bump to 2.4.40
 
 -- radvd, version bump to 2.8
+
+-- stunnel, version bump to 5.06
 
 ** Asterisk
 
