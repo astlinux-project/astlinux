@@ -18,6 +18,8 @@ Released **TBD**
 
 -- bash, version bump to 4.1.17, bug and security fixes
 
+-- libxml2, version bump to 2.9.2 (security fixes: CVE-2014-3660, CVE-2014-0191)
+
 -- libsrtp, version bump to 1.5.0, now using the Cisco repo with OpenSSL support
 
 -- libsodium, version bump to 1.0.0
