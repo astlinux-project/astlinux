@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LIBXML2_VERSION = 2.9.1
+LIBXML2_VERSION = 2.9.2
 LIBXML2_SITE = ftp://xmlsoft.org/libxml2
 LIBXML2_INSTALL_STAGING = YES
 
@@ -22,6 +22,7 @@ endef
 LIBXML2_POST_INSTALL_STAGING_HOOKS += LIBXML2_STAGING_LIBXML2_CONFIG_FIXUP
 
 HOST_LIBXML2_DEPENDENCIES = host-pkg-config
+LIBXML2_DEPENDENCIES = host-pkg-config
 
 HOST_LIBXML2_CONF_OPT = --without-debug --without-python
 
