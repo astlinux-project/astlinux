@@ -36,7 +36,7 @@ endif
 
 ifeq ($(BR2_PACKAGE_ZLIB),y)
 LIBXML2_DEPENDENCIES += zlib
-LIBXML2_CONF_OPT += --with-zlib
+LIBXML2_CONF_OPT += --with-zlib=$(STAGING_DIR)/usr
 else
 LIBXML2_CONF_OPT += --without-zlib
 endif
