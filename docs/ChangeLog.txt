@@ -48,6 +48,10 @@ Released **TBD**
 
 -- wanpipe, version bump to 7.0.12
 
+-- FOP2, available version bump to 2.28.  New CLI command option: "service fop2 test"
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: http://doc.astlinux.org/userdoc:tt_asterisk-fop2-upgrade
+
 ** Web Interface
 
 -- No change
