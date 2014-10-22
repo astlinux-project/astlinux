@@ -63,6 +63,25 @@ reload () {
   fi
 }
 
+dotest () {
+  local restart
+
+  if [ -f $PIDFILE ]; then
+    restart=1
+    stop
+  else
+    restart=0
+    init
+  fi
+  if [ -f /etc/fop2/fop2.cfg ]; then
+    echo "Testing Asterisk FOP2..."
+    $FOP2_SERVER --test -c /etc/fop2
+  fi
+  if [ $restart -eq 1 ]; then
+    start
+  fi
+}
+
 case $1 in
 
 start)
@@ -88,8 +107,12 @@ reload)
   reload
   ;;
 
+test)
+  dotest
+  ;;
+
 *)
-  echo "Usage: start|stop|restart|reload"
+  echo "Usage: start|stop|restart|reload|test"
   ;;
 
 esac

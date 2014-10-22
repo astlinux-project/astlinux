@@ -95,6 +95,21 @@ upgrade() {
   fi
 }
 
+upgrade_config() {
+  local file IFS
+
+  case $PKG in
+    fop2)
+      unset IFS
+      for file in server/fop2.lic; do
+        if [ -f "$BASE/$PKG-OLD/$file" ] && [ ! -f "$BASE/$PKG/$file" ]; then
+          cp "$BASE/$PKG-OLD/$file" "$BASE/$PKG/$file"
+        fi
+      done
+      ;;
+  esac
+}
+
 revert() {
 
   if [ ! -d $BASE/$PKG ]; then
@@ -196,7 +211,7 @@ fop2)
   if ! RAM_needed_MB 475; then
     finish $RED "Not enough RAM installed. Minimum: 512 MB, Recommended: 1024+ MB"
   fi
-  SRC_URL="http://files.astlinux.org/fop2-2.27-debian-i386.tgz"
+  SRC_URL="http://files.astlinux.org/fop2-2.28-debian-i386.tgz"
   ;;
 
 show)
@@ -220,6 +235,7 @@ upgrade)
     SRC_URL=$2
   fi
   upgrade
+  upgrade_config
   finish $GREEN "Successful package '$PKG' upgrade, '$PKG' is not running."
   ;;
 
