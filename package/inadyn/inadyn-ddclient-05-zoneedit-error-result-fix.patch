@@ -11,7 +11,7 @@
  		    $status_ip   = $var{'IP'}   if exists $var{'IP'};
  
 -		    if ($status eq 'SUCCESS' || ($status eq 'ERROR' && $var{'CODE'} eq '707')) {
-+		    if ($status eq 'SUCCESS' || ($status eq 'ERROR' && ($var{'CODE'} eq '707' || $var{'CODE'} eq '702'))) {
++		    if ($status eq 'SUCCESS' || ($status eq 'ERROR' && ($var{'CODE'} eq '703' || $var{'CODE'} eq '701'))) {
  			$config{$h}{'ip'}     = $status_ip;
  			$config{$h}{'mtime'}  = $now;
  	    		$config{$h}{'status'} = 'good';
