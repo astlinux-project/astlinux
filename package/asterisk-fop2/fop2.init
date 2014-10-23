@@ -49,6 +49,13 @@ stop () {
   if [ -f $PIDFILE ]; then
     echo "Stopping Asterisk FOP2..."
     kill $(cat $PIDFILE) >/dev/null 2>&1
+
+    # Wait for FOP2 to stop
+    cnt=5
+    while [ $cnt -gt 0 ] && [ -f $PIDFILE ]; do
+      cnt=$((cnt - 1))
+      sleep 1
+    done
     rm -f $PIDFILE
   fi
 }
