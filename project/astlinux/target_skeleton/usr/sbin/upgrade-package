@@ -22,6 +22,33 @@ RAM_needed_MB() {
   return 0
 }
 
+check() {
+  local ver installed available
+
+  if [ -f $BASE/$PKG/.sha1 ]; then
+    ver="$(cat $BASE/$PKG/.sha1 | awk '{ print $2; exit; }')"
+    ver="${ver##*/}"
+    ver="${ver%.*}"
+    installed="$ver"
+  else
+    installed=""
+  fi
+
+  ver="$SRC_URL"
+  ver="${ver##*/}"
+  ver="${ver%.*}"
+  available="$ver"
+
+  if [ "$installed" = "$available" ]; then
+    finish $ORANGE "Package '$PKG' is currently the newest available version: $available"
+  fi
+  if [ -n "$installed" ]; then
+    PKG_STR="Package '$PKG' current version is: $installed, newest available version is: $available"
+  else
+    PKG_STR="Package '$PKG' is not installed, newest available version is: $available"
+  fi
+}
+
 upgrade() {
   local suffix="${SRC_URL##*.}" tar_args pkg_dir err_str sha1
 
@@ -152,21 +179,31 @@ show() {
     unset IFS
     for pkg in $pkgs; do
       pkg="${pkg##*/}"
-      if [ -f $BASE/$pkg/.sha1 ]; then
-        ver="$(cat $BASE/$pkg/.sha1 | awk '{ print $2; exit; }')"
-        ver="${ver##*/}"
-        ver="${ver%.*}"
-        str="$str${str:+, }$pkg ($ver)"
-      else
-        str="$str${str:+, }$pkg (unknown)"
+      if [ "$PKG" = "show" -o "$PKG" = "${pkg%-OLD}" ]; then
+        if [ -f $BASE/$pkg/.sha1 ]; then
+          ver="$(cat $BASE/$pkg/.sha1 | awk '{ print $2; exit; }')"
+          ver="${ver##*/}"
+          ver="${ver%.*}"
+          str="$str${str:+, }$pkg ($ver)"
+        else
+          str="$str${str:+, }$pkg (unknown)"
+        fi
       fi
     done
   fi
 
-  if [ -z "$str" ]; then
-    PKG_STR="No Packages Installed."
+  if [ "$PKG" = "show" ]; then
+    if [ -z "$str" ]; then
+      PKG_STR="No Packages Installed."
+    else
+      PKG_STR="Installed Packages: $str"
+    fi
   else
-    PKG_STR="Installed Packages: $str"
+    if [ -z "$str" ]; then
+      PKG_STR="Package '$PKG' is not installed."
+    else
+      PKG_STR="Installed '$PKG' Package: $str"
+    fi
   fi
 }
 
@@ -230,6 +267,11 @@ shift
 
 case $1 in
 
+check)
+  check
+  finish $GREEN "$PKG_STR"
+  ;;
+
 upgrade)
   if [ -n "$2" ]; then
     SRC_URL=$2
@@ -237,6 +279,11 @@ upgrade)
   upgrade
   upgrade_config
   finish $GREEN "Successful package '$PKG' upgrade, '$PKG' is not running."
+  ;;
+
+show)
+  show
+  finish $GREEN "$PKG_STR"
   ;;
 
 revert)
@@ -250,7 +297,7 @@ remove)
   ;;
 
 *)
-  finish 1 "Usage: upgrade-package $PKG upgrade|revert|remove [ package_url ]"
+  finish 1 "Usage: upgrade-package $PKG check|upgrade|show|revert|remove [ package_url ]"
   ;;
 
 esac
