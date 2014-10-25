@@ -54,7 +54,8 @@ Released **TBD**
 
 ** Web Interface
 
--- No change
+-- System -> Add-On Packages: add action "Check for New" and "Show Installed" works
+   for all packages, or now just the selected package.
 
 
 Additions for AstLinux 1.2.0:
