@@ -368,10 +368,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         putACTIONresult($result_str, $status);
         exit;
       } elseif ($action === 'show') {
-        $result_str = shell($file.' '.$action.$std_err, $status);
+        if ($type !== '') {
+          $result_str = shell($file.' '.$type.' '.$action.$std_err, $status);
+        } else {
+          $result_str = shell($file.' '.$action.$std_err, $status);
+        }
         putACTIONresult($result_str, $status);
         exit;
       } elseif ($action === 'revert') {
+        $result_str = shell($file.' '.$type.' '.$action.$std_err, $status);
+        putACTIONresult($result_str, $status);
+        exit;
+      } elseif ($action === 'check') {
         $result_str = shell($file.' '.$type.' '.$action.$std_err, $status);
         putACTIONresult($result_str, $status);
         exit;
@@ -784,6 +792,8 @@ if (is_file('/usr/sbin/upgrade-package')) {
   putHtml('<select name="addon_package_action">');
   $sel = ($addon_package_action === 'upgrade') ? ' selected="selected"' : '';
   putHtml('<option value="upgrade"'.$sel.'>Upgrade/Install</option>');
+  $sel = ($addon_package_action === 'check') ? ' selected="selected"' : '';
+  putHtml('<option value="check"'.$sel.'>Check for New</option>');
   $sel = ($addon_package_action === 'remove') ? ' selected="selected"' : '';
   putHtml('<option value="remove"'.$sel.'>Remove</option>');
   $sel = ($addon_package_action === 'show') ? ' selected="selected"' : '';

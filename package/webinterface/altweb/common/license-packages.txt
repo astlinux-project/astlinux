@@ -7,7 +7,7 @@
 ##
 ex-vi~Copyright (c) 2001-2002 Caldera International Inc. All rights reserved.
 RUNNIX~Copyright (c) 2006-2014 by Kristian Kielhofner.
-libSRTP~Copyright (c) 2001-2005 Cisco Systems, Inc. All rights reserved.
+libSRTP~Copyright (c) 2001-2014 Cisco Systems, Inc. All rights reserved.
 iLBC CODEC~Copyright (c) 2011 The WebRTC project authors. All rights reserved.
 Web Interface~Copyright (c) 2008-2014 Lonnie Abelbeck.
 shellinabox~Copyright (c) 2008-2010 Markus Gutschke.
