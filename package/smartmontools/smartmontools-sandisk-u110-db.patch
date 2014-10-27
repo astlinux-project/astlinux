@@ -1,0 +1,20 @@
+--- smartmontools-6.3/drivedb.h.orig	2014-10-27 10:51:52.000000000 -0500
++++ smartmontools-6.3/drivedb.h	2014-10-27 10:55:26.000000000 -0500
+@@ -1003,7 +1003,8 @@
+     "SanDisk iSSD P4 [0-9]*GB|" // tested with SanDisk iSSD P4 16GB/SSD 9.14
+     "SanDisk SDSSDP[0-9]*G|" // tested with SanDisk SDSSDP064G/1.0.0, SDSSDP128G/2.0.0
+     "SanDisk SSD i100 [0-9]*GB|" // tested with SanDisk SSD i100 8GB/11.56.04, 24GB/11.56.04
+-    "SanDisk SSD U100 ([0-9]*GB|SMG2)", // tested with SanDisk SSD U100 8GB/10.56.00, 256GB/10.01.02, SMG2/10.56.04
++    "SanDisk SSD U100 ([0-9]*GB|SMG2)|" // tested with SanDisk SSD U100 8GB/10.56.00, 256GB/10.01.02, SMG2/10.56.04
++    "SanDisk SSD U110 [0-9]*GB",        // tested with SanDisk SSD U110 32GB/U221000
+     "", "",
+   //"-v 5,raw16(raw16),Reallocated_Sector_Ct "
+   //"-v 9,raw24(raw8),Power_On_Hours "
+@@ -1008,6 +1008,7 @@
+   //"-v 5,raw16(raw16),Reallocated_Sector_Ct "
+   //"-v 9,raw24(raw8),Power_On_Hours "
+   //"-v 12,raw48,Power_Cycle_Count "
++    "-v 165,raw48,Total_Write_Erase_Count "
+     "-v 171,raw48,Program_Fail_Count "
+     "-v 172,raw48,Erase_Fail_Count "
+     "-v 173,raw48,Avg_Write_Erase_Ct "

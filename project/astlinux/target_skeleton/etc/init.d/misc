@@ -23,6 +23,11 @@ init () {
   if [ -n "$NETISSUE" ]; then
     echo "$NETISSUE" > /tmp/etc/issue.net
   fi
+
+  # local smartmontools drive database for smartctl
+  if [ -f /mnt/kd/smart_drivedb.h ]; then
+    ln -sf /mnt/kd/smart_drivedb.h /tmp/etc/smart_drivedb.h
+  fi
 }
 
 start () {
