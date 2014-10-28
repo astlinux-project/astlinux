@@ -51,3 +51,4 @@ iftop~Copyright (c) 2002-2014 Paul Warren, Chris Lightfoot, et al.
 dnscrypt-proxy~Copyright (c) 2011-2014 Frank Denis
 libsodium~Copyright (c) 2013-2014 Frank Denis
 phoneprov-tools~Copyright (c) 2014 Lonnie Abelbeck and Michael Keuter.
+smartmontools~Copyright (c) 2002-2014, Bruce Allen, Christian Franke, et al.

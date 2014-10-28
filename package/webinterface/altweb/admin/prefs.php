@@ -146,6 +146,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'status_show_hardware_monitoring = yes';
       fwrite($fp, $value."\n");
     }
+    if (isset($_POST['smart_monitoring'])) {
+      $value = 'status_show_smart_monitoring = yes';
+      fwrite($fp, $value."\n");
+    }
     if (! isset($_POST['system_logs'])) {
       $value = 'status_show_system_logs = no';
       fwrite($fp, $value."\n");
@@ -659,6 +663,9 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_show_hardware_monitoring') === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="hardware_monitoring" name="hardware_monitoring"'.$sel.' /></td><td colspan="5">Show Hardware Monitoring</td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'status_show_smart_monitoring') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="smart_monitoring" name="smart_monitoring"'.$sel.' /></td><td colspan="5">Show S.M.A.R.T Monitoring</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_show_system_logs') !== 'no') ? ' checked="checked"' : '';

@@ -1212,17 +1212,31 @@ if (is_executable('/usr/bin/sensors')) {
   if (getPREFdef($global_prefs, 'status_show_hardware_monitoring') === 'yes') {
     putHtml("<h2>Hardware Monitoring:</h2>");
     putHtml("<pre>");
-    $tmpfile = tempnam("/tmp", "PHP_");
-    shell('/usr/bin/sensors >'.$tmpfile, $status);
-  
-    $ph = @fopen($tmpfile, "r");
-    while (! feof($ph)) {
-      if ($line = rtrim(fgets($ph, 1024))) {
+
+    $output = array();
+    @exec('/usr/bin/sensors', $output);
+    foreach ($output as $line) {
+      $line = rtrim($line);
+      if ($line !== '') {
         putText($line);
       }
     }
-    fclose($ph);
-    @unlink($tmpfile);
+    unset($output);
+    putHtml("</pre>");
+  }
+}
+
+if (is_executable('/usr/sbin/smart-status')) {
+  if (getPREFdef($global_prefs, 'status_show_smart_monitoring') === 'yes') {
+    putHtml("<h2>S.M.A.R.T Monitoring:</h2>");
+    putHtml("<pre>");
+
+    $output = array();
+    @exec('/usr/sbin/smart-status attributes', $output);
+    foreach ($output as $line) {
+      putText(rtrim($line));
+    }
+    unset($output);
     putHtml("</pre>");
   }
 }
