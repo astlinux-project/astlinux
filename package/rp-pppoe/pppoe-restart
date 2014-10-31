@@ -22,7 +22,7 @@ delay=${PPPOE_RESTART_DELAY:-2}
 sleep 1
 
 # kill any remaining pppd/pppoe processes
-for pid in $(ps | awk '/[\/]pppd .*\/rp-pppoe.so / { print $1; }'); do
+for pid in $(pgrep -f '^pppd .*/rp-pppoe.so '); do
   kill -9 $pid
 done
 
