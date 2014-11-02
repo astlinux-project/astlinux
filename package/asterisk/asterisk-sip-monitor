@@ -61,7 +61,7 @@ start_run()
   
   trap 'rm -f "$LOCKFILE" "$PIDFILE"; exit $?' INT TERM EXIT
   
-  echo "$$" > "$PIDFILE"
+  echo "$BASHPID" > "$PIDFILE"
   
   # Delay to allow asterisk to start
   idle_wait 60
