@@ -491,15 +491,6 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
     #end static ip on 2nd if
   fi
 
-  if [ -n "$EXTGW" -a -n "$EXT2GW" ]; then
-    if [ -n "$FAILTIME" ]; then
-      TIME=$FAILTIME
-    else
-      TIME=10
-    fi
-    echo $TIME > /proc/sys/net/ipv4/route/gc_timeout
-  fi
-
   #DHCP
   if [ -n "$EXTIF" -a -z "$EXTIP" ] && ! isextppp extif; then
     udhcpc -b -T2 -t6 -S -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXTIF.pid -i $EXTIF
