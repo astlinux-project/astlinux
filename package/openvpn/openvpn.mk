@@ -4,7 +4,7 @@
 #
 #############################################################
 
-OPENVPN_VERSION = 2.3.4
+OPENVPN_VERSION = 2.3.5
 OPENVPN_SITE = http://swupdate.openvpn.net/community/releases
 OPENVPN_DEPENDENCIES = host-pkg-config
 OPENVPN_CONF_OPT = --disable-plugins --enable-iproute2 --enable-password-save
