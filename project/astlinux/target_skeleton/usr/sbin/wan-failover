@@ -1,0 +1,370 @@
+#!/bin/bash
+##
+## Linux WAN failover script.
+##
+## Original: http://code.google.com/p/wanfailoverscript/
+## Copyright 2010 Louwrentius
+##
+## Copyright 2014 Modified for AstLinux
+##
+## Licence = GNU GPL
+##
+
+. /etc/rc.conf
+
+LOCKFILE="/var/lock/wan-failover.lock"
+PIDFILE="/var/run/wan-failover.pid"
+SCRIPTFILE="/mnt/kd/wan-failover.script"
+
+TARGETS="$WAN_FAILOVER_TARGETS"
+INTERVAL="${WAN_FAILOVER_TEST_INTERVAL:-20}"
+MAX_LATENCY="${WAN_FAILOVER_MAX_LATENCY:-1000}"
+THRESHOLD="${WAN_FAILOVER_THRESHOLD:-3}"
+SECONDARY_DELAY="${WAN_FAILOVER_SECONDARY_DELAY:-900}"
+PRIMARY_DELAY="${WAN_FAILOVER_PRIMARY_DELAY:-60}"
+VERBOSITY="${WAN_FAILOVER_VERBOSITY:-6}"
+NOTIFY="$WAN_FAILOVER_NOTIFY"                # Who to notify with email alerts, space separate
+NOTIFY_FROM="$WAN_FAILOVER_NOTIFY_FROM"      # From email header (optional)
+
+TARGETS_FAILED=0
+TEST_INTERVAL=$INTERVAL
+NO_OF_TARGETS=0
+
+log() {
+  local TYPE="$1" MESG="$2"
+
+  case $TYPE in
+
+    ERROR)
+      log2syslog "$TYPE" "$TYPE $MESG"
+      ;;
+
+    DEBUG)
+      if [ "$VERBOSITY" = "9" ]; then
+        log2syslog "$TYPE" "$TYPE $MESG"
+      fi
+      ;;
+
+    INFO)
+      if [ "$VERBOSITY" != "3" ]; then
+        log2syslog "$TYPE" "$TYPE $MESG"
+      fi
+      ;;
+
+  esac
+}
+
+log_all() {
+
+  log "$@"
+  echo "wan-failover: $2" >&2
+}
+
+log2mail() {
+  local TO subject="$1" body="$2" IFS
+
+  unset IFS
+  for TO in $NOTIFY; do
+    echo "To: ${TO}${NOTIFY_FROM:+
+From: $NOTIFY_FROM}
+Subject: $subject
+
+$body
+
+[Generated at $(date "+%H:%M:%S on %B %d, %Y")]" | \
+    sendmail -t
+  done
+}
+
+log2syslog() {
+  local TYPE="$1" MESG="$2"
+
+  TYPE="$(echo "$TYPE" | tr '[:upper:]' '[:lower:]')"
+
+  logger -t wan-failover -p "daemon.$TYPE" "$MESG"
+}
+
+idle_wait()
+{
+  local time="$1" cnt=0
+
+  while [ -f "$PIDFILE" -a $cnt -lt $time ]; do
+    cnt=$((cnt+1))
+    sleep 1
+  done
+}
+
+add_target_static_routes() {
+  local x IFS
+
+  NO_OF_TARGETS=0
+  unset IFS
+  for x in $TARGETS; do
+    NO_OF_TARGETS=$((NO_OF_TARGETS+1))
+    log DEBUG "Adding static route for host $x"
+    ip route add $x via $PRIMARY_GW dev $EXTIF
+  done
+}
+
+remove_target_static_routes() {
+  local x IFS
+
+  unset IFS
+  for x in $TARGETS; do
+    ip route delete $x via $PRIMARY_GW dev $EXTIF
+  done
+}
+
+display_header() {
+
+  log INFO "WAN Link: $ACTIVE_CONNECTION"
+  log INFO "Primary gateway: $PRIMARY_GW"
+  log INFO "Secondary gateway: $SECONDARY_GW"
+  if [ -n "$SECONDARY_GWIPV6" ]; then
+    log INFO "Secondary IPv6 gateway: $SECONDARY_GWIPV6"
+  fi
+  log INFO "Max latency in millisec: $MAX_LATENCY"
+  log INFO "Threshold before failover: $THRESHOLD"
+  log INFO "Number of target hosts: $NO_OF_TARGETS"
+}
+
+targets_ok() {
+  local cnt
+
+  ## Check if the static routes need refreshing
+  if ! ip route list dev $EXTIF | grep -q "^${FIRST_TARGET//./[.]} "; then
+    add_target_static_routes
+  fi
+
+  cnt="$(fping -a -t $MAX_LATENCY $TARGETS 2>/dev/null | wc -l)"
+
+  return $cnt
+}
+
+test_targets() {
+  local cnt err
+
+  log DEBUG "Test interval between hosts are $TEST_INTERVAL"
+
+  targets_ok
+  cnt=$?
+
+  if [ $cnt -gt 0 ]; then
+    if [ $TARGETS_FAILED -gt 0 ] ; then
+      TARGETS_FAILED=$((TARGETS_FAILED-1))
+    fi
+    if [ "$ACTIVE_CONNECTION" = "PRIMARY" ]; then
+      TEST_INTERVAL=$INTERVAL
+      err="DEBUG"
+    else
+      TEST_INTERVAL=2
+      err="INFO"
+    fi
+    log $err "($cnt of $NO_OF_TARGETS) Host Targets OK"
+  else
+    if [ $TARGETS_FAILED -lt $THRESHOLD ]; then
+      TARGETS_FAILED=$((TARGETS_FAILED+1)) 
+    fi
+    if [ "$ACTIVE_CONNECTION" = "PRIMARY" ]; then
+      TEST_INTERVAL=2
+      err="INFO"
+    else
+      TEST_INTERVAL=$INTERVAL
+      err="DEBUG"
+    fi
+    log $err "($((NO_OF_TARGETS-cnt)) of $NO_OF_TARGETS) Host Targets UNREACHABLE"
+  fi
+}
+
+test_wan_status() {
+
+  test_targets
+  if [ $TARGETS_FAILED -gt 0 ]; then
+    log DEBUG "Failed targets is $TARGETS_FAILED, threshold is $THRESHOLD."
+  fi
+  check_wan_status
+  idle_wait $TEST_INTERVAL
+}
+
+switch_to_primary() {
+
+  ip route delete 128.0.0.0/1 via $SECONDARY_GW dev $EXT2IF
+  ip route delete 0.0.0.0/1 via $SECONDARY_GW dev $EXT2IF
+  if [ -n "$SECONDARY_GWIPV6" ]; then
+    ip -6 route delete 2000::/3 via $SECONDARY_GWIPV6 dev $EXT2IF metric 1
+  fi
+  ACTIVE_CONNECTION="PRIMARY"
+}
+
+switch_to_secondary() {
+
+  ip route add 0.0.0.0/1 via $SECONDARY_GW dev $EXT2IF
+  ip route add 128.0.0.0/1 via $SECONDARY_GW dev $EXT2IF
+  if [ -n "$SECONDARY_GWIPV6" ]; then
+    ip -6 route add 2000::/3 via $SECONDARY_GWIPV6 dev $EXT2IF metric 1
+  fi
+  ACTIVE_CONNECTION="SECONDARY"
+}
+
+check_wan_status() {
+
+  if [ $TARGETS_FAILED -ge $THRESHOLD -a "$ACTIVE_CONNECTION" = "PRIMARY" ]; then
+    switch
+  elif [ $TARGETS_FAILED -eq 0 -a "$ACTIVE_CONNECTION" = "SECONDARY" ]; then
+    switch
+  else
+    log DEBUG "WAN Link: $ACTIVE_CONNECTION"
+  fi
+}
+
+gen_body_text() {
+
+  echo "-- Primary '$EXTIF' routes --"
+  ip route list dev $EXTIF
+  if [ -n "$SECONDARY_GWIPV6" ]; then
+    echo "-- IPv6 --"
+    ip -6 route list dev $EXTIF
+  fi
+  echo "--"
+  echo "-- Secondary '$EXT2IF' routes --"
+  ip route list dev $EXT2IF
+  if [ -n "$SECONDARY_GWIPV6" ]; then
+    echo "-- IPv6 --"
+    ip -6 route list dev $EXT2IF
+  fi
+  echo "--"
+}
+
+switch() {
+  local MESG BODY
+
+  if [ "$ACTIVE_CONNECTION" = "PRIMARY" ]; then
+    switch_to_secondary
+    if [ -x $SCRIPTFILE ]; then
+      $SCRIPTFILE "SECONDARY" "$EXTIF" "$PRIMARY_GW" "$EXT2IF" "$SECONDARY_GW" "$SECONDARY_GWIPV6"
+    fi
+    idle_wait 10
+    MESG="Primary WAN link failed on '$HOSTNAME'. Switched to secondary link."
+    BODY="$(gen_body_text)"
+    log2mail "$MESG" "$BODY"
+    log INFO "$MESG"
+    log DEBUG "Failover Hysteresis started, sleeping for $SECONDARY_DELAY seconds."
+    idle_wait $SECONDARY_DELAY
+
+  elif [ "$ACTIVE_CONNECTION" = "SECONDARY" ]; then
+    switch_to_primary
+    if [ -x $SCRIPTFILE ]; then
+      $SCRIPTFILE "PRIMARY" "$EXTIF" "$PRIMARY_GW" "$EXT2IF" "$SECONDARY_GW" "$SECONDARY_GWIPV6"
+    fi
+    idle_wait 10
+    MESG="Primary WAN link OK on '$HOSTNAME'. Switched back to primary link."
+    BODY="$(gen_body_text)"
+    log2mail "$MESG" "$BODY"
+    log INFO "$MESG"
+    log DEBUG "Failback Hysteresis started, sleeping for $PRIMARY_DELAY seconds."
+    idle_wait $PRIMARY_DELAY
+  fi
+}
+
+test_switch() {
+
+  if [ "$ACTIVE_CONNECTION" = "PRIMARY" ]; then
+    log INFO "Testing failover link, switching to secondary link."
+    TARGETS_FAILED=$((THRESHOLD+1))
+  else
+    log INFO "Testing ignored, currently using secondary link."
+  fi
+}
+
+start_monitor() {
+
+  # Robust 'bash' method of creating/testing for a lockfile
+  if ! ( set -o noclobber; echo "$$" > "$LOCKFILE" ) 2>/dev/null; then
+    log ERROR "wan-failover: already running, lockfile \"$LOCKFILE\" exists, process id: $(cat "$LOCKFILE")."
+    return 9
+  fi
+
+  trap 'test_switch' HUP
+
+  trap 'remove_target_static_routes; rm -f "$LOCKFILE" "$PIDFILE"; exit $?' INT TERM EXIT
+
+  echo "$BASHPID" > "$PIDFILE"
+
+  log INFO "Starting monitoring of WAN link."
+
+  add_target_static_routes
+  display_header
+
+  while [ -f "$PIDFILE" ]; do
+    test_wan_status
+  done
+
+  remove_target_static_routes
+
+  log INFO "Stopping monitoring of WAN link."
+
+  rm -f "$LOCKFILE" "$PIDFILE"
+  trap - HUP INT TERM EXIT
+
+  return 0
+}
+
+## Override the 2nd external interface if WAN_FAILOVER_SECONDARY_GW is defined
+if [ -n "$WAN_FAILOVER_SECONDARY_GW" ]; then
+  EXT2IF="$(ip -o route get $WAN_FAILOVER_SECONDARY_GW | sed -n -r -e 's/^.* dev +([^ ]+).*$/\1/p')"
+  EXT2GW="$WAN_FAILOVER_SECONDARY_GW"
+  if [ "$IPV6" = "yes" -a -n "$WAN_FAILOVER_SECONDARY_GWIPV6" ]; then
+    EXT2GWIPV6="$WAN_FAILOVER_SECONDARY_GWIPV6"
+  fi
+fi
+
+if [ -z "$EXTIF" ]; then
+  log_all ERROR "Primary interface is not set, define: EXTIF"
+  exit 1
+fi
+if [ -z "$EXT2IF" ]; then
+  log_all ERROR "Secondary interface is not set, define: EXT2IF"
+  exit 1
+fi
+
+PRIMARY_GW="$(ip route list dev $EXTIF 2>/dev/null | sed -n -r -e 's/^default .*via +([^ ]+).*$/\1/p')"
+if [ -z "$PRIMARY_GW" ]; then
+  log_all ERROR "Primary interface gateway not found, exiting."
+  exit 1
+fi
+
+if [ -n "$EXT2GW" ]; then
+  SECONDARY_GW="$EXT2GW"
+elif [ -f "/tmp/udhcpc-${EXT2IF}.conf" ]; then
+  SECONDARY_GW="$(sed -n -r -e 's/^GW=([0-9.]+).*$/\1/p' "/tmp/udhcpc-${EXT2IF}.conf" | head -n1)"
+fi
+if [ -z "$SECONDARY_GW" ]; then
+  log_all ERROR "Secondary interface gateway not found, exiting."
+  exit 1
+fi
+
+if [ "$IPV6" = "yes" -a -n "$EXT2GWIPV6" ]; then
+  SECONDARY_GWIPV6="$EXT2GWIPV6"
+else
+  SECONDARY_GWIPV6=""
+fi
+
+if ! which fping >/dev/null 2>&1; then
+  log_all ERROR "The command 'fping' is not available, exiting."
+  exit 1
+fi
+
+FIRST_TARGET="$(echo $TARGETS | awk '{ print $1; nextfile; }')"
+if [ -z "$FIRST_TARGET" ]; then
+  log_all ERROR "No targets to test availability, define: WAN_FAILOVER_TARGETS"
+  exit 1
+fi
+
+if [ "$SECONDARY_GW" = "$(ip route list dev $EXT2IF 2>/dev/null | sed -n -r -e 's|^0.0.0.0/1 .*via +([^ ]+).*$|\1|p')" ]; then
+  ACTIVE_CONNECTION="SECONDARY"
+else
+  ACTIVE_CONNECTION="PRIMARY"
+fi
+
+start_monitor >/dev/null 2>&1 &
+

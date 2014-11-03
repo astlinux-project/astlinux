@@ -1,0 +1,81 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+WAN_LOCKFILE="/var/lock/wan-failover.lock"
+WAN_PIDFILE="/var/run/wan-failover.pid"
+
+init()
+{
+  :
+}
+
+start()
+{
+  if [ -n "$WAN_FAILOVER_TARGETS" ] && [ ! -f "$WAN_LOCKFILE" ]; then
+    echo "Starting WAN Failover..."
+
+    # Start the background process
+    wan-failover
+  fi
+}
+
+stop()
+{
+  if [ -f "$WAN_PIDFILE" ]; then
+    echo "Stopping WAN Failover..."
+
+    #
+    # kill $(cat $WAN_PIDFILE)
+    # is not necessary.  Removing the PID file is sufficient
+    # because the background process monitors its PID file.
+    #
+    rm -f "$WAN_PIDFILE"
+
+    # Wait for the background process to exit
+    cnt=10
+    while [ $cnt -gt 0 -a -f "$WAN_LOCKFILE" ]; do
+      cnt=$((cnt - 1))
+      sleep 1
+    done
+  fi
+}
+
+dotest()
+{
+  if [ -f "$WAN_PIDFILE" ]; then
+    echo "Testing WAN Failover..."
+    kill -HUP $(cat "$WAN_PIDFILE")
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  start
+  ;;
+
+test)
+  dotest
+  ;;
+
+*)
+  echo "Usage: start|stop|restart|test"
+  ;;
+
+esac
+
