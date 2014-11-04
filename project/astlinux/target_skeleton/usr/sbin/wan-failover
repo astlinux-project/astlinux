@@ -342,6 +342,8 @@ if [ -n "$EXT2GW" ]; then
   SECONDARY_GW="$EXT2GW"
 elif [ -f "/tmp/udhcpc-${EXT2IF}.conf" ]; then
   SECONDARY_GW="$(sed -n -r -e 's/^GW=([0-9.]+).*$/\1/p' "/tmp/udhcpc-${EXT2IF}.conf" | head -n1)"
+else
+  SECONDARY_GW="$PRIMARY_GW"
 fi
 if [ -z "$SECONDARY_GW" ]; then
   log_all ERROR "Secondary interface gateway not found, exiting."

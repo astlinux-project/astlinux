@@ -12,7 +12,7 @@ init()
 
 start()
 {
-  if [ -n "$WAN_FAILOVER_TARGETS" ] && [ ! -f "$WAN_LOCKFILE" ]; then
+  if [ "$WAN_FAILOVER_ENABLE" = "yes" ] && [ ! -f "$WAN_LOCKFILE" ]; then
     echo "Starting WAN Failover..."
 
     # Start the background process
