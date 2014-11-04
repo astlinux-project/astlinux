@@ -138,8 +138,8 @@ init () {
   if [ -n "$IFRENAME" ]; then
 
     #clear existing iftabs
-    echo -n > /tmp/etc/iftab
-    echo -n > /tmp/etc/iftab.init
+    : > /tmp/etc/iftab
+    : > /tmp/etc/iftab.init
 
     #set COUNT
     COUNT=10
@@ -201,7 +201,7 @@ start () {
 
   SYS_gen_etc_hosts > /tmp/etc/hosts
 
-  echo -n "" > /tmp/etc/ethers
+  : > /tmp/etc/ethers
 
   if [ -f /stat/etc/ethers ]; then
     cat /stat/etc/ethers >> /tmp/etc/ethers

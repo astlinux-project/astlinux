@@ -1,4 +1,3 @@
 #!/bin/sh
-#wrapper script for wall
-#/dev/null everything for now
-echo -n ""
+# Null wrapper script for wall
+:

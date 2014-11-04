@@ -226,7 +226,7 @@ init () {
     fi
   fi
 
-  echo -n > /tmp/etc/resolv-static.conf
+  : > /tmp/etc/resolv-static.conf
   for h in $DNS; do
     get_numeric_ip_version "$h"
     case $? in
