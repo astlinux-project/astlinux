@@ -5,6 +5,8 @@
 
 [ -z "$1" ] && echo "Error: should be called from udhcpc" && exit 1
 
+. /etc/rc.conf
+
 resolv_conf="/tmp/etc/resolv-up.conf"
 
 udhcpc_conf="/tmp/udhcpc-${interface}.conf"
@@ -13,7 +15,10 @@ case "$1" in
   deconfig)
     /sbin/ip link set dev ${interface} up
     /sbin/ip -4 addr flush dev ${interface} scope global
-    rm -f /tmp/mydhcpip "$udhcpc_conf"
+    if [ "$EXTIF" = "${interface}" ]; then
+      rm -f /tmp/mydhcpip
+    fi
+    rm -f "$udhcpc_conf"
     ;;
 
   renew|bound)
@@ -26,27 +31,46 @@ case "$1" in
     else
       OLDGW=""
     fi
-    echo "${ip}" > /tmp/mydhcpip
+    if [ "$EXTIF" = "${interface}" ]; then
+      echo "${ip}" > /tmp/mydhcpip
+    fi
     echo "IP=${ip}
 BCAST=${broadcast}
 NETMASK=${subnet}" > "$udhcpc_conf"
 
     if [ -n "${router}" ]; then
-      # Delete existing default route(s)
-      while /sbin/ip route del default dev ${interface} >/dev/null 2>&1; do
-        :
-      done
+      if [ "$EXTIF" = "${interface}" ]; then
+        # Delete existing default route(s)
+        /sbin/ip route list dev ${interface} | grep '^default .*via ' | while read x; do
+          /sbin/ip route delete ${x} dev ${interface} >/dev/null 2>&1
+        done
+      else
+        # Delete optional route(s)
+        /sbin/ip route list dev ${interface} | grep ' via ' | while read x; do
+          /sbin/ip route delete ${x} dev ${interface} >/dev/null 2>&1
+        done
+      fi
 
       NEWGW=""
       metric=0
       for i in ${router}; do
-        echo "udhcpc: adding route via ${i}"
-        /sbin/ip route add default via ${i} dev ${interface} metric $((metric++))
+        if [ "$EXTIF" = "${interface}" ]; then
+          echo "udhcpc: adding default route via ${i}"
+          /sbin/ip route add default via ${i} dev ${interface} metric $metric
+        else
+          for x in $EXT2ROUTES; do
+            echo "udhcpc: adding ${x} route via ${i}"
+            /sbin/ip route add ${x} via ${i} dev ${interface} metric $metric
+          done
+        fi
+        metric=$((metric+1))
         echo "GW=${i}" >> "$udhcpc_conf"
         if [ -z "$NEWGW" ]; then
           NEWGW="${i}"
         fi
       done
+
+      # Restart Failover script if running and if the gateway changed
       if [ -f /var/run/wan-failover.pid ]; then
         if [ "$OLDGW" != "$NEWGW" ]; then
           /etc/init.d/failover restart
@@ -54,13 +78,21 @@ NETMASK=${subnet}" > "$udhcpc_conf"
       fi
     fi
 
-    echo -n "" > "$resolv_conf"
+    if [ "$EXTIF" = "${interface}" ]; then
+      : > "$resolv_conf"
+      if [ -n "${domain}" ]; then
+        echo "search ${domain}" >> "$resolv_conf"
+      fi
+      for i in ${dns}; do
+        echo "udhcpc: adding resolver ${i}"
+        echo "nameserver ${i}" >> "$resolv_conf"
+      done
+    fi
+
     if [ -n "${domain}" ]; then
-      echo "search ${domain}" >> "$resolv_conf"
+      echo "DOMAIN=${domain}" >> "$udhcpc_conf"
     fi
     for i in ${dns}; do
-      echo "udhcpc: adding resolver ${i}"
-      echo "nameserver ${i}" >> "$resolv_conf"
       echo "DNS=${i}" >> "$udhcpc_conf"
     done
     ;;

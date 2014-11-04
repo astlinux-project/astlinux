@@ -483,10 +483,14 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
     esac
 
     if [ -n "$EXT2GW" ]; then
-      ip route add default via $EXT2GW dev $EXT2IF
+      for x in $EXT2ROUTES; do
+        ip route add $x via $EXT2GW dev $EXT2IF
+      done
     fi
     if [ "$IPV6" = "yes" -a -n "$EXT2GWIPV6" ]; then
-      ip -6 route add default via $EXT2GWIPV6 dev $EXT2IF metric 1
+      for x in $EXT2ROUTESIPV6; do
+        ip -6 route add $x via $EXT2GWIPV6 dev $EXT2IF metric 1
+      done
     fi
     #end static ip on 2nd if
   fi
@@ -511,7 +515,9 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
     # No DHCPv6 - Static IPv6 if defined
     if [ "$IPV6" = "yes" -a -n "$EXT2IPV6" -a -n "$EXT2GWIPV6" ]; then
       ip -6 addr add $EXT2IPV6 dev $EXT2IF
-      ip -6 route add default via $EXT2GWIPV6 dev $EXT2IF metric 1
+      for x in $EXT2ROUTESIPV6; do
+        ip -6 route add $x via $EXT2GWIPV6 dev $EXT2IF metric 1
+      done
     fi
   fi
 
