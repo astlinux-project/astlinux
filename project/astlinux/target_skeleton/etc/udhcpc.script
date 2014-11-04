@@ -20,22 +20,38 @@ case "$1" in
     /sbin/ip link set dev ${interface} up
     /sbin/ip -4 addr flush dev ${interface} scope global
     /sbin/ip -4 addr add ${ip}/${subnet} brd ${broadcast:-+} dev ${interface}
+
+    if [ -f "$udhcpc_conf" ]; then
+      OLDGW="$(sed -n -r -e 's/^GW=([0-9.]+).*$/\1/p' "$udhcpc_conf" | head -n1)"
+    else
+      OLDGW=""
+    fi
     echo "${ip}" > /tmp/mydhcpip
     echo "IP=${ip}
 BCAST=${broadcast}
 NETMASK=${subnet}" > "$udhcpc_conf"
+
     if [ -n "${router}" ]; then
       # Delete existing default route(s)
       while /sbin/ip route del default dev ${interface} >/dev/null 2>&1; do
         :
       done
 
+      NEWGW=""
       metric=0
       for i in ${router}; do
         echo "udhcpc: adding route via ${i}"
         /sbin/ip route add default via ${i} dev ${interface} metric $((metric++))
         echo "GW=${i}" >> "$udhcpc_conf"
+        if [ -z "$NEWGW" ]; then
+          NEWGW="${i}"
+        fi
       done
+      if [ -f /var/run/wan-failover.pid ]; then
+        if [ "$OLDGW" != "$NEWGW" ]; then
+          /etc/init.d/failover restart
+        fi
+      fi
     fi
 
     echo -n "" > "$resolv_conf"
