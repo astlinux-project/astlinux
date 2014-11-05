@@ -14,9 +14,9 @@
 
 LOCKFILE="/var/lock/wan-failover.lock"
 PIDFILE="/var/run/wan-failover.pid"
+STATUSFILE="/var/log/wan-failover-status.log"
 SCRIPTFILE="/mnt/kd/wan-failover.script"
 
-TARGETS="$WAN_FAILOVER_TARGETS"
 INTERVAL="${WAN_FAILOVER_TEST_INTERVAL:-20}"
 MAX_LATENCY="${WAN_FAILOVER_MAX_LATENCY:-1000}"
 THRESHOLD="${WAN_FAILOVER_THRESHOLD:-3}"
@@ -129,6 +129,23 @@ display_header() {
   log INFO "Number of target hosts: $NO_OF_TARGETS"
 }
 
+gen_log_status_text() {
+
+  echo "WAN Failover Updated: $(date "+%Y-%m-%d %H:%M:%S")"
+  echo "WAN Link: $ACTIVE_CONNECTION"
+  echo "Primary Gateway: $PRIMARY_GW"
+  echo "Secondary Gateway: $SECONDARY_GW"
+  if [ -n "$SECONDARY_GWIPV6" ]; then
+    echo "Secondary IPv6 Gateway: $SECONDARY_GWIPV6"
+  fi
+  echo "Target IPv4 Hosts: $TARGETS"
+}
+
+update_log_status() {
+
+  gen_log_status_text > "$STATUSFILE"
+}
+
 targets_ok() {
   local cnt
 
@@ -199,6 +216,7 @@ switch_to_primary() {
     ip -6 route delete 2000::/3 via $SECONDARY_GWIPV6 dev $EXT2IF metric 1
   fi
   ACTIVE_CONNECTION="PRIMARY"
+  update_log_status
 }
 
 switch_to_secondary() {
@@ -209,6 +227,7 @@ switch_to_secondary() {
     ip -6 route add 2000::/3 via $SECONDARY_GWIPV6 dev $EXT2IF metric 1
   fi
   ACTIVE_CONNECTION="SECONDARY"
+  update_log_status
 }
 
 check_wan_status() {
@@ -299,6 +318,7 @@ start_monitor() {
 
   add_target_static_routes
   display_header
+  update_log_status
 
   while [ -f "$PIDFILE" ]; do
     test_wan_status
@@ -361,9 +381,20 @@ if ! which fping >/dev/null 2>&1; then
   exit 1
 fi
 
-FIRST_TARGET="$(echo $TARGETS | awk '{ print $1; nextfile; }')"
+FIRST_TARGET=""
+TARGETS=""
+unset IFS
+for x in $WAN_FAILOVER_TARGETS; do
+  # Sanitize for manual IPv4 addresses
+  if [ -z "$(echo "$x" | tr -d '0-9.')" ]; then
+    TARGETS="$TARGETS${TARGETS:+ }$x"
+    if [ -z "$FIRST_TARGET" ]; then
+      FIRST_TARGET="$x"
+    fi
+  fi
+done
 if [ -z "$FIRST_TARGET" ]; then
-  log_all ERROR "No targets to test availability, define: WAN_FAILOVER_TARGETS"
+  log_all ERROR "No IPv4 targets to test availability, define: WAN_FAILOVER_TARGETS"
   exit 1
 fi
 
