@@ -31,6 +31,13 @@ TEST_INTERVAL=$INTERVAL
 NO_OF_TARGETS=0
 TEST_FAILOVER=0
 
+PRIMARY_STR="PRIMARY"
+SECONDARY_STR="SECONDARY"
+WAN_LINK_STR="WAN Link: "
+PRIMARY_GW_STR="Primary Gateway: "
+SECONDARY_GW_STR="Secondary Gateway: "
+SECONDARY_GWIPV6_STR="Secondary IPv6 Gateway: "
+
 log() {
   local TYPE="$1" MESG="$2"
 
@@ -118,11 +125,11 @@ remove_target_static_routes() {
 
 display_header() {
 
-  log INFO "WAN Link: $ACTIVE_CONNECTION"
-  log INFO "Primary gateway: $PRIMARY_GW"
-  log INFO "Secondary gateway: $SECONDARY_GW"
+  log INFO "${WAN_LINK_STR}${ACTIVE_CONNECTION}"
+  log INFO "${PRIMARY_GW_STR}${PRIMARY_GW}"
+  log INFO "${SECONDARY_GW_STR}${SECONDARY_GW}"
   if [ -n "$SECONDARY_GWIPV6" ]; then
-    log INFO "Secondary IPv6 gateway: $SECONDARY_GWIPV6"
+    log INFO "${SECONDARY_GWIPV6_STR}${SECONDARY_GWIPV6}"
   fi
   log INFO "Max latency in millisec: $MAX_LATENCY"
   log INFO "Threshold before failover: $THRESHOLD"
@@ -132,11 +139,11 @@ display_header() {
 gen_log_status_text() {
 
   echo "WAN Failover Updated: $(date "+%Y-%m-%d %H:%M:%S")"
-  echo "WAN Link: $ACTIVE_CONNECTION"
-  echo "Primary Gateway: $PRIMARY_GW"
-  echo "Secondary Gateway: $SECONDARY_GW"
+  echo "${WAN_LINK_STR}${ACTIVE_CONNECTION}"
+  echo "${PRIMARY_GW_STR}${PRIMARY_GW}"
+  echo "${SECONDARY_GW_STR}${SECONDARY_GW}"
   if [ -n "$SECONDARY_GWIPV6" ]; then
-    echo "Secondary IPv6 Gateway: $SECONDARY_GWIPV6"
+    echo "${SECONDARY_GWIPV6_STR}${SECONDARY_GWIPV6}"
   fi
   echo "Target IPv4 Hosts: $TARGETS"
 }
@@ -171,7 +178,7 @@ test_targets() {
     if [ $TARGETS_FAILED -gt 0 ] ; then
       TARGETS_FAILED=$((TARGETS_FAILED-1))
     fi
-    if [ "$ACTIVE_CONNECTION" = "PRIMARY" ]; then
+    if [ "$ACTIVE_CONNECTION" = "$PRIMARY_STR" ]; then
       TEST_INTERVAL=$INTERVAL
       err="DEBUG"
     else
@@ -183,7 +190,7 @@ test_targets() {
     if [ $TARGETS_FAILED -lt $THRESHOLD ]; then
       TARGETS_FAILED=$((TARGETS_FAILED+1)) 
     fi
-    if [ "$ACTIVE_CONNECTION" = "PRIMARY" ]; then
+    if [ "$ACTIVE_CONNECTION" = "$PRIMARY_STR" ]; then
       TEST_INTERVAL=2
       err="INFO"
     else
@@ -215,7 +222,7 @@ switch_to_primary() {
   if [ -n "$SECONDARY_GWIPV6" ]; then
     ip -6 route delete 2000::/3 via $SECONDARY_GWIPV6 dev $EXT2IF metric 1
   fi
-  ACTIVE_CONNECTION="PRIMARY"
+  ACTIVE_CONNECTION="$PRIMARY_STR"
   update_log_status
 }
 
@@ -226,18 +233,18 @@ switch_to_secondary() {
   if [ -n "$SECONDARY_GWIPV6" ]; then
     ip -6 route add 2000::/3 via $SECONDARY_GWIPV6 dev $EXT2IF metric 1
   fi
-  ACTIVE_CONNECTION="SECONDARY"
+  ACTIVE_CONNECTION="$SECONDARY_STR"
   update_log_status
 }
 
 check_wan_status() {
 
-  if [ $TARGETS_FAILED -ge $THRESHOLD -a "$ACTIVE_CONNECTION" = "PRIMARY" ]; then
+  if [ $TARGETS_FAILED -ge $THRESHOLD -a "$ACTIVE_CONNECTION" = "$PRIMARY_STR" ]; then
     switch
-  elif [ $TARGETS_FAILED -eq 0 -a "$ACTIVE_CONNECTION" = "SECONDARY" ]; then
+  elif [ $TARGETS_FAILED -eq 0 -a "$ACTIVE_CONNECTION" = "$SECONDARY_STR" ]; then
     switch
   else
-    log DEBUG "WAN Link: $ACTIVE_CONNECTION"
+    log DEBUG "${WAN_LINK_STR}${ACTIVE_CONNECTION}"
   fi
 }
 
@@ -262,10 +269,10 @@ gen_body_text() {
 switch() {
   local MESG BODY
 
-  if [ "$ACTIVE_CONNECTION" = "PRIMARY" ]; then
+  if [ "$ACTIVE_CONNECTION" = "$PRIMARY_STR" ]; then
     switch_to_secondary
     if [ -x $SCRIPTFILE ]; then
-      $SCRIPTFILE "SECONDARY" "$EXTIF" "$PRIMARY_GW" "$EXT2IF" "$SECONDARY_GW" "$SECONDARY_GWIPV6"
+      $SCRIPTFILE "$SECONDARY_STR" "$EXTIF" "$PRIMARY_GW" "$EXT2IF" "$SECONDARY_GW" "$SECONDARY_GWIPV6"
     fi
     idle_wait 10
     MESG="Primary WAN link failed on '$HOSTNAME'. Switched to secondary link."
@@ -275,10 +282,10 @@ switch() {
     log DEBUG "Failover Hysteresis started, sleeping for $SECONDARY_DELAY seconds."
     idle_wait $SECONDARY_DELAY
 
-  elif [ "$ACTIVE_CONNECTION" = "SECONDARY" ]; then
+  elif [ "$ACTIVE_CONNECTION" = "$SECONDARY_STR" ]; then
     switch_to_primary
     if [ -x $SCRIPTFILE ]; then
-      $SCRIPTFILE "PRIMARY" "$EXTIF" "$PRIMARY_GW" "$EXT2IF" "$SECONDARY_GW" "$SECONDARY_GWIPV6"
+      $SCRIPTFILE "$PRIMARY_STR" "$EXTIF" "$PRIMARY_GW" "$EXT2IF" "$SECONDARY_GW" "$SECONDARY_GWIPV6"
     fi
     idle_wait 10
     MESG="Primary WAN link OK on '$HOSTNAME'. Switched back to primary link."
@@ -292,7 +299,7 @@ switch() {
 
 test_switch() {
 
-  if [ "$ACTIVE_CONNECTION" = "PRIMARY" ]; then
+  if [ "$ACTIVE_CONNECTION" = "$PRIMARY_STR" ]; then
     log INFO "Testing failover link, switching to secondary link within $TEST_INTERVAL seconds..."
     TEST_FAILOVER=1
   else
@@ -338,9 +345,7 @@ start_monitor() {
 if [ -n "$WAN_FAILOVER_SECONDARY_GW" ]; then
   EXT2IF="$(ip -o route get $WAN_FAILOVER_SECONDARY_GW | sed -n -r -e 's/^.* dev +([^ ]+).*$/\1/p')"
   EXT2GW="$WAN_FAILOVER_SECONDARY_GW"
-  if [ "$IPV6" = "yes" -a -n "$WAN_FAILOVER_SECONDARY_GWIPV6" ]; then
-    EXT2GWIPV6="$WAN_FAILOVER_SECONDARY_GWIPV6"
-  fi
+  EXT2GWIPV6="$WAN_FAILOVER_SECONDARY_GWIPV6"
 fi
 
 if [ -z "$EXTIF" ]; then
@@ -399,9 +404,34 @@ if [ -z "$FIRST_TARGET" ]; then
 fi
 
 if [ "$SECONDARY_GW" = "$(ip route list dev $EXT2IF 2>/dev/null | sed -n -r -e 's|^0.0.0.0/1 .*via +([^ ]+).*$|\1|p')" ]; then
-  ACTIVE_CONNECTION="SECONDARY"
+  ACTIVE_CONNECTION="$SECONDARY_STR"
 else
-  ACTIVE_CONNECTION="PRIMARY"
+  ACTIVE_CONNECTION="$PRIMARY_STR"
+
+  ## Cleanup possible stale routes if certain config variables are changed and this script restarted
+  ## Use the status file for the old state information
+  ##
+  if [ -f "$STATUSFILE" ]; then
+    if grep -q "^${WAN_LINK_STR}${SECONDARY_STR}" "$STATUSFILE"; then
+      oldgw="$(sed -n -r -e "s/^${SECONDARY_GW_STR}([0-9.]+).*$/\1/p" "$STATUSFILE")"
+      oldgwipv6="$(sed -n -r -e "s/^${SECONDARY_GWIPV6_STR}([0-9a-fA-F:]+).*$/\1/p" "$STATUSFILE")"
+      if [ -n "$oldgw" ]; then
+        unset IFS
+        for x in $(ip route list 2>/dev/null | sed -n -r -e 's|^0.0.0.0/1 .*via +([^ ]+).*$|\1|p'); do
+          if [ "$x" = "$oldgw" ]; then
+            oldif="$(ip -o route get $oldgw | sed -n -r -e 's/^.* dev +([^ ]+).*$/\1/p')"
+            if [ "$oldif" ]; then
+              ip route delete 128.0.0.0/1 via $oldgw dev $oldif
+              ip route delete 0.0.0.0/1 via $oldgw dev $oldif
+              if [ -n "$oldgwipv6" ]; then
+                ip -6 route delete 2000::/3 via $oldgwipv6 dev $oldif metric 1
+              fi
+            fi
+          fi
+        done
+      fi
+    fi
+  fi
 fi
 
 start_monitor >/dev/null 2>&1 &
