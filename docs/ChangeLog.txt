@@ -35,6 +35,13 @@ Released **TBD**
 
 -- OpenSSL, version bump to 1.0.1j (security fixes: CVE-2014-3513, CVE-2014-3567, CVE-2014-3568)
 
+-- WAN Failover, new feature allowing a network failover method via an interface or specified gateway address.
+   A background script monitors selected hosts and triggers a failover when criterion is met.
+   The optional /mnt/kd/wan-failover.script executable script will be called to allow for service adjustments.
+   More info: http://doc.astlinux.org/userdoc:tt_wan_failover
+
+-- OpenVPN, version bump to 2.3.5
+
 -- prosody, version bump to 0.9.6
 
 -- openldap, version bump to 2.4.40
@@ -61,6 +68,10 @@ Released **TBD**
    for all packages, or now just the selected package.
 
 -- Status tab, added "S.M.A.R.T Monitoring", disabled by default and can be enabled via the Prefs tab.
+
+-- Status tab, added "WAN Failover Status", and can be hidden via the Prefs tab.
+
+-- Network tab, added "External Failover Interface:" section with new sub-tab { WAN Failover Configuration }
 
 
 Additions for AstLinux 1.2.0:
