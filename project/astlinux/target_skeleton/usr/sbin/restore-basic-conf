@@ -83,7 +83,8 @@ fi
 # Restore basic configuration files
 #
 if ! restore_files astdb astdb.sqlite3 asterisk-odbc.sqlite3 webgui-prefs.txt blocked-hosts dnsmasq.static \
-                   ast-crash rc.local rc.local.stop rc.elocal rc.ledcontrol hosts ethers; then
+                   rc.local rc.local.stop rc.elocal rc.ledcontrol wan-failover.script \
+                   ast-crash hosts ethers; then
   exit 2
 fi
 
