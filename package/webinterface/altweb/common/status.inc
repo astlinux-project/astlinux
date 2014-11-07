@@ -33,6 +33,8 @@
 // 01-03-2014, Added NUT UPS Monitoring Status
 // 07-02-2014, Added "Show PPPoE Logs" button
 // 09-04-2014, Added Kamailio SIP Server Status
+// 10-28-2014, Added S.M.A.R.T Monitoring Status
+// 11-06-2014, Added Failover Status
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -663,6 +665,21 @@ if (($cmd = getPREFdef($global_prefs, 'status_disk_usage')) !== 'no') {
   fclose($ph);
   @unlink($tmpfile);
   putHtml("</pre>");
+}
+
+if (is_file('/var/run/wan-failover.pid') && is_file('/var/log/wan-failover-status.log')) {
+  if (getPREFdef($global_prefs, 'status_show_wan_failover') !== 'no') {
+    putHtml("<h2>WAN Failover Status:</h2>");
+    putHtml("<pre>");
+
+    $output = array();
+    @exec('cat /var/log/wan-failover-status.log', $output);
+    foreach ($output as $line) {
+      putText(rtrim($line));
+    }
+    unset($output);
+    putHtml("</pre>");
+  }
 }
 
 if ($daemon['ntpd'] > 0) {

@@ -50,6 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'status_disk_usage = no';
       fwrite($fp, $value."\n");
     }
+    if (! isset($_POST['wan_failover'])) {
+      $value = 'status_show_wan_failover = no';
+      fwrite($fp, $value."\n");
+    }
     if (! isset($_POST['ntp_sessions'])) {
       $value = 'status_ntp_sessions = no';
       fwrite($fp, $value."\n");
@@ -559,6 +563,11 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_disk_usage') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="disk_usage" name="disk_usage"'.$sel.' /></td><td colspan="5">Show Disk Usage</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'status_show_wan_failover') !== 'no') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="wan_failover" name="wan_failover"'.$sel.' /></td><td colspan="5">Show WAN Failover Status</td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_ntp_sessions') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="ntp_sessions" name="ntp_sessions"'.$sel.' /></td><td colspan="5">Show NTP Peer States</td></tr>');

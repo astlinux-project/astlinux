@@ -134,6 +134,12 @@ function statusPROCESS($process) {
     } else {
       $str = $stopped;
     }
+  } elseif ($process === 'failover') {
+    if (is_file($path.'wan-failover.pid')) {
+      $str = $running;
+    } else {
+      $str = $stopped;
+    }
   }
   if ($str === '') {
     if (is_file($path.$process.'.pid')) {

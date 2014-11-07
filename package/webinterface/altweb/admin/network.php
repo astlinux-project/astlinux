@@ -124,6 +124,7 @@ function checkNETWORKsettings() {
   global $FIREWALLCONFFILE;
   
   $eth[] = $_POST['ext_eth'];
+  $eth[] = $_POST['ext2_eth'];
   $eth[] = $_POST['int_eth'];
   $eth[] = $_POST['int2_eth'];
   $eth[] = $_POST['int3_eth'];
@@ -252,6 +253,9 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $value = isset($_POST['vlan_cos']) ? 'VLANCOS="yes"' : 'VLANCOS=""';
   fwrite($fp, "### VLAN COS\n".$value."\n");
   
+  $value = 'EXT2IF="'.$_POST['ext2_eth'].'"';
+  fwrite($fp, "### External Failover Interface\n".$value."\n");
+
   $value = 'INTIF="'.$_POST['int_eth'].'"';
   fwrite($fp, "### 1st LAN Interface\n".$value."\n");
   
@@ -826,6 +830,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = 999;                                 
   } elseif (isset($_POST['submit_save'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
+  } elseif (isset($_POST['submit_edit_failover'])) {
+    if (($result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE)) == 11) {
+      header('Location: /admin/failover.php');
+      exit;
+    }
   } elseif (isset($_POST['submit_edit_firewall'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/firewall.php');
@@ -1310,6 +1319,26 @@ require_once '../common/header.php';
   $value = htmlspecialchars(RCconfig2string($value));
   putHtml('PPPoE Password:<input type="password" size="24" maxlength="64" value="'.$value.'" name="pass_pppoe" /></td></tr>');
   
+  putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
+  
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>External Failover Interface:</strong>');
+  putHtml('</td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml('<strong>Failover Interface:</strong>');
+  putHtml('<select name="ext2_eth">');
+  putHtml('<option value="">none</option>');
+  $varif = getVARdef($db, 'EXT2IF', $cur_db);
+  if (($n = count($eth)) > 0) {
+    for ($i = 0; $i < $n; $i++) {
+      $sel = ($varif === $eth[$i]) ? ' selected="selected"' : '';
+      putHtml('<option value="'.$eth[$i].'"'.$sel.'>'.$eth[$i].'</option>');
+    }
+  }
+  putHtml('</select>');
+  putHtml('&ndash;');
+  putHtml('<input type="submit" value="WAN Failover Configuration" name="submit_edit_failover" class="button" /></td></tr>');
+
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
   
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
