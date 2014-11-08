@@ -70,8 +70,8 @@ NETMASK=${subnet}" > "$udhcpc_conf"
         fi
       done
 
-      # Restart Failover script if running and if the gateway changed
-      if [ -f /var/run/wan-failover.pid ]; then
+      # Restart Failover script if running or enabled and if the gateway changed
+      if [ -f /var/run/wan-failover.pid -o "$WAN_FAILOVER_ENABLE" = "yes" ]; then
         if [ "$OLDGW" != "$NEWGW" ]; then
           /etc/init.d/failover restart >/dev/null 2>&1 &
         fi

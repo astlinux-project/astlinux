@@ -110,7 +110,7 @@ add_target_static_routes() {
   for x in $TARGETS; do
     NO_OF_TARGETS=$((NO_OF_TARGETS+1))
     log DEBUG "Adding static route for host $x"
-    ip route add $x via $PRIMARY_GW dev $EXTIF
+    ip route add $x ${PRIMARY_GW:+via $PRIMARY_GW} dev $EXTIF
   done
 }
 
@@ -119,7 +119,7 @@ remove_target_static_routes() {
 
   unset IFS
   for x in $TARGETS; do
-    ip route delete $x via $PRIMARY_GW dev $EXTIF
+    ip route delete $x ${PRIMARY_GW:+via $PRIMARY_GW} dev $EXTIF
   done
 }
 
@@ -357,18 +357,13 @@ if [ -z "$EXT2IF" ]; then
   exit 1
 fi
 
+## PPPoE results in an empty PRIMARY_GW
 PRIMARY_GW="$(ip route list dev $EXTIF 2>/dev/null | sed -n -r -e 's/^default .*via +([^ ]+).*$/\1/p')"
-if [ -z "$PRIMARY_GW" ]; then
-  log_all ERROR "Primary interface gateway not found, exiting."
-  exit 1
-fi
 
 if [ -n "$EXT2GW" ]; then
   SECONDARY_GW="$EXT2GW"
 elif [ -f "/tmp/udhcpc-${EXT2IF}.conf" ]; then
   SECONDARY_GW="$(sed -n -r -e 's/^GW=([0-9.]+).*$/\1/p' "/tmp/udhcpc-${EXT2IF}.conf" | head -n1)"
-else
-  SECONDARY_GW="$PRIMARY_GW"
 fi
 if [ -z "$SECONDARY_GW" ]; then
   log_all ERROR "Secondary interface gateway not found, exiting."
