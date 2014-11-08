@@ -495,22 +495,11 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
     #end static ip on 2nd if
   fi
 
-  #DHCP
-  if [ -n "$EXTIF" -a -z "$EXTIP" ] && ! isextppp extif; then
-    udhcpc -b -T2 -t6 -S -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXTIF.pid -i $EXTIF
-    ifplugd -apq -t2 -u3 -d3 -i $EXTIF -r /etc/ifplugd/udhcpc.action
-
-    # No DHCPv6 - Static IPv6 if defined
-    if [ "$IPV6" = "yes" -a -n "$EXTIPV6" -a -n "$EXTGWIPV6" ]; then
-      ip -6 addr add $EXTIPV6 dev $EXTIF
-      ip -6 route add default via $EXTGWIPV6 dev $EXTIF metric 1
-    fi
-  fi
-
-  #DHCP
+  #DHCP Failover Interface
   if [ -n "$EXT2IF" -a -z "$EXT2IP" ] && ! isextppp ext2if; then
-    udhcpc -b -T2 -t6 -S -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXT2IF.pid -i $EXT2IF
     ifplugd -apq -t2 -u3 -d3 -i $EXT2IF -r /etc/ifplugd/udhcpc.action
+    ip link set dev $EXT2IF up
+    sleep 4
 
     # No DHCPv6 - Static IPv6 if defined
     if [ "$IPV6" = "yes" -a -n "$EXT2IPV6" -a -n "$EXT2GWIPV6" ]; then
@@ -518,6 +507,20 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
       for x in $EXT2ROUTESIPV6; do
         ip -6 route add $x via $EXT2GWIPV6 dev $EXT2IF metric 1
       done
+    fi
+  fi
+
+  #DHCP
+  if [ -n "$EXTIF" -a -z "$EXTIP" ] && ! isextppp extif; then
+    ip link set dev $EXTIF up
+    sleep 4
+    udhcpc -b -T2 -t6 -S -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXTIF.pid -i $EXTIF
+    ifplugd -apq -t2 -u3 -d3 -i $EXTIF -r /etc/ifplugd/udhcpc.action
+
+    # No DHCPv6 - Static IPv6 if defined
+    if [ "$IPV6" = "yes" -a -n "$EXTIPV6" -a -n "$EXTGWIPV6" ]; then
+      ip -6 addr add $EXTIPV6 dev $EXTIF
+      ip -6 route add default via $EXTGWIPV6 dev $EXTIF metric 1
     fi
   fi
 
