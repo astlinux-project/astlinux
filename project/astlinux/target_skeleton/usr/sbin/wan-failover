@@ -218,8 +218,8 @@ test_wan_status() {
 
 switch_to_primary() {
 
-  ip route delete 128.0.0.0/1 via $SECONDARY_GW dev $EXT2IF
-  ip route delete 0.0.0.0/1 via $SECONDARY_GW dev $EXT2IF
+  ip route delete 128.0.0.0/1 ${SECONDARY_GW:+via $SECONDARY_GW} dev $EXT2IF
+  ip route delete 0.0.0.0/1 ${SECONDARY_GW:+via $SECONDARY_GW} dev $EXT2IF
   if [ -n "$SECONDARY_GWIPV6" ]; then
     ip -6 route delete 2000::/3 via $SECONDARY_GWIPV6 dev $EXT2IF metric 1
   fi
@@ -229,8 +229,8 @@ switch_to_primary() {
 
 switch_to_secondary() {
 
-  ip route add 0.0.0.0/1 via $SECONDARY_GW dev $EXT2IF
-  ip route add 128.0.0.0/1 via $SECONDARY_GW dev $EXT2IF
+  ip route add 0.0.0.0/1 ${SECONDARY_GW:+via $SECONDARY_GW} dev $EXT2IF
+  ip route add 128.0.0.0/1 ${SECONDARY_GW:+via $SECONDARY_GW} dev $EXT2IF
   if [ -n "$SECONDARY_GWIPV6" ]; then
     ip -6 route add 2000::/3 via $SECONDARY_GWIPV6 dev $EXT2IF metric 1
   fi
@@ -383,15 +383,18 @@ if ! which fping >/dev/null 2>&1; then
   exit 1
 fi
 
-## PPPoE results in an empty PRIMARY_GW
 PRIMARY_GW="$(ip route list dev $EXTIF 2>/dev/null | sed -n -r -e 's/^default .*via +([^ ]+).*$/\1/p')"
+if [ -z "$PRIMARY_GW" -a "${EXTIF%[0-9]}" != "ppp" ]; then
+  log_all ERROR "Primary interface gateway not found, exiting."
+  exit 1
+fi
 
 if [ -n "$EXT2GW" ]; then
   SECONDARY_GW="$EXT2GW"
 elif [ -f "/tmp/udhcpc-${EXT2IF}.conf" ]; then
   SECONDARY_GW="$(sed -n -r -e 's/^GW=([0-9.]+).*$/\1/p' "/tmp/udhcpc-${EXT2IF}.conf" | head -n1)"
 fi
-if [ -z "$SECONDARY_GW" ]; then
+if [ -z "$SECONDARY_GW" -a "${EXT2IF%[0-9]}" != "ppp" ]; then
   echo "1" > "$STARTFILE"
   log_all ERROR "Secondary interface gateway not found, will restart on a network change."
   exit 1
@@ -403,7 +406,9 @@ else
   SECONDARY_GWIPV6=""
 fi
 
-if [ "$SECONDARY_GW" = "$(ip route list dev $EXT2IF 2>/dev/null | sed -n -r -e 's|^0.0.0.0/1 .*via +([^ ]+).*$|\1|p')" ]; then
+if [ -n "$SECONDARY_GW" ] && [ "$SECONDARY_GW" = "$(ip route list dev $EXT2IF 2>/dev/null | sed -n -r -e 's|^0.0.0.0/1 .*via +([^ ]+).*$|\1|p')" ]; then
+  ACTIVE_CONNECTION="$SECONDARY_STR"
+elif [ -z "$SECONDARY_GW" ] && ip route list dev $EXT2IF 2>/dev/null | grep -q '^0.0.0.0/1 '; then
   ACTIVE_CONNECTION="$SECONDARY_STR"
 else
   ACTIVE_CONNECTION="$PRIMARY_STR"
