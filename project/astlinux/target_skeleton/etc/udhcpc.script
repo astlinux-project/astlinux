@@ -11,91 +11,123 @@ resolv_conf="/tmp/etc/resolv-up.conf"
 
 udhcpc_conf="/tmp/udhcpc-${interface}.conf"
 
-case "$1" in
+ACTION="$1"
+
+gen_udhcpc_conf() {
+  local i IFS
+
+  echo "IP=${ip}
+BCAST=${broadcast}
+NETMASK=${subnet}"
+
+  unset IFS
+  for i in ${router}; do
+    echo "GW=$i"
+  done
+
+  if [ -n "${domain}" ]; then
+    echo "DOMAIN=${domain}"
+  fi
+
+  for i in ${dns}; do
+    echo "DNS=$i"
+  done
+}
+
+gen_resolv_conf() {
+  local i IFS
+
+  if [ -n "${domain}" ]; then
+    echo "search ${domain}"
+  fi
+
+  unset IFS
+  for i in ${dns}; do
+    echo "udhcpc: adding resolver ${i}" >&2
+    echo "nameserver ${i}"
+  done
+}
+
+add_routes()
+{
+  local i x metric IFS
+
+  metric=0
+  unset IFS
+  for i in ${router}; do
+    if [ "$EXTIF" = "${interface}" ]; then
+      echo "udhcpc: adding default route via ${i}" >&2
+      ip route add default via ${i} dev ${interface} metric $metric
+    else
+      for x in $EXT2ROUTES; do
+        echo "udhcpc: adding ${x} route via ${i}" >&2
+        ip route add ${x} via ${i} dev ${interface} metric $metric
+      done
+    fi
+    metric=$((metric+1))
+  done
+}
+
+restart_failover_service()
+{
+  # Restart Failover script if running or waiting to start
+  if [ -f /var/run/wan-failover.pid -o -f /var/run/wan-failover.start ]; then
+    /etc/init.d/failover restart >/dev/null 2>&1 &
+  fi
+}
+
+case "$ACTION" in
+
   deconfig)
-    /sbin/ip link set dev ${interface} up
-    /sbin/ip -4 addr flush dev ${interface} scope global
+    ip link set dev ${interface} up
+    ip -4 addr flush dev ${interface} scope global
     if [ "$EXTIF" = "${interface}" ]; then
       rm -f /tmp/mydhcpip
     fi
     rm -f "$udhcpc_conf"
     ;;
 
-  renew|bound)
-    /sbin/ip link set dev ${interface} up
-    /sbin/ip -4 addr flush dev ${interface} scope global
-    /sbin/ip -4 addr add ${ip}/${subnet} brd ${broadcast:-+} dev ${interface}
+  bound)
+    ip link set dev ${interface} up
+    gen_udhcpc_conf > "$udhcpc_conf"
 
-    if [ -f "$udhcpc_conf" ]; then
-      OLDGW="$(sed -n -r -e 's/^GW=([0-9.]+).*$/\1/p' "$udhcpc_conf" | head -n1)"
-    else
-      OLDGW=""
-    fi
     if [ "$EXTIF" = "${interface}" ]; then
       echo "${ip}" > /tmp/mydhcpip
+      gen_resolv_conf > "$resolv_conf"
     fi
-    echo "IP=${ip}
-BCAST=${broadcast}
-NETMASK=${subnet}" > "$udhcpc_conf"
+
+    ip -4 addr flush dev ${interface} scope global
+    ip -4 addr add ${ip}/${subnet} brd ${broadcast:-+} dev ${interface}
 
     if [ -n "${router}" ]; then
-      if [ "$EXTIF" = "${interface}" ]; then
-        # Delete existing default route(s)
-        /sbin/ip route list dev ${interface} | grep '^default .*via ' | while read x; do
-          /sbin/ip route delete ${x} dev ${interface} >/dev/null 2>&1
-        done
-      else
-        # Delete optional route(s)
-        /sbin/ip route list dev ${interface} | grep ' via ' | while read x; do
-          /sbin/ip route delete ${x} dev ${interface} >/dev/null 2>&1
-        done
-      fi
-
-      NEWGW=""
-      metric=0
-      for i in ${router}; do
-        if [ "$EXTIF" = "${interface}" ]; then
-          echo "udhcpc: adding default route via ${i}"
-          /sbin/ip route add default via ${i} dev ${interface} metric $metric
-        else
-          for x in $EXT2ROUTES; do
-            echo "udhcpc: adding ${x} route via ${i}"
-            /sbin/ip route add ${x} via ${i} dev ${interface} metric $metric
-          done
-        fi
-        metric=$((metric+1))
-        echo "GW=${i}" >> "$udhcpc_conf"
-        if [ -z "$NEWGW" ]; then
-          NEWGW="${i}"
-        fi
-      done
-
-      # Restart Failover script if running or enabled and if the gateway changed
-      if [ -f /var/run/wan-failover.pid -o -f /var/run/wan-failover.start ]; then
-        if [ "$OLDGW" != "$NEWGW" ]; then
-          /etc/init.d/failover restart >/dev/null 2>&1 &
-        fi
-      fi
+      add_routes
+      restart_failover_service
     fi
-
-    if [ "$EXTIF" = "${interface}" ]; then
-      : > "$resolv_conf"
-      if [ -n "${domain}" ]; then
-        echo "search ${domain}" >> "$resolv_conf"
-      fi
-      for i in ${dns}; do
-        echo "udhcpc: adding resolver ${i}"
-        echo "nameserver ${i}" >> "$resolv_conf"
-      done
-    fi
-
-    if [ -n "${domain}" ]; then
-      echo "DOMAIN=${domain}" >> "$udhcpc_conf"
-    fi
-    for i in ${dns}; do
-      echo "DNS=${i}" >> "$udhcpc_conf"
-    done
     ;;
+
+  renew)
+    gen_udhcpc_conf > "${udhcpc_conf}.new"
+
+    if [ -f "$udhcpc_conf" ] && cmp -s "$udhcpc_conf" "${udhcpc_conf}.new"; then
+      rm -f "${udhcpc_conf}.new"
+    else
+      mv "${udhcpc_conf}.new" "$udhcpc_conf"
+
+      if [ "$EXTIF" = "${interface}" ]; then
+        echo "${ip}" > /tmp/mydhcpip
+        gen_resolv_conf > "$resolv_conf"
+      fi
+
+      ip -4 addr flush dev ${interface} scope global
+      ip -4 addr add ${ip}/${subnet} brd ${broadcast:-+} dev ${interface}
+
+      if [ -n "${router}" ]; then
+        add_routes
+        restart_failover_service
+      fi
+    fi
+    ;;
+
 esac
 
 exit 0
