@@ -14,6 +14,7 @@
 
 LOCKFILE="/var/lock/wan-failover.lock"
 PIDFILE="/var/run/wan-failover.pid"
+STARTFILE="/var/run/wan-failover.start"
 STATUSFILE="/var/log/wan-failover-status.log"
 SCRIPTFILE="/mnt/kd/wan-failover.script"
 
@@ -341,6 +342,9 @@ start_monitor() {
   return 0
 }
 
+## Reset flag, when set, on a network change wan-failover should be started if not already running
+rm -f "$STARTFILE"
+
 ## Override the 2nd external interface if WAN_FAILOVER_SECONDARY_GW is defined
 if [ -n "$WAN_FAILOVER_SECONDARY_GW" ]; then
   EXT2IF="$(ip -o route get $WAN_FAILOVER_SECONDARY_GW | sed -n -r -e 's/^.* dev +([^ ]+).*$/\1/p')"
@@ -354,30 +358,6 @@ if [ -z "$EXTIF" ]; then
 fi
 if [ -z "$EXT2IF" ]; then
   log_all ERROR "Secondary interface is not set, define: EXT2IF"
-  exit 1
-fi
-
-## PPPoE results in an empty PRIMARY_GW
-PRIMARY_GW="$(ip route list dev $EXTIF 2>/dev/null | sed -n -r -e 's/^default .*via +([^ ]+).*$/\1/p')"
-
-if [ -n "$EXT2GW" ]; then
-  SECONDARY_GW="$EXT2GW"
-elif [ -f "/tmp/udhcpc-${EXT2IF}.conf" ]; then
-  SECONDARY_GW="$(sed -n -r -e 's/^GW=([0-9.]+).*$/\1/p' "/tmp/udhcpc-${EXT2IF}.conf" | head -n1)"
-fi
-if [ -z "$SECONDARY_GW" ]; then
-  log_all ERROR "Secondary interface gateway not found, exiting."
-  exit 1
-fi
-
-if [ "$IPV6" = "yes" -a -n "$EXT2GWIPV6" ]; then
-  SECONDARY_GWIPV6="$EXT2GWIPV6"
-else
-  SECONDARY_GWIPV6=""
-fi
-
-if ! which fping >/dev/null 2>&1; then
-  log_all ERROR "The command 'fping' is not available, exiting."
   exit 1
 fi
 
@@ -396,6 +376,31 @@ done
 if [ -z "$FIRST_TARGET" ]; then
   log_all ERROR "No IPv4 targets to test availability, define: WAN_FAILOVER_TARGETS"
   exit 1
+fi
+
+if ! which fping >/dev/null 2>&1; then
+  log_all ERROR "The command 'fping' is not available, exiting."
+  exit 1
+fi
+
+## PPPoE results in an empty PRIMARY_GW
+PRIMARY_GW="$(ip route list dev $EXTIF 2>/dev/null | sed -n -r -e 's/^default .*via +([^ ]+).*$/\1/p')"
+
+if [ -n "$EXT2GW" ]; then
+  SECONDARY_GW="$EXT2GW"
+elif [ -f "/tmp/udhcpc-${EXT2IF}.conf" ]; then
+  SECONDARY_GW="$(sed -n -r -e 's/^GW=([0-9.]+).*$/\1/p' "/tmp/udhcpc-${EXT2IF}.conf" | head -n1)"
+fi
+if [ -z "$SECONDARY_GW" ]; then
+  echo "1" > "$STARTFILE"
+  log_all ERROR "Secondary interface gateway not found, will restart on a network change."
+  exit 1
+fi
+
+if [ "$IPV6" = "yes" -a -n "$EXT2GWIPV6" ]; then
+  SECONDARY_GWIPV6="$EXT2GWIPV6"
+else
+  SECONDARY_GWIPV6=""
 fi
 
 if [ "$SECONDARY_GW" = "$(ip route list dev $EXT2IF 2>/dev/null | sed -n -r -e 's|^0.0.0.0/1 .*via +([^ ]+).*$|\1|p')" ]; then

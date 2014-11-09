@@ -4,6 +4,7 @@
 
 WAN_LOCKFILE="/var/lock/wan-failover.lock"
 WAN_PIDFILE="/var/run/wan-failover.pid"
+WAN_STARTFILE="/var/run/wan-failover.start"
 
 init()
 {
@@ -17,6 +18,8 @@ start()
 
     # Start the background process
     wan-failover
+  elif [ -f "$WAN_STARTFILE" ]; then
+    rm "$WAN_STARTFILE"
   fi
 }
 
