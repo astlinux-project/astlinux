@@ -9,7 +9,7 @@
  	char *emailsubject;              /*!< E-mail subject */
  	char *emailbody;                 /*!< E-mail body */
  	char pager[80];                  /*!< E-mail address to pager (no attachment) */
-@@ -1043,6 +1043,8 @@
+@@ -1044,6 +1044,8 @@
  		vmu->maxdeletedmsg = maxdeletedmsg;
  	}
  	vmu->volgain = volgain;
@@ -18,7 +18,7 @@
  	ast_free(vmu->emailsubject);
  	vmu->emailsubject = NULL;
  	ast_free(vmu->emailbody);
-@@ -1339,7 +1341,8 @@
+@@ -1340,7 +1342,8 @@
  		} else if (!strcasecmp(var->name, "pager")) {
  			ast_copy_string(retval->pager, var->value, sizeof(retval->pager));
  		} else if (!strcasecmp(var->name, "email")) {
@@ -28,7 +28,7 @@
  		} else if (!strcasecmp(var->name, "fullname")) {
  			ast_copy_string(retval->fullname, var->value, sizeof(retval->fullname));
  		} else if (!strcasecmp(var->name, "context")) {
-@@ -1466,6 +1469,7 @@
+@@ -1467,6 +1470,7 @@
  		if ((vmu = (ivm ? ivm : ast_malloc(sizeof(*vmu))))) {
  			*vmu = *cur;
  			if (!ivm) {
@@ -36,7 +36,7 @@
  				vmu->emailbody = ast_strdup(cur->emailbody);
  				vmu->emailsubject = ast_strdup(cur->emailsubject);
  			}
-@@ -1761,6 +1765,9 @@
+@@ -1762,6 +1766,9 @@
  {
  	if (ast_test_flag(vmu, VM_ALLOCED)) {
  
@@ -46,7 +46,7 @@
  		ast_free(vmu->emailbody);
  		vmu->emailbody = NULL;
  
-@@ -2297,7 +2304,7 @@
+@@ -2299,7 +2306,7 @@
  		 * of this function, we will revert back to an empty string if tempcopy
  		 * is 1.
  		 */
@@ -55,7 +55,7 @@
  		tempcopy = 1;
  	}
  
-@@ -2309,8 +2316,10 @@
+@@ -2311,8 +2318,10 @@
  	   command hangs. */
  	if (!(p = vm_mkftemp(tmp))) {
  		ast_log(AST_LOG_WARNING, "Unable to store '%s' (can't create temporary file)\n", fn);
@@ -68,7 +68,7 @@
  		return -1;
  	}
  
-@@ -4563,6 +4572,9 @@
+@@ -4584,6 +4593,9 @@
  	struct ast_str *str1 = ast_str_create(16), *str2 = ast_str_create(16);
  	char *greeting_attachment; 
  	char filename[256];
@@ -78,7 +78,7 @@
  
  	if (!str1 || !str2) {
  		ast_free(str1);
-@@ -4604,7 +4616,7 @@
+@@ -4625,7 +4637,7 @@
  			ast_str_substitute_variables(&str1, 0, ast, fromstring);
  
  			if (check_mime(ast_str_buffer(str1))) {
@@ -87,7 +87,7 @@
  				ast_str_encode_mime(&str2, 0, ast_str_buffer(str1), strlen("From: "), strlen(who) + 3);
  				while ((ptr = strchr(ast_str_buffer(str2), ' '))) {
  					*ptr = '\0';
-@@ -4625,20 +4637,25 @@
+@@ -4646,20 +4658,25 @@
  		fprintf(p, "From: Asterisk PBX <%s>" ENDL, who);
  	}
  
@@ -126,7 +126,7 @@
  	}
  
  	if (!ast_strlen_zero(emailsubject) || !ast_strlen_zero(vmu->emailsubject)) {
-@@ -4648,7 +4665,7 @@
+@@ -4669,7 +4686,7 @@
  			prep_email_sub_vars(ast, vmu, msgnum + 1, context, mailbox, fromfolder, cidnum, cidname, dur, date, category, flag);
  			ast_str_substitute_variables(&str1, 0, ast, e_subj);
  			if (check_mime(ast_str_buffer(str1))) {
@@ -135,7 +135,7 @@
  				char *ptr;
  				ast_str_encode_mime(&str2, 0, ast_str_buffer(str1), strlen("Subject: "), 0);
  				while ((ptr = strchr(ast_str_buffer(str2), ' '))) {
-@@ -10825,7 +10842,7 @@
+@@ -10841,7 +10858,7 @@
  		ast_copy_string(vmu->fullname, s, sizeof(vmu->fullname));
  	}
  	if (stringp && (s = strsep(&stringp, ","))) {
@@ -144,7 +144,7 @@
  	}
  	if (stringp && (s = strsep(&stringp, ","))) {
  		ast_copy_string(vmu->pager, s, sizeof(vmu->pager));
-@@ -12985,7 +13002,7 @@
+@@ -13001,7 +13018,7 @@
  	}
  
  	populate_defaults(vmu);

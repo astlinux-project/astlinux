@@ -1,9 +1,0 @@
---- asterisk-11.13.0/res/res_srtp.c.orig	2014-10-13 22:34:16.000000000 -0500
-+++ asterisk-11.13.0/res/res_srtp.c	2014-10-13 22:37:49.000000000 -0500
-@@ -41,5 +41,6 @@
- 
- #include <srtp/srtp.h>
-+#include <srtp/crypto_kernel.h>
- 
- #include "asterisk/lock.h"
- #include "asterisk/sched.h"
