@@ -4,7 +4,7 @@
 #
 #############################################################
 
-STUNNEL_VERSION = 5.06
+STUNNEL_VERSION = 5.07
 STUNNEL_SITE = http://ftp.nluug.nl/pub/networking/stunnel/archive/5.x
 STUNNEL_DEPENDENCIES = openssl
 
@@ -15,6 +15,7 @@ STUNNEL_CONF_OPT += \
 	--with-ssl=$(STAGING_DIR)/usr \
 	--localstatedir=/var \
 	--disable-libwrap \
+	--disable-systemd \
 	--disable-fips \
 	--with-threads=fork
 
