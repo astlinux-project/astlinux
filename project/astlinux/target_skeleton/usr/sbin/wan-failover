@@ -385,7 +385,8 @@ fi
 
 PRIMARY_GW="$(ip route list dev $EXTIF 2>/dev/null | sed -n -r -e 's/^default .*via +([^ ]+).*$/\1/p')"
 if [ -z "$PRIMARY_GW" -a "${EXTIF%[0-9]}" != "ppp" ]; then
-  log_all ERROR "Primary interface gateway not found, exiting."
+  echo "1" > "$STARTFILE"
+  log_all ERROR "Primary interface gateway not found, will restart on a network change."
   exit 1
 fi
 
