@@ -208,7 +208,7 @@ require_once '../common/header.php';
     } elseif ($result == 10) {
       putHtml('<p style="color: green;">WAN Failover'.statusPROCESS('failover').'.</p>');
     } elseif ($result == 11) {
-      putHtml('<p style="color: green;">Settings saved, click "Restart Failover" to apply any changed settings.</p>');
+      putHtml('<p style="color: green;">Settings saved, click "Restart Failover" to apply WAN Failover settings, a "Reboot" is required for External Failover Interface changes.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {
