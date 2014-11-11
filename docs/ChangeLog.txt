@@ -29,7 +29,7 @@ Released **TBD**
 
 -- pcre, version bump to 8.36
 
--- Time Zone Database update, tzdata2014h and tzcode2014h
+-- Time Zone Database update, tzdata2014i and tzcode2014i
 
 ** Networking
 
@@ -40,6 +40,11 @@ Released **TBD**
    The optional /mnt/kd/wan-failover.script executable script will be called to allow for service adjustments.
    More info: http://doc.astlinux.org/userdoc:tt_wan_failover
 
+-- External interface DHCP client enhancements to better handle 'primary' and 'secondary' external DHCP interfaces.
+   A DHCP client 'renew' no longer flushes and rebuilds the IPv4 interface settings if no change is requested.
+
+-- libcurl (curl) version bump to 7.39.0, bug and security fix: CVE-2014-3707
+
 -- OpenVPN, version bump to 2.3.5
 
 -- prosody, version bump to 0.9.6
@@ -48,15 +53,19 @@ Released **TBD**
 
 -- radvd, version bump to 2.8
 
--- stunnel, version bump to 5.06
+-- stunnel, version bump to 5.07
+
+-- (Custom Build Only) kamailio, version bump to 4.1.7
 
 ** Asterisk
 
--- Asterisk 1.8.31.1 (version bump) and 11.13.1 (version bump)
+-- Asterisk 1.8.32.0 (version bump) and 11.14.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
 -- wanpipe, version bump to 7.0.12
+
+-- neon, version bump to 0.30.1, used for Asterisk Calendar Support
 
 -- FOP2, available version bump to 2.28.  New CLI command option: "service fop2 test"
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
@@ -72,6 +81,8 @@ Released **TBD**
 -- Status tab, added "WAN Failover Status", and can be hidden via the Prefs tab.
 
 -- Network tab, added "External Failover Interface:" section with new sub-tab { WAN Failover Configuration }
+   Note: EXT2* rc.conf variables can now be defined via the web interface.
+   More info: http://doc.astlinux.org/userdoc:tt_wan_failover
 
 
 Additions for AstLinux 1.2.0:
