@@ -4,10 +4,9 @@
 #
 #############################################################
 
-ZABBIX_VERSION = 2.2.4
+ZABBIX_VERSION = 2.2.7
 ZABBIX_SOURCE = zabbix-$(ZABBIX_VERSION).tar.gz
 ZABBIX_SITE = http://downloads.sourceforge.net/sourceforge/zabbix
-ZABBIX_AUTORECONF = YES
 
 ZABBIX_CONF_OPT = \
 	--enable-agent \
@@ -22,7 +21,7 @@ ZABBIX_CONF_OPT += \
  ifeq ($(strip $(BR2_PACKAGE_CURL)),y)
 ZABBIX_DEPENDENCIES += libcurl
 ZABBIX_CONF_OPT += \
-	--with-libcurl="$(STAGING_DIR)/usr" LIBCURL_LIBS="-lcurl"
+	--with-libcurl="$(STAGING_DIR)/usr/bin/curl-config"
  endif
 
  ifeq ($(strip $(BR2_PACKAGE_NETSNMP)),y)
