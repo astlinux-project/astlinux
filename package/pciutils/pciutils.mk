@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PCIUTILS_VERSION = 3.2.1
+PCIUTILS_VERSION = 3.3.0
 PCIUTILS_SITE = ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci
 PCIUTILS_INSTALL_STAGING = YES
 # Depend on linux to define LINUX_VERSION_PROBED
@@ -13,7 +13,8 @@ PCIUTILS_DEPENDENCIES = linux
 PCIUTILS_ZLIB=no
 PCIUTILS_DNS=no
 PCIUTILS_SHARED=yes
-PCIUTILS_KMOD = no
+PCIUTILS_KMOD=no
+PCIUTILS_HWDB=no
 
 # Build after busybox since it's got a lightweight lspci
 ifeq ($(BR2_PACKAGE_BUSYBOX),y)
@@ -40,6 +41,7 @@ define PCIUTILS_BUILD_CMDS
 		ZLIB=$(PCIUTILS_ZLIB) \
 		DNS=$(PCIUTILS_DNS) \
 		LIBKMOD=$(PCIUTILS_KMOD) \
+		HWDB=$(PCIUTILS_HWDB) \
 		PREFIX=/usr
 endef
 
