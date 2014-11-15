@@ -725,7 +725,7 @@ require_once '../common/header.php';
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
-  putHtml('Server Hostname:');
+  putHtml('Server Hostname(s):');
   putHtml('</td><td style="text-align: left;" colspan="4">');
   if (($server_hostname = getVARdef($db, 'OVPN_HOSTNAME')) === '') {
     $server_hostname = get_HOSTNAME_DOMAIN();
