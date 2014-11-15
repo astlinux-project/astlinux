@@ -90,7 +90,7 @@ Released **TBD**
    Note: EXT2* rc.conf variables can now be defined via the web interface.
    More info: http://doc.astlinux.org/userdoc:tt_wan_failover
 
--- Network -> OpenVPN Server -> Server Hostname: may now contain a space separated list
+-- Network -> OpenVPN Server -> Server Hostname(s): may now contain a space separated list
    of hosts which will add multiple "remote" entries to the .ovpn profile for failover.
 
 
