@@ -317,7 +317,12 @@ function ovpnProfile($db, $ssl, $client, &$ta_file) {
     return(FALSE);
   }
 
-  $str = "remote $server_hostname $port $protocol\n";
+  $str = '';
+  foreach (explode(' ', $server_hostname) as $hostname) {
+    if ($hostname !== '') {
+      $str .= "remote $hostname $port $protocol\n";
+    }
+  }
 
   $str .= "comp-lzo ".getVARdef($db, 'OVPN_LZO')."\n";
 
@@ -725,7 +730,7 @@ require_once '../common/header.php';
   if (($server_hostname = getVARdef($db, 'OVPN_HOSTNAME')) === '') {
     $server_hostname = get_HOSTNAME_DOMAIN();
   }
-  putHtml('<input type="text" size="48" maxlength="128" value="'.$server_hostname.'" name="server_hostname" />');
+  putHtml('<input type="text" size="48" maxlength="200" value="'.$server_hostname.'" name="server_hostname" />');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
