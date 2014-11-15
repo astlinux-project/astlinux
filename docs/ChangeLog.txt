@@ -25,9 +25,15 @@ Released **TBD**
 -- smartctl, version 6.3, new command to monitor S.M.A.R.T enabled SSD's
    smart-status, new command, Usage: smart-status attr[ibutes]|ATTR[IBUTES]|health|info
 
+-- zabbix, version bump to 2.2.7
+
 -- libsodium, version bump to 1.0.0
 
 -- pcre, version bump to 8.36
+
+-- pciutils, version bump to 3.3.0
+
+-- mac2vendor, database update at 2014-11-12
 
 -- Time Zone Database update, tzdata2014i and tzcode2014i
 
@@ -83,6 +89,9 @@ Released **TBD**
 -- Network tab, added "External Failover Interface:" section with new sub-tab { WAN Failover Configuration }
    Note: EXT2* rc.conf variables can now be defined via the web interface.
    More info: http://doc.astlinux.org/userdoc:tt_wan_failover
+
+-- Network -> OpenVPN Server -> Server Hostname: may now contain a space separated list
+   of hosts which will add multiple "remote" entries to the .ovpn profile for failover.
 
 
 Additions for AstLinux 1.2.0:
