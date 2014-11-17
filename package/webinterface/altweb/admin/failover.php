@@ -39,12 +39,15 @@ $test_interval_menu = array (
 );
 
 $max_latency_menu = array (
+  '100' => '0.1 sec',
+  '200' => '0.2 sec',
+  '300' => '0.3 sec',
+  '400' => '0.4 sec',
   '500' => '0.5 sec',
-  '1000' => '1 sec',
-  '2000' => '2 secs',
-  '3000' => '3 secs',
-  '4000' => '4 secs',
-  '5000' => '5 secs'
+  '1000' => '1.0 sec',
+  '1500' => '1.5 secs',
+  '2000' => '2.0 secs',
+  '3000' => '3.0 secs'
 );
 
 $threshold_menu = array (
