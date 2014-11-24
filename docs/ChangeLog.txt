@@ -27,7 +27,7 @@ Released **TBD**
 
 -- zabbix, version bump to 2.2.7
 
--- libsodium, version bump to 1.0.0
+-- libsodium, version bump to 1.0.1
 
 -- pcre, version bump to 8.36
 
@@ -53,7 +53,7 @@ Released **TBD**
 
 -- OpenVPN, version bump to 2.3.5
 
--- prosody, version bump to 0.9.6
+-- prosody, version bump to 0.9.7
 
 -- openldap, version bump to 2.4.40
 
