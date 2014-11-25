@@ -58,7 +58,7 @@ add_routes()
     if [ "$EXTIF" = "${interface}" ]; then
       echo "udhcpc: adding default route via ${i}" >&2
       ip route add default via ${i} dev ${interface} metric $metric
-    else
+    elif [ "$EXT2IF" = "${interface}" ]; then
       for x in $EXT2ROUTES; do
         echo "udhcpc: adding ${x} route via ${i}" >&2
         ip route add ${x} via ${i} dev ${interface} metric $metric
