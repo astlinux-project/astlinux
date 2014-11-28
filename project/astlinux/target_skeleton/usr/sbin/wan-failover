@@ -155,10 +155,17 @@ update_log_status() {
 }
 
 targets_ok() {
-  local cnt
+  local routes cnt
+
+  routes="$(ip route list dev $EXTIF 2>/dev/null)"
+  if [ -z "$routes" ]; then
+    # No routes implies the interface is down or missing
+    # Act as no targets are reachable
+    return 0
+  fi
 
   ## Check if the static routes need refreshing
-  if ! ip route list dev $EXTIF | grep -q "^${FIRST_TARGET//./[.]} "; then
+  if ! echo "$routes" | grep -q "^${FIRST_TARGET//./[.]} "; then
     add_target_static_routes
   fi
 
