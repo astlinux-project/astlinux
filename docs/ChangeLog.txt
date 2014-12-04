@@ -35,7 +35,7 @@ Released **TBD**
 
 -- mac2vendor, database update at 2014-11-12
 
--- Time Zone Database update, tzdata2014i and tzcode2014i
+-- Time Zone Database update, tzdata2014j and tzcode2014j
 
 ** Networking
 
