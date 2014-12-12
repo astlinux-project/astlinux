@@ -1,0 +1,68 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+PIDFILE="/var/run/monit.pid"
+
+STATEFILE="/var/db/monit.state"
+
+init ()
+{
+  if [ -d /mnt/kd/monit ]; then
+    ln -snf /mnt/kd/monit /tmp/etc/monit
+  fi
+}
+
+start ()
+{
+  if [ -f /etc/monit/monitrc ]; then
+    echo "Starting monit..."
+    chmod 600 /etc/monit/monitrc
+    monit -c /etc/monit/monitrc -p $PIDFILE -s $STATEFILE
+  fi
+}
+
+stop ()
+{
+  if [ -f $PIDFILE ]; then
+    echo "Stopping monit..."
+
+    kill $(cat $PIDFILE) >/dev/null 2>&1
+
+    # Wait for monit to stop
+    cnt=5
+    while [ $cnt -gt 0 ] && [ -f $PIDFILE ]; do
+      cnt=$((cnt - 1))
+      sleep 1
+    done
+    rm -f $PIDFILE
+  fi
+}
+
+case $1 in
+
+init)
+  init
+  start
+  ;;
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart" >&2
+  exit 1
+  ;;
+
+esac
