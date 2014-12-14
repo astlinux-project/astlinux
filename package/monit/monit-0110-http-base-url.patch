@@ -1,0 +1,23 @@
+--- monit-5.10/src/http/processor.c.orig	2014-12-14 16:07:53.000000000 -0600
++++ monit-5.10/src/http/processor.c	2014-12-14 16:35:04.000000000 -0600
+@@ -24,6 +24,8 @@
+ 
+ #include "config.h"
+ 
++#define HTTP_BASE_URL "/admin/monit"
++
+ #ifdef HAVE_STDIO_H
+ #include <stdio.h>
+ #endif
+@@ -504,6 +506,11 @@
+     internal_error(S, SC_BAD_REQUEST, "[error] URL too long");
+     return NULL;
+   }
++#ifdef HTTP_BASE_URL
++  if(Str_startsWith(url, HTTP_BASE_URL)) {
++    Str_copy(url, url + strlen(HTTP_BASE_URL), strlen(url) - strlen(HTTP_BASE_URL));
++  }
++#endif
+   NEW(req);
+   req->S = S;
+   Util_urlDecode(url);
