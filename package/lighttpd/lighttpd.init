@@ -96,6 +96,14 @@ init () {
     cli_proxy_server="#"
   fi
 
+  if [ -f /etc/init.d/monit ]; then
+    # Always enable /admin/monit/ proxy so monit can be
+    # enabled/disabled without requiring a reboot via the web interface.
+    monit_server=""
+  else
+    monit_server="#"
+  fi
+
   # Always enable /admin/netstat/ proxy so darkstat can be
   # enabled/disabled without requiring a reboot via the web interface.
   netstat_server=""
@@ -136,6 +144,7 @@ init () {
          -e "s|@HTTPSCGI@|${httpscgi}|g" \
          -e "s|@IPV6@|${ipv6}|g" \
          -e "s|@CLI_PROXY_SERVER@|${cli_proxy_server}|g" \
+         -e "s|@MONIT_SERVER@|${monit_server}|g" \
          -e "s|@NETSTAT_SERVER@|${netstat_server}|g" \
          -e "s|@PHONEPROV@|${phoneprov}|g" \
          -e "s!@PHONEPROV_ALLOW@!${phoneprov_allow}!g" \
