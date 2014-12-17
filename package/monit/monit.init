@@ -71,7 +71,8 @@ init ()
 start ()
 {
   if [ -f /etc/monit/monitrc ]; then
-    echo "Starting monit..."
+    # 'monit' displays "Starting..." text
+    # echo "Starting Monit..."
 
     monit -c /etc/monit/monitrc -p $PIDFILE -s $STATEFILE
   fi
@@ -80,7 +81,7 @@ start ()
 stop ()
 {
   if [ -f $PIDFILE ]; then
-    echo "Stopping monit..."
+    echo "Stopping Monit..."
 
     kill $(cat $PIDFILE) >/dev/null 2>&1
 
