@@ -34,6 +34,7 @@
 // 09-23-2013, Added ddclient support
 // 10-21-2013, Added LDAP server support
 // 01-04-2014, Added NUT UPS Monitoring support
+// 12-16-2014, Added Monit Monitoring support
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -900,6 +901,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       header('Location: /admin/edit.php?file='.$file);
       exit;
     }
+  } elseif (isset($_POST['submit_monit'])) {
+    $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
+    header('Location: /admin/monitconfig.php');
+    exit;
   } elseif (isset($_POST['submit_zabbix'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/zabbix.php');
@@ -1025,6 +1030,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 44, $result, 'init');
       } elseif ($process === 'kamailio') {
         $result = restartPROCESS($process, 45, $result, 'init');
+      } elseif ($process === 'monit') {
+        $result = restartPROCESS($process, 46, $result, 'init');
       }
     } else {
       $result = 2;
@@ -1113,6 +1120,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">NetStat Server (darkstat)'.statusPROCESS('darkstat').'.</p>');
     } elseif ($result == 45) {
       putHtml('<p style="color: green;">Kamailio SIP Server'.statusPROCESS('kamailio').'.</p>');
+    } elseif ($result == 46) {
+      putHtml('<p style="color: green;">Monit Monitoring'.statusPROCESS('monit').'.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 100) {
@@ -1194,6 +1203,8 @@ require_once '../common/header.php';
   putHtml('<option value="ldap"'.$sel.'>Reload LDAP Client</option>');
   $sel = ($reboot_restart === 'slapd') ? ' selected="selected"' : '';
   putHtml('<option value="slapd"'.$sel.'>Restart LDAP Server</option>');
+  $sel = ($reboot_restart === 'monit') ? ' selected="selected"' : '';
+  putHtml('<option value="monit"'.$sel.'>Restart Monit Monitor</option>');
   $sel = ($reboot_restart === 'darkstat') ? ' selected="selected"' : '';
   putHtml('<option value="darkstat"'.$sel.'>Restart NetStat Server</option>');
   $sel = ($reboot_restart === 'snmpd') ? ' selected="selected"' : '';
@@ -1643,6 +1654,11 @@ require_once '../common/header.php';
     putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
     putHtml('SNMP&nbsp;Agent&nbsp;Server:');
     putHtml('<input type="submit" value="Configure SNMP Agent" name="submit_snmp_agent" class="button" /></td></tr>');
+  }
+  if (is_file('/etc/init.d/monit')) {
+    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+    putHtml('Monit&nbsp;Monitoring:');
+    putHtml('<input type="submit" value="Configure Monit" name="submit_monit" class="button" /></td></tr>');
   }
   if (is_file('/etc/init.d/zabbix')) {
     putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');

@@ -31,6 +31,7 @@ $select_reload = array (
   'pptpd' => 'Restart PPTP VPN Server',
   'ldap' => 'Reload LDAP Client',
   'slapd' => 'Restart LDAP Server',
+  'monit' => 'Restart Monit Monitor',
   'darkstat' => 'Restart NetStat Server',
   'snmpd' => 'Restart SNMP Server',
   'stunnel' => 'Restart Stunnel Proxy',
@@ -250,6 +251,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 44, $result, 'init');
       } elseif ($process === 'kamailio') {
         $result = restartPROCESS($process, 45, $result, 'init');
+      } elseif ($process === 'monit') {
+        $result = restartPROCESS($process, 46, $result, 'init');
       } elseif ($process === 'cron') {
         $result = updateCRON('root', 30, $result);
       }
@@ -292,6 +295,8 @@ require_once '../common/header.php';
       $dir === '/mnt/kd/snmp' ||
       $dir === '/mnt/kd/fop2' ||
       $dir === '/mnt/kd/kamailio' ||
+      $dir === '/mnt/kd/monit' ||
+      $dir === '/mnt/kd/monit/monit.d' ||
       $dir === '/mnt/kd/ups' ||
       $dir === '/mnt/kd/prosody' ||
       $dir === '/mnt/kd/docs' ||
@@ -382,6 +387,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">NetStat Server (darkstat)'.statusPROCESS('darkstat').'.</p>');
     } elseif ($result == 45) {
       putHtml('<p style="color: green;">Kamailio SIP Server'.statusPROCESS('kamailio').'.</p>');
+    } elseif ($result == 46) {
+      putHtml('<p style="color: green;">Monit Monitoring'.statusPROCESS('monit').'.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {
@@ -557,6 +564,20 @@ require_once '../common/header.php';
     if (is_writable($file = '/mnt/kd/ups/upsd.users')) {
       $sel = ($file === $openfile) ? ' selected="selected"' : '';
       putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - NUT UPS Configuration</option>');
+    }
+    putHtml('</optgroup>');
+  }
+  if (is_dir('/mnt/kd/monit/monit.d') && count($globfiles = glob('/mnt/kd/monit/monit.d/*')) > 0) {
+    putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; Monit Monitoring Configs &mdash;&mdash;&mdash;&mdash;">');
+    foreach ($globfiles as $globfile) {
+      if (is_file($globfile) && is_writable($globfile)) {
+        $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
+        putHtml('<option value="'.$globfile.'"'.$sel.'>monit.d/'.basename($globfile).' - Monit Configuration</option>');
+      }
+    }
+    if (is_writable($file = '/mnt/kd/monit/monitrc')) {
+      $sel = ($file === $openfile) ? ' selected="selected"' : '';
+      putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - Monit Base Configuration</option>');
     }
     putHtml('</optgroup>');
   }

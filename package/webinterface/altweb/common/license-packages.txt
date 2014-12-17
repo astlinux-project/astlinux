@@ -52,3 +52,4 @@ dnscrypt-proxy~Copyright (c) 2011-2014 Frank Denis
 libsodium~Copyright (c) 2013-2014 Frank Denis
 phoneprov-tools~Copyright (c) 2014 Lonnie Abelbeck and Michael Keuter.
 smartmontools~Copyright (c) 2002-2014, Bruce Allen, Christian Franke, et al.
+Monit~Copyright (c) 2001-2014, Tildeslash. All rights reserved

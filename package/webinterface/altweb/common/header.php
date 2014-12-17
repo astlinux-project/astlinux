@@ -258,6 +258,9 @@ header('Content-Type: text/html; charset=utf-8');
           }
         }
       }
+      if ($global_admin && (getPREFdef($global_prefs, 'tab_monit_show') === 'yes')) {
+        putHtml('<li><a href="/admin/monit.php"><span>Monit</span></a></li>');
+      }
       if ($global_admin && (getPREFdef($global_prefs, 'tab_network_show') !== 'no')) {
         putHtml('<li><a href="/admin/network.php"><span>Network</span></a></li>');
       }
