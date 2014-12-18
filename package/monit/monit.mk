@@ -39,8 +39,8 @@ define MONIT_INSTALL_TARGET_CMDS
 		$(TARGET_DIR)/stat/etc/monit/monit.d/services
 	$(INSTALL) -m 0755 -D package/monit/monit.init $(TARGET_DIR)/etc/init.d/monit
 	ln -sf /tmp/etc/monit $(TARGET_DIR)/etc/monit
-	ln -sf ../../init.d/monit $(TARGET_DIR)/etc/runlevels/default/S75monit
-	ln -sf ../../init.d/monit $(TARGET_DIR)/etc/runlevels/default/K15monit
+	ln -sf ../../init.d/monit $(TARGET_DIR)/etc/runlevels/default/S98monit
+	ln -sf ../../init.d/monit $(TARGET_DIR)/etc/runlevels/default/K01monit
 endef
 
 define MONIT_UNINSTALL_TARGET_CMDS
@@ -48,8 +48,8 @@ define MONIT_UNINSTALL_TARGET_CMDS
 	rm -rf $(TARGET_DIR)/stat/etc/monit
 	rm -f $(TARGET_DIR)/etc/init.d/monit
 	rm -f $(TARGET_DIR)/etc/monit
-	rm -f $(TARGET_DIR)/etc/runlevels/default/S75monit
-	rm -f $(TARGET_DIR)/etc/runlevels/default/K15monit
+	rm -f $(TARGET_DIR)/etc/runlevels/default/S98monit
+	rm -f $(TARGET_DIR)/etc/runlevels/default/K01monit
 endef
 
 $(eval $(call AUTOTARGETS,package,monit))
