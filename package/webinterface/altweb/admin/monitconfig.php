@@ -20,6 +20,15 @@ $myself = $_SERVER['PHP_SELF'];
 
 require_once '../common/functions.php';
 
+$check_interval_menu = array (
+  '20' => '20 seconds',
+  '30' => '30 seconds',
+  '40' => '40 seconds',
+  '60' => '1 minute',
+  '120' => '2 minutes',
+  '300' => '5 minutes'
+);
+
 // Function: saveMONITsettings
 //
 function saveMONITsettings($conf_dir, $conf_file) {
@@ -36,6 +45,9 @@ function saveMONITsettings($conf_dir, $conf_file) {
 
   $value = 'MONIT_SERVER="'.$_POST['monit_server'].'"';
   fwrite($fp, "### Monit Server\n".$value."\n");
+
+  $value = 'MONIT_CHECK_INTERVAL="'.$_POST['monit_check_interval'].'"';
+  fwrite($fp, "### Check Interval\n".$value."\n");
 
   fwrite($fp, "### Notifications\n");
   $value = 'MONIT_NOTIFY="'.tuq($_POST['monit_notify']).'"';
@@ -129,6 +141,20 @@ require_once '../common/header.php';
   putHtml('<option value="no">disabled</option>');
   $sel = ($monit_server === 'yes') ? ' selected="selected"' : '';
   putHtml('<option value="yes"'.$sel.'>enabled</option>');
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Check Interval:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  putHtml('<select name="monit_check_interval">');
+  if (($check_interval = getVARdef($db, 'MONIT_CHECK_INTERVAL', $cur_db)) === '') {
+    $check_interval = '60';
+  }
+  foreach ($check_interval_menu as $key => $value) {
+    $sel = ($check_interval === (string)$key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
   putHtml('</select>');
   putHtml('</td></tr>');
 
