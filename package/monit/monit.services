@@ -1,0 +1,78 @@
+##
+## Check general system resources such as load average, cpu and memory
+## usage. Each test specifies a resource, conditions and the action to be
+## performed should a test fail.
+##
+check system $HOST
+  if memory usage > 85% then alert
+#  if loadavg (1min) > 4 then alert
+#  if loadavg (5min) > 2 then alert
+#  if cpu usage (user) > 70% for 3 cycles then alert
+#  if cpu usage (system) > 30% for 3 cycles then alert
+
+
+##
+## Check that a process is running.
+##
+#check process asterisk
+#  pidfile /var/run/asterisk/asterisk.pid
+
+
+##
+## Check filesystem permissions, uid, gid, space and inode usage.
+##
+check filesystem tmp_tmpfs
+  path /tmp
+  if space usage > 80% then alert
+
+check filesystem var_tmpfs
+  path /var
+  if space usage > 80% then alert
+
+check filesystem asturw
+  path /oldroot/mnt/asturw
+  if space usage > 80% then alert
+
+#check filesystem kd
+#  path /mnt/kd
+#  if space usage > 80% then alert
+
+
+##
+## Check if a file exists, checksum, permissions, uid and gid.
+##
+#check file rc.conf
+#  path /etc/rc.conf
+
+
+##
+## Check for remote host availability.
+##
+#check host sip_gateway
+#  address pbx
+#  if failed
+#    ping
+#  then alert
+#  if failed
+#    port 5060
+#    type udp
+#    protocol sip
+#    target s@pbx
+#    maxforward 6
+#  then alert
+
+#check host web_server
+#  address 10.10.50.62
+#  if failed
+#    ping
+#  then alert
+#  if failed
+#    port 80
+#    protocol http
+##    request /some/path with content = "a string"
+#  then alert
+#  if failed
+#    port 443
+#    protocol https
+#  then alert
+

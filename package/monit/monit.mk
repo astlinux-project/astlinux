@@ -33,10 +33,7 @@ endif
 
 define MONIT_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/monit $(TARGET_DIR)/usr/sbin/monit
-	$(INSTALL) -m 0600 -D $(@D)/monitrc $(TARGET_DIR)/stat/etc/monit/monit.d/services
-	$(SED) '1,/^## Services/ d' \
-	    -e '/^## Includes/,$$ d' \
-		$(TARGET_DIR)/stat/etc/monit/monit.d/services
+	$(INSTALL) -m 0600 -D package/monit/monit.services $(TARGET_DIR)/stat/etc/monit/monit.d/services
 	$(INSTALL) -m 0755 -D package/monit/monit.init $(TARGET_DIR)/etc/init.d/monit
 	ln -sf /tmp/etc/monit $(TARGET_DIR)/etc/monit
 	ln -sf ../../init.d/monit $(TARGET_DIR)/etc/runlevels/default/S98monit
