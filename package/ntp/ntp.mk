@@ -3,18 +3,13 @@
 # ntp
 #
 #############################################################
-NTP_VERSION = 4.2.6p5
+NTP_VERSION = 4.2.8
 NTP_SOURCE = ntp-$(NTP_VERSION).tar.gz
 NTP_SITE = http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2
 
-NTP_CONF_ENV = ac_cv_lib_md5_MD5Init=no
-
-ifneq ($(BR2_INET_IPV6),y)
-NTP_CONF_ENV += isc_cv_have_in6addr_any=no
-endif
-
 NTP_CONF_OPT = --with-shared \
 		--program-transform-name=s,,, \
+		--with-yielding-select=yes \
 		--enable-ipv6=no \
 		--without-ntpsnmpd
 
@@ -27,7 +22,6 @@ endif
 
 define NTP_PATCH_FIXUPS
 	$(SED) "s,^#if.*__GLIBC__.*_BSD_SOURCE.*$$,#if 0," $(@D)/ntpd/refclock_pcf.c
-	$(SED) '/[[:space:](]rindex[[:space:]]*(/s/[[:space:]]*rindex[[:space:]]*(/ strrchr(/g' $(@D)/ntpd/*.c
 endef
 
 NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTP_KEYGEN) += util/ntp-keygen
