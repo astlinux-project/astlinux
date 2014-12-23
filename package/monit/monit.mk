@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-MONIT_VERSION = 5.10
+MONIT_VERSION = 5.11
 MONIT_SITE = http://mmonit.com/monit/dist
 #
 # Touching Makefile.am:

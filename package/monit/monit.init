@@ -23,7 +23,7 @@ set httpd
 
   unset IFS
   for i in $MONIT_NOTIFY; do
-    echo "set alert $i not on { action, instance, uid, pid, ppid }"
+    echo "set alert $i not on { action, instance }"
   done
 
   if [ -n "$MONIT_NOTIFY_FROM" ]; then
