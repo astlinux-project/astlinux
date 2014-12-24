@@ -1,6 +1,15 @@
---- monit-5.11/libmonit/src/system/NetStatistics.c.orig	2014-12-23 16:32:10.000000000 -0600
-+++ monit-5.11/libmonit/src/system/NetStatistics.c	2014-12-23 17:30:08.000000000 -0600
-@@ -81,6 +81,7 @@
+--- monit-5.11/libmonit/src/system/NetStatistics.c.orig	2014-12-24 13:59:56.000000000 -0600
++++ monit-5.11/libmonit/src/system/NetStatistics.c	2014-12-24 14:39:16.000000000 -0600
+@@ -71,6 +71,8 @@
+ 
+ #define T NetStatistics_T
+ 
++#define DO_FIX_32BIT 1
++#define NO_FIX_32BIT 0
+ 
+ static struct {
+         struct ifaddrs *addrs;
+@@ -81,6 +83,7 @@
  typedef struct NetStatisticsData_T {
          long long last;
          long long now;
@@ -8,7 +17,30 @@
          long long minute[60];
          long long hour[24];
  } NetStatisticsData_T;
-@@ -153,6 +154,18 @@
+@@ -122,6 +125,22 @@
+ /* --------------------------------------------------------------- Private */
+ 
+ 
++static void _updateRawStats(NetStatisticsData_T *data, long long value, int fix32bit) {
++	long long raw = value;
++
++	if (fix32bit == DO_FIX_32BIT) {
++		if (raw < data->raw) {
++			raw += 4294967296LL;
++		}
++	}
++	data->last = data->now;
++	if (raw > data->raw) {
++		data->now += raw - data->raw;
++	}
++	data->raw = value;
++}
++
++
+ #if defined DARWIN
+ #include "os/macosx/NetStatistics.c"
+ #elif defined FREEBSD
+@@ -153,6 +172,18 @@
          S->state = -1;
          S->duplex = -1;
          S->speed = 0LL;
@@ -27,35 +59,30 @@
          _resetData(&(S->ibytes), -1LL);
          _resetData(&(S->ipackets), -1LL);
          _resetData(&(S->ierrors), -1LL);
---- monit-5.11/libmonit/src/system/os/linux/NetStatistics.c.orig	2014-12-23 12:42:09.000000000 -0600
-+++ monit-5.11/libmonit/src/system/os/linux/NetStatistics.c	2014-12-23 17:25:24.000000000 -0600
-@@ -91,17 +91,23 @@
+--- monit-5.11/libmonit/src/system/os/linux/NetStatistics.c.orig	2014-12-24 14:00:18.000000000 -0600
++++ monit-5.11/libmonit/src/system/os/linux/NetStatistics.c	2014-12-24 14:55:04.000000000 -0600
+@@ -90,18 +90,12 @@
+                         if (sscanf(buf, "%256[^:]: %lld %lld %lld %*s %*s %*s %*s %*s %lld %lld %lld %*s %*s %*s %*s %*s", iface, &ibytes, &ipackets, &ierrors, &obytes, &opackets, &oerrors) == 7 && Str_isEqual(Str_trim(iface), interface)) {
                                  S->timestamp.last = S->timestamp.now;
                                  S->timestamp.now = Time_milli();
-                                 S->ipackets.last = S->ipackets.now;
+-                                S->ipackets.last = S->ipackets.now;
 -                                S->ipackets.now = ipackets;
-+                                S->ipackets.now += ((ipackets < S->ipackets.raw ? ipackets + 4294967296LL : ipackets) - S->ipackets.raw);
-+                                S->ipackets.raw = ipackets;
-                                 S->ibytes.last = S->ibytes.now;
+-                                S->ibytes.last = S->ibytes.now;
 -                                S->ibytes.now = ibytes;
-+                                S->ibytes.now += ((ibytes < S->ibytes.raw ? ibytes + 4294967296LL : ibytes) - S->ibytes.raw);
-+                                S->ibytes.raw = ibytes;
-                                 S->ierrors.last = S->ierrors.now;
+-                                S->ierrors.last = S->ierrors.now;
 -                                S->ierrors.now = ierrors;
-+                                S->ierrors.now += ((ierrors < S->ierrors.raw ? ierrors + 4294967296LL : ierrors) - S->ierrors.raw);
-+                                S->ierrors.raw = ierrors;
-                                 S->opackets.last = S->opackets.now;
+-                                S->opackets.last = S->opackets.now;
 -                                S->opackets.now = opackets;
-+                                S->opackets.now += ((opackets < S->opackets.raw ? opackets + 4294967296LL : opackets) - S->opackets.raw);
-+                                S->opackets.raw = opackets;
-                                 S->obytes.last = S->obytes.now;
+-                                S->obytes.last = S->obytes.now;
 -                                S->obytes.now = obytes;
-+                                S->obytes.now += ((obytes < S->obytes.raw ? obytes + 4294967296LL : obytes) - S->obytes.raw);
-+                                S->obytes.raw = obytes;
-                                 S->oerrors.last = S->oerrors.now;
+-                                S->oerrors.last = S->oerrors.now;
 -                                S->oerrors.now = oerrors;
-+                                S->oerrors.now += ((oerrors < S->oerrors.raw ? oerrors + 4294967296LL : oerrors) - S->oerrors.raw);
-+                                S->oerrors.raw = oerrors;
++				_updateRawStats(&(S->ibytes), ibytes, DO_FIX_32BIT);
++				_updateRawStats(&(S->ipackets), ipackets, DO_FIX_32BIT);
++				_updateRawStats(&(S->ierrors), ierrors, DO_FIX_32BIT);
++				_updateRawStats(&(S->obytes), obytes, DO_FIX_32BIT);
++				_updateRawStats(&(S->opackets), opackets, DO_FIX_32BIT);
++				_updateRawStats(&(S->oerrors), oerrors, DO_FIX_32BIT);
                                  fclose(f);
                                  return true;
                          }
