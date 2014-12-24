@@ -43,8 +43,8 @@
 +			fclose(p);
 +			snprintf(system_cmd, STRLEN, "( %s < %s ; rm -f %s ) &", mailcmd, tmpname, tmpname);
 +			spawn_system_cmd(system_cmd);
-+                	failed = TRUE;
 +		} else {
++                	failed = TRUE;
 +                	LogError("Sendmail: Unable to launch '%s' (can't create temporary file)\n", mailcmd);
 +		}
 +	}
