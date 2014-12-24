@@ -1,0 +1,61 @@
+--- monit-5.11/libmonit/src/system/NetStatistics.c.orig	2014-12-23 16:32:10.000000000 -0600
++++ monit-5.11/libmonit/src/system/NetStatistics.c	2014-12-23 17:30:08.000000000 -0600
+@@ -81,6 +81,7 @@
+ typedef struct NetStatisticsData_T {
+         long long last;
+         long long now;
++        long long raw;
+         long long minute[60];
+         long long hour[24];
+ } NetStatisticsData_T;
+@@ -153,6 +154,18 @@
+         S->state = -1;
+         S->duplex = -1;
+         S->speed = 0LL;
++        S->ibytes.now = 0LL;
++        S->ipackets.now = 0LL;
++        S->ierrors.now = 0LL;
++        S->obytes.now = 0LL;
++        S->opackets.now = 0LL;
++        S->oerrors.now = 0LL;
++        S->ibytes.raw = 0LL;
++        S->ipackets.raw = 0LL;
++        S->ierrors.raw = 0LL;
++        S->obytes.raw = 0LL;
++        S->opackets.raw = 0LL;
++        S->oerrors.raw = 0LL;
+         _resetData(&(S->ibytes), -1LL);
+         _resetData(&(S->ipackets), -1LL);
+         _resetData(&(S->ierrors), -1LL);
+--- monit-5.11/libmonit/src/system/os/linux/NetStatistics.c.orig	2014-12-23 12:42:09.000000000 -0600
++++ monit-5.11/libmonit/src/system/os/linux/NetStatistics.c	2014-12-23 17:25:24.000000000 -0600
+@@ -91,17 +91,23 @@
+                                 S->timestamp.last = S->timestamp.now;
+                                 S->timestamp.now = Time_milli();
+                                 S->ipackets.last = S->ipackets.now;
+-                                S->ipackets.now = ipackets;
++                                S->ipackets.now += ((ipackets < S->ipackets.raw ? ipackets + 4294967296LL : ipackets) - S->ipackets.raw);
++                                S->ipackets.raw = ipackets;
+                                 S->ibytes.last = S->ibytes.now;
+-                                S->ibytes.now = ibytes;
++                                S->ibytes.now += ((ibytes < S->ibytes.raw ? ibytes + 4294967296LL : ibytes) - S->ibytes.raw);
++                                S->ibytes.raw = ibytes;
+                                 S->ierrors.last = S->ierrors.now;
+-                                S->ierrors.now = ierrors;
++                                S->ierrors.now += ((ierrors < S->ierrors.raw ? ierrors + 4294967296LL : ierrors) - S->ierrors.raw);
++                                S->ierrors.raw = ierrors;
+                                 S->opackets.last = S->opackets.now;
+-                                S->opackets.now = opackets;
++                                S->opackets.now += ((opackets < S->opackets.raw ? opackets + 4294967296LL : opackets) - S->opackets.raw);
++                                S->opackets.raw = opackets;
+                                 S->obytes.last = S->obytes.now;
+-                                S->obytes.now = obytes;
++                                S->obytes.now += ((obytes < S->obytes.raw ? obytes + 4294967296LL : obytes) - S->obytes.raw);
++                                S->obytes.raw = obytes;
+                                 S->oerrors.last = S->oerrors.now;
+-                                S->oerrors.now = oerrors;
++                                S->oerrors.now += ((oerrors < S->oerrors.raw ? oerrors + 4294967296LL : oerrors) - S->oerrors.raw);
++                                S->oerrors.raw = oerrors;
+                                 fclose(f);
+                                 return true;
+                         }
