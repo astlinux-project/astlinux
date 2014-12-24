@@ -567,7 +567,7 @@ require_once '../common/header.php';
     }
     putHtml('</optgroup>');
   }
-  if (is_dir('/mnt/kd/monit/monit.d') && count($globfiles = glob('/mnt/kd/monit/monit.d/*')) > 0) {
+  if (is_dir('/mnt/kd/monit/monit.d') && count($globfiles = glob('/mnt/kd/monit/monit.d/*.conf')) > 0) {
     putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; Monit Monitoring Configs &mdash;&mdash;&mdash;&mdash;">');
     foreach ($globfiles as $globfile) {
       if (is_file($globfile) && is_writable($globfile)) {
