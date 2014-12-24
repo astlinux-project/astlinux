@@ -31,7 +31,7 @@ set httpd
   fi
 
   echo "
-include /etc/monit/monit.d/*"
+include /etc/monit/monit.d/*.conf"
 }
 
 init ()
