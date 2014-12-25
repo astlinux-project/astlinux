@@ -10,8 +10,8 @@
 -                " .green-text {color:#00ff00;} "\
 +                " .stripe {background:#EFEFE7} "\
 +                " .rule {background:#E7E5E2} "\
-+                " .red-text {color:#cc0000;} "\
-+                " .green-text {color:#009900;} "\
++                " .red-text {color:#dd0000;} "\
++                " .green-text {color:#008000;} "\
                  " .gray-text {color:#999999;} "\
                  " .blue-text {color:#0000ff;} "\
                  " .orange-text {color:#ff8800;} "\
