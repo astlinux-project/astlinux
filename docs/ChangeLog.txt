@@ -21,6 +21,10 @@ Released **TBD**
 
 -- usbutils, version bump to 007
 
+-- sqlite, version bump to 3.8.7.4
+
+-- sqliteodbc, version bump to 0.9991
+
 ** Networking
 
 -- ntpd/sntp, version bump to 4.2.8
