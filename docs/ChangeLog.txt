@@ -33,6 +33,8 @@ Released **TBD**
 
 -- stunnel, version bump to 5.08
 
+-- msmtp, version bump to 1.6.0
+
 -- mtr, version bump to 0.86 plus upstream fixes
 
 -- links, version bump to 2.9
