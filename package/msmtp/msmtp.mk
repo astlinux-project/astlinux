@@ -13,7 +13,7 @@ MSMTP_CONF_OPT += \
 	--with-ssl=openssl \
 	--without-libgsasl \
 	--without-libidn \
-	--without-gnome-keyring \
+	--without-libsecret \
 	--sysconfdir=/etc
 
 define MSMTP_INSTALL_TARGET_CMDS
