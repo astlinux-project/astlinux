@@ -7,6 +7,10 @@ LOCKFILE="/var/lock/msmtp.lock"
 # 5 minutes, wait on error
 ERROR_WAIT=300
 
+# msmtp error values from src/tools.h (sysexits.h)
+EX_OK=0
+EX_USAGE=64
+
 flush()
 {
   local file count wait msmtp_num msmtp_str IFS
@@ -44,13 +48,13 @@ flush()
         if [ -f "$MAILFILE" ]; then
           msmtp_str="$(msmtp $(cat "$file") < "$MAILFILE" 2>&1)"
           msmtp_num=$?
-          if [ $msmtp_num -eq 0 ]; then
+          if [ $msmtp_num -eq $EX_OK ]; then
             rm -f "$MAILFILE" "$file"
             log_msg "Success: $file"
           else
             wait=$ERROR_WAIT
             log_msg "($msmtp_num) $msmtp_str"
-            if [ $msmtp_num -eq 64 ]; then    # error code which is not queue worthy
+            if [ $msmtp_num -eq $EX_USAGE ]; then    # error code which is not queue worthy
               rm -f "$MAILFILE" "$file"
               log_msg "Deleted mail queue ${file%.msmtp} msmtp/mail pair."
             else
