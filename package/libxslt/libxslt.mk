@@ -4,21 +4,25 @@
 #
 #############################################################
 
-LIBXSLT_VERSION = 1.1.26
+LIBXSLT_VERSION = 1.1.28
 LIBXSLT_SITE = ftp://xmlsoft.org/libxslt
 LIBXSLT_INSTALL_STAGING = YES
 
+LIBXSLT_DEPENDENCIES = libxml2
+
+LIBXSLT_CONF_OPT = \
+	--with-gnu-ld \
+	--without-debug \
+	--without-python \
+	--with-libxml-prefix=$(STAGING_DIR)/usr/
+
 # If we have enabled libgcrypt then use it, else disable crypto support.
 ifeq ($(BR2_PACKAGE_LIBGCRYPT),y)
-LIBXSLT_DEPENDENCIES_EXTRA=libgcrypt
+LIBXSLT_DEPENDENCIES += libgcrypt
+LIBXSLT_CONF_ENV += LIBGCRYPT_CONFIG=$(STAGING_DIR)/usr/bin/libgcrypt-config
 else
-LIBXSLT_XTRA_CONF_OPT = --without-crypto
+LIBXSLT_CONF_OPT += --without-crypto
 endif
-
-LIBXSLT_CONF_OPT = --with-gnu-ld $(LIBXSLT_XTRA_CONF_OPT) --without-debug \
-		--without-python --with-libxml-prefix=$(STAGING_DIR)/usr/
-
-LIBXSLT_DEPENDENCIES = libxml2 $(LIBXSLT_DEPENDENCIES_EXTRA)
 
 HOST_LIBXSLT_CONF_OPT = --without-debug --without-python --without-crypto
 
@@ -33,12 +37,11 @@ endef
 LIBXSLT_POST_INSTALL_STAGING_HOOKS += LIBXSLT_XSLT_CONFIG_FIXUP
 
 define LIBXSLT_REMOVE_CONFIG_SCRIPTS
-	$(RM) -f $(TARGET_DIR)/usr/bin/xslt-config
+	rm -f $(TARGET_DIR)/usr/bin/xslt-config
+	rm -f $(TARGET_DIR)/usr/lib/xsltConf.sh
 endef
 
-ifneq ($(BR2_HAVE_DEVFILES),y)
 LIBXSLT_POST_INSTALL_TARGET_HOOKS += LIBXSLT_REMOVE_CONFIG_SCRIPTS
-endif
 
 $(eval $(call AUTOTARGETS,package,libxslt))
 $(eval $(call AUTOTARGETS,package,libxslt,host))
