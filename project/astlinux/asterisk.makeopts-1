@@ -1,10 +1,9 @@
-MENUSELECT_APPS=app_ivrdemo app_osplookup app_rpt app_skel 
+MENUSELECT_APPS=app_ivrdemo app_osplookup app_skel 
 MENUSELECT_CDR=cdr_odbc cdr_pgsql cdr_radius cdr_sqlite cdr_tds 
-MENUSELECT_CHANNELS=chan_alsa chan_features chan_h323 chan_nbs chan_vpb 
+MENUSELECT_CHANNELS=chan_alsa chan_h323 chan_nbs chan_vpb 
 MENUSELECT_CODECS=codec_speex 
 MENUSELECT_FORMATS=format_ogg_vorbis 
 MENUSELECT_FUNCS=func_odbc 
-MENUSELECT_PBX=pbx_gtkconsole 
 MENUSELECT_RES=res_config_odbc res_config_pgsql res_odbc res_snmp 
 MENUSELECT_OPTS_app_voicemail=
 MENUSELECT_CFLAGS=LOADABLE_MODULES 

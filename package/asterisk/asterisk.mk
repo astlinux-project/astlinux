@@ -6,7 +6,11 @@
 ifeq ($(BR2_PACKAGE_ASTERISK_v1_8),y)
 ASTERISK_VERSION := 1.8.32.1
 else
+ ifeq ($(BR2_PACKAGE_ASTERISK_v11),y)
 ASTERISK_VERSION := 11.15.0
+ else
+ASTERISK_VERSION := 13.1.0
+ endif
 endif
 ASTERISK_SOURCE := asterisk-$(ASTERISK_VERSION).tar.gz
 ASTERISK_SITE := http://downloads.asterisk.org/pub/telephony/asterisk/releases
@@ -28,11 +32,7 @@ ASTERISK_VERSION_SINGLE := $(call ndots,1,1,$(ASTERISK_VERSION))
 ASTERISK_VERSION_TUPLE := $(call ndots,1,2,$(ASTERISK_VERSION))
 ASTERISK_VERSION_TRIPLE := $(call ndots,1,3,$(ASTERISK_VERSION))
 
-ifeq ($(ASTERISK_VERSION_SINGLE),1)
-ASTERISK_GLOBAL_MAKEOPTS := $(BASE_DIR)/../project/astlinux/asterisk.makeopts
-else
-ASTERISK_GLOBAL_MAKEOPTS := $(BASE_DIR)/../project/astlinux/asterisk.makeopts-10
-endif
+ASTERISK_GLOBAL_MAKEOPTS := $(BASE_DIR)/../project/astlinux/asterisk.makeopts-$(ASTERISK_VERSION_SINGLE)
 
 ASTERISK_CONFIGURE_ENV += \
 			USE_GETIFADDRS=yes
@@ -161,6 +161,33 @@ ASTERISK_CONFIGURE_ENV+= \
  endif
 endif
 
+ifneq ($(ASTERISK_VERSION_SINGLE),1)
+ifneq ($(ASTERISK_VERSION_SINGLE),11)
+
+ifeq ($(strip $(BR2_PACKAGE_JANSSON)),y)
+ASTERISK_EXTRAS+=jansson
+ASTERISK_CONFIGURE_ARGS+= \
+                        --with-jansson="$(STAGING_DIR)/usr"
+endif
+
+ifeq ($(strip $(BR2_PACKAGE_LIBURIPARSER)),y)
+ASTERISK_EXTRAS+=liburiparser
+ASTERISK_CONFIGURE_ARGS+= \
+                        --with-uriparser="$(STAGING_DIR)/usr"
+endif
+
+ifeq ($(strip $(BR2_PACKAGE_LIBXSLT)),y)
+ASTERISK_EXTRAS+=libxslt
+ASTERISK_CONFIGURE_ARGS+= \
+                        --with-libxslt="$(STAGING_DIR)/usr"
+else
+ASTERISK_CONFIGURE_ARGS+= \
+                        --without-libxslt
+endif
+
+endif
+endif
+
 $(DL_DIR)/$(ASTERISK_SOURCE):
 	$(WGET) -P $(DL_DIR) $(ASTERISK_SITE)/$(ASTERISK_SOURCE)
 
@@ -201,7 +228,10 @@ $(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | libelf ncurses zlib \
 		CPPFLAGS='$(TARGET_CFLAGS)' \
 		LIBS='$(ASTERISK_LIBS)' \
 	)
-	PATH=$(STAGING_DIR)/bin:$$PATH \
+	(cd $(ASTERISK_DIR)/menuselect; rm -rf config.cache configure; \
+		./bootstrap.sh; \
+		./configure \
+	)
 	$(MAKE) -C $(ASTERISK_DIR)/menuselect menuselect
 ifeq ($(strip $(BR2_PACKAGE_ASTERISK_MENUSELECT)),y)
 	PATH=$(STAGING_DIR)/bin:$$PATH \

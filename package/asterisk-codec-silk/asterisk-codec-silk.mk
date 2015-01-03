@@ -3,7 +3,7 @@
 # asterisk-codec-silk
 #
 ##############################################################
-ifeq ($(BR2_PACKAGE_ASTERISK_v11),y)
+ifneq ($(BR2_PACKAGE_ASTERISK_v1_8),y)
 ASTERISK_CODEC_SILK_VERSION := 11.0_1.0.0-i686_32
 ASTERISK_CODEC_SILK_SITE := http://downloads.digium.com/pub/telephony/codec_silk/asterisk-11.0/x86-32
 endif

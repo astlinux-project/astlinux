@@ -27,6 +27,11 @@ choice
 		bool "Asterisk v11.x"
 		help
 			Asterisk Long Term Release.
+
+	config BR2_PACKAGE_ASTERISK_v13
+		bool "Asterisk v13.x"
+		help
+			Asterisk Long Term Release.
 endchoice
 
 comment "cdr_mysql, app_mysql and res_config_mysql - disabled (requires MYSQL_CLIENT)"
