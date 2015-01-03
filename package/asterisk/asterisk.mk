@@ -164,6 +164,15 @@ endif
 ifneq ($(ASTERISK_VERSION_SINGLE),1)
 ifneq ($(ASTERISK_VERSION_SINGLE),11)
 
+ifeq ($(strip $(BR2_PACKAGE_PJSIP)),y)
+ASTERISK_EXTRAS+=pjsip
+ASTERISK_CONFIGURE_ARGS+= \
+                        --with-pjproject="$(STAGING_DIR)/usr"
+else
+ASTERISK_CONFIGURE_ARGS+= \
+                        --without-pjproject
+endif
+
 ifeq ($(strip $(BR2_PACKAGE_JANSSON)),y)
 ASTERISK_EXTRAS+=jansson
 ASTERISK_CONFIGURE_ARGS+= \
