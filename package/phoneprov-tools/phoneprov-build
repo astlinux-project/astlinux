@@ -373,6 +373,14 @@ sip_file="$(extract_var sip_file)"
 if [ -z "$sip_file" ]; then
   sip_file="astlinux-phoneprov-sip.conf"
 fi
+pjsip_path="$(extract_var pjsip_path)"
+if [ -z "$pjsip_path" ]; then
+  pjsip_path="$SIP_DIR"
+fi
+pjsip_file="$(extract_var pjsip_file)"
+if [ -z "$pjsip_file" ]; then
+  pjsip_file="astlinux-phoneprov-pjsip.conf"
+fi
 sql_enable="$(extract_var sql_enable)"
 if [ -z "$sql_enable" ]; then
   sql_enable="yes"
@@ -418,6 +426,21 @@ if [ "$ext" = "init" -o "$ext" = "init-dialplan" -o "$ext" = "init-sip" ]; then
 ; #include $sip_path/$sip_file
 
 " > "$sip_path/$sip_file"
+    fi
+    if is_context "pjsip" "$TEMPLATE_DIR/$template.conf"; then
+      exit_no_overwrite "$pjsip_path/$pjsip_file"
+      if [ ! -d "$pjsip_path" ]; then
+        mkdir -p "$pjsip_path"
+      fi
+      echo ";
+; ###############################################################
+; ### AstLinux auto-provisioned IP-Phone PJSIP configurations ###
+; ###############################################################
+;
+; Include in your pjsip.conf file by using:
+; #include $pjsip_path/$pjsip_file
+
+" > "$pjsip_path/$pjsip_file"
     fi
   fi
 
@@ -478,6 +501,16 @@ if is_context "sip" "$TEMPLATE_DIR/$template.conf"; then
     merge_variables | merge_indexed_variables >> "$sip_path/$sip_file"
   # Add an empty line
   echo "" >> "$sip_path/$sip_file"
+fi
+
+if is_context "pjsip" "$TEMPLATE_DIR/$template.conf"; then
+  if [ ! -d "$pjsip_path" ]; then
+    mkdir -p "$pjsip_path"
+  fi
+  extract_context "pjsip" "$TEMPLATE_DIR/$template.conf" | \
+    merge_variables | merge_indexed_variables >> "$pjsip_path/$pjsip_file"
+  # Add an empty line
+  echo "" >> "$pjsip_path/$pjsip_file"
 fi
 
 if [ $is_context_phoneprov -eq 1 ]; then
