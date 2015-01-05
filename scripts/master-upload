@@ -83,6 +83,12 @@ set_asterisk_version()
       MIRROR_FIRMWARE="$FIRMWARE"
       MIRROR_IMG="downloads/img"
       ;;
+    ast13)
+      FIRMWARE="ast13-firmware-1.x"
+      IMG="ast13-img"
+      MIRROR_FIRMWARE="$FIRMWARE"
+      MIRROR_IMG="downloads/img"
+      ;;
     *)
       echo "master-upload: Unknown Asterisk Version."
       exit 1
@@ -119,10 +125,10 @@ if [ ! -f "$auth_file" ]; then
 fi
 
 #
-# Upload Asterisk 1.8 and 11 versions of AstLinux
+# Upload Asterisk 1.8, 11 and 13 versions of AstLinux
 #
 
-for asterisk in ast18 ast11; do
+for asterisk in ast18 ast11 ast13; do
 
   set_asterisk_version $asterisk
 
