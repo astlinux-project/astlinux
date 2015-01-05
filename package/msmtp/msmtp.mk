@@ -4,16 +4,17 @@
 #
 #############################################################
 
-MSMTP_VERSION = 1.6.0
+MSMTP_VERSION = 1.6.1
 MSMTP_SOURCE = msmtp-$(MSMTP_VERSION).tar.xz
 MSMTP_SITE = http://downloads.sourceforge.net/project/msmtp/msmtp/$(MSMTP_VERSION)
 MSMTP_DEPENDENCIES = openssl
 
 MSMTP_CONF_OPT += \
-	--with-ssl=openssl \
+	--with-tls=openssl \
 	--without-libgsasl \
 	--without-libidn \
 	--without-libsecret \
+	--disable-gai-idn \
 	--sysconfdir=/etc
 
 define MSMTP_INSTALL_TARGET_CMDS
