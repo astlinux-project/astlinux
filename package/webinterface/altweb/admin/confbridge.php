@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2012-2013 Lonnie Abelbeck
+// Copyright (C) 2012-2015 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -8,13 +8,14 @@
 
 // confbridge.php for AstLinux
 // 04-09-2013
+// 01-06-2015, Added Asterisk 13 support
 //
 
 $myself = $_SERVER['PHP_SELF'];
 
 require_once '../common/functions.php';
 
-$isASTERISKv1_x = isASTERISKv1_x();
+$ASTERISKversion = getASTERISKversion();
 
 // Function: getASTERISKversion
 //
@@ -24,15 +25,16 @@ function getASTERISKversion() {
   return($list[1]);
 }
 
-// Function: isASTERISKv1_x
+// Function: getDOTtuple
 //
-function isASTERISKv1_x() {
+function getDOTtuple($verSTR, $index) {
 
-  $list = explode('.', getASTERISKversion());
-  if ((int)$list[0] < 10) {
-    return(TRUE);
+  if ($index < 1) {  // 1 based index
+    return(FALSE);
   }
-  return(FALSE);
+  $list = explode('.', $verSTR);
+
+  return((int)$list[$index - 1]);
 }
 
 // Function: userRedirect
@@ -160,6 +162,10 @@ function getCONFBRIDGErooms() {
 // Function: parseCONFBRIDGEdata
 //
 function parseCONFBRIDGEdata($room_list) {
+  global $ASTERISKversion;
+
+  $ast13 = (getDOTtuple($ASTERISKversion, 1) == 13);
+
   $id = 0;
 
   for ($i = 0; $i < count($room_list); $i++) {
@@ -176,14 +182,37 @@ function parseCONFBRIDGEdata($room_list) {
       }
       while (! feof($ph)) {
         if ($line = trim(fgets($ph, 1024))) {
-          if (preg_match('/^([^ ]+) +([^ ]+) +([^ ]+) .* ([^ ]+) +([^ ]+) *$/', $line, $ips)) {
-            $db['data'][$id]['room'] = $room_list[$i]['room'];
-            $db['data'][$id]['channel'] = $ips[1];
-            $db['data'][$id]['user_profile'] = $ips[2];
-            $db['data'][$id]['bridge_profile'] = $ips[3];
-            $db['data'][$id]['cidnum'] = $ips[4];
-            $db['data'][$id]['mute'] = $ips[5];
-            $id++;
+          if ($ast13) {
+            if (preg_match('/^([^ ]+) .* ([^ ]+) *$/', $line, $ips)) {
+              $db['data'][$id]['room'] = $room_list[$i]['room'];
+              $db['data'][$id]['channel'] = $ips[1];
+              $db['data'][$id]['cidnum'] = $ips[2];
+              $db['data'][$id]['mute'] = 'No';
+              $db['data'][$id]['user_profile'] = '';
+              $db['data'][$id]['bridge_profile'] = '';
+              unset($ips);
+              if (preg_match('/^([^ ]+) +([AMWEmw]+) +([^ ]+) +([^ ]+).*$/', $line, $ips)) {
+                if (strpos($ips[2], 'm') !== FALSE) {
+                  $db['data'][$id]['mute'] = 'Yes';
+                }
+                $db['data'][$id]['user_profile'] = $ips[3];
+                $db['data'][$id]['bridge_profile'] = $ips[4];
+              } elseif (preg_match('/^([^ ]+) +([^ ]+) +([^ ]+).*$/', $line, $ips)) {
+                $db['data'][$id]['user_profile'] = $ips[2];
+                $db['data'][$id]['bridge_profile'] = $ips[3];
+              }
+              $id++;
+            }
+          } else {
+            if (preg_match('/^([^ ]+) +([^ ]+) +([^ ]+) .* ([^ ]+) +([^ ]+) *$/', $line, $ips)) {
+              $db['data'][$id]['room'] = $room_list[$i]['room'];
+              $db['data'][$id]['channel'] = $ips[1];
+              $db['data'][$id]['user_profile'] = $ips[2];
+              $db['data'][$id]['bridge_profile'] = $ips[3];
+              $db['data'][$id]['cidnum'] = $ips[4];
+              $db['data'][$id]['mute'] = $ips[5];
+              $id++;
+            }
           }
         }
       }
@@ -305,7 +334,7 @@ require_once '../common/header.php';
   </td></tr>
   </table>
 <?php
-  if ($isASTERISKv1_x) {
+  if (getDOTtuple($ASTERISKversion, 1) == 1) {
     $room_list = NULL;
     $db = NULL;
   } else {
@@ -365,7 +394,7 @@ require_once '../common/header.php';
     putHtml("</tr>");
     putHtml("</table>");
   }
-  if ($isASTERISKv1_x) {
+  if (getDOTtuple($ASTERISKversion, 1) == 1) {
     putHtml('<p style="color: red;">ConfBridge is not available, Asterisk 10 or later is required.</p>');
   } elseif (count($room_list) == 0) {
     putHtml('<p>No active ConfBridge conferences.</p>');
