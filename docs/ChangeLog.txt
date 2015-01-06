@@ -62,6 +62,8 @@ Released **TBD**
    == Prefs tab, "Show Monit Tab" - unchecked by default
    More Info: http://doc.astlinux.org/userdoc:tt_monit_monitoring
 
+-- ConfBridge tab, added Asterisk 13 support
+
 
 Additions for AstLinux 1.2.1:
 =============================
