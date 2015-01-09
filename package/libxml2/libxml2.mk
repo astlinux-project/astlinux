@@ -12,19 +12,18 @@ ifneq ($(BR2_LARGEFILE),y)
 LIBXML2_CONF_ENV = CC="$(TARGET_CC) $(TARGET_CFLAGS) -DNO_LARGEFILE_SOURCE"
 endif
 
-LIBXML2_CONF_OPT = --with-gnu-ld --without-python --without-debug
+LIBXML2_CONF_OPT = --with-gnu-ld --without-python --without-debug --without-lzma
 
 define LIBXML2_STAGING_LIBXML2_CONFIG_FIXUP
 	$(SED) "s,^prefix=.*,prefix=\'$(STAGING_DIR)/usr\',g" $(STAGING_DIR)/usr/bin/xml2-config
 	$(SED) "s,^exec_prefix=.*,exec_prefix=\'$(STAGING_DIR)/usr\',g" $(STAGING_DIR)/usr/bin/xml2-config
-	ln -snf $(STAGING_DIR)/usr/include/libxml2/libxml $(STAGING_DIR)/usr/include/libxml
 endef
 LIBXML2_POST_INSTALL_STAGING_HOOKS += LIBXML2_STAGING_LIBXML2_CONFIG_FIXUP
 
 HOST_LIBXML2_DEPENDENCIES = host-pkg-config
 LIBXML2_DEPENDENCIES = host-pkg-config
 
-HOST_LIBXML2_CONF_OPT = --without-debug --without-python
+HOST_LIBXML2_CONF_OPT = --without-zlib --without-lzma --without-debug --without-python
 
 ifneq ($(BR2_HAVE_DEVFILES),y)
 define LIBXML2_REMOVE_CONFIG_SCRIPTS
