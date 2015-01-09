@@ -3,7 +3,7 @@
 # dnscrypt-proxy
 #
 #############################################################
-DNSCRYPT_PROXY_VERSION = 1.4.2
+DNSCRYPT_PROXY_VERSION = 1.4.3
 DNSCRYPT_PROXY_SOURCE = dnscrypt-proxy-$(DNSCRYPT_PROXY_VERSION).tar.gz
 DNSCRYPT_PROXY_SITE = http://download.dnscrypt.org/dnscrypt-proxy
 
