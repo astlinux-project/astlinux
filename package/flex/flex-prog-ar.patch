@@ -1,0 +1,10 @@
+--- flex-2.5.37/Makefile.in.orig	2015-01-09 10:26:23.000000000 -0600
++++ flex-2.5.37/Makefile.in	2015-01-09 10:26:48.000000000 -0600
+@@ -119,7 +119,6 @@
+ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
+ 	"$(DESTDIR)$(docdir)" "$(DESTDIR)$(includedir)"
+ LIBRARIES = $(lib_LIBRARIES)
+-AR = ar
+ ARFLAGS = cru
+ libfl_a_AR = $(AR) $(ARFLAGS)
+ libfl_a_LIBADD =
