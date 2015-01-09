@@ -164,6 +164,8 @@ endif
 ifneq ($(ASTERISK_VERSION_SINGLE),1)
 ifneq ($(ASTERISK_VERSION_SINGLE),11)
 
+ASTERISK_EXTRAS+=host-libxml2
+
 ifeq ($(strip $(BR2_PACKAGE_PJSIP)),y)
 ASTERISK_EXTRAS+=pjsip
 ASTERISK_CONFIGURE_ARGS+= \
@@ -215,12 +217,11 @@ endif
 
 	touch $@
 
-$(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | libelf ncurses zlib \
+$(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | host-pkg-config host-ncurses host-flex libelf ncurses zlib \
 				openssl libtool util-linux $(ASTERISK_EXTRAS)
 	(cd $(ASTERISK_DIR); rm -rf config.cache configure; \
 		./bootstrap.sh; \
 		$(TARGET_CONFIGURE_OPTS) \
-		PATH=$(STAGING_DIR)/bin:$$PATH \
 		./configure \
 		--target=$(GNU_TARGET_NAME) \
 		--host=$(GNU_TARGET_NAME) \
@@ -239,33 +240,38 @@ $(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | libelf ncurses zlib \
 	)
 	(cd $(ASTERISK_DIR)/menuselect; rm -rf config.cache configure; \
 		./bootstrap.sh; \
+		$(HOST_CONFIGURE_OPTS) \
 		./configure \
 	)
+	$(HOST_MAKE_ENV) \
 	$(MAKE) -C $(ASTERISK_DIR)/menuselect menuselect
 ifeq ($(strip $(BR2_PACKAGE_ASTERISK_MENUSELECT)),y)
-	PATH=$(STAGING_DIR)/bin:$$PATH \
+	$(HOST_MAKE_ENV) \
 	$(MAKE) -C $(ASTERISK_DIR) \
 		GLOBAL_MAKEOPTS=$(ASTERISK_GLOBAL_MAKEOPTS) \
 		USER_MAKEOPTS= \
 		menuselect
 else
-	PATH=$(STAGING_DIR)/bin:$$PATH \
+	$(HOST_MAKE_ENV) \
 	$(MAKE) -C $(ASTERISK_DIR) \
 		GLOBAL_MAKEOPTS=$(ASTERISK_GLOBAL_MAKEOPTS) \
 		USER_MAKEOPTS= \
 		menuselect.makeopts
  ifeq ($(strip $(BR2_PACKAGE_MYSQL_CLIENT)),y)
 	(cd $(ASTERISK_DIR); \
+		$(HOST_MAKE_ENV) \
 		menuselect/menuselect --enable app_mysql --enable cdr_mysql --enable res_config_mysql menuselect.makeopts; \
 	)
  endif
  ifeq ($(strip $(BR2_PACKAGE_UW_IMAP)),y)
 	(cd $(ASTERISK_DIR); \
+		$(HOST_MAKE_ENV) \
 		menuselect/menuselect --enable IMAP_STORAGE menuselect.makeopts; \
 	)
  endif
  ifneq ($(ASTERISK_VERSION_SINGLE),1)
 	(cd $(ASTERISK_DIR); \
+		$(HOST_MAKE_ENV) \
 		menuselect/menuselect --enable app_meetme --enable app_page menuselect.makeopts; \
 	)
  endif
@@ -273,15 +279,14 @@ endif
 	touch $@
 
 $(ASTERISK_DIR)/$(ASTERISK_BINARY): $(ASTERISK_DIR)/.configured
-	PATH=$(STAGING_DIR)/bin:$$PATH \
+	$(TARGET_MAKE_ENV) \
 	$(MAKE) -C $(ASTERISK_DIR) \
 		GLOBAL_MAKEOPTS=$(ASTERISK_GLOBAL_MAKEOPTS) \
 		USER_MAKEOPTS= \
 		ASTVARRUNDIR=/var/run/asterisk
 
 $(TARGET_DIR)/$(ASTERISK_TARGET_BINARY): $(ASTERISK_DIR)/$(ASTERISK_BINARY)
-	# mkdir -p $(TARGET_DIR)/$(ASTERISK_MODULE_DIR)
-	PATH=$(STAGING_DIR)/bin:$$PATH \
+	$(TARGET_MAKE_ENV) \
 	$(MAKE1) -C $(ASTERISK_DIR) \
 		GLOBAL_MAKEOPTS=$(ASTERISK_GLOBAL_MAKEOPTS) \
 		USER_MAKEOPTS=menuselect.makeopts \
