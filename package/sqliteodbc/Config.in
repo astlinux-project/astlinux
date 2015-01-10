@@ -3,6 +3,7 @@ config BR2_PACKAGE_SQLITEODBC
 	default n
 	depends on BR2_PACKAGE_SQLITE
 	select BR2_PACKAGE_UNIXODBC
+	select BR2_PACKAGE_LIBXML2
 	help
 
 	  SQLite library wrapped into an ODBC driver.
