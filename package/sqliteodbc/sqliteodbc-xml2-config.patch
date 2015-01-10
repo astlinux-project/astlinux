@@ -1,0 +1,17 @@
+--- sqliteodbc-0.9991/sqliteodbc-0.9991/configure.orig	2015-01-09 22:42:33.000000000 -0600
++++ sqliteodbc-0.9991/sqliteodbc-0.9991/configure	2015-01-09 22:44:33.000000000 -0600
+@@ -12312,10 +12312,10 @@
+ if test "$SQLITE3_LOADEXTENSION" = "1" ; then
+    { $as_echo "$as_me:$LINENO: checking for libxml2 header and library" >&5
+ $as_echo_n "checking for libxml2 header and library... " >&6; }
+-   XML2_CONFIG="`which xml2-config 2>/dev/null`"
+-   if test -n "$XML2_CONFIG" ; then
+-      XML2_FLAGS="`xml2-config --cflags`"
+-      XML2_LIBS="`xml2-config --libs`"
++   XML2_CONFIG="$SQLITE3_DIR/bin/xml2-config"
++   if test -f "$XML2_CONFIG" ; then
++      XML2_FLAGS="`$XML2_CONFIG --cflags`"
++      XML2_LIBS="`$XML2_CONFIG --libs`"
+       EXT_XPATH=libsqlite3_mod_xpath.la
+       LIB_TARGETS="$LIB_TARGETS $EXT_XPATH"
+       { $as_echo "$as_me:$LINENO: result: yes" >&5
