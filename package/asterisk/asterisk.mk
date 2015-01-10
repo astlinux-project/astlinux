@@ -258,20 +258,17 @@ else
 		USER_MAKEOPTS= \
 		menuselect.makeopts
  ifeq ($(strip $(BR2_PACKAGE_MYSQL_CLIENT)),y)
-	(cd $(ASTERISK_DIR); \
-		$(HOST_MAKE_ENV) \
+	(cd $(ASTERISK_DIR); $(HOST_MAKE_ENV) \
 		menuselect/menuselect --enable app_mysql --enable cdr_mysql --enable res_config_mysql menuselect.makeopts; \
 	)
  endif
  ifeq ($(strip $(BR2_PACKAGE_UW_IMAP)),y)
-	(cd $(ASTERISK_DIR); \
-		$(HOST_MAKE_ENV) \
+	(cd $(ASTERISK_DIR); $(HOST_MAKE_ENV) \
 		menuselect/menuselect --enable IMAP_STORAGE menuselect.makeopts; \
 	)
  endif
  ifneq ($(ASTERISK_VERSION_SINGLE),1)
-	(cd $(ASTERISK_DIR); \
-		$(HOST_MAKE_ENV) \
+	(cd $(ASTERISK_DIR); $(HOST_MAKE_ENV) \
 		menuselect/menuselect --enable app_meetme --enable app_page menuselect.makeopts; \
 	)
  endif
