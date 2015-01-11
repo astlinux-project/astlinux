@@ -243,32 +243,32 @@ $(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | host-pkg-config host-ncu
 		$(HOST_CONFIGURE_OPTS) \
 		./configure \
 	)
-	$(HOST_MAKE_ENV) \
+	$(HOST_MAKE_ENV) LD_RUN_PATH="$(HOST_DIR)/usr/lib" \
 	$(MAKE) -C $(ASTERISK_DIR)/menuselect menuselect
 ifeq ($(strip $(BR2_PACKAGE_ASTERISK_MENUSELECT)),y)
-	$(HOST_MAKE_ENV) \
+	$(HOST_MAKE_ENV) LD_RUN_PATH="$(HOST_DIR)/usr/lib" \
 	$(MAKE) -C $(ASTERISK_DIR) \
 		GLOBAL_MAKEOPTS=$(ASTERISK_GLOBAL_MAKEOPTS) \
 		USER_MAKEOPTS= \
 		menuselect
 else
-	$(HOST_MAKE_ENV) \
+	$(HOST_MAKE_ENV) LD_RUN_PATH="$(HOST_DIR)/usr/lib" \
 	$(MAKE) -C $(ASTERISK_DIR) \
 		GLOBAL_MAKEOPTS=$(ASTERISK_GLOBAL_MAKEOPTS) \
 		USER_MAKEOPTS= \
 		menuselect.makeopts
  ifeq ($(strip $(BR2_PACKAGE_MYSQL_CLIENT)),y)
-	(cd $(ASTERISK_DIR); $(HOST_MAKE_ENV) \
+	(cd $(ASTERISK_DIR); \
 		menuselect/menuselect --enable app_mysql --enable cdr_mysql --enable res_config_mysql menuselect.makeopts; \
 	)
  endif
  ifeq ($(strip $(BR2_PACKAGE_UW_IMAP)),y)
-	(cd $(ASTERISK_DIR); $(HOST_MAKE_ENV) \
+	(cd $(ASTERISK_DIR); \
 		menuselect/menuselect --enable IMAP_STORAGE menuselect.makeopts; \
 	)
  endif
  ifneq ($(ASTERISK_VERSION_SINGLE),1)
-	(cd $(ASTERISK_DIR); $(HOST_MAKE_ENV) \
+	(cd $(ASTERISK_DIR); \
 		menuselect/menuselect --enable app_meetme --enable app_page menuselect.makeopts; \
 	)
  endif
