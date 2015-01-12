@@ -17,7 +17,8 @@ SQLITEODBC_CONF_OPT = \
 	--with-sqlite="$(STAGING_DIR)/usr" \
 	--with-sqlite3="$(STAGING_DIR)/usr" \
 	--with-sqlite4="$(STAGING_DIR)/usr" \
-	--with-odbc="$(STAGING_DIR)/usr"
+	--with-odbc="$(STAGING_DIR)/usr" \
+	--with-libxml2="$(STAGING_DIR)/usr/bin/xml2-config"
 
 define SQLITEODBC_INSTALL_TARGET_CMDS
         cp -a $(STAGING_DIR)/usr/lib/libsqlite3odbc*.so $(TARGET_DIR)/usr/lib/
