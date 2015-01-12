@@ -76,7 +76,7 @@ fi
 
 # Restore basic configuration directories, overlaying target directory
 #
-if ! restore_files ssl arno-iptables-firewall/plugins ${phoneprov_templates}; then
+if ! restore_files ssl arno-iptables-firewall/plugins custom-agi ${phoneprov_templates}; then
   exit 2
 fi
 
