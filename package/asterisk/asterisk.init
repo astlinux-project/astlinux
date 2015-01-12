@@ -29,6 +29,8 @@ init () {
 
   mkdir -p /var/tmp/asterisk/sounds
 
+  mkdir -p /var/tmp/asterisk/agi-bin
+
   if [ ! -d /var/log/asterisk ]; then
     mkdir /var/log/asterisk
   fi
@@ -70,6 +72,8 @@ init () {
   fi
 
   make_symlink_or_dir "/mnt/kd/custom-sounds" "/var/tmp/asterisk/sounds/custom-sounds"
+
+  make_symlink_or_dir "/mnt/kd/custom-agi" "/var/tmp/asterisk/agi-bin/custom-agi"
 
   if [ -f /mnt/kd/astdb -o -f /mnt/kd/astdb.sqlite3 ]; then
     ln -sf /mnt/kd/astdb /var/db/astdb

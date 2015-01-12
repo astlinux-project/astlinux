@@ -331,6 +331,7 @@ endif
 	rm -rf $(TARGET_DIR)/etc/asterisk
 	ln -sf /tmp/etc/asterisk $(TARGET_DIR)/etc/asterisk
 	ln -sf /var/tmp/asterisk/sounds/custom-sounds $(TARGET_DIR)/stat/var/lib/asterisk/sounds/custom-sounds
+	ln -sf /var/tmp/asterisk/agi-bin/custom-agi $(TARGET_DIR)/stat/var/lib/asterisk/agi-bin/custom-agi
 
 	if [ -d $(TARGET_DIR)/usr/share/snmp/mibs ]; then \
 	  $(INSTALL) -D -m 0644 package/asterisk/mibs/ASTERISK-MIB.txt $(TARGET_DIR)/usr/share/snmp/mibs/ ; \
