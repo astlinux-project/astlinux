@@ -64,6 +64,11 @@ Released **TBD**
 
 -- phoneprov-tools, add support for pjsip_file and pjsip_path for new [pjsip] context
 
+-- Asterisk 'agi-bin' now includes the 'custom-agi' sub-directory path which is automatically symlinked
+   to the /mnt/kd/custom-agi directory if it exists.  The dialplan must use "AGI(custom-agi/foobar.agi,...)"
+   to use any such AGI scripts.  The /mnt/kd/custom-agi directory is now part of the basic backup/restore.
+   Note: All previously existing AGI scripts will continue to work as before.
+
 ** Web Interface
 
 -- Add Monit support
