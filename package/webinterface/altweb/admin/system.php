@@ -196,6 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $srcfile .= ' -e "s/^blocked-hosts$/&/p" -e "s/^dnsmasq.static$/&/p" -e "s/^hosts$/&/p" -e "s/^ethers$/&/p"';
       $srcfile .= ' -e "s/^rc.local$/&/p" -e "s/^rc.local.stop$/&/p" -e "s/^rc.elocal$/&/p" -e "s/^rc.ledcontrol$/&/p"';
       $srcfile .= ' -e "s/^wan-failover.script$/&/p"';
+      $srcfile .= ' -e "s/^custom-agi$/&/p"';
       $srcfile .= ' -e "s/^crontabs$/&/p" -e "s/^snmp$/&/p" -e "s/^fop2$/&/p" -e "s/^kamailio$/&/p" -e "s/^monit$/&/p"';
       $srcfile .= ' -e "s/^openvpn$/&/p" -e "s/^ipsec$/&/p" -e "s/^dahdi$/&/p" -e "s/^ssl$/&/p" -e "s/^ups$/&/p")';
       $srcfile .= $firewall;
