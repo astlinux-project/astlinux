@@ -1002,8 +1002,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 27, $result, 'init');
       } elseif ($process === 'dnsmasq') {
         $result = restartPROCESS($process, 28, $result, 'init');
-      } elseif ($process === 'radvd') {
-        $result = restartPROCESS($process, 32, $result, 'init');
       } elseif ($process === 'pptpd') {
         $result = restartPROCESS($process, 33, $result, 'init');
       } elseif ($process === 'miniupnpd') {
@@ -1092,8 +1090,6 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">OpenVPN Client'.statusPROCESS('openvpnclient').'.</p>');
     } elseif ($result == 31) {
       putHtml('<p style="color: green;">SMTP Mail has Restarted.</p>');
-    } elseif ($result == 32) {
-      putHtml('<p style="color: green;">IPv6 Autoconfig (radvd)'.statusPROCESS('radvd').'.</p>');
     } elseif ($result == 33) {
       putHtml('<p style="color: green;">PPTP VPN Server'.statusPROCESS('pptpd').'.</p>');
     } elseif ($result == 34) {
@@ -1183,8 +1179,6 @@ require_once '../common/header.php';
   putHtml('<option value="iptables"'.$sel.'>Restart Firewall</option>');
   $sel = ($reboot_restart === 'dnsmasq') ? ' selected="selected"' : '';
   putHtml('<option value="dnsmasq"'.$sel.'>Restart DNS &amp; DHCP</option>');
-  $sel = ($reboot_restart === 'radvd') ? ' selected="selected"' : '';
-  putHtml('<option value="radvd"'.$sel.'>Restart IPv6 Autoconfig</option>');
   $sel = ($reboot_restart === 'dynamicdns') ? ' selected="selected"' : '';
   putHtml('<option value="dynamicdns"'.$sel.'>Restart Dynamic DNS</option>');
   $sel = ($reboot_restart === 'ntpd') ? ' selected="selected"' : '';

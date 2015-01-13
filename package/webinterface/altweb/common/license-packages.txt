@@ -23,7 +23,6 @@ PHP~Copyright (c) 1999-2015 The PHP Group. All rights reserved.
 ntpd~Copyright (c) 1992-2015 David L. Mills.
 vsftpd~Copyright (c) 2001-2013 Daniel Jacobowitz. <dan@debian.org>
 lighttpd~Copyright (c) 2004-2015, Jan Kneschke.
-radvd~Copyright (c) 1996-2015 by Reuben Hawkins, et al.
 msmtp~Copyright (c) 2000-2015 Martin Lambers <marlam@marlam.de>
 libxml2~Copyright (c) 1998-2012 Daniel Veillard. All Rights Reserved.
 libtiff~Copyright (c) 1988-1997 Sam Leffler, Copyright (c) 1991-1997 Silicon Graphics, Inc.
@@ -53,3 +52,5 @@ libsodium~Copyright (c) 2013-2015 Frank Denis
 phoneprov-tools~Copyright (c) 2015 Lonnie Abelbeck and Michael Keuter.
 smartmontools~Copyright (c) 2002-2015, Bruce Allen, Christian Franke, et al.
 Monit~Copyright (c) 2001-2015, Tildeslash. All rights reserved
+sqlite~Copyright (c) 1995-2015, SQLite Consortium
+sqliteodbc~Copyright (c) 2001-2015, Christian Werner

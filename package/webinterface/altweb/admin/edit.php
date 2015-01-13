@@ -21,7 +21,6 @@ $select_reload = array (
   'reload' => 'Reload Asterisk',
   'iptables' => 'Restart Firewall',
   'dnsmasq' => 'Restart DNS &amp; DHCP',
-  'radvd' => 'Restart IPv6 Autoconfig',
   'dynamicdns' => 'Restart Dynamic DNS',
   'ntpd' => 'Restart NTP Time',
   'msmtp' => 'Restart SMTP Mail',
@@ -223,8 +222,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 27, $result, 'init');
       } elseif ($process === 'dnsmasq') {
         $result = restartPROCESS($process, 28, $result, 'init');
-      } elseif ($process === 'radvd') {
-        $result = restartPROCESS($process, 32, $result, 'init');
       } elseif ($process === 'pptpd') {
         $result = restartPROCESS($process, 33, $result, 'init');
       } elseif ($process === 'miniupnpd') {
@@ -359,8 +356,6 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Cron Jobs for root will be reloaded within a minute.</p>');
     } elseif ($result == 31) {
       putHtml('<p style="color: green;">SMTP Mail has Restarted.</p>');
-    } elseif ($result == 32) {
-      putHtml('<p style="color: green;">IPv6 Autoconfig (radvd)'.statusPROCESS('radvd').'.</p>');
     } elseif ($result == 33) {
       putHtml('<p style="color: green;">PPTP VPN Server'.statusPROCESS('pptpd').'.</p>');
     } elseif ($result == 34) {
