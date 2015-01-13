@@ -6,6 +6,27 @@
 . /etc/init.d/functions.d/network
 . /etc/init.d/functions.d/misc
 
+addr_to_prefix64()
+{
+  local cnt=1 prefix="" next
+  
+  if [ -n "$1" ]; then
+    while [ $cnt -le 4 ]; do
+      next="$(echo "$1" | cut -s -d':' -f$cnt)"
+      if [ -z "$next" ]; then
+        break
+      fi
+      prefix="${prefix}${prefix:+:}${next}"
+      cnt=$((cnt + 1))
+    done
+    if [ -n "$prefix" ]; then
+      prefix="${prefix}::"
+    fi
+  fi
+
+  echo "$prefix"
+}
+
 dnscrypt_proxy_check()
 {
   if [ -f /etc/init.d/dnscrypt ]; then
@@ -78,6 +99,47 @@ falseDNSMASQnet()
 no-dhcp-interface=$1"
 }
 
+addIPV6net()
+{
+  # args: IF, tag
+  local interface="$1" tag="$2" prefix="" iname IFS
+
+  unset IFS
+  for iname in $IPV6_AUTOCONF; do
+    case $iname in
+      INTIF)
+        if [ "$tag" = "lan" ]; then
+          prefix="$(addr_to_prefix64 "$INTIPV6")"
+          break
+        fi
+        ;;
+      INT2IF)
+        if [ "$tag" = "lan2" ]; then
+          prefix="$(addr_to_prefix64 "$INT2IPV6")"
+          break
+        fi
+        ;;
+      INT3IF)
+        if [ "$tag" = "lan3" ]; then
+          prefix="$(addr_to_prefix64 "$INT3IPV6")"
+          break
+        fi
+        ;;
+      DMZIF)
+        if [ "$tag" = "dmz" ]; then
+          prefix="$(addr_to_prefix64 "$DMZIPV6")"
+          break
+        fi
+        ;;
+    esac
+  done
+
+  if [ -n "$prefix" ]; then
+    echo "
+dhcp-range=$tag,$prefix,ra-only,64,24h"
+  fi
+}
+
 addDNSMASQnet()
 {
   # args: IF, IP, NM, tag
@@ -98,6 +160,10 @@ addDNSMASQnet()
       ipstart=$(($ipbase + $dstart))
       ipend=$(($ipbase + $dend))
       trueDNSMASQnet $4 $2 $(_mkdottedquad $ipstart) $(_mkdottedquad $ipend)
+
+      if [ "$IPV6" = "yes" ]; then
+        addIPV6net $1 $4
+      fi
     else
       falseDNSMASQnet $1
     fi
@@ -150,6 +216,11 @@ proxy-dnssec"
   if tftpd_check; then
     echo "enable-tftp
 tftp-root=/tftpboot"
+  fi
+
+  # IPv6 Options
+  if [ "$IPV6" = "yes" ]; then
+    echo "quiet-ra"
   fi
 }
 
@@ -275,7 +346,7 @@ nameserver 127.0.0.1" > /tmp/etc/resolv.conf
     ln -sf /mnt/kd/dnsmasq.conf /tmp/etc/dnsmasq.conf
     return
   fi
-  
+
   if is_DHCP_active || is_EXTDHCP_active; then
     createDNSMASQbasic dhcp >> /tmp/etc/dnsmasq.conf
 
