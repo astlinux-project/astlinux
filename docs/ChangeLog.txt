@@ -54,6 +54,8 @@ Released **TBD**
 
 -- links, version bump to 2.9
 
+-- radvd, removed, the same functionality is now configured in dnsmasq for IPv6 router advertisements
+
 ** Asterisk
 
 -- Asterisk 1.8.32.1 (no change), 11.15.0 (version bump) and 13.1.0 (new version for testing)
@@ -79,6 +81,8 @@ Released **TBD**
    More Info: http://doc.astlinux.org/userdoc:tt_monit_monitoring
 
 -- ConfBridge tab, added Asterisk 13 support
+
+-- Remove "radvd" support as "dnsmasq" is now used for IPv6 router advertisements
 
 
 Additions for AstLinux 1.2.1:
