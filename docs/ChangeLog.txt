@@ -29,6 +29,8 @@ Released **TBD**
 
 -- sqliteodbc, version bump to 0.9991
 
+-- libidn, version bump to 1.29
+
 -- Update build system tools:
    == autoconf, version bump to 2.69
    == automake, version bump to 1.15
