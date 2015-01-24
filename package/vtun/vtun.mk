@@ -9,7 +9,7 @@
 VTUN_VERSION:=3.0.2
 VTUN_SOURCE:=vtun-$(VTUN_VERSION).tar.gz
 VTUN_SITE:=http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/sourceforge/vtun/
-VTUN_DEPENDENCIES = zlib lzo openssl
+VTUN_DEPENDENCIES = host-bison host-flex zlib lzo openssl
 
 VTUN_CONF_OPT = \
 		--with-ssl-headers=$(STAGING_DIR)/usr/include/openssl \

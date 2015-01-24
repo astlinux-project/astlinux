@@ -23,14 +23,16 @@ E2FSPROGS_CONF_OPT = \
 	--disable-testio-debug \
 	--disable-rpath
 
-E2FSPROGS_DEPENDENCIES = host-pkg-config util-linux
+E2FSPROGS_DEPENDENCIES = host-bison host-pkg-config util-linux
 
 E2FSPROGS_MAKE_OPT = \
 	LDCONFIG=true
 
 define HOST_E2FSPROGS_INSTALL_CMDS
- $(HOST_MAKE_ENV) $(MAKE) -C $(@D) install install-libs
+	$(HOST_MAKE_ENV) $(MAKE) -C $(@D) install install-libs
 endef
+# we don't have a host-util-linux
+HOST_E2FSPROGS_DEPENDENCIES = host-bison host-pkg-config
 
 # binaries to keep or remove
 E2FSPROGS_BINTARGETS_$(BR2_PACKAGE_E2FSPROGS_BADBLOCKS) += usr/sbin/badblocks

@@ -6,7 +6,7 @@
 UNIXODBC_VERSION = 2.3.2
 UNIXODBC_SOURCE = unixODBC-$(UNIXODBC_VERSION).tar.gz
 UNIXODBC_SITE = ftp://ftp.unixodbc.org/pub/unixODBC
-UNIXODBC_DEPENDENCIES = libtool
+UNIXODBC_DEPENDENCIES = host-bison host-flex libtool
 
 UNIXODBC_INSTALL_STAGING = YES
 

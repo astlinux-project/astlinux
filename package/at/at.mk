@@ -12,7 +12,7 @@ AT_AUTORECONF = YES
 AT_INSTALL_STAGING = NO
 AT_INSTALL_TARGET = YES
 
-AT_DEPENDENCIES = $(if $(BR2_PACKAGE_FLEX),flex)
+AT_DEPENDENCIES = $(if $(BR2_PACKAGE_FLEX),flex) host-bison host-flex
 
 AT_CONF_OPT = \
         --with-jobdir=/var/spool/cron/atjobs \

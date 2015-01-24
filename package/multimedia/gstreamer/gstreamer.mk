@@ -21,6 +21,6 @@ GSTREAMER_CONF_OPT = \
 		--disable-failing-tests \
 		--disable-loadsave
 
-GSTREAMER_DEPENDENCIES = libglib2 host-pkg-config
+GSTREAMER_DEPENDENCIES = libglib2 host-pkg-config host-bison host-flex
 
 $(eval $(call AUTOTARGETS,package/multimedia,gstreamer))

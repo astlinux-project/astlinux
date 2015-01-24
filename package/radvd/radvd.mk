@@ -6,7 +6,7 @@
 RADVD_VERSION = 2.8
 RADVD_SOURCE = radvd-$(RADVD_VERSION).tar.gz
 RADVD_SITE = http://www.litech.org/radvd/dist/
-RADVD_DEPENDENCIES:=flex host-flex host-pkg-config
+RADVD_DEPENDENCIES = host-bison flex host-flex host-pkg-config
 # For radvd-drop-check.patch
 RADVD_AUTORECONF = YES
 

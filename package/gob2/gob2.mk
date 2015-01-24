@@ -10,7 +10,7 @@ IPERF_CONF_ENV = ac_cv_lib_lex=-lfl
 
 GOB2_DEPENDENCIES = libglib2 flex bison host-pkg-config host-flex
 
-HOST_GOB2_DEPENDENCIES = host-libglib2
+HOST_GOB2_DEPENDENCIES = host-bison host-flex host-libglib2
 
 $(eval $(call AUTOTARGETS,package,gob2))
 $(eval $(call AUTOTARGETS,package,gob2,host))

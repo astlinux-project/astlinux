@@ -217,8 +217,8 @@ endif
 
 	touch $@
 
-$(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | host-pkg-config host-ncurses host-flex libelf ncurses zlib \
-				openssl libtool util-linux $(ASTERISK_EXTRAS)
+$(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | host-pkg-config host-ncurses host-bison host-flex \
+			libelf ncurses zlib openssl libtool util-linux $(ASTERISK_EXTRAS)
 	(cd $(ASTERISK_DIR); rm -rf config.cache configure; \
 		./bootstrap.sh; \
 		$(TARGET_CONFIGURE_OPTS) \

@@ -7,6 +7,7 @@
 MROUTED_VERSION = 3.9.4
 MROUTED_SOURCE = mrouted-$(MROUTED_VERSION).tar.bz2
 MROUTED_SITE = http://ftp.vmlinux.org/pub/People/jocke/mrouted
+MROUTED_DEPENDENCIES = host-bison
 
 define MROUTED_BUILD_CMDS
 	$(MAKE) $(TARGET_CONFIGURE_OPTS) -C $(@D)

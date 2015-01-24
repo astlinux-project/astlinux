@@ -8,7 +8,7 @@ LIBPCAP_VERSION = 1.6.2
 LIBPCAP_SITE = http://www.tcpdump.org/release
 LIBPCAP_SOURCE = libpcap-$(LIBPCAP_VERSION).tar.gz
 LIBPCAP_INSTALL_STAGING = YES
-LIBPCAP_DEPENDENCIES = zlib
+LIBPCAP_DEPENDENCIES = zlib host-flex host-bison
 
 # We're patching configure.in
 LIBPCAP_AUTORECONF = YES
