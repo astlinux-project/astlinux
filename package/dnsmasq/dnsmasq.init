@@ -27,6 +27,18 @@ addr_to_prefix64()
   echo "$prefix"
 }
 
+directive_exists_with_file() {
+  local directive="$1" file="$2"
+
+  if [ -f "$file" ]; then
+    if grep -q "^${directive} *=" "$file"; then
+      return 0
+    fi
+  fi
+
+  return 1
+}
+
 dnscrypt_proxy_check()
 {
   if [ -f /etc/init.d/dnscrypt ]; then
@@ -201,8 +213,15 @@ domain-needed
 ${local_domain}bogus-priv
 ${local_domain}local=/$DOMAIN/
 expand-hosts
-domain=$DOMAIN
-cache-size=2048"
+domain=$DOMAIN"
+
+  # Some directives can only be defined once
+  if ! directive_exists_with_file "cache-size" /etc/dnsmasq.static; then
+    echo "cache-size=4096"
+  fi
+  if ! directive_exists_with_file "dns-forward-max" /etc/dnsmasq.static; then
+    echo "dns-forward-max=512"
+  fi
 
   if dnscrypt_proxy_check; then
     echo "no-resolv
