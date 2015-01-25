@@ -31,6 +31,8 @@ Released **TBD**
 
 -- libidn, version bump to 1.29
 
+-- libsodium, version bump to 1.0.2
+
 -- Update build system tools:
    == autoconf, version bump to 2.69
    == automake, version bump to 1.15
@@ -47,7 +49,7 @@ Released **TBD**
 
 -- ntpd/sntp, version bump to 4.2.8
 
--- dnscrypt-proxy, version bump to 1.4.3
+-- dnscrypt-proxy, version bump to 1.4.3, and 'max-active-requests' increased to 520
 
 -- stunnel, version bump to 5.09
 
@@ -58,6 +60,9 @@ Released **TBD**
 -- links, version bump to 2.9
 
 -- radvd, removed, the same functionality is now configured in dnsmasq for IPv6 router advertisements
+
+-- dnsmasq, new defaults of cache-size=4096 and dns-forward-max=512
+   Allow /mnt/kd/dnsmasq.static ( /etc/dnsmasq.static ) to override either default if specified.
 
 ** Asterisk
 
