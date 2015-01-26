@@ -38,7 +38,7 @@ Released **TBD**
    == automake, version bump to 1.15
    == libtool, version bump to 2.4.4
    == flex, version bump to 2.5.37
-   == bison, version bump to 3.0.2
+   == bison, version bump to 3.0.3
    == xz, version bump to 5.2.0
 
 ** Networking
