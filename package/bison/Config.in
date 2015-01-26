@@ -1,6 +1,5 @@
 config BR2_PACKAGE_BISON
 	bool "bison"
-	depends on BR2_USE_WCHAR
 	help
 	  General-purpose parser generator that converts a
 	  grammar description for an LALR context-free grammar into a C
@@ -8,5 +7,5 @@ config BR2_PACKAGE_BISON
 
 	  http://www.gnu.org/software/bison/
 
-comment "bison requires a toolchain with WCHAR support"
-	depends on !BR2_USE_WCHAR
+	  **HOST Only**
+
