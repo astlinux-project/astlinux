@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2014 Lonnie Abelbeck
+// Copyright (C) 2008-2015 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -165,7 +165,7 @@ function parseIPSECstates($log) {
 
 // Function: parseFIREWALLstates
 //
-function parseFIREWALLstates(&$status, $log) {
+function parseFIREWALLstates(&$status, $log, $max) {
   global $global_prefs;
   
   $proto = array (
@@ -233,6 +233,8 @@ function parseFIREWALLstates(&$status, $log) {
           }
         
           $unique = TRUE;
+          $xid = $max;
+          $xbytes = $bytes;
           for ($i = 0; $i < $cid; $i++) {
             if ($status['states'][$i]['src'] === $src &&
                 $status['states'][$i]['dst'] === $dst &&
@@ -248,19 +250,34 @@ function parseFIREWALLstates(&$status, $log) {
               }
               $unique = FALSE;
               break;
+            } elseif ($status['states'][$i]['bytes'] < $xbytes) {
+              $xid = $i;
+              $xbytes = $status['states'][$i]['bytes'];
             }
           }
           if ($unique) {
-            $status['states'][$cid]['bytes'] = $bytes;
-            $status['states'][$cid]['packets'] = $packets;
-            $status['states'][$cid]['src'] = $src;
-            $status['states'][$cid]['sport'] = $sport;
-            $status['states'][$cid]['nsports'] = 1;
-            $status['states'][$cid]['dst'] = $dst;
-            $status['states'][$cid]['dport'] = $dport;
-            $status['states'][$cid]['proto'] = $protocol;
-            $status['states'][$cid]['ttl'] = $ttl;
-            $cid++;
+            if ($cid < $max) {
+              $status['states'][$cid]['bytes'] = $bytes;
+              $status['states'][$cid]['packets'] = $packets;
+              $status['states'][$cid]['src'] = $src;
+              $status['states'][$cid]['sport'] = $sport;
+              $status['states'][$cid]['nsports'] = 1;
+              $status['states'][$cid]['dst'] = $dst;
+              $status['states'][$cid]['dport'] = $dport;
+              $status['states'][$cid]['proto'] = $protocol;
+              $status['states'][$cid]['ttl'] = $ttl;
+              $cid++;
+            } elseif ($xid < $max) {
+              $status['states'][$xid]['bytes'] = $bytes;
+              $status['states'][$xid]['packets'] = $packets;
+              $status['states'][$xid]['src'] = $src;
+              $status['states'][$xid]['sport'] = $sport;
+              $status['states'][$xid]['nsports'] = 1;
+              $status['states'][$xid]['dst'] = $dst;
+              $status['states'][$xid]['dport'] = $dport;
+              $status['states'][$xid]['proto'] = $protocol;
+              $status['states'][$xid]['ttl'] = $ttl;
+            }
           }
         }
       }
@@ -1137,9 +1154,9 @@ if (is_file($CONNTRACK)) {
   if (getPREFdef($global_prefs, 'status_show_firewall_states') === 'yes') {
     putHtml("<h2>Firewall States:</h2>");
     $tmpfile = tempnam("/tmp", "PHP_");
-    shell('grep -v "127\.0\.0\.1" '.$CONNTRACK.' | tail -n 500 >'.$tmpfile, $status);
+    shell('grep -v "127\.0\.0\.1" '.$CONNTRACK.' | head -n 2500 >'.$tmpfile, $status);
   
-    parseFIREWALLstates($firewall, $tmpfile);
+    parseFIREWALLstates($firewall, $tmpfile, 100);
     if (is_null($firewall)) {
       putHtml("<pre>");
       putText('No Active Firewall States');
@@ -1147,7 +1164,7 @@ if (is_file($CONNTRACK)) {
     } else {
       putHtml('<pre><table class="statusdatatable">');
       putHtml("<tr>");
-      if (($n = min(count($firewall['states']), 100)) > 0) {
+      if (($n = count($firewall['states'])) > 0) {
         echo "<td>", "Source", "</td>";
         echo "<td>", "Port (#'s)", "</td>";
         echo "<td>", "Destination", "</td>";
