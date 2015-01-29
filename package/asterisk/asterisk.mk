@@ -272,6 +272,9 @@ else
 		menuselect/menuselect --enable app_meetme --enable app_page menuselect.makeopts; \
 	)
  endif
+	(cd $(ASTERISK_DIR); \
+		menuselect/menuselect --enable res_pktccops menuselect.makeopts; \
+	)
 endif
 	touch $@
 
