@@ -4,12 +4,12 @@
 #
 ##############################################################
 ifeq ($(BR2_PACKAGE_ASTERISK_v1_8),y)
-ASTERISK_VERSION := 1.8.32.1
+ASTERISK_VERSION := 1.8.32.2
 else
  ifeq ($(BR2_PACKAGE_ASTERISK_v11),y)
-ASTERISK_VERSION := 11.15.0
+ASTERISK_VERSION := 11.15.1
  else
-ASTERISK_VERSION := 13.1.0
+ASTERISK_VERSION := 13.1.1
  endif
 endif
 ASTERISK_SOURCE := asterisk-$(ASTERISK_VERSION).tar.gz
