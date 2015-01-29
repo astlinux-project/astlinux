@@ -34,8 +34,12 @@ reload_asterisk()
 {
   echo "Auto-reloading Asterisk 'dialplan' and 'sip'."
 
-  asterisk -rx "dialplan reload" >/dev/null
-  asterisk -rx "sip reload" >/dev/null
+  if [ -x /mnt/kd/phoneprov-reload.script ]; then
+    /mnt/kd/phoneprov-reload.script
+  else
+    asterisk -rx "dialplan reload" >/dev/null
+    asterisk -rx "sip reload" >/dev/null
+  fi
 }
 
 error_info() {
