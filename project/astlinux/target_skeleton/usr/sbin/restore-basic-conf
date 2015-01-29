@@ -83,7 +83,7 @@ fi
 # Restore basic configuration files
 #
 if ! restore_files astdb astdb.sqlite3 asterisk-odbc.sqlite3 webgui-prefs.txt blocked-hosts dnsmasq.static \
-                   rc.local rc.local.stop rc.elocal rc.ledcontrol wan-failover.script \
+                   rc.local rc.local.stop rc.elocal rc.ledcontrol wan-failover.script phoneprov-reload.script \
                    ast-crash hosts ethers; then
   exit 2
 fi
