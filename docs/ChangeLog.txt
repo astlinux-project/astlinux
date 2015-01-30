@@ -12,6 +12,13 @@ Released **TBD**
 
 ** System
 
+-- Build system update: crosstool-NG 1.20.0, gcc 4.8.3, eglibc 2.18
+   Security fix: CVE-2015-0235 (GHOST: glibc gethostbyname buffer overflow)
+
+-- Linux Kernel 3.2.66 (minor bump)
+
+-- RUNNIX, version bump to runnix-0.4-6956, with Linux Kernel 3.2.66, dropbear 2015.67
+
 -- igb, version 5.2.15, Intel Gigabit Ethernet Network Driver
 
 -- Monit, version 5.11, new package, easily configured monitoring system with web status interface
@@ -32,6 +39,8 @@ Released **TBD**
 -- libidn, version bump to 1.29
 
 -- libsodium, version bump to 1.0.2
+
+-- kexec-tools, version bump to 2.0.8
 
 -- Update build system tools:
    == autoconf, version bump to 2.69
@@ -66,13 +75,15 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.8.32.1 (no change), 11.15.0 (version bump) and 13.1.0 (new version for testing)
+-- Asterisk 1.8.32.2 (version bump), 11.15.1 (version bump) and 13.1.1 (new version for testing)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
 -- pjsip, new package for Asterisk 13, version 2.3
 
--- phoneprov-tools, add support for pjsip_file and pjsip_path for new [pjsip] context
+-- phoneprov-tools, add support for pjsip_file and pjsip_path for new [pjsip] context.
+   Add support for optional '/mnt/kd/phoneprov-reload.script' action script when 'Reload Dialplan/SIP' is checked.
+   More Info: http://doc.astlinux.org/userdoc:tt_ip_phone_provisioning#reload_action_script_optional
 
 -- Asterisk 'agi-bin' now includes the 'custom-agi' sub-directory path which is automatically symlinked
    to the /mnt/kd/custom-agi directory if it exists.  The dialplan must use "AGI(custom-agi/foobar.agi,...)"
