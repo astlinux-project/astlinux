@@ -4,12 +4,13 @@
 #
 #############################################################
 
-DROPBEAR_VERSION = 2012.55
-DROPBEAR_SOURCE = dropbear-$(DROPBEAR_VERSION).tar.gz
+DROPBEAR_VERSION = 2015.67
 DROPBEAR_SITE = http://matt.ucc.asn.au/dropbear/releases
+DROPBEAR_SOURCE = dropbear-$(DROPBEAR_VERSION).tar.bz2
 DROPBEAR_TARGET_BINS = dbclient dropbearkey dropbearconvert scp ssh
-DROPBEAR_MAKE =	$(MAKE) MULTI=1 SCPPROGRESS=1 \
-		PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp"
+DROPBEAR_MAKE = \
+	$(MAKE) MULTI=1 SCPPROGRESS=1 \
+	PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp"
 
 ifeq ($(BR2_PREFER_STATIC_LIB),y)
 DROPBEAR_MAKE += STATIC=1
@@ -21,21 +22,23 @@ endef
 
 DROPBEAR_POST_EXTRACT_HOOKS += DROPBEAR_FIX_XAUTH
 
-define DROPBEAR_DISABLE_REVERSE_DNS
-	$(SED) 's,^#define DO_HOST_LOOKUP.*,/* #define DO_HOST_LOOKUP */,' $(@D)/options.h
+define DROPBEAR_ENABLE_REVERSE_DNS
+	$(SED) 's:.*\(#define DO_HOST_LOOKUP\).*:\1:' $(@D)/options.h
 endef
 
 define DROPBEAR_BUILD_SMALL
-	echo "#define DROPBEAR_SMALL_CODE" >>$(@D)/options.h
-	echo "#define NO_FAST_EXPTMOD" >>$(@D)/options.h
+	$(SED) 's:.*\(#define NO_FAST_EXPTMOD\).*:\1:' $(@D)/options.h
 endef
 
 define DROPBEAR_BUILD_FEATURED
-	echo "#define DROPBEAR_BLOWFISH" >>$(@D)/options.h
+	$(SED) 's:^#define DROPBEAR_SMALL_CODE::' $(@D)/options.h
+	$(SED) 's:.*\(#define DROPBEAR_BLOWFISH\).*:\1:' $(@D)/options.h
+	$(SED) 's:.*\(#define DROPBEAR_TWOFISH128\).*:\1:' $(@D)/options.h
+	$(SED) 's:.*\(#define DROPBEAR_TWOFISH256\).*:\1:' $(@D)/options.h
 endef
 
-ifeq ($(BR2_PACKAGE_DROPBEAR_DISABLE_REVERSEDNS),y)
-DROPBEAR_POST_EXTRACT_HOOKS += DROPBEAR_DISABLE_REVERSE_DNS
+ifeq ($(BR2_PACKAGE_DROPBEAR_DISABLE_REVERSEDNS),)
+DROPBEAR_POST_EXTRACT_HOOKS += DROPBEAR_ENABLE_REVERSE_DNS
 endif
 
 ifeq ($(BR2_PACKAGE_DROPBEAR_SMALL),y)
@@ -55,12 +58,13 @@ define DROPBEAR_INSTALL_TARGET_CMDS
 	for f in $(DROPBEAR_TARGET_BINS); do \
 		ln -snf ../sbin/dropbear $(TARGET_DIR)/usr/bin/$$f ; \
 	done
+	ln -snf /tmp/etc/dropbear $(TARGET_DIR)/etc/dropbear
 endef
 
 define DROPBEAR_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/sbin/dropbear
+	rm -f $(TARGET_DIR)/etc/dropbear
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/, $(DROPBEAR_TARGET_BINS))
-	rm -f $(TARGET_DIR)/etc/init.d/S50dropbear
 endef
 
 $(eval $(call AUTOTARGETS,package,dropbear))

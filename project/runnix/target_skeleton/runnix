@@ -62,15 +62,18 @@ setup_ssh () {
   if [ -n "$SSHPORT" ]; then
     mount -t devpts devpts /dev/pts
 
+    mkdir /tmp/etc/dropbear
+
     echo "Generating keys..."
-    dropbearkey -t rsa -f /tmp/rsa_key -s 1024
-    dropbearkey -t dss -f /tmp/dss_key -s 1024
+    dropbearkey -t rsa -f /tmp/etc/dropbear/dropbear_rsa_host_key -s 1024
+    dropbearkey -t dss -f /tmp/etc/dropbear/dropbear_dss_host_key -s 1024
+    dropbearkey -t ecdsa -f /tmp/etc/dropbear/dropbear_ecdsa_host_key
 
     touch /var/log/lastlog
     touch /var/log/wtmp
 
     echo "Starting SSH..."
-    dropbear -d /tmp/dss_key -r /tmp/rsa_key -E -P /tmp/dropbear.pid -p $SSHPORT
+    dropbear -E -P /tmp/dropbear.pid -p $SSHPORT
 
     myipv4="$(ip -o addr show dev "$NDEV" 2>/dev/null | awk '$3 == "inet" { split($4, field, "/"); print field[1]; }')"
     if [ -n "$myipv4" ]; then
