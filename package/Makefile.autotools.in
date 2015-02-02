@@ -158,7 +158,7 @@ define LIBTOOL_PATCH_HOOK
 			elif test $$$${ltmain_version} = "2.2"; then\
 				toolchain/patch-kernel.sh $$$${i%/*} package buildroot-libtool-v2.2.patch; \
 			elif test $$$${ltmain_version} = "2.4"; then\
-				if test $$$${ltmain_patchlevel} -gt 2; then \
+				if test $$$${ltmain_patchlevel:-0} -gt 2; then \
 					toolchain/patch-kernel.sh $$$${i%/*} package buildroot-libtool-v2.4.4.patch; \
 				else \
 					toolchain/patch-kernel.sh $$$${i%/*} package buildroot-libtool-v2.4.patch; \
@@ -190,7 +190,7 @@ define AUTORECONF_HOOK
 			elif test $$$${ltmain_version} = "2.2"; then\
 				toolchain/patch-kernel.sh $$$${i%/*} package buildroot-libtool-v2.2.patch; \
 			elif test $$$${ltmain_version} = "2.4"; then\
-				if test $$$${ltmain_patchlevel} -gt 2; then \
+				if test $$$${ltmain_patchlevel:-0} -gt 2; then \
 					toolchain/patch-kernel.sh $$$${i%/*} package buildroot-libtool-v2.4.4.patch; \
 				else \
 					toolchain/patch-kernel.sh $$$${i%/*} package buildroot-libtool-v2.4.patch; \
