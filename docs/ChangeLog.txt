@@ -42,6 +42,8 @@ Released **TBD**
 
 -- kexec-tools, version bump to 2.0.8
 
+-- Time Zone Database update, tzdata2015a and tzcode2015a
+
 -- Update build system tools:
    == autoconf, version bump to 2.69
    == automake, version bump to 1.15
