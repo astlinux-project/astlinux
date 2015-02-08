@@ -10,44 +10,53 @@ config BR2_PACKAGE_PHP
 if BR2_PACKAGE_PHP
 
 config BR2_PACKAGE_PHP_CLI
-       bool
+	bool
 
 config BR2_PACKAGE_PHP_CGI
-       bool
+	bool
+
+config BR2_PACKAGE_PHP_FPM
+	bool
 
 choice
-        prompt "PHP interface"
-        default BR2_PACKAGE_PHP_SAPI_CGI
-        help
-          Select the PHP interface(s).
-
-config BR2_PACKAGE_PHP_SAPI_CLI
-        bool "cli interface"
-	select BR2_PACKAGE_PHP_CLI
-        help
-          Command line interface for PHP.
+	prompt "PHP interface"
+	default BR2_PACKAGE_PHP_SAPI_CGI
+	help
+	  Select the PHP interface(s).
 
 config BR2_PACKAGE_PHP_SAPI_CGI
-        bool "cgi interface"
-        select BR2_PACKAGE_PHP_CGI
-        help
-          CGI interface for PHP.
+	bool "cgi interface"
+	select BR2_PACKAGE_PHP_CGI
+	help
+	  Common Gateway Interface
+
+config BR2_PACKAGE_PHP_SAPI_CLI
+	bool "cli interface"
+	select BR2_PACKAGE_PHP_CLI
+	help
+	  Command Line Interface
+
+config BR2_PACKAGE_PHP_SAPI_FPM
+	bool "fpm interface"
+	select BR2_PACKAGE_PHP_FPM
+	help
+	  PHP-FPM (FastCGI Process Manager)
 
 config BR2_PACKAGE_PHP_SAPI_CLI_CGI
-        bool "cli and cgi interfaces"
+	bool "cli and cgi interfaces"
 	select BR2_PACKAGE_PHP_CLI
 	select BR2_PACKAGE_PHP_CGI
 	help
-	  Command line and CGI interfaces for PHP.
+	  Command line and Common gateway interfaces
+
+config BR2_PACKAGE_PHP_SAPI_CLI_FPM
+	bool "cli and fpm interfaces"
+	select BR2_PACKAGE_PHP_CLI
+	select BR2_PACKAGE_PHP_FPM
+	help
+	  Command line and PHP-FPM (FastCGI Process Manager)
 
 endchoice
-
-config BR2_PACKAGE_PHP_FASTCGI
-        bool "fastcgi"
-        depends on BR2_PACKAGE_PHP_CGI
-        default y
-        help
-          fast cgi interface for php
 
 source "package/php/Config.ext"
 endif

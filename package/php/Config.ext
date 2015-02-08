@@ -1,12 +1,5 @@
 menu "PHP Extensions"
 
-config BR2_PACKAGE_PHP_CONFIG
-	string "PHP configuration file to use"
-	default "$(PHP_DIR)/php.ini-dist"
-	help
-	  If you want to use a different php.ini file define it here.
-	  Otherwise it'll just copy the default php.ini-dist from PHP.
-
 config BR2_PACKAGE_PHP_EXT_SOCKETS
 	bool "socket"
 	help
@@ -18,17 +11,17 @@ config BR2_PACKAGE_PHP_EXT_POSIX
 	help
 	  POSIX support
 
-config BR2_PACKAGE_PHP_EXT_SPL
-	bool "SPL"
-	default y
-	help
-	  Standard PHP library support
-
 config BR2_PACKAGE_PHP_EXT_SESSION
 	bool "Session"
 	default y
 	help
 	  Session support
+
+config BR2_PACKAGE_PHP_EXT_HASH
+	bool "hash"
+	default y
+	help
+	  HASH message digest framework
 
 config BR2_PACKAGE_PHP_EXT_OPENSSL
 	bool "openssl"
@@ -99,22 +92,18 @@ config BR2_PACKAGE_PHP_EXT_JSON
 	help
 	  JavaScript Object Serialization support
 
+config BR2_PACKAGE_PHP_EXT_TOKENIZER
+	bool "tokenizer"
+	default y
+	help
+	  Tokenizer functions support
+
 config BR2_PACKAGE_PHP_EXT_READLINE
 	bool "readline"
-	depends on (BR2_PACKAGE_PHP_CLI || BR2_PACKAGE_PHP_CGI) && BR2_PACKAGE_READLINE
+	select BR2_PACKAGE_NCURSES
+	select BR2_PACKAGE_READLINE
 	help
 	  readline support
-
-config BR2_PACKAGE_PHP_EXT_NCURSES
-	bool "ncurses"
-	depends on (BR2_PACKAGE_PHP_CLI || BR2_PACKAGE_PHP_CGI) && BR2_PACKAGE_NCURSES
-	help
-	  ncurses support
-
-config BR2_PACKAGE_PHP_EXT_PCRE
-	bool "PCRE"
-	help
-	  Perl Compatible Regular Expressions support
 
 config BR2_PACKAGE_PHP_EXT_PCNTL
 	bool "PCNTL"
@@ -141,9 +130,14 @@ config BR2_PACKAGE_PHP_EXT_ZIP
 	help
 	  Zip read/write support
 
+config BR2_PACKAGE_PHP_EXT_CTYPE
+	bool "ctype"
+	default y
+	help
+	  Character type checking support
+
 config BR2_PACKAGE_PHP_EXT_FILTER
 	bool "filter"
-	select BR2_PACKAGE_PHP_EXT_PCRE
 	help
 	  Input filter support
 
@@ -154,17 +148,6 @@ config BR2_PACKAGE_PHP_EXT_CALENDAR
 
 comment "Database extensions"
 
-config BR2_PACKAGE_PHP_EXT_SQLITE
-	bool "SQLite"
-	help
-	  Legacy SQLite2 support
-
-config BR2_PACKAGE_PHP_EXT_SQLITE_UTF8
-	bool "sqlite UTF8 support"
-	depends on BR2_PACKAGE_PHP_EXT_SQLITE
-	help
-	  UTF8 Support for sqlite
-
 config BR2_PACKAGE_PHP_EXT_PDO
 	bool "PDO"
 	help
@@ -173,15 +156,9 @@ config BR2_PACKAGE_PHP_EXT_PDO
 config BR2_PACKAGE_PHP_EXT_PDO_SQLITE
 	bool "PDO_SQLite"
 	depends on BR2_PACKAGE_PHP_EXT_PDO
-	help
-	  SQLite driver for PDO
-
-config BR2_PACKAGE_PHP_EXT_PDO_SQLITE_EXTERNAL
-	bool "PDO_SQLite external"
-	depends on BR2_PACKAGE_PHP_EXT_PDO_SQLITE
 	select BR2_PACKAGE_SQLITE
 	help
-	  Use external sqlite3 library
+	  SQLite driver for PDO
 
 config BR2_PACKAGE_PHP_EXT_PDO_MYSQL
 	bool "PDO_MySQL"

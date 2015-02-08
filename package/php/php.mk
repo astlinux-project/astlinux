@@ -4,55 +4,61 @@
 #
 #############################################################
 
-PHP_VERSION = 5.3.29
-PHP_SOURCE = php-$(PHP_VERSION).tar.bz2
+PHP_VERSION = 5.5.21
 PHP_SITE = http://www.php.net/distributions
+PHP_SOURCE = php-$(PHP_VERSION).tar.xz
 PHP_INSTALL_STAGING = YES
 PHP_INSTALL_STAGING_OPT = INSTALL_ROOT=$(STAGING_DIR) install
 PHP_INSTALL_TARGET_OPT = INSTALL_ROOT=$(TARGET_DIR) install
-PHP_LIBTOOL_PATCH = NO
-PHP_CONF_OPT =  --mandir=/usr/share/man \
-		--infodir=/usr/share/info \
-		--disable-all \
-		--without-pear \
-		--without-iconv \
-		--without-gd \
-		--enable-ctype \
-		--enable-hash \
-		--enable-tokenizer \
-		--with-config-file-path=/etc \
-		--localstatedir=/var
+PHP_DEPENDENCIES = host-pkg-config
+PHP_CONF_OPT = \
+	--mandir=/usr/share/man \
+	--infodir=/usr/share/info \
+	--disable-all \
+	--without-pear \
+	--without-iconv \
+	--with-config-file-path=/etc \
+	--localstatedir=/var \
+	--disable-rpath
+
+PHP_CONF_ENV = EXTRA_LIBS="$(PHP_EXTRA_LIBS)"
+
+ifeq ($(BR2_ENDIAN),"BIG")
+PHP_CONF_ENV += ac_cv_c_bigendian_php=yes
+else
+PHP_CONF_ENV += ac_cv_c_bigendian_php=no
+endif
 
 PHP_CFLAGS = $(TARGET_CFLAGS)
 
-ifneq ($(BR2_PACKAGE_PHP_CLI),y)
-	PHP_CONF_OPT += --disable-cli
-else
-	PHP_CONF_OPT += --enable-cli
-endif
+# We need to force dl "detection"
+PHP_CONF_ENV += ac_cv_func_dlopen=yes ac_cv_lib_dl_dlopen=yes
+PHP_EXTRA_LIBS += -ldl
 
-ifneq ($(BR2_PACKAGE_PHP_CGI),y)
-	PHP_CONF_OPT += --disable-cgi
-else
-	PHP_CONF_OPT += --enable-cgi
-endif
+PHP_CONF_OPT += $(if $(BR2_PACKAGE_PHP_CLI),,--disable-cli)
+PHP_CONF_OPT += $(if $(BR2_PACKAGE_PHP_CGI),,--disable-cgi)
+PHP_CONF_OPT += $(if $(BR2_PACKAGE_PHP_FPM),--enable-fpm,--disable-fpm)
 
 ### Extensions
-ifeq ($(BR2_PACKAGE_PHP_EXT_SOCKETS),y)
-	PHP_CONF_OPT += --enable-sockets
-endif
-
-ifeq ($(BR2_PACKAGE_PHP_EXT_POSIX),y)
-	PHP_CONF_OPT += --enable-posix
-endif
-
-ifeq ($(BR2_PACKAGE_PHP_EXT_SPL),y)
-	PHP_CONF_OPT += --enable-spl
-endif
-
-ifeq ($(BR2_PACKAGE_PHP_EXT_SESSION),y)
-	PHP_CONF_OPT += --enable-session
-endif
+PHP_CONF_OPT += \
+	$(if $(BR2_PACKAGE_PHP_EXT_SOCKETS),--enable-sockets) \
+	$(if $(BR2_PACKAGE_PHP_EXT_POSIX),--enable-posix) \
+	$(if $(BR2_PACKAGE_PHP_EXT_SESSION),--enable-session) \
+	$(if $(BR2_PACKAGE_PHP_EXT_HASH),--enable-hash) \
+	$(if $(BR2_PACKAGE_PHP_EXT_SIMPLEXML),--enable-simplexml) \
+	$(if $(BR2_PACKAGE_PHP_EXT_XMLPARSER),--enable-xml) \
+	$(if $(BR2_PACKAGE_PHP_EXT_EXIF),--enable-exif) \
+	$(if $(BR2_PACKAGE_PHP_EXT_FTP),--enable-ftp) \
+	$(if $(BR2_PACKAGE_PHP_EXT_JSON),--enable-json) \
+	$(if $(BR2_PACKAGE_PHP_EXT_TOKENIZER),--enable-tokenizer) \
+	$(if $(BR2_PACKAGE_PHP_EXT_PCNTL),--enable-pcntl) \
+	$(if $(BR2_PACKAGE_PHP_EXT_SYSVMSG),--enable-sysvmsg) \
+	$(if $(BR2_PACKAGE_PHP_EXT_SYSVSEM),--enable-sysvsem) \
+	$(if $(BR2_PACKAGE_PHP_EXT_SYSVSHM),--enable-sysvshm) \
+	$(if $(BR2_PACKAGE_PHP_EXT_ZIP),--enable-zip) \
+	$(if $(BR2_PACKAGE_PHP_EXT_CTYPE),--enable-ctype) \
+	$(if $(BR2_PACKAGE_PHP_EXT_FILTER),--enable-filter) \
+	$(if $(BR2_PACKAGE_PHP_EXT_CALENDAR),--enable-calendar)
 
 ifeq ($(BR2_PACKAGE_PHP_EXT_OPENSSL),y)
 	PHP_CONF_OPT += --with-openssl=$(STAGING_DIR)/usr
@@ -70,25 +76,9 @@ ifeq ($(BR2_PACKAGE_PHP_EXT_LIBXML2),y)
 	PHP_DEPENDENCIES += libxml2
 endif
 
-ifeq ($(BR2_PACKAGE_PHP_EXT_XMLPARSER),y)
-	PHP_CONF_OPT += --enable-xml
-endif
-
-ifeq ($(BR2_PACKAGE_PHP_EXT_SIMPLEXML),y)
-	PHP_CONF_OPT += --enable-simplexml
-endif
-
 ifeq ($(BR2_PACKAGE_PHP_EXT_ZLIB),y)
 	PHP_CONF_OPT += --with-zlib=$(STAGING_DIR)/usr
 	PHP_DEPENDENCIES += zlib
-endif
-
-ifeq ($(BR2_PACKAGE_PHP_EXT_EXIF),y)
-	PHP_CONF_OPT += --enable-exif
-endif
-
-ifeq ($(BR2_PACKAGE_PHP_EXT_FTP),y)
-	PHP_CONF_OPT += --enable-ftp
 endif
 
 ifeq ($(BR2_PACKAGE_PHP_EXT_GETTEXT),y)
@@ -101,73 +91,17 @@ ifeq ($(BR2_PACKAGE_PHP_EXT_GMP),y)
 	PHP_DEPENDENCIES += gmp
 endif
 
-ifeq ($(BR2_PACKAGE_PHP_EXT_JSON),y)
-	PHP_CONF_OPT += --enable-json
-endif
-
 ifeq ($(BR2_PACKAGE_PHP_EXT_READLINE),y)
 	PHP_CONF_OPT += --with-readline=$(STAGING_DIR)/usr
 	PHP_DEPENDENCIES += readline
-endif
-
-ifeq ($(BR2_PACKAGE_PHP_EXT_NCURSES),y)
-	PHP_CONF_OPT += --with-ncurses=$(STAGING_DIR)/usr
-	PHP_DEPENDENCIES += ncurses
-endif
-
-ifeq ($(BR2_PACKAGE_PHP_EXT_PCNTL),y)
-	PHP_CONF_OPT += --enable-pcntl
-endif
-
-ifeq ($(BR2_PACKAGE_PHP_EXT_SYSVMSG),y)
-	PHP_CONF_OPT += --enable-sysvmsg
-endif
-
-ifeq ($(BR2_PACKAGE_PHP_EXT_SYSVSEM),y)
-	PHP_CONF_OPT += --enable-sysvsem
-endif
-
-ifeq ($(BR2_PACKAGE_PHP_EXT_SYSVSHM),y)
-	PHP_CONF_OPT += --enable-sysvshm
-endif
-
-ifeq ($(BR2_PACKAGE_PHP_EXT_ZIP),y)
-	PHP_CONF_OPT += --enable-zip
-endif
-
-ifeq ($(BR2_PACKAGE_PHP_EXT_FILTER),y)
-	PHP_CONF_OPT += --enable-filter
-endif
-
-ifeq ($(BR2_PACKAGE_PHP_EXT_CALENDAR),y)
-	PHP_CONF_OPT += --enable-calendar
-endif
-
-ifeq ($(BR2_PACKAGE_PHP_EXT_PCRE),y)
-	PHP_CONF_OPT += --with-pcre-regex
-endif
-
-### Legacy sqlite2 support
-ifeq ($(BR2_PACKAGE_PHP_EXT_SQLITE),y)
-	PHP_CONF_OPT += --with-sqlite
-ifneq ($(BR2_LARGEFILE),y)
-	PHP_CFLAGS += -DSQLITE_DISABLE_LFS
-endif
-ifeq ($(BR2_PACKAGE_PHP_EXT_SQLITE_UTF8),y)
-	PHP_CONF_OPT += --enable-sqlite-utf8
-endif
 endif
 
 ### PDO
 ifeq ($(BR2_PACKAGE_PHP_EXT_PDO),y)
 	PHP_CONF_OPT += --enable-pdo
 ifeq ($(BR2_PACKAGE_PHP_EXT_PDO_SQLITE),y)
-ifeq ($(BR2_PACKAGE_PHP_EXT_PDO_SQLITE_EXTERNAL),y)
 	PHP_CONF_OPT += --with-pdo-sqlite=$(STAGING_DIR)/usr
 	PHP_DEPENDENCIES += sqlite
-else
-	PHP_CONF_OPT += --with-pdo-sqlite
-endif
 	PHP_CFLAGS += -DSQLITE_OMIT_LOAD_EXTENSION
 ifneq ($(BR2_LARGEFILE),y)
 	PHP_CFLAGS += -DSQLITE_DISABLE_LFS
@@ -177,6 +111,12 @@ ifeq ($(BR2_PACKAGE_PHP_EXT_PDO_MYSQL),y)
 	PHP_CONF_OPT += --with-pdo-mysql=$(STAGING_DIR)/usr
 	PHP_DEPENDENCIES += mysql_client
 endif
+endif
+
+### Use external PCRE if it's available
+ifeq ($(BR2_PACKAGE_PCRE),y)
+	PHP_CONF_OPT += --with-pcre-regex=$(STAGING_DIR)/usr
+	PHP_DEPENDENCIES += pcre
 endif
 
 ### LDAP
@@ -189,6 +129,10 @@ endif
 define PHP_FIXUP_PHP_CONFIG
 	$(SED) 's%^prefix="/usr"%prefix="$(STAGING_DIR)/usr"%' \
 		-e 's%^exec_prefix="/usr"%exec_prefix="$(STAGING_DIR)/usr"%' \
+		$(STAGING_DIR)/usr/bin/php-config
+	$(SED) "/prefix/ s:/usr:$(STAGING_DIR)/usr:" \
+		$(STAGING_DIR)/usr/bin/phpize
+	$(SED) "/extension_dir/ s:/usr:$(TARGET_DIR)/usr:" \
 		$(STAGING_DIR)/usr/bin/php-config
 endef
 
