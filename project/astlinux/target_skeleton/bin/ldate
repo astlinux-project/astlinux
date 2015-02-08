@@ -1,5 +1,8 @@
 #!/usr/bin/php -qC
 <?php
+if (! isset($argv)) {
+  $argv = $_SERVER['argv'];
+}
 $loc_file = '/usr/lib/locale/.locale';
 $format = '%c';
 $date_string = '';
@@ -63,7 +66,7 @@ while (isset($argv[$i])) {
     echo "$usage\n";
     exit(0);
   } elseif ($argv[$i] === '--version') {
-    echo "ldate: v1.0.0\n";
+    echo "ldate: v1.0.1\n";
     exit(0);
   } elseif ($argv[$i] === '-d' && isset($argv[$i+1])) {
     $date_string = $argv[++$i];

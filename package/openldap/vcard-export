@@ -1,5 +1,8 @@
 #!/usr/bin/php -qC 
 <?php
+if (! isset($argv)) {
+  $argv = $_SERVER['argv'];
+}
 
 //AstLinux// Adapted for AstLinux - 10-11-2013 by Lonnie Abelbeck
 //AstLinux// Single shared file vcard-parse-convert.php, use name "vcard-export"

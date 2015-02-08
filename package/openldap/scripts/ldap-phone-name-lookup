@@ -1,5 +1,8 @@
 #!/usr/bin/php -qC
 <?php
+if (! isset($argv)) {
+  $argv = $_SERVER['argv'];
+}
 
 // Function: LDAP_Client
 //
