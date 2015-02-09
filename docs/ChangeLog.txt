@@ -5,10 +5,36 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.2.2:
+Additions for AstLinux 1.2.3:
 =============================
 
 Released **TBD**
+
+** System
+
+-- php, version bump to 5.5.21, major version change, bug and security fixes
+
+-- logrotate, version bump to 3.8.7
+
+** Networking
+
+-- (Custom Build Only) kamailio, version bump to 4.1.8
+
+** Asterisk
+
+-- Asterisk 1.8.32.2 (no change), 11.15.1 (no change) and 13.1.1 (no change)
+
+-- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
+
+** Web Interface
+
+-- no change
+
+
+Additions for AstLinux 1.2.2:
+=============================
+
+Released 2015-02-12
 
 ** System
 
