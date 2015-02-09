@@ -3,7 +3,7 @@
 # logrotate
 #
 #############################################################
-LOGROTATE_VERSION = 3.8.6
+LOGROTATE_VERSION = 3.8.7
 LOGROTATE_SOURCE = logrotate-$(LOGROTATE_VERSION).tar.gz
 LOGROTATE_SITE = https://www.fedorahosted.org/releases/l/o/logrotate
 
@@ -24,8 +24,6 @@ endef
 define LOGROTATE_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/sbin/logrotate
 	rm -f $(TARGET_DIR)/etc/logrotate.conf
-	rm -f $(TARGET_DIR)/usr/man/man5/logrotate.conf.5
-	rm -f $(TARGET_DIR)/usr/man/man8/logrotate.8
 endef
 
 define LOGROTATE_CLEAN_CMDS
