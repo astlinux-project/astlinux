@@ -18,6 +18,8 @@ Released **TBD**
 
 ** Networking
 
+-- ntpd/sntp, version bump to 4.2.8p1, security fixes: CVE-2014-9297 and CVE-2014-9298
+
 -- (Custom Build Only) kamailio, version bump to 4.1.8
 
 ** Asterisk
