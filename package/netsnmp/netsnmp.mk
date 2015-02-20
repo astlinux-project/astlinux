@@ -4,22 +4,33 @@
 #
 #############################################################
 
-NETSNMP_VERSION = 5.7.2.1
+NETSNMP_VERSION = 5.7.3
 NETSNMP_SITE = http://downloads.sourceforge.net/project/net-snmp/net-snmp/$(NETSNMP_VERSION)
 NETSNMP_SOURCE = net-snmp-$(NETSNMP_VERSION).tar.gz
 NETSNMP_INSTALL_STAGING = YES
 NETSNMP_CONF_ENV = ac_cv_NETSNMP_CAN_USE_SYSCTL=no
-NETSNMP_CONF_OPT = --with-persistent-directory=/var/lib/snmp --disable-static \
-		--with-defaults --enable-mini-agent --without-rpm \
-		--with-logfile=none --without-kmem-usage \
-		--enable-as-needed --disable-debugging --without-perl-modules \
-		--disable-embedded-perl --disable-perl-cc-checks \
-		--disable-scripts --with-default-snmp-version="1" \
-		--enable-silent-libtool --enable-mfd-rewrites \
-		--with-sys-contact="root@localhost" \
-		--with-sys-location="Unknown" \
-		--with-mib-modules="host ucd-snmp/dlmod agentx" \
-		--with-out-mib-modules="disman/event disman/schedule utilities"
+NETSNMP_CONF_OPT = \
+	--with-persistent-directory=/var/lib/snmp \
+	--disable-static \
+	--with-defaults \
+	--enable-mini-agent \
+	--without-rpm \
+	--with-logfile=none \
+	--without-kmem-usage \
+	--enable-as-needed \
+	--disable-debugging \
+	--without-perl-modules \
+	--disable-embedded-perl \
+	--disable-perl-cc-checks \
+	--disable-scripts \
+	--with-default-snmp-version="1" \
+	--enable-silent-libtool \
+	--enable-mfd-rewrites \
+	--with-sys-contact="root@localhost" \
+	--with-sys-location="Unknown" \
+	--with-mib-modules="host ucd-snmp/dlmod agentx" \
+	--with-out-mib-modules="disman/event disman/schedule utilities" \
+	--disable-manuals
 NETSNMP_MAKE = $(MAKE1)
 NETSNMP_BLOAT_MIBS = BRIDGE DISMAN-EVENT DISMAN-SCHEDULE DISMAN-SCRIPT EtherLike RFC-1215 RFC1155-SMI RFC1213 SCTP SMUX
 
@@ -36,11 +47,6 @@ ifeq ($(BR2_PACKAGE_OPENSSL),y)
 		--with-openssl=$(STAGING_DIR)/usr/include/openssl
 else
 	NETSNMP_CONF_OPT += --without-openssl
-endif
-
-# Docs
-ifneq ($(BR2_HAVE_DOCUMENTATION),y)
-	NETSNMP_CONF_OPT += --disable-manuals
 endif
 
 # Remove IPv6 MIBs if there's no IPv6
