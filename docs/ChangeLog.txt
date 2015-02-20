@@ -12,7 +12,9 @@ Released **TBD**
 
 ** System
 
--- php, version bump to 5.5.21, major version change, bug and security fixes
+-- php, version bump to 5.5.22, major version change, bug and security fixes
+
+-- sudo, version bump to 1.8.12, security fix: CVE-2014-9680
 
 -- logrotate, version bump to 3.8.7
 
@@ -23,6 +25,8 @@ Released **TBD**
 ** Networking
 
 -- ntpd/sntp, version bump to 4.2.8p1, security fixes: CVE-2014-9297 and CVE-2014-9298
+
+-- netsnmp, version bump to 5.7.3, security fix: CVE-2014-2285
 
 -- (Custom Build Only) kamailio, version bump to 4.1.8
 
