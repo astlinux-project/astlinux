@@ -616,8 +616,10 @@ function asteriskURLrepo() {
     $str .= 'firmware-1.x';
   } elseif ($ver3 === '1.8') {
     $str .= 'ast18-firmware-1.x';
-  } else {
+  } elseif ($ver3 === '11.') {
     $str .= 'ast11-firmware-1.x';
+  } else {
+    $str .= 'ast13-firmware-1.x';
   }
   return($str);
 }
