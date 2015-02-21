@@ -38,7 +38,7 @@ Released **TBD**
 
 ** Web Interface
 
--- no change
+-- Prefs and System tab, set default "Repository URL" to use Asterisk 13 if installed.
 
 
 Additions for AstLinux 1.2.2:
