@@ -16,6 +16,8 @@ Released **TBD**
 
 -- sudo, version bump to 1.8.12, security fix: CVE-2014-9680
 
+-- e2fsprogs, security fix: CVE-2015-1572
+
 -- logrotate, version bump to 3.8.7
 
 -- Kernel runtime parameters, add support for /etc/sysctl.conf via either /mnt/kd/sysctl.conf
