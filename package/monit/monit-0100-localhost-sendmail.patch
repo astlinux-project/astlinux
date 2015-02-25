@@ -28,7 +28,7 @@
 +	const char *mailcmd = "/usr/sbin/sendmail -t";
 +	char *tmpname = CALLOC(sizeof(char), strlen(template) + 1);
 +	char *system_cmd = CALLOC(sizeof(char), STRLEN);
-+	int failed = FALSE;
++	int failed = false;
 +
 +	for (m = mail; m; m = m->next) {
 +		strcpy(tmpname, template);
@@ -44,7 +44,7 @@
 +			snprintf(system_cmd, STRLEN, "( %s < %s ; rm -f %s ) &", mailcmd, tmpname, tmpname);
 +			spawn_system_cmd(system_cmd);
 +		} else {
-+                	failed = TRUE;
++                	failed = true;
 +                	LogError("Sendmail: Unable to launch '%s' (can't create temporary file)\n", mailcmd);
 +		}
 +	}
@@ -57,7 +57,7 @@
  /* ------------------------------------------------------------------ Public */
  
  
-@@ -199,6 +249,10 @@
+@@ -198,6 +248,10 @@
  
          ASSERT(mail);
  
@@ -92,16 +92,16 @@
 +        pthread_sigmask(SIG_BLOCK, &mask, &save);
 +
 +        pid = fork();
-+        if(pid < 0) {
++        if (pid < 0) {
 +                LogError("Cannot fork a new process -- %s\n", STRERROR);
 +                exit(1);
 +        }
 +
-+        if(pid == 0) {
++        if (pid == 0) {
 +
-+                if(! Run.isdaemon) {
-+                        for(int i = 0; i < 3; i++)
-+                                if(close(i) == -1 || open("/dev/null", O_RDWR) != i)
++                if (! Run.isdaemon) {
++                        for (int i = 0; i < 3; i++)
++                                if (close(i) == -1 || open("/dev/null", O_RDWR) != i)
 +                                        stat_loc |= redirect_ERROR;
 +                }
 +
@@ -110,12 +110,12 @@
 +                setsid();
 +
 +                pid = fork();
-+                if(pid < 0) {
++                if (pid < 0) {
 +                        stat_loc |= fork_ERROR;
 +                        _exit(stat_loc);
 +                }
 +
-+                if(pid == 0) {
++                if (pid == 0) {
 +                        /*
 +                         * Reset all signals, so the spawned process is *not* created
 +                         * with any inherited SIG_BLOCKs
@@ -137,7 +137,7 @@
 +        }
 +
 +        /* Wait for first child - aka second parent, to exit */
-+        if(waitpid(pid, &stat_loc, 0) != pid) {
++        if (waitpid(pid, &stat_loc, 0) != pid) {
 +                LogError("Waitpid error\n");
 +        }
 +

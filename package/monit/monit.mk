@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-MONIT_VERSION = 5.11
+MONIT_VERSION = 5.12
 MONIT_SITE = http://mmonit.com/monit/dist
 MONIT_DEPENDENCIES = host-bison host-flex
 #
@@ -12,6 +12,7 @@ MONIT_DEPENDENCIES = host-bison host-flex
 MONIT_AUTORECONF = YES
 
 MONIT_CONF_ENV = \
+	ac_cv_ipv6=yes \
 	libmonit_cv_setjmp_available=yes \
 	libmonit_cv_vsnprintf_c99_conformant=yes
 

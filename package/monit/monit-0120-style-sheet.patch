@@ -1,37 +1,37 @@
 --- monit-5.10/src/http/cervlet.c.orig	2014-12-18 15:56:05.000000000 -0600
 +++ monit-5.10/src/http/cervlet.c	2014-12-18 15:57:08.000000000 -0600
-@@ -329,10 +329,10 @@
-                 " a:hover {text-decoration: none;} "\
-                 " a {text-decoration: underline;color:#222} "\
-                 " table {border-collapse:collapse; border:0;} "\
--                " .stripe {background:#EDF5FF} "\
--                " .rule {background:#ddd} "\
--                " .red-text {color:#ff0000;} "\
--                " .green-text {color:#00ff00;} "\
-+                " .stripe {background:#EFEFE7} "\
-+                " .rule {background:#E7E5E2} "\
-+                " .red-text {color:#dd0000;} "\
-+                " .green-text {color:#008000;} "\
-                 " .gray-text {color:#999999;} "\
-                 " .blue-text {color:#0000ff;} "\
-                 " .orange-text {color:#ff8800;} "\
-@@ -342,16 +342,16 @@
-                 " /*Opera Fix*/body:before {content:\"\";height:100%%;float:left;width:0;margin-top:-32767px;/} "\
-                 " #footer {position: relative;margin-top: -50px; height: 50px; clear:both; font-size:11px;color:#777;text-align:center;} "\
-                 " #footer a {color:#333;} #footer a:hover {text-decoration: none;} "\
--                " #nav {background:#ddd;font:normal normal normal 14px/0px 'HelveticaNeue', Helvetica;} "\
-+                " #nav {background:#E7E5E2;font:normal normal normal 14px/0px 'HelveticaNeue', Helvetica;} "\
-                 " #nav td {padding:5px 10px;} "\
--                " #header {margin-bottom:30px;background:#EFF7FF} "\
-+                " #header {margin-bottom:30px;background:#EFEFE7} "\
-                 " #nav, #header {border-bottom:1px solid #ccc;} "\
-                 " #header-row {width:95%%;} "\
-                 " #header-row th {padding:30px 10px 10px 10px;font-size:120%%;} "\
-                 " #header-row td {padding:3px 10px;} "\
-                 " #header-row .first {min-width:200px;width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} "\
-                 " #status-table {width:95%%;} "\
--                " #status-table th {text-align:left;background:#edf5ff;font-weight:normal;} "\
-+                " #status-table th {text-align:left;background:#EFEFE7;font-weight:normal;} "\
-                 " #status-table th, #status-table td, #status-table tr {border:1px solid #ccc;padding:5px;} "\
-                 " #buttons {font-size:20px; margin:40px 0 20px 0;} "\
-                 " #buttons td {padding-right:50px;} "\
+@@ -319,10 +319,10 @@
+                             " a:hover {text-decoration: none;} "\
+                             " a {text-decoration: underline;color:#222} "\
+                             " table {border-collapse:collapse; border:0;} "\
+-                            " .stripe {background:#EDF5FF} "\
+-                            " .rule {background:#ddd} "\
+-                            " .red-text {color:#ff0000;} "\
+-                            " .green-text {color:#00ff00;} "\
++                            " .stripe {background:#EFEFE7} "\
++                            " .rule {background:#E7E5E2} "\
++                            " .red-text {color:#dd0000;} "\
++                            " .green-text {color:#008000;} "\
+                             " .gray-text {color:#999999;} "\
+                             " .blue-text {color:#0000ff;} "\
+                             " .orange-text {color:#ff8800;} "\
+@@ -332,16 +332,16 @@
+                             " /*Opera Fix*/body:before {content:\"\";height:100%%;float:left;width:0;margin-top:-32767px;/} "\
+                             " #footer {position: relative;margin-top: -50px; height: 50px; clear:both; font-size:11px;color:#777;text-align:center;} "\
+                             " #footer a {color:#333;} #footer a:hover {text-decoration: none;} "\
+-                            " #nav {background:#ddd;font:normal normal normal 14px/0px 'HelveticaNeue', Helvetica;} "\
++                            " #nav {background:#E7E5E2;font:normal normal normal 14px/0px 'HelveticaNeue', Helvetica;} "\
+                             " #nav td {padding:5px 10px;} "\
+-                            " #header {margin-bottom:30px;background:#EFF7FF} "\
++                            " #header {margin-bottom:30px;background:#EFEFE7} "\
+                             " #nav, #header {border-bottom:1px solid #ccc;} "\
+                             " #header-row {width:95%%;} "\
+                             " #header-row th {padding:30px 10px 10px 10px;font-size:120%%;} "\
+                             " #header-row td {padding:3px 10px;} "\
+                             " #header-row .first {min-width:200px;width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} "\
+                             " #status-table {width:95%%;} "\
+-                            " #status-table th {text-align:left;background:#edf5ff;font-weight:normal;} "\
++                            " #status-table th {text-align:left;background:#EFEFE7;font-weight:normal;} "\
+                             " #status-table th, #status-table td, #status-table tr {border:1px solid #ccc;padding:5px;} "\
+                             " #buttons {font-size:20px; margin:40px 0 20px 0;} "\
+                             " #buttons td {padding-right:50px;} "\
