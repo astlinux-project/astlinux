@@ -18,6 +18,8 @@ Released **TBD**
 
 -- e2fsprogs, security fix: CVE-2015-1572
 
+-- Monit, version bump to 5.12, added IPv6 support
+
 -- logrotate, version bump to 3.8.7
 
 -- Kernel runtime parameters, add support for /etc/sysctl.conf via either /mnt/kd/sysctl.conf
