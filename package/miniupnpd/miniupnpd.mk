@@ -4,10 +4,10 @@
 #
 #############################################################
 
-MINIUPNPD_VERSION = 1.7
+MINIUPNPD_VERSION = 1.9.20141209
 MINIUPNPD_SOURCE = miniupnpd-$(MINIUPNPD_VERSION).tar.gz
 MINIUPNPD_SITE = http://miniupnp.free.fr/files
-MINIUPNPD_DEPENDENCIES = linux iptables
+MINIUPNPD_DEPENDENCIES = host-pkg-config linux iptables libnfnetlink
 
 define MINIUPNPD_IPTABLES_PATH_FIX
 	$(SED) 's:/sbin/iptables:/usr/sbin/iptables:g' \
@@ -17,18 +17,13 @@ endef
 MINIUPNPD_POST_PATCH_HOOKS += MINIUPNPD_IPTABLES_PATH_FIX
 
 define MINIUPNPD_CONFIGURE_CMDS
-# add this to make for IPv6... CONFIG_OPTIONS="--ipv6"
 	echo "$(LINUX_VERSION_PROBED)" >$(@D)/os.astlinux
-	CONFIG_OPTIONS="--leasefile" \
-	$(MAKE) CC="$(TARGET_CC)" LD="$(TARGET_LD)" CFLAGS="$(TARGET_CFLAGS)" \
-		-f Makefile.linux -C $(@D) config.h
 endef
 
 define MINIUPNPD_BUILD_CMDS
-	$(MAKE) CC="$(TARGET_CC)" LD="$(TARGET_LD)" \
-		CFLAGS="$(TARGET_CFLAGS) -I$(BUILD_DIR)/iptables-$(IPTABLES_VERSION)/include/ -DIPTABLES_143" \
-		LIBS="$(STAGING_DIR)/usr/lib/libiptc.so $(STAGING_DIR)/usr/lib/libip4tc.so $(STAGING_DIR)/usr/lib/libip6tc.so" \
-		-f Makefile.linux -C $(@D) miniupnpd
+	$(TARGET_CONFIGURE_OPTS) \
+	CONFIG_OPTIONS="--leasefile --portinuse" \
+	$(MAKE) -f Makefile.linux -C $(@D) miniupnpd
 endef
 
 define MINIUPNPD_INSTALL_TARGET_CMDS

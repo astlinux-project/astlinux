@@ -169,7 +169,6 @@ system_uptime=yes
 notify_interval=60
 clean_ruleset_interval=600
 uuid=$UUID
-friendly_name=AstLinux Router
 serial=000001
 model_number=$(cat /etc/astlinux-release)" >> $MINIUPNPD_CONF
   if [ -n "$UPNP_ALLOW" ]; then
