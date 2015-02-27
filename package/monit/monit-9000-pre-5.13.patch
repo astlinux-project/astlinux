@@ -1,0 +1,217 @@
+From 64fdf3195f3e5be7377a66318a54eb878c74fdc6 Mon Sep 17 00:00:00 2001
+From: tildeslash <info@tildeslash.com>
+Date: Fri, 27 Feb 2015 07:51:39 +0100
+Subject: [PATCH] fix Issue #155 : Monit may crash if the system hostname
+ resolving failed.
+
+---
+ CHANGES           |  2 ++
+ src/http/engine.c | 42 +++++++++++++++++++++---------------------
+ src/net.c         |  5 ++---
+ src/util.c        | 11 +++++------
+ 4 files changed, 30 insertions(+), 30 deletions(-)
+
+diff --git a/src/http/engine.c b/src/http/engine.c
+index 0a5025a..3fd4eb6 100644
+--- a/src/http/engine.c
++++ b/src/http/engine.c
+@@ -365,32 +365,32 @@ boolean_t Engine_addHostAllow(char *pattern) {
+         struct addrinfo *res, hints = {
+                 .ai_family = AF_INET /* we support just IPv4 currently */
+         };
+-        if (getaddrinfo(pattern, NULL, &hints, &res) != 0)
+-                return false;
+         int added = 0;
+-        for (struct addrinfo *_res = res; _res; _res = _res->ai_next) {
+-                if (_res->ai_family == AF_INET) {
+-                        struct sockaddr_in *sin = (struct sockaddr_in *)_res->ai_addr;
+-                        HostsAllow_T h;
+-                        NEW(h);
+-                        memcpy(&h->network, &sin->sin_addr, 4);
+-                        h->mask = 0xffffffff;
+-                        LOCK(mutex)
+-                        {
+-                                if (_hasHostAllow(h))  {
+-                                        DEBUG("Skipping redundant host '%s'\n", pattern);
+-                                        FREE(h);
+-                                } else {
+-                                        DEBUG("Adding host allow '%s'\n", pattern);
+-                                        h->next = hostlist;
+-                                        hostlist = h;
+-                                        added++;
++        if (! getaddrinfo(pattern, NULL, &hints, &res)) {
++                for (struct addrinfo *_res = res; _res; _res = _res->ai_next) {
++                        if (_res->ai_family == AF_INET) {
++                                struct sockaddr_in *sin = (struct sockaddr_in *)_res->ai_addr;
++                                HostsAllow_T h;
++                                NEW(h);
++                                memcpy(&h->network, &sin->sin_addr, 4);
++                                h->mask = 0xffffffff;
++                                LOCK(mutex)
++                                {
++                                        if (_hasHostAllow(h))  {
++                                                DEBUG("Skipping redundant host '%s'\n", pattern);
++                                                FREE(h);
++                                        } else {
++                                                DEBUG("Adding host allow '%s'\n", pattern);
++                                                h->next = hostlist;
++                                                hostlist = h;
++                                                added++;
++                                        }
+                                 }
++                                END_LOCK;
+                         }
+-                        END_LOCK;
+                 }
++                freeaddrinfo(res);
+         }
+-        freeaddrinfo(res);
+         return added ? true : false;
+ }
+ 
+diff --git a/src/net.c b/src/net.c
+index 3426de3..55405a5 100644
+--- a/src/net.c
++++ b/src/net.c
+@@ -256,9 +256,8 @@ boolean_t check_host(const char *hostname) {
+ #endif
+         };
+         struct addrinfo *res;
+-        if (getaddrinfo(hostname, NULL, &hints, &res) != 0)
+-                return false;
+-        freeaddrinfo(res);
++        if (! getaddrinfo(hostname, NULL, &hints, &res))
++                freeaddrinfo(res);
+         return true;
+ }
+ 
+diff --git a/src/util.c b/src/util.c
+index b1a0bcd..cca27b2 100644
+--- a/src/util.c
++++ b/src/util.c
+@@ -1922,23 +1922,22 @@ int Util_getfqdnhostname(char *buf, unsigned len) {
+         snprintf(buf, len, "%s", hostname);
+ 
+         // Try to look for FQDN hostname
+-        struct addrinfo *result, hints = {
++        struct addrinfo *result = NULL, hints = {
+                 .ai_family = AF_UNSPEC,
+                 .ai_flags = AI_CANONNAME,
+                 .ai_socktype = SOCK_STREAM
+         };
+-        if ((status = getaddrinfo(hostname, NULL, &hints, &result))) {
+-                LogError("Cannot translate '%s' to FQDN name -- %s\n", hostname, status == EAI_SYSTEM ? STRERROR : gai_strerror(status));
+-        } else {
++        if (! (status = getaddrinfo(hostname, NULL, &hints, &result))) {
+                 for (struct addrinfo *r = result; r; r = r->ai_next) {
+                         if (Str_startsWith(r->ai_canonname, hostname)) {
+                                 snprintf(buf, len, "%s", r->ai_canonname);
+                                 break;
+                         }
+                 }
+-        }
+-        if (result)
+                 freeaddrinfo(result);
++        } else {
++                LogError("Cannot translate '%s' to FQDN name -- %s\n", hostname, status == EAI_SYSTEM ? STRERROR : gai_strerror(status));
++        }
+         return 0;
+ }
+ 
+-- 
+2.1.1
+From 23fc19a034d39196fa462d599037ae52f3e51ba7 Mon Sep 17 00:00:00 2001
+From: tildeslash <info@tildeslash.com>
+Date: Fri, 27 Feb 2015 08:52:47 +0100
+Subject: [PATCH] Fixed: Monit skipped the connection tests if no start program
+ was defined.
+
+---
+ CHANGES        | 2 ++
+ libmonit       | 2 +-
+ src/validate.c | 8 ++++----
+ 3 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/src/validate.c b/src/validate.c
+index f506e9a..9432289 100644
+--- a/src/validate.c
++++ b/src/validate.c
+@@ -1027,14 +1027,14 @@ boolean_t check_process(Service_T s) {
+                 }
+         }
+         if (s->portlist) {
+-                /* pause port tests int the start timeout timeframe while the process is starting (it may take some time to the process before it starts accepting connections) */
+-                if (s->start && s->inf->priv.process.uptime > s->start->timeout)
++                /* pause port tests in the start timeout timeframe while the process is starting (it may take some time to the process before it starts accepting connections) */
++                if (! s->start || s->inf->priv.process.uptime > s->start->timeout)
+                         for (Port_T pp = s->portlist; pp; pp = pp->next)
+                                 check_connection(s, pp);
+         }
+         if (s->socketlist) {
+-                /* pause socket tests int the start timeout timeframe while the process is starting (it may take some time to the process before it starts accepting connections) */
+-                if (s->start && s->inf->priv.process.uptime > s->start->timeout)
++                /* pause socket tests in the start timeout timeframe while the process is starting (it may take some time to the process before it starts accepting connections) */
++                if (! s->start || s->inf->priv.process.uptime > s->start->timeout)
+                         for (Port_T pp = s->socketlist; pp; pp = pp->next)
+                                 check_connection(s, pp);
+         }
+-- 
+2.1.1
+From 803d731da2232ab15b8aca18bb8d974567f0922e Mon Sep 17 00:00:00 2001
+From: tildeslash <info@tildeslash.com>
+Date: Fri, 27 Feb 2015 12:17:37 +0100
+Subject: [PATCH] fix
+
+---
+ libmonit  | 2 +-
+ src/net.c | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/net.c b/src/net.c
+index 55405a5..ac1fd58 100644
+--- a/src/net.c
++++ b/src/net.c
+@@ -256,8 +256,10 @@ boolean_t check_host(const char *hostname) {
+ #endif
+         };
+         struct addrinfo *res;
+-        if (! getaddrinfo(hostname, NULL, &hints, &res))
++        if (! getaddrinfo(hostname, NULL, &hints, &res)) {
+                 freeaddrinfo(res);
++                return false;
++        }
+         return true;
+ }
+ 
+-- 
+2.1.1
+From 1d27f53fcb3534e286b58cd54d2d2e5a0bf75762 Mon Sep 17 00:00:00 2001
+From: tildeslash <info@tildeslash.com>
+Date: Fri, 27 Feb 2015 12:22:13 +0100
+Subject: [PATCH] fix
+
+---
+ src/net.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/net.c b/src/net.c
+index ac1fd58..823c744 100644
+--- a/src/net.c
++++ b/src/net.c
+@@ -256,11 +256,11 @@ boolean_t check_host(const char *hostname) {
+ #endif
+         };
+         struct addrinfo *res;
+-        if (! getaddrinfo(hostname, NULL, &hints, &res)) {
++        if (getaddrinfo(hostname, NULL, &hints, &res) == 0) {
+                 freeaddrinfo(res);
+-                return false;
++                return true;
+         }
+-        return true;
++        return false;
+ }
+ 
+ 
+-- 
+2.1.1
