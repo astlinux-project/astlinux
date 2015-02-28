@@ -723,11 +723,11 @@ if ($daemon['ntpd'] > 0) {
 
 if ($daemon['miniupnpd'] > 0) {
   if (getPREFdef($global_prefs, 'status_show_miniupnpd_leases') !== 'no') { // currently not set in the Prefs tab
-    putHtml("<h2>Universal Plug'n'Play (NAT-PMP and UPnP) Leases:</h2>");
+    putHtml("<h2>Universal Plug'n'Play (NAT-PMP/PCP and UPnP) Leases:</h2>");
   
     if (is_null($upnp = parseMINIUPNPDleases($MINIUPNPDLEASES))) {
       putHtml("<pre>");
-      putText('No Active NAT-PMP or UPnP Leases');
+      putText('No Active NAT-PMP/PCP or UPnP Leases');
       putHtml("</pre>");
     } else {
       putHtml('<pre><table class="statusdatatable">');

@@ -114,9 +114,9 @@ $select_ups_driver = array (
 
 $select_upnp = array (
   'disabled' => 'no:no',
-  'NAT-PMP only' => 'yes:no',
+  'NAT-PMP/PCP only' => 'yes:no',
   'UPnP only' => 'no:yes',
-  'NAT-PMP &amp; UPnP' => 'yes:yes'
+  'NAT-PMP/PCP &amp; UPnP' => 'yes:yes'
 );
 
 // Function: checkNETWORKsettings
@@ -441,7 +441,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $x_value = $_POST['upnp'];
   $tokens = explode(':', $x_value);
   $value = 'UPNP_ENABLE_NATPMP="'.$tokens[0].'"';
-  fwrite($fp, "### UPnP NAT-PMP\n".$value."\n");
+  fwrite($fp, "### UPnP NAT-PMP/PCP\n".$value."\n");
   $value = 'UPNP_ENABLE_UPNP="'.$tokens[1].'"';
   fwrite($fp, "### UPnP Enable\n".$value."\n");
 
@@ -1148,9 +1148,9 @@ require_once '../common/header.php';
       case 1:
       case 2:
       case 3:
-        alert('WARNING: Enabling either NAT-PMP or UPnP has security implications!\
+        alert('WARNING: Enabling either NAT-PMP/PCP or UPnP has security implications!\
 \n\nNAT EXT->LAN rules can be created automatically.\
-\n\nIf you must, try NAT-PMP only.');
+\n\nIf you must, try NAT-PMP/PCP only.');
         break;
     }
   }
