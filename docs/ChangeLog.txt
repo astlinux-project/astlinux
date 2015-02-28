@@ -32,6 +32,8 @@ Released **TBD**
 
 -- netsnmp, version bump to 5.7.3, security fix: CVE-2014-2285
 
+-- miniupnpd, version bump to 1.9.20141209, adds 'Port Control Protocol' NAT-PMP/PCP support.
+
 -- (Custom Build Only) kamailio, version bump to 4.1.8
 
 ** Asterisk
@@ -43,6 +45,8 @@ Released **TBD**
 ** Web Interface
 
 -- Prefs and System tab, set default "Repository URL" to use Asterisk 13 if installed.
+
+-- Status and Network tab, change NAT-PMP to NAT-PMP/PCP labels adding 'Port Control Protocol' support.
 
 
 Additions for AstLinux 1.2.2:
