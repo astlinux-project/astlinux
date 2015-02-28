@@ -158,7 +158,9 @@ ext_ifname=$EXTIF" > $MINIUPNPD_CONF
     return
   fi
 
-  echo "port=5000
+  astlinux_release="$(cat /etc/astlinux-release)"
+
+  echo "http_port=5000
 enable_natpmp=$UPNP_ENABLE_NATPMP
 enable_upnp=$UPNP_ENABLE_UPNP
 lease_file=$MINIUPNPD_LEASEFILE
@@ -170,7 +172,10 @@ notify_interval=60
 clean_ruleset_interval=600
 uuid=$UUID
 serial=000001
-model_number=$(cat /etc/astlinux-release)" >> $MINIUPNPD_CONF
+friendly_name=AstLinux Router
+model_name=AstLinux Router
+model_description=$astlinux_release
+model_number=$astlinux_release" >> $MINIUPNPD_CONF
   if [ -n "$UPNP_ALLOW" ]; then
     upnp_allow >> $MINIUPNPD_CONF
   else
