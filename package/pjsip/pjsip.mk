@@ -23,4 +23,11 @@ PJSIP_CONF_OPT = \
 	--disable-video \
 	--disable-opencore-amr
 
+ifeq ($(BR2_PACKAGE_OPENSSL),y)
+PJSIP_CONF_OPT += --with-ssl=$(STAGING_DIR)/usr
+PJSIP_DEPENDENCIES += openssl
+else
+PJSIP_CONF_OPT += --disable-ssl
+endif
+
 $(eval $(call AUTOTARGETS,package,pjsip))
