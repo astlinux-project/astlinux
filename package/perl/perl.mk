@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PERL_VERSION_MAJOR = 18
+PERL_VERSION_MAJOR = 20
 PERL_VERSION = 5.$(PERL_VERSION_MAJOR).2
 PERL_SITE = http://www.cpan.org/src/5.0
 PERL_SOURCE = perl-$(PERL_VERSION).tar.bz2
@@ -12,13 +12,14 @@ PERL_INSTALL_STAGING = YES
 # Depend on linux to define LINUX_VERSION_PROBED
 PERL_DEPENDENCIES = linux
 
-PERL_MODULES = constant Carp Errno Fcntl Cwd POSIX Digest Socket IO XSLoader
-PERL_MODULES += Digest/MD5 Digest/SHA Getopt/Std Getopt/Long Time/Local File/Glob Sys/Hostname
+PERL_MODULES = constant version Carp Errno Fcntl PathTools POSIX Digest Socket IO XSLoader Exporter File-Find
+PERL_MODULES += Digest/MD5 Digest/SHA Getopt/Long Time/Local File/Glob Sys/Hostname
 
-PERL_CROSS_VERSION = 0.8.5
+PERL_CROSS_VERSION = 0.9.5
 PERL_CROSS_BASE_VERSION = 5.$(PERL_VERSION_MAJOR).2
-PERL_CROSS_SITE    = https://raw.github.com/arsv/perl-cross/releases
-PERL_CROSS_SOURCE  = perl-$(PERL_CROSS_BASE_VERSION)-cross-$(PERL_CROSS_VERSION).tar.gz
+#PERL_CROSS_SITE = http://raw.github.com/arsv/perl-cross/releases
+PERL_CROSS_SITE = http://files.astlinux.org
+PERL_CROSS_SOURCE = perl-$(PERL_CROSS_BASE_VERSION)-cross-$(PERL_CROSS_VERSION).tar.gz
 
 # We use the perlcross hack to cross-compile perl. It should
 # be extracted over the perl sources, so we don't define that
@@ -37,7 +38,7 @@ endef
 PERL_POST_EXTRACT_HOOKS += PERL_CROSS_EXTRACT
 
 ifeq ($(BR2_PACKAGE_BERKELEYDB),y)
-    PERL_DEPENDENCIES += berkeleydb
+PERL_DEPENDENCIES += berkeleydb
 endif
 
 # We have to override LD, because an external multilib toolchain ld is not
@@ -60,11 +61,11 @@ PERL_CONF_OPT = \
 	-Dperladmin=root
 
 ifeq ($(shell expr $(PERL_VERSION_MAJOR) % 2), 1)
-    PERL_CONF_OPT += -Dusedevel
+PERL_CONF_OPT += -Dusedevel
 endif
 
 ifneq ($(BR2_LARGEFILE),y)
-    PERL_CONF_OPT += -Uuselargefiles
+PERL_CONF_OPT += -Uuselargefiles
 endif
 
 ifneq ($(PERL_MODULES),)
@@ -74,6 +75,7 @@ endif
 define PERL_CONFIGURE_CMDS
 	(cd $(@D); HOSTCC='$(HOSTCC_NOCACHE)' ./configure $(PERL_CONF_OPT))
 	$(SED) 's/UNKNOWN-/Buildroot $(BR2_VERSION_FULL) /' $(@D)/patchlevel.h
+	touch $(@D)/x2p/a2p.c # prevents regen by yacc
 endef
 
 define PERL_BUILD_CMDS
@@ -84,20 +86,16 @@ define PERL_INSTALL_STAGING_CMDS
 	$(MAKE1) -C $(@D) DESTDIR="$(STAGING_DIR)" install.perl
 endef
 
-PERL_INSTALL_TARGET_GOALS = install.perl
-ifeq ($(BR2_HAVE_DOCUMENTATION),y)
-PERL_INSTALL_TARGET_GOALS += install.man
-endif
-
-
 define PERL_INSTALL_TARGET_CMDS
-	$(MAKE1) -C $(@D) DESTDIR="$(TARGET_DIR)" $(PERL_INSTALL_TARGET_GOALS)
+	$(MAKE1) -C $(@D) DESTDIR="$(TARGET_DIR)" install.perl
 	# Remove all .pod files
-	find $(TARGET_DIR)/usr/lib/perl5/ -name "*.pod" -print0 | xargs -0 rm -f
+	find $(TARGET_DIR)/usr/lib/perl5/ -name '*.pod' -print0 | xargs -0 rm -f
 	# Remove many unicore files
 	rm -rf $(TARGET_DIR)/usr/lib/perl5/$(PERL_VERSION)/unicore/lib/
 	rm -rf $(TARGET_DIR)/usr/lib/perl5/$(PERL_VERSION)/unicore/To/
 	rm -f $(TARGET_DIR)/usr/lib/perl5/$(PERL_VERSION)/unicore/Name.pl
+	# Remove misc files
+	find $(TARGET_DIR)/usr/lib/perl5/ -name '.packlist' -print0 | xargs -0 rm -f
 	#
 	ln -sf perl$(PERL_VERSION) $(TARGET_DIR)/usr/bin/perl
 endef
