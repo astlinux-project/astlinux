@@ -15,7 +15,7 @@ PERL_DEPENDENCIES = linux
 PERL_MODULES = constant version Carp Errno Fcntl PathTools POSIX Digest Socket IO XSLoader Exporter File-Find
 PERL_MODULES += Digest/MD5 Digest/SHA Getopt/Long Time/Local File/Glob Sys/Hostname
 
-PERL_CROSS_VERSION = 0.9.5
+PERL_CROSS_VERSION = 0.9.6
 PERL_CROSS_BASE_VERSION = 5.$(PERL_VERSION_MAJOR).2
 #PERL_CROSS_SITE = http://raw.github.com/arsv/perl-cross/releases
 PERL_CROSS_SITE = http://files.astlinux.org
@@ -75,7 +75,6 @@ endif
 define PERL_CONFIGURE_CMDS
 	(cd $(@D); HOSTCC='$(HOSTCC_NOCACHE)' ./configure $(PERL_CONF_OPT))
 	$(SED) 's/UNKNOWN-/Buildroot $(BR2_VERSION_FULL) /' $(@D)/patchlevel.h
-	touch $(@D)/x2p/a2p.c # prevents regen by yacc
 endef
 
 define PERL_BUILD_CMDS
