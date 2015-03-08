@@ -12,13 +12,19 @@ Released **TBD**
 
 ** System
 
+-- igb, version 5.2.17, Intel Gigabit Ethernet Network Driver
+
 -- php, version bump to 5.5.22, major version change, bug and security fixes
+
+-- perl, version bump to 5.20.2 using perlcross 0.9.5
 
 -- sudo, version bump to 1.8.12, security fix: CVE-2014-9680
 
 -- e2fsprogs, security fix: CVE-2015-1572
 
 -- Monit, version bump to 5.12, added IPv6 support
+
+-- sox, version bump to 14.4.2
 
 -- logrotate, version bump to 3.8.7
 
@@ -34,6 +40,8 @@ Released **TBD**
 
 -- miniupnpd, version bump to 1.9.20141209, adds 'Port Control Protocol' NAT-PMP/PCP support.
 
+-- libcurl (curl) version bump to 7.41.0
+
 -- (Custom Build Only) kamailio, version bump to 4.1.8
 
 ** Asterisk
@@ -41,6 +49,8 @@ Released **TBD**
 -- Asterisk 1.8.32.2 (no change), 11.16.0 (version bump) and 13.2.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
+
+-- pjsip 2.3 (no change), but now built with proper SSL/TLS suport.
 
 ** Web Interface
 
