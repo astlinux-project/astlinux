@@ -16,13 +16,13 @@ Released **TBD**
 
 -- php, version bump to 5.5.22, major version change, bug and security fixes
 
--- perl, version bump to 5.20.2 using perlcross 0.9.5
+-- perl, version bump to 5.20.2 using perlcross 0.9.6
 
 -- sudo, version bump to 1.8.12, security fix: CVE-2014-9680
 
 -- e2fsprogs, security fix: CVE-2015-1572
 
--- Monit, version bump to 5.12, added IPv6 support
+-- Monit, version bump to 5.12.1, added IPv6 support
 
 -- sox, version bump to 14.4.2
 
