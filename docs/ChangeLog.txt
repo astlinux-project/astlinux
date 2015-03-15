@@ -38,7 +38,11 @@ Released **TBD**
 
 -- netsnmp, version bump to 5.7.3, security fix: CVE-2014-2285
 
+-- vsftpd, add security fix: CVE-2015-1419 and fix segfault with incorrect password.
+
 -- miniupnpd, version bump to 1.9.20141209, adds 'Port Control Protocol' NAT-PMP/PCP support.
+
+-- libpcap / tcpdump, version bump to 1.7.2 / 4.7.3, security and build fixes.
 
 -- libcurl (curl) version bump to 7.41.0
 
