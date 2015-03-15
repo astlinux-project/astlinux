@@ -1,0 +1,22 @@
+Ref: http://forums.gentoo.org/viewtopic-p-7582662.html
+
+--- vsftpd-3.0.2/sysdeputil.c.orig	2015-03-15 10:37:45.000000000 -0500
++++ vsftpd-3.0.2/sysdeputil.c	2015-03-15 10:47:08.000000000 -0500
+@@ -285,7 +285,7 @@
+         return 0;
+       }
+       p_crypted = crypt(str_getbuf(p_pass_str), p_spwd->sp_pwdp);
+-      if (!vsf_sysutil_strcmp(p_crypted, p_spwd->sp_pwdp))
++      if (p_crypted != NULL && !vsf_sysutil_strcmp(p_crypted, p_spwd->sp_pwdp))
+       {
+         return 1;
+       }
+@@ -293,7 +293,7 @@
+   }
+   #endif /* VSF_SYSDEP_HAVE_SHADOW */
+   p_crypted = crypt(str_getbuf(p_pass_str), p_pwd->pw_passwd);
+-  if (!vsf_sysutil_strcmp(p_crypted, p_pwd->pw_passwd))
++  if (p_crypted != NULL && !vsf_sysutil_strcmp(p_crypted, p_pwd->pw_passwd))
+   {
+     return 1;
+   }
