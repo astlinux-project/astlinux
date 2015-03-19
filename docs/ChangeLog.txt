@@ -34,6 +34,9 @@ Released **TBD**
 
 ** Networking
 
+-- OpenSSL, version bump to 1.0.1m, security fixes: CVE-2015-0286, CVE-2015-0287, CVE-2015-0289, CVE-2015-0292,
+                                                    CVE-2015-0293, CVE-2015-0209, CVE-2015-0288
+
 -- ntpd/sntp, version bump to 4.2.8p1, security fixes: CVE-2014-9297 and CVE-2014-9298
 
 -- netsnmp, version bump to 5.7.3, security fix: CVE-2014-2285
