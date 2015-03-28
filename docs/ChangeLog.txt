@@ -18,7 +18,7 @@ Released **TBD**
 
 -- perl, version bump to 5.20.2 using perlcross 0.9.6
 
--- sudo, version bump to 1.8.12, security fix: CVE-2014-9680
+-- sudo, version bump to 1.8.13, security fix: CVE-2014-9680
 
 -- e2fsprogs, security fix: CVE-2015-1572
 
@@ -27,6 +27,8 @@ Released **TBD**
 -- zabbix, version bump to 2.2.9
 
 -- sox, version bump to 14.4.2
+
+-- nano, version bump to 2.4.0
 
 -- logrotate, version bump to 3.8.7
 
@@ -38,6 +40,8 @@ Released **TBD**
 
 -- OpenSSL, version bump to 1.0.1m, security fixes: CVE-2015-0286, CVE-2015-0287, CVE-2015-0289, CVE-2015-0292,
                                                     CVE-2015-0293, CVE-2015-0209, CVE-2015-0288
+
+-- prosody, version bump to 0.9.8, security fix: CVE-2015-2059
 
 -- ntpd/sntp, version bump to 4.2.8p1, security fixes: CVE-2014-9297 and CVE-2014-9298
 
