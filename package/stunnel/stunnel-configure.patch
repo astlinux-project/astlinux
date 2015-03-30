@@ -1,6 +1,6 @@
 --- stunnel-5.01/configure.ac.orig	2014-04-11 10:43:39.000000000 -0500
 +++ stunnel-5.01/configure.ac	2014-04-11 10:49:05.000000000 -0500
-@@ -115,7 +115,8 @@
+@@ -110,7 +110,8 @@
      AC_CHECK_FILE("/dev/ptc", AC_DEFINE([HAVE_DEV_PTS_AND_PTC], [1],
          [Define to 1 if you have '/dev/ptc' device.]))
  else
@@ -10,7 +10,7 @@
  fi
  
  AC_MSG_NOTICE([**************************************** entropy sources])
-@@ -143,7 +144,9 @@
+@@ -139,7 +140,9 @@
          AC_DEFINE_UNQUOTED([RANDOM_FILE], ["$RANDOM_FILE"], [Random file path])
      fi
  else
