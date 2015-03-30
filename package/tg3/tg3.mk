@@ -4,7 +4,7 @@
 #
 #############################################################
 
-TG3_VERSION = 3.136h
+TG3_VERSION = 3.137h
 TG3_SOURCE:=tg3-$(TG3_VERSION).tar.gz
 TG3_SITE = http://files.astlinux.org
 TG3_DEPENDENCIES = linux
