@@ -14,6 +14,8 @@ Released **TBD**
 
 -- igb, version 5.2.17, Intel Gigabit Ethernet Network Driver
 
+-- tg3, version bump to 3.137h, Broadcom NetLink 10/100/1000 Mbps PCI/PCI-X/PCI Express Ethernet Linux driver
+
 -- php, version bump to 5.5.23, major version change, bug and security fixes
 
 -- perl, version bump to 5.20.2 using perlcross 0.9.6
