@@ -46,7 +46,7 @@
  		ast_free(vmu->emailbody);
  		vmu->emailbody = NULL;
  
-@@ -2545,7 +2552,7 @@
+@@ -2571,7 +2578,7 @@
  		 * of this function, we will revert back to an empty string if tempcopy
  		 * is 1.
  		 */
@@ -55,7 +55,7 @@
  		tempcopy = 1;
  	}
  
-@@ -2557,8 +2564,10 @@
+@@ -2583,8 +2590,10 @@
  	   command hangs. */
  	if (!(p = vm_mkftemp(tmp))) {
  		ast_log(AST_LOG_WARNING, "Unable to store '%s' (can't create temporary file)\n", fn);
@@ -68,7 +68,7 @@
  		return -1;
  	}
  
-@@ -4903,6 +4912,9 @@
+@@ -4929,6 +4938,9 @@
  	struct ast_str *str1 = ast_str_create(16), *str2 = ast_str_create(16);
  	char *greeting_attachment; 
  	char filename[256];
@@ -78,7 +78,7 @@
  
  	if (!str1 || !str2) {
  		ast_free(str1);
-@@ -4944,7 +4956,7 @@
+@@ -4970,7 +4982,7 @@
  			ast_str_substitute_variables(&str1, 0, ast, fromstring);
  
  			if (check_mime(ast_str_buffer(str1))) {
@@ -87,7 +87,7 @@
  				ast_str_encode_mime(&str2, 0, ast_str_buffer(str1), strlen("From: "), strlen(who) + 3);
  				while ((ptr = strchr(ast_str_buffer(str2), ' '))) {
  					*ptr = '\0';
-@@ -4965,20 +4977,25 @@
+@@ -4991,20 +5003,25 @@
  		fprintf(p, "From: Asterisk PBX <%s>" ENDL, who);
  	}
  
@@ -126,7 +126,7 @@
  	}
  
  	if (!ast_strlen_zero(emailsubject) || !ast_strlen_zero(vmu->emailsubject)) {
-@@ -4988,7 +5005,7 @@
+@@ -5014,7 +5031,7 @@
  			prep_email_sub_vars(ast, vmu, msgnum + 1, context, mailbox, fromfolder, cidnum, cidname, dur, date, category, flag);
  			ast_str_substitute_variables(&str1, 0, ast, e_subj);
  			if (check_mime(ast_str_buffer(str1))) {
@@ -135,7 +135,7 @@
  				char *ptr;
  				ast_str_encode_mime(&str2, 0, ast_str_buffer(str1), strlen("Subject: "), 0);
  				while ((ptr = strchr(ast_str_buffer(str2), ' '))) {
-@@ -11740,7 +11757,7 @@
+@@ -11766,7 +11783,7 @@
  		ast_copy_string(vmu->fullname, s, sizeof(vmu->fullname));
  	}
  	if (stringp && (s = strsep(&stringp, ","))) {
@@ -144,7 +144,7 @@
  	}
  	if (stringp && (s = strsep(&stringp, ","))) {
  		ast_copy_string(vmu->pager, s, sizeof(vmu->pager));
-@@ -14009,7 +14026,7 @@
+@@ -14035,7 +14052,7 @@
  	}
  
  	populate_defaults(vmu);
