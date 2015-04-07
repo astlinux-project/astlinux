@@ -38,6 +38,8 @@ Released **TBD**
    or the rc.conf variable KERNEL_SYSCTL, disabled by default.
    Example: KERNEL_SYSCTL="kernel.panic=3 vm.min_free_kbytes=8192"
 
+-- Time Zone Database update, tzdata2015b and tzcode2015b
+
 ** Networking
 
 -- OpenSSL, version bump to 1.0.1m, security fixes: CVE-2015-0286, CVE-2015-0287, CVE-2015-0289, CVE-2015-0292,
@@ -45,7 +47,7 @@ Released **TBD**
 
 -- prosody, version bump to 0.9.8, security fix: CVE-2015-2059
 
--- ntpd/sntp, version bump to 4.2.8p1, security fixes: CVE-2014-9297 and CVE-2014-9298
+-- ntpd/sntp, version bump to 4.2.8p2, security fixes: CVE-2014-9297, CVE-2014-9298, CVE-2015-1798, CVE-2015-1799
 
 -- netsnmp, version bump to 5.7.3, security fix: CVE-2014-2285
 
