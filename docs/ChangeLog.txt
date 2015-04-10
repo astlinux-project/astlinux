@@ -34,6 +34,8 @@ Released **TBD**
 
 -- logrotate, version bump to 3.8.7
 
+-- pciutils, version bump to 3.3.1
+
 -- Kernel runtime parameters, add support for /etc/sysctl.conf via either /mnt/kd/sysctl.conf
    or the rc.conf variable KERNEL_SYSCTL, disabled by default.
    Example: KERNEL_SYSCTL="kernel.panic=3 vm.min_free_kbytes=8192"
