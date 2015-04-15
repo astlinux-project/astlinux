@@ -36,6 +36,10 @@ Released **TBD**
 
 -- pciutils, version bump to 3.3.1
 
+-- sqlite, version bump to 3.8.9
+
+-- sqliteodbc, version bump to 0.9992
+
 -- Kernel runtime parameters, add support for /etc/sysctl.conf via either /mnt/kd/sysctl.conf
    or the rc.conf variable KERNEL_SYSCTL, disabled by default.
    Example: KERNEL_SYSCTL="kernel.panic=3 vm.min_free_kbytes=8192"
@@ -54,6 +58,8 @@ Released **TBD**
 -- netsnmp, version bump to 5.7.3, security fix: CVE-2014-2285
 
 -- vsftpd, add security fix: CVE-2015-1419 and fix segfault with incorrect password.
+
+-- dnsmasq, add upstream security fix.
 
 -- miniupnpd, version bump to 1.9.20141209, adds 'Port Control Protocol' NAT-PMP/PCP support.
 
