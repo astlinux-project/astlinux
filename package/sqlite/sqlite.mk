@@ -4,17 +4,14 @@
 #
 #############################################################
 
-SQLITE_VERSION = 3080704
+SQLITE_VERSION = 3080900
 SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VERSION).tar.gz
-SQLITE_SITE = http://www.sqlite.org/2014
+SQLITE_SITE = http://www.sqlite.org/2015
 SQLITE_INSTALL_STAGING = YES
 
-ifneq ($(BR2_LARGEFILE),y)
-# the sqlite configure script fails to define SQLITE_DISABLE_LFS when
-# --disable-largefile is passed, breaking the build. Work around it by
-# simply adding it to CFLAGS for configure instead
-SQLITE_CONF_ENV = CFLAGS="$(TARGET_CFLAGS) -DSQLITE_DISABLE_LFS"
-endif
+SQLITE_CFLAGS += -DSQLITE_ENABLE_COLUMN_METADATA
+
+SQLITE_CONF_ENV = CFLAGS="$(TARGET_CFLAGS) $(SQLITE_CFLAGS)"
 
 SQLITE_CONF_OPT = \
 	--enable-threadsafe \
