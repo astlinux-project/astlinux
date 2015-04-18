@@ -7,7 +7,7 @@ Signed-off-by: Gustavo Zacarias <gustavo@zacarias.com.ar>
 diff -Nura php-5.5.8.orig/configure php-5.5.8/configure
 --- php-5.5.8.orig/configure	2014-01-28 17:41:33.943851727 -0300
 +++ php-5.5.8/configure	2014-01-28 17:42:53.785493795 -0300
-@@ -17153,7 +17153,6 @@
+@@ -17156,7 +17156,6 @@
  
  
  
@@ -15,7 +15,7 @@ diff -Nura php-5.5.8.orig/configure php-5.5.8/configure
    unset ac_cv_func___dlopen
    unset found
  
-@@ -17181,7 +17180,6 @@
+@@ -17184,7 +17183,6 @@
  
      *)
  

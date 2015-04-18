@@ -12,7 +12,7 @@ Signed-off-by: Gustavo Zacarias <gustavo@zacarias.com.ar>
 diff -Nura php-5.5.11.orig/configure php-5.5.11/configure
 --- php-5.5.11.orig/configure	2014-04-16 14:55:52.300838499 -0300
 +++ php-5.5.11/configure	2014-04-22 21:54:01.499097295 -0300
-@@ -45929,12 +45929,6 @@
+@@ -45943,12 +45943,6 @@
    if test -n "$unique" && test "`eval $cmd`" = "" ; then
      eval "INCLUDEPATH$unique=set"
  
@@ -25,7 +25,7 @@ diff -Nura php-5.5.11.orig/configure php-5.5.11/configure
    fi
  
    fi
-@@ -45964,14 +45958,7 @@
+@@ -45978,14 +45972,7 @@
        PHP_ICONV_PREFIX="$ICONV_DIR"
      fi
  
@@ -41,7 +41,7 @@ diff -Nura php-5.5.11.orig/configure php-5.5.11/configure
  
      { $as_echo "$as_me:${as_lineno-$LINENO}: checking if iconv is glibc's" >&5
  $as_echo_n "checking if iconv is glibc's... " >&6; }
-@@ -46369,8 +46356,6 @@
+@@ -46383,8 +46370,6 @@
    ext_builddir=ext/iconv
    ext_srcdir=$abs_srcdir/ext/iconv
  
@@ -50,7 +50,7 @@ diff -Nura php-5.5.11.orig/configure php-5.5.11/configure
    if test "$ext_shared" != "shared" && test "$ext_shared" != "yes" && test "" != "cli"; then
      PHP_ICONV_SHARED=no
  
-@@ -97595,12 +97580,6 @@
+@@ -97712,12 +97697,6 @@
    if test -n "$unique" && test "`eval $cmd`" = "" ; then
      eval "INCLUDEPATH$unique=set"
  
