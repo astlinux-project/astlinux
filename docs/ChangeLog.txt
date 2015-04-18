@@ -16,7 +16,7 @@ Released **TBD**
 
 -- tg3, version bump to 3.137h, Broadcom NetLink 10/100/1000 Mbps PCI/PCI-X/PCI Express Ethernet Linux driver
 
--- php, version bump to 5.5.23, major version change, bug and security fixes
+-- php, version bump to 5.5.24, major version change, bug and security fixes
 
 -- perl, version bump to 5.20.2 using perlcross 0.9.6
 
@@ -30,7 +30,7 @@ Released **TBD**
 
 -- sox, version bump to 14.4.2
 
--- nano, version bump to 2.4.0
+-- nano, version bump to 2.4.1
 
 -- logrotate, version bump to 3.8.7
 
@@ -59,7 +59,7 @@ Released **TBD**
 
 -- vsftpd, add security fix: CVE-2015-1419 and fix segfault with incorrect password.
 
--- dnsmasq, add upstream security fix.
+-- dnsmasq, add upstream security fix: CVE-2015-3294
 
 -- miniupnpd, version bump to 1.9.20141209, adds 'Port Control Protocol' NAT-PMP/PCP support.
 
