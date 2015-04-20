@@ -79,6 +79,8 @@ Released **TBD**
 
 -- pjsip 2.3 (no change), but now built with proper SSL/TLS suport.
 
+-- wanpipe, version bump to 7.0.14
+
 ** Web Interface
 
 -- Prefs and System tab, set default "Repository URL" to use Asterisk 13 if installed.
