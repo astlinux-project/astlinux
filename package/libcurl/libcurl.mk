@@ -3,7 +3,7 @@
 # libcurl
 #
 #############################################################
-LIBCURL_VERSION = 7.41.0
+LIBCURL_VERSION = 7.42.0
 LIBCURL_SOURCE = curl-$(LIBCURL_VERSION).tar.gz
 LIBCURL_SITE = http://curl.haxx.se/download
 LIBCURL_INSTALL_STAGING = YES
@@ -17,6 +17,7 @@ LIBCURL_CONF_OPT = \
 	--disable-verbose \
 	--disable-manual \
 	--disable-ntlm-wb \
+	--disable-curldebug \
 	--enable-hidden-symbols \
 	--with-random=/dev/urandom \
 	--enable-ipv6
