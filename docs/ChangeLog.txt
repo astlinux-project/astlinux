@@ -71,6 +71,8 @@ Released **TBD**
 
 -- stunnel, version bump to 5.16
 
+-- msmtp, version bump to 1.6.2
+
 -- (Custom Build Only) kamailio, version bump to 4.1.8
 
 ** Asterisk
