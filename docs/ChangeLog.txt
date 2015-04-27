@@ -42,6 +42,8 @@ Released **TBD**
 
 -- nut, version bump to 2.7.3
 
+-- libsrtp, version bump to 1.5.2
+
 -- Kernel runtime parameters, add support for /etc/sysctl.conf via either /mnt/kd/sysctl.conf
    or the rc.conf variable KERNEL_SYSCTL, disabled by default.
    Example: KERNEL_SYSCTL="kernel.panic=3 vm.min_free_kbytes=8192"
