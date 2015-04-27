@@ -7,6 +7,13 @@
 SMARTMONTOOLS_VERSION = 6.3
 SMARTMONTOOLS_SITE = http://downloads.sourceforge.net/project/smartmontools/smartmontools/$(SMARTMONTOOLS_VERSION)
 
+define SMARTMONTOOLS_LATEST_DRIVEDB
+	# Upstream Drive DB: http://svn.code.sf.net/p/smartmontools/code/trunk/smartmontools/drivedb.h
+	# Install local snapshot
+	cp package/smartmontools/drivedb.h $(@D)/drivedb.h
+endef
+SMARTMONTOOLS_POST_EXTRACT_HOOKS += SMARTMONTOOLS_LATEST_DRIVEDB
+
 define SMARTMONTOOLS_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/smartctl $(TARGET_DIR)/usr/sbin/smartctl
 	$(INSTALL) -m 0755 -D package/smartmontools/smart-status.sh $(TARGET_DIR)/usr/sbin/smart-status
