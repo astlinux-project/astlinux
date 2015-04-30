@@ -4,14 +4,21 @@
 #
 #############################################################
 
-PCRE_VERSION = 8.36
-PCRE_SITE = ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre
+PCRE_VERSION = 8.37
+PCRE_SITE = http://downloads.sourceforge.net/project/pcre/pcre/$(PCRE_VERSION)
+PCRE_SOURCE = pcre-$(PCRE_VERSION).tar.bz2
 PCRE_INSTALL_STAGING = YES
 
 ifneq ($(BR2_INSTALL_LIBSTDCPP),y)
 # pcre will use the host g++ if a cross version isn't available
 PCRE_CONF_OPT = --disable-cpp
 endif
+
+PCRE_CONF_OPT += --enable-pcre8
+PCRE_CONF_OPT += --disable-pcre16
+PCRE_CONF_OPT += --disable-pcre32
+PCRE_CONF_OPT += --disable-utf
+PCRE_CONF_OPT += --disable-unicode-properties
 
 define PCRE_STAGING_PCRE_CONFIG_FIXUP
 	$(SED) 's,^prefix=.*,prefix=$(STAGING_DIR)/usr,' \
@@ -20,11 +27,9 @@ define PCRE_STAGING_PCRE_CONFIG_FIXUP
 endef
 PCRE_POST_INSTALL_STAGING_HOOKS += PCRE_STAGING_PCRE_CONFIG_FIXUP
 
-ifneq ($(BR2_HAVE_DEVFILES),y)
 define PCRE_TARGET_REMOVE_PCRE_CONFIG
 	rm -f $(TARGET_DIR)/usr/bin/pcre-config
 endef
 PCRE_POST_INSTALL_TARGET_HOOKS += PCRE_TARGET_REMOVE_PCRE_CONFIG
-endif
 
 $(eval $(call AUTOTARGETS,package,pcre))
