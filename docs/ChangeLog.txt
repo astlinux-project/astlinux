@@ -20,6 +20,8 @@ Released **TBD**
 
 -- perl, version bump to 5.20.2 using perlcross 0.9.6
 
+-- pcre, version bump to 8.37, security fixes: CVE-2014-8964, CVE-2015-2325, CVE-2015-2326
+
 -- sudo, version bump to 1.8.13, security fix: CVE-2014-9680
 
 -- e2fsprogs, security fix: CVE-2015-1572
@@ -71,9 +73,9 @@ Released **TBD**
 
 -- libpcap / tcpdump, version bump to 1.7.2 / 4.7.3, security and build fixes.
 
--- libcurl (curl) version bump to 7.42.0, security fixes: CVE-2015-3144, CVE-2015-3145, CVE-2015-3148, CVE-2015-3143
+-- libcurl (curl) version bump to 7.42.1, security fixes: CVE-2015-3144, CVE-2015-3145, CVE-2015-3148, CVE-2015-3143, CVE-2015-3153
 
--- stunnel, version bump to 5.16
+-- stunnel, version bump to 5.17
 
 -- msmtp, version bump to 1.6.2
 
