@@ -26,7 +26,7 @@ Released **TBD**
 
 -- e2fsprogs, security fix: CVE-2015-1572
 
--- Monit, version bump to 5.12.2, added IPv6 support
+-- Monit, version bump to 5.13, added IPv6 support
 
 -- zabbix, version bump to 2.2.9
 
