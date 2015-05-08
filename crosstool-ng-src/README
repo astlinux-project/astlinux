@@ -26,8 +26,8 @@ cd ctng-1.20.0-3.2
 cp ~/astlinux/1.0/crosstool-ng-src/ct-ng-1.20.0-3.2.config .config
 # leave as configured, just look, don't make any changes
 ct-ng menuconfig
-# then install linux kernel for the header includes
-wget http://files.astlinux.org/linux-3.2.66.tar.gz
+# run shell script "crosstool-ng-src/get-files.sh" located in the SVN
+sh ~/astlinux/1.0/crosstool-ng-src/get-files.sh
 # finally, start the toolchain build process
 ct-ng build
 # takes 50-70 min.
