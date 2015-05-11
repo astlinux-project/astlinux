@@ -63,7 +63,7 @@ start () {
     if [ -n "$first" ]; then
 
       # Set the clock (large change)
-      if sntp $NTPAF -s -t4 $first; then
+      if sntp $NTPAF -S -t4 $first; then
         if [ -r /dev/rtc ]; then
           hwclock -wu --noadjfile 2>/dev/null
         fi
