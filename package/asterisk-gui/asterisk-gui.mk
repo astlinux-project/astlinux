@@ -80,7 +80,7 @@ asterisk-gui-source: $(ASTERISK_GUI_DIR)/.source
 asterisk-gui-unpack: $(ASTERISK_GUI_DIR)/.configured
 
 asterisk-gui-clean:
-	rm -rf $(TARGET_DIR)/stat/var/lib/asterisk/http-static
+	rm -rf $(TARGET_DIR)/stat/var/lib/asterisk/static-http/config
 	$(SED) "/^; Modified for use with asterisk-gui on AstLinux$$/,+3d" \
 	    -e 's/^enabled = yes$$/enabled = no/' \
 	    -e 's/^webenabled = yes$$/;webenabled = yes/' \
