@@ -92,6 +92,9 @@ Released **TBD**
 
 -- wanpipe, version bump to 7.0.14
 
+-- Asterisk-gui, removed for all Asterisk versions.
+   Digium: "Asterisk GUI is no longer maintained and should not be used" https://wiki.asterisk.org/wiki/display/AST/Asterisk+GUI
+
 ** Web Interface
 
 -- Prefs and System tab, set default "Repository URL" to use Asterisk 13 if installed.
