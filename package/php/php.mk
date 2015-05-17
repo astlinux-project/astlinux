@@ -61,68 +61,68 @@ PHP_CONF_OPT += \
 	$(if $(BR2_PACKAGE_PHP_EXT_CALENDAR),--enable-calendar)
 
 ifeq ($(BR2_PACKAGE_PHP_EXT_OPENSSL),y)
-	PHP_CONF_OPT += --with-openssl=$(STAGING_DIR)/usr
-	PHP_DEPENDENCIES += openssl
+PHP_CONF_OPT += --with-openssl=$(STAGING_DIR)/usr
+PHP_DEPENDENCIES += openssl
 endif
 
 ifeq ($(BR2_PACKAGE_PHP_EXT_CURL),y)
-	PHP_CONF_OPT += --with-curl=$(STAGING_DIR)/usr
-	PHP_DEPENDENCIES += libcurl
+PHP_CONF_OPT += --with-curl=$(STAGING_DIR)/usr
+PHP_DEPENDENCIES += libcurl
 endif
 
 ifeq ($(BR2_PACKAGE_PHP_EXT_LIBXML2),y)
-	PHP_CONF_ENV += php_cv_libxml_build_works=yes
-	PHP_CONF_OPT += --enable-libxml --with-libxml-dir=${STAGING_DIR}/usr --enable-dom
-	PHP_DEPENDENCIES += libxml2
+PHP_CONF_ENV += php_cv_libxml_build_works=yes
+PHP_CONF_OPT += --enable-libxml --with-libxml-dir=${STAGING_DIR}/usr --enable-dom
+PHP_DEPENDENCIES += libxml2
 endif
 
 ifeq ($(BR2_PACKAGE_PHP_EXT_ZLIB),y)
-	PHP_CONF_OPT += --with-zlib=$(STAGING_DIR)/usr
-	PHP_DEPENDENCIES += zlib
+PHP_CONF_OPT += --with-zlib=$(STAGING_DIR)/usr
+PHP_DEPENDENCIES += zlib
 endif
 
 ifeq ($(BR2_PACKAGE_PHP_EXT_GETTEXT),y)
-	PHP_CONF_OPT += --with-gettext=$(STAGING_DIR)/usr
-	PHP_DEPENDENCIES += $(if $(BR2_NEEDS_GETTEXT),gettext)
+PHP_CONF_OPT += --with-gettext=$(STAGING_DIR)/usr
+PHP_DEPENDENCIES += $(if $(BR2_NEEDS_GETTEXT),gettext)
 endif
 
 ifeq ($(BR2_PACKAGE_PHP_EXT_GMP),y)
-	PHP_CONF_OPT += --with-gmp=$(STAGING_DIR)/usr
-	PHP_DEPENDENCIES += gmp
+PHP_CONF_OPT += --with-gmp=$(STAGING_DIR)/usr
+PHP_DEPENDENCIES += gmp
 endif
 
 ifeq ($(BR2_PACKAGE_PHP_EXT_READLINE),y)
-	PHP_CONF_OPT += --with-readline=$(STAGING_DIR)/usr
-	PHP_DEPENDENCIES += readline
+PHP_CONF_OPT += --with-readline=$(STAGING_DIR)/usr
+PHP_DEPENDENCIES += readline
 endif
 
 ### PDO
 ifeq ($(BR2_PACKAGE_PHP_EXT_PDO),y)
-	PHP_CONF_OPT += --enable-pdo
+PHP_CONF_OPT += --enable-pdo
 ifeq ($(BR2_PACKAGE_PHP_EXT_PDO_SQLITE),y)
-	PHP_CONF_OPT += --with-pdo-sqlite=$(STAGING_DIR)/usr
-	PHP_DEPENDENCIES += sqlite
-	PHP_CFLAGS += -DSQLITE_OMIT_LOAD_EXTENSION
+PHP_CONF_OPT += --with-pdo-sqlite=$(STAGING_DIR)/usr
+PHP_DEPENDENCIES += sqlite
+PHP_CFLAGS += -DSQLITE_OMIT_LOAD_EXTENSION
 ifneq ($(BR2_LARGEFILE),y)
-	PHP_CFLAGS += -DSQLITE_DISABLE_LFS
+PHP_CFLAGS += -DSQLITE_DISABLE_LFS
 endif
 endif
 ifeq ($(BR2_PACKAGE_PHP_EXT_PDO_MYSQL),y)
-	PHP_CONF_OPT += --with-pdo-mysql=$(STAGING_DIR)/usr
-	PHP_DEPENDENCIES += mysql_client
+PHP_CONF_OPT += --with-pdo-mysql=$(STAGING_DIR)/usr
+PHP_DEPENDENCIES += mysql_client
 endif
 endif
 
 ### Use external PCRE if it's available
 ifeq ($(BR2_PACKAGE_PCRE),y)
-	PHP_CONF_OPT += --with-pcre-regex=$(STAGING_DIR)/usr
-	PHP_DEPENDENCIES += pcre
+PHP_CONF_OPT += --with-pcre-regex=$(STAGING_DIR)/usr
+PHP_DEPENDENCIES += pcre
 endif
 
 ### LDAP
 ifeq ($(BR2_PACKAGE_OPENLDAP),y)
-	PHP_CONF_OPT += --with-ldap=$(STAGING_DIR)/usr
-	PHP_DEPENDENCIES += openldap
+PHP_CONF_OPT += --with-ldap=$(STAGING_DIR)/usr
+PHP_DEPENDENCIES += openldap
 endif
 
 # Fixup prefix= and exec_prefix= in php-config
