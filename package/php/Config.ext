@@ -1,5 +1,16 @@
 menu "PHP Extensions"
 
+config BR2_PACKAGE_PHP_EXT_TIMEZONEDB
+	bool "timezonedb"
+	default y
+	help
+	  Custom TimeZone Database (AstLinux Feature)
+	  Allows the PHP and system Zoneinfo to track each other
+	  and uses the much smaller 32-bit only tzdata
+
+	  Use: ./scripts/php-timezonedb/makearchive.sh
+	  to generate a new database tracking the target's zoneinfo
+
 config BR2_PACKAGE_PHP_EXT_SOCKETS
 	bool "socket"
 	help

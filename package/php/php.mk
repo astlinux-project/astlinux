@@ -4,13 +4,33 @@
 #
 #############################################################
 
-PHP_VERSION = 5.5.24
+PHP_VERSION = 5.5.25
 PHP_SITE = http://www.php.net/distributions
 PHP_SOURCE = php-$(PHP_VERSION).tar.xz
 PHP_INSTALL_STAGING = YES
 PHP_INSTALL_STAGING_OPT = INSTALL_ROOT=$(STAGING_DIR) install
 PHP_INSTALL_TARGET_OPT = INSTALL_ROOT=$(TARGET_DIR) install
 PHP_DEPENDENCIES = host-pkg-config
+
+ifeq ($(BR2_PACKAGE_PHP_EXT_TIMEZONEDB),y)
+PHP_TIMEZONEDB_VERSION = 2015.3
+PHP_TIMEZONEDB_SITE = http://files.astlinux.org
+PHP_TIMEZONEDB_SOURCE = timezonedb-$(PHP_TIMEZONEDB_VERSION).tar.gz
+
+define PHP_TIMEZONEDB_DOWNLOAD
+	$(call DOWNLOAD,$(PHP_TIMEZONEDB_SITE),$(PHP_TIMEZONEDB_SOURCE))
+endef
+PHP_POST_DOWNLOAD_HOOKS += PHP_TIMEZONEDB_DOWNLOAD
+
+define PHP_TIMEZONEDB_EXTRACT
+	mkdir -p $(@D)/timezonedb
+	$(INFLATE$(suffix $(PHP_TIMEZONEDB_SOURCE))) $(DL_DIR)/$(PHP_TIMEZONEDB_SOURCE) | \
+	$(TAR) $(TAR_STRIP_COMPONENTS)=1 -C $(@D)/timezonedb $(TAR_OPTIONS) -
+	cp $(@D)/timezonedb/timezonedb.h $(@D)/ext/date/lib/timezonedb.h
+endef
+PHP_POST_EXTRACT_HOOKS += PHP_TIMEZONEDB_EXTRACT
+endif
+
 PHP_CONF_OPT = \
 	--mandir=/usr/share/man \
 	--infodir=/usr/share/info \
