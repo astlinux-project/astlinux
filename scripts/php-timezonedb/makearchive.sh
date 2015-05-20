@@ -14,6 +14,11 @@ else
   TZDATA="output/target/usr/share/zoneinfo"
 fi
 
+if [ ! -x /usr/bin/php ]; then
+  echo "Missing native PHP. PHP must be installed at: /usr/bin/php"
+  exit 1
+fi
+
 if [ ! -f $TZDATA/.tzversion ]; then
   echo "File not found: $TZDATA/.tzversion"
   exit 1
