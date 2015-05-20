@@ -16,7 +16,7 @@ Released **TBD**
 
 -- tg3, version bump to 3.137h, Broadcom NetLink 10/100/1000 Mbps PCI/PCI-X/PCI Express Ethernet Linux driver
 
--- php, version bump to 5.5.24, major version change, bug and security fixes
+-- php, version bump to 5.5.25, major version change, bug and security fixes
 
 -- perl, version bump to 5.20.2 using perlcross 0.9.6
 
@@ -52,7 +52,7 @@ Released **TBD**
    or the rc.conf variable KERNEL_SYSCTL, disabled by default.
    Example: KERNEL_SYSCTL="kernel.panic=3 vm.min_free_kbytes=8192"
 
--- Time Zone Database update, tzdata2015c and tzcode2015c
+-- Time Zone Database update, tzdata2015d and tzcode2015d
 
 ** Networking
 
