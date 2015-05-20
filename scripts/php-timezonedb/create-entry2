@@ -1,0 +1,7 @@
+#!/usr/bin/php -qC
+<?php
+$j = $argv[1];
+$l = $argv[2];
+
+echo "\t{ ".sprintf('%-36s, 0x%06X', '"'.$j.'"', $l)." },\n";
+?>

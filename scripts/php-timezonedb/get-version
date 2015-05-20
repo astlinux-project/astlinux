@@ -1,0 +1,10 @@
+#!/usr/bin/php -qC
+<?php
+$ver = $argv[1];
+
+if (preg_match('@([0-9]{4})([a-z])@', $ver, $a)) {
+  echo $a[1].'.'.(ord($a[2]) - ord('a') + 1);
+} else {
+  echo $ver;
+}
+?>
