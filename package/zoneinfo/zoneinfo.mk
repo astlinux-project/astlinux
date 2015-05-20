@@ -3,12 +3,12 @@
 # zoneinfo
 #
 ##############################################################
-ZONEINFO_VERSION :=
-ZONEINFO_DATA := tzdata2015c.tar.gz
-ZONEINFO_SOURCE := tzcode2015c.tar.gz
+ZONEINFO_VERSION := 2015d
+ZONEINFO_DATA := tzdata$(ZONEINFO_VERSION).tar.gz
+ZONEINFO_SOURCE := tzcode$(ZONEINFO_VERSION).tar.gz
 ZONEINFO_SITE := ftp://ftp.iana.org/tz/releases
 ZONEINFO_DIR := $(BUILD_DIR)/zoneinfo
-ZONEINFO_BINARY := usr/share/zoneinfo/.tzcompiled
+ZONEINFO_BINARY := usr/share/zoneinfo/.tzversion
 
 $(DL_DIR)/$(ZONEINFO_SOURCE):
 	$(WGET) -P $(DL_DIR) $(ZONEINFO_SITE)/$(ZONEINFO_SOURCE)
@@ -28,7 +28,7 @@ $(TARGET_DIR)/$(ZONEINFO_BINARY): $(ZONEINFO_DIR)/.source
 	)
 	$(INSTALL) -D -m 0644 $(ZONEINFO_DIR)/zone.tab $(TARGET_DIR)/usr/share/zoneinfo/zone.tab
 	$(INSTALL) -D -m 0644 $(ZONEINFO_DIR)/iso3166.tab $(TARGET_DIR)/usr/share/zoneinfo/iso3166.tab
-	touch $@
+	echo "$(ZONEINFO_VERSION)" > $(TARGET_DIR)/$(ZONEINFO_BINARY)
 
 zoneinfo: $(TARGET_DIR)/$(ZONEINFO_BINARY)
 
