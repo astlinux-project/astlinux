@@ -6,7 +6,7 @@ Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 diff -Nura libpcap-1.7.2.orig/configure.in libpcap-1.7.2/configure.in
 --- libpcap-1.7.2.orig/configure.in	2015-03-14 08:02:05.538706347 -0300
 +++ libpcap-1.7.2/configure.in	2015-03-14 08:17:22.637519050 -0300
-@@ -461,14 +461,13 @@
+@@ -471,14 +471,13 @@
  			#
  			# Yes, we have libnl 3.x.
  			#
