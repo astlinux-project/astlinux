@@ -3,8 +3,8 @@
 # darkstat
 #
 #############################################################
-DARKSTAT_VERSION = 3.0.718
-DARKSTAT_SITE = http://unix4lyfe.org/darkstat
+DARKSTAT_VERSION = 3.0.719
+DARKSTAT_SITE = https://www.unix4lyfe.org/darkstat
 DARKSTAT_SOURCE = darkstat-$(DARKSTAT_VERSION).tar.bz2
 
 DARKSTAT_DEPENDENCIES = zlib libpcap
