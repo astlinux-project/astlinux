@@ -71,9 +71,11 @@ Released **TBD**
 
 -- miniupnpd, version bump to 1.9.20141209, adds 'Port Control Protocol' NAT-PMP/PCP support.
 
--- libpcap / tcpdump, version bump to 1.7.2 / 4.7.3, security and build fixes.
+-- libpcap / tcpdump, version bump to 1.7.3 / 4.7.4, security and build fixes.
 
 -- libcurl (curl) version bump to 7.42.1, security fixes: CVE-2015-3144, CVE-2015-3145, CVE-2015-3148, CVE-2015-3143, CVE-2015-3153
+
+-- darkstat, version bump to 3.0.719
 
 -- stunnel, version bump to 5.17
 
