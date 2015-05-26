@@ -2,7 +2,6 @@ config BR2_PACKAGE_MINIUPNPD
 	bool "miniupnpd"
 	depends on BR2_LINUX_KERNEL
 	select BR2_PACKAGE_IPTABLES
-	select BR2_PACKAGE_LIBNFNETLINK
 	help
 	  Implements UPnP and NAT-PMP/PCP protocols.
 

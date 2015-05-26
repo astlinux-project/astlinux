@@ -4,10 +4,10 @@
 #
 #############################################################
 
-MINIUPNPD_VERSION = 1.9.20141209
+MINIUPNPD_VERSION = 1.9.20150430
 MINIUPNPD_SOURCE = miniupnpd-$(MINIUPNPD_VERSION).tar.gz
 MINIUPNPD_SITE = http://miniupnp.free.fr/files
-MINIUPNPD_DEPENDENCIES = host-pkg-config linux iptables libnfnetlink
+MINIUPNPD_DEPENDENCIES = host-pkg-config linux iptables
 
 define MINIUPNPD_IPTABLES_PATH_FIX
 	$(SED) 's:/sbin/iptables:/usr/sbin/iptables:g' \
