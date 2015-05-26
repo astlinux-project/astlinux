@@ -46,6 +46,8 @@ Released **TBD**
 
 -- libsrtp, version bump to 1.5.2
 
+-- libsodium, version bump to 1.0.3
+
 -- smartctl, update snapshot of latest drivedb.h
 
 -- Kernel runtime parameters, add support for /etc/sysctl.conf via either /mnt/kd/sysctl.conf
@@ -69,7 +71,7 @@ Released **TBD**
 
 -- dnsmasq, add upstream security fix: CVE-2015-3294
 
--- miniupnpd, version bump to 1.9.20141209, adds 'Port Control Protocol' NAT-PMP/PCP support.
+-- miniupnpd, version bump to 1.9.20150430, adds 'Port Control Protocol' NAT-PMP/PCP support.
 
 -- libpcap / tcpdump, version bump to 1.7.3 / 4.7.4, security and build fixes.
 
