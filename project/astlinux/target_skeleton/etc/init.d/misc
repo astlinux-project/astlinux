@@ -5,10 +5,87 @@
 
 . /etc/rc.conf
 
+gen_httpd_cert()
+{
+  local fname="$1"
+
+  openssl req \
+    -new -batch \
+    -newkey rsa:1024 \
+    -days 36500 \
+    -nodes \
+    -x509 \
+    -subj '/C=US/ST=Nebraska/L=Omaha/O=AstLinux Management/OU=Web Interface/CN=*/emailAddress=info@astlinux.org' \
+    -keyout "$fname" \
+    -out "$fname"
+
+  chmod 600 "$fname"
+}
+
+fat16_file()
+{
+  local cmd="$1" src="$2" dst="$3"
+
+  if ! mount | grep -q "/oldroot/cdrom"; then
+    return 1
+  fi
+  if ! mount -o rw,remount /oldroot/cdrom >/dev/null; then
+    return 1
+  fi
+
+  case $cmd in
+    remove)
+      rm "$src"
+      ;;
+    copy)
+      cp "$src" "$dst"
+      ;;
+  esac
+
+  mount -o ro,remount /oldroot/cdrom >/dev/null
+  return 0
+}
+
+install_httpd_cert()
+{
+  local perm="$1" save="$2"
+  local fat16="/oldroot/cdrom/os/default_https.pem"
+
+  if [ $perm -eq 1 ]; then
+    if [ -f "$fat16" ]; then
+      cp "$fat16" "$save"
+      chmod 600 "$save"
+      fat16_file remove "$fat16"
+    else
+      gen_httpd_cert "$save"
+    fi
+  else
+    if [ -f "$fat16" ]; then
+      cp "$fat16" "$save"
+      chmod 600 "$save"
+    else
+      gen_httpd_cert "$save"
+      fat16_file copy "$save" "$fat16"
+    fi
+  fi
+}
+
 init () {
 
   # Setup Hostname
   hostname "$HOSTNAME"
+
+  # Setup /etc/ssl/default_https.pem
+  mkdir -p /tmp/etc/ssl
+  if [ -f /mnt/kd/ssl/default_https.pem ]; then
+    ln -sf /mnt/kd/ssl/default_https.pem /tmp/etc/ssl/default_https.pem
+  elif [ -d /mnt/kd/rc.conf.d -o -f /mnt/kd/rc.conf ]; then
+    mkdir -p /mnt/kd/ssl
+    install_httpd_cert 1 /mnt/kd/ssl/default_https.pem
+    ln -sf /mnt/kd/ssl/default_https.pem /tmp/etc/ssl/default_https.pem
+  else
+    install_httpd_cert 0 /tmp/etc/ssl/default_https.pem
+  fi
 
   if [ -n "$VI_EDITOR_OPTIONS" ]; then
     echo -e "$VI_EDITOR_OPTIONS" > /root/.exrc

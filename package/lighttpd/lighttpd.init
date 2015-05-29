@@ -54,7 +54,7 @@ init () {
   else
     httpdir="/dev/null"
   fi
-  httpscert="${HTTPSCERT:-/etc/ssl/mini_httpd.pem}"
+  httpscert="${HTTPSCERT:-/etc/ssl/default_https.pem}"
   if [ "$HTTP_LISTING" = "no" ]; then
     http_listing="disable"
   else

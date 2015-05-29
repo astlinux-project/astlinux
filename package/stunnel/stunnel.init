@@ -71,7 +71,7 @@ init () {
       elif [ -n "$HTTPSCERT" ]; then
         SCERT="$HTTPSCERT"
       else
-        SCERT="/etc/ssl/mini_httpd.pem"
+        SCERT="/etc/ssl/default_https.pem"
       fi
 
       gen_stunnel_config server "$STUNNEL_SERVERS" > /tmp/etc/stunnel/server.conf
