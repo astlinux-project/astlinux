@@ -5,7 +5,7 @@
 
 . /etc/rc.conf
 
-gen_httpd_cert()
+gen_https_cert()
 {
   local fname="$1"
 
@@ -46,7 +46,7 @@ fat16_file()
   return 0
 }
 
-install_httpd_cert()
+install_https_cert()
 {
   local perm="$1" save="$2"
   local fat16="/oldroot/cdrom/os/default_https.pem"
@@ -57,14 +57,14 @@ install_httpd_cert()
       chmod 600 "$save"
       fat16_file remove "$fat16"
     else
-      gen_httpd_cert "$save"
+      gen_https_cert "$save"
     fi
   else
     if [ -f "$fat16" ]; then
       cp "$fat16" "$save"
       chmod 600 "$save"
     else
-      gen_httpd_cert "$save"
+      gen_https_cert "$save"
       fat16_file copy "$save" "$fat16"
     fi
   fi
@@ -81,10 +81,10 @@ init () {
     ln -sf /mnt/kd/ssl/default_https.pem /tmp/etc/ssl/default_https.pem
   elif [ -d /mnt/kd/rc.conf.d -o -f /mnt/kd/rc.conf ]; then
     mkdir -p /mnt/kd/ssl
-    install_httpd_cert 1 /mnt/kd/ssl/default_https.pem
+    install_https_cert 1 /mnt/kd/ssl/default_https.pem
     ln -sf /mnt/kd/ssl/default_https.pem /tmp/etc/ssl/default_https.pem
   else
-    install_httpd_cert 0 /tmp/etc/ssl/default_https.pem
+    install_https_cert 0 /tmp/etc/ssl/default_https.pem
   fi
 
   if [ -n "$VI_EDITOR_OPTIONS" ]; then
