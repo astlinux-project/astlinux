@@ -24,7 +24,7 @@ Released **TBD**
 
 -- sudo, version bump to 1.8.13, security fix: CVE-2014-9680
 
--- e2fsprogs, security fix: CVE-2015-1572
+-- e2fsprogs, version bump to 1.42.13, many bug fixes and security fix: CVE-2015-1572
 
 -- Monit, version bump to 5.13, added IPv6 support
 
