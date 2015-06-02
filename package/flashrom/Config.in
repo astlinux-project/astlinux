@@ -3,8 +3,6 @@ config BR2_PACKAGE_FLASHROM
 	select BR2_PACKAGE_PCIUTILS
 	select BR2_PACKAGE_LIBUSB
 	select BR2_PACKAGE_LIBUSB_COMPAT
-	# dmidecode is only a runtime dependency
-	select BR2_PACKAGE_DMIDECODE
 	depends on BR2_i386 || BR2_x86_64
 	help
 	  flashrom is a utility for identifying, reading, writing,
