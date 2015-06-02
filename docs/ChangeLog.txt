@@ -50,6 +50,8 @@ Released **TBD**
 
 -- smartctl, update snapshot of latest drivedb.h
 
+-- ethtool, version bump to 4.0
+
 -- Kernel runtime parameters, add support for /etc/sysctl.conf via either /mnt/kd/sysctl.conf
    or the rc.conf variable KERNEL_SYSCTL, disabled by default.
    Example: KERNEL_SYSCTL="kernel.panic=3 vm.min_free_kbytes=8192"
@@ -57,6 +59,8 @@ Released **TBD**
 -- Linux patch, crypto: aesni - fix memory usage in GCM decryption, Security fix: CVE-2015-3331
 
 -- Time Zone Database update, tzdata2015d and tzcode2015d
+
+-- (Custom Build Only) flashrom, version bump to 0.9.8, no longer requires dmidecode
 
 ** Networking
 
