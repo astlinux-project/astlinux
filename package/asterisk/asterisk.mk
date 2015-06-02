@@ -164,8 +164,6 @@ endif
 ifneq ($(ASTERISK_VERSION_SINGLE),1)
 ifneq ($(ASTERISK_VERSION_SINGLE),11)
 
-ASTERISK_EXTRAS+=host-libxml2
-
 ifeq ($(strip $(BR2_PACKAGE_PJSIP)),y)
 ASTERISK_EXTRAS+=pjsip
 ASTERISK_CONFIGURE_ARGS+= \
@@ -217,7 +215,7 @@ endif
 
 	touch $@
 
-$(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | host-pkg-config host-ncurses host-bison host-flex \
+$(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | host-pkg-config host-ncurses host-bison host-flex host-libxml2 \
 			libelf ncurses zlib openssl libtool util-linux $(ASTERISK_EXTRAS)
 	(cd $(ASTERISK_DIR); rm -rf config.cache configure; \
 		./bootstrap.sh; \
@@ -238,8 +236,7 @@ $(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | host-pkg-config host-ncu
 		CPPFLAGS='$(TARGET_CFLAGS)' \
 		LIBS='$(ASTERISK_LIBS)' \
 	)
-	(cd $(ASTERISK_DIR)/menuselect; rm -rf config.cache configure; \
-		./bootstrap.sh; \
+	(cd $(ASTERISK_DIR)/menuselect; \
 		$(HOST_CONFIGURE_OPTS) \
 		./configure \
 	)
