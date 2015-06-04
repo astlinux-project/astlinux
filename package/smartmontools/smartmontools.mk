@@ -4,11 +4,12 @@
 #
 #############################################################
 
-SMARTMONTOOLS_VERSION = 6.3
+SMARTMONTOOLS_VERSION = 6.4
 SMARTMONTOOLS_SITE = http://downloads.sourceforge.net/project/smartmontools/smartmontools/$(SMARTMONTOOLS_VERSION)
 
 define SMARTMONTOOLS_LATEST_DRIVEDB
-	# Upstream Drive DB: http://svn.code.sf.net/p/smartmontools/code/trunk/smartmontools/drivedb.h
+	# Upstream Drive DB:
+	# curl -o package/smartmontools/drivedb.h 'http://sourceforge.net/p/smartmontools/code/HEAD/tree/trunk/smartmontools/drivedb.h?format=raw'
 	# Install local snapshot
 	cp package/smartmontools/drivedb.h $(@D)/drivedb.h
 endef
