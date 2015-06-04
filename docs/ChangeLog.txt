@@ -50,7 +50,7 @@ Released **TBD**
 
 -- libsodium, version bump to 1.0.3
 
--- smartctl, update snapshot of latest drivedb.h
+-- smartctl, version bump to 6.4, drivedb.h 4105 2015-06-03
 
 -- ethtool, version bump to 4.0
 
