@@ -9,6 +9,8 @@ LIBSODIUM_SITE = http://download.dnscrypt.org/libsodium/releases
 
 LIBSODIUM_INSTALL_STAGING = YES
 
+LIBSODIUM_CONF_OPT = --enable-minimal
+
 define LIBSODIUM_INSTALL_TARGET_CMDS
 	cp -a $(STAGING_DIR)/usr/lib/libsodium.so* $(TARGET_DIR)/usr/lib/
 endef
