@@ -107,6 +107,8 @@ $(TARGET_DIR)/$(WANPIPE_TARGET_BINARY): $(WANPIPE_DIR)/.built
 	$(INSTALL) -D -m 0755 -s $(WANPIPE_DIR)/util/wanec_client/wan_ec_client $(TARGET_DIR)/usr/sbin/wan_ec_client
 	$(INSTALL) -m 0755 $(WANPIPE_DIR)/util/wancfg_zaptel/wancfg_dahdi $(TARGET_DIR)/usr/sbin/wancfg_dahdi
 	$(INSTALL) -m 0755 package/wanpipe/wanrouter.init $(TARGET_DIR)/etc/init.d/wanrouter
+	ln -sf ../../init.d/wanrouter $(TARGET_DIR)/etc/runlevels/default/S00wanrouter
+	ln -sf ../../init.d/wanrouter $(TARGET_DIR)/etc/runlevels/default/K98wanrouter
 	## Install and Cleanup wancfg_zaptel directory
 	cp -af $(WANPIPE_DIR)/util/wancfg_zaptel $(TARGET_DIR)/etc/wanpipe
 	for i in setup-sangoma clean.sh install.sh uninstall.sh Makefile; do \
@@ -147,6 +149,9 @@ wanpipe-clean:
 	rm -f $(TARGET_DIR)/usr/sbin/wanpipe_lxdialog
 	rm -f $(TARGET_DIR)/usr/sbin/wan_ec_client
 	rm -f $(TARGET_DIR)/usr/sbin/wancfg_dahdi
+	rm -f $(TARGET_DIR)/etc/init.d/wanrouter
+	rm -f $(TARGET_DIR)/etc/runlevels/default/S00wanrouter
+	rm -f $(TARGET_DIR)/etc/runlevels/default/K98wanrouter
 	rm -f $(WANPIPE_DIR)/.built
 
 wanpipe-dirclean:

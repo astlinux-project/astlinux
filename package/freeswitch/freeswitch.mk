@@ -86,6 +86,8 @@ endif
 	ln -sf $(FREESWITCH_INSTALL_DIR)/bin/freeswitch $(TARGET_DIR)/usr/sbin/freeswitch
 	ln -sf $(FREESWITCH_INSTALL_DIR)/bin/fs_cli $(TARGET_DIR)/usr/sbin/fs_cli
 	$(INSTALL) -D -m 0755 package/freeswitch/freeswitch.init $(TARGET_DIR)/etc/init.d/freeswitch
+	ln -sf ../../init.d/freeswitch $(TARGET_DIR)/etc/runlevels/default/S60freeswitch
+	ln -sf ../../init.d/freeswitch $(TARGET_DIR)/etc/runlevels/default/K00freeswitch
 
 freeswitch: $(TARGET_DIR)/$(FREESWITCH_TARGET_BINARY)
 
@@ -98,6 +100,8 @@ freeswitch-clean:
 	rm -rf $(TARGET_DIR)/$(FREESWITCH_INSTALL_DIR) $(TARGET_DIR)/usr/lib/libfreeswitch.so* \
 		$(TARGET_DIR)/usr/sbin/freeswitch $(TARGET_DIR)/usr/sbin/fs_cli \
 		$(TARGET_DIR)/etc/init.d/freeswitch
+	rm -f $(TARGET_DIR)/etc/runlevels/default/S60freeswitch
+	rm -f $(TARGET_DIR)/etc/runlevels/default/K00freeswitch
 
 freeswitch-dirclean:
 	rm -rf $(FREESWITCH_DIR)
