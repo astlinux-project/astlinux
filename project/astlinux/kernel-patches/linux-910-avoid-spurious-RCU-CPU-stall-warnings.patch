@@ -1,0 +1,26 @@
+From c96ea7cfdd88d0a67c970502bc5313fede34b86b Mon Sep 17 00:00:00 2001
+From: Paul E. McKenney <paul.mckenney@linaro.org>
+Date: Sun, 23 Sep 2012 16:42:51 +0200
+Subject: [PATCH] rcu: Avoid spurious RCU CPU stall warnings
+
+---
+ kernel/rcutree.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/kernel/rcutree.c b/kernel/rcutree.c
+index 2cf8eb3..98f2752 100644
+--- a/kernel/rcutree.c
++++ b/kernel/rcutree.c
+@@ -633,7 +633,8 @@
+ 	j = ACCESS_ONCE(jiffies);
+ 	js = ACCESS_ONCE(rsp->jiffies_stall);
+ 	rnp = rdp->mynode;
+-	if ((ACCESS_ONCE(rnp->qsmask) & rdp->grpmask) && ULONG_CMP_GE(j, js)) {
++	if (rcu_gp_in_progress(rsp) &&
++	    (ACCESS_ONCE(rnp->qsmask) & rdp->grpmask) && ULONG_CMP_GE(j, js)) {
+ 
+ 		/* We haven't checked in, so go dump stack. */
+ 		print_cpu_stall(rsp);
+
+--
+Gitblit v1.3.1
