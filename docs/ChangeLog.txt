@@ -85,6 +85,8 @@ Released **TBD**
 
 -- libcurl (curl) version bump to 7.42.1, security fixes: CVE-2015-3144, CVE-2015-3145, CVE-2015-3148, CVE-2015-3143, CVE-2015-3153
 
+-- OpenVPN, version bump to 2.3.7
+
 -- darkstat, version bump to 3.0.719
 
 -- stunnel, version bump to 5.17
