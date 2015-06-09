@@ -21,14 +21,14 @@
 +}
 +
 +
-+static int sendmail_local(Mail_T mail) {
++static boolean_t sendmail_local(Mail_T mail) {
 +	Mail_T m;
 +	FILE *p;
 +	const char *template = "/tmp/monitmail-XXXXXX";
 +	const char *mailcmd = "/usr/sbin/sendmail -t";
 +	char *tmpname = CALLOC(sizeof(char), strlen(template) + 1);
 +	char *system_cmd = CALLOC(sizeof(char), STRLEN);
-+	int failed = false;
++	boolean_t failed = false;
 +
 +	for (m = mail; m; m = m->next) {
 +		strcpy(tmpname, template);
@@ -45,7 +45,7 @@
 +			spawn_system_cmd(system_cmd);
 +		} else {
 +                	failed = true;
-+                	LogError("Sendmail: Unable to launch '%s' (can't create temporary file)\n", mailcmd);
++                	LogError("Mail: Unable to launch '%s' (can't create temporary file)\n", mailcmd);
 +		}
 +	}
 +
@@ -99,7 +99,7 @@
 +
 +        if (pid == 0) {
 +
-+                if (! Run.isdaemon) {
++                if (! (Run.flags & Run_Daemon)) {
 +                        for (int i = 0; i < 3; i++)
 +                                if (close(i) == -1 || open("/dev/null", O_RDWR) != i)
 +                                        stat_loc |= redirect_ERROR;
