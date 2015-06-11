@@ -12,6 +12,8 @@ Released **TBD**
 
 ** System
 
+-- Linux patch, crypto: aesni - fix memory usage in GCM decryption, Security fix: CVE-2015-3331
+
 -- igb, version 5.2.18, Intel Gigabit Ethernet Network Driver
 
 -- e1000e version bump to 3.2.4.2 Intel PCI-Express PRO/1000 Ethernet Linux driver
@@ -58,7 +60,7 @@ Released **TBD**
    or the rc.conf variable KERNEL_SYSCTL, disabled by default.
    Example: KERNEL_SYSCTL="kernel.panic=3 vm.min_free_kbytes=8192"
 
--- Linux patch, crypto: aesni - fix memory usage in GCM decryption, Security fix: CVE-2015-3331
+-- mac2vendor, database update at 2015-06-11
 
 -- Time Zone Database update, tzdata2015d and tzcode2015d
 
@@ -92,6 +94,8 @@ Released **TBD**
 -- stunnel, version bump to 5.17
 
 -- msmtp, version bump to 1.6.2
+
+-- ddclient (dynamicdns), version bump to 3.8.3
 
 -- lighttpd / stunnel, the default /etc/ssl/default_https.pem file, is now auto-generated and ultimately stored in
    /mnt/kd/ssl/default_https.pem, a symlink for /etc/ssl/mini_httpd.pem to default_https.pem is also provided for
