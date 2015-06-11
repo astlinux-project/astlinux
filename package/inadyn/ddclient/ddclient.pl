@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 #!/usr/local/bin/perl -w
 ######################################################################
-# $Id: ddclient 157 2013-12-26 09:02:05Z wimpunk $
+# $Id: ddclient 184 2015-05-28 19:59:34Z wimpunk $
 #
 # DDCLIENT - a Perl client for updating DynDNS information
 #
@@ -13,6 +13,12 @@
 # Support for multiple IP numbers added by
 # Astaro AG, Ingo Schwarze <ischwarze-OOs/4mkCeqbQT0dZR+AlfA@public.gmane.org> September 16, 2008
 #
+# Support for multiple domain support for Namecheap by Robert Ian Hawdon 2010-09-03: https://robertianhawdon.me.uk/
+#
+# Initial Cloudflare support by Ian Pye, updated by Robert Ian Hawdon 2012-07-16
+# Further updates by Peter Roberts to support the new API 2013-09-26, 2014-06-22: http://blog.peter-r.co.uk/
+#
+#
 ######################################################################
 require 5.004;
 use strict;
@@ -20,9 +26,9 @@ use Getopt::Long;
 use Sys::Hostname;
 use IO::Socket;
 
-my ($VERSION) = q$Revision: 157 $ =~ /(\d+)/;
+# my ($VERSION) = q$Revision: 184 $ =~ /(\d+)/;
 
-my $version  = "3.8.2";
+my $version  = "3.8.3";
 my $programd  = $0; 
 $programd =~ s%^.*/%%;
 my $program   = $programd;
@@ -65,7 +71,7 @@ my %builtinweb = (
    'dyndns'       => { 'url' => 'http://checkip.dyndns.org/', 'skip' =>
    'Current IP Address:', },
    'dnspark'      => { 'url' => 'http://ipdetect.dnspark.com/', 'skip' => 'Current Address:', },
-   'loopia'       => { 'url' => 'http://dns.loopia.se/checkip/checkip.php', 'skip' => 'Current Address:', },
+   'loopia'       => { 'url' => 'http://dns.loopia.se/checkip/checkip.php', 'skip' => 'Current IP Address:', },
 );
 my %builtinfw = (
     'watchguard-soho'        => {
@@ -429,6 +435,25 @@ my %variables = (
 	'login'               => setv(T_LOGIN,  0, 0, 0, 'unused',            undef),
 	'client'              => setv(T_STRING, 0, 1, 1, $program,            undef),
     },
+    'nsupdate-common-defaults' => {
+	'ttl'                 => setv(T_NUMBER, 0, 1, 0, 600,                 undef),
+	'zone'                => setv(T_STRING, 1, 1, 1, '',                  undef),
+    },
+	'cloudflare-common-defaults'       => {
+		'server'	      => setv(T_FQDNP,  1, 0, 1, 'www.cloudflare.com', undef),
+		'zone'                => setv(T_FQDN,   1, 0, 1, '',                  undef),
+		'static'              => setv(T_BOOL,   0, 1, 1, 0,                   undef),
+		'wildcard'            => setv(T_BOOL,   0, 1, 1, 0,                   undef),
+		'mx'	              => setv(T_OFQDN,  0, 1, 1, '',                  undef),
+		'backupmx'            => setv(T_BOOL,   0, 1, 1, 0,                   undef),
+	},
+	'googledomains-common-defaults'       => {
+		'server'	      => setv(T_FQDNP,  1, 0, 1, 'domains.google.com', undef),
+	},
+	'duckdns-common-defaults'       => {
+			'server'              => setv(T_FQDNP,  1, 0, 1, 'www.duckdns.org', undef),
+			'login'               => setv(T_LOGIN,  0, 0, 0, 'unused',            undef),
+	},
 );
 my %services = (
     'dyndns1' => {
@@ -573,6 +598,46 @@ my %services = (
 			  $variables{'service-common-defaults'},
 		        ),
     },
+    'nsupdate' => {
+	'updateable' => undef,
+	'update'     => \&nic_nsupdate_update,
+	'examples'   => \&nic_nsupdate_examples,
+	'variables'  => merge(
+			  { 'login'        => setv(T_LOGIN, 1, 0, 1, '/usr/bin/nsupdate', undef), },
+			  $variables{'nsupdate-common-defaults'},
+			  $variables{'service-common-defaults'},
+	),
+    },
+    'cloudflare' => {
+        'updateable' => undef,
+        'update'     => \&nic_cloudflare_update,
+        'examples'   => \&nic_cloudflare_examples,
+        'variables'  => merge(
+            { 'server'       => setv(T_FQDNP,  1, 0, 1, 'www.cloudflare.com', undef)          },
+            { 'min-interval' => setv(T_DELAY,  0, 0, 1, interval('5m'), 0),},
+            $variables{'cloudflare-common-defaults'},
+            $variables{'service-common-defaults'},
+        ),
+    },
+    'googledomains' => {
+        'updateable' => undef,
+        'update'     => \&nic_googledomains_update,
+        'examples'   => \&nic_googledomains_examples,
+        'variables'  => merge(
+            { 'min-interval' => setv(T_DELAY,  0, 0, 1, interval('5m'), 0),},
+            $variables{'googledomains-common-defaults'},
+            $variables{'service-common-defaults'},
+            ),
+    },
+    'duckdns' => {
+        'updateable' => undef,
+        'update'     => \&nic_duckdns_update,
+        'examples'   => \&nic_duckdns_examples,
+        'variables'  => merge(
+                          $variables{'duckdns-common-defaults'},
+                          $variables{'service-common-defaults'},
+                        ),
+    },
 );
 $variables{'merged'} = merge($variables{'global-defaults'},
 			     $variables{'service-common-defaults'},
@@ -584,7 +649,7 @@ my @opt = (
     "usage: ${program} [options]",
     "options are:",
     [ "daemon",      "=s", "-daemon delay         : run as a daemon, specify delay as an interval." ],
-+     [ "foreground",  "!",  "-foreground           : do not fork" ],
+     [ "foreground",  "!",  "-foreground           : do not fork" ],
     [ "proxy",       "=s", "-proxy host           : use 'host' as the HTTP proxy" ],
     [ "server",      "=s", "-server host          : update DNS information on 'host'" ],
     [ "protocol",    "=s", "-protocol type        : update protocol used" ],
@@ -1230,6 +1295,7 @@ sub init_config {
 	$proto = opt('protocol')          if !defined($proto);
 
 	load_sha1_support() if ($proto eq "freedns");
+	load_json_support() if ($proto eq "cloudflare");
 
  	if (!exists($services{$proto})) {
 	    warning("skipping host: %s: unrecognized protocol '%s'", $h, $proto);
@@ -1739,7 +1805,7 @@ sub check_value {
 	return undef if $value eq "";
 
     } elsif ($type eq T_IF) {
-	return undef if $value !~ /^[a-z0-9:._-]+$/;
+	return undef if $value !~ /^[a-zA-Z0-9:._-]+$/;
 
     } elsif ($type eq T_PROG) {
 	return undef if $value eq "";
@@ -1784,6 +1850,7 @@ sub load_ssl_support {
 Error loading the Perl module IO::Socket::SSL needed for SSL connect.
 On Debian, the package libio-socket-ssl-perl must be installed.
 On Red Hat, the package perl-IO-Socket-SSL must be installed.
+On Alpine, the package perl-io-socket-ssl must be installed.
 EOM
     }
     import  IO::Socket::SSL;
@@ -1806,6 +1873,18 @@ EOM
     } elsif($sha_loaded) {
     	import  Digest::SHA (qw/sha1_hex/);
     }
+}
+######################################################################
+## load_json_support
+######################################################################
+sub load_json_support {
+	my $json_loaded = eval {require JSON::Any};
+	unless ($json_loaded) {
+		fatal(<<"EOM");
+Error loading the Perl module JSON::Any needed for cloudflare update.
+EOM
+	}
+	import JSON::Any;
 }
 ######################################################################
 ## geturl
@@ -1860,7 +1939,7 @@ sub geturl {
     $request .= "/$url HTTP/1.0\n";
     $request .= "Host: $server\n";
 
-    my $auth = encode_base64("${login}:${password}");
+    my $auth = encode_base64("${login}:${password}", "");
     $request .= "Authorization: Basic $auth\n" if $login || $password;
     $request .= "User-Agent: ${program}/${version}\n";
     $request .= "Connection: close\n";
@@ -2587,10 +2666,6 @@ sub nic_noip_update {
 	$url  .= "&hostname=$hosts";
 	$url  .= "&myip=";
 	$url  .= $ip            if $ip;
-
-
-	print "here..." . $config{$h}{'login'} . " --> " . $config{$h}{'password'} . "\n";
-	
 
 	my $reply = geturl(opt('proxy'), $url, $config{$h}{'login'}, $config{$h}{'password'});
 	if (!defined($reply) || !$reply) {
@@ -3396,8 +3471,11 @@ sub nic_namecheap_update {
 
         my $url;
         $url   = "http://$config{$h}{'server'}/update";
-        $url  .= "?host=$h";
-        $url  .= "&domain=$config{$h}{'login'}";
+	my $domain = $config{$h}{'login'};
+	my $host = $h;
+	$host  =~ s/(.*)\.$domain(.*)/$1$2/;
+	$url  .= "?host=$host";
+	$url  .= "&domain=$domain";
         $url  .= "&password=$config{$h}{'password'}";
         $url  .= "&ip=";
         $url  .= $ip if $ip;
@@ -3758,6 +3836,388 @@ sub nic_dtdns_update {
          {
                 my @reply = split /\n/, $reply;
                 my $returned = pop(@reply);
+                $config{$h}{'status'} = 'failed';
+                failed("updating %s: Server said: '$returned'", $h);
+         }
+    }
+}
+######################################################################
+
+######################################################################
+## nic_googledomains_examples
+##
+## written by Nelson Araujo
+##
+######################################################################
+sub nic_googledomains_examples {
+    return <<EoEXAMPLE;
+o 'googledomains'
+
+The 'googledomains' protocol is used by DNS service offered by www.google.com/domains.
+
+Configuration variables applicable to the 'googledomains' protocol are:
+  protocol=googledomains       ##
+  login=service-login          ## the user name provided by the admin interface
+  password=service-password    ## the password provided by the admin interface
+  fully.qualified.host         ## the host registered with the service.
+
+Example ${program}.conf file entries:
+  ## single host update
+  protocol=googledomains,                                      \\
+  login=my-generated-user-name,                                \\
+  password=my-genereated-password                              \\
+  myhost.com
+
+  ## multiple host update to the custom DNS service
+  protocol=googledomains,                                      \\
+  login=my-generated-user-name,                                \\
+  password=my-genereated-password                              \\
+  my-toplevel-domain.com,my-other-domain.com
+EoEXAMPLE
+}
+######################################################################
+## nic_googledomains_update
+######################################################################
+sub nic_googledomains_update {
+  debug("\nnic_googledomains_update -------------------");
+
+  ## group hosts with identical attributes together
+  my %groups = group_hosts_by([ @_ ], [ qw(server login password) ]);
+
+  ## update each set of hosts that had similar configurations
+  foreach my $sig (keys %groups) {
+    my @hosts = @{$groups{$sig}};
+    my $key   = $hosts[0];
+    my $ip    = $config{$key}{'wantip'};
+
+    # FQDNs
+    for my $host (@hosts) {
+      delete $config{$host}{'wantip'};
+
+      info("setting IP address to %s for %s", $ip, $host);
+      verbose("UPDATE:","updating %s", $host);
+
+      # Update the DNS record
+      my $url = "https://$config{$host}{'server'}/nic/update";
+      $url   .= "?hostname=$host";
+      $url   .= "&myip=";
+      $url   .= $ip if $ip;
+
+      my $reply = geturl(opt('proxy'), $url, $config{$host}{'login'}, $config{$host}{'password'});
+      unless ($reply) {
+        failed("updating %s: Could not connect to %s.", $host, $config{$host}{'server'});
+        last;
+      }
+      last if !header_ok($host, $reply);
+
+      # Cache
+      $config{$host}{'ip'}     = $ip;
+      $config{$host}{'mtime'}  = $now;
+      $config{$host}{'status'} = 'good';
+    }
+  }
+}
+
+######################################################################
+## nic_nsupdate_examples
+######################################################################
+sub nic_nsupdate_examples {
+ return <<EoEXAMPLE;
+o 'nsupdate'
+
+The 'nsupdate' protocol is used to submit Dynamic DNS Update requests as
+defined in RFC2136 to a name server using the 'nsupdate' command line
+utility part of ISC BIND.  Dynamic DNS updates allow resource records to
+be added or removed from a zone configured for dynamic updates through
+DNS requests protected using TSIG.  BIND ships with 'ddns-confgen', a
+utility to generate sample configurations and instructions for both the
+server and the client.  See nsupdate(1) and ddns-confgen(8) for details.
+
+Configuration variables applicable to the 'nsupdate' protocol are:
+  protocol=nsupdate
+  server=ns1.example.com       ## name or IP address of the DNS server to send
+                               ## the update requests to; usually master for
+                               ## zone, but slaves should forward the request
+  password=tsig.key            ## path and name of the symmetric HMAC key file
+                               ## to use for TSIG signing of the request
+                               ## (as generated by 'ddns-confgen -q' and
+                               ## configured on server in 'grant' statement)
+  zone=dyn.example.com         ## forward zone that is to be updated
+  ttl=600                      ## time to live of the record;
+                               ## defaults to 600 seconds
+  login=/usr/bin/nsupdate      ## path and name of nsupdate binary;
+                               ## defaults to '/usr/bin/nsupdate'
+  <hostname>                   ## fully qualified hostname to update
+
+Example ${program}.conf file entries:
+  ## single host update
+  protocol=nsupdate \\
+  server=ns1.example.com \\
+  password=/etc/${program}/dyn.example.com.key \\
+  zone=dyn.example.com \\
+  ttl=3600 \\
+  myhost.dyn.example.com
+
+EoEXAMPLE
+}
+
+######################################################################
+## nic_nsupdate_update
+## by Daniel Roethlisberger <daniel@roe.ch>
+######################################################################
+sub nic_nsupdate_update {
+	debug("\nnic_nsupdate_update -------------------");
+
+	## group hosts with identical attributes together
+	my %groups = group_hosts_by([ @_ ], [ qw(login password server zone) ]);
+
+	## update each set of hosts that had similar configurations
+	foreach my $sig (keys %groups) {
+		my @hosts = @{$groups{$sig}};
+		my $hosts = join(',', @hosts);
+		my $h = $hosts[0];
+		my $binary = $config{$h}{'login'};
+		my $keyfile = $config{$h}{'password'};
+		my $server = $config{$h}{'server'};
+		my $zone = $config{$h}{'zone'};
+		my $ip = $config{$h}{'wantip'};
+		delete $config{$_}{'wantip'} foreach @hosts;
+
+		info("setting IP address to %s for %s", $ip, $hosts);
+		verbose("UPDATE:","updating %s", $hosts);
+
+		## send separate requests for each zone with all hosts in that zone
+		my $instructions = <<EoINSTR1;
+server $server
+zone $zone.
+EoINSTR1
+		foreach (@hosts) {
+			$instructions .= <<EoINSTR2;
+update delete $_. A
+update add $_. $config{$_}{'ttl'} A $ip
+EoINSTR2
+		}
+		$instructions .= <<EoINSTR3;
+send
+EoINSTR3
+		my $command = "$binary -k $keyfile";
+		$command .= " -d" if (opt('debug'));
+		verbose("UPDATE:", "nsupdate command is: %s", $command);
+		verbose("UPDATE:", "nsupdate instructions are:\n%s", $instructions);
+
+		my $status = pipecmd($command, $instructions);
+		if ($status eq 1) {
+			foreach (@hosts) {
+				$config{$_}{'ip'} = $ip;
+				$config{$_}{'mtime'} = $now;
+				success("updating %s: %s: IP address set to %s", $_, $status, $ip);
+			}
+		} else {
+			foreach (@hosts) {
+				failed("updating %s", $_);
+			}
+		}
+	}
+}
+
+######################################################################
+
+######################################################################
+## nic_cloudflare_examples
+##
+## written by Ian Pye
+##
+######################################################################
+sub nic_cloudflare_examples {
+    return <<EoEXAMPLE;
+o 'cloudflare'
+
+The 'cloudflare' protocol is used by DNS service offered by www.cloudflare.com.
+
+Configuration variables applicable to the 'cloudflare' protocol are:
+  protocol=cloudflare          ## 
+  server=fqdn.of.service       ## defaults to www.cloudflare.com
+  login=service-login          ## login name and password  registered with the service
+  password=service-password    ##
+  fully.qualified.host         ## the host registered with the service.
+
+Example ${program}.conf file entries:
+  ## single host update
+  protocol=cloudflare,                                         \\
+  zone=dns.zone,                                               \\
+  login=my-cloudflare.com-login,                               \\
+  password=my-cloudflare.com-secure-token                      \\
+  myhost.com 
+
+  ## multiple host update to the custom DNS service
+  protocol=cloudflare,                                         \\
+  zone=dns.zone,                                               \\
+  login=my-cloudflare.com-login,                               \\
+  password=my-cloudflare.com-secure-token                      \\
+  my-toplevel-domain.com,my-other-domain.com
+EoEXAMPLE
+}
+######################################################################
+## nic_cloudflare_update
+######################################################################
+sub nic_cloudflare_update {
+	debug("\nnic_cloudflare_update -------------------");
+
+	## group hosts with identical attributes together 
+	my %groups = group_hosts_by([ @_ ], [ qw(ssh login password server wildcard mx backupmx zone) ]);
+
+	## update each set of hosts that had similar configurations
+	foreach my $sig (keys %groups) {
+		my @hosts = @{$groups{$sig}};
+		my $hosts = join(',', @hosts);
+		my $key   = $hosts[0];
+		my $ip    = $config{$key}{'wantip'};
+
+		# FQDNs
+		for my $domain (@hosts) {
+			(my $hostname = $domain) =~ s/\.$config{$key}{zone}$//;
+			delete $config{$domain}{'wantip'};
+
+			info("setting IP address to %s for %s", $ip, $domain);
+			verbose("UPDATE:","updating %s", $domain);
+
+			# Get domain ID
+			my $url = "https://$config{$key}{'server'}/api_json.html?a=rec_load_all";
+			$url   .= "&z=".$config{$key}{'zone'};
+			$url   .= "&email=".$config{$key}{'login'};	
+			$url   .= "&tkn=".$config{$key}{'password'};
+
+			my $reply = geturl(opt('proxy'), $url);
+			unless ($reply) {
+				failed("updating %s: Could not connect to %s.", $domain, $config{$key}{'server'});
+				last;
+			}
+			last if !header_ok($domain, $reply);
+
+			# Strip header
+			$reply =~ s/^.*?\n\n//s;
+			my $response = JSON::Any->jsonToObj($reply);
+			if ($response->{result} eq 'error') {
+				failed ("%s", $response->{msg});
+				next; 
+			}
+
+			# Pull the ID out of the json, messy
+			my ($id) = map { $_->{name} eq $domain ? $_->{rec_id} : () } @{ $response->{response}->{recs}->{objs} };
+			unless($id) {
+				failed("updating %s: No domain ID found.", $domain);
+				next;
+			}
+
+			# Set domain
+			$url   = "https://$config{$key}{'server'}/api_json.html?a=rec_edit&type=A&ttl=1";
+			$url     .= "&name=$hostname";
+			$url     .= "&z=".$config{$key}{'zone'};
+			$url     .= "&id=".$id;	
+			$url     .= "&email=".$config{$key}{'login'};	
+			$url     .= "&tkn=".$config{$key}{'password'};    
+			$url     .= "&content=";
+			$url     .= "$ip"       if $ip;
+
+			$reply = geturl(opt('proxy'), $url);
+			unless ($reply) {
+				failed("updating %s: Could not connect to %s.", $domain, $config{$domain}{'server'});
+				last;
+			}
+			last if !header_ok($domain, $reply);
+
+			# Strip header
+			$reply =~ s/^.*?\n\n//s;
+			$response = JSON::Any->jsonToObj($reply);
+			if ($response->{result} eq 'error') {
+				failed ("%s", $response->{msg});	
+			} else {
+				success ("%s -- Updated Successfully to %s", $domain, $ip);
+
+			}
+
+			# Cache
+			$config{$key}{'ip'}     = $ip;
+			$config{$key}{'mtime'}  = $now;
+			$config{$key}{'status'} = 'good';
+		}
+	}
+}
+
+######################################################################
+## nic_duckdns_examples
+######################################################################
+sub nic_duckdns_examples {
+    return <<EoEXAMPLE;
+o 'duckdns'
+
+The 'duckdns' protocol is used by the free
+dynamic DNS service offered by www.duckdns.org.
+Check http://www.duckdns.org/install.jsp?tab=linux-cron for API
+
+Configuration variables applicable to the 'duckdns' protocol are:
+  protocol=duckdns               ##
+  server=www.fqdn.of.service   ## defaults to www.duckdns.org
+  password=service-password    ## password (token) registered with the service
+  non-fully.qualified.host         ## the host registered with the service.
+
+Example ${program}.conf file entries:
+  ## single host update
+  protocol=duckdns,                                       \\
+  password=z0mgs3cjur3p4ss                    \\
+  myhost
+
+EoEXAMPLE
+}
+
+######################################################################
+## nic_duckdns_update
+## by George Kranis (copypasta from nic_dtdns_update)
+## http://www.duckdns.org/update?domains=mydomain1,mydomain2&token=xxxx-xxx-xx-x&ip=x.x.x.x
+## response contains OK or KO
+######################################################################
+sub nic_duckdns_update {
+    debug("\nnic_duckdns_update -------------------");
+
+    ## update each configured host
+    ## should improve to update in one pass
+    foreach my $h (@_) {
+        my $ip = delete $config{$h}{'wantip'};
+        info("setting IP address to %s for %s", $ip, $h);
+        verbose("UPDATE:","updating %s", $h);
+
+        # Set the URL that we're going to to update
+        my $url;
+        $url  = "http://$config{$h}{'server'}/update";
+        $url .= "?domains=";
+        $url .= $h;
+        $url .= "&token=";
+        $url .= $config{$h}{'password'};
+        $url .= "&ip=";
+        $url .= $ip;
+        
+
+        # Try to get URL
+        my $reply = geturl(opt('proxy'), $url);
+
+        # No response, declare as failed
+        if (!defined($reply) || !$reply) {
+            failed("updating %s: Could not connect to %s.", $h, $config{$h}{'server'});
+            last;
+        }
+        last if !header_ok($h, $reply);
+
+        my @reply = split /\n/, $reply;
+        my $returned = pop(@reply);
+        if ($returned =~ /OK/)
+        {
+                $config{$h}{'ip'}     = $ip;
+                $config{$h}{'mtime'}  = $now;
+                $config{$h}{'status'} = 'good';
+                success("updating %s: good: IP address set to %s", $h, $ip);
+         }
+         else
+         {
                 $config{$h}{'status'} = 'failed';
                 failed("updating %s: Server said: '$returned'", $h);
          }

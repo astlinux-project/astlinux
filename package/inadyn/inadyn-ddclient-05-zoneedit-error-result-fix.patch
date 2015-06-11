@@ -1,12 +1,6 @@
 --- inadyn-1.96.2/ddclient/ddclient.orig	2014-05-09 18:07:36.000000000 -0500
 +++ inadyn-1.96.2/ddclient/ddclient	2014-05-09 18:04:23.000000000 -0500
-@@ -1,5 +1,4 @@
- #!/usr/bin/perl -w
--#!/usr/local/bin/perl -w
- ######################################################################
- # $Id: ddclient 157 2013-12-26 09:02:05Z wimpunk $
- #
-@@ -2998,7 +2997,7 @@
+@@ -3072,7 +3072,7 @@
  		    $status_text = $var{'TEXT'} if exists $var{'TEXT'};
  		    $status_ip   = $var{'IP'}   if exists $var{'IP'};
  
