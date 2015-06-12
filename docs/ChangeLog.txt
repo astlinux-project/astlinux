@@ -20,7 +20,7 @@ Released **TBD**
 
 -- tg3, version bump to 3.137h, Broadcom NetLink 10/100/1000 Mbps PCI/PCI-X/PCI Express Ethernet Linux driver
 
--- php, version bump to 5.5.25, major version change, bug and security fixes
+-- php, version bump to 5.5.26, major version change, bug and security fixes
 
 -- perl, version bump to 5.20.2 using perlcross 0.9.6
 
@@ -68,8 +68,10 @@ Released **TBD**
 
 ** Networking
 
--- OpenSSL, version bump to 1.0.1m, security fixes: CVE-2015-0286, CVE-2015-0287, CVE-2015-0289, CVE-2015-0292,
-                                                    CVE-2015-0293, CVE-2015-0209, CVE-2015-0288
+-- OpenSSL, version bump to 1.0.1n, security fixes: CVE-2015-0286, CVE-2015-0287, CVE-2015-0289, CVE-2015-0292,
+                                                    CVE-2015-0293, CVE-2015-0209, CVE-2015-0288, CVE-2015-4000,
+                                                    CVE-2015-1788, CVE-2015-1789, CVE-2015-1790, CVE-2015-1792,
+                                                    CVE-2015-1791
 
 -- prosody, version bump to 0.9.8, security fix: CVE-2015-2059
 
