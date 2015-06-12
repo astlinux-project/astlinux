@@ -1,6 +1,6 @@
 --- openssl-1.0.1h/Makefile.org.orig	2014-06-05 11:36:09.000000000 -0500
 +++ openssl-1.0.1h/Makefile.org	2014-06-05 11:36:17.000000000 -0500
-@@ -538,7 +538,7 @@
+@@ -528,7 +528,7 @@
  dist_pem_h:
  	(cd crypto/pem; $(MAKE) -e $(BUILDENV) pem.h; $(MAKE) clean)
  
