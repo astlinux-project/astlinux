@@ -62,7 +62,7 @@ Released **TBD**
 
 -- mac2vendor, database update at 2015-06-11
 
--- Time Zone Database update, tzdata2015d and tzcode2015d
+-- Time Zone Database update, tzdata2015e and php-timezonedb-2015.5
 
 -- (Custom Build Only) flashrom, version bump to 0.9.8, no longer requires dmidecode
 
