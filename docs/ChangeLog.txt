@@ -95,7 +95,7 @@ Released **TBD**
 
 -- darkstat, version bump to 3.0.719
 
--- stunnel, version bump to 5.17
+-- stunnel, version bump to 5.19
 
 -- msmtp, version bump to 1.6.2
 
