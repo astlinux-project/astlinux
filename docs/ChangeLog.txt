@@ -89,7 +89,8 @@ Released **TBD**
 
 -- libpcap / tcpdump, version bump to 1.7.3 / 4.7.4, security and build fixes.
 
--- libcurl (curl) version bump to 7.42.1, security fixes: CVE-2015-3144, CVE-2015-3145, CVE-2015-3148, CVE-2015-3143, CVE-2015-3153
+-- libcurl (curl) version bump to 7.43.0, security fixes: CVE-2015-3144, CVE-2015-3145, CVE-2015-3148, CVE-2015-3143,
+                                                          CVE-2015-3153, CVE-2015-3236, CVE-2015-3237
 
 -- OpenVPN, version bump to 2.3.7
 
