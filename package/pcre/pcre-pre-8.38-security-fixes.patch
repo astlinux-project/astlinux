@@ -295,3 +295,53 @@
      /* For caseless UTF-8 mode when UCP support is available, check whether
      this character has more than one other case. If so, generate a special
 
+--- pcre-8.37/pcre_compile.c	2015/06/03 16:51:59	1562
++++ pcre-8.37/pcre_compile.c	2015/06/09 17:45:25	1566
+@@ -204,7 +204,7 @@
+ /*  78 */     0,   '`',    ':',     '#',    '@',  '\'',    '=',    '"',
+ /*  80 */     0,     7, -ESC_b,       0, -ESC_d, ESC_e,  ESC_f,      0,
+ /*  88 */-ESC_h,     0,      0,     '{',      0,     0,      0,      0,
+-/*  90 */     0,     0, -ESC_k,     'l',      0, ESC_n,      0, -ESC_p,
++/*  90 */     0,     0, -ESC_k,       0,      0, ESC_n,      0, -ESC_p,
+ /*  98 */     0, ESC_r,      0,     '}',      0,     0,      0,      0,
+ /*  A0 */     0,   '~', -ESC_s, ESC_tee,      0,-ESC_v, -ESC_w,      0,
+ /*  A8 */     0,-ESC_z,      0,       0,      0,   '[',      0,      0,
+@@ -2487,7 +2487,7 @@
+   if (c == OP_BRA  || c == OP_BRAPOS ||
+       c == OP_CBRA || c == OP_CBRAPOS ||
+       c == OP_ONCE || c == OP_ONCE_NC ||
+-      c == OP_COND)
++      c == OP_COND || c == OP_SCOND)
+     {
+     BOOL empty_branch;
+     if (GET(code, 1) == 0) return TRUE;    /* Hit unclosed bracket */
+@@ -7353,7 +7353,15 @@
+ 
+           recno = 0;
+           while(IS_DIGIT(*ptr))
++            {
++            if (recno > INT_MAX / 10 - 1) /* Integer overflow */            
++              {                                                             
++              while (IS_DIGIT(*ptr)) ptr++;                                 
++              *errorcodeptr = ERR61;                                        
++              goto FAILED;                                                  
++              }
+             recno = recno * 10 + *ptr++ - CHAR_0;
++            } 
+ 
+           if (*ptr != (pcre_uchar)terminator)
+             {
+
+--- pcre-8.37/pcre_exec.c	2015/06/09 16:33:27	1564
++++ pcre-8.37/pcre_exec.c	2015/06/09 16:46:52	1565
+@@ -6685,7 +6685,8 @@
+   register int *iend = iptr - re->top_bracket;
+   if (iend < md->offset_vector + 2) iend = md->offset_vector + 2;
+   while (--iptr >= iend) *iptr = -1;
+-  md->offset_vector[0] = md->offset_vector[1] = -1;
++  if (offsetcount > 0) md->offset_vector[0] = -1;
++  if (offsetcount > 1) md->offset_vector[1] = -1;
+   }
+ 
+ /* Set up the first character to match, if available. The first_char value is
+
