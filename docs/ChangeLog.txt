@@ -30,6 +30,8 @@ Released **TBD**
 
 -- e2fsprogs, version bump to 1.42.13, many bug fixes and security fix: CVE-2015-1572
 
+-- tiff, version bump to 4.0.4, security fix: CVE-2014-8128
+
 -- Monit, version bump to 5.14, added IPv6 support
 
 -- zabbix, version bump to 2.2.9
