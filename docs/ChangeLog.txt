@@ -128,6 +128,8 @@ Released **TBD**
 
 -- Status and Network tab, change NAT-PMP to NAT-PMP/PCP labels adding 'Port Control Protocol' support.
 
+-- CDR Log tab, new "Export CDR.csv" button which exports the CDR data currently displayed with any search criteria applied.
+
 
 Additions for AstLinux 1.2.2:
 =============================
