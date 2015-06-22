@@ -1,6 +1,6 @@
 <?php session_start();
 
-// Copyright (C) 2008-2009 Lonnie Abelbeck
+// Copyright (C) 2008-2015 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -17,6 +17,7 @@
 // 10-02-2008, Add optional last column CDR value
 // 07-20-2009, Add David Kerr's code and ideas for multiple page support
 // 02-13-2010, Add multiple *.csv CDR Database suport
+// 06-22-2015, Add "Export CDR.csv" button
 //
 // cdr_custom.conf Master.csv definition for "Special cdr-custom" option
 // Master.csv => "${CDR(start)}","${CDR(clid)}","${CDR(dst)}","${CDR(dcontext)}","${CDR(billsec)}"
@@ -131,6 +132,49 @@ function splitCIDfields($cid) {
     $cidtokens['num'] = $cidtokens['name'];
   }
   return($cidtokens);
+}
+
+// Function: exportCDRline
+//
+function exportCDRline($data) {
+
+  $str  =  '"'.$data['time'].'"';
+  $str .= ',"'.$data['cidname'].'"';
+  $str .= ',"'.$data['cidnum'].'"';
+  $str .= ',"'.$data['ext'].'"';
+  $str .= ',"'.$data['context'].'"';
+  if (isset($data['channel'])) {
+    $str .= ',"'.$data['channel'].'"';
+  }
+  if (isset($data['dstchannel'])) {
+    $str .= ',"'.$data['dstchannel'].'"';
+  }
+  if (isset($data['disposition'])) {
+    $str .= ',"'.$data['disposition'].'"';
+  }
+  $str .= ',"['.secs2hourminsec($data['billsec']).']"';
+  $str .= ',"'.$data['billsec'].'"';
+
+  if (isset($data['lastapp'])) {
+    $str .= ',"'.$data['lastapp'].'"';
+  }
+  if (isset($data['lastdata'])) {
+    $str .= ',"'.$data['lastdata'].'"';
+  }
+  if (isset($data['amaflags'])) {
+    $str .= ',"'.$data['amaflags'].'"';
+  }
+  if (isset($data['accountcode'])) {
+    $str .= ',"'.$data['accountcode'].'"';
+  }
+  if (isset($data['uniqueid'])) {
+    $str .= ',"'.$data['uniqueid'].'"';
+  }
+  if (isset($data['userfield'])) {
+    $str .= ',"'.$data['userfield'].'"';
+  }
+
+  return($str);
 }
 
 // Function: parseCDRline
@@ -507,6 +551,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
       }
     }
+  } elseif (isset($_POST['submit_export'])) {
+    if (($n = count($db['data'])) > 0) {
+      $search = isset($_POST['current_search']) ? $_POST['current_search'] : '';
+      $key = isset($_POST['current_key']) ? $_POST['current_key'] : '';
+      $name = 'CDR'.(($key === '') ? '' : '-'.$key).(($search === '') ? '' : '-'.rawurlencode($search)).'.csv';
+      header('Content-Type: application/octet-stream');             
+      header('Content-Disposition: attachment; filename="'.$name.'"');
+      header('Content-Transfer-Encoding: binary');                       
+      ob_clean();       
+      flush();                   
+      for ($i = 0; $i < $n; $i++) {
+        echo exportCDRline($db['data'][$i]), "\n";
+      }
+      exit;
+    } else {
+      $result = 0;
+    }
   } elseif (isset($_POST['submit_backup'])) {
     if (($fp = @fopen($db['logfile'],"rb")) === FALSE) {
       $result = 5;
@@ -675,6 +736,8 @@ $sel = ($fkey === 'channel') ? ' selected="selected"' : '';
 putHtml('<option value="channel"'.$sel.'>Match Src Channel:</option>');
 putHtml('</select>');
 putHtml('<input type="text" value="'.htmlspecialchars($search).'" size="18" maxlength="64" name="list_type_val" />');
+putHtml('<input type="hidden" name="current_search" value="'.htmlspecialchars($search).'" />');
+putHtml('<input type="hidden" name="current_key" value="'.$fkey.'" />');
 
 putHtml('</td><td style="text-align: center;">');
 putHtml('<select name="format_dl">');
@@ -711,6 +774,7 @@ putHtml($sel.'</option>');
   </select>
   </td></tr><tr><td style="text-align: center;">
   <input type="submit" value="Refresh CDR Display" name="submit_cdrlog" />
+  <input type="submit" value="Export CDR.csv" name="submit_export" />
   </td><td style="text-align: center;">
   <input type="submit" value="Download CDR.csv" name="submit_backup" />
   </td></tr>
