@@ -14,7 +14,7 @@ Released **TBD**
 
 -- Linux patch, crypto: aesni - fix memory usage in GCM decryption, Security fix: CVE-2015-3331
 
--- igb, version 5.2.18, Intel Gigabit Ethernet Network Driver
+-- igb, version 5.3.2, Intel Gigabit Ethernet Network Driver
 
 -- e1000e version bump to 3.2.4.2 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
