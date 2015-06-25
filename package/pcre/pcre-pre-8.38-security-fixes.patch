@@ -332,6 +332,18 @@
            if (*ptr != (pcre_uchar)terminator)
              {
 
+--- pcre-8.37/pcre_compile.c	2015/06/22 09:38:41	1570
++++ pcre-8.37/pcre_compile.c	2015/06/23 16:34:53	1571
+@@ -9427,7 +9427,7 @@
+ exceptional ones forgo this. We scan the pattern to check that they are fixed
+ length, and set their lengths. */
+ 
+-if (cd->check_lookbehind)
++if (errorcode == 0 && cd->check_lookbehind)
+   {
+   pcre_uchar *cc = (pcre_uchar *)codestart;
+ 
+
 --- pcre-8.37/pcre_exec.c	2015/06/09 16:33:27	1564
 +++ pcre-8.37/pcre_exec.c	2015/06/09 16:46:52	1565
 @@ -6685,7 +6685,8 @@
