@@ -3,9 +3,9 @@
 # dosfstools
 #
 #############################################################
-DOSFSTOOLS_VERSION = 3.0.26
-DOSFSTOOLS_SOURCE = dosfstools-$(DOSFSTOOLS_VERSION).tar.gz
-DOSFSTOOLS_SITE = http://daniel-baumann.ch/files/software/dosfstools
+DOSFSTOOLS_VERSION = 3.0.28
+DOSFSTOOLS_SOURCE = dosfstools-$(DOSFSTOOLS_VERSION).tar.xz
+DOSFSTOOLS_SITE = https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VERSION)
 
 ifneq ($(BR2_ENABLE_LOCALE),y)
 DOSFSTOOLS_DEPENDENCIES += libiconv
