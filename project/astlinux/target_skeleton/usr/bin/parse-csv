@@ -1,0 +1,21 @@
+#!/usr/bin/php -qC
+<?php
+if (! isset($argv)) {
+  $argv = $_SERVER['argv'];
+}
+
+$str = $argv[1];
+
+if ($str == '') {
+  echo "Usage: parse-csv csv_string\n";
+  exit(1);
+}
+
+$csv = str_getcsv($str, ',', '"', '""');
+
+foreach ($csv as $line) {
+  echo "$line\n";
+}
+
+exit(0);
+?>
