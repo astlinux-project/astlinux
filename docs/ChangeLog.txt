@@ -5,10 +5,47 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.2.3:
+Additions for AstLinux 1.2.4:
 =============================
 
 Released **TBD**
+
+** System
+
+-- perl, version 5.20.2 using perlcross 0.9.7
+
+-- lm-sensors, version bump to 3.4.0
+
+-- nano, version bump to 2.4.2
+
+-- dosfstools, version bump to 3.0.28
+
+-- parse-csv, new command, parse a comma-seperated-value string like an Asterisk CDR line and output each value
+   followed by a new-line.  Fields may be quoted with double-quotes and a quoted quote is encoded as two double-quotes.
+
+** Networking
+
+-- ntpd/sntp, version bump to 4.2.8p3
+
+-- openldap, version bump to 2.4.41
+
+** Asterisk
+
+-- Asterisk 1.8.32.3 (no change), 11.18.0 (no change) and 13.4.0 (no change)
+
+-- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
+
+-- pjsip 2.4 (no change)
+
+** Web Interface
+
+-- No Change
+
+
+Additions for AstLinux 1.2.3:
+=============================
+
+Released 2015-07-06
 
 ** System
 
