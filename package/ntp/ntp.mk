@@ -21,10 +21,6 @@ else
 NTP_CONF_OPT += --without-crypto
 endif
 
-define NTP_PATCH_FIXUPS
-	$(SED) "s,^#if.*__GLIBC__.*_BSD_SOURCE.*$$,#if 0," $(@D)/ntpd/refclock_pcf.c
-endef
-
 NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTP_KEYGEN) += util/ntp-keygen
 NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTP_WAIT) += scripts/ntp-wait/ntp-wait
 NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTPDATE) += ntpdate/ntpdate
@@ -46,7 +42,5 @@ define NTP_UNINSTALL_TARGET_CMDS
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,$(NTP_INSTALL_FILES_y))
 	rm $(TARGET_DIR)/etc/init.d/ntpd
 endef
-
-NTP_POST_PATCH_HOOKS += NTP_PATCH_FIXUPS
 
 $(eval $(call AUTOTARGETS,package,ntp))
