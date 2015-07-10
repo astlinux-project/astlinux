@@ -41,7 +41,7 @@ Released **TBD**
 
 ** Web Interface
 
--- System tab, Configuration/File Backup: exclude /stat/var/www/cache/ files from unionfs backup.
+-- System and Staff tabs, Configuration/File Backup: exclude /stat/var/www/cache/ files from unionfs backup.
 
 
 Additions for AstLinux 1.2.3:
