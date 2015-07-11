@@ -12,6 +12,8 @@ Released **TBD**
 
 ** System
 
+-- php, version bump to 5.5.27, bug and security fixes
+
 -- perl, version 5.20.2 using perlcross 0.9.7
 
 -- lm-sensors, version bump to 3.4.0
