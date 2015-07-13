@@ -29,6 +29,8 @@ Released **TBD**
 
 -- OpenSSL, version bump to 1.0.1p, security fix: CVE-2015-1793
 
+-- libpcap, version bump to 1.7.4
+
 -- ntpd/sntp, version bump to 4.2.8p3
 
 -- openldap, version bump to 2.4.41
