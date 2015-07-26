@@ -46,7 +46,7 @@ dnscrypt_proxy_servers()
   if [ -f /etc/init.d/dnscrypt ]; then
     if [ "$DNSCRYPT_PROXY" = "yes" ]; then
       servers="127.0.0.1#2053"
-      if [ -n "$DNSCRYPT_2SERVER_ADDRESS" -a -n "$DNSCRYPT_2PROVIDER_NAME" -a -n "$DNSCRYPT_2PROVIDER_KEY" ]; then
+      if [ -n "$DNSCRYPT_2SERVER_ADDRESS" ]; then
         servers="$servers 127.0.0.1#2054"
       fi
     fi
