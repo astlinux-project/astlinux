@@ -35,6 +35,9 @@ Released **TBD**
 
 -- openldap, version bump to 2.4.41
 
+-- dnscrypt-proxy, version bump to 1.6.0, add support for ephemeral-keys and an optional secondary proxy server.
+   New rc.conf variables are: DNSCRYPT_EPHEMERAL_KEYS, DNSCRYPT_2SERVER_ADDRESS, DNSCRYPT_2PROVIDER_NAME, DNSCRYPT_2PROVIDER_KEY
+
 ** Asterisk
 
 -- Asterisk 1.8.32.3 (no change), 11.18.0 (no change) and 13.4.0 (no change)
@@ -46,6 +49,10 @@ Released **TBD**
 ** Web Interface
 
 -- System and Staff tabs, Configuration/File Backup: exclude /stat/var/www/cache/ files from unionfs backup.
+
+-- Network -> "DNSCrypt Proxy Server Configuration" sub-tab, add support for "Ephemeral Keys"
+   and optional "Secondary Server" configuration.
+   More Info: http://doc.astlinux.org/userdoc:tt_dnscrypt_proxy
 
 
 Additions for AstLinux 1.2.3:
