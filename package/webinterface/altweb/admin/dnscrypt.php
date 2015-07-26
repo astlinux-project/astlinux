@@ -44,7 +44,10 @@ function saveDNSCRYPTsettings($conf_dir, $conf_file) {
   
   $value = 'DNSCRYPT_VERBOSITY="'.$_POST['verbosity'].'"';
   fwrite($fp, "### Log Level\n".$value."\n");
-  
+
+  $value = 'DNSCRYPT_EPHEMERAL_KEYS="'.$_POST['ephemeral_keys'].'"';
+  fwrite($fp, "### Ephemeral Keys\n".$value."\n");
+
   $value = 'DNSCRYPT_SERVER_ADDRESS="'.tuq($_POST['server_address']).'"';
   fwrite($fp, "### Server Address\n".$value."\n");
 
@@ -53,6 +56,15 @@ function saveDNSCRYPTsettings($conf_dir, $conf_file) {
 
   $value = 'DNSCRYPT_PROVIDER_KEY="'.tuq($_POST['provider_key']).'"';
   fwrite($fp, "### Provider Key\n".$value."\n");
+
+  $value = 'DNSCRYPT_2SERVER_ADDRESS="'.tuq($_POST['server_address2']).'"';
+  fwrite($fp, "### 2nd Server Address\n".$value."\n");
+
+  $value = 'DNSCRYPT_2PROVIDER_NAME="'.tuq($_POST['provider_name2']).'"';
+  fwrite($fp, "### 2nd Provider Name\n".$value."\n");
+
+  $value = 'DNSCRYPT_2PROVIDER_KEY="'.tuq($_POST['provider_key2']).'"';
+  fwrite($fp, "### 2nd Provider Key\n".$value."\n");
 
   fwrite($fp, "### gui.dnscrypt.conf - end ###\n");
   fclose($fp);
@@ -157,14 +169,31 @@ require_once '../common/header.php';
   putHtml('</select>');
   putHtml('</td></tr>');
 
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Ephemeral Keys:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  putHtml('<select name="ephemeral_keys">');
+  $value = getVARdef($db, 'DNSCRYPT_EPHEMERAL_KEYS', $cur_db);
+  putHtml('<option value="no">disabled</option>');
+  $sel = ($value === 'yes') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>enabled</option>');
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>Primary Server:</strong>');
+  putHtml('</td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="color: orange; text-align: center;" colspan="6">');
-  putHtml('Note: Leave the fields below empty to use the OpenDNS defaults.');
+  putHtml('Note: Any empty fields below use the OpenDNS defaults.');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Server Address:');
   putHtml('</td><td style="text-align: left;" colspan="4">');
-  $value = getVARdef($db, 'DNSCRYPT_SERVER_ADDRESS', $cur_db);
+  if (($value = getVARdef($db, 'DNSCRYPT_SERVER_ADDRESS', $cur_db)) === '') {
+    $value = '208.67.220.220:443';
+  }
   putHtml('<input type="text" size="48" maxlength="128" value="'.$value.'" name="server_address" />');
   putHtml('</td></tr>');
 
@@ -180,6 +209,36 @@ require_once '../common/header.php';
   putHtml('</td><td style="text-align: left;" colspan="4">');
   $value = getVARdef($db, 'DNSCRYPT_PROVIDER_KEY', $cur_db);
   putHtml('<input type="text" size="80" maxlength="80" value="'.$value.'" name="provider_key" />');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>Secondary Server:</strong> <i>(optional)</i>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="color: orange; text-align: center;" colspan="6">');
+  putHtml('Note: The "Server Address" field below must be defined to enable the<br />');
+  putHtml('secondary server. Other empty fields use the OpenDNS defaults.');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Server Address:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  $value = getVARdef($db, 'DNSCRYPT_2SERVER_ADDRESS', $cur_db);
+  putHtml('<input type="text" size="48" maxlength="128" value="'.$value.'" name="server_address2" />');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Provider Name:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  $value = getVARdef($db, 'DNSCRYPT_2PROVIDER_NAME', $cur_db);
+  putHtml('<input type="text" size="48" maxlength="128" value="'.$value.'" name="provider_name2" />');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Provider Key:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  $value = getVARdef($db, 'DNSCRYPT_2PROVIDER_KEY', $cur_db);
+  putHtml('<input type="text" size="80" maxlength="80" value="'.$value.'" name="provider_key2" />');
   putHtml('</td></tr>');
 
   putHtml('</table>');
