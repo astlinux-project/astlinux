@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LINKS_VERSION = 2.9
+LINKS_VERSION = 2.10
 LINKS_SITE = http://links.twibright.com/download
 LINKS_CONF_OPT = --without-x
 
