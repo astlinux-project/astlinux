@@ -4,14 +4,15 @@
 #
 #############################################################
 
-IPTABLES_VERSION = 1.4.17
+IPTABLES_VERSION = 1.4.21
 IPTABLES_SOURCE = iptables-$(IPTABLES_VERSION).tar.bz2
 IPTABLES_SITE = http://ftp.netfilter.org/pub/iptables
 IPTABLES_INSTALL_STAGING = YES
-IPTABLES_AUTORECONF = YES
 IPTABLES_DEPENDENCIES = host-pkg-config
 
-IPTABLES_CONF_OPT = --libexecdir=/usr/lib --with-kernel=$(LINUX_HEADERS_DIR)
+IPTABLES_CONF_OPT = \
+	--libexecdir=/usr/lib \
+	--with-kernel=$(STAGING_DIR)/usr
 
 define IPTABLES_TARGET_SYMLINK_CREATE
 	ln -sf xtables-multi $(TARGET_DIR)/usr/sbin/iptables
