@@ -32,6 +32,8 @@ Released **TBD**
 -- lighttpd, version bump to 1.4.36, security fix: CVE-2015-3200
    Note: SSLv3 is now disabled by default, clients must support TLS.
 
+-- iptables, version bump to 1.4.21
+
 -- libpcap, version bump to 1.7.4
 
 -- ntpd/sntp, version bump to 4.2.8p3
