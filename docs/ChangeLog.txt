@@ -20,6 +20,8 @@ Released **TBD**
 
 -- nano, version bump to 2.4.2
 
+-- logrotate, version bump to 3.9.1
+
 -- dosfstools, version bump to 3.0.28
 
 -- parse-csv, new command, parse a comma-seperated-value string like an Asterisk CDR line and output each value
@@ -41,6 +43,8 @@ Released **TBD**
 -- openldap, version bump to 2.4.41
 
 -- vsftpd, version bump to 3.0.3
+
+-- stunnel, version bump to 5.22
 
 -- dnsmasq, version bump to 2.74
 
