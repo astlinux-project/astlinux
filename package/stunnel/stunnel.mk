@@ -4,8 +4,8 @@
 #
 #############################################################
 
-STUNNEL_VERSION = 5.19
-STUNNEL_SITE = http://ftp.nluug.nl/pub/networking/stunnel/archive/5.x
+STUNNEL_VERSION = 5.22
+STUNNEL_SITE = http://www.usenix.org.uk/mirrors/stunnel/archive/5.x
 STUNNEL_DEPENDENCIES = openssl
 
 # We're patching configure.ac
