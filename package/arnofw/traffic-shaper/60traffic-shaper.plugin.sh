@@ -2,11 +2,11 @@
 #      -= Arno's iptables firewall - HTB & HFSC traffic shaper plugin =-
 #
 PLUGIN_NAME="Traffic-Shaper plugin"
-PLUGIN_VERSION="1.2.07-astlinux"
+PLUGIN_VERSION="1.2.08-astlinux"
 PLUGIN_CONF_FILE="traffic-shaper.conf"
 #
-# Last changed          : December 26, 2012
-# Requirements          : kernel 2.6 + iproute
+# Last changed          : July 31, 2015
+# Requirements          : kernel 2.6 + iproute2
 # Comments              : This plugin will shape traffic. It borrows heavily on
 #                         the logic of Maciej's original script (below), with
 #                         some minor changes to the actual bins that traffic
@@ -223,8 +223,7 @@ plugin_start()
 plugin_start_hfsc()
 {
   # Some required modules are already loaded by the main script:
-  modprobe ip_nat
-  # modprobe ip_table
+  modprobe_multi nf_nat ip_nat
 
   modprobe sch_hfsc
 
@@ -297,7 +296,7 @@ plugin_start_hfsc()
 plugin_start_htb()
 {
   # Some required modules are already loaded by the main script:
-  modprobe ip_nat
+  modprobe_multi nf_nat ip_nat
 
   printf "${INDENT}Shaping as (Down/Up) %d/%d kb/s using '%s' for interface: %s\n" $DOWNLINK $UPLINK htb "$SHAPER_IF"
 
@@ -414,16 +413,6 @@ plugin_sanity_check()
 {
   if [ -z "$UPLINK" -o -z "$DOWNLINK" ]; then
     printf "\033[40m\033[1;31m${INDENT}ERROR: The plugin config file is not properly set!\n\033[0m" >&2
-    return 1
-  fi
-
-  count=0
-  IFS=' ,'
-  for eif in $SHAPER_IF; do
-    count=$((count+1))
-  done
-  if [ "$count" -ne 1 ]; then
-    printf "\033[40m\033[1;31m${INDENT}ERROR: Only one external interface is supported!\n\033[0m" >&2
     return 1
   fi
 
