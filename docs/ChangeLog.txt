@@ -46,7 +46,7 @@ Released **TBD**
 
 -- stunnel, version bump to 5.22
 
--- dnsmasq, version bump to 2.74
+-- dnsmasq, version bump to 2.75
 
 -- dnscrypt-proxy, version bump to 1.6.0, add support for ephemeral-keys and an optional secondary proxy server.
    New rc.conf variables are: DNSCRYPT_EPHEMERAL_KEYS, DNSCRYPT_2SERVER_ADDRESS, DNSCRYPT_2PROVIDER_NAME, DNSCRYPT_2PROVIDER_KEY
