@@ -1,0 +1,38 @@
+--- arno-iptables-firewall_2.0.1e/share/arno-iptables-firewall/environment.orig	2015-08-02 08:31:33.000000000 -0500
++++ arno-iptables-firewall_2.0.1e/share/arno-iptables-firewall/environment	2015-08-02 08:33:37.000000000 -0500
+@@ -291,7 +291,7 @@
+ {
+   local result retval IFS=' '
+ 
+-  result=`$IP4TABLES "$@" 2>&1`
++  result=`$IP4TABLES -w "$@" 2>&1`
+   retval=$?
+ 
+   if [ $retval -ne 0 ]; then
+@@ -318,7 +318,7 @@
+ {
+   local result retval IFS=' '
+ 
+-  result=`$IP6TABLES "$@" 2>&1`
++  result=`$IP6TABLES -w "$@" 2>&1`
+   retval=$?
+ 
+   if [ $retval -ne 0 ]; then
+@@ -417,7 +417,7 @@
+ {
+   local IFS=' '
+ 
+-  $IP4TABLES "$@" >/dev/null 2>&1
++  $IP4TABLES -w "$@" >/dev/null 2>&1
+ }
+ 
+ 
+@@ -425,7 +425,7 @@
+ {
+   local IFS=' '
+ 
+-  $IP6TABLES "$@" >/dev/null 2>&1
++  $IP6TABLES -w "$@" >/dev/null 2>&1
+ }
+ 
+ 

@@ -286,7 +286,7 @@ ip4tables()
 {
   local result retval
 
-  result="$($IP4TABLES "$@" 2>&1)"
+  result="$($IP4TABLES -w "$@" 2>&1)"
   retval=$?
   
   if [ $retval -ne 0 ]; then
@@ -302,7 +302,7 @@ ip6tables()
 {
   local result retval
 
-  result="$($IP6TABLES "$@" 2>&1)"
+  result="$($IP6TABLES -w "$@" 2>&1)"
   retval=$?
   
   if [ $retval -ne 0 ]; then
