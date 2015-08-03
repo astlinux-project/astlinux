@@ -8,7 +8,7 @@
 
 // phoneprov.php for AstLinux
 // 03-14-2014
-// 08-02-2015, Add Status Info, Reload Config and Reboot buttons
+// 08-02-2015, Add Status, Reload and Reboot links
 //
 // System location of /mnt/kd/rc.conf.d directory
 $PHONEPROVCONFDIR = '/mnt/kd/rc.conf.d';
@@ -616,7 +616,7 @@ require_once '../common/header.php';
         $info_data_mac = $mac;
         putHtml('<p>&nbsp;</p>');
       } else {
-        putHtml('<p style="color: red;">Status Info Failed.</p>');
+        putHtml('<p style="color: red;">Status Action Failed.</p>');
       }
     } else {
       putHtml('<p style="color: red;">SQL Action Failed.</p>');
@@ -628,10 +628,10 @@ require_once '../common/header.php';
         if (($sip_notify_text = asteriskCMDtext('sip notify '.$sip_notify.' '.$sql['account'])) !== FALSE) {
           putHtml('<p>'.$sip_notify_text[0].'</p>');
         } else {
-          putHtml('<p style="color: red;">Reload Config Failed.</p>');
+          putHtml('<p style="color: red;">Reload Action Failed.</p>');
         }
       } else {
-        putHtml('<p style="color: red;">Reload Config Failed.</p>');
+        putHtml('<p style="color: red;">Reload Action Failed.</p>');
       }
     } else {
       putHtml('<p style="color: red;">SQL Action Failed.</p>');
@@ -643,10 +643,10 @@ require_once '../common/header.php';
         if (($sip_notify_text = asteriskCMDtext('sip notify '.$sip_notify.' '.$sql['account'])) !== FALSE) {
           putHtml('<p>'.$sip_notify_text[0].'</p>');
         } else {
-          putHtml('<p style="color: red;">Reboot Failed.</p>');
+          putHtml('<p style="color: red;">Reboot Action Failed.</p>');
         }
       } else {
-        putHtml('<p style="color: red;">Reboot Failed.</p>');
+        putHtml('<p style="color: red;">Reboot Action Failed.</p>');
       }
     } else {
       putHtml('<p style="color: red;">SQL Action Failed.</p>');
@@ -794,11 +794,10 @@ if (($templates = getPHONEPROVtemplates("$phoneprov_base_dir/templates")) !== FA
       if (($sql = isMACinSQL($mac)) !== FALSE) {
         putHtml("</tr>");
         echo '<tr ', ($i % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
-        echo '<td>&nbsp;</td>';
-        echo '<td colspan="6">';
-        echo '&nbsp;<a href="'.$myself.'?info='.rawurlencode($mac).'" class="actionText">Status Info</a>';
-        echo '&nbsp;<a href="'.$myself.'?reload='.rawurlencode($mac).'" class="actionText">Reload Config</a>';
-        echo '&nbsp;<a href="'.$myself.'?reboot='.rawurlencode($mac).'" class="actionText">Reboot</a>';
+        echo '<td style="text-align: right;" colspan="7">';
+        echo '&nbsp;<a href="'.$myself.'?info='.rawurlencode($mac).'" class="headerText" title="Show SIP Peer Info">Status</a>';
+        echo '&nbsp;<a href="'.$myself.'?reload='.rawurlencode($mac).'" class="headerText" title="Send SIP Notify to Reload Config">Reload</a>';
+        echo '&nbsp;<a href="'.$myself.'?reboot='.rawurlencode($mac).'" class="headerText" title="Send SIP Notify to Reboot Phone">Reboot</a>';
         echo '</td>';
         if ($info_data_mac === $mac) {
           foreach ($info_data as $info_label => $info_field) {

@@ -420,7 +420,7 @@ function sortCDRdb(&$db, $sortby) {
 function putCDRheader($sortby, $title) {
   global $myself;
 
-  return('<a href="'.$myself.'?sortcolumnby='.$sortby.'" class="headerText">'.$title.'</a>');
+  return('<a href="'.$myself.'?sortcolumnby='.$sortby.'" class="headerText" title="Column Sort by: '.$sortby.'">'.$title.'</a>');
 
 }
 
