@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2014 Lonnie Abelbeck
+// Copyright (C) 2015 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -8,14 +8,19 @@
 
 // phoneprov.php for AstLinux
 // 03-14-2014
+// 08-02-2015, Add Status Info, Reload Config and Reboot buttons
 //
 // System location of /mnt/kd/rc.conf.d directory
 $PHONEPROVCONFDIR = '/mnt/kd/rc.conf.d';
 // System location of gui.phoneprov.conf file
 $PHONEPROVCONFFILE = '/mnt/kd/rc.conf.d/gui.phoneprov.conf';
+// Asterisk sip_notify config file
+$ASTERISK_SIP_NOTIFY_CONF = '/etc/asterisk/sip_notify.conf';
 
 $family = "phoneprov";
 $myself = $_SERVER['PHP_SELF'];
+
+$info_data_mac = '';
 
 require_once '../common/functions.php';
 
@@ -32,6 +37,159 @@ $gw_if_menu = array (
   'INT3IF' => '3rd LAN Interface',
   'EXTIF' => 'External Interface'
 );
+
+$sip_notify_reload = array (
+  'aastra' => 'aastra-check-cfg',
+  'cisco' => 'cisco-check-cfg',
+  'linksys' => 'linksys-warm-restart',
+  'polycom' => 'polycom-check-cfg',
+  'sipura' => 'sipura-check-cfg',
+  'snom' => 'snom-check-cfg',
+  'yealink' => 'snom-check-cfg'
+);
+
+$sip_notify_reboot = array (
+  'linksys' => 'linksys-cold-restart',
+  'snom' => 'snom-reboot',
+  'yealink' => 'snom-reboot'
+);
+
+// Function: isMACinSQL
+//
+function isMACinSQL($mac) {
+
+  if (! class_exists('PDO')) {
+    return(FALSE);
+  }
+
+  $db_file = '/mnt/kd/asterisk-odbc.sqlite3';
+  if (! is_file("$db_file")) {
+    return(FALSE);
+  }
+
+  $sql = array();
+  try {
+    $pdo_db = new PDO("sqlite:$db_file");
+    $pdo_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $sql_str = "SELECT account,model,vendor FROM phoneprov WHERE mac_addr='$mac'";
+    foreach ($pdo_db->query($sql_str) as $row) {
+      if ($row['account'] !== '') {
+        $sql['account'] = $row['account'];
+        $sql['model'] = ($row['model'] !== '') ? $row['model'] : 'unknown';
+        $sql['vendor'] = ($row['vendor'] !== '') ? $row['vendor'] : 'unknown';
+        break;
+      }
+    }
+    $pdo_db = NULL;
+  } catch (PDOException $e) {
+    return(FALSE);
+  }
+
+  if (! isset($sql['account'])) {
+    return(FALSE);
+  }
+  return($sql);
+}
+
+// Function: isMACinfo
+//
+function isMACinfo($mac, $sql) {
+
+  if (($text = asteriskCMDtext('sip show peer '.$sql['account'])) === FALSE) {
+    return(FALSE);
+  }
+
+  $match = array (
+    'useragent',
+    'addr->ip',
+    'status'
+  );
+
+  $info = array();
+  foreach ($match as $value) {
+    foreach ($text as $line) {
+      $strtokens = explode(':', $line, 2);
+      $label = trim($strtokens[0]);
+      if ($value === strtolower($label)) {
+        if (($field = trim($strtokens[1])) !== '') {
+          $info[$label] = $field;
+        }
+        break;
+      }
+    }
+  }
+  if (count($info) < 1) {
+    return(FALSE);
+  }
+  return($info);
+}
+
+// Function: isMACreload
+//
+function isMACreload($mac, $sql, $map) {
+  global $ASTERISK_SIP_NOTIFY_CONF;
+  
+  $model = $sql['model'].'-reload';
+  $vendor = $sql['vendor'].'-reload';
+  $name = $ASTERISK_SIP_NOTIFY_CONF;
+  if (is_file($name)) {
+    $cmd = 'grep -q "^\['.$model.'\]" '.$name;
+    shell($cmd.' >/dev/null 2>/dev/null', $status);
+    if ($status == 0) {
+      return($model);
+    }
+    $cmd = 'grep -q "^\['.$vendor.'\]" '.$name;
+    shell($cmd.' >/dev/null 2>/dev/null', $status);
+    if ($status == 0) {
+      return($vendor);
+    }
+    if (isset($map[$sql['vendor']])) {
+      return($map[$sql['vendor']]);
+    }
+  }
+  return(FALSE);
+}
+
+// Function: isMACreboot
+//
+function isMACreboot($mac, $sql, $map) {
+  global $ASTERISK_SIP_NOTIFY_CONF;
+
+  $model = $sql['model'].'-reboot';
+  $vendor = $sql['vendor'].'-reboot';
+  $name = $ASTERISK_SIP_NOTIFY_CONF;
+  if (is_file($name)) {
+    $cmd = 'grep -q "^\['.$model.'\]" '.$name;
+    shell($cmd.' >/dev/null 2>/dev/null', $status);
+    if ($status == 0) {
+      return($model);
+    }
+    $cmd = 'grep -q "^\['.$vendor.'\]" '.$name;
+    shell($cmd.' >/dev/null 2>/dev/null', $status);
+    if ($status == 0) {
+      return($vendor);
+    }
+    if (isset($map[$sql['vendor']])) {
+      return($map[$sql['vendor']]);
+    }
+  }
+  return(FALSE);
+}
+
+// Function: asteriskCMDtext
+//
+function asteriskCMDtext($cmd) {
+
+  $tmpfile = tempnam("/tmp", "PHP_");
+  if (asteriskCMD($cmd, $tmpfile) == 0) {
+    $text = @file($tmpfile, FILE_IGNORE_NEW_LINES);
+  } else {
+    $text = FALSE;
+  }
+  @unlink($tmpfile);
+  return($text);
+}
 
 // Function: putACTIONresult
 //
@@ -451,6 +609,48 @@ require_once '../common/header.php';
     } else {
       putHtml('<p>&nbsp;</p>');
     }
+  } elseif (isset($_GET['info'])) {
+    $mac = rawurldecode($_GET['info']);
+    if (($sql = isMACinSQL($mac)) !== FALSE) {
+      if (($info_data = isMACinfo($mac, $sql)) !== FALSE) {
+        $info_data_mac = $mac;
+        putHtml('<p>&nbsp;</p>');
+      } else {
+        putHtml('<p style="color: red;">Status Info Failed.</p>');
+      }
+    } else {
+      putHtml('<p style="color: red;">SQL Action Failed.</p>');
+    }
+  } elseif (isset($_GET['reload'])) {
+    $mac = rawurldecode($_GET['reload']);
+    if (($sql = isMACinSQL($mac)) !== FALSE) {
+      if (($sip_notify = isMACreload($mac, $sql, $sip_notify_reload)) !== FALSE) {
+        if (($sip_notify_text = asteriskCMDtext('sip notify '.$sip_notify.' '.$sql['account'])) !== FALSE) {
+          putHtml('<p>'.$sip_notify_text[0].'</p>');
+        } else {
+          putHtml('<p style="color: red;">Reload Config Failed.</p>');
+        }
+      } else {
+        putHtml('<p style="color: red;">Reload Config Failed.</p>');
+      }
+    } else {
+      putHtml('<p style="color: red;">SQL Action Failed.</p>');
+    }
+  } elseif (isset($_GET['reboot'])) {
+    $mac = rawurldecode($_GET['reboot']);
+    if (($sql = isMACinSQL($mac)) !== FALSE) {
+      if (($sip_notify = isMACreboot($mac, $sql, $sip_notify_reboot)) !== FALSE) {
+        if (($sip_notify_text = asteriskCMDtext('sip notify '.$sip_notify.' '.$sql['account'])) !== FALSE) {
+          putHtml('<p>'.$sip_notify_text[0].'</p>');
+        } else {
+          putHtml('<p style="color: red;">Reboot Failed.</p>');
+        }
+      } else {
+        putHtml('<p style="color: red;">Reboot Failed.</p>');
+      }
+    } else {
+      putHtml('<p style="color: red;">SQL Action Failed.</p>');
+    }
   } else {
     putHtml('<p>&nbsp;</p>');
   }
@@ -591,6 +791,26 @@ if (($templates = getPHONEPROVtemplates("$phoneprov_base_dir/templates")) !== FA
       $sel = ($data[$i]['enabled'] === '0') ? ' checked="checked"' : '';
       echo '<td style="text-align: center;">', '<input type="checkbox" name="disabled[]" value="', $mac, '"'.$sel.' />', '</td>';
       echo '<td style="text-align: center;">', '<input type="checkbox" name="delete[]" value="', $mac, '" />', '</td>';
+      if (($sql = isMACinSQL($mac)) !== FALSE) {
+        putHtml("</tr>");
+        echo '<tr ', ($i % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
+        echo '<td>&nbsp;</td>';
+        echo '<td colspan="6">';
+        echo '&nbsp;<a href="'.$myself.'?info='.rawurlencode($mac).'" class="actionText">Status Info</a>';
+        echo '&nbsp;<a href="'.$myself.'?reload='.rawurlencode($mac).'" class="actionText">Reload Config</a>';
+        echo '&nbsp;<a href="'.$myself.'?reboot='.rawurlencode($mac).'" class="actionText">Reboot</a>';
+        echo '</td>';
+        if ($info_data_mac === $mac) {
+          foreach ($info_data as $info_label => $info_field) {
+            putHtml("</tr>");
+            echo '<tr ', ($i % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
+            echo '<td style="text-align: right;">'.htmlspecialchars($info_label).':</td>';
+            echo '<td colspan="6">';
+            echo htmlspecialchars($info_field);
+            echo '</td>';
+          }
+        }
+      }
     }
   } else {
     if ($db['status'] == 0) {                                                                    
