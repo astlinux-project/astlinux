@@ -1,0 +1,11 @@
+--- lighttpd-1.4.36/src/mod_proxy.c.orig	2015-08-03 13:03:02.000000000 -0500
++++ lighttpd-1.4.36/src/mod_proxy.c	2015-08-03 13:04:51.000000000 -0500
+@@ -940,7 +940,7 @@
+ 		case 1:
+ 			/* we are done */
+ 			proxy_connection_close(srv, hctx);
+-			log_error_write(srv, __FILE__, __LINE__, "s", "proxy request finished");
++			/* log_error_write(srv, __FILE__, __LINE__, "s", "proxy request finished"); */
+ 
+ 			joblist_append(srv, con);
+ 			return HANDLER_FINISHED;
