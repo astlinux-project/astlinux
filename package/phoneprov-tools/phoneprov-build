@@ -167,7 +167,8 @@ CREATE TABLE 'phoneprov_build' (
   'mac_addr' TEXT DEFAULT '',
   'template' TEXT DEFAULT '',
   'model' TEXT DEFAULT '',
-  'vendor' TEXT DEFAULT ''
+  'vendor' TEXT DEFAULT '',
+  'sip_driver' TEXT DEFAULT ''
 );
 EOF
 }
@@ -186,7 +187,8 @@ sql_add_extensions() {
 'mac_addr',
 'template',
 'model',
-'vendor'
+'vendor',
+'sip_driver'
 )
 VALUES (
 '${EXT[$i]}',
@@ -196,7 +198,8 @@ VALUES (
 '${mac_addr}',
 '${template}',
 '${model}',
-'${vendor}'
+'${vendor}',
+'${sip_driver}'
 );"
     fi
   done
@@ -386,6 +389,12 @@ if [ -z "$sql_enable" ]; then
   sql_enable="yes"
 else
   sql_enable="$(echo "$sql_enable" | tr '[:upper:]' '[:lower:]')"
+fi
+sip_driver="$(extract_var sip_driver)"
+if [ -z "$sip_driver" ]; then
+  sip_driver="sip"
+else
+  sip_driver="$(echo "$sip_driver" | tr '[:upper:]' '[:lower:]')"
 fi
 
 # Special case to initialize dialplan and sip output files
