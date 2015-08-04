@@ -9,6 +9,7 @@
 // phoneprov.php for AstLinux
 // 03-14-2014
 // 08-02-2015, Add Status, Reload and Reboot links
+// 08-04-2015, Add pjsip support
 //
 // System location of /mnt/kd/rc.conf.d directory
 $PHONEPROVCONFDIR = '/mnt/kd/rc.conf.d';
@@ -16,6 +17,8 @@ $PHONEPROVCONFDIR = '/mnt/kd/rc.conf.d';
 $PHONEPROVCONFFILE = '/mnt/kd/rc.conf.d/gui.phoneprov.conf';
 // Asterisk sip_notify config file
 $ASTERISK_SIP_NOTIFY_CONF = '/etc/asterisk/sip_notify.conf';
+// Asterisk pjsip_notify config file
+$ASTERISK_PJSIP_NOTIFY_CONF = '/etc/asterisk/pjsip_notify.conf';
 
 $family = "phoneprov";
 $myself = $_SERVER['PHP_SELF'];
@@ -49,6 +52,7 @@ $sip_notify_reload = array (
 );
 
 $sip_notify_reboot = array (
+  'cisco' => 'linksys-cold-restart',
   'linksys' => 'linksys-cold-restart',
   'snom' => 'snom-reboot',
   'yealink' => 'snom-reboot'
@@ -72,12 +76,13 @@ function isMACinSQL($mac) {
     $pdo_db = new PDO("sqlite:$db_file");
     $pdo_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $sql_str = "SELECT account,model,vendor FROM phoneprov WHERE mac_addr='$mac'";
+    $sql_str = "SELECT * FROM phoneprov WHERE mac_addr='$mac'";
     foreach ($pdo_db->query($sql_str) as $row) {
-      if ($row['account'] !== '') {
+      if ($row['account'] != '') {
         $sql['account'] = $row['account'];
-        $sql['model'] = ($row['model'] !== '') ? $row['model'] : 'unknown';
-        $sql['vendor'] = ($row['vendor'] !== '') ? $row['vendor'] : 'unknown';
+        $sql['model'] = ($row['model'] != '') ? $row['model'] : 'unknown';
+        $sql['vendor'] = ($row['vendor'] != '') ? $row['vendor'] : 'unknown';
+        $sql['sip_driver'] = ($row['sip_driver'] != '') ? $row['sip_driver'] : 'sip';
         break;
       }
     }
@@ -96,6 +101,9 @@ function isMACinSQL($mac) {
 //
 function isMACinfo($mac, $sql) {
 
+  if ($sql['sip_driver'] === 'pjsip') {
+    return(FALSE);
+  }
   if (($text = asteriskCMDtext('sip show peer '.$sql['account'])) === FALSE) {
     return(FALSE);
   }
@@ -129,10 +137,11 @@ function isMACinfo($mac, $sql) {
 //
 function isMACreload($mac, $sql, $map) {
   global $ASTERISK_SIP_NOTIFY_CONF;
+  global $ASTERISK_PJSIP_NOTIFY_CONF;
   
   $model = $sql['model'].'-reload';
   $vendor = $sql['vendor'].'-reload';
-  $name = $ASTERISK_SIP_NOTIFY_CONF;
+  $name = ($sql['sip_driver'] === 'pjsip') ? $ASTERISK_PJSIP_NOTIFY_CONF : $ASTERISK_SIP_NOTIFY_CONF;
   if (is_file($name)) {
     $cmd = 'grep -q "^\['.$model.'\]" '.$name;
     shell($cmd.' >/dev/null 2>/dev/null', $status);
@@ -155,10 +164,11 @@ function isMACreload($mac, $sql, $map) {
 //
 function isMACreboot($mac, $sql, $map) {
   global $ASTERISK_SIP_NOTIFY_CONF;
+  global $ASTERISK_PJSIP_NOTIFY_CONF;
 
   $model = $sql['model'].'-reboot';
   $vendor = $sql['vendor'].'-reboot';
-  $name = $ASTERISK_SIP_NOTIFY_CONF;
+  $name = ($sql['sip_driver'] === 'pjsip') ? $ASTERISK_PJSIP_NOTIFY_CONF : $ASTERISK_SIP_NOTIFY_CONF;
   if (is_file($name)) {
     $cmd = 'grep -q "^\['.$model.'\]" '.$name;
     shell($cmd.' >/dev/null 2>/dev/null', $status);
@@ -625,7 +635,10 @@ require_once '../common/header.php';
     $mac = rawurldecode($_GET['reload']);
     if (($sql = isMACinSQL($mac)) !== FALSE) {
       if (($sip_notify = isMACreload($mac, $sql, $sip_notify_reload)) !== FALSE) {
-        if (($sip_notify_text = asteriskCMDtext('sip notify '.$sip_notify.' '.$sql['account'])) !== FALSE) {
+        $notify_cmd = ($sql['sip_driver'] === 'pjsip') ? 'pjsip send notify '.$sip_notify.' endpoint '
+                                                       : 'sip notify '.$sip_notify.' ';
+        $notify_cmd .= $sql['account'];
+        if (($sip_notify_text = asteriskCMDtext($notify_cmd)) !== FALSE) {
           putHtml('<p>'.$sip_notify_text[0].'</p>');
         } else {
           putHtml('<p style="color: red;">Reload Action Failed.</p>');
@@ -640,7 +653,10 @@ require_once '../common/header.php';
     $mac = rawurldecode($_GET['reboot']);
     if (($sql = isMACinSQL($mac)) !== FALSE) {
       if (($sip_notify = isMACreboot($mac, $sql, $sip_notify_reboot)) !== FALSE) {
-        if (($sip_notify_text = asteriskCMDtext('sip notify '.$sip_notify.' '.$sql['account'])) !== FALSE) {
+        $notify_cmd = ($sql['sip_driver'] === 'pjsip') ? 'pjsip send notify '.$sip_notify.' endpoint '
+                                                       : 'sip notify '.$sip_notify.' ';
+        $notify_cmd .= $sql['account'];
+        if (($sip_notify_text = asteriskCMDtext($notify_cmd)) !== FALSE) {
           putHtml('<p>'.$sip_notify_text[0].'</p>');
         } else {
           putHtml('<p style="color: red;">Reboot Action Failed.</p>');
@@ -795,7 +811,9 @@ if (($templates = getPHONEPROVtemplates("$phoneprov_base_dir/templates")) !== FA
         putHtml("</tr>");
         echo '<tr ', ($i % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
         echo '<td style="text-align: right;" colspan="7">';
-        echo '&nbsp;<a href="'.$myself.'?info='.rawurlencode($mac).'" class="headerText" title="Show SIP Peer Info">Status</a>';
+        if ($sql['sip_driver'] !== 'pjsip') {
+          echo '&nbsp;<a href="'.$myself.'?info='.rawurlencode($mac).'" class="headerText" title="Show SIP Peer Info">Status</a>';
+        }
         echo '&nbsp;<a href="'.$myself.'?reload='.rawurlencode($mac).'" class="headerText" title="Send SIP Notify to Reload Config">Reload</a>';
         echo '&nbsp;<a href="'.$myself.'?reboot='.rawurlencode($mac).'" class="headerText" title="Send SIP Notify to Reboot Phone">Reboot</a>';
         echo '</td>';
