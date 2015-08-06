@@ -799,7 +799,7 @@ if (($templates = getPHONEPROVtemplates("$phoneprov_base_dir/templates")) !== FA
       putHtml("</tr>");
       $mac = $data[$i]['mac'];
       echo '<tr ', ($i % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
-      echo '<td><a href="'.$myself.'?key='.rawurlencode($mac).'" class="actionText">'.$mac.'</a>', '</td>';
+      echo '<td'.($info_data_mac === $mac ? ' id="to_status"' : '').'><a href="'.$myself.'?key='.rawurlencode($mac).'" class="actionText">'.$mac.'</a>', '</td>';
       echo '<td>', htmlspecialchars($data[$i]['template']), '</td>';
       echo '<td>', wordwrap(htmlspecialchars(expandPHONEPROVexttext($data[$i])), 10, '<br />', FALSE), '</td>';
       echo '<td>', htmlspecialchars(substr($data[$i]['password'], 0, 6)), '&hellip;', '</td>';
@@ -812,7 +812,7 @@ if (($templates = getPHONEPROVtemplates("$phoneprov_base_dir/templates")) !== FA
         echo '<tr ', ($i % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
         echo '<td style="text-align: right;" colspan="7">';
         if ($sql['sip_driver'] !== 'pjsip') {
-          echo '&nbsp;<a href="'.$myself.'?info='.rawurlencode($mac).'" class="headerText" title="Show SIP Peer Info">Status</a>';
+          echo '&nbsp;<a href="'.$myself.'?info='.rawurlencode($mac).'&amp;#to_status" class="headerText" title="Show SIP Peer Info">Status</a>';
         }
         echo '&nbsp;<a href="'.$myself.'?reload='.rawurlencode($mac).'" class="headerText" title="Send SIP Notify to Reload Config">Reload</a>';
         echo '&nbsp;<a href="'.$myself.'?reboot='.rawurlencode($mac).'" class="headerText" title="Send SIP Notify to Reboot Phone">Reboot</a>';
