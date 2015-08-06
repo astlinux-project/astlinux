@@ -16,6 +16,8 @@ Released **TBD**
 
 -- perl, version 5.20.2 using perlcross 0.9.7
 
+-- sudo, version bump to 1.8.14p3
+
 -- lm-sensors, version bump to 3.4.0
 
 -- nano, version bump to 2.4.2
@@ -33,6 +35,8 @@ Released **TBD**
 
 -- lighttpd, version bump to 1.4.36, security fix: CVE-2015-3200
    Note: SSLv3 is now disabled by default, clients must support TLS.
+
+-- OpenVPN, version bump to 2.3.8
 
 -- iptables, version bump to 1.4.21
 
@@ -69,6 +73,13 @@ Released **TBD**
 -- Network -> "DNSCrypt Proxy Server Configuration" sub-tab, add support for "Ephemeral Keys"
    and optional "Secondary Server" configuration.
    More Info: http://doc.astlinux.org/userdoc:tt_dnscrypt_proxy
+
+-- PhoneProv tab, add real-time links for "Status", "Reload" and "Reboot"
+   == Status retrieves "sip show peer <account>" and displays a few useful lines.
+   == Reload issues "sip notify <reload> <account>" using the model or vendor to determine the <reload> argument
+   == Reboot issues "sip notify <reboot> <account>" using the model or vendor to determine the <reboot> argument
+
+-- SQL-Data tab, version bump to phpLiteAdmin 1.9.6, modified for AstLinux
 
 
 Additions for AstLinux 1.2.3:
