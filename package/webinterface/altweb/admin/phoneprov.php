@@ -133,6 +133,19 @@ function isMACinfo($mac, $sql) {
   return($info);
 }
 
+// Function: addSpecialInfo
+//
+function addSpecialInfo($label, $field) {
+  $str = '';
+
+  if (strtolower($label) === 'addr->ip') {
+    if (preg_match('/^([0-9]+[.][0-9]+[.][0-9]+[.][0-9]+).*$/', $field, $ips)) {
+      $str = '&nbsp;&nbsp;<a href="http://'.$ips[1].'/" class="headerText" title="Phone Web Admin" target="_blank">Admin</a>';
+    }
+  }
+  return($str);
+}
+
 // Function: isMACreload
 //
 function isMACreload($mac, $sql, $map) {
@@ -823,7 +836,7 @@ if (($templates = getPHONEPROVtemplates("$phoneprov_base_dir/templates")) !== FA
             echo '<tr ', ($i % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
             echo '<td style="text-align: right;">'.htmlspecialchars($info_label).':</td>';
             echo '<td colspan="6">';
-            echo htmlspecialchars($info_field);
+            echo htmlspecialchars($info_field).addSpecialInfo($info_label, $info_field);
             echo '</td>';
           }
         }
