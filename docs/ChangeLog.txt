@@ -12,7 +12,7 @@ Released **TBD**
 
 ** System
 
--- php, version bump to 5.5.27, bug and security fixes
+-- php, version bump to 5.5.28, bug and security fixes
 
 -- perl, version 5.20.2 using perlcross 0.9.7
 
