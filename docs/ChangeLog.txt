@@ -60,7 +60,7 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.8.32.3 (no change), 11.18.0 (no change) and 13.4.0 (no change)
+-- Asterisk 1.8.32.3 (no change), 11.19.0 (version bump) and 13.5.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
