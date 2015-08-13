@@ -29,6 +29,8 @@ Released **TBD**
 -- parse-csv, new command, parse a comma-seperated-value string like an Asterisk CDR line and output each value
    followed by a new-line.  Fields may be quoted with double-quotes and a quoted quote is encoded as two double-quotes.
 
+-- Time Zone Database update, tzdata2015f and php-timezonedb-2015.6
+
 ** Networking
 
 -- OpenSSL, version bump to 1.0.1p, security fix: CVE-2015-1793
@@ -37,6 +39,8 @@ Released **TBD**
    Note: SSLv3 is now disabled by default, clients must support TLS.
 
 -- OpenVPN, version bump to 2.3.8
+
+-- arnofw (AIF), version bump to pre-release 2.0.1f
 
 -- iptables, version bump to 1.4.21
 
