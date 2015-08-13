@@ -78,5 +78,10 @@ rm -rf "timezonedb-$version"
 rm -f timezonedb.idx timezonedb.idx.php timezonedb.dta
 echo ""
 
-echo "Done"
+echo "Install using...
+
+# mv timezonedb-$version.tar.gz dl/
+
+# ./scripts/upload-dl-pair dl/timezonedb-$version.tar.gz
+"
 
