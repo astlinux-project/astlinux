@@ -3,20 +3,20 @@
 # Arno's IPtables Firewall Script
 #
 #############################################################
-ARNOFW_VER:=2.0.1e
-ARNOFW_ROOT:=arno-iptables-firewall
-ARNOFW_SOURCE:=$(ARNOFW_ROOT)_$(ARNOFW_VER).tar.gz
-ARNOFW_SITE:=http://rocky.eld.leidenuniv.nl/arno-iptables-firewall
-#ARNOFW_SITE:=http://files.astlinux.org
-ARNOFW_DIR:=$(BUILD_DIR)/$(ARNOFW_ROOT)_$(ARNOFW_VER)
-ARNOFW_CAT:=zcat
-ARNOFW_TARGET_BINARY:=/usr/sbin/arno-iptables-firewall
-ARNOFW_CONFIG_DIR:=/etc/arno-iptables-firewall
-ARNOFW_SCRIPT_DIR:=/usr/share/arno-iptables-firewall
-ARNOFW_PLUGIN_CONFIG_DIR:=$(ARNOFW_CONFIG_DIR)/plugins
-ARNOFW_PLUGIN_SCRIPT_DIR:=$(ARNOFW_SCRIPT_DIR)/plugins
-ARNOFW_CONFIG_SHIM:=$(ARNOFW_SCRIPT_DIR)/astlinux.shim
-ARNOFW_CONFIG_SERIAL:=$(ARNOFW_CONFIG_DIR)/serial
+ARNOFW_VER := 2.0.1f-DEVEL
+ARNOFW_ROOT := arno-iptables-firewall
+ARNOFW_SOURCE := $(ARNOFW_ROOT)_$(ARNOFW_VER).tar.gz
+#ARNOFW_SITE := http://rocky.eld.leidenuniv.nl/arno-iptables-firewall
+ARNOFW_SITE := http://files.astlinux.org
+ARNOFW_DIR := $(BUILD_DIR)/$(ARNOFW_ROOT)_$(ARNOFW_VER)
+ARNOFW_CAT := zcat
+ARNOFW_TARGET_BINARY := /usr/sbin/arno-iptables-firewall
+ARNOFW_CONFIG_DIR := /etc/arno-iptables-firewall
+ARNOFW_SCRIPT_DIR := /usr/share/arno-iptables-firewall
+ARNOFW_PLUGIN_CONFIG_DIR := $(ARNOFW_CONFIG_DIR)/plugins
+ARNOFW_PLUGIN_SCRIPT_DIR := $(ARNOFW_SCRIPT_DIR)/plugins
+ARNOFW_CONFIG_SHIM := $(ARNOFW_SCRIPT_DIR)/astlinux.shim
+ARNOFW_CONFIG_SERIAL := $(ARNOFW_CONFIG_DIR)/serial
 
 $(DL_DIR)/$(ARNOFW_SOURCE):
 	$(WGET) -P $(DL_DIR) $(ARNOFW_SITE)/$(ARNOFW_SOURCE)
@@ -50,8 +50,6 @@ $(TARGET_DIR)$(ARNOFW_TARGET_BINARY): $(ARNOFW_DIR)/.patched
 	    -e 's:^ENV_FILE="[^"]*":ENV_FILE="$(ARNOFW_SCRIPT_DIR)/environment":' \
 	    -e 's:^ENV_FILE=[^"]*$$:ENV_FILE="$(ARNOFW_SCRIPT_DIR)/environment":' \
 	    -e 's:^LOCAL_CONFIG_FILE="":LOCAL_CONFIG_FILE="$(ARNOFW_CONFIG_SHIM)":' \
-	    -e 's:^IP4TABLES="[^"]*":IP4TABLES="$(IPTABLES_BIN)":' \
-	    -e 's:^IP6TABLES="[^"]*":IP6TABLES="$(IP6TABLES_BIN)":' \
 	    -e 's:^(INT_IF|EXT_IF|MODEM_IF|INTERNAL_NET|NAT|NAT_INTERNAL_NET|EXT_IF_DHCP_IP)=:#&:' \
 	    -e 's:^NAT_LOCAL_REDIRECT=0$$:NAT_LOCAL_REDIRECT=1:' \
 	    -e 's:^IGMP_LOG=1$$:IGMP_LOG=0:' \
