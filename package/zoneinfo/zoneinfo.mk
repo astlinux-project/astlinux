@@ -3,7 +3,7 @@
 # zoneinfo
 #
 ##############################################################
-ZONEINFO_VERSION := 2015e
+ZONEINFO_VERSION := 2015f
 ZONEINFO_DATA := tzdata$(ZONEINFO_VERSION).tar.gz
 ZONEINFO_SOURCE := tzcode$(ZONEINFO_VERSION).tar.gz
 ZONEINFO_SITE := ftp://ftp.iana.org/tz/releases
