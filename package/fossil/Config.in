@@ -1,0 +1,9 @@
+config BR2_PACKAGE_FOSSIL
+	bool "fossil"
+	select BR2_PACKAGE_OPENSSL
+	select BR2_PACKAGE_ZLIB
+	help
+	  Fossil is a simple, high-reliability, distributed software
+	  configuration management system.
+
+	  http://www.fossil-scm.org/
