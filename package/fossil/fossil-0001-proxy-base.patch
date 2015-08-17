@@ -1,0 +1,28 @@
+--- fossil-1.33/src/cgi.c.orig	2015-08-16 14:43:49.000000000 -0500
++++ fossil-1.33/src/cgi.c	2015-08-16 15:14:28.000000000 -0500
+@@ -1346,6 +1346,12 @@
+   if( zToken==0 ){
+     malformed_request("malformed URL in HTTP header");
+   }
++  const char *proxy_base = "/admin/fossil/"; /* str must begin and end with '/' */
++  if( (i = strlen(proxy_base))>1 ){
++    if( strncmp(zToken, proxy_base, i)==0 ){
++      memmove(zToken, zToken+i-1, strlen(zToken)-i+2);
++    }
++  }
+   cgi_setenv("REQUEST_URI", zToken);
+   cgi_setenv("SCRIPT_NAME", "");
+   for(i=0; zToken[i] && zToken[i]!='?'; i++){}
+--- fossil-1.33/src/main.c.orig	2015-08-17 10:47:53.000000000 -0500
++++ fossil-1.33/src/main.c	2015-08-17 11:19:43.000000000 -0500
+@@ -1331,8 +1331,8 @@
+     zCur = PD("SCRIPT_NAME","/");
+     i = strlen(zCur);
+     while( i>0 && zCur[i-1]=='/' ) i--;
+-    if( fossil_stricmp(zMode,"on")==0 ){
+-      g.zBaseURL = mprintf("https://%s%.*s", zHost, i, zCur);
++    if( 1 ){  /* AstLinux */
++      g.zBaseURL = mprintf("https://%s/admin/fossil%.*s", zHost, i, zCur);
+       g.zTop = &g.zBaseURL[8+strlen(zHost)];
+       g.zHttpsURL = g.zBaseURL;
+     }else{
