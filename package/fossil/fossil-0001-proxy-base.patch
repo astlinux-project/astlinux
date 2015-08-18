@@ -26,3 +26,17 @@
        g.zTop = &g.zBaseURL[8+strlen(zHost)];
        g.zHttpsURL = g.zBaseURL;
      }else{
+--- fossil-1.33/src/login.c.orig	2015-08-17 23:35:08.000000000 -0500
++++ fossil-1.33/src/login.c	2015-08-17 23:47:02.000000000 -0500
+@@ -1249,9 +1249,9 @@
+     Blob redir;
+     blob_init(&redir, 0, 0);
+     if( login_wants_https_redirect() ){
+-      blob_appendf(&redir, "%s/login?g=%T", g.zHttpsURL, zUrl);
++      blob_appendf(&redir, "%s/login?g=/admin/fossil%T", g.zHttpsURL, zUrl);
+     }else{
+-      blob_appendf(&redir, "%R/login?g=%T", zUrl);
++      blob_appendf(&redir, "%R/login?g=/admin/fossil%T", zUrl);
+     }
+     if( anonOk ) blob_append(&redir, "&anon", 5);
+     if( zQS && zQS[0] ){
