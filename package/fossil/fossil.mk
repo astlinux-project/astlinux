@@ -29,10 +29,16 @@ FOSSIL_UNINSTALL_STAGING_OPT = --version
 
 define FOSSIL_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/fossil $(TARGET_DIR)/usr/bin/fossil
+	$(INSTALL) -m 0755 -D package/fossil/fossil.init $(TARGET_DIR)/etc/init.d/fossil
+	ln -sf ../../init.d/fossil $(TARGET_DIR)/etc/runlevels/default/S75fossil
+	ln -sf ../../init.d/fossil $(TARGET_DIR)/etc/runlevels/default/K15fossil
 endef
 
 define FOSSIL_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/bin/fossil
+	rm -f $(TARGET_DIR)/etc/init.d/fossil
+	rm -f $(TARGET_DIR)/etc/runlevels/default/S75fossil
+	rm -f $(TARGET_DIR)/etc/runlevels/default/K15fossil
 endef
 
 $(eval $(call AUTOTARGETS,package,fossil))
