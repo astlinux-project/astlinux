@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd /mnt/kd
+
+fossil close --force

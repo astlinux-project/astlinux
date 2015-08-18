@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cd /mnt/kd
+
+fossil open /mnt/kd/fossil/astlinux.fossil --keep >/dev/null
+fossil status

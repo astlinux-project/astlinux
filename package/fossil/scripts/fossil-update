@@ -1,0 +1,12 @@
+#!/bin/sh
+
+export FOSSIL_HOME="/mnt/kd/fossil"
+
+message="${1:-auto commit via cron}"
+
+cd /mnt/kd
+
+fossil open /mnt/kd/fossil/astlinux.fossil --keep >/dev/null
+fossil status
+fossil commit --no-warnings -m "$message"
+fossil close --force

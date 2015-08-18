@@ -30,8 +30,10 @@ init()
     if [ ! -f $REPO ]; then
       fossil init --admin-user admin $REPO >/dev/null
 
-      fossil user password admin admin -R $REPO
-      fossil user default admin -R $REPO
+      fossil user password admin astlinux -R $REPO >/dev/null
+      fossil user default admin -R $REPO >/dev/null
+      fossil user capabilities nobody "a" -R $REPO >/dev/null
+      fossil user capabilities anonymous "" -R $REPO >/dev/null
       fossil sqlite3 "REPLACE INTO config VALUES('project-name','${HOSTNAME}',now());" -R $REPO
       fossil sqlite3 "REPLACE INTO config VALUES('timeline-utc','0',now());" -R $REPO
       fossil sqlite3 "REPLACE INTO config VALUES('require-captcha','0',now());" -R $REPO
