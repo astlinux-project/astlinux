@@ -4,9 +4,31 @@ export FOSSIL_HOME="/mnt/kd/fossil"
 
 message="${1:-auto commit via cron}"
 
-cd /mnt/kd
+REPO="/mnt/kd/fossil/astlinux.fossil"
 
-fossil open /mnt/kd/fossil/astlinux.fossil --keep >/dev/null
+if [ ! -f $REPO ]; then
+  echo "Fossil repository not found: $REPO" >&2
+  exit 1
+fi
+
+if ! cd /mnt/kd; then
+  exit 1
+fi
+
+fossil open $REPO --keep >/dev/null
 fossil status
+
+## Check for locally added files, add them to the repo
+fossil ls | sed 's:/.*$::' | sort | uniq | xargs fossil add --force
+
+## Check for locally deleted files, remove them from the repo
+if fossil changes | grep -q '^MISSING'; then
+  fossil changes | awk '/^MISSING/ { print $2; }' | xargs fossil forget
+fi
+
 fossil commit --no-warnings -m "$message"
+rtn=$?
+
 fossil close --force
+
+exit $rtn

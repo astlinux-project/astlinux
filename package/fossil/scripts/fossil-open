@@ -1,6 +1,15 @@
 #!/bin/sh
 
-cd /mnt/kd
+REPO="/mnt/kd/fossil/astlinux.fossil"
 
-fossil open /mnt/kd/fossil/astlinux.fossil --keep >/dev/null
+if [ ! -f $REPO ]; then
+  echo "Fossil repository not found: $REPO" >&2
+  exit 1
+fi
+
+if ! cd /mnt/kd; then
+  exit 1
+fi
+
+fossil open $REPO --keep >/dev/null
 fossil status
