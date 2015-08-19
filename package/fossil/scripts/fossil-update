@@ -19,7 +19,7 @@ fossil open $REPO --keep >/dev/null
 fossil status
 
 ## Check for locally added files, add them to the repo
-fossil ls | sed 's:/.*$::' | sort | uniq | xargs fossil add --force
+fossil ls | sed 's:/[^/]*$::' | sort | uniq | xargs fossil add --force
 
 ## Check for locally deleted files, remove them from the repo
 if fossil changes | grep -q '^MISSING'; then
