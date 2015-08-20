@@ -1,5 +1,7 @@
 #!/bin/sh
 
+. /etc/rc.conf
+
 export FOSSIL_HOME="/mnt/kd/fossil"
 
 message="${1:-auto commit via cron}"
@@ -18,8 +20,23 @@ fi
 fossil open $REPO --keep >/dev/null
 fossil status
 
-## Check for locally added files, add them to the repo
-fossil ls | sed 's:/[^/]*$::' | sort | uniq | xargs fossil add --force
+## Check for locally added files in selected directories, add them to the repo
+
+if [ -n "$FOSSIL_DEFAULT_DIRS" ]; then
+  dirs="$FOSSIL_DEFAULT_DIRS"
+else
+  dirs="rc.conf.d monit/monit.d"
+  if [ "$ASTERISK_DAHDI_DISABLE" != "yes" ]; then
+    dirs="$dirs asterisk dahdi fop2 phoneprov/templates"
+  fi
+fi
+
+unset IFS
+for dir in $dirs $FOSSIL_INCLUDE_DIRS; do
+  if [ -d $dir ]; then
+    fossil add --force $dir
+  fi
+done
 
 ## Check for locally deleted files, remove them from the repo
 if fossil changes | grep -q '^MISSING'; then
