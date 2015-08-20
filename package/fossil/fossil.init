@@ -2,6 +2,8 @@
 
 . /etc/rc.conf
 
+export FOSSIL_HOME="/mnt/kd/fossil"
+
 PIDFILE="/var/run/fossil.pid"
 
 TMPDIR="/mnt/kd/fossil/tmp"
