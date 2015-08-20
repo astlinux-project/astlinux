@@ -4,28 +4,12 @@ REPO="/mnt/kd/fossil/astlinux.fossil"
 
 LOCKFILE="/var/lock/fossil-update.lock"
 
-file="$1"
-
-revision="$2"
-
-if [ -z "$file" ]; then
-  echo "Usage: fossil-revert [/mnt/kd/]file_name [hex_revision_num]"
-  echo ""
-  echo "Note:  If no hex_revision_num is specified, the latest is used."
-  exit 1
-fi
-
 if [ ! -f $REPO ]; then
   echo "Fossil repository not found: $REPO" >&2
   exit 1
 fi
 
 if ! cd /mnt/kd; then
-  exit 1
-fi
-
-if [ ! -f "$file" ]; then
-  echo "fossil-revert: file not found: /mnt/kd/${file#/mnt/kd/}" >&2
   exit 1
 fi
 
@@ -36,10 +20,8 @@ fi
 
 fossil open $REPO --keep >/dev/null
 
-fossil revert${revision:+ -r $revision} "$file" | grep -v 'fossil undo'
+fossil diff
 rtn=$?
-
-fossil changes
 
 fossil close --force
 
