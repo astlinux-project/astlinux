@@ -2,6 +2,8 @@
 
 REPO="/mnt/kd/fossil/astlinux.fossil"
 
+LOCKFILE="/var/lock/fossil-update.lock"
+
 if [ ! -f $REPO ]; then
   echo "Fossil repository not found: $REPO" >&2
   exit 1
@@ -9,6 +11,11 @@ fi
 
 if ! cd /mnt/kd; then
   exit 1
+fi
+
+if [ -f "$LOCKFILE" ]; then
+  echo "fossil-update: already running, lockfile \"$LOCKFILE\" exists, process id: $(cat "$LOCKFILE")." >&2
+  exit 9
 fi
 
 fossil open $REPO --keep >/dev/null

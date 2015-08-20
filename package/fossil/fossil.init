@@ -37,6 +37,8 @@ init()
       fossil sqlite3 "REPLACE INTO config VALUES('project-name','${HOSTNAME}',now());" -R $REPO
       fossil sqlite3 "REPLACE INTO config VALUES('timeline-utc','0',now());" -R $REPO
       fossil sqlite3 "REPLACE INTO config VALUES('require-captcha','0',now());" -R $REPO
+
+      fossil-update "initial default check-in" >/dev/null
     fi
   fi
 }
@@ -54,6 +56,12 @@ start()
 
 stop()
 {
+  # Close any open fossil checkouts
+  if [ -f /mnt/kd/.fslckout ]; then
+    echo "Closing fossil checkout..."
+    fossil-close
+  fi
+
   if [ -f $PIDFILE ]; then
     echo "Stopping fossil..."
 

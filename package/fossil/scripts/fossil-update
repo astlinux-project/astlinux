@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 . /etc/rc.conf
 
@@ -7,6 +7,8 @@ export FOSSIL_HOME="/mnt/kd/fossil"
 message="${1:-auto commit via cron}"
 
 REPO="/mnt/kd/fossil/astlinux.fossil"
+
+LOCKFILE="/var/lock/fossil-update.lock"
 
 if [ ! -f $REPO ]; then
   echo "Fossil repository not found: $REPO" >&2
@@ -17,6 +19,14 @@ if ! cd /mnt/kd; then
   exit 1
 fi
 
+# Robust 'bash' method of creating/testing for a lockfile
+if ! ( set -o noclobber; echo "$$" > "$LOCKFILE" ) 2>/dev/null; then
+  echo "fossil-update: already running, lockfile \"$LOCKFILE\" exists, process id: $(cat "$LOCKFILE")." >&2
+  exit 9
+fi
+
+trap 'rm -f "$LOCKFILE"; exit $?' INT TERM EXIT
+
 fossil open $REPO --keep >/dev/null
 fossil status
 
@@ -25,16 +35,26 @@ fossil status
 if [ -n "$FOSSIL_DEFAULT_DIRS" ]; then
   dirs="$FOSSIL_DEFAULT_DIRS"
 else
-  dirs="rc.conf.d monit/monit.d"
+  dirs="rc.conf.d monit/monit.d openvpn/ccd"
   if [ "$ASTERISK_DAHDI_DISABLE" != "yes" ]; then
     dirs="$dirs asterisk dahdi fop2 phoneprov/templates"
   fi
 fi
 
+files="${FOSSIL_DEFAULT_FILES:-rc.elocal rc.local rc.local.stop dnsmasq.static}"
+
 unset IFS
 for dir in $dirs $FOSSIL_INCLUDE_DIRS; do
-  if [ -d $dir ]; then
-    fossil add --force $dir
+  if [ "$dir" != "/mnt/kd" -a "$dir" != "/mnt/kd/" -a -d "$dir" ]; then
+    fossil add --ignore '*.bak,*.db' --force "$dir"
+  fi
+done
+
+for file in $files $FOSSIL_INCLUDE_FILES; do
+  if [ -f "$file" ]; then
+    if ! fossil ls "${file#/mnt/kd/}" | grep -q "${file#/mnt/kd/}"; then
+      fossil add --force "$file"
+    fi
   fi
 done
 
@@ -47,5 +67,8 @@ fossil commit --no-warnings -m "$message"
 rtn=$?
 
 fossil close --force
+
+rm -f "$LOCKFILE"
+trap - INT TERM EXIT
 
 exit $rtn
