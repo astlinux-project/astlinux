@@ -34,6 +34,7 @@ define FOSSIL_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D package/fossil/scripts/fossil-update $(TARGET_DIR)/usr/bin/
 	$(INSTALL) -m 0755 -D package/fossil/scripts/fossil-revert $(TARGET_DIR)/usr/bin/
 	$(INSTALL) -m 0755 -D package/fossil/scripts/fossil-diff $(TARGET_DIR)/usr/bin/
+	$(INSTALL) -m 0755 -D package/fossil/scripts/fossil-status $(TARGET_DIR)/usr/bin/
 	$(INSTALL) -m 0755 -D package/fossil/fossil.init $(TARGET_DIR)/etc/init.d/fossil
 	ln -sf ../../init.d/fossil $(TARGET_DIR)/etc/runlevels/default/S75fossil
 	ln -sf ../../init.d/fossil $(TARGET_DIR)/etc/runlevels/default/K15fossil
@@ -46,6 +47,7 @@ define FOSSIL_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/bin/fossil-update
 	rm -f $(TARGET_DIR)/usr/bin/fossil-revert
 	rm -f $(TARGET_DIR)/usr/bin/fossil-diff
+	rm -f $(TARGET_DIR)/usr/bin/fossil-status
 	rm -f $(TARGET_DIR)/etc/init.d/fossil
 	rm -f $(TARGET_DIR)/etc/runlevels/default/S75fossil
 	rm -f $(TARGET_DIR)/etc/runlevels/default/K15fossil
