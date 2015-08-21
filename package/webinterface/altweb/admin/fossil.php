@@ -57,7 +57,7 @@ require_once '../common/header.php';
 
   putHtml('<table class="stdtable" width="100%"><tr><td style="text-align: center;">');
   if (is_file('/var/run/fossil.pid')) {
-    echo '<iframe id="fossil" src="/admin/fossil/timeline" frameborder="1" width="100%" onload="setIFheight();">';
+    echo '<iframe id="fossil" src="/admin/fossil/timeline?y=ci" frameborder="1" width="100%" onload="setIFheight();">';
     putHtml('</iframe>');
   } elseif (! is_file('/etc/init.d/fossil')) {
     putHtml('<p style="color: red;">Fossil is not available on your AstLinux image.</p>');
