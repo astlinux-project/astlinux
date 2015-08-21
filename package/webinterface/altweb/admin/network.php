@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2014 Lonnie Abelbeck
+// Copyright (C) 2008-2015 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -35,6 +35,7 @@
 // 10-21-2013, Added LDAP server support
 // 01-04-2014, Added NUT UPS Monitoring support
 // 12-16-2014, Added Monit Monitoring support
+// 08-21-2015, Added Fossil - Software Configuration Management
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -647,6 +648,14 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $value = 'UPS_KILL_POWER="'.$_POST['ups_kill_power'].'"';
   fwrite($fp, $value."\n");
   
+  fwrite($fp, "### Fossil - Software Configuration Management\n");
+  $value = 'FOSSIL_SERVER="'.$_POST['fossil_server'].'"';
+  fwrite($fp, $value."\n");
+  $value = 'FOSSIL_INCLUDE_DIRS="'.tuq($_POST['fossil_include_dirs']).'"';
+  fwrite($fp, $value."\n");
+  $value = 'FOSSIL_INCLUDE_FILES="'.tuq($_POST['fossil_include_files']).'"';
+  fwrite($fp, $value."\n");
+
   $value = 'ADNAME=""';
   fwrite($fp, "### Disable Bonjour Broadcasts\n".$value."\n");
   fwrite($fp, "### gui.network.conf - end ###\n");
@@ -1030,6 +1039,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 45, $result, 'init');
       } elseif ($process === 'monit') {
         $result = restartPROCESS($process, 46, $result, 'init');
+      } elseif ($process === 'fossil') {
+        $result = restartPROCESS($process, 47, $result, 'init');
       }
     } else {
       $result = 2;
@@ -1118,6 +1129,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Kamailio SIP Server'.statusPROCESS('kamailio').'.</p>');
     } elseif ($result == 46) {
       putHtml('<p style="color: green;">Monit Monitoring'.statusPROCESS('monit').'.</p>');
+    } elseif ($result == 47) {
+      putHtml('<p style="color: green;">Fossil Server'.statusPROCESS('fossil').'.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 100) {
@@ -1193,6 +1206,8 @@ require_once '../common/header.php';
   putHtml('<option value="racoon"'.$sel.'>Restart IPsec VPN</option>');
   $sel = ($reboot_restart === 'pptpd') ? ' selected="selected"' : '';
   putHtml('<option value="pptpd"'.$sel.'>Restart PPTP VPN Server</option>');
+  $sel = ($reboot_restart === 'fossil') ? ' selected="selected"' : '';
+  putHtml('<option value="fossil"'.$sel.'>Restart Fossil Server</option>');
   $sel = ($reboot_restart === 'ldap') ? ' selected="selected"' : '';
   putHtml('<option value="ldap"'.$sel.'>Reload LDAP Client</option>');
   $sel = ($reboot_restart === 'slapd') ? ' selected="selected"' : '';
@@ -2058,6 +2073,28 @@ require_once '../common/header.php';
   
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
   
+if (is_file('/etc/init.d/fossil')) {
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  
+  putHtml('<strong>Fossil &ndash; Software Configuration Management:</strong>');
+  putHtml('</td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml('Fossil Server:');
+  putHtml('<select name="fossil_server">');
+  putHtml('<option value="no">disabled</option>');
+  $sel = (getVARdef($db, 'FOSSIL_SERVER', $cur_db) === 'yes') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>enabled</option>');
+  putHtml('</select></td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  $value = getVARdef($db, 'FOSSIL_INCLUDE_DIRS', $cur_db);
+  putHtml('Fossil Include Dirs:&nbsp;<input type="text" size="82" maxlength="256" value="'.$value.'" name="fossil_include_dirs" /></td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  $value = getVARdef($db, 'FOSSIL_INCLUDE_FILES', $cur_db);
+  putHtml('Fossil Include Files:<input type="text" size="82" maxlength="256" value="'.$value.'" name="fossil_include_files" /></td></tr>');
+
+  putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
+}
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   
   putHtml('<strong>Advanced Configuration:</strong>');

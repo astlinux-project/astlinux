@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2014 Lonnie Abelbeck
+// Copyright (C) 2008-2015 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -28,6 +28,7 @@ $select_reload = array (
   'openvpnclient' => 'Restart OpenVPN Client',
   'racoon' => 'Restart IPsec VPN',
   'pptpd' => 'Restart PPTP VPN Server',
+  'fossil' => 'Restart Fossil Server',
   'ldap' => 'Reload LDAP Client',
   'slapd' => 'Restart LDAP Server',
   'monit' => 'Restart Monit Monitor',
@@ -250,6 +251,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 45, $result, 'init');
       } elseif ($process === 'monit') {
         $result = restartPROCESS($process, 46, $result, 'init');
+      } elseif ($process === 'fossil') {
+        $result = restartPROCESS($process, 47, $result, 'init');
       } elseif ($process === 'cron') {
         $result = updateCRON('root', 30, $result);
       }
@@ -384,6 +387,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Kamailio SIP Server'.statusPROCESS('kamailio').'.</p>');
     } elseif ($result == 46) {
       putHtml('<p style="color: green;">Monit Monitoring'.statusPROCESS('monit').'.</p>');
+    } elseif ($result == 47) {
+      putHtml('<p style="color: green;">Fossil Server'.statusPROCESS('fossil').'.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {

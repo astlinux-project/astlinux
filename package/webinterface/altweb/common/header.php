@@ -1,6 +1,6 @@
 <?php session_manual_gc();
 
-// Copyright (C) 2008-2014 Lonnie Abelbeck
+// Copyright (C) 2008-2015 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -269,6 +269,9 @@ header('Content-Type: text/html; charset=utf-8');
       }
       if ($global_admin && (getPREFdef($global_prefs, 'tab_cli_show') === 'yes')) {
         putHtml('<li><a href="/admin/cli.php"><span>CLI</span></a></li>');
+      }
+      if ($global_admin && (getPREFdef($global_prefs, 'tab_fossil_show') === 'yes')) {
+        putHtml('<li><a href="/admin/fossil.php"><span>Fossil</span></a></li>');
       }
       if ($global_admin && (getPREFdef($global_prefs, 'tab_prefs_show') !== 'no')) {
         putHtml('<li><a href="/admin/prefs.php"><span>Prefs</span></a></li>');

@@ -54,3 +54,4 @@ smartmontools~Copyright (c) 2002-2015, Bruce Allen, Christian Franke, et al.
 Monit~Copyright (c) 2001-2015, Tildeslash. All rights reserved
 sqlite~Copyright (c) 1995-2015, SQLite Consortium
 sqliteodbc~Copyright (c) 2001-2015, Christian Werner
+Fossil~Copyright (c) 2007-2015 D. Richard Hipp. All rights reserved.

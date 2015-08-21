@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2014 Lonnie Abelbeck
+// Copyright (C) 2008-2015 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -19,6 +19,7 @@
 // 09-06-2013, Added Edit Tab Shortcut support
 // 09-04-2014, Added Show Kamailio SIP Server Status
 // 12-16-2014, Added Show Monit Tab
+// 08-12-2015, Added Show Fossil Tab
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -502,6 +503,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (isset($_POST['tab_monit'])) {
       $value = 'tab_monit_show = yes';
+      fwrite($fp, $value."\n");
+    }
+    if (isset($_POST['tab_fossil'])) {
+      $value = 'tab_fossil_show = yes';
       fwrite($fp, $value."\n");
     }
     if (! isset($_POST['tab_staff'])) {
@@ -1200,6 +1205,10 @@ require_once '../common/header.php';
   $sel = (getPREFdef($global_prefs, 'tab_cli_show') === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="tab_cli" name="tab_cli"'.$sel.' /></td><td colspan="5">Show CLI Tab</td></tr>');
   
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'tab_fossil_show') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="tab_fossil" name="tab_fossil"'.$sel.' /></td><td colspan="5">Show Fossil Tab</td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_staff_disable_staff') !== 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="tab_staff" name="tab_staff"'.$sel.' /></td><td colspan="5">Show Staff Tab for &quot;staff&quot; user</td></tr>');
