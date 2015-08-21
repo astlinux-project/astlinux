@@ -31,7 +31,7 @@ define FOSSIL_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/fossil $(TARGET_DIR)/usr/bin/fossil
 	$(INSTALL) -m 0755 -D package/fossil/scripts/fossil-open $(TARGET_DIR)/usr/bin/
 	$(INSTALL) -m 0755 -D package/fossil/scripts/fossil-close $(TARGET_DIR)/usr/bin/
-	$(INSTALL) -m 0755 -D package/fossil/scripts/fossil-update $(TARGET_DIR)/usr/bin/
+	$(INSTALL) -m 0755 -D package/fossil/scripts/fossil-commit $(TARGET_DIR)/usr/bin/
 	$(INSTALL) -m 0755 -D package/fossil/scripts/fossil-revert $(TARGET_DIR)/usr/bin/
 	$(INSTALL) -m 0755 -D package/fossil/scripts/fossil-diff $(TARGET_DIR)/usr/bin/
 	$(INSTALL) -m 0755 -D package/fossil/scripts/fossil-status $(TARGET_DIR)/usr/bin/
@@ -44,7 +44,7 @@ define FOSSIL_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/bin/fossil
 	rm -f $(TARGET_DIR)/usr/bin/fossil-open
 	rm -f $(TARGET_DIR)/usr/bin/fossil-close
-	rm -f $(TARGET_DIR)/usr/bin/fossil-update
+	rm -f $(TARGET_DIR)/usr/bin/fossil-commit
 	rm -f $(TARGET_DIR)/usr/bin/fossil-revert
 	rm -f $(TARGET_DIR)/usr/bin/fossil-diff
 	rm -f $(TARGET_DIR)/usr/bin/fossil-status
