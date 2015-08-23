@@ -1,0 +1,29 @@
+Index: src/statrep.c
+==================================================================
+--- fossil-1.33/src/statrep.c
++++ fossil-1.33/src/statrep.c
+@@ -691,10 +691,11 @@
+   HQuery url;                        /* URL for various branch links */
+   const char *zView = P("view");     /* Which view/report to show. */
+   int eType = RPT_NONE;              /* Numeric code for view/report to show */
+   int i;                             /* Loop counter */
+   const char *zUserName;             /* Name of user */
++  const char *azView[16];            /* Drop-down menu of view types */
+   const struct {
+     const char *zName;  /* Name of view= screen type */
+     const char *zVal;   /* Value of view= query parameter */
+     int eType;          /* Corresponding RPT_* define */
+   } aViewType[] = {
+@@ -731,11 +732,10 @@
+   }
+   url_initialize(&url, "reports");
+   cgi_query_parameters_to_url(&url);
+   if( eType!=RPT_NONE ){
+     int nView = 0;                     /* Slots used in azView[] */
+-    const char *azView[16];            /* Drop-down menu of view types */
+     for(i=0; i<ArraySize(aViewType); i++){
+       azView[nView++] = aViewType[i].zVal;
+       azView[nView++] = aViewType[i].zName;
+     }
+     if( eType!=RPT_BYFILE ){
+
