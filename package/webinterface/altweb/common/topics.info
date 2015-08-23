@@ -358,3 +358,93 @@ other.dev@example.com=Mel
 You can see the last two entries here have custom names, if no name is given then it is up to
 the user's client to find a suitable name (e.g. take it from the contact's vcard/profile).
 
+[[Fossil-Commands]]
+
+Fossil Commands:
+
+------------------------------------------------------------------------------
+AstLinux "helper" scripts for Fossil
+------------------------------------------------------------------------------
+
+The "fossil-status" command:
+
+Usage: fossil-status
+
+Report on the status of the current checkout.
+
+------------------------------------------------------------------------------
+
+The "fossil-diff" command:
+
+Usage: fossil-diff [options] [FILE1 FILE2 ...]
+
+Show the difference between the current version of each of the FILEs
+specified (as they exist on disk) and that same file as it was checked
+out.  Or if the FILE arguments are omitted, show the unsaved changed
+currently in the working check-out.
+
+If the "--from VERSION" or "-r VERSION" option is used it specifies
+the source check-in for the diff operation.  If not specified, the
+source check-in is the base check-in for the current check-out.
+
+If the "--to VERSION" option appears, it specifies the check-in from
+which the second version of the file or files is taken.  If there is
+no "--to" option then the (possibly edited) files in the current check-out
+are used.
+
+The "-N" or "--new-file" option causes the complete text of added or
+deleted files to be displayed.
+
+The "--diff-binary" option enables or disables the inclusion of binary files
+when using an external diff program.
+
+The "--binary" option causes files matching the glob PATTERN to be treated
+as binary when considering if they should be used with external diff program.
+This option overrides the "binary-glob" setting.
+
+Options:
+  --binary PATTERN           Treat files that match the glob PATTERN as binary
+  --branch BRANCH            Show diff of all changes on BRANCH
+  --brief                    Show filenames only
+  --context|-c N             Use N lines of context
+  --diff-binary BOOL         Include binary files when using external commands
+  --from|-r VERSION          select VERSION as source for the diff
+  --side-by-side|-y          side-by-side diff
+  --strip-trailing-cr        Strip trailing CR
+  --to VERSION               select VERSION as target for the diff
+  --unified                  unified diff
+  -v|--verbose               output complete text of added or deleted files
+  -w|--ignore-all-space      Ignore white space when comparing lines
+  -W|--width <num>           Width of lines in side-by-side diff
+  -Z|--ignore-trailing-space Ignore changes to end-of-line whitespace
+
+------------------------------------------------------------------------------
+
+The "fossil-commit" command:
+
+Usage: fossil-commit [comment-text]
+
+Create a new revision containing all of the changes in the current checkout.
+
+If no comment-text is provided, "auto commit via cron" will be used.
+
+All files that have changed will be committed, including added and removed files.
+
+Options:
+  comment-text        use as commit comment message
+
+------------------------------------------------------------------------------
+
+The "fossil-revert" command:
+
+Usage: fossil-revert [/mnt/kd/]FILE [hex_revision_num]
+
+Revert to the current repository version of FILE, or to
+the version associated with baseline hex_revision_num.
+
+If FILE was part of a rename operation, both the original file
+and the renamed file are reverted.
+
+Options:
+  hex_revision_num    revert given FILE back to given REVISION
+

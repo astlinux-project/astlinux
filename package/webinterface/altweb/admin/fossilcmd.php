@@ -92,9 +92,9 @@ require_once '../common/header.php';
   <form method="post" action="<?php echo $myself;?>" enctype="multipart/form-data">
   <table width="100%" class="stdtable">
   <tr><td style="text-align: center;" colspan="2">
-  <h2>Fossil Commands:</h2>
-  </td></tr>
 <?php
+  putHtml('<h2>Fossil Commands:'.includeTOPICinfo('Fossil-Commands').'</h2>');
+  putHtml('</td></tr>');
 
 if (is_file('/var/run/fossil.pid')) {
   putHtml('<tr><td style="text-align: center;" colspan="2">');
@@ -129,7 +129,7 @@ if (is_file('/var/run/fossil.pid')) {
       if ($stat['size'] > $max) {
         @fseek($fp, -$max, SEEK_END);
         fgets($fp, 1024);
-        echo "<strong>----- File too large to display, showing the end of the file -----</strong>\n";
+        echo "<strong>----- Result too large to display, showing the end of the output -----</strong>\n";
       }
       while (! feof($fp)) {                   
         if ($line = fgets($fp, 1024)) {      
