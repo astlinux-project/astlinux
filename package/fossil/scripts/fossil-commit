@@ -66,6 +66,8 @@ fi
 fossil commit --no-warnings -m "$message"
 rtn=$?
 
+fossil timeline -n 1 | grep -v 'entry limit'
+
 fossil close --force
 
 rm -f "$LOCKFILE"
