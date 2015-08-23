@@ -187,6 +187,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = 3;
       }
     }
+  } elseif (isset($_POST['submit_fossil'])) {
+    header('Location: /admin/fossilcmd.php');
+    exit;
   } elseif (isset($_POST['submit_reload'])) {
     $result = 99;
     $process = $_POST['reload_restart'];
@@ -673,6 +676,10 @@ require_once '../common/header.php';
   putHtml('</select>');
   putHtml('</td><td width="20">&nbsp;</td><td style="text-align: left;">');
   putHtml('<input type="submit" class="formbtn" value="&gt;&gt;&nbsp;Open File" name="submit_open" />');
+  if (getPREFdef($global_prefs, 'tab_fossil_show') === 'yes') {
+    putHtml('<br /><br />');
+    putHtml('<input type="submit" class="formbtn" value="Fossil Commands" name="submit_fossil" />');
+  }
   putHtml('</td></tr></table>');
 
   if (($shortcut_str = getPREFdef($global_prefs, 'edit_text_shortcut_cmdstr')) !== '') {
