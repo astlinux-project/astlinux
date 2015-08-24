@@ -40,7 +40,7 @@ init()
       fossil sqlite3 "REPLACE INTO config VALUES('timeline-utc','0',now());" -R $REPO
       fossil sqlite3 "REPLACE INTO config VALUES('require-captcha','0',now());" -R $REPO
 
-      fossil-update "initial default check-in" >/dev/null
+      fossil-commit "initial default check-in" >/dev/null
     fi
   fi
 }

@@ -46,7 +46,7 @@ files="${FOSSIL_DEFAULT_FILES:-rc.elocal rc.local rc.local.stop dnsmasq.static}"
 unset IFS
 for dir in $dirs $FOSSIL_INCLUDE_DIRS; do
   if [ "$dir" != "/mnt/kd" -a "$dir" != "/mnt/kd/" -a -d "$dir" ]; then
-    fossil add --ignore '*.bak,*.db' --force "$dir"
+    fossil add --ignore '*.bak,*.db,*.sqlite3,*.fossil' --force "$dir"
   fi
 done
 
