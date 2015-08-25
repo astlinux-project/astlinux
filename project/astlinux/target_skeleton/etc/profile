@@ -38,6 +38,11 @@ if [ -f /usr/bin/less ]; then
 	export PAGER=less
 fi
 
+# Set Fossil home directory
+if [ -d /mnt/kd/fossil ]; then
+  export FOSSIL_HOME="/mnt/kd/fossil"
+fi
+
 # Set UTF-8 character type for vi
 if [ -f /usr/lib/locale/.locale ]; then
   alias vi="LC_CTYPE=$(cat /usr/lib/locale/.locale) vi"

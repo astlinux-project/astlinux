@@ -2,6 +2,8 @@
 
 ARGS="$@"
 
+export FOSSIL_HOME="/mnt/kd/fossil"
+
 REPO="/mnt/kd/fossil/astlinux.fossil"
 
 LOCKFILE="/var/lock/fossil-commit.lock"
