@@ -122,7 +122,7 @@ if (is_file('/var/run/fossil.pid')) {
   if ($action !== '') {
     putHtml("<pre>");
     $tmpfile = tempnam("/tmp", "PHP_");
-    @exec('cd /root;FOSSIL_HOME="/mnt/kd/fossil" fossil-'.$action.' '.$arg_str.' >'.$tmpfile.' 2>&1');
+    @exec('cd /root;fossil-'.$action.' '.$arg_str.' >'.$tmpfile.' 2>&1');
     if (($fp = @fopen($tmpfile, "rb")) !== FALSE) {
       $max = 250000;
       $stat = fstat($fp);
