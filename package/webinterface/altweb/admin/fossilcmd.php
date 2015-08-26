@@ -62,7 +62,7 @@ require_once '../common/header.php';
   } elseif ($action === 'diff') {
     $arg_str = multi_args($arg);
   } elseif ($action === 'commit') {
-    $arg_str = ($arg !== '') ? '"'.$arg.'"' : '';
+    $arg_str = ($arg !== '') ? '"'.$arg.'"' : '"commit via web interface: Fossil Commands"';
   } elseif ($action === 'revert') {
     $arg_str = multi_args($arg);
   } else {
