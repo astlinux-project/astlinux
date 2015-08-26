@@ -20,6 +20,16 @@ init () {
 0 4 * * * /usr/sbin/logrotate /etc/logrotate.conf >/dev/null 2>&1" >> /var/spool/cron/crontabs/root
     fi
   fi
+
+  # Automatically add daily cron entry for Fossil - disabled by default
+  if [ -x /usr/bin/fossil-commit ]; then
+    if [ ! -f /var/spool/cron/crontabs/root ] || ! grep -q '/usr/bin/fossil-commit ' /var/spool/cron/crontabs/root; then
+      echo "
+##
+## Fossil daily auto-commit - Do not remove, un-comment to enable
+#5 4 * * * /usr/bin/fossil-commit >/dev/null 2>&1" >> /var/spool/cron/crontabs/root
+    fi
+  fi
 }
 
 start () {
