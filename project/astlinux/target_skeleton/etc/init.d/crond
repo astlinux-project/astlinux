@@ -27,7 +27,7 @@ init () {
       echo "
 ##
 ## Fossil daily auto-commit - Do not remove, un-comment to enable
-#5 4 * * * /usr/bin/fossil-commit >/dev/null 2>&1" >> /var/spool/cron/crontabs/root
+#55 23 * * * /usr/bin/fossil-commit >/dev/null 2>&1" >> /var/spool/cron/crontabs/root
     fi
   fi
 }
