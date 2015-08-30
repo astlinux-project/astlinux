@@ -43,7 +43,7 @@ Released **TBD**
 
 -- OpenSSL, version bump to 1.0.1p, security fix: CVE-2015-1793
 
--- lighttpd, version bump to 1.4.36, security fix: CVE-2015-3200
+-- lighttpd, version bump to 1.4.37, security fix: CVE-2015-3200
    Note: SSLv3 is now disabled by default, clients must support TLS.
 
 -- OpenVPN, version bump to 2.3.8
