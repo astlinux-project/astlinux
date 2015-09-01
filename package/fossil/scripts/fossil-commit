@@ -41,7 +41,7 @@ else
   fi
 fi
 
-files="${FOSSIL_DEFAULT_FILES:-rc.elocal rc.local rc.local.stop dnsmasq.static}"
+files="${FOSSIL_DEFAULT_FILES:-rc.elocal rc.local rc.local.stop dnsmasq.static arno-iptables-firewall/custom-rules}"
 
 unset IFS
 for dir in $dirs $FOSSIL_INCLUDE_DIRS; do
