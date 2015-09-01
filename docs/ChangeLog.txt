@@ -16,6 +16,8 @@ Released **TBD**
    New rc.conf variables are: FOSSIL_SERVER, FOSSIL_DEFAULT_DIRS, FOSSIL_DEFAULT_FILES, FOSSIL_INCLUDE_DIRS, FOSSIL_INCLUDE_FILES
    More Info: http://doc.astlinux.org/userdoc:tt_fossil
 
+-- expat, add security patch for CVE-2015-1283
+
 -- php, version bump to 5.5.28, bug and security fixes
 
 -- perl, version 5.20.2 using perlcross 0.9.7
