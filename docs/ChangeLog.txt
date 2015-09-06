@@ -18,7 +18,7 @@ Released **TBD**
 
 -- expat, add security patch for CVE-2015-1283
 
--- php, version bump to 5.5.28, bug and security fixes
+-- php, version bump to 5.5.29, bug and security fixes
 
 -- perl, version 5.20.2 using perlcross 0.9.7
 
@@ -35,6 +35,8 @@ Released **TBD**
 -- ncurses, version bump to 5.9
 
 -- unixodbc, version bump to 2.3.3
+
+-- tiff, version bump to 4.0.5
 
 -- parse-csv, new command, parse a comma-seperated-value string like an Asterisk CDR line and output each value
    followed by a new-line.  Fields may be quoted with double-quotes and a quoted quote is encoded as two double-quotes.
@@ -64,7 +66,7 @@ Released **TBD**
 
 -- vsftpd, version bump to 3.0.3
 
--- stunnel, version bump to 5.22
+-- stunnel, version bump to 5.23
 
 -- dnsmasq, version bump to 2.75
 
