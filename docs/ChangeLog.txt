@@ -34,7 +34,7 @@ Released **TBD**
 
 -- ncurses, version bump to 5.9
 
--- unixodbc, version bump to 2.3.3
+-- unixodbc, version bump to 2.3.4
 
 -- tiff, version bump to 4.0.5
 
