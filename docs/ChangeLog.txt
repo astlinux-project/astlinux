@@ -49,6 +49,7 @@ Released **TBD**
 
 -- lighttpd, version bump to 1.4.37, security fix: CVE-2015-3200
    Note: SSLv3 is now disabled by default, clients must support TLS.
+   Note: The underscore '_' character is no longer allowed in the server.name (HOSTNAME), per RFC2396 section 3.2.2
 
 -- OpenVPN, version bump to 2.3.8
 
