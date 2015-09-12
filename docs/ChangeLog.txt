@@ -12,6 +12,8 @@ Released **TBD**
 
 ** System
 
+-- igb, version bump to 5.3.3.2, Intel Gigabit Ethernet Network Driver
+
 -- Fossil, version 1.33, new package, a simple, high-reliability, distributed software configuration management system.
    New rc.conf variables are: FOSSIL_SERVER, FOSSIL_DEFAULT_DIRS, FOSSIL_DEFAULT_FILES, FOSSIL_INCLUDE_DIRS, FOSSIL_INCLUDE_FILES
    More Info: http://doc.astlinux.org/userdoc:tt_fossil
