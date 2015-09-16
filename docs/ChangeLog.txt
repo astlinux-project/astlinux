@@ -73,6 +73,8 @@ Released **TBD**
 
 -- dnsmasq, version bump to 2.75
 
+-- sipsak, version 0.9.6-1, new package known as SIP-swiss-army-knife.
+
 -- dnscrypt-proxy, version bump to 1.6.0, add support for ephemeral-keys and an optional secondary proxy server.
    New rc.conf variables are: DNSCRYPT_EPHEMERAL_KEYS, DNSCRYPT_2SERVER_ADDRESS, DNSCRYPT_2PROVIDER_NAME, DNSCRYPT_2PROVIDER_KEY
 
