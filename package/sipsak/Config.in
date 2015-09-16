@@ -1,0 +1,12 @@
+config BR2_PACKAGE_SIPSAK
+	bool "sipsak"
+	select BR2_PACKAGE_OPENSSL
+	default n
+	help
+	  sipsak is a small command line tool for developers and administrators of Session Initiation Protocol (SIP) applications. 
+ 	  It can be used for some simple tests on SIP applications and devices.
+
+	  http://sourceforge.net/projects/sipsak.berlios/
+	  http://linux.die.net/man/1/sipsak
+	  https://github.com/sipwise/sipsak
+
