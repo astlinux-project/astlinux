@@ -40,6 +40,8 @@ Released **TBD**
 
 -- tiff, version bump to 4.0.5
 
+-- libusb, version bump to 1.0.20
+
 -- parse-csv, new command, parse a comma-seperated-value string like an Asterisk CDR line and output each value
    followed by a new-line.  Fields may be quoted with double-quotes and a quoted quote is encoded as two double-quotes.
 
