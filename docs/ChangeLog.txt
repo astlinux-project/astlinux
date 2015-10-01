@@ -57,7 +57,7 @@ Released **TBD**
 
 -- OpenVPN, version bump to 2.3.8
 
--- arnofw (AIF), version bump to pre-release 2.0.1f
+-- arnofw (AIF), version bump to 2.0.1f
 
 -- iptables, version bump to 1.4.21
 
