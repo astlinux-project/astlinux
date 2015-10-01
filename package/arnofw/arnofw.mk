@@ -3,11 +3,11 @@
 # Arno's IPtables Firewall Script
 #
 #############################################################
-ARNOFW_VER := 2.0.1f-DEVEL
+ARNOFW_VER := 2.0.1f
 ARNOFW_ROOT := arno-iptables-firewall
 ARNOFW_SOURCE := $(ARNOFW_ROOT)_$(ARNOFW_VER).tar.gz
-#ARNOFW_SITE := http://rocky.eld.leidenuniv.nl/arno-iptables-firewall
-ARNOFW_SITE := http://files.astlinux.org
+ARNOFW_SITE := http://rocky.eld.leidenuniv.nl/arno-iptables-firewall
+#ARNOFW_SITE := http://files.astlinux.org
 ARNOFW_DIR := $(BUILD_DIR)/$(ARNOFW_ROOT)_$(ARNOFW_VER)
 ARNOFW_CAT := zcat
 ARNOFW_TARGET_BINARY := /usr/sbin/arno-iptables-firewall
