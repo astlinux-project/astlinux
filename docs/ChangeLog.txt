@@ -14,13 +14,15 @@ Released **TBD**
 
 -- igb, version bump to 5.3.3.2, Intel Gigabit Ethernet Network Driver
 
+-- e1000e version bump to 3.2.7.1 Intel PCI-Express PRO/1000 Ethernet Linux driver
+
 -- Fossil, version 1.33, new package, a simple, high-reliability, distributed software configuration management system.
    New rc.conf variables are: FOSSIL_SERVER, FOSSIL_DEFAULT_DIRS, FOSSIL_DEFAULT_FILES, FOSSIL_INCLUDE_DIRS, FOSSIL_INCLUDE_FILES
    More Info: http://doc.astlinux.org/userdoc:tt_fossil
 
 -- expat, add security patch for CVE-2015-1283
 
--- php, version bump to 5.5.29, bug and security fixes
+-- php, version bump to 5.5.30, bug and security fixes
 
 -- perl, version 5.20.2 using perlcross 0.9.7
 
@@ -38,14 +40,16 @@ Released **TBD**
 
 -- unixodbc, version bump to 2.3.4
 
--- tiff, version bump to 4.0.5
+-- tiff, version bump to 4.0.6
+
+-- pciutils, version bump to 3.4.0
 
 -- libusb, version bump to 1.0.20
 
 -- parse-csv, new command, parse a comma-seperated-value string like an Asterisk CDR line and output each value
    followed by a new-line.  Fields may be quoted with double-quotes and a quoted quote is encoded as two double-quotes.
 
--- Time Zone Database update, tzdata2015f and php-timezonedb-2015.6
+-- Time Zone Database update, tzdata2015g and php-timezonedb-2015.7
 
 ** Networking
 
