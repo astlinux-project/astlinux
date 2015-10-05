@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PCIUTILS_VERSION = 3.3.1
+PCIUTILS_VERSION = 3.4.0
 PCIUTILS_SITE = ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci
 PCIUTILS_INSTALL_STAGING = YES
 # Depend on linux to define LINUX_VERSION_PROBED
