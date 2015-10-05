@@ -34,6 +34,9 @@ elif grep -q "^$FILE" "toolchain/file_exclude"; then
   exit 0
 else
   echo "$FILE failed verification - exiting"
+  echo "##"
+  echo "## Maintainer upload command: ./scripts/upload-dl-pair dl/$FILE"
+  echo "##"
   exit 1
 fi
 
