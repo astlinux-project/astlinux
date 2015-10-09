@@ -97,6 +97,9 @@ Released **TBD**
 
 -- pjsip 2.4 (no change)
 
+-- phoneprov-tools, new default templates:
+   == Polycom UCS, polycom.conf, thanks to Darrick and Ian of DJH Solutions LLC.
+
 ** Web Interface
 
 -- Add Fossil support
