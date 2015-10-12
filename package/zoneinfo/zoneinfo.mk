@@ -6,7 +6,7 @@
 ZONEINFO_VERSION := 2015g
 ZONEINFO_DATA := tzdata$(ZONEINFO_VERSION).tar.gz
 ZONEINFO_SOURCE := tzcode$(ZONEINFO_VERSION).tar.gz
-ZONEINFO_SITE := ftp://ftp.iana.org/tz/releases
+ZONEINFO_SITE := http://www.iana.org/time-zones/repository/releases
 ZONEINFO_DIR := $(BUILD_DIR)/zoneinfo
 ZONEINFO_BINARY := usr/share/zoneinfo/.tzversion
 
