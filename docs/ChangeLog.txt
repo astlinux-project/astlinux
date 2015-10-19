@@ -5,8 +5,8 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.2.4:
-=============================
+Additions for AstLinux 1.2.4.1:
+===============================
 
 Released **TBD**
 
@@ -91,7 +91,7 @@ Released **TBD**
 
 ** Asterisk
 
--- Asterisk 1.8.32.3 (no change), 11.20.0 (version bump) and 13.6.0 (version bump)
+-- Asterisk 1.8.32.3 (no change), 11.19.0 (version bump) and 13.5.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
