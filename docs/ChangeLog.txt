@@ -124,6 +124,13 @@ Released **TBD**
 -- SQL-Data tab, version bump to phpLiteAdmin 1.9.6, modified for AstLinux
 
 
+Additions for AstLinux 1.2.4:
+=============================
+
+Not released due to last-second issue discovered with Asterisk 11.20.0 and 13.6.0
+More Info: https://issues.asterisk.org/jira/browse/ASTERISK-25476
+
+
 Additions for AstLinux 1.2.3:
 =============================
 
