@@ -1,0 +1,20 @@
+--- asterisk-11.20.0/res/res_rtp_asterisk.c.orig	2015-10-20 12:52:37.000000000 -0500
++++ asterisk-11.20.0/res/res_rtp_asterisk.c	2015-10-20 12:53:38.000000000 -0500
+@@ -4780,7 +4780,7 @@
+ 			return;
+ 		} else {
+ 			if (rtp->rtcp) {
+-				if (rtp->rtcp->schedid > 0) {
++				if (rtp->rtcp->schedid > -1) {
+ 					if (!ast_sched_del(rtp->sched, rtp->rtcp->schedid)) {
+ 						/* Successfully cancelled scheduler entry. */
+ 						ao2_ref(instance, -1);
+@@ -4997,7 +4997,7 @@
+ 	}
+ #endif
+ 
+-	if (rtp->rtcp && rtp->rtcp->schedid > 0) {
++	if (rtp->rtcp && rtp->rtcp->schedid > -1) {
+ 		if (!ast_sched_del(rtp->sched, rtp->rtcp->schedid)) {
+ 			/* successfully cancelled scheduler entry. */
+ 			ao2_ref(instance, -1);
