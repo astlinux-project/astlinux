@@ -121,6 +121,10 @@ addIPV6net()
   # args: IF, tag
   local interface="$1" tag="$2" prefix="" iname IFS
 
+  if [ "$IPV6" != "yes" ]; then
+    return 2
+  fi
+
   unset IFS
   for iname in $IPV6_AUTOCONF; do
     case $iname in
@@ -154,7 +158,10 @@ addIPV6net()
   if [ -n "$prefix" ]; then
     echo "
 dhcp-range=$tag,$prefix,ra-only,64,24h"
+    return 0
   fi
+
+  return 1
 }
 
 addDNSMASQnet()
@@ -178,11 +185,11 @@ addDNSMASQnet()
       ipend=$(($ipbase + $dend))
       trueDNSMASQnet $4 $2 $(_mkdottedquad $ipstart) $(_mkdottedquad $ipend)
 
-      if [ "$IPV6" = "yes" ]; then
-        addIPV6net $1 $4
-      fi
+      addIPV6net $1 $4
     else
-      falseDNSMASQnet $1
+      if ! addIPV6net $1 $4; then
+        falseDNSMASQnet $1
+      fi
     fi
   fi
 }
