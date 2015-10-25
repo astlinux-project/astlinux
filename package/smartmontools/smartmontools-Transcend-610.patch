@@ -1,0 +1,11 @@
+--- smartmontools-6.4/drivedb.h.orig	2015-10-25 12:26:29.000000000 -0500
++++ smartmontools-6.4/drivedb.h	2015-10-25 12:31:41.000000000 -0500
+@@ -1106,7 +1106,7 @@
+     "-v 244,raw48,Thermal_Throttle "
+   },
+   { "SiliconMotion based SSDs", // SM2246EN (Transcend TS6500)
+-    "TS((16|32|64|128|256|512)G|1T)(SSD|MSA)370", // Transcend SSD370 SATA/mSATA, TS6500, tested with
++    "TS((16|32|64|128|256|512)G|1T)(SSD|MSA|MSM)(370S?|420I?|610)", // Transcend SSD370/420/610 SATA/mSATA, TS6500,
+       // TS32GMSA370/20140402, TS16GMSA370/20140516, TS64GSSD370/20140516, TS256GSSD370/N0815B
+     "", "",
+   //"-v 1,raw48,Raw_Read_Error_Rate "
