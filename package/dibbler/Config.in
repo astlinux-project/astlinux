@@ -1,0 +1,8 @@
+config BR2_PACKAGE_DIBBLER
+	bool "dibbler"
+	help
+	  Dibbler is a portable DHCPv6 implementation.
+
+	  http://klub.com.pl/dhcpv6/
+	  http://sourceforge.net/projects/dibbler/
+
