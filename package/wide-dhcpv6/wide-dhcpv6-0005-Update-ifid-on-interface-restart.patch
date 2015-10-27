@@ -1,0 +1,35 @@
+From 0eb4cdb7bbf496b83923a05e4993b0e9757d0064 Mon Sep 17 00:00:00 2001
+From: Jeremie Corbier <jeremie+debian@famille-corbier.net>
+Date: Tue, 6 Apr 2010 15:51:12 +0200
+Subject: [PATCH] Update ifid on interface restart
+
+Interface ID may have changed between a stop and start.
+
+Signed-off-by: Jeremie Corbier <jeremie@famille-corbier.net>
+---
+ dhcp6c.c |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
+
+diff --git a/dhcp6c.c b/dhcp6c.c
+index c959b7c..edeca80 100644
+--- a/dhcp6c.c
++++ b/dhcp6c.c
+@@ -768,6 +768,15 @@ client6_ifctl(ifname, command)
+ 
+ 	switch(command) {
+ 	case DHCP6CTL_COMMAND_START:
++		/*
++		 * The ifid might have changed, so reset it before releasing the
++		 * lease.
++		 */
++		if (ifreset(ifp)) {
++			dprintf(LOG_NOTICE, FNAME, "failed to reset %s",
++			    ifname);
++			return (-1);
++		}
+ 		free_resources(ifp);
+ 		if (client6_start(ifp)) {
+ 			debug_printf(LOG_NOTICE, FNAME, "failed to restart %s",
+-- 
+1.5.6.5
+

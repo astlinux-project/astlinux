@@ -1,0 +1,80 @@
+From 2bb6f1769a5c3ea4f669382801c9bb2b74881d48 Mon Sep 17 00:00:00 2001
+From: Jeremie Corbier <jeremie+debian@famille-corbier.net>
+Date: Tue, 6 Apr 2010 15:51:08 +0200
+Subject: [PATCH] Close inherited file descriptors
+
+wide-dhcpv6 binaries should close inherited fds.
+
+Signed-off-by: Jeremie Corbier <jeremie@famille-corbier.net>
+---
+ dhcp6c.c     |    7 ++++++-
+ dhcp6relay.c |    6 ++++++
+ dhcp6s.c     |    5 +++++
+ 3 files changed, 17 insertions(+), 1 deletions(-)
+
+diff --git a/dhcp6c.c b/dhcp6c.c
+index 1caaaa5..b5f5ed7 100644
+--- a/dhcp6c.c
++++ b/dhcp6c.c
+@@ -159,6 +159,7 @@ main(argc, argv)
+ 	char *progname;
+ 	FILE *pidfp;
+ 	struct dhcp6_if *ifp;
++	int fd;
+ 
+ #ifndef HAVE_ARC4RANDOM
+ 	srandom(time(NULL) & getpid());
+@@ -205,8 +206,12 @@ main(argc, argv)
+ 		exit(0);
+ 	}
+ 
+-	if (foreground == 0)
++	if (foreground == 0) {
++		for (fd = 3; fd < 1024; fd++)
++			close(fd);
++
+ 		openlog(progname, LOG_NDELAY|LOG_PID, LOG_DAEMON);
++	}
+ 
+ 	setloglevel(debug);
+ 
+diff --git a/dhcp6relay.c b/dhcp6relay.c
+index fb84ce3..eb0bce9 100644
+--- a/dhcp6relay.c
++++ b/dhcp6relay.c
+@@ -207,8 +207,14 @@ main(argc, argv)
+ 	}
+ 
+ 	if (foreground == 0) {
++		int fd;
++
+ 		if (daemon(0, 0) < 0)
+ 			err(1, "daemon");
++
++		for (fd = 3; fd < 1024; fd++)
++			close(fd);
++
+ 		openlog(progname, LOG_NDELAY|LOG_PID, LOG_DAEMON);
+ 	}
+ 	setloglevel(debug);
+diff --git a/dhcp6s.c b/dhcp6s.c
+index 544afff..494e571 100644
+--- a/dhcp6s.c
++++ b/dhcp6s.c
+@@ -316,8 +316,13 @@ main(argc, argv)
+ 	}
+ 
+ 	if (foreground == 0) {
++		int fd;
++
+ 		if (daemon(0, 0) < 0)
+ 			err(1, "daemon");
++
++		for (fd = 3; fd < 1024; fd++)
++			close(fd);
+ 	}
+ 
+ 	/* dump current PID */
+-- 
+1.5.6.5
+

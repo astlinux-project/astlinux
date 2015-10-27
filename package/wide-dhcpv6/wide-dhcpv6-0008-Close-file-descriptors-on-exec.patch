@@ -1,0 +1,223 @@
+From 1aca5d13ded2f2a67f28e68724adbcc8a4316e09 Mon Sep 17 00:00:00 2001
+From: Jeremie Corbier <jeremie@famille-corbier.net>
+Date: Tue, 2 Dec 2014 10:52:42 +0100
+Subject: [PATCH 08/10] Close file descriptors on exec
+
+Avoid FD leakage to children
+Closes: #757848
+
+Signed-off-by: Jeremie Corbier <jeremie@famille-corbier.net>
+---
+ cftoken.c            |    8 ++++++++
+ cftoken.l            |    8 ++++++++
+ common.c             |   15 ++++++++++++++-
+ dhcp6_ctl.c          |    3 +++
+ dhcp6_ctlclient.c    |    3 +++
+ dhcp6c.c             |   11 ++++++++++-
+ dhcp6relay.c         |    6 ++++++
+ missing/getifaddrs.c |    9 +++++++--
+ 8 files changed, 59 insertions(+), 4 deletions(-)
+
+diff --git a/cftoken.c b/cftoken.c
+index 0f6c1bf..079f274 100644
+--- a/cftoken.c
++++ b/cftoken.c
+@@ -2539,7 +2539,11 @@ cfswitch_buffer(incl)
+ 	incstack[incstackp].state = YY_CURRENT_BUFFER;
+ 	incstack[incstackp].lineno = lineno;
+ 
++#ifdef __linux__
++	fp = fopen(path, "re");
++#else
+ 	fp = fopen(path, "r");
++#endif
+ 	if (fp == NULL) {
+ 		debug_printf(LOG_ERR, FNAME, "cfparse: fopen(%s): %s",
+ 			path, strerror(errno));
+@@ -2562,7 +2566,11 @@ cfparse(conf)
+ 	char *conf;
+ {
+ 	configfilename = conf;
++#ifdef __linux__
++	if ((yyin = fopen(configfilename, "re")) == NULL) {
++#else
+ 	if ((yyin = fopen(configfilename, "r")) == NULL) {
++#endif
+ 		debug_printf(LOG_ERR, FNAME, "cfparse: fopen(%s): %s",
+ 			configfilename, strerror(errno));
+ 		if (errno == ENOENT)
+diff --git a/cftoken.l b/cftoken.l
+index 6afda5f..f480406 100644
+--- a/cftoken.l
++++ b/cftoken.l
+@@ -415,7 +415,11 @@ cfswitch_buffer(incl)
+ 	incstack[incstackp].state = YY_CURRENT_BUFFER;
+ 	incstack[incstackp].lineno = lineno;
+ 
++#ifdef __linux__
++	fp = fopen(path, "re");
++#else
+ 	fp = fopen(path, "r");
++#endif
+ 	if (fp == NULL) {
+ 		debug_printf(LOG_ERR, FNAME, "cfparse: fopen(%s): %s",
+ 			path, strerror(errno));
+@@ -438,7 +442,11 @@ cfparse(conf)
+ 	char *conf;
+ {
+ 	configfilename = conf;
++#ifdef __linux__
++	if ((yyin = fopen(configfilename, "re")) == NULL) {
++#else
+ 	if ((yyin = fopen(configfilename, "r")) == NULL) {
++#endif
+ 		debug_printf(LOG_ERR, FNAME, "cfparse: fopen(%s): %s",
+ 			configfilename, strerror(errno));
+ 		if (errno == ENOENT)
+diff --git a/common.c b/common.c
+index cc4abcc..b5c09c3 100644
+--- a/common.c
++++ b/common.c
+@@ -1115,7 +1115,11 @@ getifhwaddr(const char *ifname, char *buf, u_int16_t *hwtypep, int ppa)
+ 		(void) snprintf(fname, sizeof (fname), "/dev/%s", ifname);
+ 	getctl.maxlen = sizeof (getbuf);
+ 	getctl.buf = (char *)getbuf;
++#ifdef __linux__
++	if ((fd = open(fname, O_RDWR | O_CLOEXEC)) == -1) {
++#else
+ 	if ((fd = open(fname, O_RDWR)) == -1) {
++#endif
+ 		dl_attach_req_t dlar;
+ 
+ 		cp = fname + strlen(fname) - 1;
+@@ -1131,7 +1135,11 @@ getifhwaddr(const char *ifname, char *buf, u_int16_t *hwtypep, int ppa)
+ 		cp++;
+ 		dlar.dl_ppa = atoi(cp);
+ 		*cp = '\0';
++#ifdef __linux__
++		if ((fd = open(fname, O_RDWR | O_CLOEXEC)) == -1)
++#else
+ 		if ((fd = open(fname, O_RDWR)) == -1)
++#endif
+ 			return (-1);
+ 		dlar.dl_primitive = DL_ATTACH_REQ;
+ 		putctl.len = sizeof (dlar);
+@@ -3292,7 +3300,12 @@ ifaddrconf(cmd, ifname, addr, plen, pltime, vltime)
+ 		return (-1);
+ 	}
+ 
+-	if ((s = socket(PF_INET6, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
++#ifdef __linux__
++#define SOCKTYPE (SOCK_DGRAM | SOCK_CLOEXEC)
++#else
++#define SOCKTYPE SOCK_DGRAM
++#endif
++	if ((s = socket(PF_INET6, SOCKTYPE, IPPROTO_UDP)) < 0) {
+ 		debug_printf(LOG_ERR, FNAME, "can't open a temporary socket: %s",
+ 		    strerror(errno));
+ 		return (-1);
+diff --git a/dhcp6_ctl.c b/dhcp6_ctl.c
+index a12f82a..f1bae0b 100644
+--- a/dhcp6_ctl.c
++++ b/dhcp6_ctl.c
+@@ -97,6 +97,9 @@ dhcp6_ctl_init(addr, port, max, sockp)
+ 		    gai_strerror(error));
+ 		return (-1);
+ 	}
++#ifdef __linux__
++	res->ai_socktype |= SOCK_CLOEXEC;
++#endif
+ 	ctlsock = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+ 	if (ctlsock < 0) {
+ 		debug_printf(LOG_ERR, FNAME, "socket(control sock): %s",
+diff --git a/dhcp6_ctlclient.c b/dhcp6_ctlclient.c
+index 5597c9e..2bec3e7 100644
+--- a/dhcp6_ctlclient.c
++++ b/dhcp6_ctlclient.c
+@@ -169,6 +169,9 @@ main(argc, argv)
+ 
+ 	s = -1;
+ 	for (res = res0; res != NULL; res = res->ai_next) {
++#ifdef __linux__
++		res->ai_socktype |= SOCK_CLOEXEC;
++#endif
+ 		s = socket(res->ai_family, res->ai_socktype,
+ 		    res->ai_protocol);
+ 		if (s < 0) {
+diff --git a/dhcp6c.c b/dhcp6c.c
+index 35080e9..0628203 100644
+--- a/dhcp6c.c
++++ b/dhcp6c.c
+@@ -290,6 +290,10 @@ client6_init()
+ 		    gai_strerror(error));
+ 		exit(1);
+ 	}
++#ifdef __linux__
++	/* Force socket to be closed on execve */
++	res->ai_socktype |= SOCK_CLOEXEC;
++#endif
+ 	sock = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+ 	if (sock < 0) {
+ 		debug_printf(LOG_ERR, FNAME, "socket");
+@@ -346,7 +350,12 @@ client6_init()
+ 	freeaddrinfo(res);
+ 
+ 	/* open a routing socket to watch the routing table */
+-	if ((rtsock = socket(PF_ROUTE, SOCK_RAW, 0)) < 0) {
++#ifdef __linux__
++#define SOCKTYPE (SOCK_RAW | SOCK_CLOEXEC)
++#else
++#define SOCKTYPE SOCK_RAW
++#endif
++	if ((rtsock = socket(PF_ROUTE, SOCKTYPE, 0)) < 0) {
+ 		debug_printf(LOG_ERR, FNAME, "open a routing socket: %s",
+ 		    strerror(errno));
+ 		exit(1);
+diff --git a/dhcp6relay.c b/dhcp6relay.c
+index 99b1227..200d3cb 100644
+--- a/dhcp6relay.c
++++ b/dhcp6relay.c
+@@ -359,6 +359,9 @@ relay6_init(int ifnum, char *iflist[])
+ 		    gai_strerror(error));
+ 		goto failexit;
+ 	}
++#ifdef __linux__
++	res->ai_socktype |= SOCK_CLOEXEC;
++#endif
+ 	csock = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+ 	if (csock < 0) {
+ 		debug_printf(LOG_ERR, FNAME, "socket(csock): %s", strerror(errno));
+@@ -465,6 +468,9 @@ relay6_init(int ifnum, char *iflist[])
+ 		goto failexit;
+ 	}
+ 	memcpy(&sa6_client, res->ai_addr, sizeof (sa6_client));
++#ifdef __linux__
++	res->ai_socktype |= SOCK_CLOEXEC;
++#endif
+ 	ssock = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+ 	if (ssock < 0) {
+ 		debug_printf(LOG_ERR, FNAME, "socket(outsock): %s",
+diff --git a/missing/getifaddrs.c b/missing/getifaddrs.c
+index 4320c43..23b3e43 100644
+--- a/missing/getifaddrs.c
++++ b/missing/getifaddrs.c
+@@ -167,9 +167,14 @@ getifaddrs(struct ifaddrs **ifap)
+ 	struct ifaddrs *ifa = NULL;
+ 	char *buf;
+ 
+-	if ((fd4 = socket(AF_INET, SOCK_DGRAM, 0)) == -1)
++#ifdef __linux__
++#define SOCKTYPE (SOCK_DGRAM | SOCK_CLOEXEC)
++#else
++#define SOCKTYPE SOCK_DGRAM
++#endif
++	if ((fd4 = socket(AF_INET, SOCKTYPE, 0)) == -1)
+ 		return (-1);
+-	if ((fd6 = socket(AF_INET6, SOCK_DGRAM, 0)) == -1 &&
++	if ((fd6 = socket(AF_INET6, SOCKTYPE, 0)) == -1 &&
+ 	    errno != EAFNOSUPPORT) {
+ 		(void) close(fd4);
+ 		return (-1);
+-- 
+1.7.10.4
+

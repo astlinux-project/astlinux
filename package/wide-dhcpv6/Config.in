@@ -1,0 +1,14 @@
+config BR2_PACKAGE_WIDE_DHCPV6
+	bool "wide-dhcpv6"
+	help
+	  WIDE-DHCPv6 is an open-source implementation of Dynamic Host Configuration Protocol
+	  for IPv6 (DHCPv6) originally developed by the KAME project.
+
+	  This package installs the client component.
+
+	  http://sourceforge.net/projects/wide-dhcpv6/
+
+	  Debian Patches:
+	  http://git.famille-corbier.net/?p=packages/wide-dhcpv6.git;a=summary
+	  http://http.debian.net/debian/pool/main/w/wide-dhcpv6/wide-dhcpv6_20080615-13.debian.tar.xz
+

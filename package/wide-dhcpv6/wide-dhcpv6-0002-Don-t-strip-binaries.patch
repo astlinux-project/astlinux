@@ -1,0 +1,28 @@
+From 30c43a801bd5b4bb96c878d2efc97042511fea92 Mon Sep 17 00:00:00 2001
+From: Jeremie Corbier <jeremie+debian@famille-corbier.net>
+Date: Tue, 6 Apr 2010 15:51:06 +0200
+Subject: [PATCH] Don't strip binaries
+
+This patch prevents wide-dhcpv6 build system from stripping built binaries.
+
+Signed-off-by: Jeremie Corbier <jeremie@famille-corbier.net>
+---
+ Makefile.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index a39596f..de25f48 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -103,7 +103,7 @@ $(srcdir)/ianaopts.h: gentab.pl bootp-dhcp-parameters
+ 
+ install::
+ 	-mkdir -p $(sbindir) $(mandir)/man5 $(mandir)/man8
+-	$(INSTALL_PROGRAM) -s -o $(user) -g $(group) $(TARGET) $(sbindir)
++	$(INSTALL_PROGRAM) -o $(user) -g $(group) $(TARGET) $(sbindir)
+ 	$(INSTALL_DATA) -o $(user) -g $(group) dhcp6c.8 $(mandir)/man8
+ 	$(INSTALL_DATA) -o $(user) -g $(group) dhcp6s.8 $(mandir)/man8
+ 	$(INSTALL_DATA) -o $(user) -g $(group) dhcp6relay.8 $(mandir)/man8
+-- 
+1.5.6.5
+
