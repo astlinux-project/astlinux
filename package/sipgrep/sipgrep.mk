@@ -4,7 +4,7 @@
 #
 #############################################################
 
-SIPGREP_VERSION = 2.0.0
+SIPGREP_VERSION = 2.1.0
 SIPGREP_SOURCE = sipgrep-$(SIPGREP_VERSION).tar.gz
 SIPGREP_SITE = http://files.astlinux.org
 #SIPGREP_SITE = https://github.com/adubovikov/sipgrep/releases
