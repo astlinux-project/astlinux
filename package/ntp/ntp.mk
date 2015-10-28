@@ -3,16 +3,17 @@
 # ntp
 #
 #############################################################
-NTP_VERSION = 4.2.8p3
+NTP_VERSION = 4.2.8p4
 NTP_SOURCE = ntp-$(NTP_VERSION).tar.gz
-NTP_SITE = http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2
+NTP_SITE = --no-check-certificate https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2
 NTP_DEPENDENCIES = host-bison host-flex host-pkg-config
 
-NTP_CONF_OPT = --with-shared \
-		--program-transform-name=s,,, \
-		--with-yielding-select=yes \
-		--enable-ipv6=no \
-		--without-ntpsnmpd
+NTP_CONF_OPT = \
+	--with-shared \
+	--program-transform-name=s,,, \
+	--with-yielding-select=yes \
+	--enable-ipv6=no \
+	--without-ntpsnmpd
 
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
 NTP_CONF_OPT += --with-crypto
