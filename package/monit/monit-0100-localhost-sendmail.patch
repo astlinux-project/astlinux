@@ -70,7 +70,7 @@
  
 --- monit/src/spawn.c.orig	2014-12-13 12:50:23.000000000 -0600
 +++ monit/src/spawn.c	2014-12-13 13:16:12.000000000 -0600
-@@ -243,3 +243,88 @@
+@@ -244,3 +244,89 @@
  
  }
  
@@ -94,7 +94,8 @@
 +        pid = fork();
 +        if (pid < 0) {
 +                LogError("Cannot fork a new process -- %s\n", STRERROR);
-+                exit(1);
++                pthread_sigmask(SIG_SETMASK, &save, NULL);
++                return;
 +        }
 +
 +        if (pid == 0) {
