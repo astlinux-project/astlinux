@@ -5,10 +5,44 @@
 === docs/ChangeLog.txt
 =========================================================
 
+Additions for AstLinux 1.2.5:
+=============================
+
+Released **TBD**
+
+** System
+
+-- Monit, version bump to 5.15
+
+-- libsodium, version bump to 1.0.5
+
+** Networking
+
+-- iperf3, new package, iperf3 is becomming more common, sits along side the old iperf since they are not compatible
+
+-- ntpd/sntp, version bump to 4.2.8p4, security fixes: CVE-2015-7871 plus 12 other low/medium-severity vulnerabilities
+
+-- fping, version bump to 3.13
+
+-- sipgrep, version bump to 2.1.0
+
+** Asterisk
+
+-- Asterisk 1.8.32.3 (no change), 11.20.0 (version bump) and 13.6.0 (version bump)
+
+-- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
+
+-- pjsip 2.4 (no change)
+
+** Web Interface
+
+-- No Change
+
+
 Additions for AstLinux 1.2.4.1:
 ===============================
 
-Released **TBD**
+Released 2015-10-28
 
 ** System
 
