@@ -4,6 +4,14 @@ interface="$1"
 
 action="$2"
 
+kill_dhcp6c()
+{
+  if [ -f "/var/run/dhcp6c-${interface}.pid" ]; then
+    kill $(cat "/var/run/dhcp6c-${interface}.pid") 2>/dev/null
+    sleep 1
+  fi
+}
+
 kill_udhcpc()
 {
   if [ -f "/var/run/udhcpc-${interface}.pid" ]; then
@@ -15,11 +23,16 @@ kill_udhcpc()
 case $action in
 
   up)
+    if [ -f "/etc/wide-dhcpv6/dhcp6c-${interface}.conf" ]; then
+      kill_dhcp6c
+      dhcp6c -c /etc/wide-dhcpv6/dhcp6c-${interface}.conf -p /var/run/dhcp6c-${interface}.pid ${interface}
+    fi
     kill_udhcpc
     udhcpc -b -T2 -t6 -S -s /etc/udhcpc.script -H $(uname -n) -p /var/run/udhcpc-${interface}.pid -i ${interface}
     ;;
 
   down)
+    kill_dhcp6c
     kill_udhcpc
     ;;
 

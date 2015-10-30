@@ -119,7 +119,7 @@ no-dhcp-interface=$1"
 addIPV6net()
 {
   # args: IF, tag
-  local interface="$1" tag="$2" prefix="" iname IFS
+  local interface="$1" tag="$2" dhcpv6="" prefix="" iname IFS
 
   if [ "$IPV6" != "yes" ]; then
     return 2
@@ -130,24 +130,28 @@ addIPV6net()
     case $iname in
       INTIF)
         if [ "$tag" = "lan" ]; then
+          dhcpv6="$DHCPV6_CLIENT_ENABLE"
           prefix="$(addr_to_prefix64 "$INTIPV6")"
           break
         fi
         ;;
       INT2IF)
         if [ "$tag" = "lan2" ]; then
+          dhcpv6="$DHCPV6_CLIENT_ENABLE"
           prefix="$(addr_to_prefix64 "$INT2IPV6")"
           break
         fi
         ;;
       INT3IF)
         if [ "$tag" = "lan3" ]; then
+          dhcpv6="$DHCPV6_CLIENT_ENABLE"
           prefix="$(addr_to_prefix64 "$INT3IPV6")"
           break
         fi
         ;;
       DMZIF)
         if [ "$tag" = "dmz" ]; then
+          dhcpv6="$DHCPV6_CLIENT_ENABLE"
           prefix="$(addr_to_prefix64 "$DMZIPV6")"
           break
         fi
@@ -155,7 +159,11 @@ addIPV6net()
     esac
   done
 
-  if [ -n "$prefix" ]; then
+  if [ "$dhcpv6" = "yes" -a "$DHCPV6_CLIENT_REQUEST_PREFIX" != "no" ]; then
+    echo "
+dhcp-range=$tag,::1,constructor:$interface,ra-only,24h"
+    return 0
+  elif [ -n "$prefix" ]; then
     echo "
 dhcp-range=$tag,$prefix,ra-only,64,24h"
     return 0
