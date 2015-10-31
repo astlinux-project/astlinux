@@ -121,11 +121,11 @@ id-assoc pd 1 {"
     ifid 1;
   };"
         id=$((id+1))
-      fi
 
-      # Only assign one interface given only a /64 prefix
-      if [ $len -eq 64 ]; then
-        break
+        # Only assign one interface given only a /64 prefix
+        if [ $len -eq 64 ]; then
+          break
+        fi
       fi
     done
 
