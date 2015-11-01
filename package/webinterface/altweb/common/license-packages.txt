@@ -55,3 +55,5 @@ Monit~Copyright (c) 2001-2015, Tildeslash. All rights reserved
 sqlite~Copyright (c) 1995-2015, SQLite Consortium
 sqliteodbc~Copyright (c) 2001-2015, Christian Werner
 Fossil~Copyright (c) 2007-2015 D. Richard Hipp. All rights reserved.
+BusyBox~Copyright (c) 1998-2011 Erik Andersen, Rob Landley, Denys Vlasenko, et al.
+dhcp6c~Copyright (c) 1998-2008 WIDE Project.

@@ -36,6 +36,7 @@
 // 01-04-2014, Added NUT UPS Monitoring support
 // 12-16-2014, Added Monit Monitoring support
 // 08-21-2015, Added Fossil - Software Configuration Management
+// 11-01-2015, Added DHCPv6 support
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -65,6 +66,18 @@ $select_ntp = array (
   'asia.pool.ntp.org' => 'asia.pool.ntp.org',
   'oceania.pool.ntp.org' => 'oceania.pool.ntp.org',
   'africa.pool.ntp.org' => 'africa.pool.ntp.org'
+);
+
+$select_dhcpv6_prefix_len = array (
+  '64' => '64',
+  '60' => '60',
+  '56' => '56',
+  '52' => '52',
+  '48' => '48',
+  '44' => '44',
+  '40' => '40',
+  '36' => '36',
+  '32' => '32'
 );
 
 $select_dyndns = array (
@@ -196,26 +209,33 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   fwrite($fp, "### External PPPoE Interface\n".$x_value."\n");
   fwrite($fp, "### External Interface\n".$value."\n");
   
-  if ($_POST['ip_type'] === 'dhcp') {
+  if ($_POST['ip_type'] === 'dhcp' || $_POST['ip_type'] === 'dhcp-dhcpv6') {
     $value = 'EXTIP=""';
   } else {
     $value = 'EXTIP="'.tuq($_POST['static_ip']).'"';
   }
   fwrite($fp, "### External Static IPv4\n".$value."\n");
   
-  if ($_POST['ip_type'] === 'dhcp') {
+  if ($_POST['ip_type'] === 'dhcp' || $_POST['ip_type'] === 'dhcp-dhcpv6') {
     $value = 'EXTNM=""';
   } else {
     $value = 'EXTNM="'.tuq($_POST['mask_ip']).'"';
   }
   fwrite($fp, "### External Static IPv4 NetMask\n".$value."\n");
   
-  if ($_POST['ip_type'] === 'dhcp') {
+  if ($_POST['ip_type'] === 'dhcp' || $_POST['ip_type'] === 'dhcp-dhcpv6') {
     $value = 'EXTGW=""';
   } else {
     $value = 'EXTGW="'.tuq($_POST['gateway_ip']).'"';
   }
   fwrite($fp, "### External Static IPv4 Gateway\n".$value."\n");
+
+  if ($_POST['ip_type'] === 'dhcp-dhcpv6') {
+    $value = 'DHCPV6_CLIENT_ENABLE="yes"';
+  } else {
+    $value = 'DHCPV6_CLIENT_ENABLE="no"';
+  }
+  fwrite($fp, "### DHCPv6\n".$value."\n");
   
   $value = tuq($_POST['static_ipv6']);
   if ($value !== '' && strpos($value, '/') === FALSE) {
@@ -540,6 +560,16 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $value = 'VPN="'.trim($x_value).'"';
   fwrite($fp, "### VPN Type\n".$value."\n");
   
+  fwrite($fp, "### IPv6 DHCPv6 Client Options\n");
+  $value = 'DHCPV6_CLIENT_REQUEST_ADDRESS="'.$_POST['dhcpv6_client_request_address'].'"';
+  fwrite($fp, $value."\n");
+  $value = 'DHCPV6_CLIENT_REQUEST_PREFIX="'.$_POST['dhcpv6_client_request_prefix'].'"';
+  fwrite($fp, $value."\n");
+  $value = 'DHCPV6_CLIENT_PREFIX_LEN="'.$_POST['dhcpv6_client_prefix_len'].'"';
+  fwrite($fp, $value."\n");
+  $value = 'DHCPV6_CLIENT_PREFIX_HINT="'.$_POST['dhcpv6_client_prefix_hint'].'"';
+  fwrite($fp, $value."\n");
+
   if (($value = $_POST['ipv6_tunnel_type']) !== '') {
     $value .= '~'.($value === '6to4-relay' ? '0/0' : $_POST['ipv6_tunnel_server']);
     $x_value = $_POST['ipv6_tunnel_endpoint'];
@@ -1275,6 +1305,8 @@ require_once '../common/header.php';
   putHtml('Connection Type:');
   putHtml('<select name="ip_type">');
   putHtml('<option value="dhcp">DHCP</option>');
+  $sel = (getVARdef($db, 'EXTIP', $cur_db) === '' && getVARdef($db, 'DHCPV6_CLIENT_ENABLE', $cur_db) === 'yes') ? ' selected="selected"' : '';
+  putHtml('<option value="dhcp-dhcpv6"'.$sel.'>DHCP/DHCPv6</option>');
   $sel = (getVARdef($db, 'EXTIP', $cur_db) !== '' && getVARdef($db, 'EXTIF', $cur_db) !== 'ppp0') ? ' selected="selected"' : '';
   putHtml('<option value="static"'.$sel.'>Static IP</option>');
   $sel = (getVARdef($db, 'EXTIF', $cur_db) === 'ppp0') ? ' selected="selected"' : '';
@@ -1844,6 +1876,51 @@ require_once '../common/header.php';
   putHtml('<input type="submit" value="PPTP Configuration" name="submit_edit_pptp" class="button" />');
   putHtml('</td></tr>');
   
+  putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
+  
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>IPv6 DHCPv6 Client Options:</strong>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
+  $value = getVARdef($db, 'DHCPV6_CLIENT_REQUEST_ADDRESS', $cur_db);
+  putHtml('DHCPv6 Client Address:');
+  putHtml('<select name="dhcpv6_client_request_address">');
+  putHtml('<option value="no">disabled</option>');
+  $sel = ($value !== 'no') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>enabled</option>');
+  putHtml('</select></td>');
+  putHtml('<td style="text-align: left;" colspan="3">');
+  if (($dhcpv6_client_prefix_len = getVARdef($db, 'DHCPV6_CLIENT_PREFIX_LEN', $cur_db)) === '') {
+    $dhcpv6_client_prefix_len = '60';
+  }
+  putHtml('DHCPv6 Prefix Length:');
+  putHtml('<select name="dhcpv6_client_prefix_len">');
+  foreach ($select_dhcpv6_prefix_len as $key => $value) {
+    $sel = ($dhcpv6_client_prefix_len == $value) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$value.'"'.$sel.'>'.$key.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
+  $value = getVARdef($db, 'DHCPV6_CLIENT_REQUEST_PREFIX', $cur_db);
+  putHtml('DHCPv6 Prefix Delegation:');
+  putHtml('<select name="dhcpv6_client_request_prefix">');
+  putHtml('<option value="no">disabled</option>');
+  $sel = ($value !== 'no') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>enabled</option>');
+  putHtml('</select></td>');
+  putHtml('<td style="text-align: left;" colspan="3">');
+  $value = getVARdef($db, 'DHCPV6_CLIENT_PREFIX_HINT', $cur_db);
+  putHtml('DHCPv6 Prefix Length Hint:');
+  putHtml('<select name="dhcpv6_client_prefix_hint">');
+  putHtml('<option value="no">disabled</option>');
+  $sel = ($value !== 'no') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>enabled</option>');
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
   
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');

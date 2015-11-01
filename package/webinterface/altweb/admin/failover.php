@@ -8,6 +8,7 @@
 
 // failover.php for AstLinux
 // 11-06-2014
+// 11-01-2015, Added DHCPv6 option
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -126,26 +127,33 @@ function saveFAILOVERsettings($conf_dir, $conf_file) {
   $value = 'WAN_FAILOVER_SECONDARY_GWIPV6="'.tuq($_POST['secondary_gw_ipv6']).'"';
   fwrite($fp, $value."\n");
 
-  if ($_POST['ip_type'] === 'dhcp') {
+  if ($_POST['ip_type'] === 'dhcp' || $_POST['ip_type'] === 'dhcp-dhcpv6') {
     $value = 'EXT2IP=""';
   } else {
     $value = 'EXT2IP="'.tuq($_POST['static_ip']).'"';
   }
   fwrite($fp, "### Static IPv4\n".$value."\n");
 
-  if ($_POST['ip_type'] === 'dhcp') {
+  if ($_POST['ip_type'] === 'dhcp' || $_POST['ip_type'] === 'dhcp-dhcpv6') {
     $value = 'EXT2NM=""';
   } else {
     $value = 'EXT2NM="'.tuq($_POST['mask_ip']).'"';
   }
   fwrite($fp, "### Static IPv4 NetMask\n".$value."\n");
 
-  if ($_POST['ip_type'] === 'dhcp') {
+  if ($_POST['ip_type'] === 'dhcp' || $_POST['ip_type'] === 'dhcp-dhcpv6') {
     $value = 'EXT2GW=""';
   } else {
     $value = 'EXT2GW="'.tuq($_POST['gateway_ip']).'"';
   }
   fwrite($fp, "### Static IPv4 Gateway\n".$value."\n");
+
+  if ($_POST['ip_type'] === 'dhcp-dhcpv6') {
+    $value = 'EXT2DHCPV6_CLIENT_ENABLE="yes"';
+  } else {
+    $value = 'EXT2DHCPV6_CLIENT_ENABLE="no"';
+  }
+  fwrite($fp, "### DHCPv6\n".$value."\n");
 
   $value = tuq($_POST['static_ipv6']);
   if ($value !== '' && strpos($value, '/') === FALSE) {
@@ -394,6 +402,8 @@ require_once '../common/header.php';
   putHtml('</td><td style="text-align: left;" colspan="4">');
   putHtml('<select name="ip_type">');
   putHtml('<option value="dhcp">DHCP</option>');
+  $sel = (getVARdef($db, 'EXT2IP', $cur_db) === '' && getVARdef($db, 'EXT2DHCPV6_CLIENT_ENABLE', $cur_db) === 'yes') ? ' selected="selected"' : '';
+  putHtml('<option value="dhcp-dhcpv6"'.$sel.'>DHCP/DHCPv6</option>');
   $sel = (getVARdef($db, 'EXT2IP', $cur_db) !== '') ? ' selected="selected"' : '';
   putHtml('<option value="static"'.$sel.'>Static IP</option>');
   putHtml('</select>');
