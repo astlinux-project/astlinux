@@ -18,13 +18,19 @@ Released **TBD**
 
 ** Networking
 
--- iperf3, new package, iperf3 is becomming more common, sits along side the old iperf since they are not compatible
-
 -- ntpd/sntp, version bump to 4.2.8p4, security fixes: CVE-2015-7871 plus 12 other low/medium-severity vulnerabilities
+
+-- wide-dhcpv6, new package, added support for DHCPv6 using dhcp6c for External and WAN Failover interfaces.
+   New rc.conf variables are: DHCPV6_CLIENT_ENABLE, DHCPV6_CLIENT_REQUEST_ADDRESS, DHCPV6_CLIENT_REQUEST_PREFIX,
+                              DHCPV6_CLIENT_PREFIX_LEN, DHCPV6_CLIENT_PREFIX_HINT, EXT2DHCPV6_CLIENT_ENABLE
+
+-- iperf3, new package, iperf3 is becomming more common, sits along side the old iperf since they are not compatible
 
 -- fping, version bump to 3.13
 
 -- sipgrep, version bump to 2.1.0
+
+-- arnofw (AIF), added upstream patch for Issue #21, Leave the IPv6 sysctl accept_ra setting alone when forwarding=1
 
 ** Asterisk
 
@@ -36,7 +42,11 @@ Released **TBD**
 
 ** Web Interface
 
--- No Change
+-- Network tab and and WAN Failover sub-tab, add DHCPv6 support with Connection Type: [DHCP/DHCPv6]
+   == External Interface supports Prefix Delegation and Request IPv6 Address
+   == WAN Failover Interface does not support Prefix Delegation, only Request IPv6 Address
+
+-- Network tab -> "IPv6 DHCPv6 Client Options:" adds External Interface DHCPv6 configuration options.
 
 
 Additions for AstLinux 1.2.4.1:
