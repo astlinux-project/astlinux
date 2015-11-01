@@ -616,7 +616,8 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
     sleep 4
 
     # No DHCPv6 - Static IPv6 if defined
-    if [ "$IPV6" = "yes" -a "$EXT2DHCPV6_CLIENT_ENABLE" != "yes" -a -n "$EXT2IPV6" -a -n "$EXT2GWIPV6" ]; then
+    if [ "$IPV6" = "yes" -a -n "$EXT2IPV6" -a -n "$EXT2GWIPV6" ] && \
+       [ "$EXT2DHCPV6_CLIENT_ENABLE" != "yes" ]; then
       ip -6 addr add $EXT2IPV6 dev $EXT2IF
       for x in $EXT2ROUTESIPV6; do
         ip -6 route add $x via $EXT2GWIPV6 dev $EXT2IF metric 1
@@ -636,7 +637,8 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
     ifplugd -apq -t2 -u3 -d3 -i $EXTIF -r /etc/ifplugd/udhcpc.action
 
     # No DHCPv6 - Static IPv6 if defined
-    if [ "$IPV6" = "yes" -a "$DHCPV6_CLIENT_ENABLE" != "yes" -a -n "$EXTIPV6" -a -n "$EXTGWIPV6" ]; then
+    if [ "$IPV6" = "yes" -a -n "$EXTIPV6" -a -n "$EXTGWIPV6" ] && \
+       [ "$DHCPV6_CLIENT_ENABLE" != "yes" -o "$DHCPV6_CLIENT_REQUEST_ADDRESS" = "no" ]; then
       ip -6 addr add $EXTIPV6 dev $EXTIF
       ip -6 route add default via $EXTGWIPV6 dev $EXTIF metric 1
     fi
