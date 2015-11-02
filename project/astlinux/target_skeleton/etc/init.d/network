@@ -540,38 +540,7 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
     rm -f /tmp/etc/ppp/pppoe.conf
   fi
 
-  #Static IP
-  if [ -n "$EXTIP" -a -n "$EXTIF" ] && ! isextppp extif; then
-
-    case $EXTIF in
-    wp)
-      ;;
-    hdlc0|pvc0)
-      ip tunnel add $EXTIF mode ipip remote $EXTGW local $EXTIP
-      ip link set dev $EXTIF up
-      ;;
-    *)
-      ip addr add $EXTIP/$EXTNM brd + dev $EXTIF
-      if [ -n "$EXTIP_ALIAS" ]; then
-        alias_interface add $EXTIF "$EXTIP_ALIAS"
-      fi
-      if [ "$IPV6" = "yes" -a -n "$EXTIPV6" ]; then
-        ip -6 addr add $EXTIPV6 dev $EXTIF
-      fi
-      ip link set dev $EXTIF up
-      ;;
-    esac
-
-    if [ -n "$EXTGW" ]; then
-      ip route add default via $EXTGW dev $EXTIF
-    fi
-    if [ "$IPV6" = "yes" -a -n "$EXTGWIPV6" ]; then
-      ip -6 route add default via $EXTGWIPV6 dev $EXTIF metric 1
-    fi
-    #end static IP
-  fi
-
-  #Static IP on 2nd IF
+  #Static IP Failover Interface
   if [ -n "$EXT2IP" -a -n "$EXT2IF" ] && ! isextppp ext2if; then
 
     case $EXT2IF in
@@ -582,14 +551,24 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
       ip link set dev $EXT2IF up
       ;;
     *)
+      up_delay=0
       ip addr add $EXT2IP/$EXT2NM brd + dev $EXT2IF
       if [ -n "$EXT2IP_ALIAS" ]; then
         alias_interface add $EXT2IF "$EXT2IP_ALIAS"
       fi
-      if [ "$IPV6" = "yes" -a -n "$EXT2IPV6" ]; then
-        ip -6 addr add $EXT2IPV6 dev $EXT2IF
+      if [ "$IPV6" = "yes" ]; then
+        if [ "$EXT2DHCPV6_CLIENT_ENABLE" = "yes" ]; then
+          up_delay=4
+          init_dhcp6c ext2if $EXT2IF
+          ifplugd -apq -t2 -u3 -d3 -i $EXT2IF -r /etc/ifplugd/dhcp6c.action
+        elif [ -n "$EXT2IPV6" ]; then
+          ip -6 addr add $EXT2IPV6 dev $EXT2IF
+        fi
       fi
       ip link set dev $EXT2IF up
+      if [ $up_delay -gt 0 ]; then
+        sleep $up_delay
+      fi
       ;;
     esac
 
@@ -606,6 +585,46 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
     #end static ip on 2nd if
   fi
 
+  #Static IP
+  if [ -n "$EXTIP" -a -n "$EXTIF" ] && ! isextppp extif; then
+
+    case $EXTIF in
+    wp)
+      ;;
+    hdlc0|pvc0)
+      ip tunnel add $EXTIF mode ipip remote $EXTGW local $EXTIP
+      ip link set dev $EXTIF up
+      ;;
+    *)
+      ip addr add $EXTIP/$EXTNM brd + dev $EXTIF
+      if [ -n "$EXTIP_ALIAS" ]; then
+        alias_interface add $EXTIF "$EXTIP_ALIAS"
+      fi
+      if [ "$IPV6" = "yes" -a -n "$EXTIPV6" ] && \
+         [ "$DHCPV6_CLIENT_ENABLE" != "yes" -o "$DHCPV6_CLIENT_REQUEST_ADDRESS" = "no" ]; then
+        ip -6 addr add $EXTIPV6 dev $EXTIF
+      fi
+      ip link set dev $EXTIF up
+      if [ "$IPV6" = "yes" -a "$DHCPV6_CLIENT_ENABLE" = "yes" ]; then
+        sleep 4
+        init_dhcp6c extif $EXTIF
+        dhcp6c -c /etc/wide-dhcpv6/dhcp6c-$EXTIF.conf -p /var/run/dhcp6c-$EXTIF.pid $EXTIF
+        ifplugd -apq -t2 -u3 -d3 -i $EXTIF -r /etc/ifplugd/dhcp6c.action
+        sleep 2
+      fi
+      ;;
+    esac
+
+    if [ -n "$EXTGW" ]; then
+      ip route add default via $EXTGW dev $EXTIF
+    fi
+    if [ "$IPV6" = "yes" -a -n "$EXTGWIPV6" ] && \
+       [ "$DHCPV6_CLIENT_ENABLE" != "yes" -o "$DHCPV6_CLIENT_REQUEST_ADDRESS" = "no" ]; then
+      ip -6 route add default via $EXTGWIPV6 dev $EXTIF metric 1
+    fi
+    #end static IP
+  fi
+
   #DHCP Failover Interface
   if [ -n "$EXT2IF" -a -z "$EXT2IP" ] && ! isextppp ext2if; then
     if [ "$IPV6" = "yes" -a "$EXT2DHCPV6_CLIENT_ENABLE" = "yes" ]; then
@@ -616,12 +635,15 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
     sleep 4
 
     # No DHCPv6 - Static IPv6 if defined
-    if [ "$IPV6" = "yes" -a -n "$EXT2IPV6" -a -n "$EXT2GWIPV6" ] && \
-       [ "$EXT2DHCPV6_CLIENT_ENABLE" != "yes" ]; then
-      ip -6 addr add $EXT2IPV6 dev $EXT2IF
-      for x in $EXT2ROUTESIPV6; do
-        ip -6 route add $x via $EXT2GWIPV6 dev $EXT2IF metric 1
-      done
+    if [ "$IPV6" = "yes" ]; then
+      if [ -n "$EXT2IPV6" -a "$EXT2DHCPV6_CLIENT_ENABLE" != "yes" ]; then
+        ip -6 addr add $EXT2IPV6 dev $EXT2IF
+      fi
+      if [ -n "$EXT2GWIPV6" ]; then
+        for x in $EXT2ROUTESIPV6; do
+          ip -6 route add $x via $EXT2GWIPV6 dev $EXT2IF metric 1
+        done
+      fi
     fi
   fi
 
