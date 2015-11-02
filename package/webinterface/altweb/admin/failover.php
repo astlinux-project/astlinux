@@ -148,7 +148,7 @@ function saveFAILOVERsettings($conf_dir, $conf_file) {
   }
   fwrite($fp, "### Static IPv4 Gateway\n".$value."\n");
 
-  if ($_POST['ip_type'] === 'dhcp-dhcpv6') {
+  if ($_POST['ip_type'] === 'dhcp-dhcpv6' || $_POST['ip_type'] === 'static-dhcpv6') {
     $value = 'EXT2DHCPV6_CLIENT_ENABLE="yes"';
   } else {
     $value = 'EXT2DHCPV6_CLIENT_ENABLE="no"';
@@ -404,8 +404,10 @@ require_once '../common/header.php';
   putHtml('<option value="dhcp">DHCP</option>');
   $sel = (getVARdef($db, 'EXT2IP', $cur_db) === '' && getVARdef($db, 'EXT2DHCPV6_CLIENT_ENABLE', $cur_db) === 'yes') ? ' selected="selected"' : '';
   putHtml('<option value="dhcp-dhcpv6"'.$sel.'>DHCP/DHCPv6</option>');
-  $sel = (getVARdef($db, 'EXT2IP', $cur_db) !== '') ? ' selected="selected"' : '';
+  $sel = (getVARdef($db, 'EXT2IP', $cur_db) !== '' && getVARdef($db, 'EXT2DHCPV6_CLIENT_ENABLE', $cur_db) !== 'yes') ? ' selected="selected"' : '';
   putHtml('<option value="static"'.$sel.'>Static IP</option>');
+  $sel = (getVARdef($db, 'EXT2IP', $cur_db) !== '' && getVARdef($db, 'EXT2DHCPV6_CLIENT_ENABLE', $cur_db) === 'yes') ? ' selected="selected"' : '';
+  putHtml('<option value="static-dhcpv6"'.$sel.'>Static IPv4/DHCPv6</option>');
   putHtml('</select>');
   putHtml('</td></tr>');
 

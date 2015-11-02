@@ -230,7 +230,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   }
   fwrite($fp, "### External Static IPv4 Gateway\n".$value."\n");
 
-  if ($_POST['ip_type'] === 'dhcp-dhcpv6') {
+  if ($_POST['ip_type'] === 'dhcp-dhcpv6' || $_POST['ip_type'] === 'static-dhcpv6') {
     $value = 'DHCPV6_CLIENT_ENABLE="yes"';
   } else {
     $value = 'DHCPV6_CLIENT_ENABLE="no"';
@@ -1110,7 +1110,7 @@ require_once '../common/header.php';
     } elseif ($result == 10) {
       putHtml('<p style="color: green;">System is Rebooting... back in <span id="count_down"><script language="JavaScript" type="text/javascript">document.write(count_down_secs);</script></span> seconds.</p>');
     } elseif ($result == 11) {
-      putHtml('<p style="color: green;">Settings saved, click "Reboot/Restart" to apply any changed settings.</p>');
+      putHtml('<p style="color: green;">Settings saved, click "Reboot/Restart" to apply any changed settings, a "Reboot System" is required for Interface changes.</p>');
     } elseif ($result == 21) {
       putHtml('<p style="color: green;">PPPoE has Restarted.</p>');
     } elseif ($result == 22) {
@@ -1307,8 +1307,10 @@ require_once '../common/header.php';
   putHtml('<option value="dhcp">DHCP</option>');
   $sel = (getVARdef($db, 'EXTIP', $cur_db) === '' && getVARdef($db, 'DHCPV6_CLIENT_ENABLE', $cur_db) === 'yes') ? ' selected="selected"' : '';
   putHtml('<option value="dhcp-dhcpv6"'.$sel.'>DHCP/DHCPv6</option>');
-  $sel = (getVARdef($db, 'EXTIP', $cur_db) !== '' && getVARdef($db, 'EXTIF', $cur_db) !== 'ppp0') ? ' selected="selected"' : '';
+  $sel = (getVARdef($db, 'EXTIP', $cur_db) !== '' && getVARdef($db, 'EXTIF', $cur_db) !== 'ppp0' && getVARdef($db, 'DHCPV6_CLIENT_ENABLE', $cur_db) !== 'yes') ? ' selected="selected"' : '';
   putHtml('<option value="static"'.$sel.'>Static IP</option>');
+  $sel = (getVARdef($db, 'EXTIP', $cur_db) !== '' && getVARdef($db, 'EXTIF', $cur_db) !== 'ppp0' && getVARdef($db, 'DHCPV6_CLIENT_ENABLE', $cur_db) === 'yes') ? ' selected="selected"' : '';
+  putHtml('<option value="static-dhcpv6"'.$sel.'>Static IPv4/DHCPv6</option>');
   $sel = (getVARdef($db, 'EXTIF', $cur_db) === 'ppp0') ? ' selected="selected"' : '';
   putHtml('<option value="pppoe"'.$sel.'>PPPoE</option>');
   putHtml('</select>');
