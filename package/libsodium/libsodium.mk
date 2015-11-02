@@ -3,7 +3,7 @@
 # libsodium
 #
 #############################################################
-LIBSODIUM_VERSION = 1.0.5
+LIBSODIUM_VERSION = 1.0.6
 LIBSODIUM_SOURCE = libsodium-$(LIBSODIUM_VERSION).tar.gz
 LIBSODIUM_SITE = http://download.dnscrypt.org/libsodium/releases
 
