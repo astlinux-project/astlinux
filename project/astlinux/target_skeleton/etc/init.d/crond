@@ -17,7 +17,7 @@ init () {
       echo "
 ##
 ## logrotate - Do not remove, comment-out to disable
-0 4 * * * /usr/sbin/logrotate /etc/logrotate.conf >/dev/null 2>&1" >> /var/spool/cron/crontabs/root
+00 04 * * * /usr/sbin/logrotate /etc/logrotate.conf >/dev/null 2>&1" >> /var/spool/cron/crontabs/root
     fi
   fi
 
