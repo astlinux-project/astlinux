@@ -1363,6 +1363,49 @@ require_once '../common/header.php';
   putHtml('IPv6 Gateway:<input type="text" size="38" maxlength="39" value="'.$value.'" name="gateway_ipv6" /></td></tr>');
   
   putHtml('<tr class="dtrow1"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>External DHCPv6 Client Settings:</strong>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
+  $value = getVARdef($db, 'DHCPV6_CLIENT_REQUEST_ADDRESS', $cur_db);
+  putHtml('DHCPv6 Client Address:');
+  putHtml('<select name="dhcpv6_client_request_address">');
+  putHtml('<option value="no">disabled</option>');
+  $sel = ($value !== 'no') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>enabled</option>');
+  putHtml('</select></td>');
+  putHtml('<td style="text-align: left;" colspan="3">');
+  if (($dhcpv6_client_prefix_len = getVARdef($db, 'DHCPV6_CLIENT_PREFIX_LEN', $cur_db)) === '') {
+    $dhcpv6_client_prefix_len = '60';
+  }
+  putHtml('DHCPv6 Prefix Length:');
+  putHtml('<select name="dhcpv6_client_prefix_len">');
+  foreach ($select_dhcpv6_prefix_len as $key => $value) {
+    $sel = ($dhcpv6_client_prefix_len == $value) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$value.'"'.$sel.'>'.$key.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
+  $value = getVARdef($db, 'DHCPV6_CLIENT_REQUEST_PREFIX', $cur_db);
+  putHtml('DHCPv6 Prefix Delegation:');
+  putHtml('<select name="dhcpv6_client_request_prefix">');
+  putHtml('<option value="no">disabled</option>');
+  $sel = ($value !== 'no') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>enabled</option>');
+  putHtml('</select></td>');
+  putHtml('<td style="text-align: left;" colspan="3">');
+  $value = getVARdef($db, 'DHCPV6_CLIENT_PREFIX_HINT', $cur_db);
+  putHtml('DHCPv6 Prefix Length Hint:');
+  putHtml('<select name="dhcpv6_client_prefix_hint">');
+  putHtml('<option value="no">disabled</option>');
+  $sel = ($value !== 'no') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>enabled</option>');
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>External PPPoE Settings:</strong>');
   putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
@@ -1878,51 +1921,6 @@ require_once '../common/header.php';
   putHtml('<input type="submit" value="PPTP Configuration" name="submit_edit_pptp" class="button" />');
   putHtml('</td></tr>');
   
-  putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
-  
-  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
-  putHtml('<strong>IPv6 DHCPv6 Client Options:</strong>');
-  putHtml('</td></tr>');
-
-  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
-  $value = getVARdef($db, 'DHCPV6_CLIENT_REQUEST_ADDRESS', $cur_db);
-  putHtml('DHCPv6 Client Address:');
-  putHtml('<select name="dhcpv6_client_request_address">');
-  putHtml('<option value="no">disabled</option>');
-  $sel = ($value !== 'no') ? ' selected="selected"' : '';
-  putHtml('<option value="yes"'.$sel.'>enabled</option>');
-  putHtml('</select></td>');
-  putHtml('<td style="text-align: left;" colspan="3">');
-  if (($dhcpv6_client_prefix_len = getVARdef($db, 'DHCPV6_CLIENT_PREFIX_LEN', $cur_db)) === '') {
-    $dhcpv6_client_prefix_len = '60';
-  }
-  putHtml('DHCPv6 Prefix Length:');
-  putHtml('<select name="dhcpv6_client_prefix_len">');
-  foreach ($select_dhcpv6_prefix_len as $key => $value) {
-    $sel = ($dhcpv6_client_prefix_len == $value) ? ' selected="selected"' : '';
-    putHtml('<option value="'.$value.'"'.$sel.'>'.$key.'</option>');
-  }
-  putHtml('</select>');
-  putHtml('</td></tr>');
-
-  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
-  $value = getVARdef($db, 'DHCPV6_CLIENT_REQUEST_PREFIX', $cur_db);
-  putHtml('DHCPv6 Prefix Delegation:');
-  putHtml('<select name="dhcpv6_client_request_prefix">');
-  putHtml('<option value="no">disabled</option>');
-  $sel = ($value !== 'no') ? ' selected="selected"' : '';
-  putHtml('<option value="yes"'.$sel.'>enabled</option>');
-  putHtml('</select></td>');
-  putHtml('<td style="text-align: left;" colspan="3">');
-  $value = getVARdef($db, 'DHCPV6_CLIENT_PREFIX_HINT', $cur_db);
-  putHtml('DHCPv6 Prefix Length Hint:');
-  putHtml('<select name="dhcpv6_client_prefix_hint">');
-  putHtml('<option value="no">disabled</option>');
-  $sel = ($value !== 'no') ? ' selected="selected"' : '';
-  putHtml('<option value="yes"'.$sel.'>enabled</option>');
-  putHtml('</select>');
-  putHtml('</td></tr>');
-
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
   
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
