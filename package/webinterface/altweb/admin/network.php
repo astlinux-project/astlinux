@@ -1410,7 +1410,7 @@ require_once '../common/header.php';
   putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
   $value = getVARdef($db, 'PPPOEUSER', $cur_db);
-  putHtml('PPPoE Username:<input type="text" size="24" maxlength="64" value="'.$value.'" name="user_pppoe" /></td>');
+  putHtml('PPPoE Username:<input type="text" size="38" maxlength="64" value="'.$value.'" name="user_pppoe" /></td>');
   putHtml('<td style="text-align: left;" colspan="3">');
   $value = getVARdef($db, 'PPPOEPASS', $cur_db);
   $value = htmlspecialchars(RCconfig2string($value));
