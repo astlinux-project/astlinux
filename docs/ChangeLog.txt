@@ -55,7 +55,7 @@ Released **TBD**
    == External Interface supports Prefix Delegation and Request IPv6 Address
    == WAN Failover Interface does not support Prefix Delegation, only Request IPv6 Address
 
--- Network tab -> "IPv6 DHCPv6 Client Options:" adds External Interface DHCPv6 configuration options.
+-- Network tab -> "External DHCPv6 Client Settings:" adds External Interface DHCPv6 configuration options.
 
 
 Additions for AstLinux 1.2.4.1:
