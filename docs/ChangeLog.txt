@@ -12,9 +12,17 @@ Released **TBD**
 
 ** System
 
+-- tg3, version bump to 3.137k, Broadcom NetLink 10/100/1000 Mbps PCI/PCI-X/PCI Express Ethernet Linux driver
+
+-- Fossil, version bump to 1.34
+
 -- Monit, version bump to 5.15
 
--- libsodium, version bump to 1.0.5
+-- sudo, version bump to 1.8.15
+
+-- libsodium, version bump to 1.0.6
+
+-- ethtool, version bump to 4.2
 
 ** Networking
 
@@ -43,6 +51,7 @@ Released **TBD**
 ** Web Interface
 
 -- Network tab and and WAN Failover sub-tab, add DHCPv6 support with Connection Type: [DHCP/DHCPv6]
+   and Connection Type: [Static IPv4/DHCPv6]
    == External Interface supports Prefix Delegation and Request IPv6 Address
    == WAN Failover Interface does not support Prefix Delegation, only Request IPv6 Address
 
