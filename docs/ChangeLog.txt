@@ -18,6 +18,8 @@ Released **TBD**
 
 -- Monit, version bump to 5.15
 
+-- perl, version bump to 5.22.0 using perlcross 1.0.1
+
 -- sudo, version bump to 1.8.15
 
 -- libsodium, version bump to 1.0.6
@@ -37,6 +39,8 @@ Released **TBD**
 -- fping, version bump to 3.13
 
 -- sipgrep, version bump to 2.1.0
+
+-- stunnel, version bump to 5.25
 
 -- arnofw (AIF), added upstream patch for Issue #21, Leave the IPv6 sysctl accept_ra setting alone when forwarding=1
 
