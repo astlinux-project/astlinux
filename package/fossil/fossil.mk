@@ -17,6 +17,7 @@ define FOSSIL_CONFIGURE_CMDS
 		--prefix=/usr \
 		--host=$(GNU_TARGET_NAME) \
 		--build=$(GNU_HOST_NAME) \
+		--disable-fusefs \
 		--with-openssl="$(STAGING_DIR)/usr" \
 		--with-zlib="$(STAGING_DIR)/usr" \
         )
