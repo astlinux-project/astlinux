@@ -4,22 +4,23 @@
 #
 #############################################################
 
-PERL_VERSION_MAJOR = 20
-PERL_VERSION = 5.$(PERL_VERSION_MAJOR).2
+PERL_VERSION_MAJOR = 22
+PERL_VERSION = 5.$(PERL_VERSION_MAJOR).0
 PERL_SITE = http://www.cpan.org/src/5.0
 PERL_SOURCE = perl-$(PERL_VERSION).tar.bz2
 PERL_INSTALL_STAGING = YES
 # Depend on linux to define LINUX_VERSION_PROBED
 PERL_DEPENDENCIES = linux
 
+PERL_ARCHNAME = $(ARCH)-linux
+
 PERL_MODULES = constant version Carp Errno Fcntl PathTools POSIX Digest Socket IO XSLoader Exporter File-Find
 PERL_MODULES += Digest/MD5 Digest/SHA Getopt/Long Time/Local File/Glob Sys/Hostname
 
-PERL_CROSS_VERSION = 0.9.7
-PERL_CROSS_BASE_VERSION = 5.$(PERL_VERSION_MAJOR).2
-#PERL_CROSS_SITE = http://raw.github.com/arsv/perl-cross/releases
+PERL_CROSS_VERSION = 1.0.1
+#PERL_CROSS_SITE = --no-check-certificate https://raw.github.com/arsv/perl-cross/releases
 PERL_CROSS_SITE = http://files.astlinux.org
-PERL_CROSS_SOURCE = perl-$(PERL_CROSS_BASE_VERSION)-cross-$(PERL_CROSS_VERSION).tar.gz
+PERL_CROSS_SOURCE = perl-$(PERL_VERSION)-cross-$(PERL_CROSS_VERSION).tar.gz
 
 # We use the perlcross hack to cross-compile perl. It should
 # be extracted over the perl sources, so we don't define that
@@ -86,7 +87,11 @@ define PERL_INSTALL_STAGING_CMDS
 endef
 
 define PERL_INSTALL_TARGET_CMDS
+	# Undefine utils.lst file so cpan, corelist, ... perlthanks are not installed, keep shasum
+	echo "utils/shasum" > $(@D)/utils.lst
 	$(MAKE1) -C $(@D) DESTDIR="$(TARGET_DIR)" install.perl
+	# Remove CORE dir
+	rm -rf $(TARGET_DIR)/usr/lib/perl5/$(PERL_VERSION)/$(PERL_ARCHNAME)/CORE
 	# Remove all .pod files
 	find $(TARGET_DIR)/usr/lib/perl5/ -name '*.pod' -print0 | xargs -0 rm -f
 	# Remove many unicore files
