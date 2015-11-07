@@ -11,6 +11,7 @@ gen_https_cert()
 
   openssl req \
     -new -batch \
+    -sha256 \
     -newkey rsa:1024 \
     -days 36500 \
     -nodes \

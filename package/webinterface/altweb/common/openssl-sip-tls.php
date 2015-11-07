@@ -40,27 +40,27 @@ function sip_tls_SETUP($opts, $countryName, $stateName, $localityName, $orgName,
   );
   $ssl['configArgs'] = array(
     'config' => $ssl['config'],
-    'digest_alg' => 'sha1',
+    'digest_alg' => 'sha256',
     'private_key_bits' => $opts['keysize'],
     'encrypt_key' => FALSE
   );
   $ssl['sign_ca'] = array(
     'config' => $ssl['config'],
-    'digest_alg' => 'sha1',
+    'digest_alg' => 'sha256',
     'private_key_bits' => $opts['keysize'],
     'x509_extensions' => 'v3_ca',
     'encrypt_key' => FALSE
   );
   $ssl['sign_server'] = array(
     'config' => $ssl['config'],
-    'digest_alg' => 'sha1',
+    'digest_alg' => 'sha256',
     'private_key_bits' => $opts['keysize'],
     'x509_extensions' => 'sip_tls_server',
     'encrypt_key' => FALSE
   );
   $ssl['sign_client'] = array(
     'config' => $ssl['config'],
-    'digest_alg' => 'sha1',
+    'digest_alg' => 'sha256',
     'private_key_bits' => $opts['keysize'],
     'x509_extensions' => 'usr_cert',
     'encrypt_key' => FALSE

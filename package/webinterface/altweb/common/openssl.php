@@ -157,12 +157,12 @@ function opensslCREATEhttpsCert($countryName, $stateName, $localityName, $orgNam
     'emailAddress' => $email
   );
   $configArgs = array(
-    'digest_alg' => 'sha1',
+    'digest_alg' => 'sha256',
     'private_key_bits' => 1024,
     'encrypt_key' => FALSE
   );
   $sign_ca = array(
-    'digest_alg' => 'sha1',
+    'digest_alg' => 'sha256',
     'private_key_bits' => 1024,
     'x509_extensions' => 'v3_ca',
     'encrypt_key' => FALSE
