@@ -63,6 +63,12 @@ Released **TBD**
 
 -- Network tab -> "External DHCPv6 Client Settings:" adds External Interface DHCPv6 configuration options.
 
+-- Network tab, new certificate creation, deprecate SHA-1 and migrate to SHA-256. Applies only to new certificates:
+   == HTTPS web server certificate
+   == SIP-TLS certificate (shared with other packages as well)
+   == OpenVPN server certificate
+   == IPsec server certificate
+
 
 Additions for AstLinux 1.2.4.1:
 ===============================
