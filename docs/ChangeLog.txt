@@ -24,6 +24,8 @@ Released **TBD**
 
 -- sudo, version bump to 1.8.15
 
+-- sqlite, version bump to 3.9.2
+
 -- libsodium, version bump to 1.0.6
 
 -- ethtool, version bump to 4.2
