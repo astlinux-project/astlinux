@@ -1,0 +1,11 @@
+--- sqlite-3090200/Makefile.in.orig	2015-11-12 10:34:16.000000000 -0600
++++ sqlite-3090200/Makefile.in	2015-11-12 10:37:16.000000000 -0600
+@@ -107,7 +107,7 @@
+ 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+ 	$(libsqlite3_la_LDFLAGS) $(LDFLAGS) -o $@
+ PROGRAMS = $(bin_PROGRAMS)
+-am_sqlite3_OBJECTS = sqlite3-shell.$(OBJEXT) sqlite3-sqlite3.$(OBJEXT)
++am_sqlite3_OBJECTS = sqlite3-shell.$(OBJEXT) $(top_builddir)/libsqlite3.la
+ sqlite3_OBJECTS = $(am_sqlite3_OBJECTS)
+ sqlite3_DEPENDENCIES =
+ sqlite3_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
