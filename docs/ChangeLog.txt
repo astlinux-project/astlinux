@@ -46,6 +46,8 @@ Released **TBD**
 
 -- stunnel, version bump to 5.25
 
+-- shellinabox, version bump to 2.18, new supported repository
+
 -- arnofw (AIF), added upstream patch for Issue #21, Leave the IPv6 sysctl accept_ra setting alone when forwarding=1
 
 ** Asterisk
@@ -70,6 +72,8 @@ Released **TBD**
    == SIP-TLS certificate (shared with other packages as well)
    == OpenVPN server certificate
    == IPsec server certificate
+
+-- CLI tab, set terminal background to 'white' and remove unnecessary title header.
 
 
 Additions for AstLinux 1.2.4.1:
