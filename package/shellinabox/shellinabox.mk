@@ -3,10 +3,18 @@
 # shellinabox
 #
 #############################################################
-SHELLINABOX_VERSION = 2.14
+SHELLINABOX_VERSION = 2.18
 SHELLINABOX_SOURCE = shellinabox-$(SHELLINABOX_VERSION).tar.gz
-SHELLINABOX_SITE = http://shellinabox.googlecode.com/files
+#SHELLINABOX_SITE = https://github.com/shellinabox/shellinabox
+SHELLINABOX_SITE = http://files.astlinux.org
 SHELLINABOX_DEPENDENCIES = openssl
+
+SHELLINABOX_AUTORECONF = YES
+
+SHELLINABOX_CONF_OPT = \
+	--enable-ssl \
+	--disable-pam \
+	--disable-runtime-loading
 
 define SHELLINABOX_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/shellinaboxd $(TARGET_DIR)/usr/bin/shellinaboxd

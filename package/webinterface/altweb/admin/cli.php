@@ -56,15 +56,11 @@ require_once '../common/header.php';
   </script>
   <center>
   <table class="layoutNOpad" width="100%"><tr><td><center>
-  <table class="stdtable">
-  <tr><td style="text-align: center;" colspan="3">
-  <h2>Command Line Interface:</h2>
-  </td></tr></table>
 <?php
 
   putHtml('<table class="stdtable" width="100%"><tr><td style="text-align: center;">');
   if (is_file('/var/run/shellinaboxd.pid')) {
-    echo '<iframe id="cli" src="/admin/cli/" frameborder="1" width="100%" onload="setCLIheight();">';
+    echo '<iframe id="cli" src="/admin/cli/" frameborder="1" width="100%" style="background-color: #ffffff;" onload="setCLIheight();">';
     putHtml('</iframe>');
   } else {
     putHtml('<p style="color: red;">The CLI Proxy Server is not running, enable via the Network Tab.</p>');

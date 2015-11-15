@@ -8,5 +8,8 @@ config BR2_PACKAGE_SHELLINABOX
 	  emulator is accessible to any JavaScript and CSS enabled web
 	  browser and does not require any additional browser plugins.
 
+	  https://github.com/shellinabox/shellinabox
+
+	  Original:
 	  http://code.google.com/p/shellinabox/
 

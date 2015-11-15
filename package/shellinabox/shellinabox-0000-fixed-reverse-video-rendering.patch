@@ -1,0 +1,208 @@
+From cde2e923786486d30c41246f7adc554855fb7e62 Mon Sep 17 00:00:00 2001
+From: KLuka <luka.krajger@gmail.com>
+Date: Thu, 3 Sep 2015 19:01:17 +0200
+Subject: [PATCH] Issue #341: Fixed reverse video rendering
+
+* Added new CSS class for handling reverse video with default terminal
+  colors. For colors given with value 0-255 background and foreground
+  values are just switched.
+* New CSS classes were also added to Black On White and White On Black
+  color themes.
+---
+ shellinabox/black-on-white.css | 16 +++++++++++
+ shellinabox/color.css          |  2 ++
+ shellinabox/styles.css         |  7 +++++
+ shellinabox/vt100.jspp         | 62 +++++++++++++++++++++++-------------------
+ shellinabox/white-on-black.css | 16 +++++++++++
+ 5 files changed, 75 insertions(+), 28 deletions(-)
+
+diff --git a/shellinabox/black-on-white.css b/shellinabox/black-on-white.css
+index e69de29..8f08acf 100644
+--- a/shellinabox/black-on-white.css
++++ b/shellinabox/black-on-white.css
+@@ -0,0 +1,16 @@
++#vt100 .ansiDefR {
++  color:            #ffffff;
++}
++
++#vt100 .bgAnsiDefR {
++  background-color: #000000;
++}
++
++#vt100 #scrollable.inverted .ansiDefR {
++  color:            #000000;
++}
++
++#vt100 #scrollable.inverted .bgAnsiDefR {
++  background-color: #ffffff;
++}
++
+diff --git a/shellinabox/color.css b/shellinabox/color.css
+index 06e565b..3c042ee 100644
+--- a/shellinabox/color.css
++++ b/shellinabox/color.css
+@@ -2,6 +2,7 @@
+ 
+ /* SYSTEM colors */
+ #vt100 .ansiDef   {                            }
++#vt100 .ansiDefR  {                            }
+ 
+ #vt100 .ansi0     { color:            #000000; }
+ #vt100 .ansi1     { color:            #cd0000; }
+@@ -264,6 +265,7 @@
+ 
+ /* SYSTEM colors */
+ #vt100 .bgAnsiDef {                            }
++#vt100 .bgAnsiDefR {                            }
+ 
+ #vt100 .bgAnsi0   { background-color: #000000; }
+ #vt100 .bgAnsi1   { background-color: #cd0000; }
+diff --git a/shellinabox/styles.css b/shellinabox/styles.css
+index d025c94..8978eaa 100755
+--- a/shellinabox/styles.css
++++ b/shellinabox/styles.css
+@@ -243,9 +243,12 @@
+ [else DEFINES_COLORS]
+ /* SYSTEM colors */
+ #vt100 .ansiDef   { color:            #000000; }
++#vt100 .ansiDefR  { color:            #ffffff; }
+ 
+ #vt100 #scrollable.inverted .ansiDef
+                   { color:            #ffffff; }
++#vt100 #scrollable.inverted .ansiDefR
++                  { color:            #000000; }
+ 
+ #vt100 .ansi0     { color:            #000000; }
+ #vt100 .ansi1     { color:            #cd0000; }
+@@ -508,9 +511,13 @@
+ 
+ /* SYSTEM colors */
+ #vt100 .bgAnsiDef { background-color: #ffffff; }
++#vt100 .bgAnsiDefR
++                  { background-color: #000000; }
+ 
+ #vt100 #scrollable.inverted .bgAnsiDef
+                   { background-color: #000000; }
++#vt100 #scrollable.inverted .bgAnsiDefR
++                  { background-color: #ffffff; }
+ 
+ #vt100 .bgAnsi0   { background-color: #000000; }
+ #vt100 .bgAnsi1   { background-color: #cd0000; }
+diff --git a/shellinabox/vt100.jspp b/shellinabox/vt100.jspp
+index e06efca..d44c631 100755
+--- a/shellinabox/vt100.jspp
++++ b/shellinabox/vt100.jspp
+@@ -3351,44 +3351,50 @@ VT100.prototype.respondSecondaryDA = function() {
+ 
+ 
+ VT100.prototype.updateStyle = function() {
+-  this.style   = '';
++  var fg          = '';
++  var bg          = '';
++  this.style      = '';
++
+   if (this.attr & ATTR_UNDERLINE) {
+-    this.style = 'text-decoration: underline;';
+-  }
+-  var bg       = (this.attr >> 4) & 0xF;
+-  var fg       =  this.attr       & 0xF;
+-  if (this.attr & ATTR_REVERSE) {
+-    var tmp    = bg;
+-    bg         = fg;
+-    fg         = tmp;
+-  }
+-  if ((this.attr & (ATTR_REVERSE | ATTR_DIM)) == ATTR_DIM) {
+-    fg         = 8; // Dark grey
+-  } else if (this.attr & ATTR_BRIGHT) {
+-    fg        |= 8;
+-    this.style = 'font-weight: bold;';
++    this.style   += 'text-decoration: underline;';
+   }
+   if (this.attr & ATTR_BLINK) {
+-    this.style = 'text-decoration: blink;';
+-  }
+-
+-  // Default colors
+-  if (this.attr & ATTR_DEF_FG) {
+-    fg         = 'Def';
+-  }
+-  if (this.attr & ATTR_DEF_BG) {
+-    bg         = 'Def';
++    this.style   += 'text-decoration: blink;';
+   }
+ 
+-  // Extended color mode support (256 colors).
++  // Forground color
+   if (this.attrFg) {
+-    fg         = this.attrFg;
++    // 256 color mode
++    fg            = this.attrFg
++  } else if (this.attr & ATTR_DEF_FG) {
++    fg            = 'Def';
++  } else {
++    fg            = this.attr & 0xF;
++    if (this.attr & ATTR_BRIGHT) {
++      fg         |= 8;
++      this.style += 'font-weight: bold;';
++    }
+   }
++
++  // Background color
+   if (this.attrBg) {
+-    bg         = this.attrBg;
++    // 256 color mode
++    bg            = this.attrBg
++  } else if (this.attr & ATTR_DEF_BG) {
++    bg            = 'Def';
++  } else {
++    bg            = (this.attr >> 4) & 0xF;
++  }
++
++  // Reverse colors
++  if (this.attr & ATTR_REVERSE) {
++    var tmpFg     = fg;
++    var tmpBg     = bg;
++    fg            = (tmpBg == 'Def') ? 'DefR' : tmpBg;
++    bg            = (tmpFg == 'Def') ? 'DefR' : tmpFg;
+   }
+ 
+-  this.color   = 'ansi' + fg + ' bgAnsi' + bg;
++  this.color      = 'ansi' + fg + ' bgAnsi' + bg;
+ };
+ 
+ VT100.prototype.setAttrColors = function(attr) {
+diff --git a/shellinabox/white-on-black.css b/shellinabox/white-on-black.css
+index 2482f1d..92cdef8 100755
+--- a/shellinabox/white-on-black.css
++++ b/shellinabox/white-on-black.css
+@@ -24,14 +24,30 @@
+   color:            #ffffff;
+ }
+ 
++#vt100 .ansiDefR {
++  color:            #000000;
++}
++
+ #vt100 .bgAnsiDef {
+   background-color: #000000;
+ }
+ 
++#vt100 .bgAnsiDefR {
++  background-color: #ffffff;
++}
++
+ #vt100 #scrollable.inverted .ansiDef {
+   color:            #000000;
+ }
+ 
++#vt100 #scrollable.inverted .ansiDefR {
++  color:            #ffffff;
++}
++
+ #vt100 #scrollable.inverted .bgAnsiDef {
+   background-color: #ffffff;
+ }
++
++#vt100 #scrollable.inverted .bgAnsiDefR {
++  background-color: #000000;
++}

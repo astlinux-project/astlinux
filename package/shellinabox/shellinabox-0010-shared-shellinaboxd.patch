@@ -1,0 +1,11 @@
+--- shellinabox-2.18/Makefile.am.orig	2015-11-14 17:21:13.000000000 -0600
++++ shellinabox-2.18/Makefile.am	2015-11-14 17:21:45.000000000 -0600
+@@ -126,7 +126,7 @@
+ 
+ shellinaboxd_LDADD   = liblogging.la                                          \
+                        libhttp.la
+-shellinaboxd_LDFLAGS = -static
++shellinaboxd_LDFLAGS = -shared
+ ## Added this for compatibility with older versions of autoconf/automake
+ docdir               = ${datadir}/doc/${PACKAGE}
+ 
