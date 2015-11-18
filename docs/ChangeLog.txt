@@ -38,6 +38,8 @@ Released **TBD**
    New rc.conf variables are: DHCPV6_CLIENT_ENABLE, DHCPV6_CLIENT_REQUEST_ADDRESS, DHCPV6_CLIENT_REQUEST_PREFIX,
                               DHCPV6_CLIENT_PREFIX_LEN, DHCPV6_CLIENT_PREFIX_HINT, EXT2DHCPV6_CLIENT_ENABLE
 
+-- dnsmasq, added optional DHCP_LEASETIME rc.conf variable, defaults to "24" hours as before. Applies to both DHCP and IPv6 Autoconfig.
+
 -- iperf3, new package, iperf3 is becomming more common, sits along side the old iperf since they are not compatible
 
 -- fping, version bump to 3.13
