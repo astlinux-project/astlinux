@@ -86,7 +86,7 @@ isDHCPinterface()
 
 trueDNSMASQnet()
 {
-  # args: tag, IP, ip.dstart, ip.dend
+  # args: tag, IP, ip.dstart, ip.dend, leasetime
   local servername="$2" gateway="$2"
 
   if [ "$1" = "lan" ]; then
@@ -96,7 +96,7 @@ trueDNSMASQnet()
   fi
 
   echo "
-dhcp-range=$1,$3,$4,24h
+dhcp-range=$1,$3,$4,$5
 dhcp-option=$1,option:router,$gateway
 dhcp-option=$1,option:dns-server,$gateway
 dhcp-option=$1,option:tftp-server,\"$servername\"
@@ -118,8 +118,8 @@ no-dhcp-interface=$1"
 
 addIPV6net()
 {
-  # args: IF, tag
-  local interface="$1" tag="$2" dhcpv6="" prefix="" iname IFS
+  # args: IF, tag, leasetime
+  local interface="$1" tag="$2" leasetime="$3" dhcpv6="" prefix="" iname IFS
 
   if [ "$IPV6" != "yes" ]; then
     return 2
@@ -161,11 +161,11 @@ addIPV6net()
 
   if [ "$dhcpv6" = "yes" -a "$DHCPV6_CLIENT_REQUEST_PREFIX" != "no" ]; then
     echo "
-dhcp-range=$tag,::1,constructor:$interface,ra-only,24h"
+dhcp-range=$tag,::1,constructor:$interface,ra-only,$leasetime"
     return 0
   elif [ -n "$prefix" ]; then
     echo "
-dhcp-range=$tag,$prefix,ra-only,64,24h"
+dhcp-range=$tag,$prefix,ra-only,64,$leasetime"
     return 0
   fi
 
@@ -175,9 +175,10 @@ dhcp-range=$tag,$prefix,ra-only,64,24h"
 addDNSMASQnet()
 {
   # args: IF, IP, NM, tag
-  local ipbase dstart dend ipstart ipend NETWORK
+  local ipbase dstart dend ipstart ipend leasetime NETWORK
 
   if [ -n "$1" -a "$1" != "none" -a -n "$2" -a -n "$3" ]; then
+    leasetime="${DHCP_LEASETIME:-24}h"
     if isDHCPinterface $1; then
       eval $(ipcalc -n "$2" "$3")
       ipbase=$(_isdottedquad $NETWORK)
@@ -191,11 +192,11 @@ addDNSMASQnet()
       fi
       ipstart=$(($ipbase + $dstart))
       ipend=$(($ipbase + $dend))
-      trueDNSMASQnet $4 $2 $(_mkdottedquad $ipstart) $(_mkdottedquad $ipend)
+      trueDNSMASQnet $4 $2 $(_mkdottedquad $ipstart) $(_mkdottedquad $ipend) $leasetime
 
-      addIPV6net $1 $4
+      addIPV6net $1 $4 $leasetime
     else
-      if ! addIPV6net $1 $4; then
+      if ! addIPV6net $1 $4 $leasetime; then
         falseDNSMASQnet $1
       fi
     fi
