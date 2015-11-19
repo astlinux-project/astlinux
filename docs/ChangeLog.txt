@@ -26,6 +26,8 @@ Released **TBD**
 
 -- sqlite, version bump to 3.9.2
 
+-- libxml2, security fixes: CVE-2015-1819, CVE-2015-7941, CVE-2015-7942, CVE-2015-8035
+
 -- libsodium, version bump to 1.0.6
 
 -- ethtool, version bump to 4.2
