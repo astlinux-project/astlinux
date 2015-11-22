@@ -24,6 +24,12 @@ KAMAILIO_DEPENDENCIES += libxml2
 KAMAILIO_INCLUDE_MODULES += presence presence_xml xmlrpc
 endif
 
+ifeq ($(ARCH),i586)
+KAMAILIO_TARGET_ARCH = i386
+else
+KAMAILIO_TARGET_ARCH = $(ARCH)
+endif
+
 KAMAILIO_ENV_ARGS = \
 	LOCALBASE="$(STAGING_DIR)/usr" \
 	SYSBASE="$(STAGING_DIR)/usr" \
@@ -44,7 +50,7 @@ KAMAILIO_MAKEFLAGS = \
 	exclude_modules="$(KAMAILIO_EXCLUDE_MODULES)" \
 	modules_dirs="modules" \
 	LIBDIR=usr/lib \
-	ARCH="i386" \
+	ARCH="$(KAMAILIO_TARGET_ARCH)" \
 	OS="linux"
 
 define KAMAILIO_BUILD_CMDS
