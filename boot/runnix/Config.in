@@ -1,7 +1,7 @@
 config BR2_TARGET_RUNNIX
 	bool "runnix"
 	default y
-	depends on BR2_i386
+	depends on BR2_i386 || BR2_x86_64
 	help
 	  The runnix bootloader for x86 systems
 
