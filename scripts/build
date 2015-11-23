@@ -139,12 +139,8 @@ fi
 ##
 "
 
-if [ ! -f "initrd.img" ]; then
-  if ! ./scripts/build-initrd; then
-    exit 1
-  fi
-else
-  echo "File initrd.img exists, skipping 'scripts/build-initrd'."
+if ! ./scripts/build-initrd; then
+  exit 1
 fi
 
 make oldconfig

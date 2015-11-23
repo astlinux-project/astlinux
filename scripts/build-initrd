@@ -6,7 +6,7 @@
 save_state()
 {
   cp -p .config .config.initrd.save
-  cp -p initrd.config .config
+  cp -p "$initrd_config_file" .config
 
   if [ -d "output" ]; then
     mv output output.initrd.save
@@ -34,13 +34,32 @@ umask 002
 
 PATH=/sbin:/usr/sbin:$PATH
 
-if [ -f "initrd.img" -a "$1" != "force" ]; then
+build_arch="$(awk -F'"' '/^BR2_ARCH=/ { print $2; nextfile }' .config)"
+
+if [ -z "$build_arch" ]; then
+  echo "Unknown build architecture, exiting."
+  exit 1
+fi
+
+if [ "$build_arch" = "x86_64" ]; then
+  initrd_config_file="x86_64-configs/initrd.config"
+else
+  initrd_config_file="initrd.config"
+fi
+
+if [ -f "initrd.arch" ]; then
+  initrd_arch="$(cat initrd.arch)"
+else
+  initrd_arch=""
+fi
+
+if [ -f "initrd.img" -a "$initrd_arch" = "$build_arch" -a "$1" != "force" ]; then
   echo "The initrd image (initrd.img) already exists, skipping build."
   exit 0
 fi
 
-if [ ! -f "initrd.config" ]; then
-  echo "The initrd.config file does not exist, exiting."
+if [ ! -f "$initrd_config_file" ]; then
+  echo "The $initrd_config_file file does not exist, exiting."
   exit 1
 fi
 
@@ -57,13 +76,16 @@ trap - INT TERM EXIT
 if [ -f "output/images/rootfs.ext2.gz" ]; then
   echo "Installing initrd.img..."
   cp "output/images/rootfs.ext2.gz" "initrd.img"
+  echo "$build_arch" > "initrd.arch"
+  rtn_val=0
 else
   echo "Initrd build failed."
+  rtn_val=1
 fi
 
 restore_state
 
 make oldconfig
 
-exit 0
+exit $rtn_val
 
