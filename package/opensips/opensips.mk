@@ -18,12 +18,6 @@ OPENSIPS_EXCLUDE_MODULES = siptrace sipcapture cachedb_couchbase cachedb_memcach
 	pua pua_bla pua_mi pua_usrloc pua_xmpp pua_dialoginfo regex dialplan mi_http pi_http cachedb_sql \
 	mi_json presence_callinfo presence_xcapdiff
 
-ifeq ($(ARCH),i586)
-OPENSIPS_TARGET_ARCH = i386
-else
-OPENSIPS_TARGET_ARCH = $(ARCH)
-endif
-
 define OPENSIPS_BUILD_CMDS
 	$(TARGET_CONFIGURE_OPTS) \
 	LOCALBASE="$(STAGING_DIR)/usr" \
@@ -36,7 +30,7 @@ define OPENSIPS_BUILD_CMDS
 		prefix="" \
 		bin-prefix=/usr/ \
 		cfg-prefix=/ \
-		ARCH="$(OPENSIPS_TARGET_ARCH)" \
+		ARCH="$(KERNEL_ARCH)" \
 		OS="linux" \
 		include_modules="$(OPENSIPS_INCLUDE_MODULES)" \
 		exclude_modules="$(OPENSIPS_EXCLUDE_MODULES)" \
