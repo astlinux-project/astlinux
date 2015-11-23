@@ -35,7 +35,7 @@ welcome_msg()
 
        Hostname: $HOSTNAME
          Domain: $DOMAIN
-          Linux: $(uname -r)
+          Linux: $(uname -r -m)
      RAM Memory: $memtotal MB, Free $memfree MB
 
       Interface: $EXTIF (External)   IPv4 Address: $(dev_to_ipv4_addresses $EXTIF)${INTIF:+
@@ -157,7 +157,7 @@ start () {
   fi
 
   # Generate Alert Sounds (after finished booting)
-  if grep -q "astlinux=geni586" /proc/cmdline; then
+  if grep -q "astlinux=gen[ix][0-9]" /proc/cmdline; then
 
     if is_alert_sound_type startup; then
       play_alert_sound_type startup
@@ -199,7 +199,7 @@ stop () {
   fi
 
   # Generate Alert Sounds (on reboot/shutdown)
-  if grep -q "astlinux=geni586" /proc/cmdline; then
+  if grep -q "astlinux=gen[ix][0-9]" /proc/cmdline; then
 
     if is_alert_sound_type shutdown; then
       play_alert_sound_type shutdown
