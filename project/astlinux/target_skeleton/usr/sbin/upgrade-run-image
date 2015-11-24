@@ -135,6 +135,10 @@ check() {
       ARCH=`echo $i | sed -e 's/astlinux=//'`
       if [ "$ARCH" = "via" -o "$ARCH" = "viac7" ]; then  # Redirect deprecated boards
         ARCH="geni586"
+      elif [ "$ARCH" = "geni586" -a "$ARCH_BITS" = "64" ]; then
+        ARCH="genx86_64"
+      elif [ "$ARCH" = "genx86_64" -a "$ARCH_BITS" = "32" ]; then
+        ARCH="geni586"
       fi
     elif echo $i | grep -q "console="; then
       SERIAL=`echo $i | sed -e 's/console=//'`
@@ -146,7 +150,7 @@ check() {
     exit $RED
   fi
 
-  if [ "$ARCH" = "geni586" ]; then
+  if [ "$ARCH" = "geni586" -o "$ARCH" = "genx86_64" ]; then
     if [ -n "$SERIAL" ]; then
       ARCH="${ARCH}-serial"
     fi
@@ -345,9 +349,10 @@ check)
   if [ -n "$2" ]; then
     SRC_URL=$2
   else
-    echo "Usage: upgrade-run-image check firmware_repository_url"
+    echo "Usage: upgrade-run-image check firmware_repository_url [32|64]"
     exit 1
   fi
+  ARCH_BITS="$3"
   check
   echo "Current version is: ${OVER}${AFTER_REBOOT},  Newest available version is: ${VER}"
   exit $GREEN
@@ -357,9 +362,10 @@ upgrade)
   if [ -n "$2" ]; then
     SRC_URL=$2
   else
-    echo "Usage: upgrade-run-image upgrade firmware_repository_url"
+    echo "Usage: upgrade-run-image upgrade firmware_repository_url [32|64]"
     exit 1
   fi
+  ARCH_BITS="$3"
   check
   upgrade
   echo "Successful upgrade to: ${VER}${AFTER_REBOOT}"
@@ -379,7 +385,7 @@ revert)
   ;;
   
 *)
-  echo "Usage: upgrade-run-image check|upgrade|show|revert firmware_repository_url"
+  echo "Usage: upgrade-run-image check|upgrade|show|revert firmware_repository_url [32|64]"
   exit 1
   ;;
   

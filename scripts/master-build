@@ -9,6 +9,8 @@ force="$2"
 
 FAT_SIZE=256
 
+BOARDS_SMP64="genx86_64 genx86_64-serial"
+
 BOARDS_SMP="geni586 geni586-serial"
 
 BOARDS_NO_SMP="net5501 alix"
@@ -137,6 +139,16 @@ for asterisk in ast18 ast11 ast13; do
   set_smp_kernel
 
   for board in $BOARDS_SMP; do
+    build_board "$FIRMWARE" "$IMG"
+  done
+
+  # SMP64 Builds
+  echo "Cleaning out any existing builds..."
+  rm -rf output
+
+  cp "x86_64-configs/$CONFIG" .config
+
+  for board in $BOARDS_SMP64; do
     build_board "$FIRMWARE" "$IMG"
   done
 done
