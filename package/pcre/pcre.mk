@@ -4,8 +4,8 @@
 #
 #############################################################
 
-PCRE_VERSION = 8.37
-PCRE_SITE = http://downloads.sourceforge.net/project/pcre/pcre/$(PCRE_VERSION)
+PCRE_VERSION = 8.38
+PCRE_SITE = ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre
 PCRE_SOURCE = pcre-$(PCRE_VERSION).tar.bz2
 PCRE_INSTALL_STAGING = YES
 
