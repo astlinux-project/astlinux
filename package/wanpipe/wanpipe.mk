@@ -3,7 +3,7 @@
 # wanpipe
 #
 #############################################################
-WANPIPE_VER:= 7.0.14
+WANPIPE_VER:= 7.0.15
 WANPIPE_SITE:= ftp://ftp.sangoma.com/linux/current_wanpipe
 WANPIPE_SOURCE:=wanpipe-$(WANPIPE_VER).tgz
 WANPIPE_DIR:=$(BUILD_DIR)/wanpipe-$(WANPIPE_VER)
@@ -14,7 +14,8 @@ WANPIPE_TARGET_BINARY:=$(WANPIPE_TARGET_DIR)/wanconfig
 
 WANPIPE_PREREQS:=flex dahdi-linux
 WANPIPE_CONFIGURE:=\
-		ZAPDIR="$(DAHDI_LINUX_DIR)"
+	ARCH=$(KERNEL_ARCH) \
+	ZAPDIR="$(DAHDI_LINUX_DIR)"
 
 $(DL_DIR)/$(WANPIPE_SOURCE):
 	$(WGET) -P $(DL_DIR) $(WANPIPE_SITE)/$(WANPIPE_SOURCE)
