@@ -10,6 +10,10 @@ Additions for AstLinux 1.2.5:
 
 Released **TBD**
 
+** Build System
+
+-- Added 64-bit support for x86_64 CPU's with new board types genx86_64 and genx86_64-serial
+
 ** System
 
 -- linux, add kernel patch allowing Geode LX (alix and net5501) to use tsc clocksource instead of pit clocksource
@@ -24,17 +28,22 @@ Released **TBD**
 
 -- perl, version bump to 5.22.0 using perlcross 1.0.1
 
+-- pcre, version bump to 8.38, security fixes: https://blog.fuzzing-project.org/29-Heap-Overflow-in-PCRE.html
+
 -- sudo, version bump to 1.8.15
 
 -- sqlite, version bump to 3.9.2
 
--- libxml2, security fixes: CVE-2015-1819, CVE-2015-7941, CVE-2015-7942, CVE-2015-8035
+-- libxml2, version bump to 2.9.3, security fixes: CVE-2015-1819, CVE-2015-7941, CVE-2015-7942, CVE-2015-8035
+                                                   CVE-2015-5312, CVE-2015-7497, CVE-2015-7500, CVE-2015-8242
 
 -- libsodium, version bump to 1.0.6
 
 -- ethtool, version bump to 4.2
 
 -- nano, version bump to 2.4.3
+
+-- strace, version bump to 4.10
 
 ** Networking
 
@@ -67,6 +76,8 @@ Released **TBD**
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
 -- pjsip 2.4 (no change)
+
+-- wanpipe, version bump to 7.0.15
 
 ** Web Interface
 
