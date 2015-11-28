@@ -65,9 +65,9 @@ Test Email from '$HOSTNAME'
   fi
   if [ -f /etc/astlinux-release ]; then
     if [ -x /usr/sbin/asterisk ]; then
-      echo "AstLinux Release:   $(cat /etc/astlinux-release) - $(/usr/sbin/asterisk -V)"
+      echo "AstLinux Release:   $(cat /etc/astlinux-release) $(uname -m) - $(/usr/sbin/asterisk -V)"
     else
-      echo "AstLinux Release:   $(cat /etc/astlinux-release)"
+      echo "AstLinux Release:   $(cat /etc/astlinux-release) $(uname -m)"
     fi
   fi
   if [ -f /oldroot/cdrom/ver ]; then
