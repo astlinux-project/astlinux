@@ -572,7 +572,7 @@ echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', 'A
 echo '<td style="text-align: left;">';
 if (($fp = @fopen('/etc/astlinux-release', 'r')) !== FALSE) {
   if (! feof($fp)) {
-    $line = trim(fgets($fp, 1024));
+    $line = trim(fgets($fp, 1024)).' '.trim(shell_exec('uname -m'));
     if ($daemon['asterisk'] > 0) {
       $line .= ' - '.trim(shell_exec('/usr/sbin/asterisk -V'));
     }
