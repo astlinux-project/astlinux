@@ -34,6 +34,8 @@ Released **TBD**
 
 -- sqlite, version bump to 3.9.2
 
+-- libsrtp, version bump to 1.5.3, security fix: CVE-2015-6360
+
 -- libxml2, version bump to 2.9.3, security fixes: CVE-2015-1819, CVE-2015-7941, CVE-2015-7942, CVE-2015-8035
                                                    CVE-2015-5312, CVE-2015-7497, CVE-2015-7500, CVE-2015-8242
 
@@ -58,6 +60,8 @@ Released **TBD**
 -- iperf3, new package, iperf3 is becomming more common, sits along side the old iperf since they are not compatible
 
 -- miniupnpd, version bump to 1.9.20151118
+
+-- msmtp, version bump to 1.6.3
 
 -- fping, version bump to 3.13
 
@@ -95,6 +99,8 @@ Released **TBD**
    == IPsec server certificate
 
 -- CLI tab, set terminal background to 'white' and remove unnecessary title header.
+
+-- Status tab, add system architecture string to 'AstLinux Release:'
 
 
 Additions for AstLinux 1.2.4.1:
