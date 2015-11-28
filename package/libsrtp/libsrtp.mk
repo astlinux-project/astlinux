@@ -3,7 +3,7 @@
 # libsrtp
 #
 #############################################################
-LIBSRTP_VERSION = 1.5.2
+LIBSRTP_VERSION = 1.5.3
 LIBSRTP_SITE = http://files.astlinux.org
 #LIBSRTP_SITE = https://github.com/cisco/libsrtp/releases
 LIBSRTP_SOURCE = libsrtp-$(LIBSRTP_VERSION).tar.gz
