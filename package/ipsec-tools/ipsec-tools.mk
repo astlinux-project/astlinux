@@ -14,8 +14,9 @@ IPSEC_TOOLS_DEPENDENCIES = openssl host-bison flex host-flex
 # configure hardcodes -Werror, so override CFLAGS on make invocation
 IPSEC_TOOLS_MAKE_OPT = CFLAGS='$(TARGET_CFLAGS)'
 
+IPSEC_TOOLS_CONF_ENV = ac_cv_va_copy=yes
+
 IPSEC_TOOLS_CONF_OPT = \
-	ac_cv_va_copy=yes \
 	--enable-hybrid \
 	--without-libpam \
 	--disable-gssapi \
