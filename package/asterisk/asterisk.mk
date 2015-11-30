@@ -88,7 +88,7 @@ endif
 ifeq ($(strip $(BR2_PACKAGE_UW_IMAP)),y)
 ASTERISK_EXTRAS+=uw-imap
 ASTERISK_CONFIGURE_ARGS+= \
-			--with-imap="$(BUILD_DIR)/uw-imap-2007e" 
+			--with-imap="$(BUILD_DIR)/uw-imap-2007f" 
 endif
 
 ifeq ($(strip $(BR2_PACKAGE_NETSNMP)),y)

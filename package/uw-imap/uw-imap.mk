@@ -3,7 +3,7 @@
 # uw-imap
 #
 #############################################################
-UW_IMAP_VERSION = 2007e
+UW_IMAP_VERSION = 2007f
 UW_IMAP_SITE = ftp://ftp.cac.washington.edu/imap
 UW_IMAP_SOURCE = imap-$(UW_IMAP_VERSION).tar.gz
 UW_IMAP_INSTALL_STAGING = NO
@@ -16,7 +16,7 @@ define UW_IMAP_CONFIGURE_CMDS
 endef
 
 UW_IMAP_MAKE_OPT = slx CC='$(TARGET_CC)' \
-		   EXTRACFLAGS="-I$(STAGING_DIR)/usr/include/openssl" \
+		   EXTRACFLAGS="-I$(STAGING_DIR)/usr/include/openssl -fPIC" \
 		   SSLLIB=$(STAGING_DIR)/lib \
 		   SSLTYPE=nopwd \
 		   SHLIBBASE=c-client \
