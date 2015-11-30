@@ -43,6 +43,8 @@ Released **TBD**
 
 -- ethtool, version bump to 4.2
 
+-- kexec-tools, version bump to 2.0.11
+
 -- nano, version bump to 2.4.3
 
 -- strace, version bump to 4.10
