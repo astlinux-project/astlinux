@@ -61,6 +61,10 @@ Released **TBD**
 
 -- iperf3, new package, iperf3 is becomming more common, sits along side the old iperf since they are not compatible
 
+-- libcurl (curl) version bump to 7.46.0
+
+-- openldap, version bump to 2.4.43
+
 -- miniupnpd, version bump to 1.9.20151118
 
 -- msmtp, version bump to 1.6.3
