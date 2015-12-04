@@ -394,7 +394,6 @@ $fstab_var
 }
 
 shutdown() {
-  # args: sreboot_flag
 
   CMDLINE="`cat /proc/cmdline`"
 
@@ -420,11 +419,7 @@ shutdown() {
     hwclock -wu 2>/dev/null
   fi
 
-  if [ "$1" = "sreboot" ]; then
-    echo "shutdown sreboot..."
-  else
-    umount -a -r 2>/dev/null
-  fi
+  umount -a -r 2>/dev/null
 
 }
 
@@ -436,7 +431,7 @@ sysinit|default)
   ;;
 
 shutdown)
-  shutdown "$2"
+  shutdown
   ;;
 
 esac

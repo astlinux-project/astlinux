@@ -1,27 +1,157 @@
 #!/bin/sh
-# kexec based quick reboot for AstLinux
 
-KERN="/boot/bzImage"
-INITRD="/oldroot/cdrom/os/initrd.img"
+## kexec based quick reboot for AstLinux
+## Replicate the basic functionality of the RUNNIX script
+##
+## If anything fails, do a normal reboot
 
-if [ ! -f "$INITRD" -o ! -f "$KERN" ]; then
-  echo "You don't have your drives mounted - exiting"
+do_failure()
+{
+  reboot -f
   exit 1
-fi
+}
+
+do_reboot()
+{
+  # Stop services and unmount all file systems or remount 'ro' if busy
+  /etc/rc shutdown
+  
+  # Stop udevd since /dev is now 'ro'
+  echo "Stopping udevd..."
+  udevadm control --timeout=121 --exit
+  killall udevd 2>/dev/null
+  
+  ROOT="/tmp/mnt/root"
+  
+  KEXEC_BASE="/tmp/mnt/kexec"
+  
+  mount -t tmpfs none /tmp
+  
+  mkdir -p "$ROOT"
+  mkdir -p "$KEXEC_BASE"
+  
+  BASE="/oldroot/cdrom"
+  
+  if ! mount | grep -q "$BASE"; then
+    LABEL="$(/sbin/findfs LABEL=RUNNIX)"
+    if [ -n "$LABEL" ]; then
+      mount -t vfat -o ro "$LABEL" $BASE
+    fi
+    if ! mount | grep -q "$BASE"; then
+      echo "Unable to find Runnix partition."
+      do_failure
+    fi
+  fi
+  
+  if [ -f $BASE/os/default.conf ]; then
+    . $BASE/os/default.conf
+  fi
+  
+  # Get the latest good one
+  cd $BASE/os
+  RUNIMG="$(ls *.run | tail -n1)"
+  
+  # If we have a ver file, override auto/default.conf value
+  if [ -f $BASE/os/ver ]; then
+    RUNIMG="$(cat $BASE/os/ver).run"
+  fi
+  
+  if [ "$VERIFY_LOCAL" = "yes" ]; then
+    echo "Verifying $RUNIMG..."
+  
+    if sha1sum -cs $RUNIMG.sha1; then
+      echo "$RUNIMG verified"
+      IMGVER=1
+    else
+      echo "$RUNIMG not verified"
+    fi
+  else
+    echo "Skip Verifying $RUNIMG"
+  fi
+  
+  if [ -f $BASE/os/$RUNIMG.conf ]; then
+    . $BASE/os/$RUNIMG.conf
+  fi
+  
+  # Fixup RUNNIX -> Astlinux paths
+  INITRD="${BASE}${INITRD#/mnt/base}"
+  KERN="${ROOT}${KERN#/mnt/root}"
+  
+  if [ -z "$OFFSET" ]; then
+    losetup /dev/loop0 $BASE/os/$RUNIMG
+  else
+    losetup -o "$OFFSET" /dev/loop0 $BASE/os/$RUNIMG
+  fi
+  
+  if [ -z "$FSTYPE" ]; then
+    FSTYPE="ext2"
+  fi
+  
+  if mount -t $FSTYPE -o ro /dev/loop0 $ROOT; then
+    echo "Root mounted"
+  else
+    echo "Error mounting $RUNIMG root fs"
+    do_failure
+  fi
+  
+  if [ -n "$INITRD" ]; then
+    if [ -f "$INITRD" ]; then
+      echo "Custom initrd $INITRD found"
+    else
+      INITRD="$BASE/os/initrd.img"
+      echo "Custom initrd not found - using $INITRD"
+    fi
+  else
+    echo "Using default initrd"
+    INITRD="$BASE/os/initrd.img"
+  fi
+  
+  if [ -n "$KERN" ]; then
+    if [ -f "$KERN" ]; then
+      echo "Custom kernel $KERN found"
+    else
+      KERN="$ROOT/boot/bzImage"
+      echo "Custom kernel not found - using $KERN"
+    fi
+  else
+    echo "Using default kernel"
+    KERN="$ROOT/boot/bzImage"
+  fi
+  
+  if [ -f "$INITRD" -a -f "$KERN" ]; then
+    echo "Copying kernel and initrd to ramdisk..."
+    mount -t tmpfs none "$KEXEC_BASE"
+    cp "$INITRD" "$KEXEC_BASE/initrd.img"
+    cp "$KERN" "$KEXEC_BASE/bzImage"
+    echo "Unmounting image..."
+    umount $ROOT
+  else
+    echo "I couldn't find your kernel and/or initrd"
+    do_failure
+  fi
+  
+  if [ -z "$KCMD" ]; then
+    echo "You need to specify a kernel command line.
+  I can't guess that"
+    do_failure
+  fi
+  
+  echo "Trying kexec..."
+  /sbin/kexec --command-line="$KCMD" --initrd="$KEXEC_BASE/initrd.img" -f "$KEXEC_BASE/bzImage"
+  
+  do_failure
+}
 
 if [ ! -x /sbin/kexec ]; then
-  echo "You don't have kexec-tools installed - exiting"
+  echo "You don't have kexec-tools installed - rebooting"
+  reboot
   exit 1
 fi
 
-echo "Calling AstLinux Shutdown..."
-/etc/rc shutdown sreboot
+if [ ! -x /sbin/findfs ]; then
+  echo "You don't have findfs installed - rebooting"
+  reboot
+  exit 1
+fi
 
-echo "Loading kernel..."
-/sbin/kexec -l --command-line="`cat /proc/cmdline`" --initrd="$INITRD" "$KERN"
-
-sync
-umount -a -r 2>/dev/null
-
-echo "Rebooting system..."
-/sbin/kexec -e
+do_reboot >/dev/console 2>&1 &
