@@ -188,4 +188,7 @@ if [ -n "$DELAY" ] && [ $DELAY -gt 0 ]; then
   sleep $DELAY
 fi
 
+# Ignore terminating signals from here on
+trap '' HUP INT TERM
+
 do_reboot >/dev/console 2>&1 &

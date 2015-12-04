@@ -168,7 +168,7 @@ function systemSHUTDOWN($myself, $result) {
 function systemREBOOT($myself, $result, $setup = FALSE) {
   global $global_prefs;
   
-  $count_down_secs = 150;                                     
+  $count_down_secs = 120;                                     
   
   if (($adjust = getPREFdef($global_prefs, 'system_reboot_timer_adjust')) !== '') {
     $count_down_secs += (int)$adjust;                                     
@@ -178,8 +178,14 @@ function systemREBOOT($myself, $result, $setup = FALSE) {
   if ($arch === 'net4801' || $arch === 'wrap') {
     $count_down_secs += 20;                                     
   }
+
+  $cmd = '/sbin/kernel-reboot';
+  if (! is_executable($cmd)) {
+    $cmd = '/sbin/reboot';
+    $count_down_secs += 30;                                     
+  }
   
-  shell('/sbin/reboot -d4 >/dev/null 2>/dev/null &', $status);
+  shell($cmd.' -d4 >/dev/null 2>/dev/null &', $status);
   if ($status == 0) {                                           
     if ($setup) {
       $count_down_secs += 50;                                     
