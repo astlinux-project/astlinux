@@ -180,7 +180,7 @@ function systemREBOOT($myself, $result, $setup = FALSE) {
   }
 
   $cmd = '/sbin/kernel-reboot';
-  if (! is_executable($cmd)) {
+  if (! is_executable($cmd) || (getPREFdef($global_prefs, 'system_reboot_classic_full') === 'yes')) {
     $cmd = '/sbin/reboot';
     $count_down_secs += 30;                                     
   }
