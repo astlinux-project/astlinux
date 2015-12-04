@@ -5,6 +5,21 @@
 ##
 ## If anything fails, do a normal reboot
 
+ARGS="$1$2"
+
+usage()
+{
+  echo '
+Usage: kernel-reboot [-d DELAY]
+
+Reboot the system using kexec as RUNNIX does
+
+Options:
+    -d SEC    Delay interval
+'
+  exit 1
+}
+
 do_failure()
 {
   reboot -f
@@ -15,23 +30,28 @@ do_reboot()
 {
   # Stop services and unmount all file systems or remount 'ro' if busy
   /etc/rc shutdown
-  
+
   # Stop udevd since /dev is now 'ro'
   echo "Stopping udevd..."
   udevadm control --timeout=121 --exit
   killall udevd 2>/dev/null
-  
+
   ROOT="/tmp/mnt/root"
-  
+
   KEXEC_BASE="/tmp/mnt/kexec"
-  
+
+  # We may have lost /proc on the shutdown, mount if missing
+  if [ ! -e /proc/mounts ]; then
+    mount -t proc none /proc
+  fi
+
   mount -t tmpfs none /tmp
-  
+
   mkdir -p "$ROOT"
   mkdir -p "$KEXEC_BASE"
-  
+
   BASE="/oldroot/cdrom"
-  
+
   if ! mount | grep -q "$BASE"; then
     LABEL="$(/sbin/findfs LABEL=RUNNIX)"
     if [ -n "$LABEL" ]; then
@@ -42,23 +62,23 @@ do_reboot()
       do_failure
     fi
   fi
-  
+
   if [ -f $BASE/os/default.conf ]; then
     . $BASE/os/default.conf
   fi
-  
+
   # Get the latest good one
   cd $BASE/os
   RUNIMG="$(ls *.run | tail -n1)"
-  
+
   # If we have a ver file, override auto/default.conf value
   if [ -f $BASE/os/ver ]; then
     RUNIMG="$(cat $BASE/os/ver).run"
   fi
-  
+
   if [ "$VERIFY_LOCAL" = "yes" ]; then
     echo "Verifying $RUNIMG..."
-  
+
     if sha1sum -cs $RUNIMG.sha1; then
       echo "$RUNIMG verified"
       IMGVER=1
@@ -68,32 +88,32 @@ do_reboot()
   else
     echo "Skip Verifying $RUNIMG"
   fi
-  
+
   if [ -f $BASE/os/$RUNIMG.conf ]; then
     . $BASE/os/$RUNIMG.conf
   fi
-  
+
   # Fixup RUNNIX -> Astlinux paths
   INITRD="${BASE}${INITRD#/mnt/base}"
   KERN="${ROOT}${KERN#/mnt/root}"
-  
+
   if [ -z "$OFFSET" ]; then
     losetup /dev/loop0 $BASE/os/$RUNIMG
   else
     losetup -o "$OFFSET" /dev/loop0 $BASE/os/$RUNIMG
   fi
-  
+
   if [ -z "$FSTYPE" ]; then
     FSTYPE="ext2"
   fi
-  
+
   if mount -t $FSTYPE -o ro /dev/loop0 $ROOT; then
     echo "Root mounted"
   else
     echo "Error mounting $RUNIMG root fs"
     do_failure
   fi
-  
+
   if [ -n "$INITRD" ]; then
     if [ -f "$INITRD" ]; then
       echo "Custom initrd $INITRD found"
@@ -105,7 +125,7 @@ do_reboot()
     echo "Using default initrd"
     INITRD="$BASE/os/initrd.img"
   fi
-  
+
   if [ -n "$KERN" ]; then
     if [ -f "$KERN" ]; then
       echo "Custom kernel $KERN found"
@@ -117,7 +137,7 @@ do_reboot()
     echo "Using default kernel"
     KERN="$ROOT/boot/bzImage"
   fi
-  
+
   if [ -f "$INITRD" -a -f "$KERN" ]; then
     echo "Copying kernel and initrd to ramdisk..."
     mount -t tmpfs none "$KEXEC_BASE"
@@ -129,16 +149,16 @@ do_reboot()
     echo "I couldn't find your kernel and/or initrd"
     do_failure
   fi
-  
+
   if [ -z "$KCMD" ]; then
     echo "You need to specify a kernel command line.
   I can't guess that"
     do_failure
   fi
-  
+
   echo "Trying kexec..."
   /sbin/kexec --command-line="$KCMD" --initrd="$KEXEC_BASE/initrd.img" -f "$KEXEC_BASE/bzImage"
-  
+
   do_failure
 }
 
@@ -152,6 +172,20 @@ if [ ! -x /sbin/findfs ]; then
   echo "You don't have findfs installed - rebooting"
   reboot
   exit 1
+fi
+
+DELAY=0
+
+if [ -n "$ARGS" ]; then
+  case "$ARGS" in
+    -d*) DELAY="${ARGS#-d}"
+         DELAY="$(echo "$DELAY" | tr -c -d '0-9')" ;;
+      *) usage ;;
+  esac
+fi
+
+if [ -n "$DELAY" ] && [ $DELAY -gt 0 ]; then
+  sleep $DELAY
 fi
 
 do_reboot >/dev/console 2>&1 &
