@@ -166,13 +166,13 @@ do_reboot()
 cd /root
 
 if [ ! -x /sbin/kexec ]; then
-  echo "You don't have kexec-tools installed - rebooting"
+  echo "kernel-reboot: You don't have kexec-tools installed - rebooting" >&2
   reboot
   exit 1
 fi
 
 if [ ! -x /sbin/findfs ]; then
-  echo "You don't have findfs installed - rebooting"
+  echo "kernel-reboot: You don't have findfs installed - rebooting" >&2
   reboot
   exit 1
 fi
@@ -187,9 +187,16 @@ if [ -n "$ARGS" ]; then
   esac
 fi
 
+if [ $(id -u) -ne 0 ]; then
+  echo "kernel-reboot: Operation not permitted, must be root" >&2
+  exit 1
+fi
+
 if [ -n "$DELAY" ] && [ $DELAY -gt 0 ]; then
   sleep $DELAY
 fi
+
+sync
 
 # Ignore terminating signals from here on
 trap '' HUP INT TERM
