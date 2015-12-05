@@ -162,6 +162,9 @@ do_reboot()
   do_failure
 }
 
+# Set a working dir for when called via PHP
+cd /root
+
 if [ ! -x /sbin/kexec ]; then
   echo "You don't have kexec-tools installed - rebooting"
   reboot
