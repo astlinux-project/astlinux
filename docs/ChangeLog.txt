@@ -45,11 +45,16 @@ Released **TBD**
 
 -- kexec-tools, version bump to 2.0.11
 
+-- kernel-reboot, new command performs a reboot via kexec just as RUNNIX does, all changes to the run images and versions are honored.
+   Reboots are 30-40 seconds faster using kernel-reboot. The kernel-reboot command replaces the sreboot script that has been removed.
+
 -- nano, version bump to 2.4.3
 
 -- strace, version bump to 4.10
 
 ** Networking
+
+-- OpenSSL, version bump to 1.0.1q, security fixes: CVE-2015-3194, CVE-2015-3195
 
 -- ntpd/sntp, version bump to 4.2.8p4, security fixes: CVE-2015-7871 plus 12 other low/medium-severity vulnerabilities
 
@@ -107,6 +112,9 @@ Released **TBD**
 -- CLI tab, set terminal background to 'white' and remove unnecessary title header.
 
 -- Status tab, add system architecture string to 'AstLinux Release:'
+
+-- Network and System tabs, now use "/sbin/kernel-reboot" if available for a faster reboot.
+   Use classic reboot method by checking Prefs tab option 'Disable faster "kernel-reboot" System Reboot'.
 
 
 Additions for AstLinux 1.2.4.1:
