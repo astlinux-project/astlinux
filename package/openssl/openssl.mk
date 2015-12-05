@@ -4,7 +4,7 @@
 #
 #############################################################
 
-OPENSSL_VERSION = 1.0.1p
+OPENSSL_VERSION = 1.0.1q
 OPENSSL_SITE = http://www.openssl.org/source
 OPENSSL_INSTALL_STAGING = YES
 OPENSSL_DEPENDENCIES = zlib
@@ -61,7 +61,6 @@ define OPENSSL_CONFIGURE_CMDS
 			--libdir=/lib \
 			$(if $(BR2_TOOLCHAIN_HAS_THREADS),threads,no-threads) \
 			$(if $(BR2_PREFER_STATIC_LIB),no-shared,shared) \
-			no-idea \
 			no-rc5 \
 			enable-camellia \
 			enable-mdc2 \
