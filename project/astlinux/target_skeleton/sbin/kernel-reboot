@@ -22,7 +22,8 @@ Options:
 
 do_failure()
 {
-  reboot -f
+  echo '## Falling back to /sbin/reboot ##'
+  /sbin/reboot -f
   exit 1
 }
 
@@ -30,6 +31,8 @@ do_reboot()
 {
   # Stop services and unmount all file systems or remount 'ro' if busy
   /etc/rc shutdown
+
+  echo '## Using /sbin/kernel-reboot ##'
 
   # Stop udevd since /dev is now 'ro'
   echo "Stopping udevd..."
@@ -58,7 +61,7 @@ do_reboot()
       mount -t vfat -o ro "$LABEL" $BASE
     fi
     if ! mount | grep -q "$BASE"; then
-      echo "Unable to find Runnix partition."
+      echo "Unable to find RUNNIX partition."
       do_failure
     fi
   fi
@@ -166,14 +169,14 @@ do_reboot()
 cd /root
 
 if [ ! -x /sbin/kexec ]; then
-  echo "kernel-reboot: You don't have kexec-tools installed - rebooting" >&2
-  reboot
+  echo "kernel-reboot: You don't have kexec-tools installed, falling back to /sbin/reboot" >&2
+  /sbin/reboot
   exit 1
 fi
 
 if [ ! -x /sbin/findfs ]; then
-  echo "kernel-reboot: You don't have findfs installed - rebooting" >&2
-  reboot
+  echo "kernel-reboot: You don't have findfs installed, falling back to /sbin/reboot" >&2
+  /sbin/reboot
   exit 1
 fi
 
