@@ -66,6 +66,8 @@ Released **TBD**
 
 -- iperf3, new package, iperf3 is becomming more common, sits along side the old iperf since they are not compatible
 
+-- lighttpd, version bump to 1.4.38
+
 -- libcurl (curl) version bump to 7.46.0
 
 -- openldap, version bump to 2.4.43
@@ -80,7 +82,7 @@ Released **TBD**
 
 -- stunnel, version bump to 5.25
 
--- shellinabox, version bump to 2.18, new supported repository
+-- shellinabox, version bump to 2.19, new supported repository
 
 -- arnofw (AIF), added upstream patch for Issue #21, Leave the IPv6 sysctl accept_ra setting alone when forwarding=1
 
