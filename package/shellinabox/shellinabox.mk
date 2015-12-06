@@ -3,7 +3,7 @@
 # shellinabox
 #
 #############################################################
-SHELLINABOX_VERSION = 2.18
+SHELLINABOX_VERSION = 2.19
 SHELLINABOX_SOURCE = shellinabox-$(SHELLINABOX_VERSION).tar.gz
 #SHELLINABOX_SITE = https://github.com/shellinabox/shellinabox
 SHELLINABOX_SITE = http://files.astlinux.org
