@@ -729,7 +729,7 @@ require_once '../common/header.php';
   if ($openfile !== '') {
     if (($ph = @fopen($openfile, "rb")) !== FALSE) {
       while (! feof($ph)) {
-        if ($line = fgets($ph, 1024)) {
+        if (($line = fgets($ph, 1024)) != '') {
           $line = str_replace(chr(10), chr(13), $line);
           echo htmlspecialchars($line);
         }

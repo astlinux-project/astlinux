@@ -106,7 +106,7 @@ function parseUPSstatus($log) {
   $cid = 0;
   if (($ph = @fopen($log, "r")) !== FALSE) {
     while (! feof($ph)) {
-      if ($line = rtrim(fgets($ph, 1024))) {
+      if (($line = rtrim(fgets($ph, 1024))) !== '') {
         if (preg_match('/^([a-z][a-z.]*)[ :]*(.*)$/', $line, $ips)) {
           switch ($ips[1]) {
           case 'ups.model':
@@ -133,7 +133,7 @@ function parseIPSECstates($log) {
   $cid = -1;
   if (($ph = @fopen($log, "r")) !== FALSE) {
     while (! feof($ph)) {
-      if ($line = rtrim(fgets($ph, 1024))) {
+      if (($line = rtrim(fgets($ph, 1024))) !== '') {
         if (preg_match('/^([0-9a-fA-F][0-9a-fA-F.:]*).* ([0-9a-fA-F][0-9a-fA-F.:]*)/', $line, $ips)) {
           $cid++;
           $status['states'][$cid]['src'] = $ips[1];
@@ -186,7 +186,7 @@ function parseFIREWALLstates(&$status, $log, $max) {
   $cid = 0;
   if (($ph = @fopen($log, "r")) !== FALSE) {
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         $linetokens = preg_split('/ +/', $line);
         if (isset($linetokens[3]) && isset($proto[$linetokens[3]])) {
           $bytes = 0;
@@ -334,7 +334,7 @@ function parseMINIUPNPDleases($log) {
   $cid = 0;
   if (($ph = @fopen($log, "r")) !== FALSE) {
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         $linetokens = explode(':', $line);
         if (isset($linetokens[4])) {
           $status['clients'][$cid]['proto'] = $linetokens[0];
@@ -366,7 +366,7 @@ function parseDNSMASQleases($log) {
   $cur_time = time();
   if (($ph = @fopen($log, "r")) !== FALSE) {
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         $linetokens = explode(' ', $line);
         if (isset($linetokens[0]) && ($linetokens[0] > $cur_time)) {
           $status['clients'][$cid]['expire'] = $linetokens[0];
@@ -399,7 +399,7 @@ function parseOpenVPNClog($log) {
 
   if (($ph = @fopen($log, "r")) !== FALSE) {
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         $linetokens = explode(',', $line);
         if (strncasecmp($linetokens[0], 'UPDATED', 7) == 0) {
           $status['updated'] = $linetokens[1];
@@ -431,7 +431,7 @@ function parseOpenVPNlog($log) {
   $cid = 0;
   if (($ph = @fopen($log, "r")) !== FALSE) {
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         $linetokens = explode(',', $line);
         if ($linetokens[0] === "TITLE") {
           $status['title'] = $linetokens[1];
@@ -528,7 +528,7 @@ if (isDNSCRYPT()) {
   $rconf = is_file('/etc/resolv-extern.conf') ? '/etc/resolv-extern.conf' : '/etc/resolv.conf';
   if (($fp = @fopen($rconf, 'r')) !== FALSE) {
     while (! feof($fp)) {
-      if ($line = trim(fgets($fp, 1024))) {
+      if (($line = trim(fgets($fp, 1024))) !== '') {
         echo '<tr ', ($i++ % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
         echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', 'DNS:', '</td>';
         echo '<td style="text-align: left;" colspan="3">', $line, '</td>';
@@ -627,7 +627,7 @@ if (is_file('/etc/ppp/pppoe.conf')) {
     if ($status == 0) {
       $ph = @fopen($tmpfile, "r");
       while (! feof($ph)) {
-        if ($line = trim(fgets($ph, 1024))) {
+        if (($line = trim(fgets($ph, 1024))) !== '') {
           putText($line);
         }
       }
@@ -646,7 +646,7 @@ if (is_file('/etc/ppp/pppoe.conf')) {
 
       $ph = @fopen($tmpfile, "r");
       while (! feof($ph)) {
-        if ($line = trim(fgets($ph, 1024))) {
+        if (($line = trim(fgets($ph, 1024))) !== '') {
           putText($line);
         }
       }
@@ -675,7 +675,7 @@ if (($cmd = getPREFdef($global_prefs, 'status_disk_usage')) !== 'no') {
   @exec('df -h | grep "^/dev/[sh]d[a-h][0-9]" | sort -k 1,1 >>'.$tmpfile);
   $ph = @fopen($tmpfile, "r");
   while (! feof($ph)) {
-    if ($line = trim(fgets($ph, 1024))) {
+    if (($line = trim(fgets($ph, 1024))) !== '') {
       putText($line);
     }
   }
@@ -708,7 +708,7 @@ if ($daemon['ntpd'] > 0) {
     if ($status == 0) {
       $ph = @fopen($tmpfile, "r");
       while (! feof($ph)) {
-        if ($line = rtrim(fgets($ph, 1024))) {
+        if (($line = rtrim(fgets($ph, 1024))) !== '') {
           putText($line);
         }
       }
@@ -899,7 +899,7 @@ if ($daemon['asterisk'] > 0) {
     putHtml('<pre>');
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         if (strncasecmp($line, 'verbosity ', 10) && stripos($line, 'command is deprecated') === FALSE) {
           putText($line);
         }
@@ -922,7 +922,7 @@ if ($daemon['asterisk'] > 0) {
     asteriskCMD('sip show registry', $tmpfile);
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         if (strncasecmp($line, 'verbosity ', 10)) {
           putText($line);
         }
@@ -940,7 +940,7 @@ if ($daemon['asterisk'] > 0) {
     asteriskCMD('sip show peers', $tmpfile);
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         if (strncasecmp($line, 'verbosity ', 10) &&
             ((getPREFdef($global_prefs, 'status_exclude_extensions') !== 'yes') || !preg_match('/^[1-9]...\/[1-9].../', $line))) {
           putText($line);
@@ -959,7 +959,7 @@ if ($daemon['asterisk'] > 0) {
     asteriskCMD('iax2 show registry', $tmpfile);
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         if (strncasecmp($line, 'verbosity ', 10)) {
           putText($line);
         }
@@ -977,7 +977,7 @@ if ($daemon['asterisk'] > 0) {
     asteriskCMD('iax2 show peers', $tmpfile);
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         if (strncasecmp($line, 'verbosity ', 10) &&
             ((getPREFdef($global_prefs, 'status_exclude_extensions') !== 'yes') || !preg_match('/^[1-9]...\/[1-9].../', $line))) {
           putText($line);
@@ -999,7 +999,7 @@ if ($daemon['asterisk'] > 0) {
     asteriskCMD($cmd, $tmpfile);
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         if (strncasecmp($line, 'verbosity ', 10) && stripos($line, 'command is deprecated') === FALSE) {
           putText($line);
         }
@@ -1024,7 +1024,7 @@ if ($daemon['asterisk'] > 0) {
     }
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         if (strncasecmp($line, 'verbosity ', 10)) {
           putText($line);
         }
@@ -1045,7 +1045,7 @@ if ($daemon['asterisk'] > 0) {
     asteriskCMD($cmd, $tmpfile);
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         if (strncasecmp($line, 'verbosity ', 10)) {
           putText($line);
         }
@@ -1067,7 +1067,7 @@ if ($daemon['asterisk'] > 0) {
       asteriskCMD($cmd, $tmpfile);
       $ph = @fopen($tmpfile, "r");
       while (! feof($ph)) {
-        if ($line = trim(fgets($ph, 1024))) {
+        if (($line = trim(fgets($ph, 1024))) !== '') {
           if (strncasecmp($line, 'verbosity ', 10)) {
             putText($line);
           }
@@ -1114,12 +1114,12 @@ if (is_file('/var/run/prosody/prosody.pid')) {
   
     $ph = @fopen($tmpfile, "r");
     if (! feof($ph)) {
-      if ($line = rtrim(fgets($ph, 1024))) {
+      if (($line = rtrim(fgets($ph, 1024))) !== '') {
         putText('Prosody Version: '.$line);
       }
     }
     while (! feof($ph)) {
-      if ($line = rtrim(fgets($ph, 1024))) {
+      if (($line = rtrim(fgets($ph, 1024))) !== '') {
         putText($line);
       }
     }
@@ -1140,7 +1140,7 @@ if (is_file('/var/lock/aif_adaptive_ban.lock')) {
   
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         putText($line);
       }
     }
@@ -1232,7 +1232,7 @@ if ($daemon['upsmon'] > 0) {
   
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         putText($line);
       }
     }
@@ -1295,7 +1295,7 @@ if ($daemon['syslogd'] > 0) {
     }
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         putText($line);
       }
     }

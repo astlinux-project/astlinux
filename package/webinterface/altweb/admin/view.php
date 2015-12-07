@@ -77,7 +77,7 @@ require_once '../common/header.php';
         echo "<strong>----- File too large to display, showing the end of the file -----</strong>\n";
       }
       while (! feof($fp)) {                   
-        if ($line = fgets($fp, 1024)) {      
+        if (($line = fgets($fp, 1024)) != '') {      
           echo htmlspecialchars($line);
         }                
       }                                    

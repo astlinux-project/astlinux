@@ -400,7 +400,7 @@ function importPHONEPROVfiles($family) {
     return(3);
   }
   while (! feof($fp)) {
-    if ($line = trim(fgets($fp, 1024))) {
+    if (($line = trim(fgets($fp, 1024))) !== '') {
       if ($line[0] !== '#') {
         if (preg_match('/^([^ \t]+)[ \t]+([^ \t]+)[ \t]+([^ \t]+)[ \t]+([^ \t]+)(.*)$/', $line, $tokens)) {
           $mac = strtolower($tokens[2]);

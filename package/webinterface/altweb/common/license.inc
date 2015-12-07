@@ -28,7 +28,7 @@ function parseLICENSEpackages($file) {
   $id = 0;
   if (($fh = @fopen($file, "r")) !== FALSE) {
     while (! feof($fh)) {
-      if ($line = trim(fgets($fh, 1024))) {
+      if (($line = trim(fgets($fh, 1024))) !== '') {
         $linetokens = explode('~', $line);
         if (isset($linetokens[0]) && ($linetokens[0][0] !== '#')) {
           $status['data'][$id]['package'] = $linetokens[0];
@@ -66,7 +66,7 @@ require_once $COMMON.'header.php';
   putHtml('<tr><td class="dialogText" style="text-align: left;">');
   if (($fp = @fopen($LICENSEFILE, "rb")) !== FALSE) {
     while (! feof($fp)) {
-      if ($line = fgets($fp, 1024)) {
+      if (($line = fgets($fp, 1024)) != '') {
         $line = str_replace('(c)', '<big>&copy;</big>', htmlspecialchars($line));
         echo $line;
         putHtml("<br />");

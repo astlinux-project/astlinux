@@ -80,7 +80,7 @@ function getVMdataTXT($path) {
   $vm['cidnum'] = '';
   $vm['duration'] = 0;
   while (! feof($ph)) {
-    if ($line = trim(fgets($ph, 1024))) {
+    if (($line = trim(fgets($ph, 1024))) !== '') {
       if ($line[0] !== ';' && $line[0] !== '[') {
         if (($pos = strpos($line, '=')) !== FALSE) {
           $var = trim(substr($line, 0, $pos), ' ');
@@ -117,7 +117,7 @@ function parseVOICEMAILfiles($dir, $username) {
   if (($db['status'] = $status) == 0) {
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         if (substr($line, 0, $ldir) === $dir) {
           if (($value = substr($line, $ldir, -4)) !== '') {
             $path = $dir.$value.'.txt';
@@ -193,7 +193,7 @@ function notifyVMdir($dir, $path, $count, $fop2) {
   if (getPREFdef($global_prefs, 'voicemail_extern_notify') === 'yes') {
     if (($ph = popen("grep -m 1 '^externnotify' /etc/asterisk/voicemail.conf", "r")) !== FALSE) {
       if (! feof($ph)) {
-        if ($line = trim(fgets($ph, 1024))) {
+        if (($line = trim(fgets($ph, 1024))) !== '') {
           if (($pos = strpos($line, '=')) !== FALSE) {
             $value = trim(substr($line, ($pos + 1)), '" ');
             if (($pos = strpos($value, ' ')) !== FALSE) {

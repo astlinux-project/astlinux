@@ -313,7 +313,7 @@ function parseCDRlog(&$db, $match, $key, $map, $default, $extra, $last, $databas
   }
   $ph = @fopen($tmpfile, "r");
   while (! feof($ph)) {
-    if ($line = trim(fgets($ph, 1024))) {
+    if (($line = trim(fgets($ph, 1024))) !== '') {
       $i = $map['commasafe'];
       $linetokens = explode('",', $line, ($i + 1));
       if (isset($linetokens[$i])) {
@@ -585,7 +585,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $last = (getPREFdef($global_prefs, 'cdrlog_last_show') === 'yes') ? getPREFdef($global_prefs, 'cdrlog_last_cmd') : '';
       $map = mapCDRvalues($default, $extra, $last);
       while (! feof($fp)) {
-        if ($line = trim(fgets($fp, 1024))) {
+        if (($line = trim(fgets($fp, 1024))) !== '') {
           if (($line = parseCDRline($line, $format, $match, $map)) !== FALSE) {
             echo $line, "\n";
           }

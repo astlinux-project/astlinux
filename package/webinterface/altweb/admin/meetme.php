@@ -173,7 +173,7 @@ function getMEETMErooms() {
   if ($status == 0) {
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         if ($isASTERISKv1_4) {
           if (preg_match('/^([0-9][0-9]*) .*$/', $line, $ips)) {
             $rooms[$id]['room'] = $ips[1];
@@ -209,7 +209,7 @@ function parseMEETMEdata($room_list) {
     if ($status == 0) {
       $ph = @fopen($tmpfile, "r");
       while (! feof($ph)) {
-        if ($line = trim(fgets($ph, 1024))) {
+        if (($line = trim(fgets($ph, 1024))) !== '') {
           if (strpos($line, '!') !== FALSE) {
             $ips = explode('!', $line);
             $db['data'][$id]['room'] = $room_list[$i]['room'];

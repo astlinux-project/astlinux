@@ -321,7 +321,7 @@ function getARNOplugins() {
   @exec($cmd);
   $ph = @fopen($tmpfile, "r");
   while (! feof($ph)) {
-    if ($line = trim(fgets($ph, 1024))) {
+    if (($line = trim(fgets($ph, 1024))) !== '') {
       if (($pos = strpos($line, ':')) !== FALSE) {
         $linetokens = explode(':', $line);
         if ($linetokens[1] === '0') {
@@ -502,7 +502,7 @@ function parseRCconf($conffile) {
   @exec("sed -e 's/^#.*//' -e '/^$/ d' ".$conffile.' >'.$tmpfile);
   $ph = @fopen($tmpfile, "r");
   while (! feof($ph)) {
-    if ($line = trim(fgets($ph, 1024))) {
+    if (($line = trim(fgets($ph, 1024))) !== '') {
       if (($pos = strpos($line, '=')) !== FALSE) {
         $var = trim(substr($line, 0, $pos), ' ');
         $line = substr($line, ($pos + 1));
@@ -510,7 +510,7 @@ function parseRCconf($conffile) {
           if (($end = strrpos($line, '"')) !== FALSE) {
             if ($begin == $end) {  // multi-line definition, single quote
               while (! feof($ph)) {
-                if ($qstr = rtrim(fgets($ph, 1024))) {
+                if (($qstr = rtrim(fgets($ph, 1024))) !== '') {
                   if (($end = strrpos($qstr, '"')) !== FALSE && ! ($end > 0 && substr($qstr, $end - 1, 1) === '\\')) {
                     if (($pos = strpos($qstr, '#', $end)) !== FALSE) {
                       $qstr = substr($qstr, 0, $pos);
@@ -729,7 +729,7 @@ function parseAstDB($family) {
   if (($db['status'] = $status) == 0) {
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         if (($pos = strpos($line, ': ')) !== FALSE) {
           $keystr = substr($line, 0, $pos);
           $valuestr = substr($line, ($pos + 2));
@@ -949,7 +949,7 @@ function parsePrefs($pfile)
     if (is_file($pfile)) {
       if (($ph = @fopen($pfile, "r")) !== FALSE) {
         while (! feof($ph)) {
-          if ($line = trim(fgets($ph, 1024))) {
+          if (($line = trim(fgets($ph, 1024))) !== '') {
             if ($line[0] !== '#') {
               if (($pos = strpos($line, '=')) !== FALSE) {
                 $var = trim(substr($line, 0, $pos), ' ');

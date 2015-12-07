@@ -144,7 +144,7 @@ function getCONFBRIDGErooms() {
   if ($status == 0) {
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         if (preg_match('/^([0-9]+) +([0-9]+) +([0-9]+) +([a-z]+).*$/', $line, $ips)) {
           $rooms[$id]['room'] = $ips[1];
           $rooms[$id]['locked'] = ($ips[4] === 'locked') ? '1' : '0';
@@ -174,14 +174,14 @@ function parseCONFBRIDGEdata($room_list) {
     if ($status == 0) {
       $ph = @fopen($tmpfile, "r");
       while (! feof($ph)) {  // Skip through a line beginning with a =
-        if ($line = fgets($ph, 1024)) {
+        if (($line = fgets($ph, 1024)) != '') {
           if ($line[0] === '=') {
             break;
           }
         }
       }
       while (! feof($ph)) {
-        if ($line = trim(fgets($ph, 1024))) {
+        if (($line = trim(fgets($ph, 1024))) !== '') {
           if ($ast13) {
             if (preg_match('/^([^ ]+) .* ([^ ]+) *$/', $line, $ips)) {
               $db['data'][$id]['room'] = $room_list[$i]['room'];

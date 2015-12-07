@@ -27,7 +27,7 @@ function genHTpasswd($user, $pass1, $pass2, $minlen) {
 
         if (($fp = @fopen($HTPASSWD,"rb")) !== FALSE) {
           while (! feof($fp)) {
-            if ($line = trim(fgets($fp, 1024))) {
+            if (($line = trim(fgets($fp, 1024))) !== '') {
               if (strncmp($line, 'admin:', 6) == 0) {
                 $oldpass['admin'] = $line;
               } elseif (strncmp($line, 'staff:', 6) == 0) {
@@ -117,7 +117,7 @@ function delHTpasswd($user) {
     if (($fp = @fopen($HTPASSWD,"rb")) !== FALSE) {
       $len = strlen($user) + 1;
       while (! feof($fp)) {
-        if ($line = trim(fgets($fp, 1024))) {
+        if (($line = trim(fgets($fp, 1024))) !== '') {
           if (strncmp($line, $user.':', $len) != 0) {
             $oldpass['users'][$id] = $line;
             $id++;

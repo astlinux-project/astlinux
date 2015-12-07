@@ -30,7 +30,7 @@ function parseMONITORfiles($dir, $username) {
   if (($db['status'] = $status) == 0) {
     $ph = @fopen($tmpfile, "r");
     while (! feof($ph)) {
-      if ($line = trim(fgets($ph, 1024))) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
         if (substr($line, 0, $ldir) === $dir) {
           if (($value = substr($line, $ldir)) !== '') {
             if (($stat = @stat($dir.$value)) !== FALSE) {

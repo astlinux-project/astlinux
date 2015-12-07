@@ -132,7 +132,7 @@ if (is_file('/var/run/fossil.pid')) {
         echo "<strong>----- Result too large to display, showing the end of the output -----</strong>\n";
       }
       while (! feof($fp)) {                   
-        if ($line = fgets($fp, 1024)) {      
+        if (($line = fgets($fp, 1024)) != '') {      
           echo htmlspecialchars($line);
         }                
       }                                    

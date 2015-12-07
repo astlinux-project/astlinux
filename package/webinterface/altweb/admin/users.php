@@ -33,7 +33,7 @@ function parseVMconf($context, $fname) {
   @exec('sed -n "/^\['.$context.'\]/,/^\[/ s/^[0-9][0-9]*[ ]*[=][> ]*[-*0-9]*,/&/p" '.$fname.' >'.$tmpfile);
   $ph = @fopen($tmpfile, "r");
   while (! feof($ph)) {
-    if ($line = trim(fgets($ph, 1024))) {
+    if (($line = trim(fgets($ph, 1024))) !== '') {
       $linetokens = explode(',', $line);
       $boxtokens = explode('=', $linetokens[0]);
       $db['data'][$id]['mbox'] = trim($boxtokens[0], ' ');
