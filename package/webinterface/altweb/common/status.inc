@@ -1066,10 +1066,22 @@ if ($daemon['asterisk'] > 0) {
       $tmpfile = tempnam("/tmp", "PHP_");
       asteriskCMD($cmd, $tmpfile);
       $ph = @fopen($tmpfile, "r");
+      $valid_line = FALSE;
+      $empty_lines = 0;
       while (! feof($ph)) {
-        if (($line = trim(fgets($ph, 1024))) !== '') {
-          if (strncasecmp($line, 'verbosity ', 10)) {
+        $line = trim(fgets($ph, 1024));
+        if (strncasecmp($line, 'verbosity ', 10)) {
+          if ($line !== '') {
+            if ($valid_line) {
+              while ($empty_lines > 0) {
+                putText('');
+                $empty_lines--;
+              }
+            }
             putText($line);
+            $valid_line = TRUE;
+          } else {
+            $empty_lines++;
           }
         }
       }
