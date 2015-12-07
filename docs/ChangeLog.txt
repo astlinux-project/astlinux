@@ -121,6 +121,8 @@ Released **TBD**
 -- Network and System tabs, now use "/sbin/kernel-reboot" if available for a faster reboot.
    Use classic reboot method by checking Prefs tab option 'Disable faster "kernel-reboot" System Reboot'.
 
+-- Status tab, allow empty lines within a Custom Asterisk Command output
+
 
 Additions for AstLinux 1.2.4.1:
 ===============================
