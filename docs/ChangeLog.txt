@@ -14,6 +14,9 @@ Released **TBD**
 
 -- Added 64-bit support for x86_64 CPU's with new board types genx86_64 and genx86_64-serial
 
+-- Update build system tools:
+   == fakeroot, version bump to 1.20.2
+
 ** System
 
 -- linux, add kernel patch allowing Geode LX (alix and net5501) to use tsc clocksource instead of pit clocksource
