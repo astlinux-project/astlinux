@@ -53,6 +53,8 @@ Released **TBD**
 
 -- nano, version bump to 2.5.0
 
+-- acpid, version bump to 2.0.25
+
 -- strace, version bump to 4.10
 
 ** Networking
