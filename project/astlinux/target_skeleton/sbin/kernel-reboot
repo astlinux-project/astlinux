@@ -139,6 +139,9 @@ do_reboot()
     do_failure
   fi
 
+  cd /root
+  losetup -d $DEVLOOP
+
   # Stop services and unmount all file systems or remount 'ro' if busy
   /etc/rc shutdown
 
