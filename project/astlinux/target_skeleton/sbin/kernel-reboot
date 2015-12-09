@@ -23,35 +23,15 @@ Options:
 do_failure()
 {
   echo '## Falling back to /sbin/reboot ##'
-  /sbin/reboot -f
+  sleep 1
+  /sbin/reboot
   exit 1
 }
 
 do_reboot()
 {
-  # Stop services and unmount all file systems or remount 'ro' if busy
-  /etc/rc shutdown
-
+  echo ''
   echo '## Using /sbin/kernel-reboot ##'
-
-  # Stop udevd since /dev is now 'ro'
-  echo "Stopping udevd..."
-  udevadm control --timeout=121 --exit
-  killall udevd 2>/dev/null
-
-  ROOT="/tmp/mnt/root"
-
-  KEXEC_BASE="/tmp/mnt/kexec"
-
-  # We may have lost /proc on the shutdown, mount if missing
-  if [ ! -e /proc/mounts ]; then
-    mount -t proc none /proc
-  fi
-
-  mount -t tmpfs none /tmp
-
-  mkdir -p "$ROOT"
-  mkdir -p "$KEXEC_BASE"
 
   BASE="/oldroot/cdrom"
 
@@ -65,6 +45,10 @@ do_reboot()
       do_failure
     fi
   fi
+
+  ROOT="/tmp/mnt/root"
+
+  mkdir -p "$ROOT"
 
   if [ -f $BASE/os/default.conf ]; then
     . $BASE/os/default.conf
@@ -100,19 +84,20 @@ do_reboot()
   INITRD="${BASE}${INITRD#/mnt/base}"
   KERN="${ROOT}${KERN#/mnt/root}"
 
+  # Find first unused loop device
+  DEVLOOP="$(losetup -f)"
+
   if [ -z "$OFFSET" ]; then
-    losetup /dev/loop0 $BASE/os/$RUNIMG
+    losetup $DEVLOOP $BASE/os/$RUNIMG
   else
-    losetup -o "$OFFSET" /dev/loop0 $BASE/os/$RUNIMG
+    losetup -o "$OFFSET" $DEVLOOP $BASE/os/$RUNIMG
   fi
 
   if [ -z "$FSTYPE" ]; then
     FSTYPE="ext2"
   fi
 
-  if mount -t $FSTYPE -o ro /dev/loop0 $ROOT; then
-    echo "Root mounted"
-  else
+  if ! mount -t $FSTYPE -o ro $DEVLOOP $ROOT; then
     echo "Error mounting $RUNIMG root fs"
     do_failure
   fi
@@ -141,28 +126,33 @@ do_reboot()
     KERN="$ROOT/boot/bzImage"
   fi
 
-  if [ -f "$INITRD" -a -f "$KERN" ]; then
-    echo "Copying kernel and initrd to ramdisk..."
-    mount -t tmpfs none "$KEXEC_BASE"
-    cp "$INITRD" "$KEXEC_BASE/initrd.img"
-    cp "$KERN" "$KEXEC_BASE/bzImage"
-    echo "Unmounting image..."
+  if [ -n "$KCMD" -a -f "$INITRD" -a -f "$KERN" ]; then
+    echo "Loading new kernel..."
+    if ! /sbin/kexec -l --command-line="$KCMD" --initrd="$INITRD" "$KERN"; then
+      umount $ROOT
+      do_failure
+    fi
     umount $ROOT
   else
-    echo "I couldn't find your kernel and/or initrd"
+    echo "Missing one or more of: kcmd, initrd, kernel"
+    umount $ROOT
     do_failure
   fi
 
-  if [ -z "$KCMD" ]; then
-    echo "You need to specify a kernel command line.
-  I can't guess that"
-    do_failure
-  fi
+  # Stop services and unmount all file systems or remount 'ro' if busy
+  /etc/rc shutdown
+
+  echo "Stopping udevd..."
+  udevadm control --timeout=121 --exit
+  killall udevd 2>/dev/null
 
   echo "Trying kexec..."
-  /sbin/kexec --command-line="$KCMD" --initrd="$KEXEC_BASE/initrd.img" -f "$KEXEC_BASE/bzImage"
+  /sbin/kexec -e
 
-  do_failure
+  echo '## Falling back to /sbin/reboot ##'
+  sleep 1
+  /sbin/reboot -f
+  exit 1
 }
 
 # Set a working dir for when called via PHP
