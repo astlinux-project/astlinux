@@ -21,6 +21,8 @@ Released **TBD**
 
 -- linux, add kernel patch allowing Geode LX (alix and net5501) to use tsc clocksource instead of pit clocksource
 
+-- igb, version bump to 5.3.3.5, Intel Gigabit Ethernet Network Driver
+
 -- e1000e version bump to 3.3.1 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
 -- tg3, version bump to 3.137k, Broadcom NetLink 10/100/1000 Mbps PCI/PCI-X/PCI Express Ethernet Linux driver
