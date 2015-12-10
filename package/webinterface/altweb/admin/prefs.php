@@ -1032,7 +1032,8 @@ require_once '../common/header.php';
     $value = '0';
   }
   putHtml('<select name="reboot_timer">');
-  $reboot_timer_label = array( '80', '60', '40', '30', '20', '10', '0', '-10', '-20', '-30', '-40', '-50', '-60', '-80');
+  $reboot_timer_label = array( '80', '60', '40', '30', '20', '10', '0',
+                              '-10', '-20', '-30', '-40', '-50', '-60', '-70', '-80', '-90');
   foreach ($reboot_timer_label as $adjust) {
     $sel = ($value === $adjust) ? ' selected="selected"' : '';
     if ((int)$adjust == 0) {
