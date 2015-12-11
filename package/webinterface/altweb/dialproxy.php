@@ -9,6 +9,7 @@
 // dialproxy.php for AstLinux
 // 09-03-2009
 // 10-31-2013, Add POST method
+// 12-11-2015, Add GET/POST variables 'phone' and 'exten' synonymous for 'num' and 'ext'
 //
 // GET Method:
 // Usage: http://pbx/dialproxy.php?num=2223334444&ext=default
@@ -216,16 +217,33 @@ function normalize_phone_number($num, &$opts) {
   return($num);
 }
 
-if (isset($_POST['num'], $_POST['ext'])) {
-  $num = normalize_phone_number($_POST['num'], $opts);
-  $ext = $_POST['ext'];
-} elseif (isset($_GET['num'], $_GET['ext'])) {
-  $num = normalize_phone_number($_GET['num'], $opts);
-  $ext = $_GET['ext'];
+if (isset($_POST['num'])) {
+  $num = $_POST['num'];
+} elseif (isset($_POST['phone'])) {
+  $num = $_POST['phone'];
+} elseif (isset($_GET['num'])) {
+  $num = $_GET['num'];
+} elseif (isset($_GET['phone'])) {
+  $num = $_GET['phone'];
 } else {
   $num = '';
+}
+if ($num !== '') {
+  $num = normalize_phone_number($num, $opts);
+}
+
+if (isset($_POST['ext'])) {
+  $ext = $_POST['ext'];
+} elseif (isset($_POST['exten'])) {
+  $ext = $_POST['exten'];
+} elseif (isset($_GET['ext'])) {
+  $ext = $_GET['ext'];
+} elseif (isset($_GET['exten'])) {
+  $ext = $_GET['exten'];
+} else {
   $ext = '';
 }
+
 if (isset($_POST['debug']) || isset($_GET['debug'])) {
   myexit(0, "Debug: num=$num ext=$ext dialprefix=".$opts['dialprefix']);
 }
