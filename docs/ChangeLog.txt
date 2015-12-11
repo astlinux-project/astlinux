@@ -127,6 +127,9 @@ Released **TBD**
 
 -- Status tab, allow empty lines within a Custom Asterisk Command output
 
+-- dialproxy, support GET/POST variables 'phone' and 'exten' synonymous for 'num' and 'ext' to be compatible
+   with the Asterisk Click2Call extension for Google Chrome and possibly others.
+
 
 Additions for AstLinux 1.2.4.1:
 ===============================
