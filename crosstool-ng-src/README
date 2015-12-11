@@ -11,7 +11,8 @@
 ## Install crosstool-ng ##
 # mkdir ~/source-control # used as example folder for these configs
 cd ~/source-control
-wget -O - http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.20.0.tar.bz2 | tar xj
+# run shell script "crosstool-ng-src/get-crosstool-ng.sh" located in the SVN
+sh ~/astlinux/1.0/crosstool-ng-src/get-crosstool-ng.sh
 cd crosstool-ng-1.20.0
 ./configure
 # Note: the 'gperf' package may need to be added to your system.
