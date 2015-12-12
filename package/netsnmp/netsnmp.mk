@@ -44,7 +44,9 @@ endif
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
 	NETSNMP_DEPENDENCIES += openssl
 	NETSNMP_CONF_OPT += \
-		--with-openssl=$(STAGING_DIR)/usr/include/openssl
+		--with-openssl=$(STAGING_DIR)/usr/include/openssl \
+		--with-security-modules="tsm,usm" \
+		--with-transports="DTLSUDP,TLSTCP"
 else
 	NETSNMP_CONF_OPT += --without-openssl
 endif
