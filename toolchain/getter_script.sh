@@ -6,17 +6,28 @@ SITE="files.astlinux.org"
 
 WGET_ARGS="--passive-ftp --timeout=30 -c -t 2"
 
-wget $WGET_ARGS $@ || (
-	echo Retrying from astlinux alternate site...
-	index=$#-1
-	# Copy all params into an array
-	for (( i=0; $?==0; i++ ));do a[$i]=$1; shift; done
-	# Chop all but filename from last param and prepend out URL
-	a[$index]=${a[index]/*\//http:\/\/$SITE/}
-	# Now wget that from our server
-	wget $WGET_ARGS ${a[@]}
-)
+wget $WGET_ARGS $@
+wget_rtn=$?
 
+# SSL verification failure
+if [ $wget_rtn -eq 5 ]; then
+  wget --no-check-certificate $WGET_ARGS $@
+  wget_rtn=$?
+fi
+
+# Alternate site on error
+if [ $wget_rtn -ne 0 ]; then
+  echo "Retrying from AstLinux alternate site..."
+  (
+    index=$#-1
+    # Copy all params into an array
+    for (( i=0; $?==0; i++ ));do a[$i]=$1; shift; done
+    # Chop all but filename from last param and prepend out URL
+    a[$index]=${a[index]/*\//http:\/\/$SITE/}
+    # Now wget that from our server
+    wget $WGET_ARGS ${a[@]}
+  )
+fi
 
 for i in $@; do
   URL="$i"

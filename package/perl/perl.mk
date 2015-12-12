@@ -18,7 +18,7 @@ PERL_MODULES = constant version Carp Errno Fcntl PathTools POSIX Digest Socket I
 PERL_MODULES += Digest/MD5 Digest/SHA Getopt/Long Time/Local File/Glob Sys/Hostname
 
 PERL_CROSS_VERSION = 1.0.1
-#PERL_CROSS_SITE = --no-check-certificate https://raw.github.com/arsv/perl-cross/releases
+#PERL_CROSS_SITE = https://raw.github.com/arsv/perl-cross/releases
 PERL_CROSS_SITE = http://files.astlinux.org
 PERL_CROSS_SOURCE = perl-$(PERL_VERSION)-cross-$(PERL_CROSS_VERSION).tar.gz
 

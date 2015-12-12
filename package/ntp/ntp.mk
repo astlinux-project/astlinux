@@ -5,7 +5,7 @@
 #############################################################
 NTP_VERSION = 4.2.8p4
 NTP_SOURCE = ntp-$(NTP_VERSION).tar.gz
-NTP_SITE = --no-check-certificate https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2
+NTP_SITE = https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2
 NTP_DEPENDENCIES = host-bison host-flex host-pkg-config
 
 NTP_CONF_OPT = \
