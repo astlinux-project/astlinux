@@ -51,6 +51,11 @@ else
 	NETSNMP_CONF_OPT += --without-openssl
 endif
 
+# libpci - pci_lookup_name
+ifeq ($(BR2_PACKAGE_PCIUTILS),y)
+	NETSNMP_DEPENDENCIES += pciutils
+endif
+
 # Remove IPv6 MIBs if there's no IPv6
 ifneq ($(BR2_INET_IPV6),y)
 define NETSNMP_REMOVE_MIBS_IPV6
