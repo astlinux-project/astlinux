@@ -40,4 +40,4 @@ include $(ASTTOPDIR)/Makefile.moddir_rules
 	$(CC) -shared $(LIBS) -o $@ $<
 
 %.o: %.c
-	$(CC) $(INCLUDE) -DAST_MODULE=\"$*\" -o $@ -c $<
+	$(CC) -fPIC $(INCLUDE) -DAST_MODULE=\"$*\" -o $@ -c $<
