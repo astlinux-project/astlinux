@@ -309,7 +309,7 @@ else ifeq ($(BR2_TOOLCHAIN_CTNG),y)
 include toolchain/toolchain-crosstool-ng.mk
 endif
 
-include package/*/*.mk
+include $(sort $(wildcard package/*/*.mk))
 
 include boot/common.mk
 include target/Makefile.in

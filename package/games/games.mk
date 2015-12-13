@@ -1,1 +1,1 @@
-include package/games/*/*.mk
+include $(sort $(wildcard package/games/*/*.mk))

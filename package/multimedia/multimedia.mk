@@ -1,1 +1,1 @@
-include package/multimedia/*/*.mk
+include $(sort $(wildcard package/multimedia/*/*.mk))

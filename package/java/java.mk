@@ -1,1 +1,1 @@
-include package/java/*/*.mk
+include $(sort $(wildcard package/java/*/*.mk))
