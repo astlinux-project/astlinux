@@ -447,10 +447,20 @@ endif
 ifeq ($(BR2_PACKAGE_PYTHON_PYC_ONLY),y)
 	find $(TARGET_DIR)/usr/lib/ -name '*.py' -print0 | xargs -0 rm -f
 endif
-	find $(TARGET_DIR) -type f -perm +111 '!' -name 'libthread_db*.so*' | \
-		xargs $(STRIPCMD) 2>/dev/null || true
-	find $(TARGET_DIR)/lib/modules -type f -name '*.ko' | \
-		xargs -r $(KSTRIPCMD) || true
+
+# strip file exclusions:
+# - libpthread.so: a non-stripped libpthread shared library is needed for
+#   proper debugging of pthread programs using gdb.
+# - kernel modules (*.ko): do not function properly when stripped like normal
+#   applications and libraries. Normally kernel modules are already excluded
+#   by the executable permission check above, so the explicit exclusion is only
+#   done for kernel modules with incorrect permissions.
+
+	find $(TARGET_DIR) -type f \( -perm /111 -o -name '*.so*' \) -not \( -name 'libpthread*.so*' -o -name '*.ko' \) -print0 | \
+		xargs -0 $(STRIPCMD) 2>/dev/null || true
+	if test -d $(TARGET_DIR)/lib/modules; then \
+		find $(TARGET_DIR)/lib/modules -type f -name '*.ko' -print0 | \
+		xargs -0 -r $(KSTRIPCMD); fi
 
 	mkdir -p $(TARGET_DIR)/etc
 	# Mandatory configuration file and auxilliary cache directory
