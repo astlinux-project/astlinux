@@ -14,7 +14,6 @@ RHINO_MODULES := r1t1 rxt1 rcbfx
 RHINO_LEGACY_MODULES := r4fxo
 
 RHINO_PREREQS := dahdi-linux
-RHINO_CONFIGURE := DAHDI_DIR=$(DAHDI_LINUX_DIR)
 
 $(DL_DIR)/$(RHINO_SOURCE):
 	$(WGET) -P $(DL_DIR) $(RHINO_SITE)/$(RHINO_SOURCE)
@@ -37,7 +36,7 @@ $(RHINO_DIR)/.built: $(RHINO_DIR)/.patched
 		KINCLUDES=$(STAGING_DIR)/include \
 		KINSTDIR=/lib/modules/$(LINUX_VERSION_PROBED)/kernel \
 		INSTALL_PREFIX=$(TARGET_DIR) \
-		$(RHINO_CONFIGURE) \
+		DAHDI_DIR=$(DAHDI_LINUX_DIR) \
 		all
 	touch $@
 
@@ -50,7 +49,7 @@ $(TARGET_DIR)/$(RHINO_TARGET_BINARY): $(RHINO_DIR)/.built
 		KINCLUDES=$(STAGING_DIR)/include \
 		KINSTDIR=/lib/modules/$(LINUX_VERSION_PROBED)/kernel \
 		INSTALL_PREFIX=$(TARGET_DIR) \
-		$(RHINO_CONFIGURE) \
+		DAHDI_DIR=$(DAHDI_LINUX_DIR) \
 		install
 	$(DEPMOD) -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) -r $(LINUX_VERSION_PROBED)
 	echo -e "#!/bin/sh\necho \""$(RHINO_VERSION)"\"" > $(TARGET_DIR)/$(RHINO_TARGET_BINARY)
