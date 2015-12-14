@@ -103,6 +103,17 @@ else
   fi
 fi
 
+echo "
+Trying sudo, if this prompts for a password, ^C and 'sudoedit /etc/sudoers' and add a line at the end
+something like:
+
+$(id -un) ALL = NOPASSWD: ALL
+"
+if ! sudo /bin/true; then
+  echo "master-build: You need to be a sudo group member to run this script" >&2
+  exit 1
+fi
+
 echo "Regenerate the initrd"
 rm -f initrd.img
 
