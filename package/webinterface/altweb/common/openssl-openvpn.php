@@ -42,27 +42,27 @@ function openvpnSETUP($opts, $countryName, $stateName, $localityName, $orgName, 
   );
   $ssl['configArgs'] = array(
     'config' => $ssl['config'],
-    'digest_alg' => 'sha256',
+    'digest_alg' => $opts['algorithm'],
     'private_key_bits' => $opts['keysize'],
     'encrypt_key' => FALSE
   );
   $ssl['sign_ca'] = array(
     'config' => $ssl['config'],
-    'digest_alg' => 'sha256',
+    'digest_alg' => $opts['algorithm'],
     'private_key_bits' => $opts['keysize'],
     'x509_extensions' => 'v3_ca',
     'encrypt_key' => FALSE
   );
   $ssl['sign_server'] = array(
     'config' => $ssl['config'],
-    'digest_alg' => 'sha256',
+    'digest_alg' => $opts['algorithm'],
     'private_key_bits' => $opts['keysize'],
     'x509_extensions' => 'openvpn_server',
     'encrypt_key' => FALSE
   );
   $ssl['sign_client'] = array(
     'config' => $ssl['config'],
-    'digest_alg' => 'sha256',
+    'digest_alg' => $opts['algorithm'],
     'private_key_bits' => $opts['keysize'],
     'x509_extensions' => 'usr_cert',
     'encrypt_key' => FALSE

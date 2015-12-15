@@ -47,8 +47,8 @@ $cipher_menu = array (
 
 $auth_hmac_menu = array (
   '' => 'Use Default',
-  'SHA1' => 'SHA1',
-  'SHA256' => 'SHA256'
+  'SHA1' => 'SHA-1',
+  'SHA256' => 'SHA-256'
 );
 
 $nscerttype_menu = array (

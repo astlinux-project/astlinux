@@ -13,6 +13,7 @@
 // 08-13-2010, Added QoS Passthrough, setting passtos
 // 01-03-2013, Added private keysize support
 // 02-13-2013, Added OpenVPN 2.3 IPv6 support
+// 12-14-2015, Added Signature Algorithm support
 //
 // System location of /mnt/kd/rc.conf.d directory
 $OVPNCONFDIR = '/mnt/kd/rc.conf.d';
@@ -35,15 +36,20 @@ if (is_file($OVPNCONFFILE)) {
 
 // Function: openvpn_openssl()
 //
-function openvpn_openssl($keysize) {
+function openvpn_openssl($keysize, $algorithm) {
   global $global_prefs;
   // System location of gui.network.conf file
   $NETCONFFILE = '/mnt/kd/rc.conf.d/gui.network.conf';
   
   if ($keysize === '') {
-    $keysize = '1024';
+    $keysize = '2048';
   }
   $opts['keysize'] = (int)$keysize;
+
+  if ($algorithm === '') {
+    $algorithm = 'sha256';
+  }
+  $opts['algorithm'] = $algorithm;
 
   if (($countryName = getPREFdef($global_prefs, 'dn_country_name_cmdstr')) === '') {
     $countryName = 'US';
@@ -79,7 +85,8 @@ function openvpn_openssl($keysize) {
   return($ssl);
 }
 $key_size = getVARdef($db, 'OVPN_CERT_KEYSIZE');
-$openssl = openvpn_openssl($key_size);
+$signature_algorithm = getVARdef($db, 'OVPN_CERT_ALGORITHM');
+$openssl = openvpn_openssl($key_size, $signature_algorithm);
 
 $cipher_menu = array (
   '' => 'Use Default',
@@ -91,8 +98,8 @@ $cipher_menu = array (
 
 $auth_hmac_menu = array (
   '' => 'Use Default',
-  'SHA1' => 'SHA1',
-  'SHA256' => 'SHA256'
+  'SHA1' => 'SHA-1',
+  'SHA256' => 'SHA-256'
 );
 
 $verbosity_menu = array (
@@ -117,6 +124,11 @@ $protocol_menu = array (
 $key_size_menu = array (
   '1024' => '1024 Bits',
   '2048' => '2048 Bits'
+);
+
+$signature_algorithm_menu = array (
+  'sha1' => 'SHA-1',
+  'sha256' => 'SHA-256'
 );
 
 $topology_menu = array (
@@ -203,6 +215,9 @@ function saveOVPNsettings($conf_dir, $conf_file, $disabled = NULL) {
   
   $value = 'OVPN_CERT_KEYSIZE="'.$_POST['key_size'].'"';
   fwrite($fp, "### Private Key Size\n".$value."\n");
+
+  $value = 'OVPN_CERT_ALGORITHM="'.$_POST['signature_algorithm'].'"';
+  fwrite($fp, "### Signature Algorithm\n".$value."\n");
 
 if (opensslOPENVPNis_valid($openssl)) {
   $value = 'OVPN_CA="'.$openssl['key_dir'].'/ca.crt"';
@@ -397,7 +412,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       // Rebuild openssl.cnf template for new CA
       $key_size = $_POST['key_size'];
-      if (($openssl = openvpn_openssl($key_size)) !== FALSE) {
+      $signature_algorithm = $_POST['signature_algorithm'];
+      if (($openssl = openvpn_openssl($key_size, $signature_algorithm)) !== FALSE) {
         if (opensslCREATEselfCert($openssl)) {
           if (opensslCREATEserverCert($openssl)) {
             if (opensslCREATEdh_pem($openssl)) {
@@ -785,11 +801,24 @@ if ($openssl !== FALSE) {
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Private Key Size:</td><td style="text-align: left;" colspan="4">');
   if (($key_size = getVARdef($db, 'OVPN_CERT_KEYSIZE')) === '') {
-    $key_size = '1024';
+    $key_size = '2048';
   }
   putHtml('<select name="key_size">');
   foreach ($key_size_menu as $key => $value) {
     $sel = ($key_size === (string)$key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Signature Algorithm:</td><td style="text-align: left;" colspan="4">');
+  if (($signature_algorithm = getVARdef($db, 'OVPN_CERT_ALGORITHM')) === '') {
+    $signature_algorithm = 'sha256';
+  }
+  putHtml('<select name="signature_algorithm">');
+  foreach ($signature_algorithm_menu as $key => $value) {
+    $sel = ($signature_algorithm === $key) ? ' selected="selected"' : '';
     putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
   }
   putHtml('</select>');

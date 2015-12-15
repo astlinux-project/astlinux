@@ -8,6 +8,7 @@
 
 // ipsecmobile.php for AstLinux
 // 11-23-2010
+// 12-14-2015, Added Signature Algorithm support
 //
 // System location of /mnt/kd/rc.conf.d directory
 $IPSECMCONFDIR = '/mnt/kd/rc.conf.d';
@@ -30,15 +31,20 @@ if (is_file($IPSECMCONFFILE)) {
 
 // Function: ipsecmobile_openssl()
 //
-function ipsecmobile_openssl($keysize, $dnsname) {
+function ipsecmobile_openssl($keysize, $algorithm, $dnsname) {
   global $global_prefs;
   // System location of gui.network.conf file
   $NETCONFFILE = '/mnt/kd/rc.conf.d/gui.network.conf';
   
   if ($keysize === '') {
-    $keysize = '1024';
+    $keysize = '2048';
   }
   $opts['keysize'] = (int)$keysize;
+
+  if ($algorithm === '') {
+    $algorithm = 'sha256';
+  }
+  $opts['algorithm'] = $algorithm;
   $opts['dnsname'] = $dnsname;
 
   if (($countryName = getPREFdef($global_prefs, 'dn_country_name_cmdstr')) === '') {
@@ -75,8 +81,9 @@ function ipsecmobile_openssl($keysize, $dnsname) {
   return($ssl);
 }
 $key_size = getVARdef($db, 'IPSECM_CERT_KEYSIZE');
+$signature_algorithm = getVARdef($db, 'IPSECM_CERT_ALGORITHM');
 $dns_name = getVARdef($db, 'IPSECM_CERT_DNSNAME');
-$openssl = ipsecmobile_openssl($key_size, $dns_name);
+$openssl = ipsecmobile_openssl($key_size, $signature_algorithm, $dns_name);
 
 $nat_t_menu = array (
   'off' => 'Disable',
@@ -134,6 +141,11 @@ $p2_pfsgroup_menu = array (
 $key_size_menu = array (
   '1024' => '1024 Bits',
   '2048' => '2048 Bits'
+);
+
+$signature_algorithm_menu = array (
+  'sha1' => 'SHA-1',
+  'sha256' => 'SHA-256'
 );
 
 // Function: saveIPSECMsettings
@@ -210,6 +222,9 @@ function saveIPSECMsettings($conf_dir, $conf_file) {
   $value = 'IPSECM_CERT_KEYSIZE="'.$_POST['key_size'].'"';
   fwrite($fp, "### Private Key Size\n".$value."\n");
 
+  $value = 'IPSECM_CERT_ALGORITHM="'.$_POST['signature_algorithm'].'"';
+  fwrite($fp, "### Signature Algorithm\n".$value."\n");
+
   $value = 'IPSECM_CERT_DNSNAME="'.str_replace(' ', '', tuq($_POST['dns_name'])).'"';
   fwrite($fp, "### Server Cert DNS Name\n".$value."\n");
 
@@ -269,8 +284,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       // Rebuild openssl.cnf template for new CA
       $key_size = $_POST['key_size'];
+      $signature_algorithm = $_POST['signature_algorithm'];
       $dns_name = str_replace(' ', '', tuq($_POST['dns_name']));
-      if (($openssl = ipsecmobile_openssl($key_size, $dns_name)) !== FALSE) {
+      if (($openssl = ipsecmobile_openssl($key_size, $signature_algorithm, $dns_name)) !== FALSE) {
         if (opensslCREATEselfCert($openssl)) {
           if (opensslCREATEserverCert($openssl)) {
             $result = 30;
@@ -593,7 +609,7 @@ if ($openssl !== FALSE) {
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Private Key Size:</td><td style="text-align: left;" colspan="4">');
   if (($key_size = getVARdef($db, 'IPSECM_CERT_KEYSIZE')) === '') {
-    $key_size = '1024';
+    $key_size = '2048';
   }
   putHtml('<select name="key_size">');
   foreach ($key_size_menu as $key => $value) {
@@ -602,6 +618,20 @@ if ($openssl !== FALSE) {
   }
   putHtml('</select>');
   putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Signature Algorithm:</td><td style="text-align: left;" colspan="4">');
+  if (($signature_algorithm = getVARdef($db, 'IPSECM_CERT_ALGORITHM')) === '') {
+    $signature_algorithm = 'sha256';
+  }
+  putHtml('<select name="signature_algorithm">');
+  foreach ($signature_algorithm_menu as $key => $value) {
+    $sel = ($signature_algorithm === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Server Cert DNS Name:</td><td style="text-align: left;" colspan="4">');
   $value = getVARdef($db, 'IPSECM_CERT_DNSNAME');
