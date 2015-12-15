@@ -44,7 +44,7 @@ Released **TBD**
 -- libxml2, version bump to 2.9.3, security fixes: CVE-2015-1819, CVE-2015-7941, CVE-2015-7942, CVE-2015-8035
                                                    CVE-2015-5312, CVE-2015-7497, CVE-2015-7500, CVE-2015-8242
 
--- libsodium, version bump to 1.0.6
+-- libsodium, version bump to 1.0.7
 
 -- ethtool, version bump to 4.2
 
@@ -112,7 +112,8 @@ Released **TBD**
 
 -- Network tab -> "External DHCPv6 Client Settings:" adds External Interface DHCPv6 configuration options.
 
--- Network tab, new certificate creation, deprecate SHA-1 and migrate to SHA-256. Applies only to new certificates:
+-- Network tab, new certificate creation, add Signature Algorithm: [ SHA-1, SHA-256 ] option, defaults to SHA-256.
+   Applies only to new certificates:
    == HTTPS web server certificate
    == SIP-TLS certificate (shared with other packages as well)
    == OpenVPN server certificate
