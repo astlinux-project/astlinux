@@ -114,10 +114,10 @@ Released **TBD**
 
 -- Network tab, new certificate creation, add Signature Algorithm: [ SHA-1, SHA-256 ] option, defaults to SHA-256.
    Applies only to new certificates:
-   == HTTPS web server certificate
    == SIP-TLS certificate (shared with other packages as well)
    == OpenVPN server certificate
    == IPsec server certificate
+   == HTTPS web server certificate (only SHA-256 for new certificates)
 
 -- CLI tab, set terminal background to 'white' and remove unnecessary title header.
 
