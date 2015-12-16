@@ -15,7 +15,7 @@ RUNNIX_NDEV:=$(patsubst "%",%,$(BR2_TARGET_RUNNIX_NDEV))
 $(DL_DIR)/$(RUNNIX_SOURCE):
 	$(WGET) -P $(DL_DIR) $(RUNNIX_SITE)/$(RUNNIX_SOURCE)
 
-$(RUNNIX_DIR)/.unpacked: $(DL_DIR)/$(RUNNIX_SOURCE)
+$(RUNNIX_DIR)/.unpacked: $(DL_DIR)/$(RUNNIX_SOURCE) | host-fdisk
 	$(RUNNIX_CAT) $(DL_DIR)/$(RUNNIX_SOURCE) | tar -C $(BUILD_DIR) $(TAR_OPTIONS) -
 	touch $(RUNNIX_DIR)/.unpacked
 

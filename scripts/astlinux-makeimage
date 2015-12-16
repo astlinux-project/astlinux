@@ -7,7 +7,12 @@
 
 PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
 
-REQUIRED_CMDS="which sudo mkdosfs mkfs fdisk losetup gzip"
+HOST_BIN="./output/host/usr/sbin"
+
+# Package host-fdisk builds:
+REQUIRED_HOST_CMDS="fdisk"
+
+REQUIRED_CMDS="which sudo mkdosfs mkfs losetup gzip"
 
 RUNNIX_VER="$(awk -F'=' '/^RUNNIX_VER/ { print $2; exit }' boot/runnix/runnix.mk)"
 
@@ -60,6 +65,12 @@ if [ $# -ne 3 ]; then
 fi
 
 error=0
+for i in $REQUIRED_HOST_CMDS; do
+  if [ ! -x "$HOST_BIN/$i" ]; then
+    error=1
+    echo "astlinux-makeimage: Required HOST command \"$i\" is missing." >&2
+  fi
+done
 for i in $REQUIRED_CMDS; do
   if ! which $i >/dev/null 2>&1; then
     error=1
@@ -154,14 +165,14 @@ echo "Disk Geometry: CYL=$CYL HEADS=$HEADS SECTORS=$SECTORS"
     echo -e "n\np\n1\n\n\nt\n6\na\n1"
   fi
   echo "w"
-) | sudo fdisk -C $CYL -H $HEADS -S $SECTORS ${LOOPD}0
+) | sudo $HOST_BIN/fdisk -c=dos -u=cylinders -C $CYL -H $HEADS -S $SECTORS ${LOOPD}0
 
 temp="${LOOPD}0"
 PREFIXLEN=${#temp}
 PREFIX="^${temp//\//\/}"
 
 # need to filter out bootable marker ('*') so it doesn't show up as $2
-eval $(sudo fdisk -u -l ${LOOPD}0 | tr '*' ' ' | awk "/${PREFIX}/ { printf \"%s=%s\\n\", substr(\$1, $PREFIXLEN+1), \$2; }")
+eval $(sudo $HOST_BIN/fdisk -c=dos -u=sectors -l ${LOOPD}0 | tr '*' ' ' | awk "/${PREFIX}/ { printf \"%s=%s\\n\", substr(\$1, $PREFIXLEN+1), \$2; }")
 
 if [ -z "$p1" -o \( $AST_SIZE -gt 0 -a -z "$p2" \) ]; then
   echo "Couldn't extract partition offsets." >&2
@@ -223,7 +234,7 @@ if [ $AST_SIZE -gt 0 -a -n "$ASTRW_FORMAT" ]; then
 fi
 
 if [ -n "$DUMP_PARTITIONS" ]; then
-  sudo fdisk -l -u ${LOOPD}0
+  sudo $HOST_BIN/fdisk -c=dos -u=sectors -l ${LOOPD}0
 fi
 
 sudo losetup -d ${LOOPD}0
