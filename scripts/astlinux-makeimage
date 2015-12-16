@@ -169,7 +169,7 @@ echo "Disk Geometry: CYL=$CYL HEADS=$HEADS SECTORS=$SECTORS"
 
 temp="${LOOPD}0"
 PREFIXLEN=${#temp}
-PREFIX="^${temp//\//\/}"
+PREFIX="^${temp//\//\\/}"
 
 # need to filter out bootable marker ('*') so it doesn't show up as $2
 eval $(sudo $HOST_BIN/fdisk -c=dos -u=sectors -l ${LOOPD}0 | tr '*' ' ' | awk "/${PREFIX}/ { printf \"%s=%s\\n\", substr(\$1, $PREFIXLEN+1), \$2; }")
