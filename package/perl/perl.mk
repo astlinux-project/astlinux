@@ -5,7 +5,7 @@
 #############################################################
 
 PERL_VERSION_MAJOR = 22
-PERL_VERSION = 5.$(PERL_VERSION_MAJOR).0
+PERL_VERSION = 5.$(PERL_VERSION_MAJOR).1
 PERL_SITE = http://www.cpan.org/src/5.0
 PERL_SOURCE = perl-$(PERL_VERSION).tar.bz2
 PERL_INSTALL_STAGING = YES
@@ -17,9 +17,9 @@ PERL_ARCHNAME = $(ARCH)-linux
 PERL_MODULES = constant version Carp Errno Fcntl PathTools POSIX Digest Socket IO XSLoader Exporter File-Find
 PERL_MODULES += Digest/MD5 Digest/SHA Getopt/Long Time/Local File/Glob Sys/Hostname
 
-PERL_CROSS_VERSION = 1.0.1
-#PERL_CROSS_SITE = https://raw.github.com/arsv/perl-cross/releases
-PERL_CROSS_SITE = http://files.astlinux.org
+PERL_CROSS_VERSION = 1.0.2
+PERL_CROSS_SITE = https://github.com/arsv/perl-cross/releases/download/$(PERL_CROSS_VERSION)
+#PERL_CROSS_SITE = http://files.astlinux.org
 PERL_CROSS_SOURCE = perl-$(PERL_VERSION)-cross-$(PERL_CROSS_VERSION).tar.gz
 
 # We use the perlcross hack to cross-compile perl. It should
