@@ -31,7 +31,7 @@ Released **TBD**
 
 -- Monit, version bump to 5.15
 
--- perl, version bump to 5.22.0 using perlcross 1.0.1
+-- perl, version bump to 5.22.1 using perlcross 1.0.2
 
 -- pcre, version bump to 8.38, security fixes: https://blog.fuzzing-project.org/29-Heap-Overflow-in-PCRE.html
 
@@ -73,13 +73,15 @@ Released **TBD**
 
 -- iperf3, new package, iperf3 is becomming more common, sits along side the old iperf since they are not compatible
 
+-- OpenVPN, version bump to 2.3.9
+
 -- lighttpd, version bump to 1.4.38
 
 -- libcurl (curl) version bump to 7.46.0
 
 -- openldap, version bump to 2.4.43
 
--- miniupnpd, version bump to 1.9.20151118
+-- miniupnpd, version bump to 1.9.20151212
 
 -- msmtp, version bump to 1.6.3
 
@@ -87,7 +89,7 @@ Released **TBD**
 
 -- sipgrep, version bump to 2.1.0
 
--- stunnel, version bump to 5.25
+-- stunnel, version bump to 5.28
 
 -- shellinabox, version bump to 2.19, new supported repository
 
