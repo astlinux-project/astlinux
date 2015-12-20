@@ -20,7 +20,7 @@
  AS 'SIP-ID' FROM $DA_TABLE $CLAUSE ; "
  			$DBROCMD "$QUERY"
  			#TMP_UUID=`sql_ro_query "$QUERY" | $AWK 'BEGIN {line=0;}
-@@ -1970,7 +1970,7 @@
+@@ -1973,7 +1973,7 @@
  $SD_DOMAIN_COLUMN='$OSERDOMAIN'"
  				mecho "Dumping speed-dials for user=<$2>"
  				echo
@@ -29,7 +29,7 @@
  $SD_SD_DOMAIN_COLUMN) AS 'Short number', $SD_NEW_URI_COLUMN AS 'New URI',\
  $SD_DESC_COLUMN FROM $SD_TABLE $CLAUSE;"
  				$DBROCMD "$QUERY"
-@@ -1996,8 +1996,8 @@
+@@ -1999,8 +1999,8 @@
  				else
  					exit 1
  				fi
@@ -40,7 +40,7 @@
  $SD_DOMAIN_COLUMN) AS 'Owner', $SD_NEW_URI_COLUMN AS 'New URI',\
  $SD_DESC_COLUMN FROM $SD_TABLE;"
  				$DBROCMD "$QUERY"
-@@ -2039,7 +2039,7 @@
+@@ -2042,7 +2042,7 @@
  			
  			CLAUSE="WHERE $SD_SD_USER_COLUMN='$OSERUSER' AND \
  $SD_SD_DOMAIN_COLUMN='$OSERDOMAIN'"
