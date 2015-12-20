@@ -95,6 +95,8 @@ Released **TBD**
 
 -- arnofw (AIF), added upstream patch for Issue #21, Leave the IPv6 sysctl accept_ra setting alone when forwarding=1
 
+-- (Custom Build Only) kamailio, version bump to 4.1.9
+
 ** Asterisk
 
 -- Asterisk 1.8.32.3 (no change), 11.19.0 (no change) and 13.5.0 (no change)
