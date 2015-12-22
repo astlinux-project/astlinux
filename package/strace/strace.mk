@@ -4,11 +4,13 @@
 #
 #############################################################
 
-STRACE_VERSION = 4.10
+STRACE_VERSION = 4.11
 STRACE_SOURCE = strace-$(STRACE_VERSION).tar.xz
 STRACE_SITE = http://downloads.sourceforge.net/project/strace/strace/$(STRACE_VERSION)
 
 STRACE_CONF_ENV = \
+	st_cv_m32_mpers=no \
+	st_cv_mx32_mpers=no \
 	ac_cv_header_linux_if_packet_h=yes \
 	ac_cv_header_linux_netlink_h=yes
 
