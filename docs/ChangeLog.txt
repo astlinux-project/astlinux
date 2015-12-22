@@ -19,6 +19,8 @@ Released **TBD**
 
 ** System
 
+-- RUNNIX, version bump to runnix-0.4-7419, updated /runnix script and kexec 2.0.11
+
 -- linux, add kernel patch allowing Geode LX (alix and net5501) to use tsc clocksource instead of pit clocksource
 
 -- igb, version bump to 5.3.3.5, Intel Gigabit Ethernet Network Driver
