@@ -59,13 +59,15 @@ Released **TBD**
 
 -- acpid, version bump to 2.0.25
 
--- strace, version bump to 4.10
+-- strace, version bump to 4.11
 
 ** Networking
 
 -- OpenSSL, version bump to 1.0.1q, security fixes: CVE-2015-3194, CVE-2015-3195
 
 -- ntpd/sntp, version bump to 4.2.8p4, security fixes: CVE-2015-7871 plus 12 other low/medium-severity vulnerabilities
+
+-- rsync, version bump to 3.1.2, security fix.
 
 -- wide-dhcpv6, new package, added support for DHCPv6 using dhcp6c for External and WAN Failover interfaces.
    New rc.conf variables are: DHCPV6_CLIENT_ENABLE, DHCPV6_CLIENT_REQUEST_ADDRESS, DHCPV6_CLIENT_REQUEST_PREFIX,
