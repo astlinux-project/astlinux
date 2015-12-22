@@ -2,12 +2,12 @@
 export PATH="/usr/bin:/bin:/usr/sbin:/sbin"
 
 # BASE is where the runnix partition is mounted
-BASE=/mnt/base
+BASE="/mnt/base"
 
 # ROOT is where the .run partition is mounted
-ROOT=/mnt/root
+ROOT="/mnt/root"
 
-RUNVER="`cat /etc/runnix-release`"
+RUNVER="$(cat /etc/runnix-release)"
 
 DRIVES="sda sdb sdc sdd sde sdf sdg sdh"
 
@@ -19,8 +19,8 @@ setup_network () {
 
   #VLANS
   for i in $VLANS; do
-    IF=`echo $i | cut -d. -f1`
-    VID=`echo $i | cut -d. -f2`
+    IF="$(echo $i | cut -d. -f1)"
+    VID="$(echo $i | cut -d. -f2)"
     ifconfig $IF up
     vconfig add $IF $VID > /dev/null
   done
@@ -129,7 +129,7 @@ mount -t proc none /proc
 mount -t tmpfs none /tmp
 mkdir /tmp/etc
 
-CMDLINE="`cat /proc/cmdline`"
+CMDLINE="$(cat /proc/cmdline)"
 
 for x in $DRIVES; do
   if mount -t iso9660 -o ro /dev/${x} $BASE 2>/dev/null; then
@@ -165,7 +165,7 @@ fi
 for i in $CMDLINE; do
   case $i in
   runimg=*)
-    RUNIMG="`echo $i | cut -c8-`"
+    RUNIMG="$(echo $i | cut -c8-)"
     ;;
   esac
 done
@@ -188,15 +188,15 @@ if [ -z "$RUNIMG" ]; then
   RUNIMG="auto"
 fi
 
+# Get the latest good one if "auto"
+cd $BASE/os
 if [ "$RUNIMG" = "auto" ]; then
-  # Get the latest good one
-  cd $BASE/os
-  RUNIMG="`ls *.run | tail -n1`"
+  RUNIMG="$(ls *.run | tail -n1)"
 fi
 
 #If we have a ver file, override auto/default.conf value
 if [ -f $BASE/os/ver ]; then
-  RUNIMG="`cat $BASE/os/ver`.run"
+  RUNIMG="$(cat $BASE/os/ver).run"
 fi
 
 if [ "$VERIFY_LOCAL" = "yes" ]; then
@@ -216,85 +216,81 @@ if [ -f $BASE/os/$RUNIMG.conf ]; then
   . $BASE/os/$RUNIMG.conf
 fi
 
-if [ -n "$INITRAMFS" ]; then
-  if [ "$INITRAMFS" = "yes" ]; then
-    if [ -n "$KCMD" ]; then
-      echo "Image is initramfs, booting now..."
-      kexec --command-line="$KCMD" -f $BASE/os/$RUNIMG
-      do_failure
-    else
-      echo "You need to specify KCMD with initramfs"
-      do_failure
-    fi
+if [ "$INITRAMFS" = "yes" ]; then
+  if [ -n "$KCMD" ]; then
+    echo "Image is initramfs, booting now..."
+    /sbin/kexec --command-line="$KCMD" -f $BASE/os/$RUNIMG
+    do_failure
+  else
+    echo "You need to specify KCMD with initramfs"
+    do_failure
   fi
 fi
 
+# Find first unused loop device
+DEVLOOP="$(losetup -f)"
+
 if [ -z "$OFFSET" ]; then
-  losetup /dev/loop0 $BASE/os/$RUNIMG
+  losetup $DEVLOOP $BASE/os/$RUNIMG
 else
-  losetup -o "$OFFSET" /dev/loop0 $BASE/os/$RUNIMG
+  losetup -o "$OFFSET" $DEVLOOP $BASE/os/$RUNIMG
 fi
 
 if [ -z "$FSTYPE" ]; then
-  FSTYPE=ext2
+  FSTYPE="ext2"
 fi
 
-if mount -t $FSTYPE -o ro /dev/loop0 $ROOT; then
-  echo "Root mounted"
-else
+if ! mount -t $FSTYPE -o ro $DEVLOOP $ROOT; then
   echo "Error mounting $RUNIMG root fs"
   do_failure
 fi
 
 if [ -n "$INITRD" ]; then
-
   if [ -f "$INITRD" ]; then
     echo "Custom initrd $INITRD found"
   else
     INITRD=$BASE/os/initrd.img
     echo "Custom initrd not found - using $INITRD"
   fi
-
 else
   echo "Using default initrd"
   INITRD=$BASE/os/initrd.img
 fi
 
 if [ -n "$KERN" ]; then
-
   if [ -f "$KERN" ]; then
     echo "Custom kernel $KERN found"
   else
     KERN=$ROOT/boot/bzImage
     echo "Custom kernel not found - using $KERN"
   fi
-
 else
   echo "Using default kernel"
   KERN=$ROOT/boot/bzImage
 fi
 
-if [ -f "$INITRD" -a -f "$KERN" ]; then
-  echo "Copying kernel and initrd to ramdisk..."
-  mount -t tmpfs none /mnt/tmp
-  cp "$INITRD" /mnt/tmp/initrd.img
-  cp "$KERN" /mnt/tmp/bzImage
-  echo "Unmounting image..."
+if [ -n "$KCMD" -a -f "$INITRD" -a -f "$KERN" ]; then
+  echo "Loading new kernel..."
+  if ! /sbin/kexec -l --command-line="$KCMD" --initrd="$INITRD" "$KERN"; then
+    umount $ROOT
+    do_failure
+  fi
   umount $ROOT
 else
-  echo "I couldn't find your kernel and/or initrd"
+  echo "Missing one or more of: kcmd, initrd, kernel"
+  umount $ROOT
   do_failure
 fi
 
-if [ -z "$KCMD" ]; then
-  echo "You need to specify a kernel command line.
-I can't guess that"
-  do_failure
-fi
+cd /
+losetup -d $DEVLOOP
 
-umount /tmp
+# Unmount all file systems or remount 'ro' if busy
+sync
+umount -a -r 2>/dev/null
 
 echo "Trying kexec..."
-kexec --command-line="$KCMD" --initrd=/mnt/tmp/initrd.img -f /mnt/tmp/bzImage
+/sbin/kexec -e
 
-do_failure
+do_shell
+# reboot
