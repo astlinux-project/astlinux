@@ -790,6 +790,8 @@ if ($daemon['dnsmasq'] > 0) {
             echo "<td>", htmlspecialchars(mac2vendor($dhcp['clients'][$i]['mac'])), "</td>";
           }
         }
+        putHtml("</tr><tr>");
+        echo '<td colspan="5">'.$n.' Active DHCP Leases</td>';
       }
       putHtml("</tr>");
       putHtml("</table></pre>");
