@@ -1168,7 +1168,7 @@ if (is_file($CONNTRACK)) {
   if (getPREFdef($global_prefs, 'status_show_firewall_states') === 'yes') {
     putHtml("<h2>Firewall States:</h2>");
     $tmpfile = tempnam("/tmp", "PHP_");
-    shell('grep -v "127\.0\.0\.1" '.$CONNTRACK.' | head -n 2500 >'.$tmpfile, $status);
+    shell('head -n 2500 '.$CONNTRACK.' | grep -v "127\.0\.0\.1" >'.$tmpfile, $status);
   
     parseFIREWALLstates($firewall, $tmpfile, 100);
     if (is_null($firewall)) {
