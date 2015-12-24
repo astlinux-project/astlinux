@@ -1176,6 +1176,9 @@ if (is_file($CONNTRACK)) {
       putText('No Active Firewall States');
       putHtml("</pre>");
     } else {
+      if (($total_firewall_states = trim(@file_get_contents('/proc/sys/net/netfilter/nf_conntrack_count'))) === '') {
+        $total_firewall_states = 'Unknown';
+      }
       putHtml('<pre><table class="statusdatatable">');
       putHtml("<tr>");
       if (($n = count($firewall['states'])) > 0) {
@@ -1198,6 +1201,8 @@ if (is_file($CONNTRACK)) {
           echo "<td>", $firewall['states'][$i]['bytes'], "</td>";
           echo '<td style="text-align: right;">', secs2minsec($firewall['states'][$i]['ttl']), "</td>";
         }
+        putHtml("</tr><tr>");
+        echo '<td colspan="8">'.$total_firewall_states.' Total Firewall States</td>';
       }
       putHtml("</tr>");
       putHtml("</table></pre>");
