@@ -99,6 +99,8 @@ Released **TBD**
 
 -- arnofw (AIF), added upstream patch for Issue #21, Leave the IPv6 sysctl accept_ra setting alone when forwarding=1
 
+-- arnofw (AIF), "adaptive-ban" plugin, added 'racoon' analysis type.
+
 -- (Custom Build Only) kamailio, version bump to 4.1.9
 
 ** Asterisk
