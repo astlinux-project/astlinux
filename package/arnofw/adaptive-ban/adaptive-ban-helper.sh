@@ -140,6 +140,8 @@ filter()
          ;;
       pptpd) filter_pptpd "$file" "$PREFIX" "$HOST"
          ;;
+      racoon) filter_racoon "$file" ".*${type}:[[:space:]]*" "$HOST"
+         ;;
       *) log_msg "Unsupported type \"$type\""
          continue
          ;;
@@ -209,6 +211,14 @@ filter_pptpd()
 
   sed -n -r -e "/^${PPP_PREFIX}.* failed CHAP authentication$/ {N;N;N;N;N;N;N;N;N;N;N;N;N;N;N;\
                s/^.*\n${PREFIX}CTRL: Client ${HOST} control connection finished\n.*$/\1/p}" \
+               "$file" >"$TEMPFILE"
+}
+
+filter_racoon()
+{
+  local file="$1" PREFIX="$2" HOST="$3"
+
+  sed -n -r -e "s/^${PREFIX}ERROR: Invalid exchange type [0-9]+ from ${HOST}\[[0-9]+].$/\1/p" \
                "$file" >"$TEMPFILE"
 }
 
