@@ -129,6 +129,8 @@ Released **TBD**
    == IPsec server certificate
    == HTTPS web server certificate (only SHA-256 for new certificates)
 
+-- Network tab -> IPsec Configuration, add all supported "DH Group:" and "PFS Group:" choices.
+
 -- CLI tab, set terminal background to 'white' and remove unnecessary title header.
 
 -- Status tab, add system architecture string to 'AstLinux Release:'
