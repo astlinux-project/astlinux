@@ -2,10 +2,10 @@
 #      -= Arno's iptables firewall - HTB & HFSC traffic shaper plugin =-
 #
 PLUGIN_NAME="Traffic-Shaper plugin"
-PLUGIN_VERSION="1.2.08-astlinux"
+PLUGIN_VERSION="1.2.09-astlinux"
 PLUGIN_CONF_FILE="traffic-shaper.conf"
 #
-# Last changed          : July 31, 2015
+# Last changed          : December 30, 2015
 # Requirements          : kernel 2.6 + iproute2
 # Comments              : This plugin will shape traffic. It borrows heavily on
 #                         the logic of Maciej's original script (below), with
@@ -207,6 +207,16 @@ incoming_traffic_limit()
   fi
 } 
 
+disable_ethernet_offloading()
+{
+  local eth="$1"
+
+  # Disable offloading on ethernet devices
+  if [ "$eth" != "${eth#eth}" ]; then
+    ethtool -K $eth tso off gso off gro off 2>/dev/null
+  fi
+}
+
 # Plugin start function
 plugin_start()
 {
@@ -283,6 +293,8 @@ plugin_start_hfsc()
         ul rate ${UPLINK}kbit
 
       incoming_traffic_limit $eif1
+
+      disable_ethernet_offloading $eif1
     done
 
     # add SHAPER_CHAIN chain to mangle table in iptables
@@ -348,6 +360,8 @@ plugin_start_htb()
       tc qdisc add dev $eif1 parent 1:60 handle 60: sfq perturb 10
 
       incoming_traffic_limit $eif1
+
+      disable_ethernet_offloading $eif1
     done
 
     # add SHAPER_CHAIN chain to mangle table in iptables
@@ -418,6 +432,11 @@ plugin_sanity_check()
 
   if ! check_command tc; then
     printf "\033[40m\033[1;31m${INDENT}ERROR: Required binary \"tc\" is not available!\n\033[0m" >&2
+    return 1
+  fi
+
+  if ! check_command ethtool; then
+    printf "\033[40m\033[1;31m${INDENT}ERROR: Required binary \"ethtool\" is not available!\n\033[0m" >&2
     return 1
   fi
 
