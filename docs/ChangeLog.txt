@@ -101,6 +101,8 @@ Released **TBD**
 
 -- arnofw (AIF), "adaptive-ban" plugin, added 'racoon' analysis type.
 
+-- arnofw (AIF), "traffic-shaper" plugin, automatically disable ethernet offloading on the shaper interface (EXTIF).
+
 -- (Custom Build Only) kamailio, version bump to 4.1.9
 
 ** Asterisk
