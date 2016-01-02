@@ -9,8 +9,8 @@ ex-vi~Copyright (c) 2001-2002 Caldera International Inc. All rights reserved.
 RUNNIX~Copyright (c) 2006-2015 by Kristian Kielhofner.
 libSRTP~Copyright (c) 2001-2015 Cisco Systems, Inc. All rights reserved.
 iLBC CODEC~Copyright (c) 2011 The WebRTC project authors. All rights reserved.
-Web Interface~Copyright (c) 2008-2015 Lonnie Abelbeck.
-shellinabox~Copyright (c) 2008-2010 Markus Gutschke.
+Web Interface~Copyright (c) 2008-2016 Lonnie Abelbeck.
+shellinabox~Copyright (c) 2008-2015 Markus Gutschke, Luka Krajger.
 Asterisk~Copyright (c) 1999-2015 Digium, Inc.
 DAHDI~Copyright (c) 2001-2015 Digium, Inc.
 libPRI~Copyright (c) 2001-2015 Digium, Inc.
@@ -22,7 +22,7 @@ OpenVPN~Copyright (c) 2002-2015 OpenVPN Technologies, Inc. <sales@openvpn.net>
 PHP~Copyright (c) 1999-2015 The PHP Group. All rights reserved.
 ntpd~Copyright (c) 1992-2015 David L. Mills.
 vsftpd~Copyright (c) 2001-2013 Daniel Jacobowitz. <dan@debian.org>
-lighttpd~Copyright (c) 2004-2015, Jan Kneschke.
+lighttpd~Copyright (c) 2004-2016, Jan Kneschke.
 msmtp~Copyright (c) 2000-2015 Martin Lambers <marlam@marlam.de>
 libxml2~Copyright (c) 1998-2012 Daniel Veillard. All Rights Reserved.
 libtiff~Copyright (c) 1988-1997 Sam Leffler, Copyright (c) 1991-1997 Silicon Graphics, Inc.
