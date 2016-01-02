@@ -14,9 +14,6 @@ Released **TBD**
 
 -- Added 64-bit support for x86_64 CPU's with new board types genx86_64 and genx86_64-serial
 
--- Update build system tools:
-   == fakeroot, version bump to 1.20.2
-
 ** System
 
 -- RUNNIX, version bump to runnix-0.4-7419, updated /runnix script and kexec 2.0.11
@@ -46,7 +43,7 @@ Released **TBD**
 -- libxml2, version bump to 2.9.3, security fixes: CVE-2015-1819, CVE-2015-7941, CVE-2015-7942, CVE-2015-8035
                                                    CVE-2015-5312, CVE-2015-7497, CVE-2015-7500, CVE-2015-8242
 
--- libsodium, version bump to 1.0.7
+-- libsodium, version bump to 1.0.8
 
 -- ethtool, version bump to 4.2
 
@@ -79,7 +76,7 @@ Released **TBD**
 
 -- OpenVPN, version bump to 2.3.9
 
--- lighttpd, version bump to 1.4.38
+-- lighttpd, version bump to 1.4.39
 
 -- libcurl (curl) version bump to 7.46.0
 
