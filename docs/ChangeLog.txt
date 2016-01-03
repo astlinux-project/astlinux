@@ -30,6 +30,8 @@ Released **TBD**
 
 -- Monit, version bump to 5.15
 
+-- zabbix, version bump to 2.2.11
+
 -- perl, version bump to 5.22.1 using perlcross 1.0.2
 
 -- pcre, version bump to 8.38, security fixes: https://blog.fuzzing-project.org/29-Heap-Overflow-in-PCRE.html
