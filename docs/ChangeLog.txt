@@ -78,7 +78,7 @@ Released **TBD**
 
 -- iperf3, new package, iperf3 is becomming more common, sits along side the old iperf since they are not compatible
 
--- OpenVPN, version bump to 2.3.9
+-- OpenVPN, version bump to 2.3.10
 
 -- lighttpd, version bump to 1.4.39
 
