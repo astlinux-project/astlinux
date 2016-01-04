@@ -4,21 +4,30 @@
 #
 #############################################################
 
-PCIUTILS_VERSION = 3.4.0
-PCIUTILS_SITE = ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci
+PCIUTILS_VERSION = 3.4.1
+PCIUTILS_SITE = $(BR2_KERNEL_MIRROR)/software/utils/pciutils
+PCIUTILS_SOURCE = pciutils-$(PCIUTILS_VERSION).tar.xz
 PCIUTILS_INSTALL_STAGING = YES
 # Depend on linux to define LINUX_VERSION_PROBED
 PCIUTILS_DEPENDENCIES = linux
 
-PCIUTILS_ZLIB=no
-PCIUTILS_DNS=no
-PCIUTILS_SHARED=yes
-PCIUTILS_KMOD=no
-PCIUTILS_HWDB=no
+PCIUTILS_MAKE_OPTS = \
+	CC="$(TARGET_CC)" \
+	HOST="$(KERNEL_ARCH)-linux" \
+	OPT="$(TARGET_CFLAGS)" \
+	LDFLAGS="$(TARGET_LDFLAGS)" \
+	RANLIB=$(TARGET_RANLIB) \
+	AR=$(TARGET_AR)
+
+PCIUTILS_MAKE_OPTS += HWDB=no
+PCIUTILS_MAKE_OPTS += ZLIB=no
+PCIUTILS_MAKE_OPTS += LIBKMOD=no
+PCIUTILS_MAKE_OPTS += SHARED=yes
+PCIUTILS_MAKE_OPTS += DNS=no
 
 # Build after busybox since it's got a lightweight lspci
 ifeq ($(BR2_PACKAGE_BUSYBOX),y)
-	PCIUTILS_DEPENDENCIES += busybox
+PCIUTILS_DEPENDENCIES += busybox
 endif
 
 define PCIUTILS_CONFIGURE_CMDS
@@ -30,31 +39,22 @@ define PCIUTILS_CONFIGURE_CMDS
 endef
 
 define PCIUTILS_BUILD_CMDS
-	$(TARGET_MAKE_ENV) $(MAKE) CC="$(TARGET_CC)" \
-		HOST="$(KERNEL_ARCH)-linux" \
-		OPT="$(TARGET_CFLAGS)" \
-		LDFLAGS="$(TARGET_LDFLAGS)" \
-		RANLIB=$(TARGET_RANLIB) \
-		AR=$(TARGET_AR) \
-		-C $(PCIUTILS_DIR) \
-		SHARED=$(PCIUTILS_SHARED) \
-		ZLIB=$(PCIUTILS_ZLIB) \
-		DNS=$(PCIUTILS_DNS) \
-		LIBKMOD=$(PCIUTILS_KMOD) \
-		HWDB=$(PCIUTILS_HWDB) \
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) $(PCIUTILS_MAKE_OPTS) \
 		PREFIX=/usr
 endef
 
-# Ditch install-lib if SHARED is an option in the future
 define PCIUTILS_INSTALL_TARGET_CMDS
-	$(MAKE1) BUILDDIR=$(@D) -C $(@D) PREFIX=$(TARGET_DIR)/usr \
-		SHARED=$(PCIUTILS_SHARED) install install-lib
-	chmod 755 $(TARGET_DIR)/usr/lib/libpci.so.$(PCIUTILS_VERSION) # set permissions so it is stripped
+	$(TARGET_MAKE_ENV) $(MAKE1) -C $(@D) $(PCIUTILS_MAKE_OPTS) \
+		PREFIX=$(TARGET_DIR)/usr \
+		install install-lib
+	chmod 755 $(TARGET_DIR)/usr/lib/libpci.so.$(PCIUTILS_VERSION)
+	rm -f $(TARGET_DIR)/usr/sbin/update-pciids
 endef
 
 define PCIUTILS_INSTALL_STAGING_CMDS
-	$(MAKE1) BUILDDIR=$(@D) -C $(@D) PREFIX=$(STAGING_DIR)/usr \
-		SHARED=$(PCIUTILS_SHARED) install install-lib
+	$(TARGET_MAKE_ENV) $(MAKE1) -C $(@D) $(PCIUTILS_MAKE_OPTS) \
+		PREFIX=$(STAGING_DIR)/usr \
+		install install-lib
 endef
 
 $(eval $(call GENTARGETS,package,pciutils))
