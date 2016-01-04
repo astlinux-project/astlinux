@@ -54,6 +54,8 @@ Released **TBD**
 -- kernel-reboot, new command performs a reboot via kexec just as RUNNIX does, all changes to the run images and versions are honored.
    Reboots are 30-40 seconds faster using kernel-reboot. The kernel-reboot command replaces the sreboot script that has been removed.
 
+-- pciutils, version bump to 3.4.1
+
 -- nano, version bump to 2.5.0
 
 -- acpid, version bump to 2.0.25
