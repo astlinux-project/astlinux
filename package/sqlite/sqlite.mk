@@ -4,9 +4,9 @@
 #
 #############################################################
 
-SQLITE_VERSION = 3090200
+SQLITE_VERSION = 3100000
 SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VERSION).tar.gz
-SQLITE_SITE = http://www.sqlite.org/2015
+SQLITE_SITE = http://www.sqlite.org/2016
 SQLITE_INSTALL_STAGING = YES
 
 # required with sqlite-dynamically-link-shell-tool.patch
