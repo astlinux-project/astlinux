@@ -32,13 +32,15 @@ Released **TBD**
 
 -- zabbix, version bump to 2.2.11
 
+-- php, version bump to 5.5.31, bug and security fixes
+
 -- perl, version bump to 5.22.1 using perlcross 1.0.2
 
 -- pcre, version bump to 8.38, security fixes: https://blog.fuzzing-project.org/29-Heap-Overflow-in-PCRE.html
 
 -- sudo, version bump to 1.8.15
 
--- sqlite, version bump to 3.9.2
+-- sqlite, version bump to 3.10.0
 
 -- libsrtp, version bump to 1.5.3, security fix: CVE-2015-6360
 
@@ -66,7 +68,9 @@ Released **TBD**
 
 -- OpenSSL, version bump to 1.0.1q, security fixes: CVE-2015-3194, CVE-2015-3195
 
--- ntpd/sntp, version bump to 4.2.8p4, security fixes: CVE-2015-7871 plus 12 other low/medium-severity vulnerabilities
+-- prosody, version bump to 0.9.9, security fixes: CVE-2016-1231, CVE-2016-1232
+
+-- ntpd/sntp, version bump to 4.2.8p5, security fixes: CVE-2015-7871, CVE-2015-5300 plus 12 other low/medium-severity vulnerabilities
 
 -- rsync, version bump to 3.1.2, security fix.
 
