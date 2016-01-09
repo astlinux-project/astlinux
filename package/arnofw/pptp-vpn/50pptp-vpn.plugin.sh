@@ -11,7 +11,6 @@ PLUGIN_CONF_FILE="pptp-vpn.conf"
 #
 # Author                : (C) Copyright 2011 by Lonnie Abelbeck & Arno van Amersfoort
 # Homepage              : http://rocky.eld.leidenuniv.nl/
-# Freshmeat homepage    : http://freshmeat.net/projects/iptables-firewall/?topic_id=151
 # Email                 : a r n o v a AT r o c k y DOT e l d DOT l e i d e n u n i v DOT n l
 #                         (note: you must remove all spaces and substitute the @ and the .
 #                         at the proper locations!)
@@ -204,7 +203,7 @@ else
 
     # Increment indention
     INDENT="$INDENT "
-    
+
     # Only proceed if environment ok
     if ! plugin_sanity_check; then
       PLUGIN_RET_VAL=1
@@ -214,7 +213,7 @@ else
         restart ) plugin_restart; PLUGIN_RET_VAL=$? ;;
         stop|stop-restart) plugin_stop; PLUGIN_RET_VAL=$? ;;
         status  ) plugin_status; PLUGIN_RET_VAL=$? ;;
-        *       ) PLUGIN_RET_VAL=1; printf "\033[40m\033[1;31m  ERROR: Invalid plugin option \"$PLUGIN_CMD\"!\033[0m\n" >&2 ;;
+        *       ) PLUGIN_RET_VAL=1; printf "\033[40m\033[1;31m${INDENT}ERROR: Invalid plugin option \"$PLUGIN_CMD\"!\033[0m\n" >&2 ;;
       esac
     fi
   fi
