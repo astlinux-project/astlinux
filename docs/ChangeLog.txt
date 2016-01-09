@@ -104,6 +104,8 @@ Released **TBD**
 
 -- arnofw (AIF), added upstream patch for Issue #21, Leave the IPv6 sysctl accept_ra setting alone when forwarding=1
 
+-- arnofw (AIF), added "pptp-vpn-passthrough" plugin, for when PPTP VPN clients have NAT between them and the PPTP VPN server.
+
 -- arnofw (AIF), "adaptive-ban" plugin, added 'racoon' analysis type.
 
 -- arnofw (AIF), "traffic-shaper" plugin, automatically disable ethernet offloading on the shaper interface (EXTIF).
