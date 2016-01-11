@@ -58,7 +58,7 @@ Released **TBD**
 
 -- pciutils, version bump to 3.4.1
 
--- nano, version bump to 2.5.0
+-- nano, version bump to 2.5.1
 
 -- acpid, version bump to 2.0.25
 
