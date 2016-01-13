@@ -60,27 +60,30 @@ $(WANPIPE_DIR)/.built: $(WANPIPE_DIR)/.patched | $(WANPIPE_PREREQS)
 		$(WANPIPE_CONFIGURE) \
 		KMOD=$(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED) \
 		EXTRA_FLAGS="-DCONFIG_RPS" \
-		ASTBROOT=$(STAGING_DIR) \
+		ASTBROOT=$(STAGING_DIR)/usr \
 		all_kmod_dahdi 
 	$(MAKE) -C $(WANPIPE_DIR)/util/wanconfig CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" \
 		SYSINC=$(WANPIPE_DIR)/patches/kdrivers/include \
 		$(WANPIPE_CONFIGURE)
 	$(MAKE) -C $(WANPIPE_DIR)/util/wan_aftup CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" \
 		SYSINC=$(WANPIPE_DIR)/patches/kdrivers/include \
-		EXTRA_FLAGS="-I$(STAGING_DIR)/include -I$(STAGING_DIR)/usr/include" \
+		EXTRA_FLAGS="-I$(STAGING_DIR)/usr/include" \
 		$(WANPIPE_CONFIGURE)
 	$(MAKE) -C $(WANPIPE_DIR)/util/wancfg CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" \
 		SYSINC=$(WANPIPE_DIR)/patches/kdrivers/include \
-		EXTRA_FLAGS="-I$(STAGING_DIR)/include -I$(STAGING_DIR)/usr/include" \
+		EXTRA_FLAGS="-I$(STAGING_DIR)/usr/include" \
 		EXTRA_FLAGS+=" -Wno-write-strings" \
 		DAHDI_ISSUES=YES \
 		$(WANPIPE_CONFIGURE)
 	$(MAKE) -C $(WANPIPE_DIR)/util/lxdialog CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" \
-		SYSINC=$(STAGING_DIR)/include \
-		ASTBROOT=$(STAGING_DIR)/include \
+		SYSINC=$(STAGING_DIR)/usr/include \
+		ASTBROOT=$(STAGING_DIR)/usr \
 		$(WANPIPE_CONFIGURE)
 	$(MAKE) -C $(WANPIPE_DIR)/util/wanec_client CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" \
-		WANINCDIR=$(STAGING_DIR)/include \
+		WANINCDIR=$(STAGING_DIR)/usr/include \
+		$(WANPIPE_CONFIGURE)
+	$(MAKE) -C $(WANPIPE_DIR)/util/wanpipemon CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" \
+		SYSINC=$(STAGING_DIR)/usr/include \
 		$(WANPIPE_CONFIGURE)
 	touch $@
 
@@ -106,6 +109,7 @@ $(TARGET_DIR)/$(WANPIPE_TARGET_BINARY): $(WANPIPE_DIR)/.built
 	$(INSTALL) -D -m 0755 -s $(WANPIPE_DIR)/util/wancfg/wancfg $(TARGET_DIR)/usr/sbin/wancfg
 	$(INSTALL) -D -m 0755 -s $(WANPIPE_DIR)/util/lxdialog/lxdialog $(TARGET_DIR)/usr/sbin/wanpipe_lxdialog
 	$(INSTALL) -D -m 0755 -s $(WANPIPE_DIR)/util/wanec_client/wan_ec_client $(TARGET_DIR)/usr/sbin/wan_ec_client
+	$(INSTALL) -D -m 0755 -s $(WANPIPE_DIR)/util/wanpipemon/wanpipemon $(TARGET_DIR)/usr/sbin/wanpipemon
 	$(INSTALL) -m 0755 $(WANPIPE_DIR)/util/wancfg_zaptel/wancfg_dahdi $(TARGET_DIR)/usr/sbin/wancfg_dahdi
 	$(INSTALL) -m 0755 package/wanpipe/wanrouter.init $(TARGET_DIR)/etc/init.d/wanrouter
 	ln -sf ../../init.d/wanrouter $(TARGET_DIR)/etc/runlevels/default/S00wanrouter
@@ -149,6 +153,7 @@ wanpipe-clean:
 	rm -f $(TARGET_DIR)/usr/sbin/wancfg
 	rm -f $(TARGET_DIR)/usr/sbin/wanpipe_lxdialog
 	rm -f $(TARGET_DIR)/usr/sbin/wan_ec_client
+	rm -f $(TARGET_DIR)/usr/sbin/wanpipemon
 	rm -f $(TARGET_DIR)/usr/sbin/wancfg_dahdi
 	rm -f $(TARGET_DIR)/etc/init.d/wanrouter
 	rm -f $(TARGET_DIR)/etc/runlevels/default/S00wanrouter
