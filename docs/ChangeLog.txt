@@ -120,7 +120,7 @@ Released **TBD**
 
 -- pjsip 2.4 (no change)
 
--- wanpipe, version bump to 7.0.15
+-- wanpipe, version bump to 7.0.15, added the 'wanpipemon' CLI tool.
 
 ** Web Interface
 
