@@ -149,7 +149,9 @@ Released **TBD**
 -- Network and System tabs, now use "/sbin/kernel-reboot" if available for a faster reboot.
    Use classic reboot method by checking Prefs tab option 'Disable faster "kernel-reboot" System Reboot'.
 
--- Status tab, allow empty lines within a Custom Asterisk Command output
+-- Status tab, allow empty lines within a Custom Asterisk Command output.
+
+-- Staff tab, add 'Restart FOP2' support if installed.
 
 -- dialproxy, support GET/POST variables 'phone' and 'exten' synonymous for 'num' and 'ext' to be compatible
    with the Asterisk Click2Call extension for Google Chrome and possibly others.
