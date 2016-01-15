@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2013 Lonnie Abelbeck
+// Copyright (C) 2008-2016 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -9,6 +9,7 @@
 // staff.php for AstLinux
 // 12-12-2009
 // 01-21-2013, Add Restart Asterisk
+// 01-15-2016, Add Restart FOP2
 //
 // System location of webgui-staff-backup.conf
 $CONFFILE = '/mnt/kd/webgui-staff-backup.conf';
@@ -156,6 +157,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
       $result = 7;
     }
+  } elseif (isset($_POST['submit_restart_fop2'])) {
+    $result = 99;
+    if (isset($_POST['confirm_restart_fop2'])) {
+      $mesg = date('Y-m-d H:i:s').'  RESTART_FOP2  Remote Address: '.$_SERVER['REMOTE_ADDR'];
+      @file_put_contents($LOGFILE, $mesg."\n", FILE_APPEND);
+      chmod($LOGFILE, 0600);
+      $result = restartPROCESS('fop2', 26, $result);
+    } else {
+      $result = 7;
+    }
   } elseif (isset($_POST['submit_shutdown'])) {
     $result = 99;
     if (isset($_POST['confirm_shutdown'])) {
@@ -190,6 +201,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: red;">Backup Failed, error archiving unionfs partition.</p>');
     } elseif ($result == 25) {
       putHtml('<p style="color: green;">Asterisk'.statusPROCESS('asterisk').'.</p>');
+    } elseif ($result == 26) {
+      putHtml('<p style="color: green;">Asterisk Flash Operating Panel2'.statusPROCESS('fop2').'.</p>');
     } elseif ($result == 40) {
       putHtml('<p style="color: green;">Reboot Scheduled within 24 hours.</p>');
     } elseif ($result == 41) {
@@ -233,6 +246,13 @@ if (isDownloadValid($CONFFILE)) {
   putHtml('&ndash;');
   putHtml('<input type="checkbox" value="restart_asterisk" name="confirm_restart_asterisk" />&nbsp;Confirm');
   putHtml('</td></tr>');
+if (is_addon_package('fop2')) {
+  putHtml('<tr><td class="dialogText" style="text-align: center;">');
+  putHtml('<input type="submit" value="Restart FOP2" name="submit_restart_fop2" />');
+  putHtml('&ndash;');
+  putHtml('<input type="checkbox" value="restart_fop2" name="confirm_restart_fop2" />&nbsp;Confirm');
+  putHtml('</td></tr>');
+}
 
   putHtml('<tr><td style="text-align: center;">');
   putHtml('<h2>Reboot/Restart System:</h2>');
