@@ -40,7 +40,7 @@ Released **TBD**
 
 -- sudo, version bump to 1.8.15
 
--- sqlite, version bump to 3.10.0
+-- sqlite, version bump to 3.10.1
 
 -- libsrtp, version bump to 1.5.3, security fix: CVE-2015-6360
 
@@ -67,6 +67,8 @@ Released **TBD**
 ** Networking
 
 -- OpenSSL, version bump to 1.0.1q, security fixes: CVE-2015-3194, CVE-2015-3195
+
+-- OpenSSH, "UseRoaming" security fixes: CVE-2016-0777, CVE-2016-0778
 
 -- prosody, version bump to 0.9.9, security fixes: CVE-2016-1231, CVE-2016-1232
 
