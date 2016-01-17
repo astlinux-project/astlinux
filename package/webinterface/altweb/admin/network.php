@@ -88,6 +88,7 @@ $select_dyndns = array (
   'DynDNS [static]' => 'statdns@dyndns.org',
   'FreeDNS' => 'default@freedns.afraid.org',
   'No-IP' => 'default@no-ip.com',
+  'nsupdate.info' => 'default@nsupdate.info',
   'pairNIC' => 'default@pairnic.com',
   'ZoneEdit' => 'default@zoneedit.com'
 );

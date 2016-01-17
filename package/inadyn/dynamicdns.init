@@ -36,6 +36,7 @@ gen_ddclient_conf()
     'default@freedns.afraid.org') service="freedns" ;;
     'default@dnsomatic.com') service="dnsomatic" ;;
     'default@pairnic.com') service="pairnic" ;;
+    'default@nsupdate.info') service="nsupdate-ipv4" ;;
      *) service="$(echo "$DDSERVICE" | tr -d '^$*[]|"')" ;;  # sanitize for sed regex
   esac
 
@@ -103,6 +104,12 @@ dyndns_server_url /nic/update?"
     'default@pairnic.com')
       DDSERVICE="dyndns@dyndns.org"
       ddcustom="dyndns_server_name dynamic.pairnic.com
+dyndns_server_url /nic/update?"
+      ;;
+
+    'default@nsupdate.info')
+      DDSERVICE="dyndns@dyndns.org"
+      ddcustom="dyndns_server_name ipv4.nsupdate.info
 dyndns_server_url /nic/update?"
       ;;
 
