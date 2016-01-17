@@ -153,6 +153,8 @@ Released **TBD**
 
 -- Staff tab, add 'Restart FOP2' support if installed.
 
+-- Network tab -> Dynamic DNS Update, add "nsupdate.info" service type.
+
 -- dialproxy, support GET/POST variables 'phone' and 'exten' synonymous for 'num' and 'ext' to be compatible
    with the Asterisk Click2Call extension for Google Chrome and possibly others.
 
