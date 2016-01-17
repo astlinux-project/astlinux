@@ -42,6 +42,8 @@ Released **TBD**
 
 -- sqlite, version bump to 3.10.1
 
+-- sqliteodbc, version bump to 0.9993
+
 -- libsrtp, version bump to 1.5.3, security fix: CVE-2015-6360
 
 -- libxml2, version bump to 2.9.3, security fixes: CVE-2015-1819, CVE-2015-7941, CVE-2015-7942, CVE-2015-8035
@@ -92,7 +94,7 @@ Released **TBD**
 
 -- openldap, version bump to 2.4.43
 
--- miniupnpd, version bump to 1.9.20151212
+-- miniupnpd, version bump to 1.9.20160113
 
 -- msmtp, version bump to 1.6.3
 
@@ -100,7 +102,7 @@ Released **TBD**
 
 -- sipgrep, version bump to 2.1.0
 
--- stunnel, version bump to 5.28
+-- stunnel, version bump to 5.29
 
 -- shellinabox, version bump to 2.19, new supported repository
 
