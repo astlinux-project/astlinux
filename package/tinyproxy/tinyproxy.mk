@@ -3,9 +3,9 @@
 # tinyproxy
 #
 #############################################################
-TINYPROXY_VERSION:=1.8.3
-TINYPROXY_SITE:=http://www.banu.com/pub/tinyproxy/1.8
-TINYPROXY_SOURCE:=tinyproxy-$(TINYPROXY_VERSION).tar.bz2
+TINYPROXY_VERSION = 1.8.4
+TINYPROXY_SITE = https://github.com/tinyproxy/tinyproxy/releases/download/$(TINYPROXY_VERSION)
+TINYPROXY_SOURCE = tinyproxy-$(TINYPROXY_VERSION).tar.bz2
 
 # Workaround for missing a2x on host, disables docs
 TINYPROXY_CONF_ENV = \

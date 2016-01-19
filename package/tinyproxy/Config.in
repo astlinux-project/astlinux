@@ -5,5 +5,5 @@ config BR2_PACKAGE_TINYPROXY
 	  Experimental for AstLinux use!
 	  Tinyproxy is a light-weight HTTP/HTTPS proxy daemon. 
 
-	  https://banu.com/tinyproxy/
+	  https://github.com/tinyproxy/tinyproxy/wiki
 
