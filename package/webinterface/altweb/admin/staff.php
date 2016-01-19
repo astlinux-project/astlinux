@@ -10,6 +10,7 @@
 // 12-12-2009
 // 01-21-2013, Add Restart Asterisk
 // 01-15-2016, Add Restart FOP2
+// 01-18-2016, Add Primary /mnt/kd/ files Backup
 //
 // System location of webgui-staff-backup.conf
 $CONFFILE = '/mnt/kd/webgui-staff-backup.conf';
@@ -60,7 +61,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $asturw = (getPREFdef($global_prefs, 'system_backup_asturw') === 'yes') ? '/mnt/kd/asturw'.$suffix : '';
     $prefix = '/mnt/kd/.';
     $tmpfile = $backup_name.'-'.$backup_type.'-'.date('Y-m-d').$suffix;
-    $srcfile = '$(ls -1 /mnt/kd/)';
+    if ($backup_type === 'primary') {
+      if (is_dir('/mnt/kd/phoneprov/templates')) {
+        $templates = ' "phoneprov/templates"';
+      } else {
+        $templates = '';
+      }
+      $srcfile = '$(ls -1 /mnt/kd/ | sed -e "s/^cdr-.*//" -e "s/^monitor$//" -e "s/^voicemail$//"';
+      $srcfile .= ' -e "s/^bin$//" -e "s/^log.*//" -e "s/^backup.*//"';
+      $srcfile .= ' -e "s/^fossil$//" -e "s/^phoneprov$//" -e "s/^tftpboot$//" -e "s/^wanpipe$//")';
+      $srcfile .= $templates;
+    } else {
+      $srcfile = '$(ls -1 /mnt/kd/)';
+    }
     if ($asturw !== '') {
       $excludefile = tempnam("/tmp", "PHP_");
       $excludecmd = 'find /oldroot/mnt/asturw/ -type f | sed -e "s:^/oldroot/mnt/asturw/::" | sed -n';
@@ -232,6 +245,7 @@ if (isDownloadValid($CONFFILE)) {
   putHtml('</td></tr><tr><td style="text-align: center;">');
   putHtml('<select name="backup_type">');
   $sel = (getPREFdef($global_prefs, 'system_backup_asturw') === 'yes') ? '&amp; unionfs ' : '';
+  putHtml('<option value="primary">Primary /mnt/kd/ '.$sel.'files</option>');
   putHtml('<option value="full">All /mnt/kd/ '.$sel.'files</option>');
   putHtml('</select>');
   putHtml('</td></tr><tr><td style="text-align: center;">');
