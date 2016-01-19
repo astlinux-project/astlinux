@@ -155,7 +155,7 @@ Released **TBD**
 
 -- Status tab, allow empty lines within a Custom Asterisk Command output.
 
--- Staff tab, add 'Restart FOP2' support if installed.
+-- Staff tab, add 'Restart FOP2' support if installed and (AES encrypted) 'Primary /mnt/kd/ files' Backup choice.
 
 -- Network tab -> Dynamic DNS Update, add "nsupdate.info" service type.
 
