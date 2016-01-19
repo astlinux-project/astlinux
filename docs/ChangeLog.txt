@@ -118,6 +118,8 @@ Released **TBD**
 
 -- (Custom Build Only) kamailio, version bump to 4.1.9
 
+-- (Custom Build Only) tinyproxy, version bump to 1.8.4, security fix: CVE-2012-3505
+
 ** Asterisk
 
 -- Asterisk 1.8.32.3 (no change), 11.19.0 (no change) and 13.5.0 (no change)
