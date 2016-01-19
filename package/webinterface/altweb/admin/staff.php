@@ -62,14 +62,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prefix = '/mnt/kd/.';
     $tmpfile = $backup_name.'-'.$backup_type.'-'.date('Y-m-d').$suffix;
     if ($backup_type === 'primary') {
-      if (is_dir('/mnt/kd/phoneprov/templates')) {
-        $templates = ' "phoneprov/templates"';
-      } else {
-        $templates = '';
+      $wanpipe = '';
+      foreach (glob('/mnt/kd/wanpipe/*.conf') as $globfile) {
+        $wanpipe .= ' "wanpipe/'.basename($globfile).'"';
       }
+      $templates = (is_dir('/mnt/kd/phoneprov/templates')) ? ' "phoneprov/templates"' : '';
       $srcfile = '$(ls -1 /mnt/kd/ | sed -e "s/^cdr-.*//" -e "s/^monitor$//" -e "s/^voicemail$//"';
-      $srcfile .= ' -e "s/^bin$//" -e "s/^log.*//" -e "s/^backup.*//"';
-      $srcfile .= ' -e "s/^fossil$//" -e "s/^phoneprov$//" -e "s/^tftpboot$//" -e "s/^wanpipe$//")';
+      $srcfile .= ' -e "s/^bin$//" -e "s/^.*[.]bak$//" -e "s/^log.*//" -e "s/^backup.*//"';
+      $srcfile .= ' -e "s/^wanpipe$//" -e "s/^fossil$//" -e "s/^phoneprov$//" -e "s/^tftpboot$//" -e "s/^lost[+]found$//")';
+      $srcfile .= $wanpipe;
       $srcfile .= $templates;
     } else {
       $srcfile = '$(ls -1 /mnt/kd/)';
