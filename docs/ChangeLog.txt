@@ -51,6 +51,8 @@ Released **TBD**
 
 -- libsodium, version bump to 1.0.8
 
+-- libjpeg, version bump to 9b
+
 -- ethtool, version bump to 4.2
 
 -- kexec-tools, version bump to 2.0.11
@@ -62,7 +64,7 @@ Released **TBD**
 
 -- nano, version bump to 2.5.1
 
--- acpid, version bump to 2.0.25
+-- acpid, version bump to 2.0.26
 
 -- strace, version bump to 4.11
 
@@ -76,7 +78,7 @@ Released **TBD**
 
 -- prosody, version bump to 0.9.9, security fixes: CVE-2016-1231, CVE-2016-1232
 
--- ntpd/sntp, version bump to 4.2.8p5, security fixes: CVE-2015-7871, CVE-2015-5300 plus 12 other low/medium-severity vulnerabilities
+-- ntpd/sntp, version bump to 4.2.8p6, security fixes: CVE-2015-7871, CVE-2015-5300 plus 21 other low/medium-severity vulnerabilities
 
 -- rsync, version bump to 3.1.2, security fix.
 
