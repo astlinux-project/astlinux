@@ -47,13 +47,14 @@ $sounds_lang_menu = array (
   'en' => 'english',
   'en_AU' => 'english-au',
   'en_GB' => 'english-gb',
-  'es' => 'spanish',
-  'fr' => 'french',
-  'ru' => 'russian',
-  'de' => 'german',
   'nl' => 'dutch',
+  'fr' => 'french',
+  'de' => 'german',
   'it' => 'italian',
-  'se' => 'swedish'
+  'ja' => 'japanese',
+  'ru' => 'russian',
+  'es' => 'spanish',
+  'sv' => 'swedish'
 );
 
 $sounds_codec_menu = array (
