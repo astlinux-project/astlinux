@@ -40,7 +40,7 @@ Released **TBD**
 
 -- sudo, version bump to 1.8.15
 
--- sqlite, version bump to 3.10.1
+-- sqlite, version bump to 3.10.2
 
 -- sqliteodbc, version bump to 0.9993
 
