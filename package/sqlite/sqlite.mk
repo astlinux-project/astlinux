@@ -4,7 +4,7 @@
 #
 #############################################################
 
-SQLITE_VERSION = 3100100
+SQLITE_VERSION = 3100200
 SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VERSION).tar.gz
 SQLITE_SITE = http://www.sqlite.org/2016
 SQLITE_INSTALL_STAGING = YES
@@ -23,6 +23,7 @@ SQLITE_CONF_OPT = \
 
 ifeq ($(BR2_PACKAGE_SQLITE_READLINE),y)
 SQLITE_DEPENDENCIES += ncurses readline
+SQLITE_CONF_OPT += --enable-readline
 else
 SQLITE_CONF_OPT += --disable-readline
 endif
