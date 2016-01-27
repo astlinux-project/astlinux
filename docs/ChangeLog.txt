@@ -76,7 +76,7 @@ Released **TBD**
 
 -- OpenSSH, "UseRoaming" security fixes: CVE-2016-0777, CVE-2016-0778
 
--- prosody, version bump to 0.9.9, security fixes: CVE-2016-1231, CVE-2016-1232
+-- prosody, version bump to 0.9.10, security fixes: CVE-2016-1231, CVE-2016-1232, CVE-2016-0756
 
 -- ntpd/sntp, version bump to 4.2.8p6, security fixes: CVE-2015-7871, CVE-2015-5300 plus 21 other low/medium-severity vulnerabilities
 
