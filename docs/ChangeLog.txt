@@ -72,7 +72,7 @@ Released **TBD**
 
 ** Networking
 
--- OpenSSL, version bump to 1.0.1q, security fixes: CVE-2015-3194, CVE-2015-3195
+-- OpenSSL, version bump to 1.0.1r, security fixes: CVE-2015-3194, CVE-2015-3195, CVE-2015-3197
 
 -- OpenSSH, "UseRoaming" security fixes: CVE-2016-0777, CVE-2016-0778
 
