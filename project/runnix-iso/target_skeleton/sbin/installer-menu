@@ -1,0 +1,228 @@
+#!/bin/sh
+
+BACKTITLE="AstLinux Installer"
+
+IMAGE_DIR="/mnt/base/os"
+
+TMP_RESULT="/tmp/installer-menu.tmp"
+
+NL='
+'
+
+display_msg()
+{
+  local msg="$1"
+
+  dialog \
+    --clear \
+    --backtitle "$BACKTITLE" \
+    --title "[ Status ]" \
+    --msgbox "$msg" 6 60
+}
+
+display_progress()
+{
+  local msg="$1"
+
+  dialog \
+    --backtitle "$BACKTITLE" \
+    --title "[ Progress ]" \
+    --infobox "$msg" 6 60
+}
+
+menu_image()
+{
+  local label text image IFS
+
+  IFS=$NL
+  for image in $IMAGES; do
+    image="${image##*/}"
+    label="${image%.img.gz}"
+    text='.img.gz'
+    echo "$label $text"
+  done
+}
+
+select_image()
+{
+  dialog \
+    --clear \
+    --backtitle "$BACKTITLE" \
+    --title "[ AstLinux Install Image ]" \
+    --menu "UP/DOWN arrow keys to select the AstLinux Install Image:" \
+    12 60 2 $(menu_image)
+}
+
+menu_disk()
+{
+  local label text disk IFS
+
+  IFS=$NL
+  for disk in $DISKS; do
+    label="$(echo "$disk" | sed -n -r -e 's|^.* (/dev/sd[a-h]).*$|\1|p')"
+    text="$(echo "$disk" | sed -n -r -e 's|^.*: *([^,]*).*$|\1|p' | sed 's: :_:g')"
+    echo "$label $text"
+  done
+}
+
+select_disk()
+{
+  dialog \
+    --clear \
+    --backtitle "$BACKTITLE" \
+    --title "[ Target Install Disk ]" \
+    --menu "UP/DOWN arrow keys to select the target install disk:\nWarning: Selected disk will be overwritten !" \
+    12 60 2 $(menu_disk)
+}
+
+install_disk()
+{
+  local disk="$1" image="$2"
+
+  if [ ! -e "$disk" ]; then
+    display_msg "Disk '$disk' does not exist.\nExiting, no action performed."
+    return 1
+  fi
+
+  if [ ! -f "$image" ]; then
+    display_msg "Image '${image##*/}' does not exist.\nExiting, no action performed."
+    return 1
+  fi
+
+  display_progress "Step 1 of 2: Erasing first 1 GB of '$disk'\nThis may take a long time..."
+  sleep 1
+
+  dd if=/dev/zero of=$disk bs=64k count=16000 >/dev/null 2>/dev/null
+  if [ $? -ne 0 ]; then
+    display_msg "Error zero'ing first 1 GB.\nInstall failed !"
+    return 1
+  fi
+
+  display_progress "Step 2 of 2: Writing AstLinux Image to '$disk'\nThis may take a long time..."
+  sleep 1
+
+  zcat "$image" | dd of=$disk bs=64k >/dev/null 2>/dev/null
+  if [ $? -ne 0 ]; then
+    display_msg "Error writing AstLinux Image.\nInstall failed !"
+    return 1
+  fi
+
+  sync
+  return 0
+}
+
+do_install()
+{
+  IMAGES="$(ls -1 $IMAGE_DIR/*.img.gz 2>/dev/null)"
+
+  if [ -z "$IMAGES" ]; then
+    display_msg "No Install Images in: $IMAGE_DIR"
+    display_msg "Exiting, no action performed."
+    return 1
+  fi
+
+  select_image 2>"$TMP_RESULT"
+  IMAGE="$(cat "$TMP_RESULT")"
+
+  if [ -n "$IMAGE" ]; then
+    IMAGE_FILE="$IMAGE.img.gz"
+  else
+    display_msg "Exiting, no action performed."
+    return 1
+  fi
+
+  DISKS="$(fdisk -l 2>/dev/null | grep '^Disk */dev/sd[a-h]:')"
+
+  if [ -z "$DISKS" ]; then
+    display_msg "No suitable disk found.\nExiting, no action performed."
+    return 1
+  fi
+
+  select_disk 2>"$TMP_RESULT"
+  DISK="$(cat "$TMP_RESULT")"
+
+  if [ -n "$DISK" ]; then
+    dialog \
+      --clear \
+      --backtitle "$BACKTITLE" \
+      --title "[ Overwrite Disk ]" \
+      --defaultno \
+      --yesno "Are you sure you want to overwrite disk '$DISK' ?" 6 60
+
+    if [ $? -eq 0 ]; then
+      install_disk "$DISK" "$IMAGE_DIR/$IMAGE_FILE"
+      if [ $? -eq 0 ]; then
+        display_msg "Install Successful."
+      else
+        return 1
+      fi
+    else
+      display_msg "Exiting, no action performed."
+      return 1
+    fi
+  else
+    display_msg "Exiting, no action performed."
+    return 1
+  fi
+
+  return 0
+}
+
+do_shutdown()
+{
+  dialog \
+    --clear \
+    --backtitle "$BACKTITLE" \
+    --title "[ Shutdown ]" \
+    --yesno "Are you sure you want to shutdown ?" 6 60
+
+  if [ $? -eq 0 ]; then
+    clear
+    poweroff -f
+  fi
+}
+
+do_reboot()
+{
+  dialog \
+    --clear \
+    --backtitle "$BACKTITLE" \
+    --title "[ Reboot ]" \
+    --yesno "Are you sure you want to reboot ?" 6 60
+
+  if [ $? -eq 0 ]; then
+    clear
+    reboot -f
+  fi
+}
+
+select_main()
+{
+  dialog \
+    --clear \
+    --backtitle "$BACKTITLE" \
+    --title "[ $BACKTITLE Menu ]" \
+    --no-cancel \
+    --menu "UP/DOWN arrow keys to select actions:" \
+    12 60 4 \
+    Install "Install AstLinux to an existing drive" \
+    Shutdown "Shutdown the install system" \
+    Reboot "Reboot the install system" \
+    Shell "Exit to shell"
+}
+
+while true; do
+  select_main 2>"$TMP_RESULT"
+  MAIN="$(cat "$TMP_RESULT")"
+
+  case $MAIN in
+    Install) do_install ;;
+    Shutdown) do_shutdown ;;
+    Reboot) do_reboot ;;
+    Shell) break ;;
+  esac
+done
+
+rm -f "$TMP_RESULT"
+clear
+

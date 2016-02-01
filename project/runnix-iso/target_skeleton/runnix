@@ -1,0 +1,154 @@
+#!/bin/sh
+export PATH="/usr/bin:/bin:/usr/sbin:/sbin"
+
+# BASE is where the runnix partition is mounted
+BASE="/mnt/base"
+
+RUNVER="$(cat /etc/runnix-release)"
+
+DRIVES="sr0 sr1 sr2 sr3"
+
+setup_network () {
+
+  if [ -z "$NDEV" -a -n "$1" ]; then
+    NDEV="$1"
+  fi
+
+  #VLANS
+  for i in $VLANS; do
+    IF="$(echo $i | cut -d. -f1)"
+    VID="$(echo $i | cut -d. -f2)"
+    ifconfig $IF up
+    vconfig add $IF $VID > /dev/null
+  done
+
+  if [ -n "$NDEV" ]; then
+    ifconfig lo up 127.0.0.1
+
+    if [ -n "$MAC" ]; then
+      ifconfig "$NDEV" hw ether "$MAC"
+    fi
+
+    if [ -z "$IP" -o "$IP" = "dhcp" ]; then
+      echo "Configuring $NDEV with DHCP..."
+      udhcpc -nq -s /etc/udhcpc.script -i "$NDEV"
+    elif [ -n "$IP" -a -n "$NM" ]; then
+      ifconfig "$NDEV" "$IP" netmask "$NM"
+
+      if [ -n "$GW" ]; then
+        route add -net default gw "$GW" dev "$NDEV"
+      fi
+
+      for i in $DNS; do
+        echo "nameserver $i" >> /tmp/etc/resolv.conf
+      done
+
+    fi
+    return 0
+  fi
+
+  return 1
+}
+
+setup_ssh () {
+
+  if [ -z "$SSHPORT" -a -n "$1" ]; then
+    SSHPORT="$1"
+  fi
+
+  if [ -n "$SSHPORT" ]; then
+    mount -t devpts devpts /dev/pts
+
+    mkdir /tmp/etc/dropbear
+
+    echo "Generating keys..."
+    dropbearkey -t rsa -f /tmp/etc/dropbear/dropbear_rsa_host_key -s 1024
+    dropbearkey -t dss -f /tmp/etc/dropbear/dropbear_dss_host_key -s 1024
+    dropbearkey -t ecdsa -f /tmp/etc/dropbear/dropbear_ecdsa_host_key
+
+    touch /var/log/lastlog
+    touch /var/log/wtmp
+
+    echo "Starting SSH..."
+    dropbear -E -P /tmp/dropbear.pid -p $SSHPORT
+
+    myipv4="$(ip -o addr show dev "$NDEV" 2>/dev/null | awk '$3 == "inet" { split($4, field, "/"); print field[1]; }')"
+    if [ -n "$myipv4" ]; then
+      echo "
+==================
+SSH server started.
+Example, establish an SSH session via a remote host:
+
+remote-host$ ssh -p $SSHPORT root@$myipv4
+(Password: runnix)
+==================
+"
+    fi
+    return 0
+  fi
+
+  return 1
+}
+
+do_shell () {
+  echo "Dropping to shell, type 'exit' to reboot"
+  echo "                   type 'installer-menu' for Menu"
+
+  export PS1='runnix# '
+
+  # Check for video console, and load os/console.kmap if it exists
+  if ! echo "$CMDLINE" | grep -q "console="; then
+    if [ -f $BASE/os/console.kmap ]; then
+      echo "Loading console keyboard map: $BASE/os/console.kmap"
+      loadkmap < $BASE/os/console.kmap
+    fi
+  fi
+
+  /bin/sh -i </dev/console >/dev/console 2>/dev/console
+
+  # and reboot when done
+  reboot -f
+}
+
+echo "
+
+Runnix version '$RUNVER' starting..."
+
+mount -t proc none /proc
+mount -t tmpfs none /tmp
+mkdir /tmp/etc
+
+CMDLINE="$(cat /proc/cmdline)"
+
+for x in $DRIVES; do
+  if mount -t iso9660 -o ro /dev/${x} $BASE 2>/dev/null; then
+    if [ -f $BASE/os/astflag ]; then
+      DEVICE=${x}
+      break
+    else
+      umount /dev/${x}
+    fi
+  fi
+done
+
+hostname runnix
+
+# Loader not found
+if [ -z "$DEVICE" ]; then
+  echo "Runnix: ISO medium not found."
+  do_shell
+  # reboot
+fi
+
+echo "Menu..."
+/sbin/installer-menu
+
+if [ -f $BASE/os/default.conf ]; then
+  . $BASE/os/default.conf
+fi
+
+if setup_network eth0; then
+  setup_ssh 2222
+fi
+do_shell
+# reboot

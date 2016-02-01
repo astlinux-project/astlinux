@@ -1,0 +1,165 @@
+#!/bin/bash
+#
+# build-runnix-iso install_image.img.gz
+#
+
+REQUIRED_CMDS="which sudo genisoimage"
+
+CONFIG="runnix-iso.config"
+
+ROOTFS_EXT2_GZ="output/images/rootfs.ext2.gz"
+
+KERNEL="output/images/bzImage"
+
+SYSLINUX_VERSION="$(awk -F'=' '/^SYSLINUX_VERSION/ { print $2; exit }' boot/syslinux/syslinux.mk)"
+
+SYSLINUX_DIR="output/build/syslinux-${SYSLINUX_VERSION// /}"
+
+make_release_version()
+{
+  RUNBASE="1.0"
+  RUNREV="$(LANG=C svn info | awk -F': ' '/^Last Changed Rev:/ { print $2 }')"
+  RUNEXTRA=""
+
+  if [ "$(cat "project/runnix-iso/target_skeleton/etc/runnix-release")" = "svn" ]; then
+    RUNVER="runnix-iso-${RUNBASE}-${RUNREV}${RUNEXTRA}"
+  else
+    RUNVER="$(cat "project/runnix-iso/target_skeleton/etc/runnix-release")${RUNEXTRA}"
+  fi
+}
+
+make_release()
+{
+  echo "
+##
+## RUNNIX-ISO Release: Version = \"$RUNVER\"
+##
+"
+
+  RUNDIR="output/build/$RUNVER"
+
+  rm -rf ${RUNDIR}
+  mkdir ${RUNDIR}
+  cp -a project/runnix-iso/files/rootfs_vfat/* ${RUNDIR}/
+  find ${RUNDIR} -type d -name .svn | xargs rm -rf
+  cp -p ${SYSLINUX_DIR}/core/isolinux.bin ${RUNDIR}/isolinux/isolinux.bin
+  cp -p ${KERNEL} ${RUNDIR}/runnix
+  cp -p ${ROOTFS_EXT2_GZ} ${RUNDIR}/runnix.img
+
+  cp "$ISO_FILE" ${RUNDIR}/os/
+
+  rm -f ${ISO_NAME}
+
+  sudo genisoimage \
+    -o ${ISO_NAME} \
+    -b isolinux/isolinux.bin \
+    -c isolinux/boot.cat \
+    -V 'AstLinux ISO' \
+    -J -R \
+    -no-emul-boot \
+    -boot-load-size 4 \
+    -boot-info-table \
+    -input-charset utf-8 \
+    ${RUNDIR}
+}
+
+save_state()
+{
+  cp -p .config .config.runnix-iso.save
+  cp -p ${CONFIG} .config
+
+  if [ -d "output" ]; then
+    mv output output.runnix-iso.save
+  fi
+}
+
+restore_state()
+{
+  # This may be called multiple times on a interrupt
+  # Only restore once
+  if [ -f ".config.runnix-iso.save" ]; then
+
+    rm -rf output
+
+    if [ -d "output.runnix-iso.save" ]; then
+      mv output.runnix-iso.save output
+    fi
+
+    cp -p .config.runnix-iso.save .config
+    rm -f .config.runnix-iso.save
+  fi
+}
+
+umask 002
+
+PATH=/sbin:/usr/sbin:$PATH
+
+if [ -n "$1" ] && [ "${1}" != "${1%.img.gz}" ]; then
+  ISO_FILE="$1"
+  ISO_NAME="${ISO_FILE##*/}"
+  ISO_NAME="${ISO_NAME%.img.gz}.iso"
+else
+  echo "Usage: ./scripts/build-runnix-iso install_image.img.gz"
+  exit 1
+fi
+
+if [ ! -f "$ISO_FILE" ]; then
+  echo "build-runnix-iso: The $ISO_FILE file does not exist, exiting."  >&2
+  exit 1
+fi
+
+error=0
+for i in $REQUIRED_CMDS; do
+  if ! which $i >/dev/null 2>&1; then
+    error=1
+    echo "build-runnix-iso: Required command \"$i\" is missing in your build environment." >&2
+    if [ "$i" = "which" ]; then  # no use proceeding
+      break
+    fi
+  fi
+done
+if [ $error -ne 0 ]; then
+  echo "Missing Required Command(s)." >&2
+  exit 1
+fi
+
+if [ ! -f "$CONFIG" ]; then
+  echo "The $CONFIG file does not exist, exiting."  >&2
+  exit 1
+fi
+
+# Save and Restore state if AstLinux is currently in output/
+#
+save_restore=0
+if [ -f "output/target/etc/astlinux-release" ]; then
+  save_restore=1
+fi
+
+if [ $save_restore -eq 1 ]; then
+  save_state
+
+  trap 'restore_state; exit $?' INT TERM EXIT
+fi
+
+make oldconfig
+
+time make all
+
+if [ $? -eq 0 -a -f "$ROOTFS_EXT2_GZ" -a -f "$KERNEL" -a -d "$SYSLINUX_DIR" ]; then
+  make_release_version
+  make_release
+else
+  rm -f "$ROOTFS_EXT2_GZ"
+  echo "build: Incomplete build, no RUNNIX-ISO Release for you."
+fi
+
+if [ $save_restore -eq 1 ]; then
+  trap - INT TERM EXIT
+
+  restore_state
+
+  make oldconfig
+fi
+
+exit 0
+
