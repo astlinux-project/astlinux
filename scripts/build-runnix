@@ -1,13 +1,9 @@
 #!/bin/bash
 #
-# build-runnix [ uclibc ]
+# build-runnix
 #
 
-if [ "$1" = "uclibc" ]; then
-  CONFIG="runnix-uclibc.config"
-else
-  CONFIG="runnix.config"
-fi
+CONFIG="runnix.config"
 
 ROOTFS_EXT2_GZ="output/images/rootfs.ext2.gz"
 
