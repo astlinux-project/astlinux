@@ -113,6 +113,14 @@ install_disk()
 
 do_install()
 {
+  local boot_disk
+
+  if [ -f /tmp/boot_disk ]; then
+    boot_disk="$(cat /tmp/boot_disk)"
+  else
+    boot_disk=""
+  fi
+
   IMAGES="$(ls -1 $IMAGE_DIR/*.img.gz 2>/dev/null)"
 
   if [ -z "$IMAGES" ]; then
@@ -131,7 +139,7 @@ do_install()
     return 1
   fi
 
-  DISKS="$(fdisk -l 2>/dev/null | grep '^Disk */dev/sd[a-h]:')"
+  DISKS="$(fdisk -l 2>/dev/null | grep '^Disk */dev/sd[a-h]:' | grep -v "^Disk */dev/${boot_disk}:")"
 
   if [ -z "$DISKS" ]; then
     display_msg "No suitable disk found.\nExiting, no action performed."

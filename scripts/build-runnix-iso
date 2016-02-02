@@ -50,6 +50,7 @@ make_release()
 
   rm -f ${ISO_NAME}
 
+  echo "Generating ISO..."
   sudo genisoimage \
     -o ${ISO_NAME} \
     -b isolinux/isolinux.bin \
@@ -61,6 +62,13 @@ make_release()
     -boot-info-table \
     -input-charset utf-8 \
     ${RUNDIR}
+
+  if [ -x "${SYSLINUX_DIR}/utils/isohybrid" ]; then
+    echo "Blessing as Hybrid ISO..."
+    sudo "${SYSLINUX_DIR}/utils/isohybrid" "${ISO_NAME}"
+  else
+    echo "Error: No Hybrid ISO support."
+  fi
 }
 
 save_state()

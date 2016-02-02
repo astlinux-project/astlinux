@@ -6,7 +6,9 @@ BASE="/mnt/base"
 
 RUNVER="$(cat /etc/runnix-release)"
 
-DRIVES="sr0 sr1 sr2 sr3"
+CDROM_DRIVES="sr0 sr1 sr2 sr3"
+
+DRIVES="sda sdb sdc sdd sde sdf sdg sdh"
 
 setup_network () {
 
@@ -120,16 +122,31 @@ mkdir /tmp/etc
 
 CMDLINE="$(cat /proc/cmdline)"
 
-for x in $DRIVES; do
+DEVICE=""
+
+for x in $CDROM_DRIVES; do
   if mount -t iso9660 -o ro /dev/${x} $BASE 2>/dev/null; then
-    if [ -f $BASE/os/astflag ]; then
-      DEVICE=${x}
+    if [ -f $BASE/os/isoflag ]; then
+      DEVICE="${x}"
       break
     else
       umount /dev/${x}
     fi
   fi
 done
+
+if [ -z "$DEVICE" ]; then
+  for x in $DRIVES; do
+    if mount -t iso9660 -o ro /dev/${x}1 $BASE 2>/dev/null; then
+      if [ -f $BASE/os/isoflag ]; then
+        DEVICE="${x}"
+        break
+      else
+        umount /dev/${x}1
+      fi
+    fi
+  done
+fi
 
 hostname runnix
 
@@ -139,6 +156,8 @@ if [ -z "$DEVICE" ]; then
   do_shell
   # reboot
 fi
+
+echo "$DEVICE" >/tmp/boot_disk
 
 echo "Menu..."
 /sbin/installer-menu
