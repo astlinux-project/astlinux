@@ -159,6 +159,11 @@ fi
 
 echo "$DEVICE" >/tmp/boot_disk
 
+if [ -f $BASE/os/serialflag ]; then
+    export DIALOGOPTS="--ascii-lines"
+    export TERM="vt100"
+fi
+
 echo "Menu..."
 /sbin/installer-menu
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# build-runnix-iso install_image.img.gz
+# build-runnix-iso install_image.img.gz [serial]
 #
 
 REQUIRED_CMDS="which sudo genisoimage"
@@ -41,7 +41,11 @@ make_release()
   rm -rf ${RUNDIR}
   mkdir ${RUNDIR}
   cp -a project/runnix-iso/files/rootfs_vfat/* ${RUNDIR}/
-  find ${RUNDIR} -type d -name .svn | xargs rm -rf
+  find ${RUNDIR} -type d -name '.svn' | xargs rm -rf
+  if [ "$SERIAL" = "serial" ]; then
+    cp -p project/runnix-iso/files/configs/isolinux-serial.cfg ${RUNDIR}/isolinux/isolinux.cfg
+    touch ${RUNDIR}/os/serialflag
+  fi
   cp -p ${SYSLINUX_DIR}/core/isolinux.bin ${RUNDIR}/isolinux/isolinux.bin
   cp -p ${KERNEL} ${RUNDIR}/runnix
   cp -p ${ROOTFS_EXT2_GZ} ${RUNDIR}/runnix.img
@@ -107,8 +111,15 @@ if [ -n "$1" ] && [ "${1}" != "${1%.img.gz}" ]; then
   ISO_NAME="${ISO_FILE##*/}"
   ISO_NAME="${ISO_NAME%.img.gz}.iso"
 else
-  echo "Usage: ./scripts/build-runnix-iso install_image.img.gz"
+  echo "Usage: ./scripts/build-runnix-iso install_image.img.gz [serial]"
   exit 1
+fi
+
+if [ "$2" = "serial" ]; then
+  SERIAL="$2"
+  ISO_NAME="${ISO_NAME%.iso}-serial.iso"
+else
+  SERIAL=""
 fi
 
 if [ ! -f "$ISO_FILE" ]; then
