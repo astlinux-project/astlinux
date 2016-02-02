@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# build-runnix-iso install_image.img.gz [serial]
+# build-runnix-iso install_image.img.gz|install_image_dir [serial]
 #
 
 REQUIRED_CMDS="which sudo genisoimage"
@@ -50,11 +50,15 @@ make_release()
   cp -p ${KERNEL} ${RUNDIR}/runnix
   cp -p ${ROOTFS_EXT2_GZ} ${RUNDIR}/runnix.img
 
-  cp "$ISO_FILE" ${RUNDIR}/os/
+  if [ -n "$ISO_DIR" ]; then
+    cp "$ISO_DIR"/*.img.gz ${RUNDIR}/os/
+  elif [ -n "$ISO_FILE" ]; then
+    cp "$ISO_FILE" ${RUNDIR}/os/
+  fi
 
   rm -f ${ISO_NAME}
 
-  echo "Generating ISO..."
+  echo "Generating ISO '${ISO_NAME}' ..."
   sudo genisoimage \
     -o ${ISO_NAME} \
     -b isolinux/isolinux.bin \
@@ -106,24 +110,39 @@ umask 002
 
 PATH=/sbin:/usr/sbin:$PATH
 
-if [ -n "$1" ] && [ "${1}" != "${1%.img.gz}" ]; then
+ISO_DIR=""
+ISO_FILE=""
+
+if [ -n "$1" ] && [ -d "$1" ]; then
+  ISO_DIR="$1"
+  ISO_NAME="$(basename "$1").iso"
+elif [ -n "$1" ] && [ "${1}" != "${1%.img.gz}" ]; then
   ISO_FILE="$1"
   ISO_NAME="${ISO_FILE##*/}"
   ISO_NAME="${ISO_NAME%.img.gz}.iso"
 else
-  echo "Usage: ./scripts/build-runnix-iso install_image.img.gz [serial]"
+  echo "Usage: ./scripts/build-runnix-iso install_image.img.gz|install_image_dir [serial]"
   exit 1
 fi
 
 if [ "$2" = "serial" ]; then
   SERIAL="$2"
+  ISO_NAME="${ISO_NAME%-serial.iso}"
   ISO_NAME="${ISO_NAME%.iso}-serial.iso"
 else
   SERIAL=""
 fi
 
-if [ ! -f "$ISO_FILE" ]; then
+if [ -n "$ISO_FILE" ] && [ ! -f "$ISO_FILE" ]; then
   echo "build-runnix-iso: The $ISO_FILE file does not exist, exiting."  >&2
+  exit 1
+fi
+if [ -n "$ISO_DIR" ] && ! ls "$ISO_DIR"/*.img.gz >/dev/null 2>&1; then
+  echo "build-runnix-iso: The $ISO_DIR directory does not contain *.img.gz files, exiting."  >&2
+  exit 1
+fi
+if [ -z "$ISO_FILE" -a -z "$ISO_DIR" ]; then
+  echo "build-runnix-iso: Neither install_image.img.gz|install_image_dir is valid, exiting."  >&2
   exit 1
 fi
 
