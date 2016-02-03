@@ -75,9 +75,22 @@ select_disk()
     12 60 3 $(menu_disk)
 }
 
+validate_image_file()
+{
+  local image="$1"
+
+  cd "$(dirname "$image")"
+
+  if sha1sum -cs "${image}.sha1" 2>/dev/null; then
+    echo "true"
+  else
+    echo "false"
+  fi
+}
+
 install_disk()
 {
-  local disk="$1" image="$2"
+  local disk="$1" image="$2" valid
 
   if [ ! -e "$disk" ]; then
     display_msg "Disk '$disk' does not exist.\nExiting, no action performed."
@@ -89,7 +102,21 @@ install_disk()
     return 1
   fi
 
-  display_progress "Step 1 of 2: Erasing first 1 GB of '$disk'\nThis may take a long time..."
+  if [ ! -f "${image}.sha1" ]; then
+    display_msg "SHA1 '${image##*/}.sha1' does not exist.\nExiting, no action performed."
+    return 1
+  fi
+
+  display_progress "Step 1 of 3: Validating AstLinux Image..."
+  sleep 1
+
+  valid="$(validate_image_file "$image")"
+  if [ "$valid" != "true" ]; then
+    display_msg "Error validating AstLinux Image.\nExiting, no action performed."
+    return 1
+  fi
+
+  display_progress "Step 2 of 3: Erasing first 1 GB of '$disk'\nThis may take a long time..."
   sleep 1
 
   dd if=/dev/zero of=$disk bs=64k count=16000 >/dev/null 2>/dev/null
@@ -98,7 +125,7 @@ install_disk()
     return 1
   fi
 
-  display_progress "Step 2 of 2: Writing AstLinux Image to '$disk'\nThis may take a long time..."
+  display_progress "Step 3 of 3: Writing AstLinux Image to '$disk'\nThis may take a long time..."
   sleep 1
 
   zcat "$image" | dd of=$disk bs=64k >/dev/null 2>/dev/null

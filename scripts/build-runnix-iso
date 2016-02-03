@@ -3,7 +3,7 @@
 # build-runnix-iso install_image.img.gz|install_image_dir [serial]
 #
 
-REQUIRED_CMDS="which sudo genisoimage"
+REQUIRED_CMDS="which sudo genisoimage sha1sum"
 
 CONFIG="runnix-iso.config"
 
@@ -14,6 +14,20 @@ KERNEL="output/images/bzImage"
 SYSLINUX_VERSION="$(awk -F'=' '/^SYSLINUX_VERSION/ { print $2; exit }' boot/syslinux/syslinux.mk)"
 
 SYSLINUX_DIR="output/build/syslinux-${SYSLINUX_VERSION// /}"
+
+gen_image_sha1_files()
+{
+  local dir="$1" image images IFS
+  (
+    cd "$dir"
+    images="$(ls -1 *.img.gz 2>/dev/null)"
+
+    IFS=$'\n'
+    for image in $images; do
+      sha1sum "${image}" > "${image}.sha1"
+    done
+  )
+}
 
 make_release_version()
 {
@@ -55,6 +69,7 @@ make_release()
   elif [ -n "$ISO_FILE" ]; then
     cp "$ISO_FILE" ${RUNDIR}/os/
   fi
+  gen_image_sha1_files ${RUNDIR}/os
 
   rm -f ${ISO_NAME}
 
