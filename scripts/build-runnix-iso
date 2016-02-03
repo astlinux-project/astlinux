@@ -141,10 +141,6 @@ if [ -n "$ISO_DIR" ] && ! ls "$ISO_DIR"/*.img.gz >/dev/null 2>&1; then
   echo "build-runnix-iso: The $ISO_DIR directory does not contain *.img.gz files, exiting."  >&2
   exit 1
 fi
-if [ -z "$ISO_FILE" -a -z "$ISO_DIR" ]; then
-  echo "build-runnix-iso: Neither install_image.img.gz|install_image_dir is valid, exiting."  >&2
-  exit 1
-fi
 
 error=0
 for i in $REQUIRED_CMDS; do
