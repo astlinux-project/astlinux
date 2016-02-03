@@ -166,13 +166,16 @@ fi
 
 echo "Menu..."
 /sbin/installer-menu
+menu_rtn=$?
 
 if [ -f $BASE/os/default.conf ]; then
   . $BASE/os/default.conf
 fi
 
-if setup_network eth0; then
-  setup_ssh 2222
+if [ $menu_rtn -eq 8 ]; then
+  if setup_network eth0; then
+    setup_ssh 2222
+  fi
 fi
 do_shell
 # reboot

@@ -50,7 +50,7 @@ select_image()
     --backtitle "$BACKTITLE" \
     --title "[ AstLinux Install Image ]" \
     --menu "UP/DOWN arrow keys to select the AstLinux Install Image:" \
-    12 60 2 $(menu_image)
+    12 60 3 $(menu_image)
 }
 
 menu_disk()
@@ -72,7 +72,7 @@ select_disk()
     --backtitle "$BACKTITLE" \
     --title "[ Target Install Disk ]" \
     --menu "UP/DOWN arrow keys to select the target install disk:\nWarning: Selected disk will be overwritten !" \
-    12 60 2 $(menu_disk)
+    12 60 3 $(menu_disk)
 }
 
 install_disk()
@@ -212,12 +212,15 @@ select_main()
     --title "[ $BACKTITLE Menu ]" \
     --no-cancel \
     --menu "UP/DOWN arrow keys to select actions:" \
-    12 60 4 \
+    12 60 5 \
     Install "Install AstLinux to an existing drive" \
     Shutdown "Shutdown the install system" \
     Reboot "Reboot the install system" \
+    Network "Exit to shell with ssh server" \
     Shell "Exit to shell"
 }
+
+menu_rtn=0
 
 while true; do
   select_main 2>"$TMP_RESULT"
@@ -227,10 +230,12 @@ while true; do
     Install) do_install ;;
     Shutdown) do_shutdown ;;
     Reboot) do_reboot ;;
+    Network) menu_rtn=8 ; break ;;
     Shell) break ;;
   esac
 done
 
 rm -f "$TMP_RESULT"
 clear
+exit $menu_rtn
 
