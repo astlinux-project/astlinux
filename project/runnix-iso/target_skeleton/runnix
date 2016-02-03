@@ -148,6 +148,19 @@ if [ -z "$DEVICE" ]; then
   done
 fi
 
+if [ -z "$DEVICE" ]; then
+  for x in $DRIVES; do
+    if mount -t vfat -o ro /dev/${x}1 $BASE 2>/dev/null; then
+      if [ -f $BASE/os/isoflag ]; then
+        DEVICE="${x}"
+        break
+      else
+        umount /dev/${x}1
+      fi
+    fi
+  done
+fi
+
 hostname runnix
 
 # Loader not found
