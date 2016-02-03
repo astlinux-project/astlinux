@@ -61,8 +61,8 @@ make_release()
     touch ${RUNDIR}/os/serialflag
   fi
   cp -p ${SYSLINUX_DIR}/core/isolinux.bin ${RUNDIR}/isolinux/isolinux.bin
-  cp -p ${KERNEL} ${RUNDIR}/runnix
-  cp -p ${ROOTFS_EXT2_GZ} ${RUNDIR}/runnix.img
+  cp -p ${KERNEL} ${RUNDIR}/runnix/runnix
+  cp -p ${ROOTFS_EXT2_GZ} ${RUNDIR}/runnix/runnix.img
 
   if [ -n "$ISO_DIR" ]; then
     cp "$ISO_DIR"/*.img.gz ${RUNDIR}/os/
@@ -71,11 +71,13 @@ make_release()
   fi
   gen_image_sha1_files ${RUNDIR}/os
 
-  rm -f ${ISO_NAME}
+  cp -p docs/ChangeLog.txt "${RUNDIR}/${ISO_NAME%.iso}.txt"
+
+  rm -f "${ISO_NAME}"
 
   echo "Generating ISO '${ISO_NAME}' ..."
   sudo genisoimage \
-    -o ${ISO_NAME} \
+    -o "${ISO_NAME}" \
     -b isolinux/isolinux.bin \
     -c isolinux/boot.cat \
     -V 'AstLinux ISO' \
