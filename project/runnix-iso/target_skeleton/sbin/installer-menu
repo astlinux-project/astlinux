@@ -32,14 +32,14 @@ display_progress()
 
 menu_image()
 {
-  local label text image IFS
+  local label num=0 image IFS
 
   IFS=$NL
   for image in $IMAGES; do
     image="${image##*/}"
     label="${image%.img.gz}"
-    text='.img.gz'
-    echo "$label $text"
+    num=$((num+1))
+    echo "$label [$num]"
   done
 }
 
