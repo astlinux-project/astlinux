@@ -41,7 +41,7 @@ build_board()
 
   mv "${ASTVER}.tar.gz" "$output_path/$firmware/$board/${ASTVER}.tar.gz"
   mv "${ASTVER}.tar.gz.sha1" "$output_path/$firmware/$board/${ASTVER}.tar.gz.sha1"
-  mv "${ASTVER}.img.gz" "$output_path/$img/$board/${ASTVER}-${ASTERISK_VERSION}.img.gz"
+  mv "${ASTVER}.img.gz" "$output_path/$img/$board/${board}-${ASTVER#astlinux-}-${ASTERISK_VERSION}.img.gz"
 
   rm -rf "${ASTVER}"
 }
