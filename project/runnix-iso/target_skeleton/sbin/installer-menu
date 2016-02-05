@@ -121,8 +121,16 @@ install_disk()
 
   dd if=/dev/zero of=$disk bs=64k count=16000 >/dev/null 2>/dev/null
   if [ $? -ne 0 ]; then
-    display_msg "Error zero'ing first 1 GB.\nInstall failed !"
-    return 1
+    dialog \
+      --clear \
+      --backtitle "$BACKTITLE" \
+      --title "[ Error Erasing ]" \
+      --yesno "Error zero'ing first 1 GB.\nContinue anyway ?" 6 60
+  
+    if [ $? -ne 0 ]; then
+      display_msg "Error zero'ing first 1 GB.\nInstall failed !"
+      return 1
+    fi
   fi
 
   display_progress "Step 3 of 3: Writing AstLinux Image to '$disk'\nThis may take a long time..."
