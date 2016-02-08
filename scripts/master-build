@@ -9,6 +9,8 @@ force="$2"
 
 FAT_SIZE=256
 
+REQUIRED_CMDS="which sudo genisoimage sha1sum"
+
 BOARDS_SMP64="genx86_64 genx86_64-serial"
 
 BOARDS_SMP="geni586 geni586-serial"
@@ -19,10 +21,7 @@ RUNFS_DIR="output/build/runfs"
 
 build_board()
 {
-  local firmware="$1" img="$2"
-
-  mkdir "$output_path/$firmware/$board"
-  mkdir "$output_path/$img/$board"
+  local firmware="$1"
 
   ./scripts/build $board
 
@@ -39,9 +38,12 @@ build_board()
 
   ./scripts/astlinux-makeimage -z $FAT_SIZE $FAT_SIZE 0
 
+  mkdir "$output_path/$firmware/$board"
+  mkdir -p "$output_path/img/${ASTVER}-${board}"
+
   mv "${ASTVER}.tar.gz" "$output_path/$firmware/$board/${ASTVER}.tar.gz"
   mv "${ASTVER}.tar.gz.sha1" "$output_path/$firmware/$board/${ASTVER}.tar.gz.sha1"
-  mv "${ASTVER}.img.gz" "$output_path/$img/$board/${board}-${ASTVER#astlinux-}-${ASTERISK_VERSION}.img.gz"
+  mv "${ASTVER}.img.gz" "$output_path/img/${ASTVER}-${board}/${board}-${ASTVER#astlinux-}-${ASTERISK_VERSION}.img.gz"
 
   rm -rf "${ASTVER}"
 }
@@ -59,21 +61,18 @@ set_asterisk_version()
       ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *1.8/) {print $2; exit} }' package/asterisk/asterisk.mk)"
       ASTERISK_VERSION="asterisk-${ASTERISK_VERSION// /}"
       FIRMWARE="ast18-firmware-1.x"
-      IMG="ast18-img"
       ;;
     ast11)
       CONFIG="astlinux-ast11.config"
       ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *11./) {print $2; exit} }' package/asterisk/asterisk.mk)"
       ASTERISK_VERSION="asterisk-${ASTERISK_VERSION// /}"
       FIRMWARE="ast11-firmware-1.x"
-      IMG="ast11-img"
       ;;
     ast13)
       CONFIG="astlinux-ast13.config"
       ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *13./) {print $2; exit} }' package/asterisk/asterisk.mk)"
       ASTERISK_VERSION="asterisk-${ASTERISK_VERSION// /}"
       FIRMWARE="ast13-firmware-1.x"
-      IMG="ast13-img"
       ;;
     *)
       echo "master-build: Unknown Asterisk Version."
@@ -103,6 +102,28 @@ else
   fi
 fi
 
+if ! mkdir "$output_path/img"; then
+  exit 1
+fi
+if ! mkdir "$output_path/iso"; then
+  exit 1
+fi
+
+error=0
+for i in $REQUIRED_CMDS; do
+  if ! which $i >/dev/null 2>&1; then
+    error=1
+    echo "master-build: Required command \"$i\" is missing in your build environment." >&2
+    if [ "$i" = "which" ]; then  # no use proceeding
+      break
+    fi
+  fi
+done
+if [ $error -ne 0 ]; then
+  echo "Missing Required Command(s)." >&2
+  exit 1
+fi
+
 echo "
 Trying sudo, if this prompts for a password, ^C and 'sudoedit /etc/sudoers' and add a line at the end
 something like:
@@ -128,9 +149,6 @@ for asterisk in ast18 ast11 ast13; do
   if ! mkdir "$output_path/$FIRMWARE"; then
     exit 1
   fi
-  if ! mkdir "$output_path/$IMG"; then
-    exit 1
-  fi
 
   # Non-SMP Builds
   echo "Cleaning out any existing builds..."
@@ -139,7 +157,7 @@ for asterisk in ast18 ast11 ast13; do
   cp "$CONFIG" .config
 
   for board in $BOARDS_NO_SMP; do
-    build_board "$FIRMWARE" "$IMG"
+    build_board "$FIRMWARE"
   done
 
   # SMP Builds
@@ -150,7 +168,7 @@ for asterisk in ast18 ast11 ast13; do
   set_smp_kernel
 
   for board in $BOARDS_SMP; do
-    build_board "$FIRMWARE" "$IMG"
+    build_board "$FIRMWARE"
   done
 
   # SMP64 Builds
@@ -160,8 +178,30 @@ for asterisk in ast18 ast11 ast13; do
   cp "x86_64-configs/$CONFIG" .config
 
   for board in $BOARDS_SMP64; do
-    build_board "$FIRMWARE" "$IMG"
+    build_board "$FIRMWARE"
   done
+done
+
+# AstLinux ISO Installer
+echo "Cleaning out any existing builds..."
+rm -rf output
+
+cp runnix-iso.config .config
+
+for board in $BOARDS_NO_SMP $BOARDS_SMP $BOARDS_SMP64; do
+  if [ "${board}" != "${board%-serial}" -o "$board" = "alix" -o "$board" = "net5501" ]; then
+    SERIAL="serial"
+  else
+    SERIAL=""
+  fi
+  ./scripts/build-runnix-iso "$output_path/img/${ASTVER}-${board}" $SERIAL
+  if [ $? -ne 0 ]; then
+    exit 1
+  fi
+  if [ ! -f "${ASTVER}-${board}.iso" ]; then
+    exit 1
+  fi
+  mv "${ASTVER}-${board}.iso" "$output_path/iso/"
 done
 
 echo "

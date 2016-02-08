@@ -55,15 +55,22 @@ upload_flash_images()
 {
   local local_dir="$1" firmware_path="$2"
 
-  for board in $(ls -1 "$local_dir"); do
-    echo "Flash Image for Board: $board"
-    file="$(ls -1 "$local_dir/$board/"*.img.gz | head -n1)"
-    if [ -n "$file" ]; then
-      upload_file "$firmware_path/$board" "$file" count
-    else
-      echo "master-upload: missing file(s) in \"$local_dir/$board/\""
-      exit 1
-    fi
+  for astver_board in $(ls -1 "$local_dir"); do
+    for file in $(ls -1 "$local_dir/$astver_board/"*.img.gz); do
+      echo "Flash Image: ${file##*/}"
+      upload_file "$firmware_path/$astver_board" "$file" count
+      echo ""
+    done
+  done
+}
+
+upload_iso_images()
+{
+  local local_dir="$1" firmware_path="$2"
+
+  for file in $(ls -1 "$local_dir/"*.iso); do
+    echo "ISO Image: ${file##*/}"
+    upload_file "$firmware_path" "$file" count
     echo ""
   done
 }
@@ -73,21 +80,15 @@ set_asterisk_version()
   case $1 in
     ast18)
       FIRMWARE="ast18-firmware-1.x"
-      IMG="ast18-img"
       MIRROR_FIRMWARE="$FIRMWARE"
-      MIRROR_IMG="downloads/img"
       ;;
     ast11)
       FIRMWARE="ast11-firmware-1.x"
-      IMG="ast11-img"
       MIRROR_FIRMWARE="$FIRMWARE"
-      MIRROR_IMG="downloads/img"
       ;;
     ast13)
       FIRMWARE="ast13-firmware-1.x"
-      IMG="ast13-img"
       MIRROR_FIRMWARE="$FIRMWARE"
-      MIRROR_IMG="downloads/img"
       ;;
     *)
       echo "master-upload: Unknown Asterisk Version."
@@ -105,16 +106,18 @@ if [ ! -d "$input_path" ]; then
   echo "master-upload: directory \"$input_path\" not found."
   exit 1
 else
+  check_iso=0
   check_img=0
   check_firmware=0
   for dir in $(ls -1 "$input_path"); do
     case $dir in
-      *img) check_img=1 ;;
+      iso) check_iso=1 ;;
+      img) check_img=1 ;;
       *firmware-1.x) check_firmware=1 ;;
     esac
   done
-  if [ $check_img -eq 0 -o $check_firmware -eq 0 ]; then
-    echo "master-upload: missing img/firmware-1.x directories."
+  if [ $check_iso -eq 0 -o $check_img -eq 0 -o $check_firmware -eq 0 ]; then
+    echo "master-upload: missing iso/img/firmware-1.x directories."
     exit 1
   fi
 fi
@@ -124,9 +127,6 @@ if [ ! -f "$auth_file" ]; then
   exit 1
 fi
 
-#
-# Upload Asterisk 1.8, 11 and 13 versions of AstLinux
-#
 
 for asterisk in ast18 ast11 ast13; do
 
@@ -135,10 +135,14 @@ for asterisk in ast18 ast11 ast13; do
   # Upload .tar.gz run images
   upload_run_images "$input_path/$FIRMWARE" "$MIRROR_FIRMWARE"
 
-  # Upload .img.gz flash images
-  upload_flash_images "$input_path/$IMG" "$MIRROR_IMG"
-
 done
+
+# Upload .img.gz flash images
+upload_flash_images "$input_path/img" "downloads/img"
+
+# Upload .iso installer images
+upload_iso_images "$input_path/iso" "downloads/iso"
+
 
 echo "
 ##
