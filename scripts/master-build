@@ -189,8 +189,11 @@ rm -rf output
 cp runnix-iso.config .config
 
 for board in $BOARDS_NO_SMP $BOARDS_SMP $BOARDS_SMP64; do
+  ISO_NAME="${ASTVER}-${board}.iso"
   if [ "${board}" != "${board%-serial}" -o "$board" = "alix" -o "$board" = "net5501" ]; then
     SERIAL="serial"
+    ISO_NAME="${ISO_NAME%-serial.iso}"
+    ISO_NAME="${ISO_NAME%.iso}-serial.iso"
   else
     SERIAL=""
   fi
@@ -198,10 +201,10 @@ for board in $BOARDS_NO_SMP $BOARDS_SMP $BOARDS_SMP64; do
   if [ $? -ne 0 ]; then
     exit 1
   fi
-  if [ ! -f "${ASTVER}-${board}.iso" ]; then
+  if [ ! -f "$ISO_NAME" ]; then
     exit 1
   fi
-  mv "${ASTVER}-${board}.iso" "$output_path/iso/"
+  mv "$ISO_NAME" "$output_path/iso/"
 done
 
 echo "
