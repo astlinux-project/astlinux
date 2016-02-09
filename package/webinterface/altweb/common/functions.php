@@ -105,7 +105,7 @@ function statusPROCESS($process) {
   if ($process === 'asterisk' || $process === 'prosody' || $process === 'slapd' || $process === 'kamailio') {
     $path .= $process.'/';
   } elseif ($process === 'dynamicdns') {
-    if (is_file($path.'ddclient.pid') || is_file($path.'inadyn.pid')) {
+    if (is_file($path.'ddclient.pid')) {
       $str = $running;
     } else {
       $str = $stopped;

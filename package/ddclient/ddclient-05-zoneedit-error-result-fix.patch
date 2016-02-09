@@ -1,0 +1,11 @@
+--- ddclient-3.8.3/ddclient.orig	2014-05-09 18:07:36.000000000 -0500
++++ ddclient-3.8.3/ddclient	2014-05-09 18:04:23.000000000 -0500
+@@ -3072,7 +3072,7 @@
+ 		    $status_text = $var{'TEXT'} if exists $var{'TEXT'};
+ 		    $status_ip   = $var{'IP'}   if exists $var{'IP'};
+ 
+-		    if ($status eq 'SUCCESS' || ($status eq 'ERROR' && $var{'CODE'} eq '707')) {
++		    if ($status eq 'SUCCESS' || ($status eq 'ERROR' && ($var{'CODE'} eq '707' || $var{'CODE'} eq '702'))) {
+ 			$config{$h}{'ip'}     = $status_ip;
+ 			$config{$h}{'mtime'}  = $now;
+ 	    		$config{$h}{'status'} = 'good';

@@ -82,11 +82,16 @@ $select_dhcpv6_prefix_len = array (
 
 $select_dyndns = array (
   'User Defined&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;' => '',
+  'ChangeIP' => 'changeip',
   'DNS-O-Matic' => 'default@dnsomatic.com',
+  'DNS Park' => 'dnspark',
+  'DtDNS' => 'dtdns',
   'DynDNS' => 'dyndns@dyndns.org',
   'DynDNS [custom]' => 'custom@dyndns.org',
   'DynDNS [static]' => 'statdns@dyndns.org',
+  'EasyDNS' => 'easydns',
   'FreeDNS' => 'default@freedns.afraid.org',
+  'NameCheap' => 'namecheap',
   'No-IP' => 'default@no-ip.com',
   'nsupdate.info' => 'default@nsupdate.info',
   'pairNIC' => 'default@pairnic.com',
@@ -1951,15 +1956,13 @@ require_once '../common/header.php';
   putHtml('<strong>Dynamic DNS Update:</strong>');
   if (($dd_client = getVARdef($db, 'DDCLIENT', $cur_db)) === '') {
     if (getVARdef($db, 'DDUSER', $cur_db) !== '' && getVARdef($db, 'DDPASS', $cur_db) !== '') {
-      $dd_client = 'inadyn';
+      $dd_client = 'ddclient';
     }
   }
   putHtml('<select name="dd_client">');
   putHtml('<option value="none">disabled</option>');
-  $sel = ($dd_client === 'inadyn') ? ' selected="selected"' : '';
-  putHtml('<option value="inadyn"'.$sel.'>inadyn</option>');
-  $sel = ($dd_client === 'ddclient') ? ' selected="selected"' : '';
-  putHtml('<option value="ddclient"'.$sel.'>ddclient</option>');
+  $sel = ($dd_client === 'ddclient' || $dd_client === 'inadyn') ? ' selected="selected"' : '';
+  putHtml('<option value="ddclient"'.$sel.'>enabled</option>');
   putHtml('</select>');
   putHtml('</td></tr>');
   

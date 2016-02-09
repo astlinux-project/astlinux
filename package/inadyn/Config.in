@@ -1,4 +1,5 @@
 config BR2_PACKAGE_INADYN
+	depends on !BR2_PACKAGE_DDCLIENT
 	bool "inadyn"
 	default n
 	help
