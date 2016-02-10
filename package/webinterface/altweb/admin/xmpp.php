@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2013 Lonnie Abelbeck
+// Copyright (C) 2013-2016 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -8,6 +8,7 @@
 
 // xmpp.php for AstLinux
 // 11-01-2013
+// 02-10-2016, Added Staff support
 //
 // System location of /mnt/kd/rc.conf.d directory
 $XMPPCONFDIR = '/mnt/kd/rc.conf.d';
@@ -77,7 +78,13 @@ function xmppGETclients($vars) {
 // Function: saveXMPPsettings
 //
 function saveXMPPsettings($conf_dir, $conf_file) {
+  global $global_admin;
   $result = 11;
+
+  // Don't save settings if 'staff' user.
+  if (! $global_admin) {
+    return($result);
+  }
 
   if (! is_dir($conf_dir)) {
     return(3);
@@ -235,7 +242,7 @@ $db = xmppGETclients($vars);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
-  if (! $global_admin) {
+  if (! ($global_admin || $global_staff_enable_xmpp)) {
     $result = 999;                                 
   } elseif (isset($_POST['submit_save'])) {
     $ok = 0;
@@ -299,7 +306,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   header('Location: '.$myself.'?result='.$result);
   exit;
 } else { // Start of HTTP GET
-$ACCESS_RIGHTS = 'admin';
+$ACCESS_RIGHTS = $global_staff_enable_xmpp ? 'staff' : 'admin';
 require_once '../common/header.php';
 
   putHtml('<center>');
@@ -314,7 +321,7 @@ require_once '../common/header.php';
     } elseif ($result == 10) {
       putHtml('<p style="color: green;">XMPP Server'.statusPROCESS('prosody').'.</p>');
     } elseif ($result == 11) {
-      putHtml('<p style="color: green;">Settings saved, click "Restart Server" to apply any changed settings.</p>');
+      putHtml('<p style="color: green;">Settings saved'.($global_admin ? ', click "Restart Server" to apply any changed settings.' : '.').'</p>');
     } elseif ($result == 12) {
       putHtml('<p style="color: red;">Missing Password, User not added or changed.</p>');
     } elseif ($result == 13) {
@@ -363,6 +370,7 @@ require_once '../common/header.php';
   putHtml('<table width="100%" class="stdtable">');
   putHtml('<tr class="dtrow0"><td width="180">&nbsp;</td><td>&nbsp;</td></tr>');
 
+if ($global_admin) {
 if (! is_file('/mnt/kd/ssl/sip-tls/keys/server.crt') || ! is_file('/mnt/kd/ssl/sip-tls/keys/server.key')) {
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
   putHtml('<strong>Missing SIP-TLS Server Certificate:</strong> <i>(Shared with XMPP)</i>');
@@ -535,6 +543,7 @@ if ($value === '') {
   }
   putHtml('</select>');
   putHtml('</td></tr>');
+} // if global_admin
 
 if (is_file('/mnt/kd/prosody/prosody.cfg.lua')) {
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');

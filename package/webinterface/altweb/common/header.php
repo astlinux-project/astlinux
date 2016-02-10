@@ -250,6 +250,12 @@ header('Content-Type: text/html; charset=utf-8');
       if ($global_staff && (getPREFdef($global_prefs, 'tab_netstat_show') === 'yes')) {
         putHtml('<li><a href="/admin/netstat.php"><span>NetStat</span></a></li>');
       }
+      if ($global_staff_enable_dnshosts) {
+        putHtml('<li><a href="/admin/dnshosts.php"><span>DNS Hosts</span></a></li>');
+      }
+      if ($global_staff_enable_xmpp) {
+        putHtml('<li><a href="/admin/xmpp.php"><span>XMPP Users</span></a></li>');
+      }
       if (! is_null($custom_tabs = getCUSTOMtabs($global_prefs))) {
         foreach ($custom_tabs as $tab) {
           if ($tab['access'] === 'all' || ($global_staff && $tab['access'] === 'staff')

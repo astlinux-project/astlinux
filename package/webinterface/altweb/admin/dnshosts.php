@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2013 Lonnie Abelbeck
+// Copyright (C) 2008-2016 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -10,6 +10,7 @@
 // 01-05-2009
 // 12-10-2010, Added IPv6 support
 // 07-22-2013, Reorganize to force unique IP's
+// 02-10-2016, Added Staff support
 //
 // System location of /mnt/kd/rc.conf.d directory
 $DNSHOSTSCONFDIR = '/mnt/kd/rc.conf.d';
@@ -122,7 +123,7 @@ $db = parseDNSHOSTSconf($vars);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
-  if (! $global_admin) {
+  if (! ($global_admin || $global_staff_enable_dnshosts)) {
     $result = 999;                                 
   } elseif (isset($_POST['submit_save'])) {
     $n = count($db['data']);
@@ -161,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   header('Location: '.$myself.'?result='.$result);
   exit;
 } else { // Start of HTTP GET
-$ACCESS_RIGHTS = 'admin';
+$ACCESS_RIGHTS = $global_staff_enable_dnshosts ? 'staff' : 'admin';
 require_once '../common/header.php';
 
   putHtml("<center>");

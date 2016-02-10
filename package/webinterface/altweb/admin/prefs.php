@@ -493,6 +493,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'tab_network_show = no';
       fwrite($fp, $value."\n");
     }
+    if (! isset($_POST['dnshosts_disable_staff'])) {
+      $value = 'tab_dnshosts_disable_staff = no';
+      fwrite($fp, $value."\n");
+    }
+    if (! isset($_POST['xmpp_disable_staff'])) {
+      $value = 'tab_xmpp_disable_staff = no';
+      fwrite($fp, $value."\n");
+    }
     if (! isset($_POST['tab_edit'])) {
       $value = 'tab_edit_show = no';
       fwrite($fp, $value."\n");
@@ -1204,6 +1212,13 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_network_show') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="tab_network" name="tab_network"'.$sel.' /></td><td colspan="5">Show Network Tab</td></tr>');
+  putHtml('<tr class="dtrow1"><td>&nbsp;</td><td colspan="5">');
+  $sel = (getPREFdef($global_prefs, 'tab_dnshosts_disable_staff') !== 'no') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="dnshosts_disable_staff" name="dnshosts_disable_staff"'.$sel.' />&nbsp;Disable DNS Hosts Tab for &quot;staff&quot; user</td></tr>');
+  putHtml('<tr class="dtrow1"><td>&nbsp;</td><td colspan="5">');
+  $sel = (getPREFdef($global_prefs, 'tab_xmpp_disable_staff') !== 'no') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="xmpp_disable_staff" name="xmpp_disable_staff"'.$sel.' />&nbsp;Disable XMPP Users Tab for &quot;staff&quot; user</td></tr>');
+  
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_edit_show') !== 'no') ? ' checked="checked"' : '';
