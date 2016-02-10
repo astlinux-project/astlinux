@@ -30,6 +30,11 @@ Released **TBD**
 
 -- Network tab, remove 'inadyn' dynamic DNS client support, add a few more "DNS Service Type" entries.
 
+-- Prefs tab, new options under "Show Network Tab", checked by default:
+   _x_ Disable DNS Hosts Tab for "staff" user
+   _x_ Disable XMPP Users Tab for "staff" user
+   When unchecked, new tabs are presented for "staff" users.
+
 
 Additions for AstLinux 1.2.5:
 =============================
