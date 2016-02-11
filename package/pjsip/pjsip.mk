@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PJSIP_VERSION = 2.4
+PJSIP_VERSION = 2.4.5
 PJSIP_SOURCE = pjproject-$(PJSIP_VERSION).tar.bz2
 PJSIP_SITE = http://www.pjsip.org/release/$(PJSIP_VERSION)
 PJSIP_INSTALL_STAGING = YES
