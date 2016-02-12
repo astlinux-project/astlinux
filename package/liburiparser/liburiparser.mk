@@ -4,10 +4,13 @@
 #
 ################################################################################
 
-LIBURIPARSER_VERSION = 0.8.1
+LIBURIPARSER_VERSION = 0.8.4
 LIBURIPARSER_SOURCE = uriparser-$(LIBURIPARSER_VERSION).tar.bz2
-LIBURIPARSER_SITE = http://sourceforge.net/projects/uriparser/files/Sources/$(LIBURIPARSER_VERSION)
+LIBURIPARSER_SITE = http://downloads.sourceforge.net/project/uriparser/Sources/$(LIBURIPARSER_VERSION)
 LIBURIPARSER_INSTALL_STAGING = YES
+
+# Cleanup build-aux/missing error
+LIBURIPARSER_AUTORECONF = YES
 
 LIBURIPARSER_CONF_OPT = \
 		--disable-test \
