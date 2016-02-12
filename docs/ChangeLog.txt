@@ -12,19 +12,35 @@ Released **TBD**
 
 ** System
 
--- no change
+-- php, version bump to 5.5.32, bug and security fixes
+
+-- Monit, version bump to 5.16
+
+-- libsrtp, version bump to 1.5.4
+
+-- liburiparser, version bump to 0.8.4
+
+-- Time Zone Database update, tzdata2016a and php-timezonedb-2016.1
 
 ** Networking
 
--- ddclient, now the only dynamic DNS client support, remove 'inadyn' dynamic DNS client support
+-- libcurl (curl) version bump to 7.47.1
+
+-- openldap, version bump to 2.4.44
+
+-- dnscrypt-proxy, version bump to 1.6.1
+
+-- ddclient, now the only dynamic DNS client support, remove 'inadyn' support
 
 ** Asterisk
 
--- Asterisk 1.8.32.3 (no change), 11.19.0 (no change) and 13.5.0 (no change)
+-- Asterisk 1.8.32.3 (security patches), 11.21.2 (version bump) and 13.7.2 (version bump)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
--- pjsip 2.4 (no change)
+-- pjsip 2.4.5 (version bump)
+
+-- wanpipe, version bump to 7.0.16
 
 ** Web Interface
 
