@@ -1,0 +1,13 @@
+config BR2_PACKAGE_ARP_SCAN
+	bool "arp-scan"
+	default n
+	select BR2_PACKAGE_LIBPCAP
+	# mac2vendor is only a runtime dependency
+	select BR2_PACKAGE_MAC2VENDOR
+	help
+	  The ARP scanner
+
+	  https://github.com/royhills/arp-scan/
+
+	  http://linux.die.net/man/1/arp-scan
+
