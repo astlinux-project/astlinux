@@ -9,6 +9,9 @@ ARP_SCAN_SITE = https://github.com/royhills/arp-scan/releases/download/$(ARP_SCA
 
 ARP_SCAN_DEPENDENCIES = libpcap
 
+# Only used and needed for 32-bit targets
+ARP_SCAN_CONF_ENV = pgac_cv_snprintf_long_long_int_format="%lld"
+
 define ARP_SCAN_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/arp-scan $(TARGET_DIR)/usr/bin/arp-scan
 endef
