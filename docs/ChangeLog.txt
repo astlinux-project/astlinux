@@ -32,6 +32,8 @@ Released **TBD**
 
 -- ddclient, now the only dynamic DNS client support, remove 'inadyn' support
 
+-- arp-scan, new command for ethernet device discovery.
+
 ** Asterisk
 
 -- Asterisk 1.8.32.3 (security patches), 11.21.2 (version bump) and 13.7.2 (version bump)
