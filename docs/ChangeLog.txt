@@ -30,7 +30,7 @@ Released **TBD**
 
 -- dnscrypt-proxy, version bump to 1.6.1
 
--- ddclient, now the only dynamic DNS client support, remove 'inadyn' support
+-- ddclient, now the only dynamic DNS client support, enable SSL updates in configs, remove 'inadyn' support.
 
 -- arp-scan, new command for ethernet device discovery.
 
