@@ -1,5 +1,5 @@
 diff --git a/main/udptl.c b/main/udptl.c
-index 8885d7a..136dcb6 100644
+index a8244e8..6960487 100644
 --- a/main/udptl.c
 +++ b/main/udptl.c
 @@ -231,16 +231,15 @@ static int decode_open_type(uint8_t *buf, unsigned int limit, unsigned int *len,

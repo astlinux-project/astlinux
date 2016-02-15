@@ -84,7 +84,7 @@ index 9bebbe7..4bfa985 100644
  				continue;
  			}
 diff --git a/main/tcptls.c b/main/tcptls.c
-index 6f918ce..0f27e45 100644
+index a5a2af6..f73c2aa 100644
 --- a/main/tcptls.c
 +++ b/main/tcptls.c
 @@ -749,6 +749,7 @@ static int __ssl_setup(struct ast_tls_config *cfg, int client)
