@@ -4,14 +4,15 @@
 #
 #############################################################
 
-MINIUPNPD_VERSION = 1.9.20160113
+MINIUPNPD_VERSION = 1.9.20160216
 MINIUPNPD_SOURCE = miniupnpd-$(MINIUPNPD_VERSION).tar.gz
 MINIUPNPD_SITE = http://miniupnp.free.fr/files
-MINIUPNPD_DEPENDENCIES = host-pkg-config linux iptables
+MINIUPNPD_DEPENDENCIES = host-pkg-config linux iptables openssl util-linux
 
 define MINIUPNPD_IPTABLES_PATH_FIX
 	$(SED) 's:/sbin/iptables:/usr/sbin/iptables:g' \
 	    -e 's:/sbin/ip6tables:/usr/sbin/ip6tables:g' $(@D)/netfilter/ip*.sh
+	$(SED) 's:#define ENABLE_PORT_TRIGGERING:/*&*/:' $(@D)/genconfig.sh
 endef
 
 MINIUPNPD_POST_PATCH_HOOKS += MINIUPNPD_IPTABLES_PATH_FIX
