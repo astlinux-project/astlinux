@@ -3,7 +3,7 @@
 ## http://crosstool-ng.org
 ##
 ## Building the eglibc toolchain for AstLinux 1.x using Buildroot
-## The resulting toolchain is output to $HOME/astlinux/x-tools-1.20.0-3.2
+## The resulting toolchain is output to $HOME/astlinux/x-tools-1.20.0-3.2p1
 ## Make sure you have a $HOME/astlinux/ directory.
 ##
 ## Note: If "crosstool-ng-1.20.0" is already installed, jump to "## Build i586 32-bit toolchain ##"

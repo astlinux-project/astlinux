@@ -1,0 +1,19 @@
+2014-12-16  Florian Weimer  <fweimer@redhat.com>
+
+	[BZ #17630]
+	* resolv/nss_dns/dns-network.c (getanswer_r): Iterate over alias
+	names.
+
+--- a/resolv/nss_dns/dns-network.c
++++ b/resolv/nss_dns/dns-network.c
+@@ -398,8 +398,8 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
+ 
+ 	case BYNAME:
+ 	  {
+-	    char **ap = result->n_aliases++;
+-	    while (*ap != NULL)
++	    char **ap;
++	    for (ap = result->n_aliases; *ap != NULL; ++ap)
+ 	      {
+ 		/* Check each alias name for being of the forms:
+ 		   4.3.2.1.in-addr.arpa		= net 1.2.3.4
