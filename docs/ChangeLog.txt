@@ -12,6 +12,8 @@ Released **TBD**
 
 ** System
 
+-- eglibc 2.18 (patched), security fixes: CVE-2015-7547, CVE-2015-1472, CVE-2014-9402, CVE-2015-1781, CVE-2014-8121
+
 -- php, version bump to 5.5.32, bug and security fixes
 
 -- Monit, version bump to 5.16
