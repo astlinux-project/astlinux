@@ -22,6 +22,8 @@ Released **TBD**
 
 -- liburiparser, version bump to 0.8.4
 
+-- nano, version bump to 2.5.2
+
 -- Time Zone Database update, tzdata2016a and php-timezonedb-2016.1
 
 ** Networking
@@ -47,6 +49,8 @@ Released **TBD**
 -- pjsip 2.4.5 (version bump)
 
 -- wanpipe, version bump to 7.0.16
+
+-- bfdetect, version bump, CLI command that detects beroNet devices
 
 ** Web Interface
 
