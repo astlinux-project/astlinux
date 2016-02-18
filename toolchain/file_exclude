@@ -2,6 +2,6 @@ pci.ids.bz2
 nProbe-4.9.4.tar.gz
 dialog.tar.gz
 oui.txt
-bfdetect.tar.gz
+bfdetect_src.tar.gz
 fop2-2.27-debian-i386.tgz
 memtest86+-4.20.tar.gz

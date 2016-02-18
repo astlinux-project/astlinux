@@ -5,7 +5,5 @@ config BR2_PACKAGE_BFDETECT
 	help
 	  Simple app that detects a Beronet Berofix card
 
-	  See:
-	    http://www.beronet.com/content/view/95/28/lang,en/
-	    http://www.beronet.com/download/berofix/
+	  http://wiki.beronet.com/index.php/Download
 
