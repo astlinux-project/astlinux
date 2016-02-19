@@ -16,6 +16,8 @@ Released **TBD**
 
 -- php, version bump to 5.5.32, bug and security fixes
 
+-- htop, new command is an interactive process viewer, aka a better 'top'
+
 -- Monit, version bump to 5.16
 
 -- libsrtp, version bump to 1.5.4
