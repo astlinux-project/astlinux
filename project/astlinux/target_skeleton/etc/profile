@@ -43,6 +43,11 @@ if [ -d /mnt/kd/fossil ]; then
   export FOSSIL_HOME="/mnt/kd/fossil"
 fi
 
+# Set persistant htop settings
+if [ -d /mnt/kd/home ]; then
+  export HTOPRC="/mnt/kd/home/.htoprc"
+fi
+
 # Set UTF-8 character type for vi
 if [ -f /usr/lib/locale/.locale ]; then
   alias vi="LC_CTYPE=$(cat /usr/lib/locale/.locale) vi"
