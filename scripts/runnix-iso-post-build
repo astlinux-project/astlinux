@@ -20,6 +20,10 @@ make_release_version()
   fi
 }
 
+## Our target skeleton copying does not include dot-files
+## Do it here:
+ln -snf "/tmp/.ssh" "$target/.ssh"
+
 make_release_version
 echo ${RUNVER} > "$target/etc/runnix-release"
 

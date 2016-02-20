@@ -63,6 +63,7 @@ setup_ssh () {
     mount -t devpts devpts /dev/pts
 
     mkdir /tmp/etc/dropbear
+    mkdir /tmp/.ssh
 
     echo "Generating keys..."
     dropbearkey -t rsa -f /tmp/etc/dropbear/dropbear_rsa_host_key -s 1024
