@@ -14,6 +14,8 @@ Released **TBD**
 
 -- eglibc 2.18 (patched), security fixes: CVE-2015-7547, CVE-2015-1472, CVE-2014-9402, CVE-2015-1781, CVE-2014-8121
 
+-- RUNNIX, version bump to runnix-0.4-7549, enable 'vmxnet3' NIC driver, dropbear version bump to 2015.71, eglibc security patches
+
 -- php, version bump to 5.5.32, bug and security fixes
 
 -- htop, new command is an interactive process viewer, aka a better 'top'
