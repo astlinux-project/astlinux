@@ -7,19 +7,19 @@
 ##
 ex-vi~Copyright (c) 2001-2002 Caldera International Inc. All rights reserved.
 RUNNIX~Copyright (c) 2006-2015 by Kristian Kielhofner.
-libSRTP~Copyright (c) 2001-2015 Cisco Systems, Inc. All rights reserved.
+libSRTP~Copyright (c) 2001-2016 Cisco Systems, Inc. All rights reserved.
 iLBC CODEC~Copyright (c) 2011 The WebRTC project authors. All rights reserved.
 Web Interface~Copyright (c) 2008-2016 Lonnie Abelbeck.
 shellinabox~Copyright (c) 2008-2015 Markus Gutschke, Luka Krajger.
-Asterisk~Copyright (c) 1999-2015 Digium, Inc.
+Asterisk~Copyright (c) 1999-2016 Digium, Inc.
 DAHDI~Copyright (c) 2001-2015 Digium, Inc.
 libPRI~Copyright (c) 2001-2015 Digium, Inc.
-Arno's Firewall~Copyright (c) 2001-2015 by Arno van Amersfoort.
+Arno's Firewall~Copyright (c) 2001-2016 by Arno van Amersfoort.
 dnsmasq~Copyright (c) 2000-2015 Simon Kelley.
 OpenSSL~Copyright (c) 1998-2015 The OpenSSL Project. All rights reserved.
 OpenSSH~Copyright (c) 1995-2015 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland. All rights reserved.
 OpenVPN~Copyright (c) 2002-2015 OpenVPN Technologies, Inc. <sales@openvpn.net>
-PHP~Copyright (c) 1999-2015 The PHP Group. All rights reserved.
+PHP~Copyright (c) 1999-2016 The PHP Group. All rights reserved.
 ntpd~Copyright (c) 1992-2015 David L. Mills.
 vsftpd~Copyright (c) 2001-2013 Daniel Jacobowitz. <dan@debian.org>
 lighttpd~Copyright (c) 2004-2016, Jan Kneschke.
@@ -28,14 +28,14 @@ libxml2~Copyright (c) 1998-2012 Daniel Veillard. All Rights Reserved.
 libtiff~Copyright (c) 1988-1997 Sam Leffler, Copyright (c) 1991-1997 Silicon Graphics, Inc.
 libjpeg~Copyright (c) 1991-2014, Thomas G. Lane, Guido Vollbeding.
 iptables~Copyright (c) 2000-2013 by the netfilter coreteam <coreteam@netfilter.org>
-curl~Copyright (c) 1996-2015 Daniel Stenberg, <daniel@haxx.se>.
+curl~Copyright (c) 1996-2016 Daniel Stenberg, <daniel@haxx.se>.
 mDNS~Copyright (c) 2002-2004 Apple Computer, Inc. All rights reserved.
 rp-pppoe~Copyright (c) 2001-2012 Roaring Penguin Software Inc.
 zabbix~Copyright (c) 2000-2015 SIA Zabbix.
 zlib~Copyright (c) 1995-2013 Jean-loup Gailly.
 SILK CODEC~Copyright (c) 2010-2012 Skype and/or Microsoft. All rights reserved. Licensed via Digium, Inc.
 SpanDSP~Copyright (c) 2003-2015 Steve Underwood <steveu@coppice.org>. All rights reserved.
-Prosody~Copyright (c) 2008-2015 Matthew Wild and Waqas Hussain.
+Prosody~Copyright (c) 2008-2016 Matthew Wild and Waqas Hussain.
 clix~Copyright (c) 2008-2013 Matthew Wild.
 Lua~Copyright (c) 1994-2012 Lua.org, PUC-Rio.  All rights reserved.
 perl~Copyright (c) 1987-2013 by Larry Wall, et al.
@@ -43,17 +43,18 @@ phpLiteAdmin~Copyright (c) 2011-2015 phpLiteAdmin (https://bitbucket.org/phplite
 FOP2~Copyright (c) 2009-2015 House Internet S.R.L. (http://www.fop2.com)
 ddclient~Copyright (c) 1999-2013 Paul Burry, wimpunk, et al.
 vCard converter~Copyright (c) 2006-2013 Thomas Bruederli <thomas@brotherli.ch>
-OpenLDAP~Copyright (c) 1998-2015 The OpenLDAP Foundation. All rights reserved.
+OpenLDAP~Copyright (c) 1998-2016 The OpenLDAP Foundation. All rights reserved.
 darkstat~Copyright (c) 2001-2015 Emil Mikulic, et al.
 NUT~Copyright (c) 1999-2013  Russell Kroll, Arnaud Quette, et al.
 iftop~Copyright (c) 2002-2014 Paul Warren, Chris Lightfoot, et al.
-dnscrypt-proxy~Copyright (c) 2011-2015 Frank Denis
-libsodium~Copyright (c) 2013-2015 Frank Denis
+dnscrypt-proxy~Copyright (c) 2011-2016 Frank Denis
+libsodium~Copyright (c) 2013-2016 Frank Denis
 phoneprov-tools~Copyright (c) 2015 Lonnie Abelbeck and Michael Keuter.
 smartmontools~Copyright (c) 2002-2015, Bruce Allen, Christian Franke, et al.
-Monit~Copyright (c) 2001-2015, Tildeslash. All rights reserved
-sqlite~Copyright (c) 1995-2015, SQLite Consortium
-sqliteodbc~Copyright (c) 2001-2015, Christian Werner
+Monit~Copyright (c) 2001-2016, Tildeslash. All rights reserved
+sqlite~Copyright (c) 1995-2016, SQLite Consortium
+sqliteodbc~Copyright (c) 2001-2016, Christian Werner
 Fossil~Copyright (c) 2007-2015 D. Richard Hipp. All rights reserved.
 BusyBox~Copyright (c) 1998-2011 Erik Andersen, Rob Landley, Denys Vlasenko, et al.
 dhcp6c~Copyright (c) 1998-2008 WIDE Project.
+htop~Copyright (c) 2004-2012 Hisham Muhammad.
