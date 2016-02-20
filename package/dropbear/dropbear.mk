@@ -4,7 +4,7 @@
 #
 #############################################################
 
-DROPBEAR_VERSION = 2015.67
+DROPBEAR_VERSION = 2015.71
 DROPBEAR_SITE = http://matt.ucc.asn.au/dropbear/releases
 DROPBEAR_SOURCE = dropbear-$(DROPBEAR_VERSION).tar.bz2
 DROPBEAR_TARGET_BINS = dbclient dropbearkey dropbearconvert scp ssh
