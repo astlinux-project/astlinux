@@ -12,7 +12,6 @@ init () {
   fi
 
   PORT="${SSHDPORT:-22}"
-  RSTAT="${SSHDROOT:-yes}"
 
   if [ -f /mnt/kd/sshd.conf ]; then
     cp /mnt/kd/sshd.conf /tmp/etc/ssh/sshd_config
@@ -30,7 +29,8 @@ Port $PORT" >> /tmp/etc/ssh/sshd_config
     echo "ListenAddress 0.0.0.0" >> /tmp/etc/ssh/sshd_config
 
     echo "
-PermitRootLogin $RSTAT
+PermitRootLogin ${SSHDROOT:-yes}
+PasswordAuthentication ${SSHD_PASS_AUTH:-yes}
 
 IPQoS		cs2 af41
 
@@ -38,6 +38,9 @@ Subsystem       sftp    /usr/libexec/sftp-server" >> /tmp/etc/ssh/sshd_config
 
     if [ -f /etc/issue.net ]; then
       echo "Banner /etc/issue.net" >> /tmp/etc/ssh/sshd_config
+    fi
+    if [ -n "$SSHD_ALLOW_USERS" ]; then
+      echo "AllowUsers $SSHD_ALLOW_USERS" >> /tmp/etc/ssh/sshd_config
     fi
   fi
 
