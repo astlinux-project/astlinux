@@ -33,8 +33,8 @@ Released **TBD**
 ** Networking
 
 -- OpenSSH, new SSH Server rc.conf variables:
-   == SSHD_PASS_AUTH (yes|no, defaults to "yes")
-   == SSHD_ALLOW_USERS (space separated list of users, defaults to any user)
+   == SSHD_PASS_AUTH (PasswordAuthentication), yes|no, defaults to "yes"
+   == SSHD_ALLOW_USERS (AllowUsers), space separated list of users, defaults to any user
 
 -- libcurl (curl) version bump to 7.47.1
 
