@@ -13,14 +13,32 @@ RELEASE="astlinux-${1}"
 
 ASTLINUX_RELEASE="project/astlinux/target_skeleton/etc/astlinux-release"
 
+ASTLINUX_CHANGELOG="docs/ChangeLog.txt"
+
 mark_release()
 {
   echo "$RELEASE" > "$ASTLINUX_RELEASE"
+
+  sed -i "s/^Released @TBD@/Released $(date +%Y-%m-%d)/" "$ASTLINUX_CHANGELOG"
 }
 
 mark_svn()
 {
+  local error="$1"
+
   echo "svn" > "$ASTLINUX_RELEASE"
+
+  if [ "$error" = "error" ]; then
+    sed -i "s/^Released $(date +%Y-%m-%d)/Released @TBD@/" "$ASTLINUX_CHANGELOG"
+  else
+    sed -i '8 i\
+Additions for AstLinux '$TVER'.'$(($(echo "$RELEASE" | cut -d'.' -f3)+1))':\
+=============================\
+\
+Released @TBD@\
+\
+' "$ASTLINUX_CHANGELOG"
+  fi
 }
 
 REPO_ROOT="$(LANG=C svn info | awk -F': ' '/^Repository Root:/ { print $2 }')"
@@ -45,7 +63,7 @@ mark_release
 svn ci -m "mark release '$RELEASE'"
 
 if [ $? -ne 0 ]; then
-  mark_svn
+  mark_svn error
   exit 1
 fi
 
