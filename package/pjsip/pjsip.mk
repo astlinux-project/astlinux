@@ -11,8 +11,13 @@ PJSIP_INSTALL_STAGING = YES
 
 PJSIP_DEPENDENCIES = libsrtp
 
+define PJSIP_CUSTOM_CONFIG
+	cp package/pjsip/asterisk-config_site.h $(@D)/pjlib/include/pj/config_site.h
+endef
+PJSIP_POST_PATCH_HOOKS += PJSIP_CUSTOM_CONFIG
+
 PJSIP_CONF_ENV = \
-	CFLAGS="$(TARGET_CFLAGS) -O2 -DPJ_HAS_IPV6=1 -DNDEBUG" \
+	CFLAGS="$(TARGET_CFLAGS) -O2" \
 	LDFLAGS="-L$(STAGING_DIR)/usr/lib" \
 	LD="$(TARGET_CC)"
 
