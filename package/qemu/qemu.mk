@@ -1,0 +1,116 @@
+################################################################################
+#
+# qemu
+#
+################################################################################
+
+QEMU_VERSION = 2.5.0
+QEMU_SOURCE = qemu-$(QEMU_VERSION).tar.bz2
+QEMU_SITE = http://wiki.qemu.org/download
+
+QEMU_DEPENDENCIES = host-pkg-config libglib2 zlib pixman util-linux
+
+# Need the LIBS variable because librt and libm are
+# not automatically pulled. :-(
+QEMU_LIBS = -lrt -lm
+
+QEMU_OPTS =
+
+QEMU_VARS = \
+	LIBTOOL=$(HOST_DIR)/usr/bin/libtool
+
+# If we want to specify only a subset of targets, we must still enable all
+# of them, so that QEMU properly builds its list of default targets, from
+# which it then checks if the specified sub-set is valid. That's what we
+# do in the first part of the if-clause.
+# Otherwise, if we do not want to pass a sub-set of targets, we then need
+# to either enable or disable -user and/or -system emulation appropriately.
+# That's what we do in the else-clause.
+ifneq ($(call qstrip,$(BR2_PACKAGE_QEMU_CUSTOM_TARGETS)),)
+QEMU_OPTS += --enable-system --enable-linux-user
+QEMU_OPTS += --target-list="$(call qstrip,$(BR2_PACKAGE_QEMU_CUSTOM_TARGETS))"
+else
+
+ifeq ($(BR2_PACKAGE_QEMU_SYSTEM),y)
+QEMU_OPTS += --enable-system
+else
+QEMU_OPTS += --disable-system
+endif
+
+ifeq ($(BR2_PACKAGE_QEMU_LINUX_USER),y)
+QEMU_OPTS += --enable-linux-user
+else
+QEMU_OPTS += --disable-linux-user
+endif
+
+endif
+
+ifeq ($(BR2_PACKAGE_QEMU_SDL),y)
+QEMU_OPTS += --enable-sdl
+QEMU_DEPENDENCIES += sdl
+QEMU_VARS += SDL_CONFIG=$(BR2_STAGING_DIR)/usr/bin/sdl-config
+else
+QEMU_OPTS += --disable-sdl
+endif
+
+QEMU_OPTS += --disable-fdt
+
+ifeq ($(BR2_PACKAGE_QEMU_SYSTEM_TOOLS),y)
+QEMU_OPTS += --enable-tools
+else
+QEMU_OPTS += --disable-tools
+endif
+
+ifeq ($(BR2_PACKAGE_QEMU_SYSTEM_VNC),y)
+QEMU_OPTS += --enable-vnc
+else
+QEMU_OPTS += --disable-vnc
+endif
+
+define QEMU_CONFIGURE_CMDS
+	( cd $(@D);                                     \
+		LIBS='$(QEMU_LIBS)'                     \
+		$(TARGET_CONFIGURE_OPTS)                \
+		$(TARGET_CONFIGURE_ARGS)                \
+		$(QEMU_VARS)                            \
+		./configure                             \
+			--prefix=/usr                   \
+			--cross-prefix=$(TARGET_CROSS)  \
+			--with-system-pixman            \
+			--audio-drv-list=               \
+			--enable-kvm                    \
+			--enable-attr                   \
+			--enable-vhost-net              \
+			--enable-uuid                   \
+			--disable-bsd-user              \
+			--disable-xen                   \
+			--disable-slirp                 \
+			--disable-virtfs                \
+			--disable-brlapi                \
+			--disable-curses                \
+			--disable-curl                  \
+			--disable-bluez                 \
+			--disable-vde                   \
+			--disable-linux-aio             \
+			--disable-cap-ng                \
+			--disable-docs                  \
+			--disable-spice                 \
+			--disable-rbd                   \
+			--disable-libiscsi              \
+			--disable-usb-redir             \
+			--disable-strip                 \
+			--disable-seccomp               \
+			--disable-sparse                \
+			$(QEMU_OPTS)                    \
+	)
+endef
+
+define QEMU_BUILD_CMDS
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D)
+endef
+
+define QEMU_INSTALL_TARGET_CMDS
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) $(QEMU_MAKE_ENV) DESTDIR=$(TARGET_DIR) install
+endef
+
+$(eval $(call GENTARGETS,package,qemu))
