@@ -28,6 +28,14 @@ config BR2_PACKAGE_QEMU
 
 	  http://qemu.org/
 
+	  Required Kernel Config:
+	    CONFIG_VIRTUALIZATION=y
+	    CONFIG_KVM=m
+	    CONFIG_KVM_INTEL=m
+	    CONFIG_KVM_AMD=m
+	    CONFIG_VHOST_NET=m
+
+
 if BR2_PACKAGE_QEMU
 
 comment "QEMU Emulators selection"
@@ -92,6 +100,7 @@ config BR2_PACKAGE_QEMU_SYSTEM_TOOLS
 
 config BR2_PACKAGE_QEMU_SYSTEM_VNC
 	bool "Enable system VNC"
+	default y
 	help
 	  Say 'y' to build VNC display.
 

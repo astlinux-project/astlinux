@@ -76,6 +76,7 @@ define QEMU_CONFIGURE_CMDS
 		./configure                             \
 			--prefix=/usr                   \
 			--cross-prefix=$(TARGET_CROSS)  \
+			--sysconfdir=/etc               \
 			--with-system-pixman            \
 			--audio-drv-list=               \
 			--enable-kvm                    \
@@ -111,6 +112,16 @@ endef
 
 define QEMU_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) $(QEMU_MAKE_ENV) DESTDIR=$(TARGET_DIR) install
+	$(INSTALL) -m 0644 -D package/qemu/bridge.conf $(TARGET_DIR)/etc/qemu/bridge.conf
+	if [ -f $(TARGET_DIR)/usr/bin/qemu-system-x86_64 ]; then \
+	  ln -sf qemu-system-x86_64 $(TARGET_DIR)/usr/bin/qemu ; \
+	fi
+endef
+
+define QEMU_UNINSTALL_TARGET_CMDS
+	rm -rf $(TARGET_DIR)/etc/qemu
+	rm -f $(TARGET_DIR)/usr/bin/qemu
+	rm -f $(TARGET_DIR)/usr/bin/qemu-*
 endef
 
 $(eval $(call GENTARGETS,package,qemu))
