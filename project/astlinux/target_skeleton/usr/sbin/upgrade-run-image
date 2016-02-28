@@ -32,7 +32,7 @@ unmount_oldroot_cdrom() {
 mount_tmpfs_up() {
   mkdir /tmp/up >/dev/null
 
-  if ! mount -t tmpfs -o size=56m none /tmp/up >/dev/null; then
+  if ! mount -t tmpfs -o size=76m none /tmp/up >/dev/null; then
     rmdir /tmp/up
     return 1
   fi

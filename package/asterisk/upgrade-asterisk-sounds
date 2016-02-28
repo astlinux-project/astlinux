@@ -41,7 +41,7 @@ reload_asterisk_moh() {
 mount_tmpfs_snd() {
   mkdir /tmp/snd >/dev/null
 
-  if ! mount -t tmpfs -o size=64m none /tmp/snd >/dev/null; then
+  if ! mount -t tmpfs -o size=76m none /tmp/snd >/dev/null; then
     rmdir /tmp/snd
     return 1
   fi
