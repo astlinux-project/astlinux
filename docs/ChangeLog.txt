@@ -16,6 +16,11 @@ Released @TBD@
 
 ** Networking
 
+-- OpenSSL, version bump to 1.0.1s, security fixes: CVE-2016-0800, CVE-2016-0705, CVE-2016-0798, CVE-2016-0797,
+                                                    CVE-2016-0799, CVE-2016-0702
+
+-- stunnel, version bump to 5.31
+
 -- miniupnpd, version bump to 1.9.20160222
 
 ** Asterisk
