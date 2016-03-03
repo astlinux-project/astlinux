@@ -9,8 +9,15 @@ PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
 
 HOST_BIN="./output/host/usr/sbin"
 
-# Package host-fdisk builds:
-REQUIRED_HOST_CMDS="fdisk"
+#
+# If the RUNNIX package was built on a x86_64 system, ./syslinux is not executable on a 32-bit build system.
+# In such a case, we need to locally build host-syslinux for 32-bit systems, host-fdisk is always needed.
+#
+if [ "$(uname -m)" != "x86_64" ]; then
+  REQUIRED_HOST_CMDS="fdisk syslinux"
+else
+  REQUIRED_HOST_CMDS="fdisk"
+fi
 
 REQUIRED_CMDS="which sudo mkdosfs mkfs losetup gzip"
 
@@ -63,6 +70,12 @@ if [ $# -ne 3 ]; then
   echo "Usage: astlinux-makeimage [imagesize in MB] [dos partition size in MB] [ASTURW partition size in MB]" >&2
   exit 1
 fi
+
+for i in $REQUIRED_HOST_CMDS; do
+  if [ ! -x "$HOST_BIN/$i" ]; then
+    make host-$i
+  fi
+done
 
 error=0
 for i in $REQUIRED_HOST_CMDS; do
@@ -195,10 +208,16 @@ echo "
 ##
 "
 
+if [ -x $HOST_BIN/syslinux ]; then
+  SYSLINUX="$(pwd)/$HOST_BIN/syslinux"
+else
+  SYSLINUX="./syslinux"
+fi
+
 # run syslinux and copy the master boot record
 (
   cd ${RUNNIX_DIR}
-  sudo ./syslinux ${LOOPD}1
+  sudo ${SYSLINUX} ${LOOPD}1
   sudo bash -c "cat mbr.bin > ${LOOPD}0"
 )
 

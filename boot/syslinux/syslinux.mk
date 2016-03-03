@@ -13,6 +13,8 @@ SYSLINUX_INSTALL_IMAGES = YES
 
 SYSLINUX_DEPENDENCIES = host-nasm
 
+HOST_SYSLINUX_DEPENDENCIES = host-nasm
+
 define SYSLINUX_BUILD_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) CC="$(HOSTCC)" AR="$(HOSTAR)" -C $(@D)
 endef
@@ -26,4 +28,13 @@ define SYSLINUX_INSTALL_IMAGES_CMDS
 	done
 endef
 
+define HOST_SYSLINUX_BUILD_CMDS
+	$(HOST_MAKE_ENV) $(MAKE) -C $(@D)
+endef
+
+define HOST_SYSLINUX_INSTALL_CMDS
+	$(INSTALL) -D -m 0755 $(@D)/linux/syslinux $(HOST_DIR)/usr/sbin/syslinux
+endef
+
 $(eval $(call GENTARGETS,boot,syslinux))
+$(eval $(call GENTARGETS,boot,syslinux,host))
