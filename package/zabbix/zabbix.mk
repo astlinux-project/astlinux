@@ -9,6 +9,7 @@ ZABBIX_SOURCE = zabbix-$(ZABBIX_VERSION).tar.gz
 ZABBIX_SITE = http://downloads.sourceforge.net/sourceforge/zabbix
 
 ZABBIX_CONF_OPT = \
+	--disable-static \
 	--enable-agent \
 	--enable-ipv6
 
@@ -30,21 +31,6 @@ ZABBIX_CONF_OPT += \
 	--with-net-snmp="$(STAGING_DIR)/usr/bin/net-snmp-config"
  endif
 endif
-
-define ZABBIX_CONFIGURE_CMDS
-        (cd $(@D); \
-                $(TARGET_CONFIGURE_ARGS) \
-                $(TARGET_CONFIGURE_OPTS) \
-                ./configure \
-		--target=$(GNU_TARGET_NAME) \
-		--host=$(GNU_TARGET_NAME) \
-        	--build=$(GNU_HOST_NAME) \
-		--prefix=/usr \
-		--exec-prefix=/usr \
-		--sysconfdir=/etc \
-		$(ZABBIX_CONF_OPT) \
-        )
-endef
 
 define ZABBIX_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/src/zabbix_agent/zabbix_agentd $(TARGET_DIR)/usr/bin/zabbix_agentd
