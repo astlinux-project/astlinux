@@ -47,8 +47,6 @@ ifeq ($(strip $(BR2_PACKAGE_ZLIB)),y)
 ASTERISK_LIBS += -lz
 endif
 
-TARGET_CONFIGURE_OPTS+=ac_cv_pthread_rwlock_timedwrlock=no
-
 ASTERISK_CONFIGURE_ARGS+= \
 			--without-sdl
 
