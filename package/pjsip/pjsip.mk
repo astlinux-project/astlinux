@@ -35,4 +35,8 @@ else
 PJSIP_CONF_OPT += --disable-ssl
 endif
 
+ifeq ($(BR2_PACKAGE_UTIL_LINUX_LIBUUID),y)
+PJSIP_DEPENDENCIES += util-linux
+endif
+
 $(eval $(call AUTOTARGETS,package,pjsip))
