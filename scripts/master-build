@@ -13,6 +13,8 @@ REQUIRED_CMDS="which sudo genisoimage sha1sum"
 
 BOARDS_SMP64="genx86_64 genx86_64-serial"
 
+BOARDS_SMP64VM="genx86_64-vm"
+
 BOARDS_SMP="geni586 geni586-serial"
 
 BOARDS_NO_SMP="net5501 alix"
@@ -51,6 +53,26 @@ build_board()
 set_smp_kernel()
 {
   sed -i 's:^BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="[^"]*":BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="project/astlinux/geni586/linux-smp.config":' .config
+}
+
+set_smp64vm_kernel()
+{
+  sed -i 's:^BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="[^"]*":BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="project/astlinux/genx86_64/linux-smp-vm.config":' .config
+}
+
+unset_major_pci_packages()
+{
+  # disable BR2_PACKAGE_RHINO
+  sed -i 's:^BR2_PACKAGE_RHINO=y.*$:# BR2_PACKAGE_RHINO is not set:' .config
+
+  # disable BR2_PACKAGE_WANPIPE
+  sed -i 's:^BR2_PACKAGE_WANPIPE=y.*$:# BR2_PACKAGE_WANPIPE is not set:' .config
+
+  # disable BR2_PACKAGE_DAHDI_HFCS
+  sed -i 's:^BR2_PACKAGE_DAHDI_HFCS=y.*$:# BR2_PACKAGE_DAHDI_HFCS is not set:' .config
+
+  # BR2_PACKAGE_DAHDI_NO_CARD_FIRMWARE=y
+  sed -i 's:^# BR2_PACKAGE_DAHDI_NO_CARD_FIRMWARE .*$:BR2_PACKAGE_DAHDI_NO_CARD_FIRMWARE=y:' .config
 }
 
 set_asterisk_version()
@@ -180,6 +202,18 @@ for asterisk in ast18 ast11 ast13; do
   for board in $BOARDS_SMP64; do
     build_board "$FIRMWARE"
   done
+
+  # SMP64VM Builds
+  echo "Cleaning out any existing builds..."
+  rm -rf output
+
+  cp "x86_64-configs/$CONFIG" .config
+  set_smp64vm_kernel
+  unset_major_pci_packages
+
+  for board in $BOARDS_SMP64VM; do
+    build_board "$FIRMWARE"
+  done
 done
 
 # AstLinux ISO Installer
@@ -188,7 +222,7 @@ rm -rf output
 
 cp runnix-iso.config .config
 
-for board in $BOARDS_NO_SMP $BOARDS_SMP $BOARDS_SMP64; do
+for board in $BOARDS_NO_SMP $BOARDS_SMP $BOARDS_SMP64 $BOARDS_SMP64VM; do
   ISO_NAME="${ASTVER}-${board}.iso"
   if [ "${board}" != "${board%-serial}" -o "$board" = "alix" -o "$board" = "net5501" ]; then
     SERIAL="serial"
