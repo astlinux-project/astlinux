@@ -1,0 +1,12 @@
+## These modules get modprobe'd when the system starts up.
+rtc
+## Comment out any modules you don't need.
+##
+## Ethernet support
+## Virtual first, then Emulated
+virtio-pci
+vmxnet3
+pcnet32
+e1000
+e1000e
+8139too

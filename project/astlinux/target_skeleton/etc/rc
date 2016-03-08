@@ -213,6 +213,12 @@ $fstab_var
     echo 1 >/sys/class/leds/alix:2/brightness
     ;;
 
+  genx86_64-vm)
+    if [ -f /sys/hypervisor/type ] && grep -q 'xen' /sys/hypervisor/type; then
+      modprobe xen-netfront
+    fi
+    ;;
+
   esac
 
   if echo $CMDLINE | grep -q depmod; then
