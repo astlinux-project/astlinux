@@ -4,7 +4,7 @@ FILES_URL="http://files.astlinux.org"
 
 TARBALLS=".build/tarballs"
 
-LINUX_KERNEL="linux-3.2.66.tar.gz"
+LINUX_KERNEL="linux-3.2.78.tar.gz"
 
 EGLIBC="eglibc-2_18.tar.bz2"
 
