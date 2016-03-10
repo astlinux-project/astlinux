@@ -9,6 +9,9 @@ SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VERSION).tar.gz
 SQLITE_SITE = http://www.sqlite.org/2016
 SQLITE_INSTALL_STAGING = YES
 
+# required with sqlite-fix-disable-static-shell.patch
+SQLITE_AUTORECONF = YES
+
 SQLITE_CFLAGS += -DSQLITE_ENABLE_COLUMN_METADATA
 
 SQLITE_CONF_ENV = CFLAGS="$(TARGET_CFLAGS) $(SQLITE_CFLAGS)"
