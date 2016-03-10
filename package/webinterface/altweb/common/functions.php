@@ -180,11 +180,11 @@ function systemREBOOT($myself, $result, $setup = FALSE) {
   }
 
   $cmd = '/sbin/kernel-reboot';
-  if (! is_executable($cmd) || (getPREFdef($global_prefs, 'system_reboot_classic_full') === 'yes')) {
+  if (! is_executable($cmd) || (getPREFdef($global_prefs, 'system_reboot_classic_full') === 'yes') || $arch === 'genx86_64-vm') {
     $cmd = '/sbin/reboot';
     $count_down_secs += 30;                                     
   }
-  
+
   shell($cmd.' -d4 >/dev/null 2>/dev/null &', $status);
   if ($status == 0) {                                           
     if ($setup) {
