@@ -1,0 +1,175 @@
+#!/bin/sh
+
+# Default settings. Override in user.conf file.
+QEMU_START=yes
+# QEMU_RUN_IMAGE=/path/to/vm/image -- Required, must be set in user.conf file
+# QEMU_MEM=1024 -- (value in MB) default set below to lesser of 50% of total memory or 90% of free memory
+# QEMU_VCPU=2 -- default set below to half of available CPU cores
+QEMU_NET_DEVICE=virtio-net-pci
+QEMU_NET_BRIDGE=br0
+QEMU_NET_MACADDR=52:54:00:AB:CD:EF
+QEMU_BLOCK_DEVICE=virtio
+QEMU_VNC_DISPLAY=1
+
+. /etc/rc.conf
+
+start () {
+
+  if [ "$QEMU_START" = "yes" ] && [ -n "$QEMU_RUN_IMAGE" ]; then
+    echo "Starting qemu..."
+    # find system memory in MB
+    TotMem=$(free -m | awk '/^Mem:/{print $2}')
+    FreeMem=$(free -m | awk '/^Mem:/{print $4}')
+    if [ -z "$QEMU_MEM" ]; then
+      # set Memory to the smaller of 50% of total system memory or 90% of available free memory
+      QemuMemory=$((`expr $TotMem / 2` < `expr $FreeMem \* 9 / 10` ? `expr $TotMem / 2` : `expr $FreeMem \* 9 / 10`))
+    else
+      # set Memory to user provided value
+      QemuMemory=$QEMU_MEM
+      if [ $QemuMemory -gt $FreeMem ]; then
+        /usr/bin/logger -s -p user.warning -id -t qemu "WARNING: $QemuMemory MB exceeds system available memory of $FreeMem"
+      fi
+    fi
+    
+    CpuCores=$(lscpu -p | /bin/egrep -v '^#' | wc -l)
+    if [ -z "$QEMU_VCPU" ]; then
+      # Set vCPU cores to half available system cores
+      QemuVCpu=$(($CpuCores>1 ? `expr $CpuCores / 2` : 1))
+    else
+      # set vCPU cores to user provided value
+      QemuVCpu=$QEMU_VCPU
+      if [ $QemuVCpu -gt $CpuCores ]; then
+        /usr/bin/logger -s -p user.warning -id -t qemu "WARNING: $QemuVCpu cores exceeds system available cores of $CpuCores"
+      fi
+    fi
+    if [ $QemuVCpu == 1 ]; then 
+      QemuVCpuStr=""
+    else
+      QemuVCpuStr="-smp cpus=$QemuVCpu"
+    fi
+
+    # Make sure network bridge exists.  If not then exit
+    /usr/sbin/brctl showmacs $QEMU_NET_BRIDGE > /dev/null
+    if [ $? == 1 ]; then
+      /usr/bin/logger -s -p user.err -id -t qemu "ERROR: Bridge $QEMU_NET_BRIDGE does not exist.  Exiting"
+      exit
+    fi
+    # Make sure that the bridge helper ACL list allows access to the network bridge we selected.
+    /bin/grep -v '^$' /etc/qemu/bridge.conf | /bin/grep -v '^ *#' | /bin/grep "allow $QEMU_NET_BRIDGE" > /dev/null
+    if [ $? == 1 ]; then
+      /usr/bin/logger -s -p user.err -id -t qemu "ERROR: ACL permissions for bridge $QEMU_NET_BRIDGE not set in /etc/qemu/bridge.conf.  Exiting"
+      exit
+    fi
+    # Check tcp-segmentation-offload and general-segmentation-offload
+    /usr/sbin/ethtool -k br0 | /bin/grep "segmentation-offload" | /bin/grep ": off" > /dev/null
+    if [ $? == 0 ]; then
+      /usr/bin/logger -s -p user.warning -id -t qemu "WARNING: host $QEMU_NET_BRIDGE interface has TSO and GSO set to off.  Consider setting guest network interface to match with ethtool command"
+    fi
+
+    # If network device virtio then set enable host support
+    if [ "$QEMU_NET_DEVICE" = "virtio-net-pci" ]; then
+      QemuVHost=",vhost=on"
+    else
+      QemuVHost=""
+    fi
+
+    # Load required modules in case they are not already loaded... kvm kvm-amd or kvm-intel and vhost_net
+    /bin/grep "flags" /proc/cpuinfo | /bin/grep " lm" > /dev/null
+    # Presence of 'lm' flag indicates 64-bit processor
+    if [ $? == 0 ]; then
+      /sbin/modprobe kvm
+      if [ $? == 1 ]; then
+        /usr/bin/logger -s -p user.err -id -t qemu "ERROR: Failed to load kernel module kvm.  Exiting"
+        exit
+      fi
+      /bin/grep "flags" /proc/cpuinfo | /bin/grep " vmx" > /dev/null
+      # Presence of 'vmx' indicates intel virtualization extensions
+      if [ $? == 0 ]; then
+        /sbin/modprobe kvm-intel
+        if [ $? == 1 ]; then
+          /usr/bin/logger -s -p user.err -id -t qemu "ERROR: Failed to load kernel module kvm-intel.  Exiting"
+          exit
+        fi
+      else
+        /bin/grep "flags" /proc/cpuinfo | /bin/grep " svm" > /dev/null
+        # Presence of 'svm' indicates AMD virtualization extensions
+        if [ $? == 0 ]; then          
+          /sbin/modprobe kvm-amd
+          if [ $? == 1 ]; then
+            /usr/bin/logger -s -p user.err -id -t qemu "ERROR: Failed to load kernel module kvm-amd.  Exiting"
+            exit
+          fi
+        else
+          /usr/bin/logger -s -p user.err -id -t qemu "ERROR: Host CPU does not support virtualization.  Exiting"
+          exit
+        fi
+      fi
+      if [ -n "QemuVHost" ]; then
+        # Only load vhost_net if virtio network device selected
+        /sbin/modprobe vhost_net
+        if [ $? == 1 ]; then
+          /usr/bin/logger -s -p user.err -id -t qemu "ERROR: Failed to load kernel module vhost_net.  Exiting"
+          exit
+        fi
+      fi
+     else
+      /usr/bin/logger -s -p user.err -id -t qemu "ERROR: Host CPU is not 64-bit architecture.  Exiting"
+      exit
+    fi
+
+    # And now run qemu.
+    /usr/bin/logger -s -p user.info -id -t qemu "Run image $QEMU_RUN_IMAGE with $QemuMemory MB of Memory and $QemuVCpu CPU cores on Network $QEMU_NET_BRIDGE.  Console on VNC port 590$QEMU_VNC_DISPLAY"
+    /usr/bin/qemu \
+        -m $QemuMemory \
+        -drive file="$QEMU_RUN_IMAGE",if=$QEMU_BLOCK_DEVICE,index=0 \
+        -netdev tap,id=nd1,helper="/usr/libexec/qemu-bridge-helper --br=$QEMU_NET_BRIDGE"$QemuVHost \
+        -device $QEMU_NET_DEVICE,netdev=nd1,id=nic1,mac=$QEMU_NET_MACADDR \
+        -enable-kvm \
+        $QemuVCpuStr \
+        -qmp tcp:localhost:4444,server,nowait \
+        -daemonize \
+        -usbdevice tablet \
+        -display vnc=:$QEMU_VNC_DISPLAY
+  fi
+}
+
+stop () {
+
+  /bin/netstat -ln | /bin/grep :4444 > /dev/null
+  if [ $? == 0 ]; then
+    echo "Stopping qemu..."
+    echo -e "{ \"execute\": \"qmp_capabilities\" }\n{ \"execute\": \"system_powerdown\" }\n" | /usr/bin/nc -w 10 localhost 4444 >/dev/null
+  else
+    /usr/bin/logger -s -p user.warning -id -t qemu "WARNING: cannot stop -- qemu not running."
+  fi
+}
+
+if [ ! -x /usr/bin/qemu ]; then
+  exit
+fi
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac

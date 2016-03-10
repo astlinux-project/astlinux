@@ -116,12 +116,18 @@ define QEMU_INSTALL_TARGET_CMDS
 	if [ -f $(TARGET_DIR)/usr/bin/qemu-system-x86_64 ]; then \
 	  ln -sf qemu-system-x86_64 $(TARGET_DIR)/usr/bin/qemu ; \
 	fi
+	$(INSTALL) -D -m 0755 package/qemu/qemu.init $(TARGET_DIR)/etc/init.d/qemu
+	ln -sf ../../init.d/qemu $(TARGET_DIR)/etc/runlevels/default/S95qemu
+	ln -sf ../../init.d/qemu $(TARGET_DIR)/etc/runlevels/default/K04qemu
 endef
 
 define QEMU_UNINSTALL_TARGET_CMDS
 	rm -rf $(TARGET_DIR)/etc/qemu
 	rm -f $(TARGET_DIR)/usr/bin/qemu
 	rm -f $(TARGET_DIR)/usr/bin/qemu-*
+	rm -f $(TARGET_DIR)/etc/init.d/qemu
+	rm -f $(TARGET_DIR)/etc/runlevels/default/S95qemu
+	rm -f $(TARGET_DIR)/etc/runlevels/default/K04qemu
 endef
 
 $(eval $(call GENTARGETS,package,qemu))
