@@ -10,7 +10,21 @@ Additions for AstLinux 1.2.7:
 
 Released @TBD@
 
+** Build System
+
+-- Added support for x86_64 KVM/Xen VM's and Virtio paravirtualized drivers with the new board type genx86_64-vm
+
 ** System
+
+-- Linux Kernel 3.2.78 (minor bump)
+
+-- RUNNIX, version bump to runnix-0.4-7583, with Linux Kernel 3.2.78, dropbear 2016.72
+
+-- igb, version bump to 5.3.4.4, Intel Gigabit Ethernet Network Driver
+
+-- php, version bump to 5.5.33, bug fixes
+
+-- sqlite, version bump to 3.11.1
 
 -- nano, version bump to 2.5.3
 
@@ -33,7 +47,7 @@ Released @TBD@
 
 ** Web Interface
 
--- (no change)
+-- Automatically don't use kernel-reboot with 'genx86_64-vm' builds, use reboot instead.
 
 
 Additions for AstLinux 1.2.6:
