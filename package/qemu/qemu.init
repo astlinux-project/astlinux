@@ -2,12 +2,13 @@
 
 # Default settings. Override in user.conf file.
 QEMU_START=yes
+# QEMU_CDROM_IMAGE=/path/to/iso/file -- Optional.
 # QEMU_RUN_IMAGE=/path/to/vm/image -- Required, must be set in user.conf file
 # QEMU_MEM=1024 -- (value in MB) default set below to lesser of 50% of total memory or 90% of free memory
 # QEMU_VCPU=2 -- default set below to half of available CPU cores
 QEMU_NET_DEVICE=virtio-net-pci
 QEMU_NET_BRIDGE=br0
-QEMU_NET_MACADDR=52:54:00:AB:CD:EF
+# QEMU_NET_MACADDR=52:54:00:12:34:56 -- Optional, leave blank for QEMU to assign
 QEMU_BLOCK_DEVICE=virtio
 QEMU_VNC_DISPLAY=1
 
@@ -48,30 +49,58 @@ start () {
       QemuVCpuStr="-smp cpus=$QemuVCpu"
     fi
 
-    # Make sure network bridge exists.  If not then exit
-    /usr/sbin/brctl showmacs $QEMU_NET_BRIDGE > /dev/null
-    if [ $? == 1 ]; then
-      /usr/bin/logger -s -p user.err -id -t qemu "ERROR: Bridge $QEMU_NET_BRIDGE does not exist.  Exiting"
-      exit
-    fi
-    # Make sure that the bridge helper ACL list allows access to the network bridge we selected.
-    /bin/grep -v '^$' /etc/qemu/bridge.conf | /bin/grep -v '^ *#' | /bin/grep "allow $QEMU_NET_BRIDGE" > /dev/null
-    if [ $? == 1 ]; then
-      /usr/bin/logger -s -p user.err -id -t qemu "ERROR: ACL permissions for bridge $QEMU_NET_BRIDGE not set in /etc/qemu/bridge.conf.  Exiting"
-      exit
-    fi
-    # Check tcp-segmentation-offload and general-segmentation-offload
-    /usr/sbin/ethtool -k br0 | /bin/grep "segmentation-offload" | /bin/grep ": off" > /dev/null
-    if [ $? == 0 ]; then
-      /usr/bin/logger -s -p user.warning -id -t qemu "WARNING: host $QEMU_NET_BRIDGE interface has TSO and GSO set to off.  Consider setting guest network interface to match with ethtool command"
+    # Was a CDROM ISO file provided?
+    QemuCdrom=""
+    if [ -n "$QEMU_CDROM_IMAGE" ]; then
+      QemuCdrom=$QEMU_CDROM_IMAGE
     fi
 
-    # If network device virtio then set enable host support
+    # If network device virtio then enable host support
     if [ "$QEMU_NET_DEVICE" = "virtio-net-pci" ]; then
       QemuVHost=",vhost=on"
     else
       QemuVHost=""
     fi
+
+    iNet=0
+    QemuNetdev=""
+    QemuDevice=""
+    QemuMacAddr=""
+    if [ -n "$QEMU_NET_MACADDR" ]; then
+      QemuMacAddr=$QEMU_NET_MACADDR
+    fi
+    for iBridge in $QEMU_NET_BRIDGE; do
+      # Make sure network bridge exists.  If not then exit
+      /usr/sbin/brctl showmacs $iBridge > /dev/null
+      if [ $? == 1 ]; then
+        /usr/bin/logger -s -p user.err -id -t qemu "ERROR: Bridge $iBridge does not exist.  Exiting"
+        exit
+      fi
+      # Make sure that the bridge helper ACL list allows access to the network bridge we selected.
+      /bin/grep -v '^$' /etc/qemu/bridge.conf | /bin/grep -v '^ *#' | /bin/grep "allow $iBridge" > /dev/null
+      if [ $? == 1 ]; then
+        /usr/bin/logger -s -p user.err -id -t qemu "ERROR: ACL permissions for bridge $iBridge not set in /etc/qemu/bridge.conf.  Exiting"
+        exit
+      fi
+      # Check tcp-segmentation-offload and general-segmentation-offload
+      /usr/sbin/ethtool -k $iBridge | /bin/grep "segmentation-offload" | /bin/grep ": off" > /dev/null
+      if [ $? == 0 ]; then
+        /usr/bin/logger -s -p user.warning -id -t qemu "WARNING: host $iBridge interface has TSO or GSO set to off.  Consider setting guest network interface to match with ethtool -K <if> command"
+      fi
+      # build the -netdev and -device options
+      ((iNet++))
+      QemuNetdev=$QemuNetdev" -netdev tap,id=nd$iNet,helper=\"/usr/libexec/qemu-bridge-helper --br=$iBridge\"$QemuVHost"
+      QemuDevice=$QemuDevice" -device $QEMU_NET_DEVICE,netdev=nd$iNet,id=nic$iNet"
+      if [ -n "$QemuMacAddr" ]; then
+           QemuDevice=$QemuDevice",mac=$QemuMacAddr"
+           # Now increment mac address by 1 in case there are multiple interfaces
+           macHead="$(echo $QemuMacAddr | cut -d: -f1-5)"
+           macTail="$(echo $QemuMacAddr | cut -d: -f6)"
+           macTail=$(printf %X $((0x$macTail + 1)))
+           QemuMacAddr="$macHead:${macTail:(-2)}"
+      fi
+    done
+
 
     # Load required modules in case they are not already loaded... kvm kvm-amd or kvm-intel and vhost_net
     /bin/grep "flags" /proc/cpuinfo | /bin/grep " lm" > /dev/null
@@ -119,11 +148,12 @@ start () {
 
     # And now run qemu.
     /usr/bin/logger -s -p user.info -id -t qemu "Run image $QEMU_RUN_IMAGE with $QemuMemory MB of Memory and $QemuVCpu CPU cores on Network $QEMU_NET_BRIDGE.  Console on VNC port 590$QEMU_VNC_DISPLAY"
-    /usr/bin/qemu \
+    eval /usr/bin/qemu \
         -m $QemuMemory \
-        -drive file="$QEMU_RUN_IMAGE",if=$QEMU_BLOCK_DEVICE,index=0 \
-        -netdev tap,id=nd1,helper="/usr/libexec/qemu-bridge-helper --br=$QEMU_NET_BRIDGE"$QemuVHost \
-        -device $QEMU_NET_DEVICE,netdev=nd1,id=nic1,mac=$QEMU_NET_MACADDR \
+        $QemuNetdev \
+        $QemuDevice \
+        $QemuCdrom \
+        -drive file="\"$QEMU_RUN_IMAGE\"",if=$QEMU_BLOCK_DEVICE \
         -enable-kvm \
         $QemuVCpuStr \
         -qmp tcp:localhost:4444,server,nowait \
@@ -151,6 +181,13 @@ fi
 case $1 in
 
 start)
+  if [ -n "$2" ]; then
+    # We got some args after the "start" lets parse them into variables.
+    # e.g /etc/init.d/qemu start QEMU_CDROM_IMAGE=/path/to/iso/file QEMU_RUN_IMAGE=/path/to/vm/image
+    for i in "${@:2}"; do
+      declare ${i%=*}="${i#*=}"
+    done
+  fi
   start
   ;;
 
