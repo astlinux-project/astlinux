@@ -35,6 +35,9 @@ config BR2_PACKAGE_QEMU
 	    CONFIG_KVM_AMD=m
 	    CONFIG_VHOST_NET=m
 
+	  Optional Kernel Config (virtio-net DHCP Checksum issue):
+	    CONFIG_NETFILTER_XT_TARGET_CHECKSUM=m
+
 
 if BR2_PACKAGE_QEMU
 
