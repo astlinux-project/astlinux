@@ -26,6 +26,8 @@ Released @TBD@
 
 -- sqlite, version bump to 3.11.1
 
+-- nut, version bump to 2.7.4
+
 -- nano, version bump to 2.5.3
 
 ** Networking
