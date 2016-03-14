@@ -133,7 +133,7 @@ start () {
           exit
         fi
       fi
-      if [ -n "QemuVHost" ]; then
+      if [ -n "$QemuVHost" ]; then
         # Only load vhost_net if virtio network device selected
         /sbin/modprobe vhost_net
         if [ $? == 1 ]; then
@@ -160,6 +160,12 @@ start () {
         -daemonize \
         -usbdevice tablet \
         -display vnc=:$QEMU_VNC_DISPLAY
+
+    if [ $? == 1 ]; then
+      # Something went wrong.
+      /usr/bin/logger -s -p user.err -id -t qemu "ERROR: Failed to run image $QEMU_RUN_IMAGE"
+      exit
+    fi
   fi
 }
 
