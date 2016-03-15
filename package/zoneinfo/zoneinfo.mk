@@ -3,7 +3,7 @@
 # zoneinfo
 #
 ##############################################################
-ZONEINFO_VERSION := 2016a
+ZONEINFO_VERSION := 2016b
 ZONEINFO_DATA := tzdata$(ZONEINFO_VERSION).tar.gz
 ZONEINFO_SOURCE := tzcode$(ZONEINFO_VERSION).tar.gz
 ZONEINFO_SITE := http://www.iana.org/time-zones/repository/releases
