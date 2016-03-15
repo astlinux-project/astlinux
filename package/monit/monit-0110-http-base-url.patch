@@ -9,7 +9,7 @@
  #ifdef HAVE_STDIO_H
  #include <stdio.h>
  #endif
-@@ -521,6 +523,11 @@
+@@ -531,6 +533,11 @@
                  internal_error(S, SC_BAD_REQUEST, "[error] URL too long");
                  return NULL;
          }
@@ -18,6 +18,6 @@
 +                Str_copy(url, url + strlen(HTTP_BASE_URL), strlen(url) - strlen(HTTP_BASE_URL));
 +        }
 +#endif
+         HttpRequest req = NULL;
          NEW(req);
          req->S = S;
-         Util_urlDecode(url);

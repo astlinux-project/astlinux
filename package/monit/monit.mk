@@ -4,8 +4,8 @@
 #
 ################################################################################
 
-MONIT_VERSION = 5.16
-MONIT_SITE = http://mmonit.com/monit/dist
+MONIT_VERSION = 5.17.1
+MONIT_SITE = https://mmonit.com/monit/dist
 MONIT_DEPENDENCIES = host-bison host-flex
 #
 # Touching Makefile.am:

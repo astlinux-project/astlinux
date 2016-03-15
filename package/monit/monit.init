@@ -27,7 +27,7 @@ set httpd
   done
 
   if [ -n "$MONIT_NOTIFY_FROM" ]; then
-    echo "set mail-format { from: $MONIT_NOTIFY_FROM }"
+    echo "set mail-format { from: \"Monit-$HOSTNAME\" <$MONIT_NOTIFY_FROM> }"
   fi
 
   echo "
