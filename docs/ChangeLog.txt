@@ -26,9 +26,17 @@ Released @TBD@
 
 -- sqlite, version bump to 3.11.1
 
+-- Monit, version bump to 5.17.1
+
 -- nut, version bump to 2.7.4
 
+-- ethtool, version bump to 4.5
+
 -- nano, version bump to 2.5.3
+
+-- expat, version bump to 2.1.1
+
+-- Time Zone Database update, tzdata2016b and php-timezonedb-2016.2
 
 ** Networking
 
