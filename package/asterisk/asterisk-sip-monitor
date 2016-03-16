@@ -96,7 +96,7 @@ email_failure() {
   unset IFS
   for TO in $NOTIFY; do
     echo "To: ${TO}${NOTIFY_FROM:+
-From: $NOTIFY_FROM}
+From: \"SIP-$HOSTNAME\" <$NOTIFY_FROM>}
 Subject: $subject
 
 Warning! Your PBX '$HOSTNAME' has detected that a SIP FAILURE has occurred.
@@ -114,7 +114,7 @@ email_status() {
   unset IFS
   for TO in $NOTIFY; do
     echo "To: ${TO}${NOTIFY_FROM:+
-From: $NOTIFY_FROM}
+From: \"SIP-$HOSTNAME\" <$NOTIFY_FROM>}
 Subject: $subject
 
 SIP Status Change! Your PBX '$HOSTNAME' has an updated list of SIP FAILURE's.
@@ -132,7 +132,7 @@ email_ok() {
   unset IFS
   for TO in $NOTIFY; do
     echo "To: ${TO}${NOTIFY_FROM:+
-From: $NOTIFY_FROM}
+From: \"SIP-$HOSTNAME\" <$NOTIFY_FROM>}
 Subject: $subject
 
 Your PBX '$HOSTNAME' has resolved previous SIP issues.

@@ -75,7 +75,7 @@ log2mail() {
   unset IFS
   for TO in $NOTIFY; do
     echo "To: ${TO}${NOTIFY_FROM:+
-From: $NOTIFY_FROM}
+From: \"WAN-$HOSTNAME\" <$NOTIFY_FROM>}
 Subject: $subject
 
 $body

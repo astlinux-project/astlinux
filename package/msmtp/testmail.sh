@@ -41,7 +41,7 @@ fi
 
 (
   echo "To: ${TO}${FROM:+
-From: $FROM}
+From: \"Test-$HOSTNAME\" <$FROM>}
 Subject: Test Email from '$HOSTNAME'
 
 Test Email from '$HOSTNAME'

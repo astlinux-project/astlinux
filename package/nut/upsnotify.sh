@@ -23,7 +23,7 @@ fi
 for TO in $NOTIFY; do
   (
   echo "To: ${TO}${NOTIFY_FROM:+
-From: $NOTIFY_FROM}
+From: \"UPS-$HOSTNAME\" <$NOTIFY_FROM>}
 Subject: UPS on '$HOSTNAME': $message
 
 UPS on '$HOSTNAME': $message

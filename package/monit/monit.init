@@ -28,6 +28,8 @@ set httpd
 
   if [ -n "$MONIT_NOTIFY_FROM" ]; then
     echo "set mail-format { from: \"Monit-$HOSTNAME\" <$MONIT_NOTIFY_FROM> }"
+  elif [ -n "$SMTP_DOMAIN" ]; then
+    echo "set mail-format { from: \"Monit-$HOSTNAME\" <monit@$SMTP_DOMAIN> }"
   fi
 
   echo "

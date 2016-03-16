@@ -119,7 +119,7 @@ run_asterisk()
         logger -s -t safe_asterisk -p kern.info "$MESG"
         for TO in $NOTIFY; do
           echo "To: ${TO}${NOTIFY_FROM:+
-From: $NOTIFY_FROM}
+From: \"Asterisk-$MACHINE\" <$NOTIFY_FROM>}
 Subject: Asterisk **Stopped** on '$MACHINE'
 
 Asterisk on '$MACHINE' stopped, restarting too often.
@@ -145,7 +145,7 @@ Asterisk on '$MACHINE' stopped, restarting too often.
       logger -s -t safe_asterisk -p kern.info "$MESG"
       for TO in $NOTIFY; do
         echo "To: ${TO}${NOTIFY_FROM:+
-From: $NOTIFY_FROM}
+From: \"Asterisk-$MACHINE\" <$NOTIFY_FROM>}
 Subject: Asterisk Crashed on '$MACHINE'
 
 Asterisk on '$MACHINE' exited on signal $EXITSIGNAL.  Restarting Asterisk...
