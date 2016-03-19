@@ -165,7 +165,7 @@ check() {
     exit $RED
   fi
 
-  if wget -q -c -O /tmp/up_ver $URL/ver >/dev/null; then
+  if /usr/sbin/download-file "/tmp/up_ver" "$URL/ver"; then
     VER=`cat /tmp/up_ver`
     rm -f /tmp/up_ver
   else
@@ -211,14 +211,14 @@ upgrade() {
     exit $RED
   fi
 
-  if ! wget -q -c -O /tmp/up/$VER.tar.gz $URL/$VER.tar.gz >/dev/null; then
+  if ! /usr/sbin/download-file "/tmp/up/$VER.tar.gz" "$URL/$VER.tar.gz"; then
     unmount_tmpfs_up
     unmount_oldroot_cdrom
     echo "Firmware download failed."
     exit $RED
   fi
 
-  if ! wget -q -c -O /tmp/up/$VER.tar.gz.sha1 $URL/$VER.tar.gz.sha1 >/dev/null; then
+  if ! /usr/sbin/download-file "/tmp/up/$VER.tar.gz.sha1" "$URL/$VER.tar.gz.sha1"; then
     unmount_tmpfs_up
     unmount_oldroot_cdrom
     echo "Firmware sha1sum download failed."

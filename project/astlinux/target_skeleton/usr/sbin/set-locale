@@ -33,13 +33,13 @@ install()
 
   mkdir /tmp/get-locale
 
-  if ! wget -q -c -O /tmp/get-locale/locale-archive.gz.sha1 $SRC_URL/$locale/locale-archive.gz.sha1 >/dev/null; then
+  if ! /usr/sbin/download-file "/tmp/get-locale/locale-archive.gz.sha1" "$SRC_URL/$locale/locale-archive.gz.sha1"; then
     rm -rf /tmp/get-locale/
     echo "SHA1 download failed for locale \"$locale\"."
     exit $RED
   fi
 
-  if ! wget -q -c -O /tmp/get-locale/locale-archive.gz $SRC_URL/$locale/locale-archive.gz >/dev/null; then
+  if ! /usr/sbin/download-file "/tmp/get-locale/locale-archive.gz" "$SRC_URL/$locale/locale-archive.gz"; then
     rm -rf /tmp/get-locale/
     echo "Download failed for locale \"$locale\"."
     exit $RED
@@ -77,7 +77,7 @@ list()
 {
   mkdir /tmp/get-locale
 
-  if ! wget -q -c -O /tmp/get-locale/locales.txt $SRC_URL/locales.txt >/dev/null; then
+  if ! /usr/sbin/download-file "/tmp/get-locale/locales.txt" "$SRC_URL/locales.txt"; then
     rm -rf /tmp/get-locale/
     echo "Locale Listing download failed."
     exit $RED

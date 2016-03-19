@@ -39,7 +39,7 @@ rm -f $TMP_DROP
 unset IFS
 for URL in $URLS; do
   rm -f $TMP_FILE
-  if ! wget -q -O $TMP_FILE $URL >/dev/null; then
+  if ! /usr/sbin/download-file "$TMP_FILE" "$URL"; then
     rm -f $TMP_DROP $TMP_FILE
     MESG="Retrieving Spamhaus DROP list failed for '$URL', no action."
     logger -s -t reload-spamhaus-drop -p kern.info "$MESG"

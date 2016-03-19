@@ -124,7 +124,7 @@ upgrade() {
 
   FILE="$(get_url_filename $type $lang $codec)"
 
-  if ! wget -q -c -O /tmp/snd/$FILE.sha1 $SRC_URL/$FILE.sha1 >/dev/null; then
+  if ! /usr/sbin/download-file "/tmp/snd/$FILE.sha1" "$SRC_URL/$FILE.sha1"; then
     unmount_tmpfs_snd
     echo "SHA1 download failed for sound package \"$(get_sha1_filename "$type" "$lang" "$codec")\"."
     exit $RED
@@ -139,7 +139,7 @@ upgrade() {
     exit $ORANGE
   fi
 
-  if ! wget -q -c -O /tmp/snd/$FILE $SRC_URL/$FILE >/dev/null; then
+  if ! /usr/sbin/download-file "/tmp/snd/$FILE" "$SRC_URL/$FILE"; then
     unmount_tmpfs_snd
     echo "Sounds download failed for sound package \"$(get_sha1_filename "$type" "$lang" "$codec")\"."
     exit $RED

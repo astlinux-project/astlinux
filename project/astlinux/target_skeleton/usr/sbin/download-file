@@ -1,0 +1,28 @@
+#!/bin/sh
+
+file="$1"
+
+url="$2"
+
+redirect_url()
+{
+  local in_url="$1" out_url="$2" base_url
+
+  base_url="${url#$in_url}"
+  if [ "$url" != "$base_url" ]; then
+    url="$out_url$base_url"
+  fi
+}
+
+if [ -z "$file" -o -z "$url" ]; then
+  echo "Usage: download-file file url" >&2
+  exit 1
+fi
+
+## Redirect to AstLinux HTTPS mirror URL
+##
+redirect_url "http://mirror.astlinux.org/" "https://d7rzm9p7jly0z.cloudfront.net/"
+redirect_url "https://mirror.astlinux.org/" "https://d7rzm9p7jly0z.cloudfront.net/"
+
+curl -sSfL --globoff --retry 1 --connect-timeout 15 --max-time 1800 -o "$file" "$url" >/dev/null
+

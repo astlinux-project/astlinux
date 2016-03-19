@@ -67,7 +67,7 @@ upgrade() {
   mkdir -p $BASE/TMP/dl
   mkdir -p $BASE/TMP/tar
 
-  if ! wget -q -c -O $BASE/TMP/dl/$PKG.$suffix.sha1 "$SRC_URL.sha1" >/dev/null; then
+  if ! /usr/sbin/download-file "$BASE/TMP/dl/$PKG.$suffix.sha1" "$SRC_URL.sha1"; then
     finish $RED "Package '$PKG' SHA1 download failed."
   fi
 
@@ -75,7 +75,7 @@ upgrade() {
     finish $ORANGE "Package '$PKG' is already installed."
   fi
 
-  if ! wget -q -c -O $BASE/TMP/dl/$PKG.$suffix "$SRC_URL" >/dev/null; then
+  if ! /usr/sbin/download-file "$BASE/TMP/dl/$PKG.$suffix" "$SRC_URL"; then
     finish $RED "Package '$PKG' download failed."
   fi
 
