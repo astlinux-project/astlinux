@@ -18,7 +18,6 @@ BIND_CONF_OPT = \
 	--enable-epoll \
 	--with-libtool \
 	--with-gssapi=no \
-	--enable-rrl \
 	--enable-filter-aaaa
 
 ifeq ($(BR2_PACKAGE_LIBCAP),y)
@@ -28,12 +27,8 @@ else
 BIND_CONF_OPT += --disable-linux-caps
 endif
 
-ifeq ($(BR2_PACKAGE_LIBXML2),y)
-BIND_CONF_OPT += --with-libxml2=$(STAGING_DIR)/usr --enable-newstats
-BIND_DEPENDENCIES += libxml2
-else
+# Don't enable newstats
 BIND_CONF_OPT += --with-libxml2=no
-endif
 
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
 BIND_DEPENDENCIES += openssl
