@@ -14,9 +14,14 @@ fi
 UPNP_BITRATE_UP="${UPNP_BITRATE_UP:-1000000}"
 UPNP_BITRATE_DOWN="${UPNP_BITRATE_DOWN:-10000000}"
 
-MINIUPNPD=/usr/sbin/miniupnpd
-MINIUPNPD_CONF=/tmp/etc/miniupnpd.conf
-MINIUPNPD_LEASEFILE=/var/db/upnp.leases
+UPNP_MIN_LIFETIME="${UPNP_MIN_LIFETIME:-120}"
+UPNP_MAX_LIFETIME="${UPNP_MAX_LIFETIME:-86400}"
+
+MINIUPNPD="/usr/sbin/miniupnpd"
+MINIUPNPD_CONF="/tmp/etc/miniupnpd.conf"
+
+# Define persistant lease_file
+MINIUPNPD_LEASEFILE="/mnt/kd/upnp.leases"
 
 aif_miniupnpd_plugin()
 {
@@ -158,6 +163,10 @@ ext_ifname=$EXTIF" > $MINIUPNPD_CONF
     return
   fi
 
+  # Symlink to persistant lease_file
+  # Note: The lease_file= can get deleted, so don't use symlink for it.
+  ln -sf "$MINIUPNPD_LEASEFILE" /var/db/upnp.leases
+
   astlinux_release="$(cat /etc/astlinux-release)"
 
   echo "http_port=5000
@@ -167,6 +176,8 @@ lease_file=$MINIUPNPD_LEASEFILE
 bitrate_up=$UPNP_BITRATE_UP
 bitrate_down=$UPNP_BITRATE_DOWN
 secure_mode=$UPNP_SECURE_MODE
+min_lifetime=$UPNP_MIN_LIFETIME
+max_lifetime=$UPNP_MAX_LIFETIME
 system_uptime=yes
 notify_interval=60
 clean_ruleset_interval=600
