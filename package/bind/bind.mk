@@ -4,55 +4,75 @@
 #
 #############################################################
 
-BIND_VERSION = 9.6-ESV-R4
+BIND_VERSION = 9.10.3-P4
 BIND_SITE = ftp://ftp.isc.org/isc/bind9/$(BIND_VERSION)
 BIND_MAKE = $(MAKE1)
-BIND_TARGET_SBINS = lwresd named named-checkconf named-checkzone
-BIND_TARGET_SBINS += named-compilezone rndc rndc-confgen dnssec-dsfromkey
-BIND_TARGET_SBINS += dnssec-keyfromlabel dnssec-keygen dnssec-signzone
-BIND_TARGET_BINS = dig host nslookup nsupdate
-BIND_TARGET_LIBS = libbind9.* libdns.* libisc.* libisccc.* libisccfg.* liblwres.*
-BIND_CONF_ENV =	BUILD_CC="$(TARGET_CC)" \
-		BUILD_CFLAGS="$(TARGET_CFLAGS)"
-BIND_CONF_OPT =	--sysconfdir=/etc \
-		--localstatedir=/var \
-		--with-randomdev=/dev/urandom \
-		--enable-epoll --with-libtool
+BIND_INSTALL_STAGING = YES
+BIND_TARGET_LIBS = libbind9.so* libdns.so* libisc.so* libisccc.so* libisccfg.so* liblwres.so*
+BIND_CONF_ENV = \
+	BUILD_CC="$(TARGET_CC)" \
+	BUILD_CFLAGS="$(TARGET_CFLAGS)"
+BIND_CONF_OPT = \
+	--with-libjson=no \
+	--with-randomdev=/dev/urandom \
+	--enable-epoll \
+	--with-libtool \
+	--with-gssapi=no \
+	--enable-rrl \
+	--enable-filter-aaaa
+
+ifeq ($(BR2_PACKAGE_LIBCAP),y)
+BIND_CONF_OPT += --enable-linux-caps
+BIND_DEPENDENCIES += libcap
+else
+BIND_CONF_OPT += --disable-linux-caps
+endif
 
 ifeq ($(BR2_PACKAGE_LIBXML2),y)
-	BIND_CONF_OPT += --with-libxml2=$(STAGING_DIR)/usr
-	BIND_DEPENDENCIES += libxml2
+BIND_CONF_OPT += --with-libxml2=$(STAGING_DIR)/usr --enable-newstats
+BIND_DEPENDENCIES += libxml2
 else
-	BIND_CONF_OPT += --with-libxml2=no
+BIND_CONF_OPT += --with-libxml2=no
 endif
 
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
-	BIND_DEPENDENCIES += openssl
-	BIND_CONF_OPT += --with-openssl=$(STAGING_DIR)/usr
+BIND_DEPENDENCIES += openssl
+BIND_CONF_ENV += \
+	ac_cv_func_EVP_sha256=yes \
+	ac_cv_func_EVP_sha384=yes \
+	ac_cv_func_EVP_sha512=yes
+BIND_CONF_OPT += \
+	--with-openssl=$(STAGING_DIR)/usr LIBS="-lz" \
+	--with-ecdsa=yes
+# GOST cipher support requires openssl extra engines
+ifeq ($(BR2_PACKAGE_OPENSSL_ENGINES),y)
+BIND_CONF_OPT += --with-gost=yes
 else
-	BIND_CONF_OPT += --with-openssl=no
+BIND_CONF_OPT += --with-gost=no
+endif
+else
+BIND_CONF_OPT += --with-openssl=no
 endif
 
-define BIND_TARGET_INSTALL_FIXES
-	rm -f $(TARGET_DIR)/usr/bin/isc-config.sh
-	$(INSTALL) -m 0755 -D package/bind/bind.sysvinit $(TARGET_DIR)/etc/init.d/S81named
-endef
+# Used by dnssec-checkds and dnssec-coverage
+BIND_CONF_OPT += --with-python=no
 
-BIND_POST_INSTALL_TARGET_HOOKS += BIND_TARGET_INSTALL_FIXES
-
-define BIND_TARGET_REMOVE_TOOLS
-	rm -rf $(addprefix $(TARGET_DIR)/usr/bin/, $(BIND_TARGET_BINS))
-endef
-
-ifneq ($(BR2_PACKAGE_BIND_TOOLS),y)
-BIND_POST_INSTALL_TARGET_HOOKS += BIND_TARGET_REMOVE_TOOLS
+ifeq ($(BR2_PACKAGE_READLINE),y)
+BIND_DEPENDENCIES += readline
+else
+BIND_CONF_OPT += --with-readline=no
 endif
+
+define BIND_INSTALL_TARGET_CMDS
+	$(INSTALL) -m 0755 -D $(STAGING_DIR)/usr/bin/dig $(TARGET_DIR)/usr/bin/dig
+	cp -a $(addprefix $(STAGING_DIR)/usr/lib/, $(BIND_TARGET_LIBS)) $(TARGET_DIR)/usr/lib/
+endef
+
+BIND_UNINSTALL_STAGING_OPT = --version
 
 define BIND_UNINSTALL_TARGET_CMDS
-	rm -rf $(addprefix $(TARGET_DIR)/usr/sbin/, $(BIND_TARGET_SBINS))
-	rm -rf $(addprefix $(TARGET_DIR)/usr/bin/, $(BIND_TARGET_BINS))
-	rm -rf $(addprefix $(TARGET_DIR)/usr/lib/, $(BIND_TARGET_LIBS))
-	rm -f $(TARGET_DIR)/etc/init.d/S81named
+	rm -f $(TARGET_DIR)/usr/bin/dig
+	rm -f $(addprefix $(TARGET_DIR)/usr/lib/, $(BIND_TARGET_LIBS))
 endef
 
 $(eval $(call AUTOTARGETS,package,bind))
