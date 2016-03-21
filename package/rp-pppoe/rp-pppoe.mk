@@ -20,6 +20,15 @@ RP_PPPOE_CONF_ENV = \
 RP_PPPOE_CONF_OPT = \
 	--disable-debugging
 
+define RP_PPPOE_SET_TARGET_COMMAND_PATHS
+	find $(@D)/scripts/ -name "*.in" | xargs sed -i \
+		-e 's:@ID@:/usr/bin/id:g' \
+		-e 's:@SETSID@:/usr/bin/setsid:g' \
+		-e 's:@ECHO@:/bin/echo:g' \
+		-e 's:@PPPD@:/usr/sbin/pppd:g'
+endef
+RP_PPPOE_POST_PATCH_HOOKS += RP_PPPOE_SET_TARGET_COMMAND_PATHS
+
 define RP_PPPOE_INSTALL_TARGET_CMDS
 	for ff in $(RP_PPPOE_TARGET_FILES); do \
 		$(INSTALL) -m 0755 $(@D)/src/$$ff $(TARGET_DIR)/usr/sbin/$$ff; \
