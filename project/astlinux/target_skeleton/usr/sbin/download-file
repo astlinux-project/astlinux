@@ -4,14 +4,34 @@ file="$1"
 
 url="$2"
 
-redirect_url()
+redirect_url_to_https()
 {
-  local in_url="$1" out_url="$2" base_url
+  local host="$1" base_url cname
 
-  base_url="${url#$in_url}"
-  if [ "$url" != "$base_url" ]; then
-    url="$out_url$base_url"
+  base_url="$url"
+  base_url="${base_url#http://}"
+  base_url="${base_url#https://}"
+
+  if [ "$host" != "${base_url%%/*}" ]; then
+    return
   fi
+
+  if [ ! -x /usr/sbin/unbound-host ]; then
+    return
+  fi
+
+  cname="$(/usr/sbin/unbound-host -t CNAME "$host" | sed -n -r -e 's/^.* CNAME .* ([^ ]+)$/\1/p' | head -n1)"
+  if [ -z "$cname" ]; then
+    return
+  fi
+
+  if [ "$base_url" != "${base_url#*/}" ]; then
+    base_url="${base_url#*/}"
+  else
+    base_url=""
+  fi
+
+  url="https://${cname%.}/${base_url}"
 }
 
 if [ -z "$file" -o -z "$url" ]; then
@@ -19,10 +39,9 @@ if [ -z "$file" -o -z "$url" ]; then
   exit 1
 fi
 
-## Redirect to AstLinux HTTPS mirror URL
+## Redirect AstLinux mirror URL to HTTPS
 ##
-redirect_url "http://mirror.astlinux.org/" "https://d7rzm9p7jly0z.cloudfront.net/"
-redirect_url "https://mirror.astlinux.org/" "https://d7rzm9p7jly0z.cloudfront.net/"
+redirect_url_to_https "mirror.astlinux.org"
 
 curl -sSfL --globoff --retry 1 --connect-timeout 15 --max-time 1800 -o "$file" "$url" >/dev/null
 
