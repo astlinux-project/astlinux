@@ -1,0 +1,12 @@
+--- unbound-1.5.8/smallapp/unbound-host.c.orig	2016-03-22 09:29:02.000000000 -0500
++++ unbound-1.5.8/smallapp/unbound-host.c	2016-03-22 09:31:10.000000000 -0500
+@@ -426,6 +426,9 @@
+ 	/* no need to fetch additional targets, we only do few lookups */
+ 	check_ub_res(ub_ctx_set_option(ctx, "target-fetch-policy:", "0 0 0 0 0"));
+ 
++	/* By default, read forwarder information from /etc/resolv.conf */
++	check_ub_res(ub_ctx_resolvconf(ctx, "/etc/resolv.conf"));
++
+ 	/* parse the options */
+ 	while( (c=getopt(argc, argv, "46DF:c:df:hrt:vy:C:")) != -1) {
+ 		switch(c) {

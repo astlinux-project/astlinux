@@ -1,0 +1,9 @@
+config BR2_PACKAGE_UNBOUND
+	bool "unbound lib and unbound-host tool"
+	select BR2_PACKAGE_OPENSSL
+	select BR2_PACKAGE_EXPAT
+	help
+	  Unbound is a validating, recursive, and caching DNS resolver.
+
+	  https://www.unbound.net
+
