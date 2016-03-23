@@ -12,6 +12,7 @@ UNBOUND_INSTALL_STAGING = YES
 UNBOUND_DEPENDENCIES = openssl expat
 
 UNBOUND_CONF_OPT = \
+	--disable-rpath \
 	--with-libexpat="$(STAGING_DIR)/usr" \
 	--with-ssl="$(STAGING_DIR)/usr"
 
