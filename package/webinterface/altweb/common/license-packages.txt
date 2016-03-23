@@ -58,3 +58,4 @@ Fossil~Copyright (c) 2007-2015 D. Richard Hipp. All rights reserved.
 BusyBox~Copyright (c) 1998-2011 Erik Andersen, Rob Landley, Denys Vlasenko, et al.
 dhcp6c~Copyright (c) 1998-2008 WIDE Project.
 htop~Copyright (c) 2004-2012 Hisham Muhammad.
+unbound~Copyright (c) 2007-2016, NLnet Labs. All rights reserved.
