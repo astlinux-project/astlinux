@@ -20,6 +20,9 @@ Released @TBD@
 
 -- RUNNIX, version bump to runnix-0.4-7583, with Linux Kernel 3.2.78, dropbear 2016.72
 
+-- Firmware and RUNNIX upgrades now support https:// URL's.  Additionally, URL's with the host 'mirror.astlinux.org'
+   will be automatically redirected to the proper HTTPS host using https:// .
+
 -- igb, version bump to 5.3.4.4, Intel Gigabit Ethernet Network Driver
 
 -- php, version bump to 5.5.33, bug fixes
@@ -43,9 +46,16 @@ Released @TBD@
 -- OpenSSL, version bump to 1.0.1s, security fixes: CVE-2016-0800, CVE-2016-0705, CVE-2016-0798, CVE-2016-0797,
                                                     CVE-2016-0799, CVE-2016-0702
 
+-- curl, added a trusted root certificates, single file bundle, to allow authenticated HTTPS connections.
+
+-- unbound, new package adding the libunbound library and unbound-host command.  A symlink of 'host' -> 'unbound-host' is also added.
+   Unbound is a validating, recursive, and caching DNS resolver.
+
 -- stunnel, version bump to 5.31
 
--- miniupnpd, version bump to 1.9.20160222
+-- miniupnpd, version bump to 1.9.20160222, also make the UPnP leases file survive a reboot using '/mnt/kd/upnp.leases'.
+
+-- rp-pppoe, PPPoE client, fix a build issue on certain build systems (CentOS 7) where the generated helper scripts failed to start.
 
 ** Asterisk
 
