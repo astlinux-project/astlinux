@@ -55,8 +55,6 @@ Released @TBD@
 
 -- miniupnpd, version bump to 1.9.20160222, also make the UPnP leases file survive a reboot using '/mnt/kd/upnp.leases'.
 
--- rp-pppoe, PPPoE client, fix a build issue on certain build systems (CentOS 7) where the generated helper scripts failed to start.
-
 ** Asterisk
 
 -- Asterisk 1.8.32.3 (no change), 11.21.2 (no change) and 13.7.2 (no change)
@@ -68,6 +66,14 @@ Released @TBD@
 ** Web Interface
 
 -- Automatically don't use kernel-reboot with 'genx86_64-vm' builds, use reboot instead.
+
+
+Additions for AstLinux 1.2.6.1:
+==============================
+
+Released 2016-03-23
+
+rp-pppoe, PPPoE client, fix a build issue where the generated helper scripts failed to start.
 
 
 Additions for AstLinux 1.2.6:
