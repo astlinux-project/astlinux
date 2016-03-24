@@ -9,7 +9,7 @@ UNBOUND_SITE = https://www.unbound.net/downloads
 UNBOUND_SOURCE = unbound-$(UNBOUND_VERSION).tar.gz
 UNBOUND_INSTALL_STAGING = YES
 
-UNBOUND_DEPENDENCIES = openssl expat
+UNBOUND_DEPENDENCIES = host-bison host-flex openssl expat
 
 UNBOUND_CONF_OPT = \
 	--disable-rpath \
