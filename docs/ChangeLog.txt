@@ -39,14 +39,18 @@ Released @TBD@
 
 -- expat, version bump to 2.1.1
 
--- Time Zone Database update, tzdata2016b and php-timezonedb-2016.2
+-- Time Zone Database update, tzdata2016c and php-timezonedb-2016.3
 
 ** Networking
 
 -- OpenSSL, version bump to 1.0.1s, security fixes: CVE-2016-0800, CVE-2016-0705, CVE-2016-0798, CVE-2016-0797,
                                                     CVE-2016-0799, CVE-2016-0702
 
+-- busybox, udhcp: fix a SEGV on malformed RFC1035-encoded domain name: CVE-2016-2148
+
 -- curl, added a trusted root certificates, single file bundle, to allow authenticated HTTPS connections.
+
+-- libcurl (curl) version bump to 7.48.0
 
 -- unbound, new package adding the libunbound library and unbound-host command.  A symlink of 'host' -> 'unbound-host' is also added.
    Unbound is a validating, recursive, and caching DNS resolver.
@@ -62,6 +66,8 @@ Released @TBD@
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
 -- pjsip 2.4.5 (no change)
+
+-- wanpipe, version bump to 7.0.18
 
 ** Web Interface
 
