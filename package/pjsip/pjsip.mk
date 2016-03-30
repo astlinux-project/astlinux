@@ -23,10 +23,14 @@ PJSIP_CONF_ENV = \
 
 PJSIP_CONF_OPT = \
 	--with-external-srtp \
-	--disable-sound \
-	--disable-resample \
 	--disable-video \
-	--disable-opencore-amr
+	--disable-v4l2 \
+	--disable-sound \
+	--disable-opencore-amr \
+	--disable-ilbc-codec \
+	--disable-g7221-codec \
+	--disable-resample \
+	--without-libyuv
 
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
 PJSIP_CONF_OPT += --with-ssl=$(STAGING_DIR)/usr

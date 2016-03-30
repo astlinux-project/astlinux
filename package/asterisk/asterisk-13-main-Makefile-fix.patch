@@ -1,0 +1,13 @@
+--- asterisk-13.8.0/main/Makefile.orig	2016-03-30 12:32:58.000000000 -0500
++++ asterisk-13.8.0/main/Makefile	2016-03-30 12:33:23.000000000 -0500
+@@ -226,9 +226,8 @@
+ 	$(ECHO_PREFIX) echo "   [LN] $< -> $@"
+ ifneq ($(LDCONFIG),)
+ 	$(CMD_PREFIX) $(LDCONFIG) $(LDCONFIG_FLAGS) . 2>/dev/null
+-else
+-	$(CMD_PREFIX) $(LN) -sf $< $@
+ endif
++	$(CMD_PREFIX) $(LN) -sf $< $@
+ 
+ else # Darwin
+ ASTSSL_LIB:=libasteriskssl.dylib

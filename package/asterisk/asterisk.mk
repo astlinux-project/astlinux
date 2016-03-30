@@ -7,9 +7,9 @@ ifeq ($(BR2_PACKAGE_ASTERISK_v1_8),y)
 ASTERISK_VERSION := 1.8.32.3
 else
  ifeq ($(BR2_PACKAGE_ASTERISK_v11),y)
-ASTERISK_VERSION := 11.21.2
+ASTERISK_VERSION := 11.22.0
  else
-ASTERISK_VERSION := 13.7.2
+ASTERISK_VERSION := 13.8.0
  endif
 endif
 ASTERISK_SOURCE := asterisk-$(ASTERISK_VERSION).tar.gz
@@ -213,9 +213,10 @@ endif
 
 	touch $@
 
-$(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | host-pkg-config host-ncurses host-bison host-flex host-libxml2 \
+$(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | host-automake host-pkg-config host-ncurses host-bison host-flex host-libxml2 \
 			libelf ncurses zlib openssl libtool util-linux $(ASTERISK_EXTRAS)
 	(cd $(ASTERISK_DIR); rm -rf config.cache configure; \
+		$(HOST_CONFIGURE_OPTS) \
 		./bootstrap.sh; \
 		$(TARGET_CONFIGURE_OPTS) \
 		./configure \
