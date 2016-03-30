@@ -4,11 +4,10 @@
 #
 ############################################################
 
-LIBPRI_VERSION = 1.4.15
+LIBPRI_VERSION = 1.5.0
 LIBPRI_SOURCE = libpri-$(LIBPRI_VERSION).tar.gz
 LIBPRI_SITE = http://downloads.asterisk.org/pub/telephony/libpri/releases
 LIBPRI_INSTALL_STAGING = YES
-LIBPRI_INSTALL_TARGET = YES
 LIBPRI_DEPENDENCIES += dahdi-tools
 
 define LIBPRI_CONFIGURE_CMDS
@@ -35,4 +34,3 @@ LIBPRI_INSTALL_TARGET_OPT = \
 	install
 
 $(eval $(call AUTOTARGETS,package,libpri))
-
