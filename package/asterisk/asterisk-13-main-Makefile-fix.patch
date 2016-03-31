@@ -1,13 +1,61 @@
---- asterisk-13.8.0/main/Makefile.orig	2016-03-30 12:32:58.000000000 -0500
-+++ asterisk-13.8.0/main/Makefile	2016-03-30 12:33:23.000000000 -0500
-@@ -226,9 +226,8 @@
+From: George Joseph <george.joseph@fairview5.com>
+Date: Wed, 30 Mar 2016 23:34:42 +0000 (-0600)
+Subject: pjproject_bundled:  Fix use of LDCONFIG for shared library link creation
+X-Git-Url: http://git.asterisk.org/gitweb/?p=asterisk%2Fasterisk.git;a=commitdiff_plain;h=304f81780dcb9702d46164d194b9fdd808c4b99f
+
+pjproject_bundled:  Fix use of LDCONFIG for shared library link creation
+
+LDCONFIG apparently isn't set to something sane on all systems so the creation
+of the shared library links fails.  Instead of just testing for non-blank,
+main/Makefile now checks that LDCONFIG is actually executable and reverts to
+LN if it isn't.
+
+This applies to both libasteriskpj and libasteriskssl.
+
+Thanks to 'abelbeck' for pointing out that the issue was LDCONFIG.
+
+ASTERISK-25873 #close
+Reported-by: Hans van Eijsden
+
+Change-Id: I25b76379bc637726ec044b2c0e709b56b3701729
+---
+
+diff --git a/main/Makefile b/main/Makefile
+index 50fdc57..d52c3f0 100644
+--- a/main/Makefile
++++ b/main/Makefile
+@@ -224,11 +224,11 @@ endif
+ 
+ $(ASTSSL_LIB): $(ASTSSL_LIB).$(ASTSSL_SO_VERSION)
  	$(ECHO_PREFIX) echo "   [LN] $< -> $@"
- ifneq ($(LDCONFIG),)
- 	$(CMD_PREFIX) $(LDCONFIG) $(LDCONFIG_FLAGS) . 2>/dev/null
+-ifneq ($(LDCONFIG),)
+-	$(CMD_PREFIX) $(LDCONFIG) $(LDCONFIG_FLAGS) . 2>/dev/null
 -else
 -	$(CMD_PREFIX) $(LN) -sf $< $@
- endif
-+	$(CMD_PREFIX) $(LN) -sf $< $@
+-endif
++	$(CMD_PREFIX) if [ -x "$(LDCONFIG)" ] ; then \
++		$(LDCONFIG) $(LDCONFIG_FLAGS) . 2>/dev/null ;\
++	else \
++		$(LN) -sf $< $@ ;\
++	fi
  
  else # Darwin
  ASTSSL_LIB:=libasteriskssl.dylib
+@@ -304,11 +304,11 @@ $(ASTPJ_LIB).$(ASTPJ_SO_VERSION): libasteriskpj.o libasteriskpj.exports
+ 
+ $(ASTPJ_LIB): $(ASTPJ_LIB).$(ASTPJ_SO_VERSION)
+ 	$(ECHO_PREFIX) echo "   [LN] $< -> $@"
+-ifneq ($(LDCONFIG),)
+-	$(CMD_PREFIX) $(LDCONFIG) $(LDCONFIG_FLAGS) . 2>/dev/null
+-else
+-	$(CMD_PREFIX) $(LN) -sf $< $@
+-endif
++	$(CMD_PREFIX) if [ -x "$(LDCONFIG)" ] ; then \
++		$(LDCONFIG) $(LDCONFIG_FLAGS) . 2>/dev/null ;\
++	else \
++		$(LN) -sf $< $@ ;\
++	fi
+ 
+ else # Darwin
+ ASTPJ_LIB:=libasteriskpj.dylib
+
