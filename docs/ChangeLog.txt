@@ -61,11 +61,13 @@ Released @TBD@
 
 ** Asterisk
 
--- Asterisk 1.8.32.3 (no change), 11.21.2 (no change) and 13.7.2 (no change)
+-- Asterisk 1.8.32.3 (no change), 11.22.0 (version bump) and 13.8.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
 -- pjsip 2.4.5 (no change)
+
+-- libpri, version bump to 1.5.0
 
 -- wanpipe, version bump to 7.0.18
 
