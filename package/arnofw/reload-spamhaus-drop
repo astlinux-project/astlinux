@@ -2,7 +2,7 @@
 #
 # reload-spamhaus-drop
 #
-# http://www.spamhaus.org/drop/
+# https://www.spamhaus.org/drop/
 #
 # Retrieve the latest spamhaus-drop files, and copy it to 'outfile'.
 # If 'infile' is specified, it is appended to 'outfile'.
@@ -16,10 +16,17 @@
 # than once every hour.
 #
 
-URLS="http://www.spamhaus.org/drop/drop.txt http://www.spamhaus.org/drop/edrop.txt"
+URLS="https://www.spamhaus.org/drop/drop.txt https://www.spamhaus.org/drop/edrop.txt"
 
 TMP_FILE="/tmp/dropfile.txt"
 TMP_DROP="/tmp/drop.txt"
+
+download_file()
+{
+  local file="$1" url="$2"
+
+  curl -sSfL --globoff --retry 1 --connect-timeout 15 --max-time 1800 -o "$file" "$url" >/dev/null
+}
 
 if [ -z "$1" ]; then
   echo "Usage: reload-spamhaus-drop outfile [ infile ]"
@@ -39,7 +46,7 @@ rm -f $TMP_DROP
 unset IFS
 for URL in $URLS; do
   rm -f $TMP_FILE
-  if ! /usr/sbin/download-file "$TMP_FILE" "$URL"; then
+  if ! download_file "$TMP_FILE" "$URL"; then
     rm -f $TMP_DROP $TMP_FILE
     MESG="Retrieving Spamhaus DROP list failed for '$URL', no action."
     logger -s -t reload-spamhaus-drop -p kern.info "$MESG"
