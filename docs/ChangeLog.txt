@@ -22,6 +22,8 @@ Released @TBD@
 
 -- linux, add kernel patch to the 'k10temp' kernel module adding support for the PC Engines APU2 board
 
+-- linux, enable CONFIG_USB_XHCI_HCD=y across all kernel configs to support USB 3.0 hardware
+
 -- Firmware and RUNNIX upgrades now support https:// URL's.  Additionally, URL's with the host 'mirror.astlinux.org'
    will be automatically redirected to the proper HTTPS host using https:// .
 
