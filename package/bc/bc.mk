@@ -4,9 +4,9 @@
 #
 #############################################################
 
-BC_VERSION = 1.06
-BC_SOURCE:=bc-$(BC_VERSION).tar.gz
-BC_SITE = http://ftp.gnu.org/gnu/bc
+BC_VERSION = 1.06.95
+BC_SOURCE = bc-$(BC_VERSION).tar.bz2
+BC_SITE = http://alpha.gnu.org/gnu/bc
 BC_DEPENDENCIES = host-bison host-flex
 
 define BC_INSTALL_TARGET_CMDS
