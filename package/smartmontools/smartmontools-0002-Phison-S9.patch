@@ -5,7 +5,7 @@
      "-v 242,raw48,Lifetime_Reads_GiB"
    },
 +  { "Phison S9 SSD", // see MKP_521_Phison_SMART_attribute.pdf
-+    "SATA SSD", // PC Engines msata16d
++    ".*SATA SSD", // PC Engines msata16d, MyDigitalSSD Super-Boot-Drive mSATA
 +    "S9FM.*", "",
 +  //"-v 1,raw48,Raw_Read_Error_Rate "
 +  //"-v 9,raw24(raw8),Power_On_Hours "
