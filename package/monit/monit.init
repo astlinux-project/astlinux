@@ -26,10 +26,18 @@ set httpd
     echo "set alert $i not on { action, instance }"
   done
 
-  if [ -n "$MONIT_NOTIFY_FROM" ]; then
-    echo "set mail-format { from: \"Monit-$HOSTNAME\" <$MONIT_NOTIFY_FROM> }"
-  elif [ -n "$SMTP_DOMAIN" ]; then
-    echo "set mail-format { from: \"Monit-$HOSTNAME\" <monit@$SMTP_DOMAIN> }"
+  NOTIFY_FROM="$MONIT_NOTIFY_FROM"
+
+  # Extract from possible <a@b.tld> format
+  NOTIFY_FROM="${NOTIFY_FROM##*<}"
+  NOTIFY_FROM="${NOTIFY_FROM%%>*}"
+
+  if [ -z "$NOTIFY_FROM" -a -n "$SMTP_DOMAIN" ]; then
+    NOTIFY_FROM="monit@$SMTP_DOMAIN"
+  fi
+
+  if [ -n "$NOTIFY_FROM" ]; then
+    echo "set mail-format { from: \"Monit-$HOSTNAME\" <$NOTIFY_FROM> }"
   fi
 
   echo "

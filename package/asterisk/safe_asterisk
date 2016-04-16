@@ -20,6 +20,10 @@ if [ "$TTY" = "none" ]; then
   TTY=""
 fi
 
+# Extract from possible <a@b.tld> format
+NOTIFY_FROM="${NOTIFY_FROM##*<}"
+NOTIFY_FROM="${NOTIFY_FROM%%>*}"
+
 if [ -z "$NOTIFY_FROM" -a -n "$SMTP_DOMAIN" ]; then
   NOTIFY_FROM="asterisk@$SMTP_DOMAIN"
 fi

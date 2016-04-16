@@ -23,6 +23,10 @@ ALERT_SENT_FILE="/var/tmp/asterisk_sip_monitor_alert"
 NOTIFY="$SAFE_ASTERISK_NOTIFY"                # Who to notify with alerts, space separate
 NOTIFY_FROM="$SAFE_ASTERISK_NOTIFY_FROM"      # From email header (optional)
 
+# Extract from possible <a@b.tld> format
+NOTIFY_FROM="${NOTIFY_FROM##*<}"
+NOTIFY_FROM="${NOTIFY_FROM%%>*}"
+
 if [ -z "$NOTIFY_FROM" -a -n "$SMTP_DOMAIN" ]; then
   NOTIFY_FROM="asterisk@$SMTP_DOMAIN"
 fi

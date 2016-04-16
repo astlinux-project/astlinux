@@ -16,6 +16,10 @@ echo "$(date "+%Y-%m-%d %H:%M:%S") - $event: $message" >>/var/log/ups-status.log
 NOTIFY="$UPS_NOTIFY"
 NOTIFY_FROM="$UPS_NOTIFY_FROM"
 
+# Extract from possible <a@b.tld> format
+NOTIFY_FROM="${NOTIFY_FROM##*<}"
+NOTIFY_FROM="${NOTIFY_FROM%%>*}"
+
 if [ -z "$NOTIFY_FROM" -a -n "$SMTP_DOMAIN" ]; then
   NOTIFY_FROM="noreply@$SMTP_DOMAIN"
 fi

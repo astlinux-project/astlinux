@@ -35,6 +35,10 @@ if [ ! -f /etc/msmtprc ]; then
   exit 1
 fi
 
+# Extract from possible <a@b.tld> format
+FROM="${FROM##*<}"
+FROM="${FROM%%>*}"
+
 if [ -z "$FROM" -a -n "$SMTP_DOMAIN" ]; then
   FROM="noreply@$SMTP_DOMAIN"
 fi

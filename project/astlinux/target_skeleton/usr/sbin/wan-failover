@@ -27,6 +27,14 @@ VERBOSITY="${WAN_FAILOVER_VERBOSITY:-6}"
 NOTIFY="$WAN_FAILOVER_NOTIFY"                # Who to notify with email alerts, space separate
 NOTIFY_FROM="$WAN_FAILOVER_NOTIFY_FROM"      # From email header (optional)
 
+# Extract from possible <a@b.tld> format
+NOTIFY_FROM="${NOTIFY_FROM##*<}"
+NOTIFY_FROM="${NOTIFY_FROM%%>*}"
+
+if [ -z "$NOTIFY_FROM" -a -n "$SMTP_DOMAIN" ]; then
+  NOTIFY_FROM="noreply@$SMTP_DOMAIN"
+fi
+
 TARGETS_FAILED=0
 TEST_INTERVAL=$INTERVAL
 NO_OF_TARGETS=0
