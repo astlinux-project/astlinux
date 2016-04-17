@@ -31,21 +31,29 @@ Released @TBD@
 
 -- php, version bump to 5.5.34, bug fixes
 
--- sqlite, version bump to 3.11.1
+-- sqlite, version bump to 3.12.1
 
 -- Monit, version bump to 5.17.1
 
 -- nut, version bump to 2.7.4
 
+-- sudo, version bump to 1.8.16
+
 -- ethtool, version bump to 4.5
 
 -- nano, version bump to 2.5.3
+
+-- smartctl, add drivedb.h entry for Phison S9 SSD: PC Engines msata16d, MyDigitalSSD Super-Boot-Drive mSATA
+
+-- libsodium, version bump to 1.0.10
 
 -- expat, version bump to 2.1.1
 
 -- bc, version bump to 1.06.95
 
 -- Time Zone Database update, tzdata2016c and php-timezonedb-2016.3
+
+-- (Custom Build Only) flashrom, version bump to 0.9.9
 
 ** Networking
 
@@ -65,9 +73,12 @@ Released @TBD@
 
 -- miniupnpd, version bump to 1.9.20160222, also make the UPnP leases file survive a reboot using '/mnt/kd/upnp.leases'.
 
+-- Email Notifications, now automatically define a 'a@b.tld' From header in the form: "<action>-<hostname>" <a@b.tld>
+   The current <action> values are: SIP, Asterisk, Monit, Test, UPS, WAN
+
 ** Asterisk
 
--- Asterisk 1.8.32.3 (no change), 11.22.0 (version bump) and 13.8.0 (version bump)
+-- Asterisk 1.8.32.3 (no change), 11.22.0 (version bump) and 13.8.1 (version bump)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
