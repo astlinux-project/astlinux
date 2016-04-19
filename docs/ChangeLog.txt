@@ -31,7 +31,7 @@ Released @TBD@
 
 -- php, version bump to 5.5.34, bug fixes
 
--- sqlite, version bump to 3.12.1
+-- sqlite, version bump to 3.12.2
 
 -- Monit, version bump to 5.17.1
 
@@ -51,7 +51,7 @@ Released @TBD@
 
 -- bc, version bump to 1.06.95
 
--- Time Zone Database update, tzdata2016c and php-timezonedb-2016.3
+-- Time Zone Database update, tzdata2016d and php-timezonedb-2016.4
 
 -- (Custom Build Only) flashrom, version bump to 0.9.9
 
