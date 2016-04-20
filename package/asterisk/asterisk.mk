@@ -9,7 +9,7 @@ else
  ifeq ($(BR2_PACKAGE_ASTERISK_v11),y)
 ASTERISK_VERSION := 11.22.0
  else
-ASTERISK_VERSION := 13.8.1
+ASTERISK_VERSION := 13.8.2
  endif
 endif
 ASTERISK_SOURCE := asterisk-$(ASTERISK_VERSION).tar.gz

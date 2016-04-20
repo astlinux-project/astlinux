@@ -1,0 +1,15 @@
+X-Git-Url: http://git.asterisk.org/gitweb/?p=asterisk%2Fasterisk.git;a=blobdiff_plain;f=apps%2Fapp_queue.c;h=fa432cb76f5e41ad1168b73d3cd415daf3c851c3;hp=4a8029080d4b88a34a84f8d2b20491ba1dcbf6f0;hb=32b4320d620ffff5c55f111fc22f22fdb07f8c60;hpb=981ed6091e513bc81d4863d409762638495c2ed1
+
+diff --git a/apps/app_queue.c b/apps/app_queue.c
+index 4a80290..fa432cb 100644
+--- a/apps/app_queue.c
++++ b/apps/app_queue.c
+@@ -3641,7 +3641,7 @@ static int can_ring_entry(struct queue_ent *qe, struct callattempt *call)
+ 		return 0;
+ 	}
+ 
+-	if (call->member->in_call && call->lastqueue->wrapuptime) {
++	if (call->member->in_call && call->lastqueue && call->lastqueue->wrapuptime) {
+ 		ast_debug(1, "%s is in call, so not available (wrapuptime %d)\n",
+ 			call->interface, call->lastqueue->wrapuptime);
+ 		return 0;
