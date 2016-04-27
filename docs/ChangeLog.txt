@@ -69,6 +69,8 @@ Released @TBD@
 -- unbound, new package adding the libunbound library and unbound-host command.  A symlink of 'host' -> 'unbound-host' is also added.
    Unbound is a validating, recursive, and caching DNS resolver.
 
+-- ntpd/sntp, version bump to 4.2.8p7, security fixes: 11 low/medium-severity vulnerabilities
+
 -- stunnel, version bump to 5.31
 
 -- miniupnpd, version bump to 1.9.20160222, also make the UPnP leases file survive a reboot using '/mnt/kd/upnp.leases'.
