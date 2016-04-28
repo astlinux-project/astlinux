@@ -12,8 +12,15 @@ NTP_CONF_OPT = \
 	--with-shared \
 	--program-transform-name=s,,, \
 	--with-yielding-select=yes \
-	--enable-ipv6=no \
+	--disable-debugging \
+	--disable-ipv6 \
 	--without-ntpsnmpd
+
+# Specify desired clocks
+NTP_CONF_OPT += \
+	--disable-all-clocks \
+	--disable-parse-clocks \
+	--enable-LOCAL-CLOCK
 
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
 NTP_CONF_OPT += --with-crypto
