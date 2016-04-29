@@ -29,7 +29,7 @@ Released @TBD@
 
 -- igb, version bump to 5.3.4.4, Intel Gigabit Ethernet Network Driver
 
--- php, version bump to 5.5.34, bug fixes
+-- php, version bump to 5.5.35, bug and security fixes
 
 -- sqlite, version bump to 3.12.2
 
@@ -70,6 +70,7 @@ Released @TBD@
    Unbound is a validating, recursive, and caching DNS resolver.
 
 -- ntpd/sntp, version bump to 4.2.8p7, security fixes: 11 low/medium-severity vulnerabilities
+   Now only include the "LOCAL" Reference Clock driver, which reduces the ntpd binary size buy 30% .
 
 -- stunnel, version bump to 5.31
 
