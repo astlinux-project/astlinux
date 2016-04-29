@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Added support for x86_64 KVM/Xen VM's and Virtio paravirtualized drivers with the new board type genx86_64-vm
 
+-- Now use pkgconf 0.9.12 for pkg-config package.
+
 ** System
 
 -- Linux Kernel 3.2.78 (minor bump)
