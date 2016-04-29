@@ -17,7 +17,7 @@ define PROSODY_CONFIGURE_CMDS
 		--with-lua="$(HOST_DIR)/usr" \
 		--with-lua-include="$(STAGING_DIR)/usr/include" \
 		--with-lua-lib="$(STAGING_DIR)/usr/lib" \
-		--cflags="$(TARGET_CFLAGS) $(TARGET_CPPFLAGS) -fPIC -std=gnu99 -D_GNU_SOURCE" \
+		--cflags="$(TARGET_CFLAGS) -fPIC -std=gnu99 -D_GNU_SOURCE" \
 		--ldflags="$(TARGET_LDFLAGS) -shared" \
 		--datadir="/etc/prosody/data" \
 		--c-compiler='$(TARGET_CC)' \
