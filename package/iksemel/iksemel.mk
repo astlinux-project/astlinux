@@ -16,6 +16,7 @@ IKSEMEL_CONF_OPT = \
 
 define IKSEMEL_CONFIGURE_PREFLIGHT
 	( cd $(@D) ; \
+	  $(HOST_CONFIGURE_OPTS) \
 	  ./autogen.sh ; \
 	)
 endef
