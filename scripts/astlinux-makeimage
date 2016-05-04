@@ -238,7 +238,17 @@ fi
   editConf
 )
 
-sudo umount /mnt/runnix
+# Some systems take a second or two before /mnt/runnix is not busy
+cnt=5
+while [ $cnt -gt 0 ]; do
+  cnt=$((cnt - 1))
+  sleep 2
+  if sudo umount /mnt/runnix; then
+    echo "/mnt/runnix is un-mounted"
+    break
+  fi
+done
+
 sudo rmdir /mnt/runnix
 
 sudo losetup -d ${LOOPD}1
