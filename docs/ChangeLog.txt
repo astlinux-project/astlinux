@@ -77,7 +77,7 @@ Released @TBD@
 
 -- stunnel, version bump to 5.31
 
--- miniupnpd, version bump to 1.9.20160222, also make the UPnP leases file survive a reboot using '/mnt/kd/upnp.leases'.
+-- miniupnpd, version bump to 2.0, also make the UPnP leases file survive a reboot using '/mnt/kd/upnp.leases'.
 
 -- Email Notifications, now automatically define a 'a@b.tld' From header in the form: "<action>-<hostname>" <a@b.tld>
    The current <action> values are: SIP, Asterisk, Monit, Test, UPS, WAN
