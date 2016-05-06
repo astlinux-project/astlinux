@@ -4,7 +4,7 @@
 #
 #############################################################
 
-MINIUPNPD_VERSION = 1.9.20160222
+MINIUPNPD_VERSION = 2.0
 MINIUPNPD_SOURCE = miniupnpd-$(MINIUPNPD_VERSION).tar.gz
 MINIUPNPD_SITE = http://miniupnp.free.fr/files
 MINIUPNPD_DEPENDENCIES = host-pkg-config linux iptables openssl util-linux
