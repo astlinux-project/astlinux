@@ -1,8 +1,8 @@
---- smartmontools-6.4/drivedb.h.orig	2016-04-11 17:01:20.000000000 -0500
-+++ smartmontools-6.4/drivedb.h	2016-04-11 17:50:51.000000000 -0500
-@@ -435,6 +435,21 @@
-     "-v 241,raw48,Lifetime_Writes_GiB "
-     "-v 242,raw48,Lifetime_Reads_GiB"
+--- smartmontools-6.5/drivedb.h.orig	2016-05-07 17:33:02.820674826 -0500
++++ smartmontools-6.5/drivedb.h	2016-05-07 17:46:54.208759606 -0500
+@@ -525,6 +525,21 @@
+     "-v 245,raw48,Max_Erase_Count "
+     "-v 246,raw48,Total_Erase_Count "
    },
 +  { "Phison S9 SSD", // see MKP_521_Phison_SMART_attribute.pdf
 +    ".*SATA SSD", // PC Engines msata16d, MyDigitalSSD Super-Boot-Drive mSATA
@@ -21,4 +21,4 @@
 +  },
    { "Indilinx Barefoot based SSDs",
      "Corsair CSSD-V(32|60|64|128|256)GB2|" // Corsair Nova, tested with Corsair CSSD-V32GB2/2.2
-     "CRUCIAL_CT(64|128|256)M225|" // tested with CRUCIAL_CT64M225/1571
+     "Corsair CMFSSD-(32|64|128|256)D1|" // Corsair Extreme, tested with Corsair CMFSSD-128D1/1.0

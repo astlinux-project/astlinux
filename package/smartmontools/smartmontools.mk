@@ -4,16 +4,20 @@
 #
 #############################################################
 
-SMARTMONTOOLS_VERSION = 6.4
+SMARTMONTOOLS_VERSION = 6.5
 SMARTMONTOOLS_SITE = http://downloads.sourceforge.net/project/smartmontools/smartmontools/$(SMARTMONTOOLS_VERSION)
 
 define SMARTMONTOOLS_LATEST_DRIVEDB
 	# Upstream Drive DB:
-	# curl -o package/smartmontools/drivedb.h 'http://sourceforge.net/p/smartmontools/code/HEAD/tree/trunk/smartmontools/drivedb.h?format=raw'
+	# curl -o package/smartmontools/drivedb.h 'https://sourceforge.net/p/smartmontools/code/HEAD/tree/trunk/smartmontools/drivedb.h?format=raw'
 	# Install local snapshot
 	cp package/smartmontools/drivedb.h $(@D)/drivedb.h
 endef
 SMARTMONTOOLS_POST_EXTRACT_HOOKS += SMARTMONTOOLS_LATEST_DRIVEDB
+
+SMARTMONTOOLS_CONF_OPT = \
+	--without-libcap-ng \
+	--without-nvme-devicescan
 
 define SMARTMONTOOLS_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/smartctl $(TARGET_DIR)/usr/sbin/smartctl
