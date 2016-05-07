@@ -45,7 +45,7 @@ Released @TBD@
 
 -- nano, version bump to 2.5.3
 
--- smartctl, add drivedb.h entry for Phison S9 SSD: PC Engines msata16d, MyDigitalSSD Super-Boot-Drive mSATA
+-- smartctl, version bump to 6.5, add drivedb.h entry for Phison S9 SSD: PC Engines msata16d, MyDigitalSSD Super-Boot-Drive mSATA
 
 -- libsodium, version bump to 1.0.10
 
