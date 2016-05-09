@@ -18,9 +18,9 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 3.2.78 (minor bump)
+-- Linux Kernel 3.2.80 (minor bump)
 
--- RUNNIX, version bump to runnix-0.4-7633, with Linux Kernel 3.2.78, dropbear 2016.72, USB 3.0 support
+-- RUNNIX, version bump to runnix-0.4-7671, with Linux Kernel 3.2.80, dropbear 2016.72, USB 3.0 support
 
 -- linux, add kernel patch to the 'k10temp' kernel module adding support for the PC Engines APU2 board
 
