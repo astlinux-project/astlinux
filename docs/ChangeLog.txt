@@ -65,6 +65,8 @@ Released @TBD@
 
 -- busybox, udhcp: fix a SEGV on malformed RFC1035-encoded domain name: CVE-2016-2148
 
+-- OpenVPN, version bump to 2.3.11
+
 -- curl, added a trusted root certificates, single file bundle, to allow authenticated HTTPS connections.
 
 -- libcurl (curl) version bump to 7.48.0
@@ -84,7 +86,7 @@ Released @TBD@
 
 ** Asterisk
 
--- Asterisk 1.8.32.3 (no change), 11.22.0 (version bump) and 13.8.2 (version bump)
+-- Asterisk 1.8.32.3 (no change), 11.22.0 (version bump) and 13.9.1 (version bump)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
@@ -92,7 +94,7 @@ Released @TBD@
 
 -- libpri, version bump to 1.5.0
 
--- wanpipe, version bump to 7.0.18
+-- wanpipe, version bump to 7.0.19
 
 ** Web Interface
 
