@@ -1697,7 +1697,7 @@ require_once '../common/header.php';
   putHtml('SMTP Cert File:<input type="text" size="24" maxlength="64" value="'.$value.'" name="smtp_ca_cert" /></td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
   $value = getVARdef($db, 'SMTP_USER', $cur_db);
-  putHtml('SMTP Username:<input type="text" size="24" maxlength="64" value="'.$value.'" name="smtp_user" /></td>');
+  putHtml('SMTP Username:<input type="text" size="32" maxlength="64" value="'.$value.'" name="smtp_user" /></td>');
   putHtml('<td style="text-align: left;" colspan="3">');
   $value = getVARdef($db, 'SMTP_PASS', $cur_db);
   $value = htmlspecialchars(RCconfig2string($value));
