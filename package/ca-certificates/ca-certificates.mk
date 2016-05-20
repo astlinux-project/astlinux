@@ -4,14 +4,9 @@
 #
 ################################################################################
 
-CA_CERTIFICATES_VERSION = 20160120
+CA_CERTIFICATES_VERSION = 2016-04-20
 CA_CERTIFICATES_SOURCE = cacert-$(CA_CERTIFICATES_VERSION).pem
-CA_CERTIFICATES_SITE = http://files.astlinux.org
-
-##
-## curl -o dl/cacert-20160120.pem https://curl.haxx.se/ca/cacert.pem
-## ./scripts/upload-dl-pair dl/cacert-20160120.pem
-##
+CA_CERTIFICATES_SITE = https://curl.haxx.se/ca
 
 define CA_CERTIFICATES_EXTRACT_CMDS
 	cp $(DL_DIR)/$(CA_CERTIFICATES_SOURCE) $(@D)/cacert.pem
