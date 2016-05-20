@@ -67,7 +67,7 @@ Released @TBD@
 
 -- OpenVPN, version bump to 2.3.11
 
--- curl, added a trusted root certificates, single file bundle, to allow authenticated HTTPS connections.
+-- ca-certificates, added trusted root certificates 2016-04-20, single file bundle, to allow authenticated HTTPS connections.
 
 -- libcurl (curl) version bump to 7.48.0
 
