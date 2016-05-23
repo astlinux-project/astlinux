@@ -43,9 +43,13 @@ Released @TBD@
 
 -- ethtool, version bump to 4.5
 
+-- pciutils, version bump to 3.5.1
+
 -- nano, version bump to 2.5.3
 
 -- smartctl, version bump to 6.5, add drivedb.h entry for Phison S9 SSD: PC Engines msata16d, MyDigitalSSD Super-Boot-Drive mSATA
+
+-- libxml2, version bump to 2.9.4, security fixes: CVE-2016-1762, CVE-2016-1834, CVE-2016-3705
 
 -- libsodium, version bump to 1.0.10
 
@@ -69,7 +73,7 @@ Released @TBD@
 
 -- ca-certificates, added trusted root certificates 2016-04-20, single file bundle, to allow authenticated HTTPS connections.
 
--- libcurl (curl) version bump to 7.48.0
+-- libcurl (curl) version bump to 7.49.0
 
 -- unbound, new package adding the libunbound library and unbound-host command.  A symlink of 'host' -> 'unbound-host' is also added.
    Unbound is a validating, recursive, and caching DNS resolver.
