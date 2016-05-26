@@ -31,7 +31,7 @@ Released @TBD@
 
 -- igb, version bump to 5.3.4.4, Intel Gigabit Ethernet Network Driver
 
--- php, version bump to 5.5.35, bug and security fixes
+-- php, version bump to 5.5.36, bug and security fixes
 
 -- sqlite, version bump to 3.12.2
 
