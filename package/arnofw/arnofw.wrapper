@@ -81,6 +81,17 @@ setDMZnet()
   fi
 }
 
+setFOREIGNnet()
+{
+  local x IFS
+
+  unset IFS
+  for x in $NAT_FOREIGN_NETWORK; do
+    NAT_INTERNAL_NET="$NAT_INTERNAL_NET${NAT_INTERNAL_NET:+ }$x"
+    NAT=1
+  done
+}
+
 setIPSECnet()
 {
   # args: IP, NM
@@ -183,6 +194,10 @@ addINTERNALnet "$INT3IF" "$INT3IP" "$INT3NM"
 setDMZnet "$DMZIF" "$DMZIP" "$DMZNM"
 
 MODEM_IF=""
+
+if [ -n "$NAT_FOREIGN_NETWORK" ]; then
+  setFOREIGNnet
+fi
 
 EXT_IF_DHCP_IP=0
 if [ -n "$EXTIF" -a -z "$EXTIP" ] && [ "$EXTIF" != "ppp0" -o -z "$PPPOEIF" ]; then
