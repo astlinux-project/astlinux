@@ -85,6 +85,8 @@ Released @TBD@
 
 -- miniupnpd, version bump to 2.0, also make the UPnP leases file survive a reboot using '/mnt/kd/upnp.leases'.
 
+-- arnofw (AIF), add NAT_FOREIGN_NETWORK rc.conf variable to support a downstream router with NAT disabled.
+
 -- Email Notifications, now automatically define a 'a@b.tld' From header in the form: "<action>-<hostname>" <a@b.tld>
    The current <action> values are: SIP, Asterisk, Monit, Test, UPS, WAN
 
