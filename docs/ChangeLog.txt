@@ -81,6 +81,8 @@ Released @TBD@
 -- ntpd/sntp, version bump to 4.2.8p7, security fixes: 11 low/medium-severity vulnerabilities
    Now only include the "LOCAL" Reference Clock driver, which reduces the ntpd binary size buy 30% .
 
+-- msmtp, version bump to 1.6.5
+
 -- stunnel, version bump to 5.31
 
 -- miniupnpd, version bump to 2.0, also make the UPnP leases file survive a reboot using '/mnt/kd/upnp.leases'.
