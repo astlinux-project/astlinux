@@ -1,0 +1,12 @@
+diff --git a/service-type-database/service-types b/service-type-database/service-types
+index 6e7e2cd..54719af 100644
+--- a/service-type-database/service-types
++++ b/service-type-database/service-types
+@@ -139,6 +139,7 @@ _realplayfavs._tcp:RealPlayer Shared Favorites
+ _realplayfavs._tcp[it]:RealPlayer - Preferiti Condivisi
+ 
+ _raop._tcp:AirTunes Remote Audio
++_airplay._tcp:AirPlay Remote Video
+ 
+ _rtsp._tcp:RTSP Realtime Streaming Server
+ _rtp._udp:RTP Realtime Streaming Server
