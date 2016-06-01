@@ -154,19 +154,30 @@ define AVAHI_INSTALL_AUTOIPD
 	ln -sf /tmp/avahi-autoipd $(TARGET_DIR)/var/lib/avahi-autoipd
 endef
 
-define AVAHI_INSTALL_AUTOIPD_INIT_SYSV
-	$(INSTALL) -D -m 0755 package/avahi/S05avahi-setup.sh $(TARGET_DIR)/etc/init.d/S05avahi-setup.sh
-endef
-
-AVAHI_POST_INSTALL_TARGET_HOOKS += AVAHI_INSTALL_AUTOIPD AVAHI_INSTALL_AUTOIPD_INIT_SYSV
+AVAHI_POST_INSTALL_TARGET_HOOKS += AVAHI_INSTALL_AUTOIPD
 endif
 
 ifeq ($(BR2_PACKAGE_AVAHI_DAEMON),y)
 define AVAHI_INSTALL_DAEMON_INIT_SYSV
-	$(INSTALL) -D -m 0755 package/avahi/S50avahi-daemon $(TARGET_DIR)/etc/init.d/S50avahi-daemon
+	mkdir -p $(TARGET_DIR)/stat/etc/avahi
+	cp -a $(TARGET_DIR)/etc/avahi/* $(TARGET_DIR)/stat/etc/avahi/
+	rm -rf $(TARGET_DIR)/etc/avahi
+	ln -s /tmp/etc/avahi $(TARGET_DIR)/etc/avahi
+	$(INSTALL) -D -m 0755 package/avahi/avahi.init $(TARGET_DIR)/etc/init.d/avahi
+	ln -sf ../../init.d/avahi $(TARGET_DIR)/etc/runlevels/default/S92avahi
+	ln -sf ../../init.d/avahi $(TARGET_DIR)/etc/runlevels/default/K05avahi
+endef
+
+define AVAHI_DAEMON_DEFAULT_FIXUP
+	$(SED) 's:^#*use-ipv6=.*$$:use-ipv6=no:' \
+	    -e 's:^#*allow-interfaces=.*$$:allow-interfaces=:' \
+	        $(TARGET_DIR)/stat/etc/avahi/avahi-daemon.conf
+	rm -f $(TARGET_DIR)/stat/etc/avahi/services/*.service
+	rm -f $(TARGET_DIR)/stat/etc/avahi/avahi-dnsconfd.action
 endef
 
 AVAHI_POST_INSTALL_TARGET_HOOKS += AVAHI_INSTALL_DAEMON_INIT_SYSV
+AVAHI_POST_INSTALL_TARGET_HOOKS += AVAHI_DAEMON_DEFAULT_FIXUP
 endif
 
 ifeq ($(BR2_PACKAGE_AVAHI_LIBDNSSD_COMPATIBILITY),y)
@@ -178,5 +189,15 @@ endef
 
 AVAHI_POST_INSTALL_STAGING_HOOKS += AVAHI_STAGING_INSTALL_LIBDNSSD_LINK
 endif
+
+define AVAHI_UNINSTALL_TARGET_CMDS
+	rm -rf $(TARGET_DIR)/stat/etc/avahi
+	rm -f $(TARGET_DIR)/etc/avahi
+	rm -f $(TARGET_DIR)/usr/sbin/avahi-*
+	rm -f $(TARGET_DIR)/var/lib/avahi-autoipd
+	rm -f $(TARGET_DIR)/etc/init.d/avahi
+	rm -f $(TARGET_DIR)/etc/runlevels/default/S92avahi
+	rm -f $(TARGET_DIR)/etc/runlevels/default/K05avahi
+endef
 
 $(eval $(call AUTOTARGETS,package,avahi))

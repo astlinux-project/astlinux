@@ -24,6 +24,7 @@ config BR2_PACKAGE_AVAHI_DAEMON
 	bool "mDNS/DNS-SD daemon"
 	select BR2_PACKAGE_LIBDAEMON
 	select BR2_PACKAGE_EXPAT
+	default y
 	help
 	  The Avahi mDNS/DNS-SD daemon implementing Apple's ZeroConf
 	  architecture (also known as "Rendezvous" or "Bonjour").
