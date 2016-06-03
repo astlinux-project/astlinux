@@ -172,8 +172,9 @@ define AVAHI_DAEMON_DEFAULT_FIXUP
 	$(SED) 's:^#*use-ipv6=.*$$:use-ipv6=no:' \
 	    -e 's:^#*allow-interfaces=.*$$:allow-interfaces=:' \
 	        $(TARGET_DIR)/stat/etc/avahi/avahi-daemon.conf
-	rm -f $(TARGET_DIR)/stat/etc/avahi/services/*.service
 	rm -f $(TARGET_DIR)/stat/etc/avahi/avahi-dnsconfd.action
+	rm -f $(TARGET_DIR)/stat/etc/avahi/services/*.service
+	cp -a package/avahi/services/*.service* $(TARGET_DIR)/stat/etc/avahi/services/
 endef
 
 AVAHI_POST_INSTALL_TARGET_HOOKS += AVAHI_INSTALL_DAEMON_INIT_SYSV

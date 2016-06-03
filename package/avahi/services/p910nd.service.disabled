@@ -1,0 +1,17 @@
+<?xml version="1.0" standalone='no'?><!--*-nxml-*-->
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+
+<service-group>
+  <name replace-wildcards="yes">AstLinux Printer on %h</name>
+  <service>
+    <type>_pdl-datastream._tcp</type>
+    <port>9100</port>
+    <txt-record>qtotal=1</txt-record>
+    <txt-record>note=USB connected to AstLinux</txt-record>
+    <txt-record>ty=Generic Printer</txt-record>
+    <txt-record>product=(Generic Printer)</txt-record>
+    <txt-record>usb_MFG=Generic</txt-record>
+    <txt-record>usb_MDL=Generic</txt-record>
+    <txt-record>pdl=application/octet-stream,application/pdf,application/postscript,application/vnd.hp-PCL</txt-record>
+  </service>
+</service-group>
