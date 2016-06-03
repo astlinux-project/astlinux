@@ -28,14 +28,18 @@ $(MDNSRESPONDER_DIR)/$(MDNSRESPONDER_BINARY): $(MDNSRESPONDER_DIR)/.configured
 $(TARGET_DIR)/$(MDNSRESPONDER_TARGET_BINARY): $(MDNSRESPONDER_DIR)/$(MDNSRESPONDER_BINARY)
 	$(INSTALL) -s -D -m 0755 $(MDNSRESPONDER_DIR)/$(MDNSRESPONDER_BINARY) $(TARGET_DIR)/$(MDNSRESPONDER_TARGET_BINARY)
 	$(INSTALL) -D -m 0755 package/mdnsresponder/mdns.init $(TARGET_DIR)/etc/init.d/mdns
+	ln -sf ../../init.d/mdns $(TARGET_DIR)/etc/runlevels/default/S92mdns
+	ln -sf ../../init.d/mdns $(TARGET_DIR)/etc/runlevels/default/K05mdns
 
 mdnsresponder: $(TARGET_DIR)/$(MDNSRESPONDER_TARGET_BINARY)
 
 mdnsresponder-source: $(MDNSRESPONDER_DIR)/.source
 
 mdnsresponder-clean:
-	rm -rf $(TARGET_DIR)/$(MDNSRESPONDER_TARGET_BINARY)
-	rm -rf $(TARGET_DIR)/etc/init.d/mdns
+	rm -f $(TARGET_DIR)/$(MDNSRESPONDER_TARGET_BINARY)
+	rm -f $(TARGET_DIR)/etc/init.d/mdns
+	rm -f $(TARGET_DIR)/etc/runlevels/default/S92mdns
+	rm -f $(TARGET_DIR)/etc/runlevels/default/K05mdns
 	-$(MAKE) -C $(MDNSRESPONDER_DIR)/mDNSPosix os=linux clean
 
 mdnsresponder-dirclean:
