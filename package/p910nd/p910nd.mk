@@ -23,11 +23,15 @@ endef
 define P910ND_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/p910nd $(TARGET_DIR)/usr/sbin/p910nd
 	$(INSTALL) -m 0755 -D package/p910nd/p910nd.init $(TARGET_DIR)/etc/init.d/p910nd
+	ln -sf ../../init.d/p910nd $(TARGET_DIR)/etc/runlevels/default/S63p910nd
+	ln -sf ../../init.d/p910nd $(TARGET_DIR)/etc/runlevels/default/K08p910nd
 endef
 
 define P910ND_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/sbin/p910nd
 	rm -f $(TARGET_DIR)/etc/init.d/p910nd
+	rm -f $(TARGET_DIR)/etc/runlevels/default/S63p910nd
+	rm -f $(TARGET_DIR)/etc/runlevels/default/K08p910nd
 endef
 
 $(eval $(call AUTOTARGETS,package,p910nd))
