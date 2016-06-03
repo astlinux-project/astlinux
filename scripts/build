@@ -6,7 +6,7 @@
 # Max image size in 1024 (k) bytes
 MAX_IMAGEFS_SIZE=196608   # 192m
 
-REQUIRED_CMDS="which zcat bzcat make gcc bison flex msgfmt makeinfo autoconf nasm wget rsync sed"
+REQUIRED_CMDS="which zcat bzcat make gcc bison flex msgfmt makeinfo autoconf nasm wget rsync sed perl gettext intltool-extract"
 
 ROOTFS_SQUASHFS="output/images/rootfs.squashfs"
 ROOTFS_EXT2="output/images/rootfs.ext2"
