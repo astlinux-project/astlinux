@@ -29,7 +29,6 @@ libtiff~Copyright (c) 1988-1997 Sam Leffler, Copyright (c) 1991-1997 Silicon Gra
 libjpeg~Copyright (c) 1991-2014, Thomas G. Lane, Guido Vollbeding.
 iptables~Copyright (c) 2000-2013 by the netfilter coreteam <coreteam@netfilter.org>
 curl~Copyright (c) 1996-2016 Daniel Stenberg, <daniel@haxx.se>.
-mDNS~Copyright (c) 2002-2004 Apple Computer, Inc. All rights reserved.
 rp-pppoe~Copyright (c) 2001-2012 Roaring Penguin Software Inc.
 zabbix~Copyright (c) 2000-2015 SIA Zabbix.
 zlib~Copyright (c) 1995-2013 Jean-loup Gailly.
@@ -59,3 +58,4 @@ BusyBox~Copyright (c) 1998-2011 Erik Andersen, Rob Landley, Denys Vlasenko, et a
 dhcp6c~Copyright (c) 1998-2008 WIDE Project.
 htop~Copyright (c) 2004-2012 Hisham Muhammad.
 unbound~Copyright (c) 2007-2016, NLnet Labs. All rights reserved.
+avahi~Copyright (c) 2004-2016 Lennart Poettering, Trent Lloyd, Avahi developers.
