@@ -1,4 +1,5 @@
 config BR2_PACKAGE_MDNSRESPONDER
+	depends on !BR2_PACKAGE_AVAHI
 	bool "mdnsresponder"
 	default n
 	help
