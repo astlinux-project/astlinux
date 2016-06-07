@@ -116,6 +116,12 @@ function statusPROCESS($process) {
     } else {
       $str = $stopped;
     }
+  } elseif ($process === 'avahi') {
+    if (is_file($path.'avahi-daemon/pid')) {
+      $str = $running;
+    } else {
+      $str = $stopped;
+    }
   } elseif ($process === 'ups') {
     if (is_file($path.'upsmon.pid')) {
       $str = $running;

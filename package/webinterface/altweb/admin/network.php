@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2015 Lonnie Abelbeck
+// Copyright (C) 2008-2016 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -37,6 +37,7 @@
 // 12-16-2014, Added Monit Monitoring support
 // 08-21-2015, Added Fossil - Software Configuration Management
 // 11-01-2015, Added DHCPv6 support
+// 06-07-2016, Added Avahi mDNS/DNS-SD support
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -487,6 +488,9 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   }
   $value = 'UPNP_LISTEN="'.trim($x_value).'"';
   fwrite($fp, "### UPnP Listen Interfaces\n".$value."\n");
+
+  $value = 'AVAHI_ENABLE="'.$_POST['avahi'].'"';
+  fwrite($fp, "### mDNS/DNS-SD\n".$value."\n");
 
   $value = 'HTTPDIR="'.tuq($_POST['http_dir']).'"';
   fwrite($fp, "### HTTP Server Directory\n".$value."\n");
@@ -954,6 +958,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/zabbix.php');
     exit;
+  } elseif (isset($_POST['submit_avahi'])) {
+    $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
+    if (is_writable($file = '/mnt/kd/avahi/avahi-daemon.conf')) {
+      header('Location: /admin/edit.php?file='.$file);
+      exit;
+    }
   } elseif (isset($_POST['submit_edit_dnsmasq_conf'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     if (is_writable($file = '/mnt/kd/dnsmasq.conf')) {
@@ -1077,6 +1087,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 46, $result, 'init');
       } elseif ($process === 'fossil') {
         $result = restartPROCESS($process, 47, $result, 'init');
+      } elseif ($process === 'avahi') {
+        $result = restartPROCESS($process, 48, $result, 'init');
       }
     } else {
       $result = 2;
@@ -1167,6 +1179,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Monit Monitoring'.statusPROCESS('monit').'.</p>');
     } elseif ($result == 47) {
       putHtml('<p style="color: green;">Fossil Server'.statusPROCESS('fossil').'.</p>');
+    } elseif ($result == 48) {
+      putHtml('<p style="color: green;">mDNS/DNS-SD (Avahi)'.statusPROCESS('avahi').'.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 100) {
@@ -1248,6 +1262,8 @@ require_once '../common/header.php';
   putHtml('<option value="ldap"'.$sel.'>Reload LDAP Client</option>');
   $sel = ($reboot_restart === 'slapd') ? ' selected="selected"' : '';
   putHtml('<option value="slapd"'.$sel.'>Restart LDAP Server</option>');
+  $sel = ($reboot_restart === 'avahi') ? ' selected="selected"' : '';
+  putHtml('<option value="avahi"'.$sel.'>Restart mDNS/DNS-SD</option>');
   $sel = ($reboot_restart === 'monit') ? ' selected="selected"' : '';
   putHtml('<option value="monit"'.$sel.'>Restart Monit Monitor</option>');
   $sel = ($reboot_restart === 'darkstat') ? ' selected="selected"' : '';
@@ -1830,7 +1846,22 @@ require_once '../common/header.php';
   $sel = isVARtype('UPNP_LISTEN', $db, $cur_db, 'DMZIF') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="upnp_DMZIF" name="upnp_DMZIF"'.$sel.' />&nbsp;DMZ');
   putHtml('</td></tr>');
-  
+
+  if (is_file('/etc/init.d/avahi')) {
+    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+    putHtml('mDNS/DNS-SD&nbsp;Service&nbsp;Discovery:');
+    putHtml('<select name="avahi">');
+    putHtml('<option value="no">disabled</option>');
+    $sel = (getVARdef($db, 'AVAHI_ENABLE', $cur_db) === 'yes') ? ' selected="selected"' : '';
+    putHtml('<option value="yes"'.$sel.'>enabled</option>');
+    putHtml('</select>');
+    if (is_writable('/mnt/kd/avahi/avahi-daemon.conf')) {
+      putHtml('&ndash;');
+      putHtml('<input type="submit" value="Configure mDNS/DNS-SD" name="submit_avahi" class="button" />');
+    }
+    putHtml('</td></tr>');
+  }
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   $value = getVARdef($db, 'HTTPDIR', $cur_db);
   putHtml('HTTP&nbsp;&nbsp;Server Directory:<input type="text" size="45" maxlength="64" value="'.$value.'" name="http_dir" />');

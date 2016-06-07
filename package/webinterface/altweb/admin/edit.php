@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2015 Lonnie Abelbeck
+// Copyright (C) 2008-2016 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -11,6 +11,7 @@
 // 12-04-2008, Added Reload/Restart Menu
 // 02-18-2013, Added OpenVPN Client Config editing
 // 09-06-2013, Added Shortcut support
+// 06-07-2016, Added Avahi mDNS/DNS-SD support
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -31,6 +32,7 @@ $select_reload = array (
   'fossil' => 'Restart Fossil Server',
   'ldap' => 'Reload LDAP Client',
   'slapd' => 'Restart LDAP Server',
+  'avahi' => 'Restart mDNS/DNS-SD',
   'monit' => 'Restart Monit Monitor',
   'darkstat' => 'Restart NetStat Server',
   'snmpd' => 'Restart SNMP Server',
@@ -256,6 +258,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 46, $result, 'init');
       } elseif ($process === 'fossil') {
         $result = restartPROCESS($process, 47, $result, 'init');
+      } elseif ($process === 'avahi') {
+        $result = restartPROCESS($process, 48, $result, 'init');
       } elseif ($process === 'cron') {
         $result = updateCRON('root', 30, $result);
       }
@@ -298,6 +302,8 @@ require_once '../common/header.php';
       $dir === '/mnt/kd/snmp' ||
       $dir === '/mnt/kd/fop2' ||
       $dir === '/mnt/kd/kamailio' ||
+      $dir === '/mnt/kd/avahi' ||
+      $dir === '/mnt/kd/avahi/services' ||
       $dir === '/mnt/kd/monit' ||
       $dir === '/mnt/kd/monit/monit.d' ||
       $dir === '/mnt/kd/ups' ||
@@ -392,6 +398,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Monit Monitoring'.statusPROCESS('monit').'.</p>');
     } elseif ($result == 47) {
       putHtml('<p style="color: green;">Fossil Server'.statusPROCESS('fossil').'.</p>');
+    } elseif ($result == 48) {
+      putHtml('<p style="color: green;">mDNS/DNS-SD (Avahi)'.statusPROCESS('avahi').'.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {
@@ -552,6 +560,24 @@ require_once '../common/header.php';
       if (is_file($globfile) && is_writable($globfile)) {
         $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
         putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - X509 CN of OpenVPN Client</option>');
+      }
+    }
+    putHtml('</optgroup>');
+  }
+  if (is_dir('/mnt/kd/avahi') && count($globfiles = glob('/mnt/kd/avahi/*')) > 0) {
+    putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; Avahi mDNS/DNS-SD Configs &mdash;&mdash;&mdash;&mdash;">');
+    foreach ($globfiles as $globfile) {
+      if (is_file($globfile) && is_writable($globfile)) {
+        $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
+        putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - Avahi Daemon Configuration</option>');
+      }
+    }
+    if (is_dir('/mnt/kd/avahi/services') && count($globfiles = glob('/mnt/kd/avahi/services/*.service')) > 0) {
+      foreach ($globfiles as $globfile) {
+        if (is_file($globfile) && is_writable($globfile)) {
+          $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
+          putHtml('<option value="'.$globfile.'"'.$sel.'>services/'.basename($globfile).' - Avahi Service</option>');
+        }
       }
     }
     putHtml('</optgroup>');
