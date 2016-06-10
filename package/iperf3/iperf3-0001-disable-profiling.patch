@@ -9,7 +9,7 @@ Signed-off-by: Gustavo Zacarias <gustavo@zacarias.com.ar>
 diff -Nura iperf-3.0.10.orig/src/Makefile.in iperf-3.0.10/src/Makefile.in
 --- iperf-3.0.10.orig/src/Makefile.in	2014-12-17 07:30:46.878310789 -0300
 +++ iperf-3.0.10/src/Makefile.in	2014-12-17 07:33:41.879356643 -0300
-@@ -82,7 +82,7 @@
+@@ -92,7 +92,7 @@
  host_triplet = @host@
  bin_PROGRAMS = iperf3$(EXEEXT)
  noinst_PROGRAMS = t_timer$(EXEEXT) t_units$(EXEEXT) t_uuid$(EXEEXT) \
@@ -17,4 +17,4 @@ diff -Nura iperf-3.0.10.orig/src/Makefile.in iperf-3.0.10/src/Makefile.in
 +	iperf3$(EXEEXT)
  TESTS = t_timer$(EXEEXT) t_units$(EXEEXT) t_uuid$(EXEEXT)
  subdir = src
- DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
