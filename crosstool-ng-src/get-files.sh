@@ -1,6 +1,7 @@
 # shell script to add additional files
 
-FILES_URL="http://files.astlinux.org"
+#FILES_URL="http://files.astlinux.org"
+FILES_URL="http://d18y2f4fr43xzs.cloudfront.net"
 
 TARBALLS=".build/tarballs"
 
