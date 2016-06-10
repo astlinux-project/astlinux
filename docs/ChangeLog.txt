@@ -71,6 +71,8 @@ Released @TBD@
 
 -- busybox, udhcp: fix a SEGV on malformed RFC1035-encoded domain name: CVE-2016-2148
 
+-- iperf3, version bump to 3.0.12, security fix: CVE-2016-4303 (ESNET-SECADV-2016-0001)
+
 -- OpenVPN, version bump to 2.3.11
 
 -- ca-certificates, added trusted root certificates 2016-04-20, single file bundle, to allow authenticated HTTPS connections.
