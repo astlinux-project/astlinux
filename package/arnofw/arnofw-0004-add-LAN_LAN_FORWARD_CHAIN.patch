@@ -1,0 +1,173 @@
+diff --git a/README b/README
+index 093151a..93641a4 100644
+--- a/README
++++ b/README
+@@ -480,6 +480,7 @@ INT_FORWARD_IN_CHAIN        - Internal-net FORWARD chain for INcoming traffic
+ INT_FORWARD_OUT_CHAIN       - Internal-net FORWARD chain for OUTcoming traffic
+ INT_INPUT_CHAIN             - Internal-net INPUT chain
+ INT_OUTPUT_CHAIN            - Internal-net OUTPUT chain
++LAN_LAN_FORWARD_CHAIN       - LAN to LAN (Inter-LAN) forward chain
+ LAN_INET_FORWARD_CHAIN      - LAN to internet (external net) forward chain
+ POST_INPUT_CHAIN            - This chain is always processed last(post) in the
+                               INPUT chain
+diff --git a/bin/arno-iptables-firewall b/bin/arno-iptables-firewall
+index b02a85f..67d79ec 100755
+--- a/bin/arno-iptables-firewall
++++ b/bin/arno-iptables-firewall
+@@ -2263,6 +2263,72 @@ setup_int_input_chain()
+ }
+ 
+ 
++##################################################
++# Setup chain for the LAN-to-LAN forward traffic #
++##################################################
++setup_lan_lan_forward_chain()
++{
++  echo " Setting up LAN->LAN policy"
++
++  # TCP ports to ALLOW for certain Inter-LAN hosts
++  ################################################
++  unset IFS
++  for rule in $LAN_LAN_HOST_OPEN_TCP; do
++    if parse_rule "$rule" LAN_LAN_HOST_OPEN_TCP "shosts:ANYHOST-dhosts-ports:ANYPORT"; then
++
++      echo "  Allowing $shosts(LAN) to $dhosts(LAN) for TCP port(s): $ports"
++
++      IFS=','
++      for shost in `ip_range "$shosts"`; do
++        for dhost in `ip_range "$dhosts"`; do
++          for port in $ports; do
++            iptables -A LAN_LAN_FORWARD_CHAIN -s $shost -d $dhost -p tcp --dport $port -j ACCEPT
++          done
++        done
++      done
++    fi
++  done
++
++  # UDP ports to ALLOW for certain Inter-LAN hosts
++  ################################################
++  unset IFS
++  for rule in $LAN_LAN_HOST_OPEN_UDP; do
++    if parse_rule "$rule" LAN_LAN_HOST_OPEN_UDP "shosts:ANYHOST-dhosts-ports:ANYPORT"; then
++
++      echo "  Allowing $shosts(LAN) to $dhosts(LAN) for UDP port(s): $ports"
++
++      IFS=','
++      for shost in `ip_range "$shosts"`; do
++        for dhost in `ip_range "$dhosts"`; do
++          for port in $ports; do
++            iptables -A LAN_LAN_FORWARD_CHAIN -s $shost -d $dhost -p udp --dport $port -j ACCEPT
++          done
++        done
++      done
++    fi
++  done
++
++  # IP protocol(s) to ALLOW for certain Inter-LAN hosts
++  #####################################################
++  unset IFS
++  for rule in $LAN_LAN_HOST_OPEN_IP; do
++    if parse_rule "$rule" LAN_LAN_HOST_OPEN_IP "shosts:ANYHOST-dhosts-protos"; then
++
++      echo "  Allowing $shosts(LAN) to $dhosts(LAN) for IP protocol(s): $protos"
++
++      IFS=','
++      for shost in `ip_range "$shosts"`; do
++        for dhost in `ip_range "$dhosts"`; do
++          for proto in $protos; do
++            iptables -A LAN_LAN_FORWARD_CHAIN -s $shost -d $dhost -p $proto -j ACCEPT
++          done
++        done
++      done
++    fi
++  done
++}
++
++
+ ###################################################
+ # Setup chain for the LAN-to-INET forward traffic #
+ ###################################################
+@@ -4803,7 +4869,8 @@ setup_firewall_rules()
+       echo " Logging of denied LAN->INET FORWARD connections disabled"
+     fi
+ 
+-    # Setup helper chain for the LAN:
++    # Setup helper chains for the LAN:
++    setup_lan_lan_forward_chain;
+     setup_lan_inet_forward_chain;
+ 
+     IFS=' ,'
+@@ -4813,6 +4880,12 @@ setup_firewall_rules()
+       # Always make subnets on the SAME interface trust each other
+       iptables -A FORWARD -i $iif -o $iif -j ACCEPT
+ 
++      for output_if in $INT_IF; do
++        if [ "$iif" != "$output_if" ]; then
++          iptables -A FORWARD -i $iif -o $output_if -j LAN_LAN_FORWARD_CHAIN
++        fi
++      done
++
+       for eif in $EXT_IF; do
+         iptables -A FORWARD -i $iif -o $eif -j LAN_INET_FORWARD_CHAIN
+       done
+@@ -5035,6 +5108,7 @@ create_user_chains()
+   iptables -N DMZ_LAN_FORWARD_CHAIN
+   iptables -N INET_DMZ_FORWARD_CHAIN
+   iptables -N DMZ_INET_FORWARD_CHAIN
++  iptables -N LAN_LAN_FORWARD_CHAIN
+   iptables -N LAN_INET_FORWARD_CHAIN
+ 
+   # Chains for the external interface
+@@ -5091,6 +5165,7 @@ flush_user_chains()
+   iptables -F DMZ_LAN_FORWARD_CHAIN
+   iptables -F INET_DMZ_FORWARD_CHAIN
+   iptables -F DMZ_INET_FORWARD_CHAIN
++  iptables -F LAN_LAN_FORWARD_CHAIN
+   iptables -F LAN_INET_FORWARD_CHAIN
+ 
+   # Chains for the external interface
+diff --git a/etc/arno-iptables-firewall/firewall.conf b/etc/arno-iptables-firewall/firewall.conf
+index 2291916..73554d2 100644
+--- a/etc/arno-iptables-firewall/firewall.conf
++++ b/etc/arno-iptables-firewall/firewall.conf
+@@ -696,6 +696,40 @@ LAN_HOST_DENY_IP=""
+ 
+ 
+ ###############################################################################
++# LAN_LAN_xxx  = LAN->LAN access rules (forward)                              #
++###############################################################################
++
++# Put in the following variables which LAN hosts you want to allow to certain
++# hosts/services on a different LAN (net).
++#
++# TCP/UDP form:
++#       "SRCIP1,SRCIP2,...>DESTIP1~port \
++#        SRCIP3,...>DESTIP2~port"
++#
++# IP form:
++#       "SRCIP1,SRCIP2,...>DESTIP1~protocol \
++#        SRCIP3,...>DESTIP2~protocol"
++#
++# TCP/UDP examples:
++# Simple (Allow port 80 to LAN host 1.2.3.4 from all other LAN hosts(0/0)):
++#       LAN_LAN_HOST_OPEN_xxx="0/0>1.2.3.4~80"
++# Advanced (Allow port 20 & 21 to LAN host 1.2.3.4 from all other LAN hosts (0/0) and
++#           allow port 80 from LAN host 5.6.7.8 (only) to LAN host 1.2.3.4):
++#       LAN_LAN_HOST_OPEN_xxx="0/0>1.2.3.4~20,21 5.6.7.8>1.2.3.4~80"
++#
++# IP protocol example:
++#       (Allow protocols 47 & 48 to LAN host 1.2.3.4 from all other LAN hosts(0/0)):
++#       LAN_LAN_HOST_OPEN_IP="0/0>1.2.3.4~47,48"
++#
++# NOTE 1: If no SRCIPx is specified, any source host is used
++# NOTE 2: If no port is specified, any port is used
++# -----------------------------------------------------------------------------
++LAN_LAN_HOST_OPEN_TCP=""
++LAN_LAN_HOST_OPEN_UDP=""
++LAN_LAN_HOST_OPEN_IP=""
++
++
++###############################################################################
+ # LAN_INET_xxx = LAN->internet access rules (forward)                         #
+ #                                                                             #
+ # Note that when the LAN_INET_OPEN_xxx & LAN_INET_HOST_OPEN_xxx variables are #
