@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2014 Lonnie Abelbeck
+// Copyright (C) 2008-2016 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -20,6 +20,7 @@
 // 07-16-2012, Added "Pass LAN->EXT" and "Pass DMZ->EXT" actions
 // 01-27-2014, Added "Log Denied DMZ interface packets"
 // 06-08-2014, Added support for multiple "Allow OpenVPN" LAN interfaces
+// 06-12-2016, Added "Pass LAN->LAN" action
 //
 // System location of /mnt/kd/rc.conf.d directory
 $FIREWALLCONFDIR = '/mnt/kd/rc.conf.d';
@@ -40,6 +41,7 @@ $action_label = array (
   'PASS_EXT_DMZ' => 'Pass EXT->DMZ',
   'PASS_DMZ_LOCAL' => 'Pass DMZ->Local',
   'PASS_DMZ_LAN' => 'Pass DMZ->LAN',
+  'PASS_LAN_LAN' => 'Pass LAN->LAN',
   'DENY_LAN_EXT' => 'Deny LAN->EXT',
   'DENY_LAN_LOCAL' => 'Deny LAN->Local',
   'DENY_LOCAL_EXT' => 'Deny Local->EXT',
@@ -59,6 +61,7 @@ $action_arno = array (
   'PASS_EXT_DMZ' => 'INET_DMZ_HOST_OPEN_xxx',
   'PASS_DMZ_LOCAL' => 'DMZ_HOST_OPEN_xxx',
   'PASS_DMZ_LAN' => 'DMZ_LAN_HOST_OPEN_xxx',
+  'PASS_LAN_LAN' => 'LAN_LAN_HOST_OPEN_xxx',
   'DENY_LAN_EXT' => 'LAN_INET_HOST_DENY_xxx',
   'DENY_LAN_LOCAL' => 'LAN_HOST_DENY_xxx',
   'DENY_LOCAL_EXT' => 'HOST_DENY_xxx_OUTPUT',
@@ -172,6 +175,7 @@ function getARNOvars($db) {
           case 'DENY_EXT_DMZ':
           case 'DENY_DMZ_EXT':
           case 'PASS_DMZ_LAN':
+          case 'PASS_LAN_LAN':
           case 'PASS_LAN_EXT':
           case 'PASS_DMZ_EXT':
             if ($is_ip) {
@@ -499,6 +503,7 @@ function addFWRule(&$db, $id) {
   case 'DENY_EXT_DMZ':
   case 'DENY_DMZ_EXT':
   case 'PASS_DMZ_LAN':
+  case 'PASS_LAN_LAN':
   case 'PASS_LAN_EXT':
   case 'PASS_DMZ_EXT':
     if ($s_addr === '' || $d_addr === '') {
@@ -681,8 +686,8 @@ require_once '../common/header.php';
         break;
       case 3:  // PASS_EXT_LOCAL
       case 6:  // PASS_DMZ_LOCAL
-      case 9:  // DENY_LAN_LOCAL
-      case 16:  // LOG_LOCAL_IN
+      case 10:  // DENY_LAN_LOCAL
+      case 17:  // LOG_LOCAL_IN
         form.s_addr.disabled = 0;
         form.s_lport.disabled = 0;
         form.s_uport.disabled = 0;
@@ -710,11 +715,12 @@ require_once '../common/header.php';
       case 4:  // PASS_EXT_LAN
       case 5:  // PASS_EXT_DMZ
       case 7:  // PASS_DMZ_LAN
-      case 8:  // DENY_LAN_EXT
-      case 11:  // DENY_EXT_DMZ
-      case 12:  // DENY_DMZ_EXT
-      case 13:  // PASS_LAN_EXT
-      case 14:  // PASS_DMZ_EXT
+      case 8:  // PASS_LAN_LAN
+      case 9:  // DENY_LAN_EXT
+      case 12:  // DENY_EXT_DMZ
+      case 13:  // DENY_DMZ_EXT
+      case 14:  // PASS_LAN_EXT
+      case 15:  // PASS_DMZ_EXT
         form.s_addr.disabled = 0;
         form.d_addr.disabled = 0;
         form.d_lport.disabled = 0;
@@ -726,8 +732,8 @@ require_once '../common/header.php';
         form.s_uport.disabled = 1;
         nat_ext.style.visibility = "hidden";
         break;
-      case 10:  // DENY_LOCAL_EXT
-      case 15:  // LOG_LOCAL_OUT
+      case 11:  // DENY_LOCAL_EXT
+      case 16:  // LOG_LOCAL_OUT
         form.d_addr.disabled = 0;
         form.d_lport.disabled = 0;
         form.d_uport.disabled = 0;
