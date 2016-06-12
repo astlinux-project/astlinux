@@ -98,6 +98,8 @@ Released @TBD@
 -- arnofw (AIF), add NAT_FOREIGN_NETWORK rc.conf variable to support a downstream router with NAT disabled.
    More Info: http://doc.astlinux.org/userdoc:tt-internal-downstream-router
 
+-- arnofw (AIF), add support for LAN_LAN_HOST_OPEN_xxx firewall rules.
+
 -- Email Notifications, now automatically define a 'a@b.tld' From header in the form: "<action>-<hostname>" <a@b.tld>
    The current <action> values are: SIP, Asterisk, Monit, Test, UPS, WAN
 
@@ -119,6 +121,10 @@ Released @TBD@
 
 -- Network and Edit tab, add support for Avahi mDNS/DNS-SD Service Discovery.
    More Info: http://doc.astlinux.org/userdoc:tt_avahi_mdns
+
+-- Network -> Firewall sub-tab, add support for "Pass LAN->LAN" action
+   Example: Allow any LAN subnet access to a LAN printer at 192.168.101.8 serving LPD, IPP and JetDirect
+   == Action: Pass LAN->LAN | Protocol: TCP | Source: 0/0 | Destination: 192.168.101.8 | Port: 515,631,9100
 
 
 Additions for AstLinux 1.2.6.1:
