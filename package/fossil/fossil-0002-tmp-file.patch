@@ -1,12 +1,12 @@
 --- fossil-1.33/src/sqlite3.c.orig	2015-08-17 12:26:08.000000000 -0500
 +++ fossil-1.33/src/sqlite3.c	2015-08-17 12:34:29.000000000 -0500
-@@ -32061,8 +32061,8 @@
-      0,
+@@ -34504,8 +34504,8 @@
+   static const char *azDirs[] = {
       0,
       0,
 +     "/mnt/kd/fossil/tmp",
       "/var/tmp",
 -     "/usr/tmp",
       "/tmp",
-      0        /* List terminator */
+      "."
    };
