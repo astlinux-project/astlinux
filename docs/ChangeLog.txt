@@ -33,6 +33,8 @@ Released @TBD@
 
 -- php, version bump to 5.5.36, bug and security fixes
 
+-- Fossil, version bump to 1.35
+
 -- sqlite, version bump to 3.13.0
 
 -- sqliteodbc, version bump to 0.9994
@@ -50,6 +52,8 @@ Released @TBD@
 -- nano, version bump to 2.5.3
 
 -- smartctl, version bump to 6.5, add drivedb.h entry for Phison S9 SSD: PC Engines msata16d, MyDigitalSSD Super-Boot-Drive mSATA
+
+-- pcre, version bump to 8.39, security fixes: CVE-2016-1283, CVE-2016-3191
 
 -- libxml2, version bump to 2.9.4, security fixes: CVE-2016-1762, CVE-2016-1834, CVE-2016-3705
 
