@@ -63,7 +63,7 @@ Released @TBD@
 
 -- bc, version bump to 1.06.95
 
--- Time Zone Database update, tzdata2016d and php-timezonedb-2016.4
+-- Time Zone Database update, tzdata2016e and php-timezonedb-2016.5
 
 -- (Custom Build Only) flashrom, version bump to 0.9.9
 
