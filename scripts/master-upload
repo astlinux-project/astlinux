@@ -138,7 +138,7 @@ for asterisk in ast18 ast11 ast13; do
 done
 
 # Upload .img.gz flash images
-upload_flash_images "$input_path/img" "downloads/img"
+#upload_flash_images "$input_path/img" "downloads/img"
 
 # Upload .iso installer images
 upload_iso_images "$input_path/iso" "downloads/iso"
