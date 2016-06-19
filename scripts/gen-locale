@@ -33,7 +33,7 @@ for i in $ARGS; do
     echo "gen-locale: Skipping '$i', only UTF-8 is supported." >&2
     continue
   fi
-  localedef --prefix "$TMP_DIR" --little-endian -c -i ${lang} -f UTF-8 ${lang}.UTF-8
+  localedef --prefix "$TMP_DIR" -c -i ${lang} -f UTF-8 ${lang}.UTF-8
   if [ $? -eq 0 ]; then
     VALID="$VALID${VALID:+, }${lang}.UTF-8"
   fi

@@ -80,6 +80,8 @@ uk_UA
 vi_VN
 "
 
+S3_BUCKET="mirror.astlinux-project"
+
 TMP_LIST_FILE="/tmp/master-locale-list"
 LOCALE_FILE="$(pwd)/locale-archive"
 
@@ -98,13 +100,13 @@ for i in $locales; do
     sha1sum locale-archive.gz > locale-archive.gz.sha1
     for file in locale-archive.gz locale-archive.gz.sha1; do
     if [ "$ACTION" = "upload" ]; then
-      s3cmd put --acl-public "$file" "s3://astlinuxmirror/locale/${locale}/${file}"
+      s3cmd put --acl-public "$file" "s3://${S3_BUCKET}/locale/${locale}/${file}"
       if [ $? -ne 0 ]; then
         rm -f "$TMP_LIST_FILE" "$LOCALE_FILE.gz" "$LOCALE_FILE.gz.sha1"
         exit 1
       fi
     else
-      echo "s3cmd put --acl-public $file s3://astlinuxmirror/locale/${locale}/${file}"
+      echo "s3cmd put --acl-public $file s3://${S3_BUCKET}/locale/${locale}/${file}"
     fi
     done
   else
@@ -114,13 +116,13 @@ done
 
 file="$TMP_LIST_FILE"
 if [ "$ACTION" = "upload" ]; then
-  s3cmd put --acl-public "$file" "s3://astlinuxmirror/locale/locales.txt"
+  s3cmd put --acl-public "$file" "s3://${S3_BUCKET}/locale/locales.txt"
   if [ $? -ne 0 ]; then
     rm -f "$TMP_LIST_FILE" "$LOCALE_FILE" "$LOCALE_FILE.gz" "$LOCALE_FILE.gz.sha1"
     exit 1
   fi
 else
-  echo "s3cmd put --acl-public $file s3://astlinuxmirror/locale/locales.txt"
+  echo "s3cmd put --acl-public $file s3://${S3_BUCKET}/locale/locales.txt"
 fi
 
 if [ $err_cnt -gt 0 ]; then

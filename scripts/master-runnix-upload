@@ -20,7 +20,7 @@ fi
 echo "$runnix" > /tmp/ver
 
 for file in $runnix.tar.gz $runnix.tar.gz.sha1 /tmp/ver; do
-  s3cmd put --acl-public "$file" "s3://astlinuxmirror/runnix4/${file##*/}"
+  s3cmd put --acl-public "$file" "s3://mirror.astlinux-project/runnix4/${file##*/}"
 done
 
 rm /tmp/ver

@@ -41,7 +41,7 @@ fi
 
 ## Redirect AstLinux mirror URL to HTTPS
 ##
-redirect_url_to_https "mirror.astlinux.org"
+redirect_url_to_https "mirror.astlinux-project.org"
 
 curl -sSfL --globoff --retry 1 --connect-timeout 15 --max-time 1800 -o "$file" "$url" >/dev/null
 

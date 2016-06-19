@@ -86,6 +86,8 @@ asterisk-moh-opsound-ulaw
 asterisk-moh-opsound-wav
 "
 
+S3_BUCKET="mirror.astlinux-project"
+
 SOUNDS_URL="http://downloads.asterisk.org/pub/telephony/sounds"
 
 SUFFIX="current.tar.gz"
@@ -120,19 +122,19 @@ for i in $sounds; do
   download_sound $i
   if [ $? -eq 0 ]; then
     if [ "$ACTION" = "upload" ]; then
-      s3cmd put --acl-public "$TMP_SND_FILE" "s3://astlinuxmirror/asterisk-sounds/${i}-${SUFFIX}"
+      s3cmd put --acl-public "$TMP_SND_FILE" "s3://${S3_BUCKET}/asterisk-sounds/${i}-${SUFFIX}"
       if [ $? -ne 0 ]; then
         cleanup
         exit 1
       fi
-      s3cmd put --acl-public "$TMP_SND_FILE.sha1" "s3://astlinuxmirror/asterisk-sounds/${i}-${SUFFIX}.sha1"
+      s3cmd put --acl-public "$TMP_SND_FILE.sha1" "s3://${S3_BUCKET}/asterisk-sounds/${i}-${SUFFIX}.sha1"
       if [ $? -ne 0 ]; then
         cleanup
         exit 1
       fi
     else
-      echo "s3cmd put --acl-public $TMP_SND_FILE s3://astlinuxmirror/asterisk-sounds/${i}-${SUFFIX}"
-      echo "s3cmd put --acl-public $TMP_SND_FILE.sha1 s3://astlinuxmirror/asterisk-sounds/${i}-${SUFFIX}.sha1"
+      echo "s3cmd put --acl-public $TMP_SND_FILE s3://${S3_BUCKET}/asterisk-sounds/${i}-${SUFFIX}"
+      echo "s3cmd put --acl-public $TMP_SND_FILE.sha1 s3://${S3_BUCKET}/asterisk-sounds/${i}-${SUFFIX}.sha1"
     fi
   else
     err_cnt=$((err_cnt+1))

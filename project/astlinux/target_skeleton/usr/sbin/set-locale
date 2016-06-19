@@ -7,7 +7,7 @@ ORANGE=2
 GREEN=0
 #
 # locale repository
-SRC_URL="https://mirror.astlinux.org/locale"
+SRC_URL="https://mirror.astlinux-project.org/locale"
 #
 # base locale directory
 BASE="/usr/lib/locale"

@@ -15,7 +15,7 @@ for i in $(ls -1 dl | grep -v .sha1); do
 done
 
 if [ "$action" = "all" ]; then
-  s3cmd sync --acl-public --exclude '*/*' -v dl/ s3://astlinuxfiles/
+  s3cmd sync --acl-public --exclude '*/*' -v dl/ s3://files.astlinux-project/
 elif [ "$action" = "dry-run" ]; then
-  s3cmd sync --dry-run --exclude '*/*' -v dl/ s3://astlinuxfiles/
+  s3cmd sync --dry-run --exclude '*/*' -v dl/ s3://files.astlinux-project/
 fi
