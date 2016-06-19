@@ -14,7 +14,7 @@ PHP_DEPENDENCIES = host-pkg-config
 
 ifeq ($(BR2_PACKAGE_PHP_EXT_TIMEZONEDB),y)
 PHP_TIMEZONEDB_VERSION = 2016.5
-PHP_TIMEZONEDB_SITE = http://files.astlinux.org
+PHP_TIMEZONEDB_SITE = http://files.astlinux-project.org
 PHP_TIMEZONEDB_SOURCE = timezonedb-$(PHP_TIMEZONEDB_VERSION).tar.gz
 
 define PHP_TIMEZONEDB_DOWNLOAD

@@ -19,7 +19,7 @@ PERL_MODULES += Digest/MD5 Digest/SHA Getopt/Long Time/Local File/Glob Sys/Hostn
 
 PERL_CROSS_VERSION = 1.0.2
 PERL_CROSS_SITE = https://github.com/arsv/perl-cross/releases/download/$(PERL_CROSS_VERSION)
-#PERL_CROSS_SITE = http://files.astlinux.org
+#PERL_CROSS_SITE = http://files.astlinux-project.org
 PERL_CROSS_SOURCE = perl-$(PERL_VERSION)-cross-$(PERL_CROSS_VERSION).tar.gz
 
 # We use the perlcross hack to cross-compile perl. It should

@@ -6,7 +6,7 @@
 
 LUASEC_VERSION = 0.5
 LUASEC_SOURCE = luasec-prosody-$(LUASEC_VERSION).tar.gz
-LUASEC_SITE = http://files.astlinux.org
+LUASEC_SITE = http://files.astlinux-project.org
 LUASEC_DEPENDENCIES = lua openssl luasocket
 
 define LUASEC_BUILD_CMDS
