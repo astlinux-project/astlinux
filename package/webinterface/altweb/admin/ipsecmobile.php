@@ -75,7 +75,7 @@ function ipsecmobile_openssl($keysize, $algorithm, $dnsname) {
     }
   }
   if (($email = getPREFdef($global_prefs, 'dn_email_address_cmdstr')) === '') {
-    $email = 'info@astlinux.org';
+    $email = 'info@astlinux-project.org';
   }
   $ssl = ipsecmobileSETUP($opts, $countryName, $stateName, $localityName, $orgName, $orgUnit, $commonName, $email);
   return($ssl);

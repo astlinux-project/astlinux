@@ -622,7 +622,7 @@ function asteriskURLrepo() {
     $ver3 = '';
   }
 
-  $str = 'https://mirror.astlinux.org/';
+  $str = 'https://mirror.astlinux-project.org/';
 
   if ($ver3 === '1.4') {
     $str .= 'firmware-1.x';

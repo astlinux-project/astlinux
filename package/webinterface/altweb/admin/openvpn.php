@@ -79,7 +79,7 @@ function openvpn_openssl($keysize, $algorithm) {
     }
   }
   if (($email = getPREFdef($global_prefs, 'dn_email_address_cmdstr')) === '') {
-    $email = 'info@astlinux.org';
+    $email = 'info@astlinux-project.org';
   }
   $ssl = openvpnSETUP($opts, $countryName, $stateName, $localityName, $orgName, $orgUnit, $commonName, $email);
   return($ssl);

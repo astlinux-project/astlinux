@@ -30,7 +30,7 @@ function ipsecmobileSETUP($opts, $countryName, $stateName, $localityName, $orgNa
     '',
     '[ ipsecmobile_server ]',
     'basicConstraints=CA:FALSE',
-    ($opts['dnsname'] !== '' ? 'subjectAltName=DNS:'.$opts['dnsname'] : '#subjectAltName=DNS:vpn.astlinux.org'),
+    ($opts['dnsname'] !== '' ? 'subjectAltName=DNS:'.$opts['dnsname'] : '#subjectAltName=DNS:vpn.astlinux-project.org'),
     'nsCertType=server',
     'nsComment="IPsec Mobile Server Certificate"',
     'subjectKeyIdentifier=hash',

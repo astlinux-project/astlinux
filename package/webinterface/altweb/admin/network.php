@@ -539,7 +539,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
       $commonName = '*';
     }
     if (($email = getPREFdef($global_prefs, 'dn_email_address_cmdstr')) === '') {
-      $email = 'info@astlinux.org';
+      $email = 'info@astlinux-project.org';
     }
     $fname = '/mnt/kd/ssl/webinterface.pem';
     if (opensslCREATEhttpsCert($countryName, $stateName, $localityName, $orgName, $orgUnit, $commonName, $email, $fname)) {
