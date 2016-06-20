@@ -10,6 +10,11 @@ Additions for AstLinux 1.2.7:
 
 Released @TBD@
 
+** IMPORTANT NOTICE
+
+-- The AstLinux Project's cloud infrastructure has changed from 'mirror.astlinux.org' to 'mirror.astlinux-project.org'
+   == The web interface "Prefs tab -> Repository URL:" needs to be changed accordingly unless you are using a private repository.
+
 ** Build System
 
 -- Added support for x86_64 KVM/Xen VM's and Virtio paravirtualized drivers with the new board type genx86_64-vm
