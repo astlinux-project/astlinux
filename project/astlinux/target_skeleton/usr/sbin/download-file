@@ -43,5 +43,9 @@ fi
 ##
 redirect_url_to_https "mirror.astlinux-project.org"
 
+## Redirect AstLinux files URL to HTTPS, used for Add-On Packages
+##
+redirect_url_to_https "files.astlinux-project.org"
+
 curl -sSfL --globoff --retry 1 --connect-timeout 15 --max-time 1800 -o "$file" "$url" >/dev/null
 
