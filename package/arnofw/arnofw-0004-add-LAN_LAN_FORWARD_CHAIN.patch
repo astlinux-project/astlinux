@@ -188,3 +188,66 @@ index 2291916..73554d2 100644
  # LAN_INET_xxx = LAN->internet access rules (forward)                         #
  #                                                                             #
  # Note that when the LAN_INET_OPEN_xxx & LAN_INET_HOST_OPEN_xxx variables are #
+
+
+From dd4ac2ea35da58eb625a3e1bb87dc707044f13a6 Mon Sep 17 00:00:00 2001
+From: Lonnie Abelbeck <lonnie@abelbeck.com>
+Date: Wed, 22 Jun 2016 14:55:37 -0500
+Subject: [PATCH] removed: unused INT_FORWARD_IN_CHAIN and
+ INT_FORWARD_OUT_CHAIN user chains, related #28
+
+---
+ README                     |  2 --
+ bin/arno-iptables-firewall | 12 ------------
+ 2 files changed, 14 deletions(-)
+
+diff --git a/README b/README
+index 802ce61..3f88069 100644
+--- a/README
++++ b/README
+@@ -476,8 +476,6 @@ HOST_BLOCK_DST              - Chain containing the list of destination based
+                               blocked hosts
+ HOST_BLOCK_SRC              - Chain containing the list of source based blocked
+                               hosts
+-INT_FORWARD_IN_CHAIN        - Internal-net FORWARD chain for INcoming traffic
+-INT_FORWARD_OUT_CHAIN       - Internal-net FORWARD chain for OUTcoming traffic
+ INT_INPUT_CHAIN             - Internal-net INPUT chain
+ INT_OUTPUT_CHAIN            - Internal-net OUTPUT chain
+ LAN_LAN_FORWARD_CHAIN       - LAN to LAN (Inter-LAN) forward chain (AIF private use only)
+diff --git a/bin/arno-iptables-firewall b/bin/arno-iptables-firewall
+index beee62d..99735ee 100755
+--- a/bin/arno-iptables-firewall
++++ b/bin/arno-iptables-firewall
+@@ -4769,14 +4769,6 @@ setup_firewall_rules()
+     iptables -A FORWARD -o $eif -j EXT_FORWARD_OUT_CHAIN
+   done
+   
+-  # Source the IN/OUT chains for the internal interface(s)
+-  ########################################################
+-  IFS=' ,'
+-  for iif in $INT_IF; do
+-    iptables -A FORWARD -i $iif -j INT_FORWARD_IN_CHAIN
+-    iptables -A FORWARD -o $iif -j INT_FORWARD_OUT_CHAIN
+-  done
+-
+   # Source the IN/OUT chains for the dmz interface(s)
+   ########################################################
+   IFS=' ,'
+@@ -5135,8 +5127,6 @@ create_user_chains()
+ 
+   # INT(LAN) chains
+   iptables -N INT_INPUT_CHAIN
+-  iptables -N INT_FORWARD_IN_CHAIN
+-  iptables -N INT_FORWARD_OUT_CHAIN
+   iptables -N INT_OUTPUT_CHAIN
+ 
+   # DMZ chains
+@@ -5192,8 +5182,6 @@ flush_user_chains()
+ 
+   # INT(LAN) chains
+   iptables -F INT_INPUT_CHAIN
+-  iptables -F INT_FORWARD_IN_CHAIN
+-  iptables -F INT_FORWARD_OUT_CHAIN
+   iptables -F INT_OUTPUT_CHAIN
+ 
+   # DMZ chains
