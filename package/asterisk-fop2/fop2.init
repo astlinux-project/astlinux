@@ -24,6 +24,26 @@ PIDFILE="/var/run/fop2.pid"
 # eliminate the 2x requirement, but would be bad practice if another PAR application was in use.
 TMPSIZEMAX=50000
 
+set_version_specific_options()
+{
+  local ver_str
+
+  OPTIONS=""
+
+  if [ ! -f "$PACKAGES_DIR/fop2/.sha1" ]; then
+    return
+  fi
+
+  ver_str="$(sed -n -r -e 's:^.*/fop2-([^-]+)-.*$:\1:p' "$PACKAGES_DIR/fop2/.sha1")"
+
+  # Set preferences database file location
+  case "$ver_str" in
+    2.2[0-9]*) ;;
+    2.30*) ;;
+    *) OPTIONS="$OPTIONS${OPTIONS:+ }--dbdir /etc/fop2" ;;
+  esac
+}
+
 init () {
 
   if [ ! -d /mnt/kd/fop2 ]; then
@@ -40,7 +60,9 @@ start () {
 
   if [ -f /etc/fop2/fop2.cfg ]; then
     echo "Starting Asterisk FOP2..."
-    $FOP2_SERVER -d -c /etc/fop2 -p $PIDFILE
+    set_version_specific_options
+
+    $FOP2_SERVER -d -c /etc/fop2 -p $PIDFILE $OPTIONS
   fi
 }
 
