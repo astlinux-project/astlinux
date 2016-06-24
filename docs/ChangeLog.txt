@@ -36,7 +36,7 @@ Released @TBD@
 
 -- igb, version bump to 5.3.5.3, Intel Gigabit Ethernet Network Driver
 
--- php, version bump to 5.5.36, bug and security fixes
+-- php, version bump to 5.5.37, bug and security fixes
 
 -- Fossil, version bump to 1.35
 
@@ -64,7 +64,7 @@ Released @TBD@
 
 -- libsodium, version bump to 1.0.10
 
--- expat, version bump to 2.1.1
+-- expat, version bump to 2.2.0
 
 -- bc, version bump to 1.06.95
 
