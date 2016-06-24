@@ -1,0 +1,134 @@
+#!/bin/bash
+#
+# beta-run-image-upload input_path
+#
+
+input_path="$1"
+
+auth_file="$HOME/.s3cfg"
+
+S3_BUCKET="beta.astlinux-project"
+
+success_count=0
+
+delete_dir()
+{
+  local remote_dir="$1"
+
+  s3cmd del -r "s3://$S3_BUCKET/$remote_dir/*"
+
+  if [ $? -ne 0 ]; then
+    echo "beta-run-image-upload: delete directory failed."
+    exit 1
+  fi
+}
+
+upload_file()
+{
+  local remote_dir="$1" files="$2" count="$3" IFS=' ' file
+
+  for file in $files; do
+    s3cmd put --acl-public "$file" "s3://$S3_BUCKET/$remote_dir/${file##*/}"
+  done
+
+  if [ $? -eq 0 ]; then
+    if [ "$count" = "count" ]; then
+      success_count=$((success_count+1))
+    fi
+  else
+    echo "beta-run-image-upload: failed."
+    exit 1
+  fi
+}
+
+upload_run_images()
+{
+  local local_dir="$1" firmware_path="$2" ver="/tmp/ver"
+
+  for board in $(ls -1 "$local_dir"); do
+    echo "Run Image for Board: $board"
+    file="$(ls -1 "$local_dir/$board/"*.tar.gz | head -n1)"
+    file_sha1="$(ls -1 "$local_dir/$board/"*.tar.gz.sha1 | head -n1)"
+    if [ -n "$file" -a -n "$file_sha1" ]; then
+      upload_file "$firmware_path/$board" "$file $file_sha1" count
+    else
+      echo "beta-run-image-upload: missing file(s) in \"$local_dir/$board/\""
+      exit 1
+    fi
+
+    # Successful upload, update the 'ver' file
+    file_ver="$(basename "$file" .tar.gz)"
+    echo "$file_ver" > "$ver"
+    upload_file "$firmware_path/$board" "$ver"
+    rm -f "$ver"
+    echo ""
+  done
+}
+
+set_asterisk_version()
+{
+  case $1 in
+    ast18)
+      FIRMWARE="ast18-firmware-1.x"
+      MIRROR_FIRMWARE="$FIRMWARE"
+      ;;
+    ast11)
+      FIRMWARE="ast11-firmware-1.x"
+      MIRROR_FIRMWARE="$FIRMWARE"
+      ;;
+    ast13)
+      FIRMWARE="ast13-firmware-1.x"
+      MIRROR_FIRMWARE="$FIRMWARE"
+      ;;
+    *)
+      echo "beta-run-image-upload: Unknown Asterisk Version."
+      exit 1
+      ;;
+  esac
+}
+
+if [ -z "$input_path" ]; then
+  echo "Usage: beta-run-image-upload input_path"
+  exit 1
+fi
+
+if [ ! -d "$input_path" ]; then
+  echo "beta-run-image-upload: directory \"$input_path\" not found."
+  exit 1
+else
+  check_firmware=0
+  for dir in $(ls -1 "$input_path"); do
+    case $dir in
+      *firmware-1.x) check_firmware=1 ;;
+    esac
+  done
+  if [ $check_firmware -eq 0 ]; then
+    echo "beta-run-image-upload: missing firmware-1.x directories."
+    exit 1
+  fi
+fi
+
+if [ ! -f "$auth_file" ]; then
+  echo "beta-run-image-upload: authentication file \"$auth_file\" not found."
+  exit 1
+fi
+
+
+for asterisk in ast18 ast11 ast13; do
+
+  set_asterisk_version $asterisk
+
+  # Remove any pre-existing run images
+  delete_dir "$MIRROR_FIRMWARE"
+
+  # Upload .tar.gz run images
+  upload_run_images "$input_path/$FIRMWARE" "$MIRROR_FIRMWARE"
+
+done
+
+echo "
+##
+## Beta Run-Image Upload Finished for '$success_count' Images
+##
+"
+
