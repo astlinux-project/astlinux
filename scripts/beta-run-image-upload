@@ -15,7 +15,7 @@ delete_dir()
 {
   local remote_dir="$1"
 
-  s3cmd del -r "s3://$S3_BUCKET/$remote_dir/*"
+  s3cmd del -r "s3://$S3_BUCKET/$remote_dir/"
 
   if [ $? -ne 0 ]; then
     echo "beta-run-image-upload: delete directory failed."
