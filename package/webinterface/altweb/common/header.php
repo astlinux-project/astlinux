@@ -135,6 +135,7 @@ header('Content-Type: text/html; charset=utf-8');
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
 <meta http-equiv="Expires" content="0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <?php
     $status = (getPREFdef($global_prefs, 'status_require_auth') === 'yes') ? '/admin/status.php' : '/status.php';
     $directory = (getPREFdef($global_prefs, 'directory_require_auth') === 'yes') ? '/admin/directory.php' : '/directory.php';
