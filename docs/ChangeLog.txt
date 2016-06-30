@@ -135,6 +135,8 @@ Released @TBD@
    Example: Allow any LAN subnet access to a LAN printer at 192.168.101.8 serving LPD, IPP and JetDirect
    == Action: Pass LAN->LAN | Protocol: TCP | Source: 0/0 | Destination: 192.168.101.8 | Port: 515,631,9100
 
+-- Add HTML meta "viewport" tag to be "mobile friendly".
+
 
 Additions for AstLinux 1.2.6.1:
 ==============================
