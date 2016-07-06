@@ -7,7 +7,7 @@ SHELLINABOX_VERSION = 2.19
 SHELLINABOX_SOURCE = shellinabox-$(SHELLINABOX_VERSION).tar.gz
 #SHELLINABOX_SITE = https://github.com/shellinabox/shellinabox
 SHELLINABOX_SITE = http://files.astlinux-project.org
-SHELLINABOX_DEPENDENCIES = openssl
+SHELLINABOX_DEPENDENCIES = zlib openssl
 
 SHELLINABOX_AUTORECONF = YES
 
