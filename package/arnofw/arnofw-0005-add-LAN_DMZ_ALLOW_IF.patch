@@ -1,0 +1,46 @@
+diff --git a/bin/arno-iptables-firewall b/bin/arno-iptables-firewall
+index 0cb5cba..d825c0b 100755
+--- a/bin/arno-iptables-firewall
++++ b/bin/arno-iptables-firewall
+@@ -4814,6 +4814,8 @@ setup_firewall_rules()
+     setup_dmz_inet_forward_chain;
+     setup_dmz_lan_forward_chain;
+ 
++    echo " Allowing LAN->DMZ for LAN interface(s): ${LAN_DMZ_ALLOW_IF:-$INT_IF}"
++
+     IFS=' ,'
+     for dif in $DMZ_IF; do
+       echo "Applying DMZ FORWARD policy to interface: $dif"
+@@ -4834,8 +4836,13 @@ setup_firewall_rules()
+         # Apply policy for DMZ->LAN
+         iptables -A FORWARD -i $dif -o $iif -j DMZ_LAN_FORWARD_CHAIN
+ 
+-        # Apply policy for LAN->DMZ (allow all)
+-        iptables -A FORWARD -i $iif -o $dif -j ACCEPT
++        # Apply policy for LAN->DMZ (allow all INT_IF when LAN_DMZ_ALLOW_IF is not defined)
++        for interface in ${LAN_DMZ_ALLOW_IF:-$INT_IF}; do
++          if [ "$iif" = "$interface" ]; then
++            iptables -A FORWARD -i $iif -o $dif -j ACCEPT
++            break
++          fi
++        done
+       done
+     done
+   fi
+diff --git a/etc/arno-iptables-firewall/firewall.conf b/etc/arno-iptables-firewall/firewall.conf
+index 83ef1dc..6d3bd19 100644
+--- a/etc/arno-iptables-firewall/firewall.conf
++++ b/etc/arno-iptables-firewall/firewall.conf
+@@ -125,6 +125,12 @@ DMZ_IF=""
+ # -----------------------------------------------------------------------------
+ DMZ_NET=""
+ 
++# Specify the LAN (INT_IF) interfaces that are allowed full access to the
++# DMZ interface(s). (LAN to DMZ forwarding policy)
++# If LAN_DMZ_ALLOW_IF is not defined, all the INT_IF interfaces will be allowed.
++# -----------------------------------------------------------------------------
++LAN_DMZ_ALLOW_IF=""
++
+ # Set this variable to 0 to disable antispoof checking for the dmz nets
+ # (EXPERT SETTING!)
+ # -----------------------------------------------------------------------------
