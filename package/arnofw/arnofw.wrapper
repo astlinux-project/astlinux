@@ -1,9 +1,11 @@
-#
-# In this shim, we're invoked after /etc/arno-iptables-firewall/firewall.conf
-# has been read.  We then read /etc/rc.conf, and paste in variables from
-# the latter file that will override whatever values were configured in
-# firewall.conf.
-#
+##
+## Custom AstLinux Variables -> AIF Configuration
+##
+## This script is called by AIF as a LOCAL_CONFIG_FILE which occurs after
+## the /etc/arno-iptables-firewall/firewall.conf defaults are read.
+## The AstLinux variables are then sourced from /etc/rc.conf, which together
+## with this script allows AIF variables to be configured as needed.
+##
 
 . /etc/rc.conf
 
@@ -25,7 +27,7 @@ isVPNtype()
 isNATinterface()
 {
   # args: IF
-  local IFS
+  local intf IFS
 
   unset IFS
   for intf in $NONAT; do
@@ -40,9 +42,10 @@ isNATinterface()
 addINTERNALnet()
 {
   # args: IF, IP, NM
+  local NETWORK PREFIX
+
   if [ -n "$1" -a "$1" != "none" -a -n "$2" -a -n "$3" ]; then
-    local NETWORK PREFIX
-    eval `ipcalc -np $2 $3`
+    eval $(ipcalc -np $2 $3)
 
     INT_IF="$INT_IF${INT_IF:+ }$1"
     INTERNAL_NET="$INTERNAL_NET${INTERNAL_NET:+ }$NETWORK/$PREFIX"
@@ -56,9 +59,10 @@ addINTERNALnet()
 addNOnatINTERNALnet()
 {
   # args: IF, IP, NM
+  local NETWORK PREFIX
+
   if [ -n "$1" -a "$1" != "none" -a -n "$2" -a -n "$3" ]; then
-    local NETWORK PREFIX
-    eval `ipcalc -np $2 $3`
+    eval $(ipcalc -np $2 $3)
 
     INT_IF="$INT_IF${INT_IF:+ }$1"
     INTERNAL_NET="$INTERNAL_NET${INTERNAL_NET:+ }$NETWORK/$PREFIX"
@@ -68,9 +72,10 @@ addNOnatINTERNALnet()
 setDMZnet()
 {
   # args: IF, IP, NM
+  local NETWORK PREFIX
+
   if [ -n "$1" -a "$1" != "none" -a -n "$2" -a -n "$3" ]; then
-    local NETWORK PREFIX
-    eval `ipcalc -np $2 $3`
+    eval $(ipcalc -np $2 $3)
 
     DMZ_IF="$1"
     DMZ_NET="$NETWORK/$PREFIX"
@@ -95,9 +100,10 @@ setFOREIGNnet()
 setIPSECnet()
 {
   # args: IP, NM
+  local NETWORK PREFIX
+
   if [ -n "$1" -a -n "$2" ]; then
-    local NETWORK PREFIX
-    eval `ipcalc -np $1 $2`
+    eval $(ipcalc -np $1 $2)
 
     NAT_INTERNAL_NET="$NAT_INTERNAL_NET${NAT_INTERNAL_NET:+ }$NETWORK/$PREFIX"
     NAT=1
@@ -106,8 +112,9 @@ setIPSECnet()
 
 getLANinterface()
 {
+  # args: LAN
   local lanif=""
-  
+
   case $1 in
   INTIF)
     lanif="$INTIF"
@@ -123,7 +130,7 @@ getLANinterface()
   if [ -z "$lanif" ]; then
     return 1
   fi
-  
+
   echo "$lanif"
   return 0
 }
@@ -141,172 +148,194 @@ get_network_cidr()
   esac
 }
 
-## Disable TOS mangling
-MANGLE_TOS=0
+astlinux_wrapper()
+{
+  local intf lan lans extCIDR ovpnIF ovpnIP ovpnNM allowif allowifs denyif count IFS
 
-if [ "$IPV6" = "yes" ]; then
-  IPV6_SUPPORT=1
-fi
+  MANGLE_TOS=0
 
-if [ -z "$PPPOEIF" ]; then
-  EXT_IF=""
-  unset IFS
-  for intf in $EXTIF $EXT2IF; do
-    EXT_IF="$EXT_IF${EXT_IF:+ }$intf"
-  done
-else
-  EXT_IF="${PPPOE_EXTIF:-ppp+}"
-  unset IFS
-  for intf in $EXTIF $EXT2IF; do
-    case "$intf" in
-      ppp[0-9]*) ;;
-      *) EXT_IF="$EXT_IF $intf" ;;
-    esac
-  done
-fi
-
-# Add external interface 'ip6tun' if an IPv6 tunnel is defined
-if [ "$IPV6" = "yes" -a -n "$IPV6_TUNNEL" ]; then
-  EXT_IF="$EXT_IF ip6tun"
-fi
-
-if [ -z "$EXTERNAL_NET" ]; then
-  unset IFS
-  for intf in $EXTIF $EXT2IF; do
-    extCIDR="$(get_network_cidr "$intf")"
-    if [ -n "$extCIDR" ]; then
-      EXTERNAL_NET="$EXTERNAL_NET${EXTERNAL_NET:+ }$extCIDR"
-    fi
-  done
-fi
-
-INT_IF=""
-INTERNAL_NET=""
-NAT_INTERNAL_NET=""
-NAT=0
-
-addINTERNALnet "$INTIF" "$INTIP" "$INTNM"
-
-addINTERNALnet "$INT2IF" "$INT2IP" "$INT2NM"
-
-addINTERNALnet "$INT3IF" "$INT3IP" "$INT3NM"
-
-setDMZnet "$DMZIF" "$DMZIP" "$DMZNM"
-
-MODEM_IF=""
-
-if [ -n "$NAT_FOREIGN_NETWORK" ]; then
-  setFOREIGNnet
-fi
-
-EXT_IF_DHCP_IP=0
-if [ -n "$EXTIF" -a -z "$EXTIP" ] && [ "$EXTIF" != "ppp0" -o -z "$PPPOEIF" ]; then
-  EXT_IF_DHCP_IP=1
-fi
-if [ -n "$EXT2IF" -a -z "$EXT2IP" ] && [ "$EXT2IF" != "ppp0" -o -z "$PPPOEIF" ]; then
-  EXT_IF_DHCP_IP=1
-fi
-
-if [ "$EXTDHCP" = "yes" -a -n "$EXTIP" -a -n "$EXTGW" -a -z "$EXT2IF" -a -z "$PPPOEIF" ]; then
-  EXTERNAL_DHCP_SERVER=1
-fi
-
-if isVPNtype racoon || isVPNtype ipsecmobile; then
-  RP_FILTER=0
-fi
-
-if isVPNtype ipsecmobile && [ "$IPSECM_AUTH_METHOD" = "xauth_rsa_server" ]; then
-  setIPSECnet "$IPSECM_XAUTH_POOLBASE" "$IPSECM_XAUTH_POOLMASK"
-fi
-
-if isVPNtype openvpn; then
-  if [ -n "$OVPN_SERVER" ]; then
-    ovpnIP="`echo $OVPN_SERVER | awk '{ print $1; }'`"
-    ovpnNM="`echo $OVPN_SERVER | awk '{ print $2; }'`"
-    if [ -z "$OVPN_DEV" -o "$OVPN_DEV" = "tun" ]; then
-      ovpnIF="tun+"
-    else
-      ovpnIF="$OVPN_DEV"
-    fi
-    addINTERNALnet "$ovpnIF" "$ovpnIP" "$ovpnNM"
-    if [ -n "$OVPN_ALLOWLAN" ]; then
-      unset IFS
-      for lan in $OVPN_ALLOWLAN; do
-        allowif="$(getLANinterface "$lan")"
-        if [ $? -eq 0 ]; then
-          IFS=' ,'
-          for intf in $INT_IF; do
-            if [ "$intf" = "$allowif" ]; then
-              IF_TRUSTS="$IF_TRUSTS${IF_TRUSTS:+|}$allowif $ovpnIF"
-              break;
-            fi
-          done
-        fi
-      done
-    fi
-  else
-    # Failsafe if /mnt/kd/openvpn/openvpn.conf is used
-    # and OVPN_SERVER is not defined.
-    TRUSTED_IF="tun+"
+  if [ "$IPV6" = "yes" ]; then
+    IPV6_SUPPORT=1
   fi
-fi
 
-if isVPNtype openvpnclient; then
-  if [ -n "$OVPNC_SERVER" ]; then
-    ovpnIP="`echo $OVPNC_SERVER | awk '{ print $1; }'`"
-    ovpnNM="`echo $OVPNC_SERVER | awk '{ print $2; }'`"
-    if [ -z "$OVPNC_DEV" -o "$OVPNC_DEV" = "tun" ]; then
-      ovpnIF="tun+"
-    else
-      ovpnIF="$OVPNC_DEV"
-    fi
-    addNOnatINTERNALnet "$ovpnIF" "$ovpnIP" "$ovpnNM"
-    if [ -n "$OVPNC_ALLOWLAN" ]; then
-      unset IFS
-      for lan in $OVPNC_ALLOWLAN; do
-        allowif="$(getLANinterface "$lan")"
-        if [ $? -eq 0 ]; then
-          IFS=' ,'
-          for intf in $INT_IF; do
-            if [ "$intf" = "$allowif" ]; then
-              IF_TRUSTS="$IF_TRUSTS${IF_TRUSTS:+|}$allowif $ovpnIF"
-              break;
-            fi
-          done
-        fi
-      done
-    fi
+  if [ -z "$PPPOEIF" ]; then
+    EXT_IF=""
+    unset IFS
+    for intf in $EXTIF $EXT2IF; do
+      EXT_IF="$EXT_IF${EXT_IF:+ }$intf"
+    done
   else
-    # Failsafe if /mnt/kd/openvpn/openvpnconf.conf is used
-    # and OVPNC_SERVER is not defined.
-    TRUSTED_IF="tun+"
+    EXT_IF="${PPPOE_EXTIF:-ppp+}"
+    unset IFS
+    for intf in $EXTIF $EXT2IF; do
+      case "$intf" in
+        ppp[0-9]*) ;;
+        *) EXT_IF="$EXT_IF $intf" ;;
+      esac
+    done
   fi
-fi
 
-if [ -n "$ALLOWLANS" ]; then
-  IFS='~'
-  for lans in $ALLOWLANS; do
-    allowifs=""
-    count=0
-    IFS=' '
-    for lan in $lans; do
-      allowif="$(getLANinterface "$lan")"
-      if [ $? -eq 0 ]; then
-        IFS=' ,'
-        for intf in $INT_IF; do
-          if [ "$intf" = "$allowif" ]; then
-            allowifs="$allowifs${allowifs:+ }$allowif"
-            count=$((count + 1))
-            break;
+  # Add external interface 'ip6tun' if an IPv6 tunnel is defined
+  if [ "$IPV6" = "yes" -a -n "$IPV6_TUNNEL" ]; then
+    EXT_IF="$EXT_IF ip6tun"
+  fi
+
+  if [ -z "$EXTERNAL_NET" ]; then
+    unset IFS
+    for intf in $EXTIF $EXT2IF; do
+      extCIDR="$(get_network_cidr "$intf")"
+      if [ -n "$extCIDR" ]; then
+        EXTERNAL_NET="$EXTERNAL_NET${EXTERNAL_NET:+ }$extCIDR"
+      fi
+    done
+  fi
+
+  INT_IF=""
+  INTERNAL_NET=""
+  NAT_INTERNAL_NET=""
+  NAT=0
+
+  addINTERNALnet "$INTIF" "$INTIP" "$INTNM"
+
+  addINTERNALnet "$INT2IF" "$INT2IP" "$INT2NM"
+
+  addINTERNALnet "$INT3IF" "$INT3IP" "$INT3NM"
+
+  setDMZnet "$DMZIF" "$DMZIP" "$DMZNM"
+
+  MODEM_IF=""
+
+  if [ -n "$NAT_FOREIGN_NETWORK" ]; then
+    setFOREIGNnet
+  fi
+
+  EXT_IF_DHCP_IP=0
+  if [ -n "$EXTIF" -a -z "$EXTIP" ] && [ "$EXTIF" != "ppp0" -o -z "$PPPOEIF" ]; then
+    EXT_IF_DHCP_IP=1
+  fi
+  if [ -n "$EXT2IF" -a -z "$EXT2IP" ] && [ "$EXT2IF" != "ppp0" -o -z "$PPPOEIF" ]; then
+    EXT_IF_DHCP_IP=1
+  fi
+
+  if [ "$EXTDHCP" = "yes" -a -n "$EXTIP" -a -n "$EXTGW" -a -z "$EXT2IF" -a -z "$PPPOEIF" ]; then
+    EXTERNAL_DHCP_SERVER=1
+  fi
+
+  if isVPNtype racoon || isVPNtype ipsecmobile; then
+    RP_FILTER=0
+  fi
+
+  if isVPNtype ipsecmobile && [ "$IPSECM_AUTH_METHOD" = "xauth_rsa_server" ]; then
+    setIPSECnet "$IPSECM_XAUTH_POOLBASE" "$IPSECM_XAUTH_POOLMASK"
+  fi
+
+  if isVPNtype openvpn; then
+    if [ -n "$OVPN_SERVER" ]; then
+      ovpnIP="$(echo $OVPN_SERVER | awk '{ print $1; }')"
+      ovpnNM="$(echo $OVPN_SERVER | awk '{ print $2; }')"
+      if [ -z "$OVPN_DEV" -o "$OVPN_DEV" = "tun" ]; then
+        ovpnIF="tun+"
+      else
+        ovpnIF="$OVPN_DEV"
+      fi
+      addINTERNALnet "$ovpnIF" "$ovpnIP" "$ovpnNM"
+      if [ -n "$OVPN_ALLOWLAN" ]; then
+        unset IFS
+        for lan in $OVPN_ALLOWLAN; do
+          allowif="$(getLANinterface "$lan")"
+          if [ $? -eq 0 ]; then
+            IFS=' ,'
+            for intf in $INT_IF; do
+              if [ "$intf" = "$allowif" ]; then
+                IF_TRUSTS="$IF_TRUSTS${IF_TRUSTS:+|}$allowif $ovpnIF"
+                break
+              fi
+            done
           fi
         done
       fi
-    done
-    if [ -n "$allowifs" ] && [ "$count" -gt 1 ]; then
-      IF_TRUSTS="$IF_TRUSTS${IF_TRUSTS:+|}$allowifs"
+    else
+      # Failsafe if /mnt/kd/openvpn/openvpn.conf is used
+      # and OVPN_SERVER is not defined.
+      TRUSTED_IF="tun+"
     fi
-  done
-fi
+  fi
 
-unset IFS
+  if isVPNtype openvpnclient; then
+    if [ -n "$OVPNC_SERVER" ]; then
+      ovpnIP="$(echo $OVPNC_SERVER | awk '{ print $1; }')"
+      ovpnNM="$(echo $OVPNC_SERVER | awk '{ print $2; }')"
+      if [ -z "$OVPNC_DEV" -o "$OVPNC_DEV" = "tun" ]; then
+        ovpnIF="tun+"
+      else
+        ovpnIF="$OVPNC_DEV"
+      fi
+      addNOnatINTERNALnet "$ovpnIF" "$ovpnIP" "$ovpnNM"
+      if [ -n "$OVPNC_ALLOWLAN" ]; then
+        unset IFS
+        for lan in $OVPNC_ALLOWLAN; do
+          allowif="$(getLANinterface "$lan")"
+          if [ $? -eq 0 ]; then
+            IFS=' ,'
+            for intf in $INT_IF; do
+              if [ "$intf" = "$allowif" ]; then
+                IF_TRUSTS="$IF_TRUSTS${IF_TRUSTS:+|}$allowif $ovpnIF"
+                break
+              fi
+            done
+          fi
+        done
+      fi
+    else
+      # Failsafe if /mnt/kd/openvpn/openvpnconf.conf is used
+      # and OVPNC_SERVER is not defined.
+      TRUSTED_IF="tun+"
+    fi
+  fi
 
+  if [ -n "$ALLOWLANS" ]; then
+    IFS='~'
+    for lans in $ALLOWLANS; do
+      allowifs=""
+      count=0
+      IFS=' '
+      for lan in $lans; do
+        allowif="$(getLANinterface "$lan")"
+        if [ $? -eq 0 ]; then
+          IFS=' ,'
+          for intf in $INT_IF; do
+            if [ "$intf" = "$allowif" ]; then
+              allowifs="$allowifs${allowifs:+ }$allowif"
+              count=$((count + 1))
+              break
+            fi
+          done
+        fi
+      done
+      if [ -n "$allowifs" ] && [ $count -gt 1 ]; then
+        IF_TRUSTS="$IF_TRUSTS${IF_TRUSTS:+|}$allowifs"
+      fi
+    done
+  fi
+
+  if [ -n "$DMZ_DENYLAN" ]; then
+    IFS=' ,'
+    for intf in $INT_IF; do
+      allowif="$intf"
+      unset IFS
+      for lan in $DMZ_DENYLAN; do
+        denyif="$(getLANinterface "$lan")"
+        if [ $? -eq 0 ]; then
+          if [ "$intf" = "$denyif" ]; then
+            allowif=""
+            break
+          fi
+        fi
+      done
+      if [ -n "$allowif" ]; then
+        LAN_DMZ_ALLOW_IF="$LAN_DMZ_ALLOW_IF${LAN_DMZ_ALLOW_IF:+ }$allowif"
+      fi
+    done
+  fi
+}
+astlinux_wrapper
