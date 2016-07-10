@@ -10,6 +10,26 @@ Additions for AstLinux 1.2.8:
 
 Released @TBD@
 
+** System
+
+-- (no change)
+
+** Networking
+
+-- (no change)
+
+** Asterisk
+
+-- Asterisk 1.8.32.3 (no change), 11.22.0 (no change) and 13.9.1 (no change)
+
+-- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
+
+-- pjsip 2.4.5 (no change)
+
+** Web Interface
+
+-- Network -> Firewall sub-tab, add "Deny LAN to DMZ" option for specified LAN Interfaces.
+
 
 Additions for AstLinux 1.2.7:
 =============================
