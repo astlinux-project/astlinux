@@ -21,6 +21,7 @@
 // 01-27-2014, Added "Log Denied DMZ interface packets"
 // 06-08-2014, Added support for multiple "Allow OpenVPN" LAN interfaces
 // 06-12-2016, Added "Pass LAN->LAN" action
+// 07-10-2016, Added Deny LAN to DMZ for specified LAN Interfaces
 //
 // System location of /mnt/kd/rc.conf.d directory
 $FIREWALLCONFDIR = '/mnt/kd/rc.conf.d';
@@ -85,6 +86,16 @@ $proto_label = array (
   '41' => '6to4'
 );
 
+$lan_permutations_label = array (
+  'INTIF' => '1st',
+  'INT2IF' => '2nd',
+  'INT3IF' => '3rd',
+  'INTIF INT2IF' => '1st and 2nd',
+  'INTIF INT3IF' => '1st and 3rd',
+  'INT2IF INT3IF' => '2nd and 3rd',
+  'INTIF INT2IF INT3IF' => '1st and 2nd and 3rd'
+);
+
 $allowlans_label = array (
   'INTIF INT2IF' => '1st and 2nd',
   'INTIF INT3IF' => '1st and 3rd',
@@ -92,16 +103,6 @@ $allowlans_label = array (
   'INTIF INT2IF~INTIF INT3IF' => '1st and 2nd, 1st and 3rd',
   'INTIF INT2IF~INT2IF INT3IF' => '1st and 2nd, 2nd and 3rd',
   'INTIF INT3IF~INT2IF INT3IF' => '1st and 3rd, 2nd and 3rd',
-  'INTIF INT2IF INT3IF' => '1st and 2nd and 3rd'
-);
-
-$vpn_allowlan_label = array (
-  'INTIF' => '1st',
-  'INT2IF' => '2nd',
-  'INT3IF' => '3rd',
-  'INTIF INT2IF' => '1st and 2nd',
-  'INTIF INT3IF' => '1st and 3rd',
-  'INT2IF INT3IF' => '2nd and 3rd',
   'INTIF INT2IF INT3IF' => '1st and 2nd and 3rd'
 );
 
@@ -293,6 +294,8 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   $value = 'LAN_INET_DEFAULT_POLICY_DROP="'.$_POST['lan_DP'].'"';
   fwrite($fp, $value."\n");
   $value = 'DMZ_INET_DEFAULT_POLICY_DROP="'.$_POST['dmz_DP'].'"';
+  fwrite($fp, $value."\n");
+  $value = 'DMZ_DENYLAN="'.(isset($_POST['is_dmz_denylan']) ? $_POST['dmz_denylan'] : '').'"';
   fwrite($fp, $value."\n");
   $value = 'ALLOWLANS="'.(isset($_POST['is_allowlans']) ? $_POST['allowlans'] : '').'"';
   fwrite($fp, $value."\n");
@@ -995,6 +998,18 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td width="75" style="text-align: right;">');
+  $dmz_denylan = getVARdef($vars, 'DMZ_DENYLAN');
+  $sel = ($dmz_denylan !== '') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="is_dmz_denylan" name="is_dmz_denylan"'.$sel.' /></td><td>Deny LAN to DMZ for the');
+  putHtml('<select name="dmz_denylan">');
+  foreach ($lan_permutations_label as $key => $value) {
+    $sel = ($dmz_denylan === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('LAN Interface(s)</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td width="75" style="text-align: right;">');
   $allowlans = getVARdef($vars, 'ALLOWLANS');
   $sel = ($allowlans !== '') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="is_allowlans" name="is_allowlans"'.$sel.' /></td><td>Allow LAN to LAN for the');
@@ -1011,7 +1026,7 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
   $sel = ($ovpn_allowlan !== '') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="is_ovpnc_allowlan" name="is_ovpnc_allowlan"'.$sel.' /></td><td>Allow OpenVPN Client tunnel to the');
   putHtml('<select name="ovpnc_allowlan">');
-  foreach ($vpn_allowlan_label as $key => $value) {
+  foreach ($lan_permutations_label as $key => $value) {
     $sel = ($ovpn_allowlan === $key) ? ' selected="selected"' : '';
     putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
   }
@@ -1023,7 +1038,7 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
   $sel = ($ovpn_allowlan !== '') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="is_ovpn_allowlan" name="is_ovpn_allowlan"'.$sel.' /></td><td>Allow OpenVPN Server tunnel to the');
   putHtml('<select name="ovpn_allowlan">');
-  foreach ($vpn_allowlan_label as $key => $value) {
+  foreach ($lan_permutations_label as $key => $value) {
     $sel = ($ovpn_allowlan === $key) ? ' selected="selected"' : '';
     putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
   }
