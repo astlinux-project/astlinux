@@ -1,27 +1,70 @@
-From 0e9f40ff16f2d1582b3e1200a7a35f83f216f4f2 Mon Sep 17 00:00:00 2001
-From: James Rudd <James.Rudd@sbhs.nsw.edu.au>
-Date: Mon, 25 Aug 2014 16:23:33 +1000
-Subject: [[PATCH] Filtering Reflector Advertisements] Filtering Reflector
- Advertisements
+From d195ac7ddd53ac457c282581783ef5cd756b9608 Mon Sep 17 00:00:00 2001
+From: David Kerr <david@kerr.net>
+Date: Sat, 2 Jul 2016 14:05:24 -0400
+Subject: [PATCH 1/3] Add service types to database for audio streaming, device
+ info, amazon fire and qnap nas devices.
 
-Allows Avahi-Daemon to  filter which advertisements are added to the cache to be reflected to  different networks.
+---
+ service-type-database/service-types | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/service-type-database/service-types b/service-type-database/service-types
+index 6e7e2cd..4bbf52a 100644
+--- a/service-type-database/service-types
++++ b/service-type-database/service-types
+@@ -139,6 +139,7 @@ _realplayfavs._tcp:RealPlayer Shared Favorites
+ _realplayfavs._tcp[it]:RealPlayer - Preferiti Condivisi
+ 
+ _raop._tcp:AirTunes Remote Audio
++_airplay._tcp:AirPlay Remote Video
+ 
+ _rtsp._tcp:RTSP Realtime Streaming Server
+ _rtp._udp:RTP Realtime Streaming Server
+@@ -216,6 +217,10 @@ _adobe-vc._tcp:Adobe Version Cue
+ 
+ _home-sharing._tcp:Apple Home Sharing
+ 
++_amzn-wplay._tcp:Amazon Fire TV
++
++_qdiscover._tcp:QNAP NAS
++
+ 
+ # Other
+ 
+@@ -231,3 +236,6 @@ _tp-https._tcp:Thousand Parsec Server (Secure HTTP Tunnel)
+ _shifter._tcp:Window Shifter
+ 
+ _libvirt._tcp:Virtual Machine Manager
++
++_device-info._tcp:Device Info
++
+
+From d9caeb59739c4e8af6b0dfbffff8e4ed365d3beb Mon Sep 17 00:00:00 2001
+From: David Kerr <david@kerr.net>
+Date: Sat, 2 Jul 2016 18:14:24 -0400
+Subject: [PATCH 2/3] Adds support for filtering reflector advertisements This
+ enhancement is provided courtesy of James Rudd <James.Rudd@sbhs.nsw.edu.au>
+ and http://jrudd.org/2014/08/avahi-reflector-filtering-patch/
+
+Allows Avahi-Daemon to  filter which advertisements are added to the cache to be reflected to different networks.
 It checks incoming service names against a list defined  in avahi-daemon.conf [reflector] reflect-filters.
 The list can be types of  services or can contain hostnames to match.
-For example we only allow AirPlay  and AirTunes to be reflected between VLANs, so have  "_airplay._tcp.local,_raop._tcp.local" set.
+For example if we only allow AirPlay and AirTunes to be reflected between VLANs, so have  "_airplay._tcp.local,_raop._tcp.local" set.
+For AirPrint set "_printer._tcp.local,_ipp._tcp.local,_pdl-datastream._tcp.local"
+Remember to set firewall to permit traffic between LANs for the corresponding ports.
 
 The patch will block the PTR and SRV advertisements but will still allow A records for machine name lookup.
 All locally published services are still published even if they do not match the filter.
 
 The filter also blocks local programs from seeing advertised programs so it is recommend to only enable it on a dedicated bonjour reflector server.
-
-Signed-off-by: James Rudd <James.Rudd@sbhs.nsw.edu.au>
 ---
- avahi-core/core.h              |  1 +
- avahi-core/server.c            | 42 +++++++++++++++++++++++++++++++++++++++++-
- avahi-daemon/avahi-daemon.conf |  1 +
- avahi-daemon/main.c            | 12 ++++++++++++
- man/avahi-daemon.conf.5.xml.in | 10 ++++++++++
- 5 files changed, 65 insertions(+), 1 deletion(-)
+ avahi-core/core.h                   |  1 +
+ avahi-core/server.c                 | 48 ++++++++++++++++++++++++++++++++++++-
+ avahi-daemon/avahi-daemon.conf      |  1 +
+ avahi-daemon/main.c                 | 12 ++++++++++
+ man/avahi-daemon.conf.5.xml.in      | 10 ++++++++
+ service-type-database/service-types |  1 -
+ 6 files changed, 71 insertions(+), 2 deletions(-)
 
 diff --git a/avahi-core/core.h b/avahi-core/core.h
 index f50c612..1ebd27a 100644
@@ -36,10 +79,10 @@ index f50c612..1ebd27a 100644
      int enable_wide_area;             /**< Enable wide area support */
      AvahiAddress wide_area_servers[AVAHI_WIDE_AREA_SERVERS_MAX]; /** Unicast DNS server to use for wide area lookup */
 diff --git a/avahi-core/server.c b/avahi-core/server.c
-index 69a1d02..81725ac 100644
+index a2cb19a..1a91907 100644
 --- a/avahi-core/server.c
 +++ b/avahi-core/server.c
-@@ -674,6 +674,34 @@ static void handle_response_packet(AvahiServer *s, AvahiDnsPacket *p, AvahiInter
+@@ -674,6 +674,40 @@ static void handle_response_packet(AvahiServer *s, AvahiDnsPacket *p, AvahiInter
          }
  
          if (!avahi_key_is_pattern(record->key)) {
@@ -50,9 +93,12 @@ index 69a1d02..81725ac 100644
 +
 +                if (record->key->type == AVAHI_DNS_TYPE_PTR){
 +                    // Need to match DNS pointer target with filter
-+                    for (l = s->config.reflect_filters; l; l = l->next)
-+                        if (strstr( record->data.ptr.name, (char*) l->text) != NULL)
-+                        match = 1;
++                    for (l = s->config.reflect_filters; l; l = l->next) {
++                        if (strstr( record->data.ptr.name, (char*) l->text) != NULL) {
++                            match = 1;
++                            break;
++                        }
++                    }
 +
 +                    if (! match){
 +                        //avahi_log_info("Reject Ptr SRC [%s] Dest [%s]", record->key->name, record->data.ptr.name);
@@ -61,9 +107,12 @@ index 69a1d02..81725ac 100644
 +                }
 +                else if (record->key->type == AVAHI_DNS_TYPE_SRV || record->key->type == AVAHI_DNS_TYPE_TXT){
 +                    // Need to match key name with filter
-+                    for (l = s->config.reflect_filters; l; l = l->next)
-+                        if (strstr( record->key->name, (char*) l->text) != NULL)
-+                        match = 1;
++                    for (l = s->config.reflect_filters; l; l = l->next) {
++                        if (strstr( record->key->name, (char*) l->text) != NULL) {
++                            match = 1;
++                            break;
++                        }
++                    }
 +
 +                    if (! match){
 +                        //avahi_log_info("Reject Key [%s] iface [%d]", record->key->name, from_local_iface);
@@ -74,7 +123,7 @@ index 69a1d02..81725ac 100644
  
              if (handle_conflict(s, i, record, cache_flush)) {
                  if (!from_local_iface && !avahi_record_is_link_local_address(record))
-@@ -1589,6 +1617,7 @@ AvahiServerConfig* avahi_server_config_init(AvahiServerConfig *c) {
+@@ -1589,6 +1623,7 @@ AvahiServerConfig* avahi_server_config_init(AvahiServerConfig *c) {
      c->use_iff_running = 0;
      c->enable_reflector = 0;
      c->reflect_ipv = 0;
@@ -82,7 +131,7 @@ index 69a1d02..81725ac 100644
      c->add_service_cookie = 0;
      c->enable_wide_area = 0;
      c->n_wide_area_servers = 0;
-@@ -1611,13 +1640,14 @@ void avahi_server_config_free(AvahiServerConfig *c) {
+@@ -1611,13 +1646,14 @@ void avahi_server_config_free(AvahiServerConfig *c) {
      avahi_free(c->host_name);
      avahi_free(c->domain_name);
      avahi_string_list_free(c->browse_domains);
@@ -98,7 +147,7 @@ index 69a1d02..81725ac 100644
      assert(ret);
      assert(c);
  
-@@ -1652,12 +1682,22 @@ AvahiServerConfig* avahi_server_config_copy(AvahiServerConfig *ret, const AvahiS
+@@ -1652,12 +1688,22 @@ AvahiServerConfig* avahi_server_config_copy(AvahiServerConfig *ret, const AvahiS
          return NULL;
      }
  
@@ -122,7 +171,7 @@ index 69a1d02..81725ac 100644
      return ret;
  }
 diff --git a/avahi-daemon/avahi-daemon.conf b/avahi-daemon/avahi-daemon.conf
-index 27e240d..662fd69 100644
+index 95166f8..2c6c1fc 100644
 --- a/avahi-daemon/avahi-daemon.conf
 +++ b/avahi-daemon/avahi-daemon.conf
 @@ -57,6 +57,7 @@ publish-workstation=no
@@ -134,7 +183,7 @@ index 27e240d..662fd69 100644
  [rlimits]
  #rlimit-as=
 diff --git a/avahi-daemon/main.c b/avahi-daemon/main.c
-index 8c28fd6..2676133 100644
+index 10cb41e..346338f 100644
 --- a/avahi-daemon/main.c
 +++ b/avahi-daemon/main.c
 @@ -826,6 +826,18 @@ static int load_config_file(DaemonConfig *c) {
@@ -157,19 +206,19 @@ index 8c28fd6..2676133 100644
                      avahi_log_error("Invalid configuration key \"%s\" in group \"%s\"\n", p->key, g->name);
                      goto finish;
 diff --git a/man/avahi-daemon.conf.5.xml.in b/man/avahi-daemon.conf.5.xml.in
-index 2d15017..c3eeff4 100644
+index 2d15017..dd91e60 100644
 --- a/man/avahi-daemon.conf.5.xml.in
 +++ b/man/avahi-daemon.conf.5.xml.in
 @@ -327,6 +327,16 @@
        enabled, avahi-daemon will forward mDNS traffic between IPv4
        and IPv6, which is usually not recommended. Defaults to "no".</p>
      </option>
-+    
++
 +    <option>
 +      <p><opt>reflect-filters=</opt> Set a comma separated list of
-+      allowed service names to be reflected. Each service that is 
-+      seen must match an entry in this list to be reflected to other 
-+      networks. This list can match the type of service or the name 
++      allowed service names to be reflected. Each service that is
++      seen must match an entry in this list to be reflected to other
++      networks. This list can match the type of service or the name
 +      of the machine providing the service. Defaults to allowing all
 +      services.</p>
 +
@@ -177,6 +226,56 @@ index 2d15017..c3eeff4 100644
    </section>
  
    <section name="Section [rlimits]">
--- 
-1.9.1
+diff --git a/service-type-database/service-types b/service-type-database/service-types
+index 4bbf52a..0b99d40 100644
+--- a/service-type-database/service-types
++++ b/service-type-database/service-types
+@@ -238,4 +238,3 @@ _shifter._tcp:Window Shifter
+ _libvirt._tcp:Virtual Machine Manager
+ 
+ _device-info._tcp:Device Info
+-
 
+From c8723de8100cac0449514e095caa45eb6af416c6 Mon Sep 17 00:00:00 2001
+From: David Kerr <david@kerr.net>
+Date: Sun, 3 Jul 2016 21:46:11 -0400
+Subject: [PATCH 3/3] Uncommented the info messages and changed them to debug
+ messages.  Added debug message for matches as well as rejects. I have found
+ that it is extremely useful to see what mDNS-SD messages are matched or
+ rejected in order to debug service discovery and therefore it is best if
+ these messages can be turned on with the --debug flag as necessary.
+
+---
+ avahi-core/server.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/avahi-core/server.c b/avahi-core/server.c
+index 1a91907..018429c 100644
+--- a/avahi-core/server.c
++++ b/avahi-core/server.c
+@@ -689,9 +689,11 @@ static void handle_response_packet(AvahiServer *s, AvahiDnsPacket *p, AvahiInter
+                     }
+ 
+                     if (! match){
+-                        //avahi_log_info("Reject Ptr SRC [%s] Dest [%s]", record->key->name, record->data.ptr.name);
++                        avahi_log_debug("Reject Ptr SRC [%s] Dest [%s]", record->key->name, record->data.ptr.name);
+                         return;
+                     }
++                    else
++                        avahi_log_debug("Match Ptr SRC [%s] Dest [%s]", record->key->name, record->data.ptr.name);
+                 }
+                 else if (record->key->type == AVAHI_DNS_TYPE_SRV || record->key->type == AVAHI_DNS_TYPE_TXT){
+                     // Need to match key name with filter
+@@ -703,9 +705,11 @@ static void handle_response_packet(AvahiServer *s, AvahiDnsPacket *p, AvahiInter
+                     }
+ 
+                     if (! match){
+-                        //avahi_log_info("Reject Key [%s] iface [%d]", record->key->name, from_local_iface);
++                        avahi_log_debug("Reject Key [%s] iface [%d]", record->key->name, from_local_iface);
+                         return;
+                     }
++                    else
++                        avahi_log_debug("Match Key [%s] iface [%d]", record->key->name, from_local_iface);
+                 }
+             }
+ 
