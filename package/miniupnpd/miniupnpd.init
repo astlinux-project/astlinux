@@ -48,8 +48,10 @@ ip4tables()
 
       # Setup needed AIF variables
       EXT_IF=""
+      NAT_IF=""
       for intf in $EXTIF $EXT2IF; do
         EXT_IF="$EXT_IF${EXT_IF:+ }$intf"
+        NAT_IF="$NAT_IF${NAT_IF:+ }$intf"
       done
 
       case $action in
