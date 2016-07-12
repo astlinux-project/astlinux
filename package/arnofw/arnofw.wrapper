@@ -160,17 +160,22 @@ astlinux_wrapper()
 
   if [ -z "$PPPOEIF" ]; then
     EXT_IF=""
+    NAT_IF=""
     unset IFS
     for intf in $EXTIF $EXT2IF; do
       EXT_IF="$EXT_IF${EXT_IF:+ }$intf"
+      NAT_IF="$NAT_IF${NAT_IF:+ }$intf"
     done
   else
     EXT_IF="${PPPOE_EXTIF:-ppp+}"
+    NAT_IF="${PPPOE_EXTIF:-ppp+}"
     unset IFS
     for intf in $EXTIF $EXT2IF; do
       case "$intf" in
         ppp[0-9]*) ;;
-        *) EXT_IF="$EXT_IF $intf" ;;
+        *) EXT_IF="$EXT_IF $intf"
+           NAT_IF="$NAT_IF $intf"
+           ;;
       esac
     done
   fi

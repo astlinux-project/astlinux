@@ -2,14 +2,14 @@
 #            -= Arno's iptables firewall - MiniUPnPd plugin =-
 #
 PLUGIN_NAME="MiniUPnPd plugin"
-PLUGIN_VERSION="1.0"
+PLUGIN_VERSION="1.01"
 PLUGIN_CONF_FILE="miniupnpd.conf"
 #
-# Last changed          : July 6, 2012
+# Last changed          : July 12, 2016
 # Requirements          : AIF 2.0.0+ with miniupnpd daemon
 # Comments              : Setup of the iptables chains that the miniupnpd daemon manages
 #
-# Author                : (C) Copyright 2012 by Lonnie Abelbeck & Arno van Amersfoort
+# Author                : (C) Copyright 2012-2016 by Lonnie Abelbeck & Arno van Amersfoort
 # Homepage              : http://rocky.eld.leidenuniv.nl/
 # Freshmeat homepage    : http://freshmeat.net/projects/iptables-firewall/?topic_id=151
 # Email                 : a r n o v a AT r o c k y DOT e l d DOT l e i d e n u n i v DOT n l
@@ -67,7 +67,7 @@ plugin_restart()
   # Reconnect both MINIUPNPD chains, flushed on a restart
 
   IFS=' ,'
-  for eif in $EXT_IF; do
+  for eif in ${NAT_IF:-$EXT_IF}; do
     ip4tables -t nat -A POST_NAT_PREROUTING_CHAIN -i $eif -j MINIUPNPD
 
     ip4tables -A POST_FORWARD_CHAIN -i $eif ! -o $eif -j MINIUPNPD
@@ -89,7 +89,7 @@ plugin_stop()
   fi
 
   IFS=' ,'
-  for eif in $EXT_IF; do
+  for eif in ${NAT_IF:-$EXT_IF}; do
     ip4tables -t nat -D POST_NAT_PREROUTING_CHAIN -i $eif -j MINIUPNPD
 
     ip4tables -D POST_FORWARD_CHAIN -i $eif ! -o $eif -j MINIUPNPD
