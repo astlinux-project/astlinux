@@ -16,7 +16,7 @@ Released @TBD@
 
 ** Networking
 
--- (no change)
+-- arnofw (AIF), version bump to 2.0.1g-RC1
 
 ** Asterisk
 
