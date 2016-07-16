@@ -38,6 +38,7 @@
 // 08-21-2015, Added Fossil - Software Configuration Management
 // 11-01-2015, Added DHCPv6 support
 // 06-07-2016, Added Avahi mDNS/DNS-SD support
+// 07-15-2016, Added 4th LAN Interface
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -150,6 +151,7 @@ function checkNETWORKsettings() {
   $eth[] = $_POST['int_eth'];
   $eth[] = $_POST['int2_eth'];
   $eth[] = $_POST['int3_eth'];
+  $eth[] = $_POST['int4_eth'];
   $eth[] = $_POST['dmz_eth'];
   
   foreach ($eth as $ki => $i) {
@@ -163,7 +165,7 @@ function checkNETWORKsettings() {
   }
   
   if ($_POST['dmz_eth'] !== '') {
-    if ($_POST['int_eth'] === '' && $_POST['int2_eth'] === '' && $_POST['int3_eth'] === '') {
+    if ($_POST['int_eth'] === '' && $_POST['int2_eth'] === '' && $_POST['int3_eth'] === '' && $_POST['int4_eth'] === '') {
       return(101);
     }
   }
@@ -333,6 +335,22 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $value = 'INT3IPV6="'.$value.'"';
   fwrite($fp, "### 3rd LAN IPv6\n".$value."\n");
 
+  $value = 'INT4IF="'.$_POST['int4_eth'].'"';
+  fwrite($fp, "### 4th LAN Interface\n".$value."\n");
+
+  $value = 'INT4IP="'.tuq($_POST['int4_ip']).'"';
+  fwrite($fp, "### 4th LAN IPv4\n".$value."\n");
+
+  $value = 'INT4NM="'.tuq($_POST['int4_mask_ip']).'"';
+  fwrite($fp, "### 4th LAN NetMask\n".$value."\n");
+
+  $value = tuq($_POST['int4_ipv6']);
+  if ($value !== '' && strpos($value, '/') === FALSE) {
+    $value="$value/64";
+  }
+  $value = 'INT4IPV6="'.$value.'"';
+  fwrite($fp, "### 4th LAN IPv6\n".$value."\n");
+
   $value = 'DMZIF="'.$_POST['dmz_eth'].'"';
   fwrite($fp, "### DMZ Interface\n".$value."\n");
   
@@ -355,6 +373,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   $x_value = $_POST['int_autoconf'];
   $x_value .= $_POST['int2_autoconf'];
   $x_value .= $_POST['int3_autoconf'];
+  $x_value .= $_POST['int4_autoconf'];
   $x_value .= $_POST['dmz_autoconf'];
   $value = 'IPV6_AUTOCONF="'.trim($x_value).'"';
   fwrite($fp, "### IPv6 Autoconfig\n".$value."\n");
@@ -457,6 +476,9 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   if (isset($_POST['netstat_INT3IF'])) {
     $x_value .= ' INT3IF';
   }
+  if (isset($_POST['netstat_INT4IF'])) {
+    $x_value .= ' INT4IF';
+  }
   if (isset($_POST['netstat_DMZIF'])) {
     $x_value .= ' DMZIF';
   }
@@ -482,6 +504,9 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   }
   if (isset($_POST['upnp_INT3IF'])) {
     $x_value .= ' INT3IF';
+  }
+  if (isset($_POST['upnp_INT4IF'])) {
+    $x_value .= ' INT4IF';
   }
   if (isset($_POST['upnp_DMZIF'])) {
     $x_value .= ' DMZIF';
@@ -859,6 +884,7 @@ function getNODHCP_value() {
     'int_dhcp'  => 'int_eth',
     'int2_dhcp' => 'int2_eth',
     'int3_dhcp' => 'int3_eth',
+    'int4_dhcp' => 'int4_eth',
     'dmz_dhcp'  => 'dmz_eth'
   );
   $rtn = '';
@@ -1560,6 +1586,38 @@ require_once '../common/header.php';
   putHtml('</td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml('<strong>4th LAN Interface:</strong>');
+  putHtml('<select name="int4_eth">');
+  putHtml('<option value="">none</option>');
+  $varif = getVARdef($db, 'INT4IF', $cur_db);
+  if (($n = count($eth)) > 0) {
+    for ($i = 0; $i < $n; $i++) {
+      $sel = ($varif === $eth[$i]) ? ' selected="selected"' : '';
+      putHtml('<option value="'.$eth[$i].'"'.$sel.'>'.$eth[$i].'</option>');
+    }
+  }
+  putHtml('</select>');
+  putDNS_DHCP_Html($db, $cur_db, $varif, 'int4_dhcp');
+  $value = getVARdef($db, 'INT4IP', $cur_db);
+  putHtml('&ndash;&nbsp;IPv4:<input type="text" size="16" maxlength="15" value="'.$value.'" name="int4_ip" />');
+  if (($value = getVARdef($db, 'INT4NM', $cur_db)) === '') {
+    $value = '255.255.255.0';
+  }
+  putHtml('NetMask:<input type="text" size="16" maxlength="15" value="'.$value.'" name="int4_mask_ip" />');
+  putHtml('</td></tr>');
+  
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml('&nbsp;&nbsp;IPv6 Autoconfig:');
+  putHtml('<select name="int4_autoconf">');
+  putHtml('<option value="">disabled</option>');
+  $sel = isVARtype('IPV6_AUTOCONF', $db, $cur_db, 'INT4IF') ? ' selected="selected"' : '';
+  putHtml('<option value=" INT4IF"'.$sel.'>enabled</option>');
+  putHtml('</select>');
+  $value = getVARdef($db, 'INT4IPV6', $cur_db);
+  putHtml('&ndash;&nbsp;IPv6/nn:<input type="text" size="45" maxlength="43" value="'.$value.'" name="int4_ipv6" />');
+  putHtml('</td></tr>');
+  
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('<strong>The DMZ Interface:</strong>');
   putHtml('<select name="dmz_eth">');
   putHtml('<option value="">none</option>');
@@ -1822,12 +1880,14 @@ require_once '../common/header.php';
   putHtml('<input type="checkbox" value="netstat_INT2IF" name="netstat_INT2IF"'.$sel.' />&nbsp;2nd LAN');
   $sel = isVARtype('NETSTAT_CAPTURE', $db, $cur_db, 'INT3IF') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="netstat_INT3IF" name="netstat_INT3IF"'.$sel.' />&nbsp;3rd LAN');
+  $sel = isVARtype('NETSTAT_CAPTURE', $db, $cur_db, 'INT4IF') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="netstat_INT4IF" name="netstat_INT4IF"'.$sel.' />&nbsp;4th LAN');
   $sel = isVARtype('NETSTAT_CAPTURE', $db, $cur_db, 'DMZIF') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="netstat_DMZIF" name="netstat_DMZIF"'.$sel.' />&nbsp;DMZ');
   putHtml('</td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
-  putHtml("Universal Plug'n'Play:");
+  putHtml("Universal Plug'n'Play Server:");
   $upnp_natpmp = getVARdef($db, 'UPNP_ENABLE_NATPMP', $cur_db) === 'yes' ? 'yes' : 'no';
   $upnp_upnp = getVARdef($db, 'UPNP_ENABLE_UPNP', $cur_db) === 'yes' ? 'yes' : 'no';
   putHtml('<select name="upnp" onchange="upnp_change()">');
@@ -1836,13 +1896,18 @@ require_once '../common/header.php';
     putHtml('<option value="'.$value.'"'.$sel.'>'.$key.'</option>');
   }
   putHtml('</select>');
-  putHtml('&ndash;&nbsp;Interfaces:');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml("Universal Plug'n'Play Interfaces:");
   $sel = isVARtype('UPNP_LISTEN', $db, $cur_db, 'INTIF') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="upnp_INTIF" name="upnp_INTIF"'.$sel.' />&nbsp;1st LAN');
   $sel = isVARtype('UPNP_LISTEN', $db, $cur_db, 'INT2IF') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="upnp_INT2IF" name="upnp_INT2IF"'.$sel.' />&nbsp;2nd LAN');
   $sel = isVARtype('UPNP_LISTEN', $db, $cur_db, 'INT3IF') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="upnp_INT3IF" name="upnp_INT3IF"'.$sel.' />&nbsp;3rd LAN');
+  $sel = isVARtype('UPNP_LISTEN', $db, $cur_db, 'INT4IF') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="upnp_INT4IF" name="upnp_INT4IF"'.$sel.' />&nbsp;4th LAN');
   $sel = isVARtype('UPNP_LISTEN', $db, $cur_db, 'DMZIF') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="upnp_DMZIF" name="upnp_DMZIF"'.$sel.' />&nbsp;DMZ');
   putHtml('</td></tr>');

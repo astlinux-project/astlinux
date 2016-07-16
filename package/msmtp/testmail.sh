@@ -64,6 +64,9 @@ Test Email from '$HOSTNAME'
   if [ -n "$INT3IF" ]; then
     echo "3rd LAN IPv4 Network:   $(dev_to_ipv4_network $INT3IF)"
   fi
+  if [ -n "$INT4IF" ]; then
+    echo "4th LAN IPv4 Network:   $(dev_to_ipv4_network $INT4IF)"
+  fi
   if [ -n "$DMZIF" ]; then
     echo "The DMZ IPv4 Network:   $(dev_to_ipv4_network $DMZIF)"
   fi

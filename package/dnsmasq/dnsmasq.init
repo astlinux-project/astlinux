@@ -149,6 +149,13 @@ addIPV6net()
           break
         fi
         ;;
+      INT4IF)
+        if [ "$tag" = "lan4" ]; then
+          dhcpv6="$DHCPV6_CLIENT_ENABLE"
+          prefix="$(addr_to_prefix64 "$INT4IPV6")"
+          break
+        fi
+        ;;
       DMZIF)
         if [ "$tag" = "dmz" ]; then
           dhcpv6="$DHCPV6_CLIENT_ENABLE"
@@ -323,7 +330,7 @@ is_EXTDHCP_active()
 is_DHCP_active()
 {
 
-  for intf in $INTIF $INT2IF $INT3IF $DMZIF; do
+  for intf in $INTIF $INT2IF $INT3IF $INT4IF $DMZIF; do
     if [ "$intf" != "none" ] && isDHCPinterface $intf; then
       return 0
     fi
@@ -399,6 +406,8 @@ nameserver 127.0.0.1" > /tmp/etc/resolv.conf
     addDNSMASQnet "$INT2IF" "$INT2IP" "$INT2NM" lan2 >> /tmp/etc/dnsmasq.conf
 
     addDNSMASQnet "$INT3IF" "$INT3IP" "$INT3NM" lan3 >> /tmp/etc/dnsmasq.conf
+
+    addDNSMASQnet "$INT4IF" "$INT4IP" "$INT4NM" lan4 >> /tmp/etc/dnsmasq.conf
 
     addDNSMASQnet "$DMZIF" "$DMZIP" "$DMZNM" dmz >> /tmp/etc/dnsmasq.conf
 

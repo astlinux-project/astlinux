@@ -11,7 +11,7 @@ SYS_gen_etc_hosts() {
   local ip hostip hostipv6 IFS
 
   # we deliberately leave out EXTIP
-  for ip in $INTIP/$INTIPV6 $INT2IP/$INT2IPV6 $INT3IP/$INT3IPV6; do
+  for ip in $INTIP/$INTIPV6 $INT2IP/$INT2IPV6 $INT3IP/$INT3IPV6 $INT4IP/$INT4IPV6; do
     hostip="$(echo $ip | cut -d'/' -f1)"
     hostipv6="$(echo $ip | cut -d'/' -f2)"
     if [ -n "$hostip" ]; then

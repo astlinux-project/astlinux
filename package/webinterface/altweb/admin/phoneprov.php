@@ -38,6 +38,7 @@ $gw_if_menu = array (
   'INTIF' => '1st LAN Interface',
   'INT2IF' => '2nd LAN Interface',
   'INT3IF' => '3rd LAN Interface',
+  'INT4IF' => '4th LAN Interface',
   'EXTIF' => 'External Interface'
 );
 

@@ -21,7 +21,7 @@ Usage: phoneprov-build [options...] template mac_addr extension[/CID_Name][;ext2
 Options:
   -f, --force-overwrite   Overwrite existing files
   -h, --help              Show this help text
-  -i, --if-name           Interface Name: INTIF, INT2IF, INT3IF, EXTIF, ethN, brN
+  -i, --if-name           Interface Name: INTIF, INT2IF, INT3IF, INT4IF, EXTIF, ethN, brN
                                           Defaults to config variable PHONEPROV_GW_IF
 '
   exit 1
@@ -265,6 +265,10 @@ case $if_name in
   INT3IF)
     sip_server_if="$INT3IF"
     sip_server_ipv4="$INT3IP"
+    ;;
+  INT4IF)
+    sip_server_if="$INT4IF"
+    sip_server_ipv4="$INT4IP"
     ;;
   EXTIF)
     sip_server_if="$EXTIF"

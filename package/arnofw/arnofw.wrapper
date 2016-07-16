@@ -125,6 +125,9 @@ getLANinterface()
   INT3IF)
     lanif="$INT3IF"
     ;;
+  INT4IF)
+    lanif="$INT4IF"
+    ;;
   esac
 
   if [ -z "$lanif" ]; then
@@ -205,6 +208,8 @@ astlinux_wrapper()
   addINTERNALnet "$INT2IF" "$INT2IP" "$INT2NM"
 
   addINTERNALnet "$INT3IF" "$INT3IP" "$INT3NM"
+
+  addINTERNALnet "$INT4IF" "$INT4IP" "$INT4NM"
 
   setDMZnet "$DMZIF" "$DMZIP" "$DMZNM"
 

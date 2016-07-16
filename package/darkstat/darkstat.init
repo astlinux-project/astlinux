@@ -36,7 +36,7 @@ init () {
 }
 
 start () {
-  local promisc="" interfaces="" f_ext="" f_lan="" f_lan2="" f_lan3="" f_dmz=""
+  local promisc="" interfaces="" f_ext="" f_int="" f_int2="" f_int3="" f_int4="" f_dmz=""
 
   if [ "$NETSTAT_SERVER" = "darkstat" ]; then
     echo "Starting darkstat..."
@@ -70,6 +70,10 @@ start () {
       interfaces="$interfaces${interfaces:+ }-i $INT3IF"
       f_int3="$NETSTAT_FILTER"
     fi
+    if is_darkstat_enabled INT4IF && is_interface_enabled "$INT4IF" "$INT4IP" "$INT4NM"; then
+      interfaces="$interfaces${interfaces:+ }-i $INT4IF"
+      f_int4="$NETSTAT_FILTER"
+    fi
     if is_darkstat_enabled DMZIF && is_interface_enabled "$DMZIF" "$DMZIP" "$DMZNM"; then
       interfaces="$interfaces${interfaces:+ }-i $DMZIF"
       f_dmz="$NETSTAT_FILTER"
@@ -80,7 +84,7 @@ start () {
     fi
 
     darkstat ${interfaces} --chroot $CHROOT_DIR --pidfile $PIDFILE --syslog ${promisc}${f_ext:+ -f "$f_ext"} \
-             ${f_int:+ -f "$f_int"}${f_int2:+ -f "$f_int2"}${f_int3:+ -f "$f_int3"}${f_dmz:+ -f "$f_dmz"} \
+             ${f_int:+ -f "$f_int"}${f_int2:+ -f "$f_int2"}${f_int3:+ -f "$f_int3"}${f_int4:+ -f "$f_int4"}${f_dmz:+ -f "$f_dmz"} \
              -b 127.0.0.1 -p 667 --base /admin/netstat/ $NETSTAT_OPTIONS
   fi
 }

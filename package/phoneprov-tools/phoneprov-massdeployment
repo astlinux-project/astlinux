@@ -21,7 +21,7 @@ Options:
   -A, --only-pass         Same as "-a, --auto-pass" without further processing
   -f, --force-overwrite   Overwrite existing files
   -h, --help              Show this help text
-  -i, --if-name           Interface Name: INTIF, INT2IF, INT3IF, EXTIF, ethN, brN
+  -i, --if-name           Interface Name: INTIF, INT2IF, INT3IF, INT4IF, EXTIF, ethN, brN
                                           Defaults to config variable PHONEPROV_GW_IF
   -p, --partial           Partial input, append "dialplan" and "sip" entries to existing
   -r, --auto-reload       Automatically reload Asterisk "dialplan" and "sip" on success

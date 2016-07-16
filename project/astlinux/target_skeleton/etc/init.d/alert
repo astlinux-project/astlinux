@@ -49,7 +49,8 @@ welcome_msg()
       Interface: $EXTIF (External)   IPv4 Address: $(dev_to_ipv4_addresses $EXTIF)${INTIF:+
       Interface: $INTIF (1st LAN)    IPv4 Network: $(dev_to_ipv4_networks $INTIF)}${INT2IF:+
       Interface: $INT2IF (2nd LAN)    IPv4 Network: $(dev_to_ipv4_networks $INT2IF)}${INT3IF:+
-      Interface: $INT3IF (3rd LAN)    IPv4 Network: $(dev_to_ipv4_networks $INT3IF)}${DMZIF:+
+      Interface: $INT3IF (3rd LAN)    IPv4 Network: $(dev_to_ipv4_networks $INT3IF)}${INT4IF:+
+      Interface: $INT4IF (4th LAN)    IPv4 Network: $(dev_to_ipv4_networks $INT4IF)}${DMZIF:+
       Interface: $DMZIF (The DMZ)    IPv4 Network: $(dev_to_ipv4_networks $DMZIF)}
 "
   # Add a one second delay to allow the message to transmit since getty immediately

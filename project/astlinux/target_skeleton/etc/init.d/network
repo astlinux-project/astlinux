@@ -122,6 +122,11 @@ id-assoc pd 1 {"
             int="$INT3IF"
           fi
           ;;
+        INT4IF)
+          if [ -n "$INT4IF" -a "$INT4IF" != "none" -a -n "$INT4IP" -a -n "$INT4NM" ]; then
+            int="$INT4IF"
+          fi
+          ;;
         DMZIF)
           if [ -n "$DMZIF" -a "$DMZIF" != "none" -a -n "$DMZIP" -a -n "$DMZNM" ]; then
             int="$DMZIF"
@@ -326,7 +331,7 @@ start () {
   ip link set dev lo up
 
   # look for nas[0123] being any one of our interfaces, and create it
-  for IF in $PPPOEIF $BRIDGE0 $BRIDGE1 $BRIDGE2 $INTIF $INT2IF $INT3IF; do
+  for IF in $PPPOEIF $BRIDGE0 $BRIDGE1 $BRIDGE2 $INTIF $INT2IF $INT3IF $INT4IF; do
     case $IF in
     nas[0123])
       create_nasX $IF ;;
@@ -460,6 +465,14 @@ start () {
       ip -6 addr add $INT3IPV6 dev $INT3IF
     fi
     ip link set dev $INT3IF up
+  fi
+
+  if [ -n "$INT4IF" -a -n "$INT4IP" -a -n "$INT4NM" -a "$INT4IF" != "none" ]; then
+    ip addr add $INT4IP/$INT4NM brd + dev $INT4IF
+    if [ "$IPV6" = "yes" -a -n "$INT4IPV6" ]; then
+      ip -6 addr add $INT4IPV6 dev $INT4IF
+    fi
+    ip link set dev $INT4IF up
   fi
 
   if [ -n "$WANDELAY" ]; then
@@ -742,6 +755,11 @@ stop () {
     ip link set dev $INT3IF down
   fi
 
+  if [ -n "$INT4IF" -a "$INT4IF" != "none" ]; then
+    echo "Bringing down $INT4IF..."
+    ip link set dev $INT4IF down
+  fi
+
   if [ -n "$DMZIF" -a "$DMZIF" != "none" ]; then
     echo "Bringing down $DMZIF ..."
     ip link set dev $DMZIF down
@@ -772,7 +790,7 @@ stop () {
   fi
 
   # ATM interfaces
-  for IF in $PPPOEIF $BRIDGE0 $BRIDGE1 $BRIDGE2 $INTIF $INT2IF $INT3IF; do
+  for IF in $PPPOEIF $BRIDGE0 $BRIDGE1 $BRIDGE2 $INTIF $INT2IF $INT3IF $INT4IF; do
     case $IF in
     nas[0123])
       ip link set dev "$IF" down

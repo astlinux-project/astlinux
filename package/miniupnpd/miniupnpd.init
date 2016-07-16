@@ -155,6 +155,10 @@ ext_ifname=$EXTIF" > $MINIUPNPD_CONF
     echo "listening_ip=$INT3IP/$INT3NM" >> $MINIUPNPD_CONF
     RULES="$RULES${RULES:+\n}allow 1024-65535 $(get_cidr $INT3IP $INT3NM) 1024-65535"
   fi
+  if is_upnp_enabled INT4IF && is_interface_enabled "$INT4IF" "$INT4IP" "$INT4NM"; then
+    echo "listening_ip=$INT4IP/$INT4NM" >> $MINIUPNPD_CONF
+    RULES="$RULES${RULES:+\n}allow 1024-65535 $(get_cidr $INT4IP $INT4NM) 1024-65535"
+  fi
   if is_upnp_enabled DMZIF && is_interface_enabled "$DMZIF" "$DMZIP" "$DMZNM"; then
     echo "listening_ip=$DMZIP/$DMZNM" >> $MINIUPNPD_CONF
     RULES="$RULES${RULES:+\n}allow 1024-65535 $(get_cidr $DMZIP $DMZNM) 1024-65535"
