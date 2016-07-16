@@ -16,6 +16,8 @@ Released @TBD@
 
 ** Networking
 
+-- Added a 4th LAN Interface configuration entry
+
 -- arnofw (AIF), version bump to 2.0.1g-RC1
 
 ** Asterisk
@@ -27,6 +29,8 @@ Released @TBD@
 -- pjsip 2.4.5 (no change)
 
 ** Web Interface
+
+-- Network tab, add 4th LAN Interface.  Added 4th LAN support to Firewall sub-tab and PhoneProv tab.
 
 -- Network -> Firewall sub-tab, add "Deny LAN to DMZ" option for specified LAN Interfaces.
 
