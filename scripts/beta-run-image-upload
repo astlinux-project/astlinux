@@ -9,6 +9,10 @@ auth_file="$HOME/.s3cfg"
 
 S3_BUCKET="beta.astlinux-project"
 
+CHANGELOG="docs/ChangeLog.txt"
+
+CHANGELOG_DIR="astlinux-changelog"
+
 success_count=0
 
 delete_dir()
@@ -108,11 +112,18 @@ else
   fi
 fi
 
+if [ ! -f "$CHANGELOG" ]; then
+  echo "beta-run-image-upload: changelog file \"$CHANGELOG\" not found."
+  exit 1
+fi
+
 if [ ! -f "$auth_file" ]; then
   echo "beta-run-image-upload: authentication file \"$auth_file\" not found."
   exit 1
 fi
 
+# Remove pre-existing ChangeLog.txt
+delete_dir "$CHANGELOG_DIR"
 
 for asterisk in ast18 ast11 ast13; do
 
@@ -125,6 +136,9 @@ for asterisk in ast18 ast11 ast13; do
   upload_run_images "$input_path/$FIRMWARE" "$MIRROR_FIRMWARE"
 
 done
+
+# Upload current ChangeLog.txt
+upload_file "$CHANGELOG_DIR" "$CHANGELOG"
 
 echo "
 ##
