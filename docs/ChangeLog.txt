@@ -12,7 +12,17 @@ Released @TBD@
 
 ** System
 
--- (no change)
+-- perl, version bump to 5.24.0 using perlcross 1.0.3
+
+-- ethtool, version bump to 4.6
+
+-- sudo, version bump to 1.8.17p1
+
+-- nano, version bump to 2.6.1
+
+-- screen, version bump to 4.4.0
+
+-- Time Zone Database update, tzdata2016f and php-timezonedb-2016.6
 
 ** Networking
 
