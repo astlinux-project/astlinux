@@ -5,19 +5,19 @@
 ##############################################################
 ifeq ($(BR2_PACKAGE_ASTERISK_v11),y)
   ifeq ($(ARCH),x86_64)
-ASTERISK_CODEC_SILK_VERSION := 11.0_1.0.0-generic_64
+ASTERISK_CODEC_SILK_VERSION := 11.0_1.0.2-generic_64
 ASTERISK_CODEC_SILK_SITE := http://downloads.digium.com/pub/telephony/codec_silk/asterisk-11.0/x86-64
   else
-ASTERISK_CODEC_SILK_VERSION := 11.0_1.0.0-i686_32
+ASTERISK_CODEC_SILK_VERSION := 11.0_1.0.2-i686_32
 ASTERISK_CODEC_SILK_SITE := http://downloads.digium.com/pub/telephony/codec_silk/asterisk-11.0/x86-32
   endif
 endif
 ifeq ($(BR2_PACKAGE_ASTERISK_v13),y)
   ifeq ($(ARCH),x86_64)
-ASTERISK_CODEC_SILK_VERSION := 13.0_1.0.0-generic_64
+ASTERISK_CODEC_SILK_VERSION := 13.0_1.0.2-generic_64
 ASTERISK_CODEC_SILK_SITE := http://downloads.digium.com/pub/telephony/codec_silk/asterisk-13.0/x86-64
   else
-ASTERISK_CODEC_SILK_VERSION := 13.0_1.0.0-i686_32
+ASTERISK_CODEC_SILK_VERSION := 13.0_1.0.2-i686_32
 ASTERISK_CODEC_SILK_SITE := http://downloads.digium.com/pub/telephony/codec_silk/asterisk-13.0/x86-32
   endif
 endif
