@@ -23,6 +23,9 @@ PJSIP_CONF_ENV = \
 
 PJSIP_CONF_OPT = \
 	--with-external-srtp \
+	--disable-speex-codec \
+	--disable-speex-aec \
+	--disable-gsm-codec \
 	--disable-video \
 	--disable-v4l2 \
 	--disable-sound \
