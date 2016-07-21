@@ -12,6 +12,8 @@ Released @TBD@
 
 ** System
 
+-- php, version bump to 5.5.38, bug and security fixes
+
 -- perl, version bump to 5.24.0 using perlcross 1.0.3
 
 -- ethtool, version bump to 4.6
@@ -29,6 +31,8 @@ Released @TBD@
 -- Added a 4th LAN Interface configuration entry
 
 -- arnofw (AIF), version bump to 2.0.1g-RC1
+
+-- libcurl (curl) version bump to 7.50.0
 
 ** Asterisk
 
