@@ -1,6 +1,6 @@
 --- asterisk-11.16.0/apps/app_voicemail.c.orig	2015-01-23 08:51:03.000000000 -0600
 +++ asterisk-11.16.0/apps/app_voicemail.c	2015-02-10 09:58:04.000000000 -0600
-@@ -751,7 +751,7 @@
+@@ -753,7 +753,7 @@
  	char mailbox[AST_MAX_EXTENSION]; /*!< Mailbox id, unique within vm context */
  	char password[80];               /*!< Secret pin code, numbers only */
  	char fullname[80];               /*!< Full name, for directory app */
@@ -9,7 +9,7 @@
  	char *emailsubject;              /*!< E-mail subject */
  	char *emailbody;                 /*!< E-mail body */
  	char pager[80];                  /*!< E-mail address to pager (no attachment) */
-@@ -1194,6 +1194,8 @@
+@@ -1196,6 +1196,8 @@
  		vmu->maxdeletedmsg = maxdeletedmsg;
  	}
  	vmu->volgain = volgain;
@@ -18,7 +18,7 @@
  	ast_free(vmu->emailsubject);
  	vmu->emailsubject = NULL;
  	ast_free(vmu->emailbody);
-@@ -1505,7 +1507,8 @@
+@@ -1507,7 +1509,8 @@
  		} else if (!strcasecmp(var->name, "pager")) {
  			ast_copy_string(retval->pager, var->value, sizeof(retval->pager));
  		} else if (!strcasecmp(var->name, "email")) {
@@ -28,25 +28,26 @@
  		} else if (!strcasecmp(var->name, "fullname")) {
  			ast_copy_string(retval->fullname, var->value, sizeof(retval->fullname));
  		} else if (!strcasecmp(var->name, "context")) {
-@@ -1642,6 +1645,7 @@
- 		if ((vmu = (ivm ? ivm : ast_malloc(sizeof(*vmu))))) {
+@@ -1644,7 +1647,9 @@
+ 		if ((vmu = (ivm ? ivm : ast_calloc(1, sizeof(*vmu))))) {
++			ast_free(vmu->email);
+ 			ast_free(vmu->emailbody);
+ 			ast_free(vmu->emailsubject);
  			*vmu = *cur;
- 			if (!ivm) {
-+				vmu->email = ast_strdup(cur->email);
- 				vmu->emailbody = ast_strdup(cur->emailbody);
- 				vmu->emailsubject = ast_strdup(cur->emailsubject);
- 			}
-@@ -1924,6 +1928,9 @@
- {
- 	if (ast_test_flag(vmu, VM_ALLOCED)) {
++			vmu->email = ast_strdup(cur->email);
+ 			vmu->emailbody = ast_strdup(cur->emailbody);
+ 			vmu->emailsubject = ast_strdup(cur->emailsubject);
+ 			ast_set2_flag(vmu, !ivm, VM_ALLOCED);
+@@ -1928,6 +1932,8 @@
+ 		return;
+ 	}
  
-+		ast_free(vmu->email);
-+		vmu->email = NULL;
-+
- 		ast_free(vmu->emailbody);
- 		vmu->emailbody = NULL;
- 
-@@ -2571,7 +2578,7 @@
++	ast_free(vmu->email);
++	vmu->email = NULL;
+ 	ast_free(vmu->emailbody);
+ 	vmu->emailbody = NULL;
+ 	ast_free(vmu->emailsubject);
+@@ -2583,7 +2589,7 @@
  		 * of this function, we will revert back to an empty string if tempcopy
  		 * is 1.
  		 */
@@ -55,7 +56,7 @@
  		tempcopy = 1;
  	}
  
-@@ -2583,8 +2590,10 @@
+@@ -2595,8 +2601,10 @@
  	   command hangs. */
  	if (!(p = vm_mkftemp(tmp))) {
  		ast_log(AST_LOG_WARNING, "Unable to store '%s' (can't create temporary file)\n", fn);
@@ -68,7 +69,7 @@
  		return -1;
  	}
  
-@@ -4929,6 +4938,9 @@
+@@ -4947,6 +4955,9 @@
  	struct ast_str *str1 = ast_str_create(16), *str2 = ast_str_create(16);
  	char *greeting_attachment; 
  	char filename[256];
@@ -78,7 +79,7 @@
  
  	if (!str1 || !str2) {
  		ast_free(str1);
-@@ -4970,7 +4982,7 @@
+@@ -4988,7 +4999,7 @@
  			ast_str_substitute_variables(&str1, 0, ast, fromstring);
  
  			if (check_mime(ast_str_buffer(str1))) {
@@ -87,7 +88,7 @@
  				ast_str_encode_mime(&str2, 0, ast_str_buffer(str1), strlen("From: "), strlen(who) + 3);
  				while ((ptr = strchr(ast_str_buffer(str2), ' '))) {
  					*ptr = '\0';
-@@ -4991,20 +5003,25 @@
+@@ -5009,20 +5020,25 @@
  		fprintf(p, "From: Asterisk PBX <%s>" ENDL, who);
  	}
  
@@ -126,7 +127,7 @@
  	}
  
  	if (!ast_strlen_zero(emailsubject) || !ast_strlen_zero(vmu->emailsubject)) {
-@@ -5014,7 +5031,7 @@
+@@ -5032,7 +5048,7 @@
  			prep_email_sub_vars(ast, vmu, msgnum + 1, context, mailbox, fromfolder, cidnum, cidname, dur, date, category, flag);
  			ast_str_substitute_variables(&str1, 0, ast, e_subj);
  			if (check_mime(ast_str_buffer(str1))) {
@@ -135,7 +136,7 @@
  				char *ptr;
  				ast_str_encode_mime(&str2, 0, ast_str_buffer(str1), strlen("Subject: "), 0);
  				while ((ptr = strchr(ast_str_buffer(str2), ' '))) {
-@@ -11766,7 +11783,7 @@
+@@ -11802,7 +11818,7 @@
  		ast_copy_string(vmu->fullname, s, sizeof(vmu->fullname));
  	}
  	if (stringp && (s = strsep(&stringp, ","))) {
@@ -144,7 +145,7 @@
  	}
  	if (stringp && (s = strsep(&stringp, ","))) {
  		ast_copy_string(vmu->pager, s, sizeof(vmu->pager));
-@@ -14035,7 +14052,7 @@
+@@ -14084,7 +14100,7 @@
  	}
  
  	populate_defaults(vmu);
