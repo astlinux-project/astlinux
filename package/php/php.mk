@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PHP_VERSION = 5.5.38
+PHP_VERSION = 5.6.24
 PHP_SITE = http://www.php.net/distributions
 PHP_SOURCE = php-$(PHP_VERSION).tar.xz
 PHP_INSTALL_STAGING = YES
@@ -41,7 +41,16 @@ PHP_CONF_OPT = \
 	--localstatedir=/var \
 	--disable-rpath
 
-PHP_CONF_ENV = EXTRA_LIBS="$(PHP_EXTRA_LIBS)"
+PHP_CONF_ENV = \
+	ac_cv_func_strcasestr=yes \
+	EXTRA_LIBS="$(PHP_EXTRA_LIBS)"
+
+# PHP can't be AUTORECONFed the standard way unfortunately
+PHP_DEPENDENCIES += host-autoconf host-automake host-libtool
+define PHP_BUILDCONF
+	cd $(@D) ; $(TARGET_MAKE_ENV) ./buildconf --force
+endef
+PHP_PRE_CONFIGURE_HOOKS += PHP_BUILDCONF
 
 ifeq ($(BR2_ENDIAN),"BIG")
 PHP_CONF_ENV += ac_cv_c_bigendian_php=yes
@@ -160,7 +169,7 @@ PHP_POST_INSTALL_STAGING_HOOKS += PHP_FIXUP_PHP_CONFIG
 
 define PHP_INSTALL_FIXUP
 	mv $(TARGET_DIR)/usr/bin/php-cgi $(TARGET_DIR)/usr/bin/php
-	rm -rf $(TARGET_DIR)/usr/lib/php
+	rm -rf $(TARGET_DIR)/usr/lib/php/build
 	rm -f $(TARGET_DIR)/usr/bin/phpize
 	rm -f $(TARGET_DIR)/usr/bin/php-config
 	ln -sf /tmp/etc/php.ini $(TARGET_DIR)/etc/php.ini

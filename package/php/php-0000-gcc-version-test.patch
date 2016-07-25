@@ -1,10 +1,10 @@
---- php-5.3.22/configure.orig	2013-03-17 14:56:49.000000000 -0500
-+++ php-5.3.22/configure	2013-03-17 14:58:16.000000000 -0500
-@@ -5457,7 +5457,7 @@
-     GCC_MAJOR_VERSION=`$CC -dumpversion | /usr/bin/sed -nE '1s/([0-9]+)\.[0-9]+\..*/\1/;1p'`
+--- php-5.6.24/configure.in.orig	2016-07-25 10:47:22.942680457 -0500
++++ php-5.6.24/configure.in	2016-07-25 10:48:07.381446344 -0500
+@@ -292,7 +292,7 @@
+     GCC_MAJOR_VERSION=`$CC -dumpversion | /usr/bin/sed -nE '1s/([[0-9]]+)\.[[0-9]]+\..*/\1/;1p'`
      ;;
    *)
--    GCC_MAJOR_VERSION=`$CC --version | $SED -n '1s/[^0-9]*//;1s/\..*//;1p'`
+-    GCC_MAJOR_VERSION=`$CC --version | $SED -n '1s/[[^0-9]]*//;1s/\..*//;1p'`
 +    GCC_MAJOR_VERSION=`$CC -dumpversion | cut -d'.' -f1`
      ;;
    esac
