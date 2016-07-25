@@ -4,7 +4,7 @@
 #
 #############################################################
 
-STUNNEL_VERSION = 5.31
+STUNNEL_VERSION = 5.35
 STUNNEL_SITE = http://www.usenix.org.uk/mirrors/stunnel/archive/5.x
 STUNNEL_DEPENDENCIES = openssl
 
