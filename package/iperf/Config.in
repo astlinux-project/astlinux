@@ -5,7 +5,7 @@ config BR2_PACKAGE_IPERF
 	  Internet Protocol bandwidth measuring tool for measuring
 	  TCP/UDP performance.
 
-	  http://dast.nlanr.net/projects/iperf/
+	  https://sourceforge.net/projects/iperf2/
 
 comment "iperf requires a toolchain with C++ support enabled"
 	depends on !BR2_INSTALL_LIBSTDCPP
