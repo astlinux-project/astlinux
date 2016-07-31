@@ -20,7 +20,7 @@ Released @TBD@
 
 -- sudo, version bump to 1.8.17p1
 
--- nano, version bump to 2.6.1
+-- nano, version bump to 2.6.2
 
 -- screen, version bump to 4.4.0
 
@@ -35,6 +35,8 @@ Released @TBD@
 -- libcurl (curl) version bump to 7.50.0
 
 -- stunnel, version bump to 5.35
+
+-- iperf, version bump to 2.0.9, now using maintained iperf2 project
 
 ** Asterisk
 
