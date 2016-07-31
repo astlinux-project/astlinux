@@ -10,6 +10,10 @@ Additions for AstLinux 1.2.8:
 
 Released @TBD@
 
+** Build System
+
+-- host-squashfs, version bump to 4.3, only build what we need (gzip)
+
 ** System
 
 -- php, major version bump to 5.6.24, bug and security fixes
