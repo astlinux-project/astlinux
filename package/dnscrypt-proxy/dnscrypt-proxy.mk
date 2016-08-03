@@ -3,13 +3,15 @@
 # dnscrypt-proxy
 #
 #############################################################
-DNSCRYPT_PROXY_VERSION = 1.6.1
-DNSCRYPT_PROXY_SOURCE = dnscrypt-proxy-$(DNSCRYPT_PROXY_VERSION).tar.gz
-DNSCRYPT_PROXY_SITE = http://download.dnscrypt.org/dnscrypt-proxy
-#DNSCRYPT_PROXY_SOURCE = dnscrypt-proxy-$(DNSCRYPT_PROXY_VERSION).tar.bz2
-#DNSCRYPT_PROXY_SITE = https://github.com/jedisct1/dnscrypt-proxy/releases/download/$(DNSCRYPT_PROXY_VERSION)
+DNSCRYPT_PROXY_VERSION = 1.7.0
+DNSCRYPT_PROXY_SOURCE = dnscrypt-proxy-$(DNSCRYPT_PROXY_VERSION).tar.bz2
+DNSCRYPT_PROXY_SITE = https://github.com/jedisct1/dnscrypt-proxy/releases/download/$(DNSCRYPT_PROXY_VERSION)
 
 DNSCRYPT_PROXY_DEPENDENCIES += libsodium
+
+DNSCRYPT_PROXY_CONF_OPT = \
+	--without-systemd \
+	--disable-plugins
 
 # libltdl (libtool)
 ifeq ($(BR2_PACKAGE_LIBTOOL),y)
