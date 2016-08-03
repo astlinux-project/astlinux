@@ -3,14 +3,11 @@
 # logrotate
 #
 #############################################################
-LOGROTATE_VERSION = 3.9.1
+LOGROTATE_VERSION = 3.10.0
 LOGROTATE_SOURCE = logrotate-$(LOGROTATE_VERSION).tar.gz
-LOGROTATE_SITE = https://www.fedorahosted.org/releases/l/o/logrotate
+LOGROTATE_SITE = https://github.com/logrotate/logrotate/releases/download/$(LOGROTATE_VERSION)
 
 LOGROTATE_DEPENDENCIES = popt host-pkg-config
-
-# tarball does not have a generated configure script
-LOGROTATE_AUTORECONF = YES
 
 LOGROTATE_CONF_OPT = --without-selinux
 
