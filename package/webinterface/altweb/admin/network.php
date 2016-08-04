@@ -1765,9 +1765,7 @@ require_once '../common/header.php';
   putHtml('<option value="on"'.$sel.'>Check Cert</option>');
   putHtml('</select>');
   putHtml('</td><td style="text-align: left;" colspan="3">');
-  if (($value = getVARdef($db, 'SMTP_CA', $cur_db)) === '') {
-    $value = '/mnt/kd/ssl/ca-smtp.pem';
-  }
+  $value = getVARdef($db, 'SMTP_CA', $cur_db);
   putHtml('SMTP Cert File:<input type="text" size="24" maxlength="64" value="'.$value.'" name="smtp_ca_cert" /></td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
   $value = getVARdef($db, 'SMTP_USER', $cur_db);

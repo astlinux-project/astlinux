@@ -2,6 +2,8 @@
 
 . /etc/rc.conf
 
+CA_BUNDLE="/usr/lib/ssl/certs/ca-bundle.crt"
+
 ALIASES_FILE="/mnt/kd/msmtp-aliases.conf"
 
 gen_msmtp_config() {
@@ -33,13 +35,16 @@ from $SMTP_FROM"
       echo "tls_starttls $SMTP_STARTTLS"
     fi
 
-    if [ -n "$SMTP_CA" ]; then
-      echo "tls_trust_file $SMTP_CA"
-    fi
+    if [ "$SMTP_CERTCHECK" = "off" ]; then
+      echo "tls_certcheck off"
+    else
+      echo "tls_certcheck on"
 
-    # may be 'off' or 'on'... use default if unset.
-    if [ -n "$SMTP_CERTCHECK" ]; then
-      echo "tls_certcheck $SMTP_CERTCHECK"
+      if [ -n "$SMTP_CA" ] && [ -f "$SMTP_CA" ]; then
+        echo "tls_trust_file $SMTP_CA"
+      else
+        echo "tls_trust_file $CA_BUNDLE"
+      fi
     fi
   fi
 
