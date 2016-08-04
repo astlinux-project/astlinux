@@ -16,6 +16,8 @@ Released @TBD@
 
 ** System
 
+-- e1000e version bump to 3.3.5 Intel PCI-Express PRO/1000 Ethernet Linux driver
+
 -- php, major version bump to 5.6.24, bug and security fixes
 
 -- perl, version bump to 5.24.0 using perlcross 1.0.3
@@ -26,7 +28,11 @@ Released @TBD@
 
 -- nano, version bump to 2.6.2
 
+-- logrotate, version bump to 3.10.0
+
 -- screen, version bump to 4.4.0
+
+-- libsodium, version bump to 1.0.11
 
 -- Time Zone Database update, tzdata2016f and php-timezonedb-2016.6
 
@@ -36,11 +42,17 @@ Released @TBD@
 
 -- arnofw (AIF), version bump to 2.0.1g-RC1
 
--- libcurl (curl) version bump to 7.50.0
+-- libcurl (curl) version bump to 7.50.1, security fixes: CVE-2016-5419, CVE-2016-5420, CVE-2016-5421
+
+-- lighttpd, version bump to 1.4.41
 
 -- stunnel, version bump to 5.35
 
+-- dnscrypt-proxy, version bump to 1.7.0
+
 -- iperf, version bump to 2.0.9, now using maintained iperf2 project
+
+-- msmtp, an undefined SMTP_CA rc.conf variable will now default to the system ca-bundle.crt .
 
 ** Asterisk
 
@@ -57,6 +69,8 @@ Released @TBD@
 -- Network tab, add 4th LAN Interface.  Added 4th LAN support to Firewall sub-tab and PhoneProv tab.
 
 -- Network -> Firewall sub-tab, add "Deny LAN to DMZ" option for specified LAN Interfaces.
+
+-- Network tab, SMTP Mail Relay, allow an empty "SMTP Cert File" which will default to the system ca-bundle.crt .
 
 
 Additions for AstLinux 1.2.7:
