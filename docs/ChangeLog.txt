@@ -52,7 +52,11 @@ Released @TBD@
 
 -- iperf, version bump to 2.0.9, now using maintained iperf2 project
 
--- msmtp, an undefined SMTP_CA rc.conf variable will now default to the system ca-bundle.crt .
+-- msmtp, add a functional "/bin/mail" script to emulate mail/mailx for sending email via sendmail.
+   Particularly useful for sending a file attachment via email.  Issue "mail --help" for details.
+   Example (end of iOS section): http://doc.astlinux.org/userdoc:tt_asterisk-fop2-ssl
+
+-- msmtp, an undefined SMTP_CA rc.conf variable will now default to the system ca-bundle.crt
 
 ** Asterisk
 
