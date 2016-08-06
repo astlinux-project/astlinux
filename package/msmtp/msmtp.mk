@@ -24,6 +24,8 @@ define MSMTP_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D package/msmtp/sendmail.sh $(TARGET_DIR)/usr/sbin/sendmail
 	$(INSTALL) -m 0755 -D package/msmtp/testmail.sh $(TARGET_DIR)/usr/sbin/testmail
 	$(INSTALL) -m 0755 -D package/msmtp/mime-pack.sh $(TARGET_DIR)/usr/sbin/mime-pack
+	$(INSTALL) -m 0755 -D package/msmtp/mail.sh $(TARGET_DIR)/bin/mail
+	ln -sf ../../bin/mail $(TARGET_DIR)/usr/bin/mail
 	ln -sf /tmp/etc/msmtprc $(TARGET_DIR)/etc/msmtprc
 endef
 
@@ -34,6 +36,8 @@ define MSMTP_UNINSTALL_TARGET_CMDS
 	rm $(TARGET_DIR)/usr/sbin/sendmail
 	rm $(TARGET_DIR)/usr/sbin/testmail
 	rm $(TARGET_DIR)/usr/sbin/mime-pack
+	rm $(TARGET_DIR)/bin/mail
+	rm $(TARGET_DIR)/usr/bin/mail
 	rm $(TARGET_DIR)/etc/msmtprc
 endef
 

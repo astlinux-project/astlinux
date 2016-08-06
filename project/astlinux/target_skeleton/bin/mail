@@ -1,4 +1,0 @@
-#!/bin/sh
-#Mail wrapper for things that insist on calling /bin/mail...
-#For now, just /dev/null everything
-echo -n ""
