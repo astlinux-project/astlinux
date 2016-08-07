@@ -21,8 +21,8 @@ usage()
 Usage: mail [options...] to_addr
 
 Options:
-  -a file      Attach the given file to the message.
-  --mime type  Optionally define the MIME Type of the attached file.
+  -a file      Attach the given file to the message. (Multiple allowed)
+  --mime type  Optionally define the MIME Type of each attached file. (Multiple allowed)
   -b address   Send blind carbon copies to a comma-separated list of email addresses.
   -c address   Send carbon copies to a comma-separated list of email addresses.
   -e           Check if mail is present. (Always exit status of "1")
@@ -97,11 +97,11 @@ gen_message_header()
   if [ -n "$from_addr" ]; then
     echo "From: $from_addr"
   fi
-  if [ -n "$set_var" ]; then
-    set_var_header "$set_var"
-  fi
+  for x in ${!SETVAR[*]}; do
+    set_var_header "${SETVAR[$x]}"
+  done
   echo "Subject: $subject"
-  if [ -n "$attach_file" ]; then
+  if [ -n "$BOUNDARY" ]; then
     mime_header
   fi
 
@@ -148,6 +148,8 @@ mime_content_type()
 
 mime_data()
 {
+  local attach_file="$1" mime_type="$2"
+
   echo ""
   echo ""
   echo "--$BOUNDARY"
@@ -157,7 +159,10 @@ mime_data()
   echo ""
 
   openssl base64 -in "$attach_file"
+}
 
+mime_footer()
+{
   echo ""
   echo "--$BOUNDARY--"
   echo "."
@@ -173,14 +178,14 @@ if [ $? -ne 0 ]; then
 fi
 eval set -- $ARGS
 
-attach_file=""
-mime_type=""
+unset FILE
+unset MIME
 bcc_addr=""
 cc_addr=""
 exists_mail=0
 headers=0
 from_addr=""
-set_var=""
+unset SETVAR
 subject=""
 message_recipients=0
 mail_user=""
@@ -188,8 +193,8 @@ version=0
 verbose=0
 while [ $# -gt 0 ]; do
   case "$1" in
-    -a)  attach_file="$2"; shift ;;
-    --mime)  mime_type="$2"; shift ;;
+    -a)  FILE[${#FILE[*]}]="$2"; shift ;;
+    --mime)  MIME[${#MIME[*]}]="$2"; shift ;;
     -b)  bcc_addr="$2"; shift ;;
     -c)  cc_addr="$2"; shift ;;
     -e)  exists_mail=1 ;;
@@ -198,7 +203,7 @@ while [ $# -gt 0 ]; do
     -h)  shift ;;
     -q)  shift ;;
     -r)  from_addr="$2"; shift ;;
-    -S)  set_var="$2"; shift ;;
+    -S)  SETVAR[${#SETVAR[*]}]="$2"; shift ;;
     -s)  subject="$2"; shift ;;
     -T)  shift ;;
     -t)  message_recipients=1 ;;
@@ -232,21 +237,26 @@ if [ -z "$to_addr" -o "$to_addr" = "--" ] && [ $message_recipients -eq 0 ]; then
   exit $?
 fi
 
-if [ -n "$attach_file" ]; then
-  if [ ! -f "$attach_file" ]; then
-    echo "mail: Attachment file not found: $attach_file" >&2
-    exit 1
-  fi
+if [ ${#FILE[*]} -gt 0 ]; then
   if [ $message_recipients -eq 1 ]; then
     echo "mail: The '-t' option is not compatible with the '-a file' option." >&2
     exit 1
   fi
 
-  if [ -z "$mime_type" ]; then
-    mime_type="$(mime_content_type "$attach_file")"
-  fi
+  for x in ${!FILE[*]}; do
+    if [ ! -f "${FILE[$x]}" ]; then
+      echo "mail: Attachment file not found: ${FILE[$x]}" >&2
+      exit 1
+    fi
+
+    if [ -z "${MIME[$x]}" ]; then
+      MIME[$x]="$(mime_content_type "${FILE[$x]}")"
+    fi
+  done
 
   BOUNDARY="$(date "+%s" | md5sum | cut -b1-32)"
+else
+  BOUNDARY=""
 fi
 
 # Check if this is an interactive session
@@ -263,8 +273,11 @@ fi
 (
   gen_message_header
   cat  # copy stdin to stdout until ^D (EOT)
-  if [ -n "$attach_file" ]; then
-    mime_data
+  if [ -n "$BOUNDARY" ]; then
+    for x in ${!FILE[*]}; do
+      mime_data "${FILE[$x]}" "${MIME[$x]}"
+    done
+    mime_footer
   fi
 ) | sendmail -t
 
