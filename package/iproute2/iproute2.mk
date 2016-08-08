@@ -22,8 +22,8 @@ ifeq ($(BR2_PACKAGE_IPTABLES),y)
 IPROUTE2_DEPENDENCIES += iptables
 define IPROUTE2_WITH_IPTABLES
 	# Makefile is busted so it never passes IPT_LIB_DIR properly
-	$(SED) "s/-DIPT/-DXT/" $(IPROUTE2_DIR)/tc/Makefile
-	echo "TC_CONFIG_XT:=y" >>$(IPROUTE2_DIR)/Config
+	$(SED) "s/-DIPT/-DXT/" $(@D)/tc/Makefile
+	echo "TC_CONFIG_XT:=y" >>$(@D)/Config
 endef
 endif
 
@@ -32,8 +32,8 @@ define IPROUTE2_CONFIGURE_CMDS
 	$(SED) 's/gcc/$$CC $$CFLAGS/g' $(@D)/configure
 	cd $(@D) && $(TARGET_CONFIGURE_OPTS) ./configure
 	# arpd needs berkeleydb
-	$(SED) "/^TARGETS=/s: arpd : :" $(IPROUTE2_DIR)/misc/Makefile
-	echo "IPT_LIB_DIR:=/usr/lib/xtables" >>$(IPROUTE2_DIR)/Config
+	$(SED) "/^TARGETS=/s: arpd : :" $(@D)/misc/Makefile
+	echo "IPT_LIB_DIR:=/usr/lib/xtables" >>$(@D)/Config
 	$(IPROUTE2_WITH_IPTABLES)
 endef
 
