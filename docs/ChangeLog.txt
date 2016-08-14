@@ -54,6 +54,8 @@ Released @TBD@
 
 -- iperf, version bump to 2.0.9, now using maintained iperf2 project
 
+-- mtr, version bump to 0.87
+
 -- msmtp, add a functional "/bin/mail" script to emulate mail/mailx for sending email via sendmail.
    Particularly useful for sending file attachment(s) via email.  Issue "mail --help" for details.
    Example (end of iOS section): http://doc.astlinux.org/userdoc:tt_asterisk-fop2-ssl
