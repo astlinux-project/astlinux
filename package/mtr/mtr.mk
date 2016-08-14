@@ -3,10 +3,9 @@
 # mtr
 #
 #############################################################
-MTR_VERSION = 0.86
+MTR_VERSION = 0.87
 MTR_SITE = ftp://ftp.bitwizard.nl/mtr
 MTR_SOURCE = mtr-$(MTR_VERSION).tar.gz
-MTR_AUTORECONF = YES
 
 MTR_DEPENDENCIES = host-pkg-config ncurses
 
