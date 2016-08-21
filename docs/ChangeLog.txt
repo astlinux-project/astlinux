@@ -38,6 +38,8 @@ Released @TBD@
 
 -- libsodium, version bump to 1.0.11
 
+-- mac2vendor, oui.txt database snapshot 2016-08-21
+
 -- Time Zone Database update, tzdata2016f and php-timezonedb-2016.6
 
 ** Networking
