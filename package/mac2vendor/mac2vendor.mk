@@ -4,13 +4,13 @@
 #
 ################################################################################
 
-MAC2VENDOR_VERSION = 2016-01-17
+MAC2VENDOR_VERSION = 2016-08-21
 MAC2VENDOR_SOURCE = oui-$(MAC2VENDOR_VERSION).txt
 MAC2VENDOR_SITE = http://files.astlinux-project.org
 
 ##
-## curl -o dl/oui-2016-01-17.txt http://standards-oui.ieee.org/oui.txt
-## ./scripts/upload-dl-pair dl/oui-2016-01-17.txt
+## curl -o dl/oui-2016-08-21.txt http://standards-oui.ieee.org/oui.txt
+## ./scripts/upload-dl-pair dl/oui-2016-08-21.txt
 ##
 
 define MAC2VENDOR_EXTRACT_CMDS
