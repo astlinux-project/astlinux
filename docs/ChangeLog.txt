@@ -52,6 +52,8 @@ Released @TBD@
 
 -- lighttpd, version bump to 1.4.41
 
+-- OpenVPN, version bump to 2.3.12
+
 -- stunnel, version bump to 5.35
 
 -- dnscrypt-proxy, version bump to 1.7.0
