@@ -24,6 +24,8 @@ Released @TBD@
 
 -- perl, version bump to 5.24.0 using perlcross 1.0.3
 
+-- sqlite, version bump to 3.14.1
+
 -- ethtool, version bump to 4.6
 
 -- sudo, version bump to 1.8.17p1
@@ -77,6 +79,10 @@ Released @TBD@
 -- pjsip 2.5 (version bump)
 
 -- SILK CODEC, version bump to 1.0.2, now supports Asterisk 13 as well as Asterisk 11
+
+-- FOP2, available version bump to 2.31.03.
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: http://doc.astlinux.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
