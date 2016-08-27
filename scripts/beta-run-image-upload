@@ -69,6 +69,18 @@ upload_run_images()
   done
 }
 
+upload_version()
+{
+  local remote_dir="$1" ver="/tmp/version.txt"
+
+  # Must be called after upload_run_images() to define file_ver
+  if [ -n "$file_ver" ]; then
+    echo "$file_ver" > "$ver"
+    upload_file "$remote_dir" "$ver"
+    rm -f "$ver"
+  fi
+}
+
 set_asterisk_version()
 {
   case $1 in
@@ -122,7 +134,7 @@ if [ ! -f "$auth_file" ]; then
   exit 1
 fi
 
-# Remove pre-existing ChangeLog.txt
+# Remove pre-existing ChangeLog.txt and version.txt
 delete_dir "$CHANGELOG_DIR"
 
 for asterisk in ast18 ast11 ast13; do
@@ -139,6 +151,9 @@ done
 
 # Upload current ChangeLog.txt
 upload_file "$CHANGELOG_DIR" "$CHANGELOG"
+
+# Upload current version.txt
+upload_version "$CHANGELOG_DIR"
 
 echo "
 ##
