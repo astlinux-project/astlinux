@@ -1,0 +1,57 @@
+From: Roger Shimizu <rogershimizu@gmail.com>
+Date: Thu, 24 Dec 2015 23:09:06 +0900
+Subject: Add a bit info to logger when get OPTION_RECONF_ACCEPT(20) dhcpv6
+ option
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+Closes: #562079
+Reported-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: Roger Shimizu <rogershimizu@gmail.com>
+---
+ common.c | 10 ++++++++++
+ dhcp6.h  |  2 +-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/common.c b/common.c
+index 10d905f..cbb1c82 100644
+--- a/common.c
++++ b/common.c
+@@ -1723,6 +1723,14 @@ dhcp6_get_options(p, ep, optinfo)
+ 			memcpy(optinfo->ifidopt_id, cp, optlen);
+ 			optinfo->ifidopt_len = optlen;
+ 			break;
++		case DH6OPT_RECONF_ACCEPT:
++			/* Debian Bug: #562079 */
++			if (optlen != 0)
++				goto malformed;
++			debug_printf(LOG_INFO, FNAME,
++			    "received option: \"%s\" (len %d), however reconfigure negotiation is not supported yet",
++			    dhcp6optstr(opt), optlen);
++			break;
+ 		case DH6OPT_SIP_SERVER_D:
+ 			if (dhcp6_get_domain(optlen, cp, opt,
+ 			    &optinfo->sipname_list) == -1)
+@@ -3024,6 +3032,8 @@ dhcp6optstr(type)
+ 		return ("interface ID");
+ 	case DH6OPT_RECONF_MSG:
+ 		return ("reconfigure message");
++	case DH6OPT_RECONF_ACCEPT:
++		return ("reconfigure accept");
+ 	case DH6OPT_SIP_SERVER_D:
+ 		return ("SIP domain name");
+ 	case DH6OPT_SIP_SERVER_A:
+diff --git a/dhcp6.h b/dhcp6.h
+index 9f3a62d..985decb 100644
+--- a/dhcp6.h
++++ b/dhcp6.h
+@@ -296,7 +296,7 @@ struct dhcp6_relay {
+ #define DH6OPT_VENDOR_OPTS 17
+ #define DH6OPT_INTERFACE_ID 18
+ #define DH6OPT_RECONF_MSG 19
+-
++#define DH6OPT_RECONF_ACCEPT 20
+ #define DH6OPT_SIP_SERVER_D 21
+ #define DH6OPT_SIP_SERVER_A 22
+ #define DH6OPT_DNS 23

@@ -1,0 +1,107 @@
+From c648bd5c29e3ad4c53c7f584688e4ff5be5e85be Mon Sep 17 00:00:00 2001
+From: Roger Shimizu <rogershimizu@gmail.com>
+Date: Wed, 9 Sep 2015 21:00:22 +0900
+Subject: [PATCH 2/3] resolv warnings so as to make "blhc" and "gcc" both happy
+
+- blhc complained: lacking of CFLAGS/CPPFLAGS for certain C files in Makefile
+- gcc complained implicit declaration of function 'time'
+- gcc complained ignoring return value of 'read'
+
+Signed-off-by: Roger Shimizu <rogershimizu@gmail.com>
+---
+ Makefile.in          |  6 +++---
+ addrconf.c           | 11 ++++++++++-
+ missing/arc4random.c |  3 ++-
+ prefixconf.c         | 11 ++++++++++-
+ 4 files changed, 25 insertions(+), 6 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index efc878d..f52d4e1 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -86,11 +86,11 @@ getaddrinfo.o:	$(srcdir)/missing/getaddrinfo.c
+ getnameinfo.o:	$(srcdir)/missing/getnameinfo.c
+ 	$(CC) -c $(srcdir)/missing/$*.c
+ strlcat.o:	$(srcdir)/missing/strlcat.c
+-	$(CC) -c $(srcdir)/missing/$*.c
++	$(CC) $(CFLAGS) $(CPPFLAGS) -c $(srcdir)/missing/$*.c
+ strlcpy.o:	$(srcdir)/missing/strlcpy.c
+-	$(CC) -c $(srcdir)/missing/$*.c
++	$(CC) $(CFLAGS) $(CPPFLAGS) -c $(srcdir)/missing/$*.c
+ arc4random.o:	$(srcdir)/missing/arc4random.c
+-	$(CC) $(CFLAGS) -c $(srcdir)/missing/$*.c
++	$(CC) $(CFLAGS) $(CPPFLAGS) -c $(srcdir)/missing/$*.c
+ getifaddrs.o:	$(srcdir)/missing/getifaddrs.c
+ 	$(CC) -c $(srcdir)/missing/$*.c
+ daemon.o:	$(srcdir)/missing/daemon.c
+diff --git a/addrconf.c b/addrconf.c
+index 47f1738..a8c52bc 100644
+--- a/addrconf.c
++++ b/addrconf.c
+@@ -29,11 +29,20 @@
+  * SUCH DAMAGE.
+  */
+ #include <sys/types.h>
+-#include <sys/time.h>
+ #include <sys/socket.h>
+ #include <sys/queue.h>
+ #include <sys/ioctl.h>
+ 
++#if TIME_WITH_SYS_TIME
++# include <sys/time.h>
++# include <time.h>
++#else
++# if HAVE_SYS_TIME_H
++#  include <sys/time.h>
++# else
++#  include <time.h>
++# endif
++#endif
+ #include <net/if.h>
+ #ifdef __FreeBSD__
+ #include <net/if_var.h>
+diff --git a/missing/arc4random.c b/missing/arc4random.c
+index 8d1e050..7fe143b 100644
+--- a/missing/arc4random.c
++++ b/missing/arc4random.c
+@@ -59,9 +59,10 @@ u_int32_t
+ arc4random()
+ {
+ 	u_int32_t v;
++	ssize_t n;
+ 
+ 	if (fd < 0)
+ 		arc4random_init();
+-	read(fd, &v, sizeof(v));
++	n = read(fd, &v, sizeof(v));
+ 	return v;
+ }
+diff --git a/prefixconf.c b/prefixconf.c
+index 9450a3f..15b5417 100644
+--- a/prefixconf.c
++++ b/prefixconf.c
+@@ -29,11 +29,20 @@
+  * SUCH DAMAGE.
+  */
+ #include <sys/types.h>
+-#include <sys/time.h>
+ #include <sys/socket.h>
+ #include <sys/queue.h>
+ #include <sys/ioctl.h>
+ 
++#if TIME_WITH_SYS_TIME
++# include <sys/time.h>
++# include <time.h>
++#else
++# if HAVE_SYS_TIME_H
++#  include <sys/time.h>
++# else
++#  include <time.h>
++# endif
++#endif
+ #include <net/if.h>
+ #ifdef __FreeBSD__
+ #include <net/if_var.h>
+-- 
+2.5.1
+
