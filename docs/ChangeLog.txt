@@ -70,6 +70,9 @@ Released @TBD@
 
 -- msmtp, an undefined SMTP_CA rc.conf variable will now default to the system ca-bundle.crt
 
+-- wide-dhcpv6, add upstream Debian patches 0011, 0012 and 0015, build fixes and handle OPTION_RECONF_ACCEPT(20)
+   More Info: http://doc.astlinux.org/userdoc:tt-dhcpv6-prefix-delegation
+
 ** Asterisk
 
 -- Asterisk 1.8.32.3 (no change), 11.23.0 (version bump) and 13.10.0 (version bump)
@@ -379,6 +382,7 @@ Released 2016-02-10
 -- wide-dhcpv6, new package, added support for DHCPv6 using dhcp6c for External and WAN Failover interfaces.
    New rc.conf variables are: DHCPV6_CLIENT_ENABLE, DHCPV6_CLIENT_REQUEST_ADDRESS, DHCPV6_CLIENT_REQUEST_PREFIX,
                               DHCPV6_CLIENT_PREFIX_LEN, DHCPV6_CLIENT_PREFIX_HINT, EXT2DHCPV6_CLIENT_ENABLE
+   More Info: http://doc.astlinux.org/userdoc:tt-dhcpv6-prefix-delegation
 
 -- dnsmasq, added optional DHCP_LEASETIME rc.conf variable, defaults to "24" hours as before. Applies to both DHCP and IPv6 Autoconfig.
 
