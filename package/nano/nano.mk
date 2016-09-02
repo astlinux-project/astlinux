@@ -4,8 +4,8 @@
 #
 #############################################################
 
-NANO_VERSION = 2.6.2
-NANO_SITE = http://www.nano-editor.org/dist/v2.6
+NANO_VERSION = 2.7.0
+NANO_SITE = http://www.nano-editor.org/dist/v2.7
 NANO_MAKE_ENV = CURSES_LIB="-lncurses"
 NANO_CONF_ENV = ac_cv_prog_NCURSESW_CONFIG=false
 NANO_CONF_OPT = \
