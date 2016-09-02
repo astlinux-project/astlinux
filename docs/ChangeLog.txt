@@ -30,7 +30,7 @@ Released @TBD@
 
 -- sudo, version bump to 1.8.17p1
 
--- nano, version bump to 2.6.2
+-- nano, version bump to 2.7.0
 
 -- logrotate, version bump to 3.10.0
 
