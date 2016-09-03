@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PJSIP_VERSION = 2.5
+PJSIP_VERSION = 2.5.5
 PJSIP_SOURCE = pjproject-$(PJSIP_VERSION).tar.bz2
 PJSIP_SITE = http://www.pjsip.org/release/$(PJSIP_VERSION)
 PJSIP_INSTALL_STAGING = YES
@@ -17,23 +17,36 @@ endef
 PJSIP_POST_PATCH_HOOKS += PJSIP_CUSTOM_CONFIG
 
 PJSIP_CONF_ENV = \
-	CFLAGS="$(TARGET_CFLAGS) -O2" \
+	CFLAGS="$(TARGET_CFLAGS) -O2 -Wno-unused-but-set-variable -Wno-unused-variable -Wno-unused-label -Wno-unused-function -Wno-strict-aliasing" \
 	LDFLAGS="-L$(STAGING_DIR)/usr/lib" \
 	LD="$(TARGET_CC)"
 
 PJSIP_CONF_OPT = \
-	--with-external-srtp \
 	--disable-speex-codec \
 	--disable-speex-aec \
 	--disable-gsm-codec \
+	--disable-ilbc-codec \
+	--disable-l16-codec \
+	--disable-g711-codec \
+	--disable-g722-codec \
+	--disable-g7221-codec \
+	--disable-opencore-amr \
+	--disable-webrtc \
+	--disable-silk \
+	--disable-opus \
 	--disable-video \
 	--disable-v4l2 \
 	--disable-sound \
-	--disable-opencore-amr \
-	--disable-ilbc-codec \
-	--disable-g7221-codec \
+	--disable-ext-sound \
+	--disable-oss \
+	--disable-sdl \
+	--disable-libyuv \
 	--disable-resample \
-	--without-libyuv
+	--disable-ffmpeg \
+	--disable-openh264 \
+	--disable-ipp \
+	--without-external-pa \
+	--with-external-srtp
 
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
 PJSIP_CONF_OPT += --with-ssl=$(STAGING_DIR)/usr

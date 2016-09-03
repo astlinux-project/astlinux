@@ -9,7 +9,7 @@ else
  ifeq ($(BR2_PACKAGE_ASTERISK_v11),y)
 ASTERISK_VERSION := 11.23.0
  else
-ASTERISK_VERSION := 13.10.0
+ASTERISK_VERSION := 13.11.0
  endif
 endif
 ASTERISK_SOURCE := asterisk-$(ASTERISK_VERSION).tar.gz
@@ -271,6 +271,7 @@ else
 	(cd $(ASTERISK_DIR); \
 		menuselect/menuselect --enable res_pktccops menuselect.makeopts; \
 		menuselect/menuselect --disable CORE-SOUNDS-EN-GSM --disable MOH-OPSOUND-WAV menuselect.makeopts; \
+		menuselect/menuselect --disable BUILD_NATIVE menuselect.makeopts; \
 	)
 endif
 	touch $@

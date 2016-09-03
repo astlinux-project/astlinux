@@ -19,7 +19,7 @@
 #define PJ_SCANNER_USE_BITWISE	0
 #define PJ_OS_HAS_CHECK_STACK	0
 #define PJ_LOG_MAX_LEVEL		3
-#define PJ_ENABLE_EXTRA_CHECK	0
+#define PJ_ENABLE_EXTRA_CHECK	1
 #define PJSIP_MAX_TSX_COUNT		((64*1024)-1)
 #define PJSIP_MAX_DIALOG_COUNT	((64*1024)-1)
 #define PJSIP_UDP_SO_SNDBUF_SIZE	(512*1024)
@@ -37,3 +37,7 @@
 
 #undef PJ_TODO
 #define PJ_TODO(x)
+
+/* Defaults too low for WebRTC */
+#define PJ_ICE_MAX_CAND 32
+#define PJ_ICE_MAX_CHECKS (PJ_ICE_MAX_CAND * 2)
