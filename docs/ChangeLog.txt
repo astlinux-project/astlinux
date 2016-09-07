@@ -40,6 +40,8 @@ Released @TBD@
 
 -- libsodium, version bump to 1.0.11
 
+-- ca-certificates, update trusted root certificates 2016-09-07
+
 -- mac2vendor, oui.txt database snapshot 2016-08-21
 
 -- Time Zone Database update, tzdata2016f and php-timezonedb-2016.6
@@ -50,7 +52,7 @@ Released @TBD@
 
 -- arnofw (AIF), version bump to 2.0.1g-RC1
 
--- libcurl (curl) version bump to 7.50.1, security fixes: CVE-2016-5419, CVE-2016-5420, CVE-2016-5421
+-- libcurl (curl) version bump to 7.50.2, security fixes: CVE-2016-5419, CVE-2016-5420, CVE-2016-5421
 
 -- lighttpd, version bump to 1.4.41
 
@@ -83,7 +85,7 @@ Released @TBD@
 
 -- SILK CODEC, version bump to 1.0.3, now supports Asterisk 13 as well as Asterisk 11
 
--- FOP2, available version bump to 2.31.03.
+-- FOP2, available version bump to 2.31.04.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
    More info: http://doc.astlinux.org/userdoc:tt_asterisk-fop2-upgrade
 
