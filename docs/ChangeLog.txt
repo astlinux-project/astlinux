@@ -18,6 +18,8 @@ Released @TBD@
 
 -- linux, tcp: make challenge acks less predictable, security fix: CVE-2016-5696
 
+-- linux, enable NETFILTER_XT_SET=m and IP_SET=m for the 'ipset' userspace utility
+
 -- e1000e version bump to 3.3.5 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
 -- php, major version bump to 5.6.25, bug and security fixes
@@ -65,6 +67,10 @@ Released @TBD@
 -- iperf, version bump to 2.0.9, now using maintained iperf2 project
 
 -- mtr, version bump to 0.87
+
+-- ipset, version 6.29, new package to store multiple IP addresses and match against the collection by iptables at one swoop
+
+-- dnsmasq, enabled 'ipset' support
 
 -- msmtp, add a functional "/bin/mail" script to emulate mail/mailx for sending email via sendmail.
    Particularly useful for sending file attachment(s) via email.  Issue "mail --help" for details.
