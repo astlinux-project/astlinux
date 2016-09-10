@@ -155,6 +155,8 @@ astlinux_wrapper()
 {
   local intf lan lans extCIDR ovpnIF ovpnIP ovpnNM allowif allowifs denyif count IFS
 
+  IPTABLES_IPSET=1
+
   MANGLE_TOS=0
 
   if [ "$IPV6" = "yes" ]; then

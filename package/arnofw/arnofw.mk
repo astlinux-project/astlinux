@@ -3,7 +3,7 @@
 # Arno's IPtables Firewall Script
 #
 #############################################################
-ARNOFW_VER := 2.0.1g-RC1
+ARNOFW_VER := 2.0.1g-RC2
 ARNOFW_ROOT := arno-iptables-firewall
 ARNOFW_SOURCE := $(ARNOFW_ROOT)_$(ARNOFW_VER).tar.gz
 #ARNOFW_SITE := http://rocky.eld.leidenuniv.nl/arno-iptables-firewall
