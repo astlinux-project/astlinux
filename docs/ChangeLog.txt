@@ -42,6 +42,12 @@ Released @TBD@
 
 -- libsodium, version bump to 1.0.11
 
+-- reload-blocklist-netset (optional CRON script), new command added to generate .netset files for the firewall blocklist.
+   Issue "reload-blocklist-netset" for details.
+   == Cron may be used to run this script once or twice every day.  Example:
+   == 05 05,15 * * * reload-blocklist-netset /mnt/kd/blocklists firehol_level1 spamhaus_dropv6 >/dev/null 2>&1
+   More Info: http://iplists.firehol.org/?ipset=firehol_level1
+
 -- ca-certificates, update trusted root certificates 2016-09-07
 
 -- mac2vendor, oui.txt database snapshot 2016-08-21
@@ -52,7 +58,7 @@ Released @TBD@
 
 -- Added a 4th LAN Interface configuration entry
 
--- arnofw (AIF), version bump to 2.0.1g-RC2, added support for 'ipset'
+-- arnofw (AIF), version bump to 2.0.1g-RC3, added support for 'ipset'
 
 -- libcurl (curl) version bump to 7.50.2, security fixes: CVE-2016-5419, CVE-2016-5420, CVE-2016-5421
 
@@ -100,6 +106,8 @@ Released @TBD@
 -- Network tab, add 4th LAN Interface.  Added 4th LAN support to Firewall sub-tab and PhoneProv tab.
 
 -- Network -> Firewall sub-tab, add "Deny LAN to DMZ" option for specified LAN Interfaces.
+
+-- Network -> Firewall sub-tab, add Block Host/CIDR using *.netset file(s) in the directory /mnt/kd/blocklists .
 
 -- Network tab, SMTP Mail Relay, allow an empty "SMTP Cert File" which will default to the system ca-bundle.crt .
 
