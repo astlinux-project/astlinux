@@ -22,6 +22,7 @@
 // 06-08-2014, Added support for multiple "Allow OpenVPN" LAN interfaces
 // 06-12-2016, Added "Pass LAN->LAN" action
 // 07-10-2016, Added Deny LAN to DMZ for specified LAN Interfaces
+// 09-14-2016, Added BLOCK_NETSET_DIR support
 //
 // System location of /mnt/kd/rc.conf.d directory
 $FIREWALLCONFDIR = '/mnt/kd/rc.conf.d';
@@ -377,6 +378,10 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   fwrite($fp, $value."\n");
   if (isset($_POST['file_blocked'])) {
     $value = 'BLOCK_HOSTS_FILE="/mnt/kd/blocked-hosts"';
+    fwrite($fp, $value."\n");
+  }
+  if (isset($_POST['block_netset_dir'])) {
+    $value = 'BLOCK_NETSET_DIR="/mnt/kd/blocklists"';
     fwrite($fp, $value."\n");
   }
   $value = 'BLOCKED_HOST_LOG='.(isset($_POST['log_blocked']) ? '1' : '0');
@@ -1112,6 +1117,9 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
   putHtml('<tr class="dtrow1"><td width="75" style="text-align: right;">');
   $sel = (getVARdef($vars, 'BLOCK_HOSTS_FILE') === '/mnt/kd/blocked-hosts') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="file_blocked" name="file_blocked"'.$sel.' /></td><td>Block Host/CIDR using the file /mnt/kd/blocked-hosts</td></tr>');
+  putHtml('<tr class="dtrow1"><td width="75" style="text-align: right;">');
+  $sel = (getVARdef($vars, 'BLOCK_NETSET_DIR') === '/mnt/kd/blocklists') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="block_netset_dir" name="block_netset_dir"'.$sel.' /></td><td>Block Host/CIDR using *.netset file(s) in the directory /mnt/kd/blocklists</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getVARdef($vars, 'BLOCKED_HOST_LOG') == 1) ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="log_blocked" name="log_blocked"'.$sel.' /></td><td>Log Denied attempts by a blocked host</td></tr>');
