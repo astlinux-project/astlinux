@@ -3,7 +3,7 @@
 # Arno's IPtables Firewall Script
 #
 #############################################################
-ARNOFW_VER := 2.0.1g-RC2
+ARNOFW_VER := 2.0.1g-RC3
 ARNOFW_ROOT := arno-iptables-firewall
 ARNOFW_SOURCE := $(ARNOFW_ROOT)_$(ARNOFW_VER).tar.gz
 #ARNOFW_SITE := http://rocky.eld.leidenuniv.nl/arno-iptables-firewall
@@ -64,6 +64,8 @@ $(TARGET_DIR)$(ARNOFW_TARGET_BINARY): $(ARNOFW_DIR)/.patched
 		$(TARGET_DIR)$(ARNOFW_CONFIG_SHIM)
 	$(INSTALL) -D -m 0755 package/arnofw/reload-spamhaus-drop \
 		$(TARGET_DIR)/usr/sbin/reload-spamhaus-drop
+	$(INSTALL) -D -m 0755 package/arnofw/reload-blocklist-netset \
+		$(TARGET_DIR)/usr/sbin/reload-blocklist-netset
 	@rm -f $(TARGET_DIR)$(ARNOFW_PLUGIN_SCRIPT_DIR)/*.CHANGELOG
 	@echo
 	@echo "Remove plugins that don't apply."
