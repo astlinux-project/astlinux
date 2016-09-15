@@ -10,6 +10,7 @@ tulip
 e100
 natsemi
 forcedeth
+#8139cp
 8139too
 via-rhine
 via-velocity
