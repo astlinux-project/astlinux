@@ -20,6 +20,8 @@ Released @TBD@
 
 -- linux, enable NETFILTER_XT_SET=m and IP_SET=m for the 'ipset' userspace utility
 
+-- linux, enable 8139CP=m for the Realtek '8139cp' NIC driver, used in old Watchguard appliances
+
 -- e1000e version bump to 3.3.5 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
 -- php, major version bump to 5.6.25, bug and security fixes
