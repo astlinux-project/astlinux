@@ -311,6 +311,7 @@ require_once '../common/header.php';
       $dir === '/mnt/kd/docs' ||
       $dir === '/mnt/kd/arno-iptables-firewall' ||
       $dir === '/mnt/kd/arno-iptables-firewall/plugins' ||
+      $dir === '/mnt/kd/blocklists' ||
       $dir === '/mnt/kd/phoneprov/templates' ||
       $dir === '/etc/asterisk' ||
       $dir === '/etc/asterisk/includes' ||
@@ -501,6 +502,14 @@ require_once '../common/header.php';
   if (is_writable($file = '/mnt/kd/blocked-hosts')) {
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
     putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - Firewall Blocked Hosts</option>');
+  }
+  if (is_writable($file = '/mnt/kd/blocklists/whitelist.netset')) {
+    $sel = ($file === $openfile) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - Firewall IPv4 Whitelist Set</option>');
+  }
+  if (is_writable($file = '/mnt/kd/blocklists/whitelistv6.netset')) {
+    $sel = ($file === $openfile) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - Firewall IPv6 Whitelist Set</option>');
   }
   if (is_writable($file = '/mnt/kd/crontabs/root')) {
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
