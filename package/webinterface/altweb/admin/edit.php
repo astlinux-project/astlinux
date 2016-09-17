@@ -503,6 +503,14 @@ require_once '../common/header.php';
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
     putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - Firewall Blocked Hosts</option>');
   }
+  if (is_writable($file = '/mnt/kd/blocklists/blocked-hosts.netset')) {
+    $sel = ($file === $openfile) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - Firewall IPv4 Blocklist Set</option>');
+  }
+  if (is_writable($file = '/mnt/kd/blocklists/blocked-hostsv6.netset')) {
+    $sel = ($file === $openfile) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - Firewall IPv6 Blocklist Set</option>');
+  }
   if (is_writable($file = '/mnt/kd/blocklists/whitelist.netset')) {
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
     putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - Firewall IPv4 Whitelist Set</option>');
