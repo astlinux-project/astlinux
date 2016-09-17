@@ -4,7 +4,7 @@
 #
 #############################################################
 
-TCPDUMP_VERSION = 4.7.4
+TCPDUMP_VERSION = 4.8.0
 TCPDUMP_SITE = http://www.tcpdump.org/release
 TCPDUMP_SOURCE = tcpdump-$(TCPDUMP_VERSION).tar.gz
 
