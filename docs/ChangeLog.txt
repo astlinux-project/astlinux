@@ -24,11 +24,11 @@ Released @TBD@
 
 -- e1000e version bump to 3.3.5 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
--- php, major version bump to 5.6.25, bug and security fixes
+-- php, major version bump to 5.6.26, bug and security fixes
 
 -- perl, version bump to 5.24.0 using perlcross 1.0.3
 
--- sqlite, version bump to 3.14.1
+-- sqlite, version bump to 3.14.2
 
 -- ethtool, version bump to 4.6
 
@@ -50,7 +50,7 @@ Released @TBD@
    == 05 05,15 * * * reload-blocklist-netset /mnt/kd/blocklists firehol_level1 spamhaus_dropv6 >/dev/null 2>&1
    More Info: http://iplists.firehol.org/?ipset=firehol_level1
 
--- ca-certificates, update trusted root certificates 2016-09-07
+-- ca-certificates, update trusted root certificates 2016-09-14
 
 -- mac2vendor, oui.txt database snapshot 2016-08-21
 
@@ -60,9 +60,9 @@ Released @TBD@
 
 -- Added a 4th LAN Interface configuration entry
 
--- arnofw (AIF), version bump to 2.0.1g-RC3, added support for 'ipset'
+-- arnofw (AIF), version bump to 2.0.1g-RC4, added support for 'ipset'
 
--- libcurl (curl) version bump to 7.50.2, security fixes: CVE-2016-5419, CVE-2016-5420, CVE-2016-5421
+-- libcurl (curl) version bump to 7.50.3, security fixes: CVE-2016-5419, CVE-2016-5420, CVE-2016-5421, CVE-2016-7167
 
 -- lighttpd, version bump to 1.4.41
 
@@ -89,6 +89,8 @@ Released @TBD@
 -- wide-dhcpv6, add upstream Debian patches 0011, 0012 and 0015, build fixes and handle OPTION_RECONF_ACCEPT(20)
    More Info: http://doc.astlinux.org/userdoc:tt-dhcpv6-prefix-delegation
 
+-- tcpdump, version bump to 4.8.0
+
 ** Asterisk
 
 -- Asterisk 1.8.32.3 (no change), 11.23.1 (version bump) and 13.11.2 (version bump)
@@ -102,6 +104,8 @@ Released @TBD@
 -- FOP2, available version bump to 2.31.04.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
    More info: http://doc.astlinux.org/userdoc:tt_asterisk-fop2-upgrade
+
+-- wanpipe, version bump to 7.0.20
 
 ** Web Interface
 
