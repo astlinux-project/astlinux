@@ -45,10 +45,7 @@ Released @TBD@
 -- libsodium, version bump to 1.0.11
 
 -- reload-blocklist-netset (optional CRON script), new command added to generate .netset files for the firewall blocklist.
-   Issue "reload-blocklist-netset" for details.
-   == Cron may be used to run this script once or twice every day.  Example:
-   == 05 05,15 * * * reload-blocklist-netset /mnt/kd/blocklists firehol_level1 spamhaus_dropv6 >/dev/null 2>&1
-   More Info: http://iplists.firehol.org/?ipset=firehol_level1
+   More Info: http://doc.astlinux.org/userdoc:tt_firewall_external_block_list
 
 -- ca-certificates, update trusted root certificates 2016-09-14
 
@@ -114,6 +111,7 @@ Released @TBD@
 -- Network -> Firewall sub-tab, add "Deny LAN to DMZ" option for specified LAN Interfaces.
 
 -- Network -> Firewall sub-tab, add Block Host/CIDR using *.netset file(s) in the directory /mnt/kd/blocklists .
+   More Info: http://doc.astlinux.org/userdoc:tt_firewall_external_block_list
 
 -- Network tab, SMTP Mail Relay, allow an empty "SMTP Cert File" which will default to the system ca-bundle.crt .
 
