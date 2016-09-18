@@ -2,8 +2,12 @@
 ##
 ## reload-blocklist-netset
 ##
+## Regularly update .netset IP/Net entries to be used by Arno's Iptables Firewall (AIF)
+##
 ## Cron may be used to run this script once or twice every day.  Example:
-## 05 05,15 * * * reload-blocklist-netset /mnt/kd/blocklists firehol_level1 spamhaus_dropv6 >/dev/null 2>&1
+## 15 05,15 * * * reload-blocklist-netset /mnt/kd/blocklists firehol_level1 spamhaus_dropv6 >/dev/null 2>&1
+##
+## Important: Do not use the cron time schedule as above, make changes so the servers are not hit at the same time.
 ##
 ## Multiple netset entries may be space or comma separated.
 ##
