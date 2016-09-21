@@ -65,11 +65,11 @@ function restartPROCESS($process, $ret_good, $ret_fail, $start = 'start', $wait 
     $cmd .= ';sleep '.$wait;
     $cmd .= ';/usr/sbin/gen-rc-conf';
     $cmd .= ';service '.$process.' '.$start.' >/dev/null 2>/dev/null';
+  } elseif ($start === 'reload') {
+    $cmd .= ';service '.$process.' '.$start.' >/dev/null 2>/dev/null';
   } elseif ($process === 'iptables') {
     $cmd .= ';/usr/sbin/gen-rc-conf';
     $cmd .= ';service iptables restart >/dev/null 2>/dev/null';
-  } elseif ($start === 'reload') {
-    $cmd .= ';service '.$process.' '.$start.' >/dev/null 2>/dev/null';
   } else {
     $cmd .= ';service '.$process.' stop >/dev/null 2>/dev/null';
     $cmd .= ';sleep '.$wait;

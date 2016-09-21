@@ -7,7 +7,6 @@ init () {
   if [ ! -e /tmp/etc/arno-iptables-firewall ]; then
     ln -s /mnt/kd/arno-iptables-firewall /tmp/etc/arno-iptables-firewall
   fi
-
 }
 
 start () {
@@ -21,37 +20,34 @@ start () {
   files, and create a firewall configuration corresponding to this version of Arno's Firewall.
   NO FIREWALL IS ACTIVE!!!"
     fi
-
   else
-
     echo "Firewall is disabled."
-
   fi
-
 }
 
 stop () {
 
   if [ "$FWVERS" = "arno" ] || [ -z "$FWVERS" ]; then
-
     /usr/sbin/arno-iptables-firewall stop
-
   fi
-
 }
 
 restart () {
 
   if [ "$FWVERS" = "arno" ]; then
-
     /usr/sbin/arno-iptables-firewall restart
-
   else
-
     /usr/sbin/arno-iptables-firewall stop
-
   fi
+}
 
+reload () {
+
+  if [ "$FWVERS" = "arno" ]; then
+    /usr/sbin/arno-iptables-firewall force-reload
+  else
+    echo "Firewall is disabled."
+  fi
 }
 
 case $1 in
@@ -73,8 +69,12 @@ restart)
   restart
   ;;
 
+reload)
+  reload
+  ;;
+
 *)
-  echo "Usage: start|stop|restart"
+  echo "Usage: start|stop|restart|reload"
   ;;
 
 esac

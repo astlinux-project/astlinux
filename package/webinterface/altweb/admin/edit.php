@@ -12,6 +12,7 @@
 // 02-18-2013, Added OpenVPN Client Config editing
 // 09-06-2013, Added Shortcut support
 // 06-07-2016, Added Avahi mDNS/DNS-SD support
+// 09-21-2016, Added Reload Firewall Blocklist
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -50,6 +51,7 @@ if (is_addon_package('fop2')) {
 if (is_file('/etc/init.d/kamailio')) {
   $select_reload['kamailio'] = 'Restart Kamailio';
 }
+$select_reload['IPTABLES'] = 'Reload Firewall Blocklist';
 $select_reload['cron'] = 'Reload Cron for root';
 
 $sys_label = array (
@@ -260,6 +262,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 47, $result, 'init');
       } elseif ($process === 'avahi') {
         $result = restartPROCESS($process, 48, $result, 'init');
+      } elseif ($process === 'IPTABLES') {
+        $result = restartPROCESS('iptables', 66, $result, 'reload');
       } elseif ($process === 'cron') {
         $result = updateCRON('root', 30, $result);
       }
@@ -401,6 +405,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Fossil Server'.statusPROCESS('fossil').'.</p>');
     } elseif ($result == 48) {
       putHtml('<p style="color: green;">mDNS/DNS-SD (Avahi)'.statusPROCESS('avahi').'.</p>');
+    } elseif ($result == 66) {
+      putHtml('<p style="color: green;">Firewall Blocklist has been Reloaded.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {
