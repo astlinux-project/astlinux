@@ -5,14 +5,14 @@
 ## Regularly update .netset IP/Net entries to be used by Arno's Iptables Firewall (AIF)
 ##
 ## Cron may be used to run this script once or twice every day.  Example:
-## 15 05,15 * * * reload-blocklist-netset /mnt/kd/blocklists firehol_level1 spamhaus_dropv6 >/dev/null 2>&1
+## 15 05,15 * * * reload-blocklist-netset /mnt/kd/blocklists firehol_level1 voipbl >/dev/null 2>&1
 ##
 ## Important: Do not use the cron time schedule as above, make changes so the servers are not hit at the same time.
 ##
 ## Multiple netset entries may be space or comma separated.
 ##
 ## In this example, a /mnt/kd/blocklists/firehol_level1.netset
-##              and a /mnt/kd/blocklists/spamhaus_dropv6.netset file will be created.
+##              and a /mnt/kd/blocklists/voipbl.netset file will be created.
 ## Note: The specified directory must pre-exist, it will not be created.
 ##
 ## This script prevents any netset from being updated more often than
@@ -31,6 +31,7 @@ Available IPv4 Blocklist Netsets:
  firehol_level1: Blacklist composed from IP lists, providing maximum protection with minimum false positives.
  firehol_level2: Blacklist that track attacks, during about the last 48 hours.
  firehol_level3: Blacklist that track attacks, spyware, viruses, reported or detected in the last 30 days.
+         voipbl: VoIP Blacklist - sponsored by ScopServ International - http://www.voipbl.org/
   spamhaus_drop: Spamhaus DROP (Don't Route Or Peer), consisting of netblocks that are "hijacked" by cyber-crime operations.
  spamhaus_edrop: Spamhaus EDROP is an extension of the DROP list that includes suballocated netblocks.
 
@@ -60,6 +61,11 @@ netset_url()
       URL="https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/firehol_level3.netset"
       ALT_URL=""
       AGE=3600
+      ;;
+     voipbl)
+      URL="http://www.voipbl.org/update/"
+      ALT_URL="https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/voipbl.netset"
+      AGE=43200
       ;;
     spamhaus_drop)
       URL="https://www.spamhaus.org/drop/drop.txt"
