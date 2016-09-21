@@ -117,6 +117,8 @@ Released @TBD@
 
 -- Network tab, SMTP Mail Relay, allow an empty "SMTP Cert File" which will default to the system ca-bundle.crt .
 
+-- Edit tab, add "Reload Firewall Blocklist" action menu item, along with editing special .netset files.
+
 
 Additions for AstLinux 1.2.7:
 =============================
