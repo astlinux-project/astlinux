@@ -57,6 +57,8 @@ Released @TBD@
 
 ** Networking
 
+-- OpenSSL, version bump to 1.0.1u, security fixes: CVE-2016-6304, and 10 "Low" Severity CVE's
+
 -- Added a 4th LAN Interface configuration entry
 
 -- arnofw (AIF), version bump to 2.0.1g-RC5, added support for 'ipset'
