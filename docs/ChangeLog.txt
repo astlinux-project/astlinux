@@ -32,7 +32,7 @@ Released @TBD@
 
 -- ethtool, version bump to 4.6
 
--- sudo, version bump to 1.8.17p1
+-- sudo, version bump to 1.8.18
 
 -- nano, version bump to 2.7.0
 
@@ -61,7 +61,7 @@ Released @TBD@
 
 -- Added a 4th LAN Interface configuration entry
 
--- arnofw (AIF), version bump to 2.0.1g-RC6, added support for 'ipset'
+-- arnofw (AIF), version bump to 2.0.1g-RC7, added support for 'ipset'
 
 -- libcurl (curl) version bump to 7.50.3, security fixes: CVE-2016-5419, CVE-2016-5420, CVE-2016-5421, CVE-2016-7167
 
