@@ -150,7 +150,7 @@ blocklist_netset()
     rm -f "$tmp_file"
     UPDATES=$((UPDATES + 1))
 
-    count=$(grep -c '^[1-9a-fA-F]' "$DIR/$netset.netset")
+    count=$(grep -c '^[0-9a-fA-F]' "$DIR/$netset.netset")
     mesg="Netset '$netset' has been updated. Contains $count addresses/nets."
     logger -t reload-blocklist-netset -p kern.info "$mesg"
     echo "$mesg"
