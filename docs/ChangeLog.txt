@@ -53,7 +53,7 @@ Released @TBD@
 
 -- mac2vendor, oui.txt database snapshot 2016-08-21
 
--- Time Zone Database update, tzdata2016f and php-timezonedb-2016.6
+-- Time Zone Database update, tzdata2016g and php-timezonedb-2016.7
 
 ** Networking
 
@@ -67,7 +67,7 @@ Released @TBD@
 
 -- unbound (host), version bump to 1.5.10
 
--- lighttpd, version bump to 1.4.41
+-- lighttpd, version bump to 1.4.41, web interface, force HTTPS for /admin/ Authentication
 
 -- OpenVPN, version bump to 2.3.12
 
