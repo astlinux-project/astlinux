@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2009 Lonnie Abelbeck
+// Copyright (C) 2008-2016 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -8,6 +8,7 @@
 
 // info.php for AstLinux
 // 12-09-2008
+// 09-30-2016, Added topic sanity check
 //
 
 // Function: getSYSlocation
@@ -27,6 +28,9 @@ function getSYSlocation($base = '')
 $topic = isset($_GET['topic']) ? $_GET['topic'] : '';
 $ifile = getSYSlocation('/common/topics.info');
 if ($topic === '' || $ifile === '') {
+  exit;
+}
+if (! preg_match('/^[a-zA-Z0-9_-]*$/', $topic)) {
   exit;
 }
 
