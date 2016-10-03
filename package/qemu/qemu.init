@@ -52,7 +52,7 @@ start () {
     # Was a CDROM ISO file provided?
     QemuCdrom=""
     if [ -n "$QEMU_CDROM_IMAGE" ]; then
-      QemuCdrom="-cdrom $QEMU_CDROM_IMAGE"
+      QemuCdrom="-boot once=d -cdrom $QEMU_CDROM_IMAGE"
     fi
 
     # If network device virtio then enable host support
