@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2014 Lonnie Abelbeck
+// Copyright (C) 2008-2016 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -20,7 +20,7 @@ require_once '../common/functions.php';
 
 require_once '../common/users-password.php';
 
-if (($context = getPREFdef($global_prefs, 'users_voicemail_context_cmdstr')) === '') {
+if (($context = tuq(getPREFdef($global_prefs, 'users_voicemail_context_cmdstr'))) === '') {
   $context = 'default';
 }
 

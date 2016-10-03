@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2009 Lonnie Abelbeck
+// Copyright (C) 2008-2016 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -215,10 +215,10 @@ function addFMextension($family, $key, $method, $time_class, $enabled, $number, 
         }
       }
     }
-    if (($value = getPREFdef($global_prefs, 'followme_number_context_cmdstr')) !== '') {
+    if (($value = tuq(getPREFdef($global_prefs, 'followme_number_context_cmdstr'))) !== '') {
       $cmd .= 'context=>'.$value.chr(10);
     }
-    if (($value = getPREFdef($global_prefs, 'followme_music_class_cmdstr')) !== '') {
+    if (($value = tuq(getPREFdef($global_prefs, 'followme_music_class_cmdstr'))) !== '') {
       $cmd .= 'musicclass=>'.$value.chr(10);
     }
     shell('echo -n "'.chr(10).$cmd.'" >>'.$fname, $status);
@@ -269,8 +269,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       $enabled = isset($_POST['enabled']) ? $_POST['enabled'] : array();
       for ($i = 0; $i < $MAXNUM; $i++) {
-        $number[$i] = tuqd($_POST["number$i"]);
-        $timeout[$i] = tuqd($_POST["timeout$i"]);
+        $number[$i] = tuq($_POST["number$i"]);
+        $timeout[$i] = tuq($_POST["timeout$i"]);
         if ($USE_RULES && $number[$i] !== '') {
           if (! preg_match("/$NUMBER_FORMAT/", $number[$i])) {
             $result = 12;                                 

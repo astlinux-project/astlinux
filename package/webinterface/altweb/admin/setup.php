@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2009 Lonnie Abelbeck
+// Copyright (C) 2008-2016 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } elseif (isset($_POST['submit_format'])) {
     if (isset($_POST['format_type']) && isset($_POST['unionfs_size']) && isset($_POST['target_drive'])) {
       $format_type = $_POST['format_type'];
-      $target_drive = $_POST['target_drive'];
+      $target_drive = tuq($_POST['target_drive']);
       if ($format_type === 'combined') {
         $result_str = shell($INITIAL_SETUP.' format combined '.$target_drive.' 2>/dev/null', $status);
         if ($status != 0) {
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           systemREBOOT($myself, 10, TRUE);
         }
       } else {
-        $unionfs_size = $_POST['unionfs_size'];
+        $unionfs_size = tuq($_POST['unionfs_size']);
         if ($unionfs_size > 9) {
           $result_str = shell($INITIAL_SETUP.' format separate '.$target_drive.' '.$unionfs_size.' 2>/dev/null', $status);
           if ($status != 0) {
@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } elseif (isset($_POST['submit_configure'])) {
     if (isset($_POST['target_drive'])) {
-      $target_drive = $_POST['target_drive'];
+      $target_drive = tuq($_POST['target_drive']);
       $result_str = shell($INITIAL_SETUP.' configure '.$target_drive.' 2>/dev/null', $status);
       if ($status != 0) {
         putACTIONresult($result_str, $status);

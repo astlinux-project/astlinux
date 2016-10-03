@@ -202,6 +202,8 @@ function addUserPass() {
 //
 function deleteUser($user) {
 
+  $user = str_replace(' ', '', stripshellsafe($user));
+
   if ($user === '') {
     return(FALSE);
   }

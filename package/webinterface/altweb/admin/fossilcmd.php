@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2015 Lonnie Abelbeck
+// Copyright (C) 2008-2016 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -55,7 +55,7 @@ $ACCESS_RIGHTS = 'admin';
 require_once '../common/header.php';
 
   $action = isset($_GET['action']) ? $_GET['action'] : '';
-  $arg = isset($_GET['arg']) ? rawurldecode($_GET['arg']) : '';
+  $arg = isset($_GET['arg']) ? tuq(rawurldecode($_GET['arg'])) : '';
   
   if ($action === 'status') {
     $arg_str = '';

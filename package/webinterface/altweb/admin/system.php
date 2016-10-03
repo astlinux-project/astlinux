@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2014 Lonnie Abelbeck
+// Copyright (C) 2008-2016 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -28,11 +28,11 @@ require_once '../common/functions.php';
 
 require_once '../common/users-password.php';
 
-if (($REPOSITORY_URL = getPREFdef($global_prefs, 'system_firmware_repository_url')) === '') {
+if (($REPOSITORY_URL = tuq(getPREFdef($global_prefs, 'system_firmware_repository_url'))) === '') {
   $REPOSITORY_URL = asteriskURLrepo();
 }
 
-if (($SOUNDS_URL = getPREFdef($global_prefs, 'system_asterisk_sounds_url')) === '') {
+if (($SOUNDS_URL = tuq(getPREFdef($global_prefs, 'system_asterisk_sounds_url'))) === '') {
   $SOUNDS_URL = 'http://downloads.asterisk.org/pub/telephony/sounds';
 }
 
@@ -333,9 +333,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['sounds_action'];
     if (isset($_POST['sounds_type'], $_POST['sounds_lang'], $_POST['sounds_codec']) && 
         ($_POST['sounds_type'] !== '' || $action === 'show')) {
-      $type = $_POST['sounds_type'];
-      $lang = $_POST['sounds_lang'];
-      $codec = $_POST['sounds_codec'];
+      $type = tuq($_POST['sounds_type']);
+      $lang = tuq($_POST['sounds_lang']);
+      $codec = tuq($_POST['sounds_codec']);
       $file = '/usr/sbin/upgrade-asterisk-sounds';
       $std_err = ' 2>/dev/null';
       if ($action === 'upgrade') {
@@ -360,7 +360,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = 99;
     $action = $_POST['addon_package_action'];
     if (isset($_POST['addon_package_type']) && ($_POST['addon_package_type'] !== '' || $action === 'show')) {
-      $type = $_POST['addon_package_type'];
+      $type = tuq($_POST['addon_package_type']);
       $file = '/usr/sbin/upgrade-package';
       $std_err = ' 2>/dev/null';
       if ($action === 'upgrade') {

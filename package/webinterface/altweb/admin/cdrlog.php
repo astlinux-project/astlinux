@@ -1,6 +1,6 @@
 <?php session_start();
 
-// Copyright (C) 2008-2015 Lonnie Abelbeck
+// Copyright (C) 2008-2016 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -528,7 +528,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $db['displayStart'] = 0;
     }
     if (isset($_POST['list_type_val'])) {
-      $search = tuqd($_POST['list_type_val']);
+      $search = tuq($_POST['list_type_val']);
       $search = trim($search, ' |&"');
       if ($search === '') {
         $result = 0;
@@ -612,7 +612,7 @@ require_once '../common/header.php';
   $map = mapCDRvalues($default, $extra, $last);
   
   if (isset($_GET['search'])) {
-    $search = rawurldecode($_GET['search']);
+    $search = tuq(rawurldecode($_GET['search']));
     if (isset($_GET['key'])) {
       $fkey = $_GET['key'];
     } else {
