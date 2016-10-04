@@ -34,6 +34,8 @@ Released @TBD@
 
 -- sudo, version bump to 1.8.18
 
+-- pciutils, version bump to 3.5.2
+
 -- nano, version bump to 2.7.0
 
 -- acpid, version bump to 2.0.28
