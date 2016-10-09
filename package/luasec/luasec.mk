@@ -4,13 +4,15 @@
 #
 #############################################################
 
-LUASEC_VERSION = 0.5
+LUASEC_VERSION = 0.5.1
 LUASEC_SOURCE = luasec-prosody-$(LUASEC_VERSION).tar.gz
 LUASEC_SITE = http://files.astlinux-project.org
 LUASEC_DEPENDENCIES = lua openssl luasocket
 
 define LUASEC_BUILD_CMDS
 	$(MAKE) -C $(@D) linux \
+		INC_PATH="" \
+		LIB_PATH="" \
 		LIBDIR="-L$(STAGING_DIR)/usr/lib/ -L$(@D)/src/luasocket" \
 		CC="$(TARGET_CC)" \
 		LD="$(TARGET_LD) -shared"
