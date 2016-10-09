@@ -77,6 +77,8 @@ Released @TBD@
 
 -- dnscrypt-proxy, version bump to 1.7.0
 
+-- luasec, version bump to 0.5.1 (luasec-prosody)
+
 -- iperf, version bump to 2.0.9, now using maintained iperf2 project
 
 -- mtr, version bump to 0.87
