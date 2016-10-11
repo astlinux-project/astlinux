@@ -63,7 +63,7 @@ Released @TBD@
 
 -- Added a 4th LAN Interface configuration entry
 
--- arnofw (AIF), version bump to 2.0.1g-RC7, added support for 'ipset'
+-- arnofw (AIF), version bump to 2.0.1g, added support for 'ipset'
 
 -- libcurl (curl) version bump to 7.50.3, security fixes: CVE-2016-5419, CVE-2016-5420, CVE-2016-5421, CVE-2016-7167
 
