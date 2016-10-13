@@ -2525,6 +2525,9 @@ Released 2011-12-16
    A new rc.conf variable, ALERT_SOUNDS allows sounds to be generated for startup and/or
    shutdown for geni586 and geni586-serial boards.
 
+-- rc.local.stop, added support for optional /mnt/kd/rc.local.stop script, if the script exists
+   and executable it will be one of the first scripts to run when the box is restarted or halted.
+
 ** Networking
 
 -- shellinaboxd, revision 239, added to provide CLI (Command Line Interface) 'login'
