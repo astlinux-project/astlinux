@@ -35,6 +35,7 @@
 // 09-04-2014, Added Kamailio SIP Server Status
 // 10-28-2014, Added S.M.A.R.T Monitoring Status
 // 11-06-2014, Added Failover Status
+// 10-14-2016, Added Check for default admin password
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -307,13 +308,23 @@ function isDHCPactive() {
 //
 function noASTURWstorage() {
 
-  if (noASTLINUX()) {
-    $status = 0;
-  } else {
-    shell('mount 2>/dev/null | grep -q "/oldroot/mnt/asturw"', $status);
-  }
+  shell('mount 2>/dev/null | grep -q "/oldroot/mnt/asturw"', $status);
 
   return($status != 0);
+}
+
+// Function: adminDEFAULTpassword
+//
+function adminDEFAULTpassword() {
+
+  $status = 0;
+
+  if (($HTPASSWD = getPASSWDlocation()) !== '') {
+    if (is_file($HTPASSWD)) {
+      shell("/usr/sbin/check-default-passwd admin '$HTPASSWD' >/dev/null 2>/dev/null", $status);
+    }
+  }
+  return($status == 0);
 }
 
 // Function: noASTERISKsounds
@@ -488,18 +499,12 @@ if (isset($_GET['result'])) {
   }
 } elseif (noASTURWstorage()) {
   putHtml('<p style="color: red;">Notice: No Persistent File Storage, click <a href="/admin/setup.php" class="headerText">Installation Setup</a></p>');
+} elseif (adminDEFAULTpassword()) {
+  putHtml('<p style="color: red;">Notice: Management Password is a known default, click <a href="/admin/system.php" class="headerText">System</a>to change the "admin" password.</p>');
 } elseif (noASTERISKsounds($daemon['asterisk'])) {
   putHtml('<p style="color: red;">Notice: No Core Asterisk Sounds, click <a href="/admin/system.php" class="headerText">System</a>then via "Asterisk Sounds Packages", Upgrade/Install "core" and "moh" sounds.</p>');
 } else {
-  if (($HTPASSWD = getPASSWDlocation()) !== '') {
-    if (is_file($HTPASSWD) || getPREFdef($global_prefs, 'status_password_warning') === 'no') {
-      putHtml("<p>&nbsp;</p>");
-    } else {
-      putHtml('<p style="color: orange;">Warning: Management Password is not set, click <a href="/admin/system.php" class="headerText">System</a>to set the password.</p>');
-    }
-  } else {
-    putHtml('<p style="color: orange;">Warning: Unable to locate base web directory.</p>');
-  }
+  putHtml("<p>&nbsp;</p>");
 }
 putHtml("</center>");
 

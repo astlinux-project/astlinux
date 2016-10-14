@@ -169,10 +169,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'status_exclude_extensions = yes';
       fwrite($fp, $value."\n");
     }
-    if (isset($_POST['pass_warn'])) {
-      $value = 'status_password_warning = no';
-      fwrite($fp, $value."\n");
-    }
     if (isset($_POST['status_auth'])) {
       $value = 'status_require_auth = yes';
       fwrite($fp, $value."\n");
@@ -708,9 +704,6 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_exclude_extensions') === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="exclude_extensions" name="exclude_extensions"'.$sel.' /></td><td colspan="5">Exclude 4-digit Extensions in SIP/IAX2 Peer Status</td></tr>');
-  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  $sel = (getPREFdef($global_prefs, 'status_password_warning') === 'no') ? ' checked="checked"' : '';
-  putHtml('<input type="checkbox" value="pass_warn" name="pass_warn"'.$sel.' /></td><td colspan="5">Disable &quot;Password not set&quot; Warning</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_asterisk_manager') === 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="disable_ami" name="disable_ami"'.$sel.' /></td><td colspan="5">Disable Asterisk Manager Interface for Asterisk Commands</td></tr>');

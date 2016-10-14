@@ -861,13 +861,6 @@ function getPREFdef($db, $var)
   return($value);
 }
 
-// Function: noASTLINUX
-//
-function noASTLINUX()
-{
-  return(is_file('/etc/astlinux-no'));
-}
-
 // Function: isDNSCRYPT
 //
 function isDNSCRYPT()
