@@ -5,7 +5,8 @@
 ##
 
 SYSTEM_ROOT_PASSWD="/etc/shadow"
-WEB_GUI_HTPASSWD="/stat/var/www/admin/.htpasswd"
+HTPASSWD="$2"
+WEB_GUI_HTPASSWD="${HTPASSWD:-/stat/var/www/admin/.htpasswd}"
 
 case $1 in
 
@@ -18,7 +19,7 @@ root)
 
 admin)
   if [ -f "$WEB_GUI_HTPASSWD" ]; then
-    if grep -q 'admin:6kERs0/UltqFI' "$WEB_GUI_HTPASSWD" || [ ! -f "/oldroot/mnt/asturw$WEB_GUI_HTPASSWD" ]; then
+    if grep -q 'admin:6kERs0/UltqFI' "$WEB_GUI_HTPASSWD" || [ -z "$HTPASSWD" -a ! -f "/oldroot/mnt/asturw$WEB_GUI_HTPASSWD" ]; then
       echo "$WEB_GUI_HTPASSWD"
       exit 0
     fi
@@ -26,7 +27,7 @@ admin)
   ;;
 
 *)
-  echo "Usage: check-default-passwd root|admin" >&2
+  echo "Usage: check-default-passwd root|admin [path_to_.htpasswd]" >&2
   ;;
 
 esac
