@@ -129,6 +129,8 @@ Released @TBD@
 
 -- Edit tab, add "Reload Firewall Blocklist" action menu item, along with editing special .netset files.
 
+-- Status tab, check for known default "admin" password and issue a warning if the default.
+
 
 Additions for AstLinux 1.2.7:
 =============================
