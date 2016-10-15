@@ -15,7 +15,7 @@ EX_VI_DEPENDENCIES += busybox
 endif
 
 define EX_VI_BUILD_CMDS
-        $(MAKE) CC="$(TARGET_CC)" \
+        $(TARGET_MAKE_ENV) $(MAKE) CC="$(TARGET_CC)" \
 		TERMLIB="ncurses" \
 		FEATURES="-DCHDIR -DFASTTAG -DUCVISUAL -DMB -DBIT8 -DTIOCGWINSZ" \
 		-C $(@D)
