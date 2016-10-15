@@ -165,7 +165,7 @@ start () {
 
   echo "Starting lighttpd..."
 
-  if grep -q "6kERs0/UltqFI" /var/www/admin/.htpasswd; then
+  if check-default-passwd admin /var/www/admin/.htpasswd >/dev/null; then
     echo "
 WARNING WARNING WARNING
 
