@@ -1,0 +1,240 @@
+From 40f16d52dbd2cab3987e7269cc0a949c6f0a9ea3 Mon Sep 17 00:00:00 2001
+From: Glenn Strauss <gstrauss@gluelogic.com>
+Date: Wed, 24 Aug 2016 15:30:11 -0400
+Subject: [core] fix crash if ready events on abandoned fd (fixes #2748)
+
+x-ref:
+  "1.4.40/1.4.41 uploads to CGI may cause crash (SIGABRT)"
+  https://redmine.lighttpd.net/issues/2748
+
+diff --git a/src/fdevent.c b/src/fdevent.c
+index 25bb42a..aa84a9a 100644
+--- a/src/fdevent.c
++++ b/src/fdevent.c
+@@ -23,6 +23,7 @@ fdevents *fdevent_init(server *srv, size_t maxfds, fdevent_handler_t type) {
+ 	ev->fdarray = calloc(maxfds, sizeof(*ev->fdarray));
+ 	force_assert(NULL != ev->fdarray);
+ 	ev->maxfds = maxfds;
++	ev->highfd = -1;
+ 
+ 	switch(type) {
+ 	case FDEVENT_HANDLER_POLL:
+@@ -94,7 +95,7 @@ void fdevent_free(fdevents *ev) {
+ 	if (ev->free) ev->free(ev);
+ 
+ 	for (i = 0; i < ev->maxfds; i++) {
+-		if (ev->fdarray[i]) free(ev->fdarray[i]);
++		if (ev->fdarray[i] > (fdnode *)0x2) free(ev->fdarray[i]);
+ 	}
+ 
+ 	free(ev->fdarray);
+@@ -148,9 +149,42 @@ int fdevent_unregister(fdevents *ev, int fd) {
+ 	return 0;
+ }
+ 
++void fdevent_sched_close(fdevents *ev, int fd, int issock) {
++	if (!ev) return;
++	ev->fdarray[fd] = (issock ? (fdnode *)0x1 : (fdnode *)0x2);
++	if (ev->highfd < fd) ev->highfd = fd;
++}
++
++void fdevent_sched_run(server *srv, fdevents *ev) {
++	const int highfd = ev->highfd;
++	for (int fd = 0; fd <= highfd; ++fd) {
++		fdnode * const fdn = ev->fdarray[fd];
++		int rc;
++		if (!((uintptr_t)fdn & 0x3)) continue;
++	      #ifdef _WIN32
++		if (fdn == (fdnode *)0x1) {
++			rc = closesocket(fd);
++		}
++		else if (fdn == (fdnode)0x2) {
++			rc = close(fd);
++		}
++	      #else
++		rc = close(fd);
++	      #endif
++
++		if (0 != rc) {
++			log_error_write(srv, __FILE__, __LINE__, "sds", "close failed ", fd, strerror(errno));
++		}
++
++		ev->fdarray[fd] = NULL;
++		--srv->cur_fds;
++	}
++	ev->highfd = -1;
++}
++
+ void fdevent_event_del(fdevents *ev, int *fde_ndx, int fd) {
+ 	if (-1 == fd) return;
+-	if (NULL == ev->fdarray[fd]) return;
++	if (ev->fdarray[fd] <= (fdnode *)0x2) return;
+ 
+ 	if (ev->event_del) *fde_ndx = ev->event_del(ev, *fde_ndx, fd);
+ 	ev->fdarray[fd]->events = 0;
+@@ -212,6 +246,7 @@ int fdevent_event_get_fd(fdevents *ev, size_t ndx) {
+ 
+ fdevent_handler fdevent_get_handler(fdevents *ev, int fd) {
+ 	if (ev->fdarray[fd] == NULL) SEGFAULT();
++	if ((uintptr_t)ev->fdarray[fd] & 0x3) return NULL;
+ 	if (ev->fdarray[fd]->fd != fd) SEGFAULT();
+ 
+ 	return ev->fdarray[fd]->handler;
+@@ -219,6 +254,7 @@ fdevent_handler fdevent_get_handler(fdevents *ev, int fd) {
+ 
+ void * fdevent_get_context(fdevents *ev, int fd) {
+ 	if (ev->fdarray[fd] == NULL) SEGFAULT();
++	if ((uintptr_t)ev->fdarray[fd] & 0x3) return NULL;
+ 	if (ev->fdarray[fd]->fd != fd) SEGFAULT();
+ 
+ 	return ev->fdarray[fd]->ctx;
+diff --git a/src/fdevent.h b/src/fdevent.h
+index 4dc1d3c..721c6d5 100644
+--- a/src/fdevent.h
++++ b/src/fdevent.h
+@@ -125,6 +125,7 @@ typedef struct fdevents {
+ 
+ 	fdnode **fdarray;
+ 	size_t maxfds;
++	int highfd;
+ 
+ #ifdef USE_LINUX_EPOLL
+ 	int epoll_fd;
+@@ -202,6 +203,8 @@ int fdevent_poll(fdevents *ev, int timeout_ms);
+ 
+ int fdevent_register(fdevents *ev, int fd, fdevent_handler handler, void *ctx);
+ int fdevent_unregister(fdevents *ev, int fd);
++void fdevent_sched_close(fdevents *ev, int fd, int issock);
++void fdevent_sched_run(struct server *srv, fdevents *ev);
+ 
+ void fd_close_on_exec(int fd);
+ int fdevent_fcntl_set(fdevents *ev, int fd);
+diff --git a/src/mod_cgi.c b/src/mod_cgi.c
+index 52e7f5d..e47b7ca 100644
+--- a/src/mod_cgi.c
++++ b/src/mod_cgi.c
+@@ -606,10 +606,7 @@ static void cgi_connection_close_fdtocgi(server *srv, handler_ctx *hctx) {
+ 	/*(closes only hctx->fdtocgi)*/
+ 	fdevent_event_del(srv->ev, &(hctx->fde_ndx_tocgi), hctx->fdtocgi);
+ 	fdevent_unregister(srv->ev, hctx->fdtocgi);
+-
+-	if (close(hctx->fdtocgi)) {
+-		log_error_write(srv, __FILE__, __LINE__, "sds", "cgi stdin close failed ", hctx->fdtocgi, strerror(errno));
+-	}
++	fdevent_sched_close(srv->ev, hctx->fdtocgi, 0);
+ 	hctx->fdtocgi = -1;
+ }
+ 
+@@ -631,10 +628,7 @@ static void cgi_connection_close(server *srv, handler_ctx *hctx) {
+ 		/* close connection to the cgi-script */
+ 		fdevent_event_del(srv->ev, &(hctx->fde_ndx), hctx->fd);
+ 		fdevent_unregister(srv->ev, hctx->fd);
+-
+-		if (close(hctx->fd)) {
+-			log_error_write(srv, __FILE__, __LINE__, "sds", "cgi close failed ", hctx->fd, strerror(errno));
+-		}
++		fdevent_sched_close(srv->ev, hctx->fd, 0);
+ 	}
+ 
+ 	if (hctx->fdtocgi != -1) {
+@@ -1372,6 +1366,8 @@ static int cgi_create_env(server *srv, connection *con, plugin_data *p, handler_
+ 		hctx->fd = from_cgi_fds[0];
+ 		hctx->fde_ndx = -1;
+ 
++		++srv->cur_fds;
++
+ 		if (0 == con->request.content_length) {
+ 			close(to_cgi_fds[1]);
+ 		} else {
+@@ -1388,6 +1384,8 @@ static int cgi_create_env(server *srv, connection *con, plugin_data *p, handler_
+ 				cgi_connection_close(srv, hctx);
+ 				return -1;
+ 			}
++
++			++srv->cur_fds;
+ 		}
+ 
+ 		fdevent_register(srv->ev, hctx->fd, cgi_handle_fdevent, hctx);
+diff --git a/src/mod_fastcgi.c b/src/mod_fastcgi.c
+index bc0dabe..f124ad2 100644
+--- a/src/mod_fastcgi.c
++++ b/src/mod_fastcgi.c
+@@ -1577,8 +1577,7 @@ static void fcgi_connection_close(server *srv, handler_ctx *hctx) {
+ 	if (hctx->fd != -1) {
+ 		fdevent_event_del(srv->ev, &(hctx->fde_ndx), hctx->fd);
+ 		fdevent_unregister(srv->ev, hctx->fd);
+-		close(hctx->fd);
+-		srv->cur_fds--;
++		fdevent_sched_close(srv->ev, hctx->fd, 1);
+ 	}
+ 
+ 	if (hctx->host && hctx->proc) {
+@@ -1631,8 +1630,7 @@ static int fcgi_reconnect(server *srv, handler_ctx *hctx) {
+ 	if (hctx->fd != -1) {
+ 		fdevent_event_del(srv->ev, &(hctx->fde_ndx), hctx->fd);
+ 		fdevent_unregister(srv->ev, hctx->fd);
+-		close(hctx->fd);
+-		srv->cur_fds--;
++		fdevent_sched_close(srv->ev, hctx->fd, 1);
+ 		hctx->fd = -1;
+ 	}
+ 
+diff --git a/src/mod_proxy.c b/src/mod_proxy.c
+index 0e4bfcf..c4e2bcc 100644
+--- a/src/mod_proxy.c
++++ b/src/mod_proxy.c
+@@ -341,9 +341,7 @@ static void proxy_connection_close(server *srv, handler_ctx *hctx) {
+ 	if (hctx->fd != -1) {
+ 		fdevent_event_del(srv->ev, &(hctx->fde_ndx), hctx->fd);
+ 		fdevent_unregister(srv->ev, hctx->fd);
+-
+-		close(hctx->fd);
+-		srv->cur_fds--;
++		fdevent_sched_close(srv->ev, hctx->fd, 1);
+ 	}
+ 
+ 	if (hctx->host) {
+diff --git a/src/mod_scgi.c b/src/mod_scgi.c
+index 94a5d65..5c62fc6 100644
+--- a/src/mod_scgi.c
++++ b/src/mod_scgi.c
+@@ -1315,8 +1315,7 @@ static void scgi_connection_close(server *srv, handler_ctx *hctx) {
+ 	if (hctx->fd != -1) {
+ 		fdevent_event_del(srv->ev, &(hctx->fde_ndx), hctx->fd);
+ 		fdevent_unregister(srv->ev, hctx->fd);
+-		close(hctx->fd);
+-		srv->cur_fds--;
++		fdevent_sched_close(srv->ev, hctx->fd, 1);
+ 	}
+ 
+ 	if (hctx->host && hctx->proc) {
+@@ -1371,8 +1370,7 @@ static int scgi_reconnect(server *srv, handler_ctx *hctx) {
+ 
+ 	fdevent_event_del(srv->ev, &(hctx->fde_ndx), hctx->fd);
+ 	fdevent_unregister(srv->ev, hctx->fd);
+-	close(hctx->fd);
+-	srv->cur_fds--;
++	fdevent_sched_close(srv->ev, hctx->fd, 1);
+ 
+ 	scgi_set_state(srv, hctx, FCGI_STATE_INIT);
+ 
+diff --git a/src/server.c b/src/server.c
+index 382d5a6..4c3fadc 100644
+--- a/src/server.c
++++ b/src/server.c
+@@ -1792,8 +1792,11 @@ int main (int argc, char **argv) {
+ 				fd      = fdevent_event_get_fd     (srv->ev, fd_ndx);
+ 				handler = fdevent_get_handler(srv->ev, fd);
+ 				context = fdevent_get_context(srv->ev, fd);
+-				(*handler)(srv, context, revents);
++				if (NULL != handler) {
++					(*handler)(srv, context, revents);
++				}
+ 			} while (--n > 0);
++			fdevent_sched_run(srv, srv->ev);
+ 		} else if (n < 0 && errno != EINTR) {
+ 			log_error_write(srv, __FILE__, __LINE__, "ss",
+ 					"fdevent_poll failed:",
+-- 
+cgit v0.10.2
+

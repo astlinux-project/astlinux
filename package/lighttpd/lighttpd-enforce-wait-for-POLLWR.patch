@@ -1,0 +1,61 @@
+From 666b9fd72675bcce468ef353a1f0b32f6e89dfd4 Mon Sep 17 00:00:00 2001
+From: Glenn Strauss <gstrauss@gluelogic.com>
+Date: Sat, 6 Aug 2016 22:04:53 -0400
+Subject: [core] enforce wait for POLLWR after EINPROGRESS (fixes #2744)
+
+mod_fastcgi, mod_scgi, and mod_proxy must enforce wait for POLLWR
+after EINPROGRESS or else getsockopt(fd, SOL_SOCKET, SO_ERROR, ...)
+may succeed even though socket connection is not yet established,
+and subsequent writev() will fail ENOTCONN.
+
+(thx pkubaj)
+
+x-ref:
+ "1.4.40/41 writev failed: Socket is not connected (fastcgi,scgi,proxy)"
+  https://redmine.lighttpd.net/issues/2744
+
+diff --git a/src/mod_fastcgi.c b/src/mod_fastcgi.c
+index 4b0f8ba..bc0dabe 100644
+--- a/src/mod_fastcgi.c
++++ b/src/mod_fastcgi.c
+@@ -3257,7 +3257,8 @@ SUBREQUEST_FUNC(mod_fastcgi_handle_subrequest) {
+ 		}
+ 	}
+ 
+-	return (0 == hctx->wb->bytes_in || !chunkqueue_is_empty(hctx->wb))
++	return ((0 == hctx->wb->bytes_in || !chunkqueue_is_empty(hctx->wb))
++		&& hctx->state != FCGI_STATE_CONNECT_DELAYED)
+ 	  ? fcgi_send_request(srv, hctx)
+ 	  : HANDLER_WAIT_FOR_EVENT;
+ }
+diff --git a/src/mod_proxy.c b/src/mod_proxy.c
+index 7250c91..bebf0f3 100644
+--- a/src/mod_proxy.c
++++ b/src/mod_proxy.c
+@@ -992,7 +992,8 @@ SUBREQUEST_FUNC(mod_proxy_handle_subrequest) {
+ 		}
+ 	}
+ 
+-	return (0 == hctx->wb->bytes_in || !chunkqueue_is_empty(hctx->wb))
++	return ((0 == hctx->wb->bytes_in || !chunkqueue_is_empty(hctx->wb))
++		&& hctx->state != PROXY_STATE_CONNECT)
+ 	  ? proxy_send_request(srv, hctx)
+ 	  : HANDLER_WAIT_FOR_EVENT;
+ }
+diff --git a/src/mod_scgi.c b/src/mod_scgi.c
+index fffbc7a..ac93d33 100644
+--- a/src/mod_scgi.c
++++ b/src/mod_scgi.c
+@@ -2585,7 +2585,8 @@ SUBREQUEST_FUNC(mod_scgi_handle_subrequest) {
+ 		}
+ 	}
+ 
+-	return (0 == hctx->wb->bytes_in || !chunkqueue_is_empty(hctx->wb))
++	return ((0 == hctx->wb->bytes_in || !chunkqueue_is_empty(hctx->wb))
++		&& hctx->state != FCGI_STATE_CONNECT)
+ 	  ? scgi_send_request(srv, hctx)
+ 	  : HANDLER_WAIT_FOR_EVENT;
+ }
+-- 
+cgit v0.10.2
+
