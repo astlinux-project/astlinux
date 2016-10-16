@@ -46,6 +46,8 @@ Released @TBD@
 
 -- strace, version bump to 4.14
 
+-- zabbix, version bump to 2.2.15
+
 -- libsodium, version bump to 1.0.11
 
 -- reload-blocklist-netset (optional CRON script), new command added to generate .netset files for the firewall blocklist.
