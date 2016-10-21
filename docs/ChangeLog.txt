@@ -16,6 +16,8 @@ Released @TBD@
 
 ** System
 
+-- linux, fix "Dirty COW" privilege escalation vulnerability, security fix: CVE-2016-5195
+
 -- linux, tcp: make challenge acks less predictable, security fix: CVE-2016-5696
 
 -- linux, enable NETFILTER_XT_SET=m and IP_SET=m for the 'ipset' userspace utility
