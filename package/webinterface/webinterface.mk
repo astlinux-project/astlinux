@@ -12,11 +12,7 @@ endif
 endif
 
 ifeq ($(strip $(BR2_PACKAGE_ASTERISK)),y)
-ifeq ($(strip $(BR2_PACKAGE_ASTERISK_GUI)),y)
-webinterface-install: asterisk asterisk-gui
-else
 webinterface-install: asterisk
-endif
 else
 webinterface-install: 
 endif

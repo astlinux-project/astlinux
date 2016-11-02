@@ -78,12 +78,6 @@ unset_major_pci_packages()
 set_asterisk_version()
 {
   case $1 in
-    ast18)
-      CONFIG="astlinux18.config"
-      ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *1.8/) {print $2; exit} }' package/asterisk/asterisk.mk)"
-      ASTERISK_VERSION="asterisk-${ASTERISK_VERSION// /}"
-      FIRMWARE="ast18-firmware-1.x"
-      ;;
     ast11)
       CONFIG="astlinux-ast11.config"
       ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *11./) {print $2; exit} }' package/asterisk/asterisk.mk)"
@@ -161,10 +155,10 @@ echo "Regenerate the initrd"
 rm -f initrd.img
 
 #
-# Build Asterisk 1.8, 11 and 13 versions of AstLinux
+# Build Asterisk 11 and 13 versions of AstLinux
 #
 
-for asterisk in ast18 ast11 ast13; do
+for asterisk in ast11 ast13; do
 
   set_asterisk_version $asterisk
 

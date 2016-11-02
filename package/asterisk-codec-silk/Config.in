@@ -1,7 +1,7 @@
 config BR2_PACKAGE_ASTERISK_CODEC_SILK
 	bool "asterisk-codec-silk"
 	default n
-	depends on BR2_PACKAGE_ASTERISK && ( ! BR2_PACKAGE_ASTERISK_v1_8 )
+	depends on BR2_PACKAGE_ASTERISK
 	help
 	  SILK CODEC developed by Skype (owned by Microsoft)
 	  License supplied by Digium in x86 binary form.

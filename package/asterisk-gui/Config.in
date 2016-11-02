@@ -1,8 +1,0 @@
-config BR2_PACKAGE_ASTERISK_GUI
-	bool "asterisk-gui"
-	default n
-	depends on BR2_PACKAGE_ASTERISK
-	help
-	  The GUI for Asterisk from Digium.
-
-	  http://www.asterisk.org/

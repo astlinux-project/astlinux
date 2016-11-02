@@ -3,13 +3,13 @@
 # asterisk
 #
 ##############################################################
-ifeq ($(BR2_PACKAGE_ASTERISK_v1_8),y)
-ASTERISK_VERSION := 1.8.32.3
-else
- ifeq ($(BR2_PACKAGE_ASTERISK_v11),y)
+ifeq ($(BR2_PACKAGE_ASTERISK_v11),y)
 ASTERISK_VERSION := 11.23.1
- else
+else
+ ifeq ($(BR2_PACKAGE_ASTERISK_v13),y)
 ASTERISK_VERSION := 13.11.2
+ else
+ASTERISK_VERSION := 15.0.0
  endif
 endif
 ASTERISK_SOURCE := asterisk-$(ASTERISK_VERSION).tar.gz
@@ -30,7 +30,6 @@ ndots = $(subst $(space),$(dot),$(wordlist $(1),$(2),$(subst $(dot),$(space),$3)
 ##
 ASTERISK_VERSION_SINGLE := $(call ndots,1,1,$(ASTERISK_VERSION))
 ASTERISK_VERSION_TUPLE := $(call ndots,1,2,$(ASTERISK_VERSION))
-ASTERISK_VERSION_TRIPLE := $(call ndots,1,3,$(ASTERISK_VERSION))
 
 ASTERISK_GLOBAL_MAKEOPTS := $(BASE_DIR)/../project/astlinux/asterisk.makeopts-$(ASTERISK_VERSION_SINGLE)
 
@@ -159,7 +158,6 @@ ASTERISK_CONFIGURE_ENV+= \
  endif
 endif
 
-ifneq ($(ASTERISK_VERSION_SINGLE),1)
 ifneq ($(ASTERISK_VERSION_SINGLE),11)
 
 ifeq ($(strip $(BR2_PACKAGE_PJSIP)),y)
@@ -193,7 +191,6 @@ ASTERISK_CONFIGURE_ARGS+= \
 endif
 
 endif
-endif
 
 $(DL_DIR)/$(ASTERISK_SOURCE):
 	$(WGET) -P $(DL_DIR) $(ASTERISK_SITE)/$(ASTERISK_SOURCE)
@@ -203,14 +200,8 @@ $(ASTERISK_DIR)/.source: $(DL_DIR)/$(ASTERISK_SOURCE)
 	touch $@
 
 $(ASTERISK_DIR)/.patched: $(ASTERISK_DIR)/.source
-ifeq ($(ASTERISK_VERSION_SINGLE),1)
-	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/ asterisk-$(ASTERISK_VERSION_TUPLE)-\*.patch
-	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/ asterisk-$(ASTERISK_VERSION_TRIPLE)-\*.patch
-else
 	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/ asterisk-$(ASTERISK_VERSION_SINGLE)-\*.patch
 	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/ asterisk-$(ASTERISK_VERSION_TUPLE)-\*.patch
-endif
-
 	touch $@
 
 $(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | host-automake host-pkg-config host-ncurses host-bison host-flex host-libxml2 \
@@ -263,12 +254,8 @@ else
 		menuselect/menuselect --enable IMAP_STORAGE menuselect.makeopts; \
 	)
  endif
- ifneq ($(ASTERISK_VERSION_SINGLE),1)
 	(cd $(ASTERISK_DIR); \
 		menuselect/menuselect --enable app_meetme --enable app_page menuselect.makeopts; \
-	)
- endif
-	(cd $(ASTERISK_DIR); \
 		menuselect/menuselect --enable res_pktccops menuselect.makeopts; \
 		menuselect/menuselect --disable CORE-SOUNDS-EN-GSM --disable MOH-OPSOUND-WAV menuselect.makeopts; \
 		menuselect/menuselect --disable BUILD_NATIVE menuselect.makeopts; \
@@ -308,10 +295,8 @@ $(TARGET_DIR)/$(ASTERISK_TARGET_BINARY): $(ASTERISK_DIR)/$(ASTERISK_BINARY)
 	rmdir $(TARGET_DIR)/var/lib/asterisk
 	rm -f $(TARGET_DIR)/stat/var/lib/asterisk/astdb
 	ln -sf /var/db/astdb $(TARGET_DIR)/stat/var/lib/asterisk/astdb
-ifneq ($(ASTERISK_VERSION_SINGLE),1)
 	rm -f $(TARGET_DIR)/stat/var/lib/asterisk/astdb.sqlite3
 	ln -sf /var/db/astdb.sqlite3 $(TARGET_DIR)/stat/var/lib/asterisk/astdb.sqlite3
-endif
 	mkdir -p $(TARGET_DIR)/stat/var/spool
 	mv $(TARGET_DIR)/var/spool/asterisk $(TARGET_DIR)/stat/var/spool/
 	touch -c $(TARGET_DIR)/$(ASTERISK_TARGET_BINARY)

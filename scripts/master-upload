@@ -78,10 +78,6 @@ upload_iso_images()
 set_asterisk_version()
 {
   case $1 in
-    ast18)
-      FIRMWARE="ast18-firmware-1.x"
-      MIRROR_FIRMWARE="$FIRMWARE"
-      ;;
     ast11)
       FIRMWARE="ast11-firmware-1.x"
       MIRROR_FIRMWARE="$FIRMWARE"
@@ -128,7 +124,7 @@ if [ ! -f "$auth_file" ]; then
 fi
 
 
-for asterisk in ast18 ast11 ast13; do
+for asterisk in ast11 ast13; do
 
   set_asterisk_version $asterisk
 

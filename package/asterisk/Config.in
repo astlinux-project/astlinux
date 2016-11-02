@@ -14,24 +14,19 @@ config BR2_PACKAGE_ASTERISK
 choice
 	prompt "Asterisk Version"
 	depends on BR2_PACKAGE_ASTERISK
-	default BR2_PACKAGE_ASTERISK_v1_8
+	default BR2_PACKAGE_ASTERISK_v11
 	help
 		Select which version of Asterisk to compile and install.
-
-	config BR2_PACKAGE_ASTERISK_v1_8
-		bool "Asterisk v1.8.x"
-		help
-			Asterisk Long Term Stable Release.
 
 	config BR2_PACKAGE_ASTERISK_v11
 		bool "Asterisk v11.x"
 		help
-			Asterisk Long Term Release.
+			Asterisk LTS Series
 
 	config BR2_PACKAGE_ASTERISK_v13
 		bool "Asterisk v13.x"
 		help
-			Asterisk Long Term Release.
+			Asterisk LTS Series
 endchoice
 
 comment "cdr_mysql, app_mysql and res_config_mysql - disabled (requires MYSQL_CLIENT)"
