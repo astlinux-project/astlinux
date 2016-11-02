@@ -24,7 +24,7 @@ endef
 define MINIUPNPD_BUILD_CMDS
 	$(TARGET_CONFIGURE_OPTS) \
 	CONFIG_OPTIONS="--leasefile --portinuse --vendorcfg --disable-pppconn" \
-	$(MAKE) -f Makefile.linux -C $(@D) miniupnpd
+	$(TARGET_MAKE_ENV) $(MAKE) -f Makefile.linux -C $(@D) miniupnpd
 endef
 
 define MINIUPNPD_INSTALL_TARGET_CMDS

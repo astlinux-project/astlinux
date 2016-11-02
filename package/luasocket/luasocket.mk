@@ -11,12 +11,12 @@ LUASOCKET_SITE = http://files.astlinux-project.org
 LUASOCKET_DEPENDENCIES = lua
 
 define LUASOCKET_BUILD_CMDS
-	$(MAKE) -C $(@D) -f makefile \
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) -f makefile \
 		CC="$(TARGET_CC)" LD="$(TARGET_CC)"
 endef
 
 define LUASOCKET_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) -f makefile \
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) -f makefile \
 		INSTALL_TOP_LDIR="$(TARGET_DIR)/usr/share/lua" \
 		INSTALL_TOP_CDIR="$(TARGET_DIR)/usr/lib/lua" install-unix
 endef

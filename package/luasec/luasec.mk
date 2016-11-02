@@ -10,7 +10,7 @@ LUASEC_SITE = http://files.astlinux-project.org
 LUASEC_DEPENDENCIES = lua openssl luasocket
 
 define LUASEC_BUILD_CMDS
-	$(MAKE) -C $(@D) linux \
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) linux \
 		INC_PATH="" \
 		LIB_PATH="" \
 		LIBDIR="-L$(STAGING_DIR)/usr/lib/ -L$(@D)/src/luasocket" \
@@ -19,7 +19,7 @@ define LUASEC_BUILD_CMDS
 endef
 
 define LUASEC_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) install \
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) install \
 		LUACPATH="$(TARGET_DIR)/usr/lib/lua" \
 		LUAPATH="$(TARGET_DIR)/usr/share/lua"
 endef
