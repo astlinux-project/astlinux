@@ -3,14 +3,13 @@
 # libcurl
 #
 #############################################################
-LIBCURL_VERSION = 7.50.3
+LIBCURL_VERSION = 7.51.0
 LIBCURL_SOURCE = curl-$(LIBCURL_VERSION).tar.gz
 LIBCURL_SITE = https://curl.haxx.se/download
 LIBCURL_INSTALL_STAGING = YES
 
 LIBCURL_DEPENDENCIES = host-pkg-config \
 	$(if $(BR2_PACKAGE_ZLIB),zlib) \
-	$(if $(BR2_PACKAGE_LIBIDN),libidn) \
 	$(if $(BR2_PACKAGE_OPENLDAP),openldap)
 
 LIBCURL_CONF_OPT = \
@@ -20,6 +19,8 @@ LIBCURL_CONF_OPT = \
 	--disable-curldebug \
 	--enable-hidden-symbols \
 	--with-random=/dev/urandom \
+	--without-libidn \
+	--without-libidn2 \
 	--enable-ipv6
 
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
