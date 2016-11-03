@@ -1,6 +1,6 @@
---- openssl-1.0.1h/Makefile.org.orig	2014-06-05 11:36:09.000000000 -0500
-+++ openssl-1.0.1h/Makefile.org	2014-06-05 11:36:17.000000000 -0500
-@@ -528,7 +528,7 @@
+--- openssl-1.0.2j/Makefile.org.orig	2016-11-03 11:36:09.000000000 -0500
++++ openssl-1.0.2j/Makefile.org	2016-11-03 11:36:17.000000000 -0500
+@@ -531,7 +531,7 @@
  	@$(MAKE) SDIRS='$(SDIRS)' clean
  	@$(MAKE) TAR='$(TAR)' TARFLAGS='$(TARFLAGS)' $(DISTTARVARS) tar
  

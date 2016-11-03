@@ -4,20 +4,12 @@
 #
 #############################################################
 
-OPENSSL_VERSION = 1.0.1u
+OPENSSL_VERSION = 1.0.2j
 OPENSSL_SITE = http://www.openssl.org/source
 OPENSSL_INSTALL_STAGING = YES
 OPENSSL_DEPENDENCIES = zlib
 OPENSSL_TARGET_ARCH = generic32
 OPENSSL_CFLAGS = $(TARGET_CFLAGS)
-
-ifeq ($(BR2_PACKAGE_OPENSSL_BIN),)
-define OPENSSL_DISABLE_APPS
-	$(SED) '/^build_apps/! s/build_apps//' $(@D)/Makefile.org
-	$(SED) '/^DIRS=/ s/apps//' $(@D)/Makefile.org
-endef
-OPENSSL_PRE_CONFIGURE_HOOKS += OPENSSL_DISABLE_APPS
-endif
 
 ifeq ($(BR2_PACKAGE_OPENSSL_OCF),y)
 	OPENSSL_CFLAGS += -DHAVE_CRYPTODEV -DUSE_CRYPTODEV_DIGESTS
@@ -43,11 +35,6 @@ ifeq ($(ARCH),i686)
 endif
 ifeq ($(ARCH),i586)
 	OPENSSL_TARGET_ARCH = elf
-endif
-
-# Workaround for bug #3445
-ifeq ($(BR2_x86_i386),y)
-	OPENSSL_TARGET_ARCH = generic32 386
 endif
 
 define OPENSSL_CONFIGURE_CMDS
@@ -95,6 +82,21 @@ define OPENSSL_INSTALL_FIXUPS_SHARED
 	do chmod +w $$i; done
 endef
 OPENSSL_POST_INSTALL_TARGET_HOOKS += OPENSSL_INSTALL_FIXUPS_SHARED
+endif
+
+ifeq ($(BR2_PACKAGE_PERL),)
+define OPENSSL_REMOVE_PERL_SCRIPTS
+	rm -f $(TARGET_DIR)/etc/ssl/misc/{CA.pl,tsget}
+endef
+OPENSSL_POST_INSTALL_TARGET_HOOKS += OPENSSL_REMOVE_PERL_SCRIPTS
+endif
+
+ifeq ($(BR2_PACKAGE_OPENSSL_BIN),)
+define OPENSSL_REMOVE_BIN
+	rm -f $(TARGET_DIR)/usr/bin/openssl
+	rm -f $(TARGET_DIR)/usr/lib/ssl/misc/{CA.*,c_*}
+endef
+OPENSSL_POST_INSTALL_TARGET_HOOKS += OPENSSL_REMOVE_BIN
 endif
 
 ifneq ($(BR2_PACKAGE_OPENSSL_ENGINES),y)
