@@ -10,6 +10,49 @@ Additions for AstLinux 1.2.9:
 
 Released @TBD@
 
+** System
+
+-- libusb, version bump to 1.0.21
+
+-- nano, version bump to 2.7.1
+
+-- ca-certificates, update trusted root certificates 2016-11-02
+
+-- Time Zone Database update, tzdata2016i and php-timezonedb-2016.9
+
+** Networking
+
+-- OpenSSL, quasi-major version bump to 1.0.2j, LTS series.
+
+-- libcurl (curl) version bump to 7.51.0, security fixes: CVE-2016-8615, CVE-2016-8616, CVE-2016-8617, CVE-2016-8618,
+             CVE-2016-8619, CVE-2016-8620, CVE-2016-8621, CVE-2016-8622, CVE-2016-8623, CVE-2016-8624, CVE-2016-8625
+
+-- prosody, version bump to 0.9.11
+
+-- ipset, version bump to 6.30
+
+-- libpcap, version bump to 1.8.1
+
+-- tcpdump, version bump to 4.8.1
+
+-- whois, version 5.2.13, new package to perform Whois lookups for domains and IP's.
+
+** Asterisk
+
+-- Asterisk 11.23.1 (no change) and 13.11.2 (no change)
+
+-- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
+
+-- pjsip 2.5.5 (no change)
+
+-- FOP2, available version bump to 2.31.05.
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: http://doc.astlinux.org/userdoc:tt_asterisk-fop2-upgrade
+
+** Web Interface
+
+-- no change
+
 
 Additions for AstLinux 1.2.8:
 =============================
