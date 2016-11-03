@@ -12,6 +12,7 @@ NGREP_DEPENDENCIES = libpcap pcre
 NGREP_UNINSTALL_STAGING_OPT = --version
 
 NGREP_CONF_OPT += \
+	--disable-pcap-restart \
 	--with-pcap-includes=$(STAGING_DIR)/usr/include/pcap \
 	--with-pcre=$(STAGING_DIR)/usr \
 	--enable-pcre \

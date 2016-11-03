@@ -4,16 +4,13 @@
 #
 #############################################################
 
-LIBPCAP_VERSION = 1.7.4
+LIBPCAP_VERSION = 1.8.1
 LIBPCAP_SITE = http://www.tcpdump.org/release
 LIBPCAP_SOURCE = libpcap-$(LIBPCAP_VERSION).tar.gz
 LIBPCAP_INSTALL_STAGING = YES
 LIBPCAP_DEPENDENCIES = zlib host-flex host-bison
 
-# We're patching configure.in
-LIBPCAP_AUTORECONF = YES
 LIBPCAP_CONF_ENV = \
-	ac_cv_linux_vers=2 \
 	ac_cv_header_linux_wireless_h=yes \
 	CFLAGS="$(LIBPCAP_CFLAGS)"
 LIBPCAP_CFLAGS = $(TARGET_CFLAGS)
@@ -40,15 +37,16 @@ LIBPCAP_CONF_OPT += --disable-dbus
 endif
 
 ifeq ($(BR2_PACKAGE_LIBUSB),y)
-LIBPCAP_CONF_OPT += --enable-canusb
+LIBPCAP_CONF_OPT += --enable-usb
 LIBPCAP_DEPENDENCIES += libusb
 else
-LIBPCAP_CONF_OPT += --disable-canusb
+LIBPCAP_CONF_OPT += --disable-usb
 endif
 
 ifeq ($(BR2_PACKAGE_LIBNL),y)
 LIBPCAP_DEPENDENCIES += libnl
 LIBPCAP_CFLAGS += "-I$(STAGING_DIR)/usr/include/libnl3"
+LIBPCAP_CONF_OPT += --with-libnl=$(STAGING_DIR)/usr
 else
 LIBPCAP_CONF_OPT += --without-libnl
 endif
