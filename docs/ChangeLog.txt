@@ -12,6 +12,8 @@ Released @TBD@
 
 ** System
 
+-- sqlite, version bump to 3.15.1
+
 -- libusb, version bump to 1.0.21
 
 -- nano, version bump to 2.7.1
@@ -27,6 +29,8 @@ Released @TBD@
 -- libcurl (curl) version bump to 7.51.0, security fixes: CVE-2016-8615, CVE-2016-8616, CVE-2016-8617, CVE-2016-8618,
              CVE-2016-8619, CVE-2016-8620, CVE-2016-8621, CVE-2016-8622, CVE-2016-8623, CVE-2016-8624, CVE-2016-8625
 
+-- OpenVPN, version bump to 2.3.13
+
 -- prosody, version bump to 0.9.11
 
 -- ipset, version bump to 6.30
@@ -34,6 +38,9 @@ Released @TBD@
 -- libpcap, version bump to 1.8.1
 
 -- tcpdump, version bump to 4.8.1
+
+-- iproute2 (ip, tc, bridge, etc.) version bump to version 3.16.0, now including the 'bridge' utility.
+   No longer use 'brctl' for managing bridge interfaces, instead use iproute2 tools.
 
 -- whois, version 5.2.13, new package to perform Whois lookups for domains and IP's.
 
