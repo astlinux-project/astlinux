@@ -384,31 +384,28 @@ start () {
   #BRIDGES
   if [ -n "$BRIDGE0" ]; then
     modprobe bridge
-    brctl addbr br0
-    brctl setfd br0 0
+    ip link add name br0 type bridge
     for i in $BRIDGE0; do
       ip link set dev $i up
-      brctl addif br0 $i
+      ip link set dev $i master br0
     done
   fi
 
   if [ -n "$BRIDGE1" ]; then
     modprobe bridge
-    brctl addbr br1
-    brctl setfd br1 0
+    ip link add name br1 type bridge
     for i in $BRIDGE1; do
       ip link set dev $i up
-      brctl addif br1 $i
+      ip link set dev $i master br1
     done
   fi
 
   if [ -n "$BRIDGE2" ]; then
     modprobe bridge
-    brctl addbr br2
-    brctl setfd br2 0
+    ip link add name br2 type bridge
     for i in $BRIDGE2; do
       ip link set dev $i up
-      brctl addif br2 $i
+      ip link set dev $i master br2
     done
   fi
 
@@ -768,17 +765,29 @@ stop () {
   #BRIDGES
   if [ -n "$BRIDGE0" ]; then
     ip link set dev br0 down
-    brctl delbr br0
+    for i in $BRIDGE0; do
+      ip link set dev $i nomaster
+      ip link set dev $i down
+    done
+    ip link delete br0 type bridge
   fi
 
   if [ -n "$BRIDGE1" ]; then
     ip link set dev br1 down
-    brctl delbr br1
+    for i in $BRIDGE1; do
+      ip link set dev $i nomaster
+      ip link set dev $i down
+    done
+    ip link delete br1 type bridge
   fi
 
   if [ -n "$BRIDGE2" ]; then
     ip link set dev br2 down
-    brctl delbr br2
+    for i in $BRIDGE2; do
+      ip link set dev $i nomaster
+      ip link set dev $i down
+    done
+    ip link delete br2 type bridge
   fi
 
   #VLANS
