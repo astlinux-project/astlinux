@@ -65,9 +65,6 @@ unset_major_pci_packages()
   # disable BR2_PACKAGE_RHINO
   sed -i 's:^BR2_PACKAGE_RHINO=y.*$:# BR2_PACKAGE_RHINO is not set:' .config
 
-  # disable BR2_PACKAGE_WANPIPE
-  sed -i 's:^BR2_PACKAGE_WANPIPE=y.*$:# BR2_PACKAGE_WANPIPE is not set:' .config
-
   # disable BR2_PACKAGE_DAHDI_HFCS
   sed -i 's:^BR2_PACKAGE_DAHDI_HFCS=y.*$:# BR2_PACKAGE_DAHDI_HFCS is not set:' .config
 
