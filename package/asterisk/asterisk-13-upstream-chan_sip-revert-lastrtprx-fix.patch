@@ -1,0 +1,17 @@
+X-Git-Url: http://git.asterisk.org/gitweb/?p=asterisk%2Fasterisk.git;a=blobdiff_plain;f=channels%2Fchan_sip.c;h=b661f0de227ff5023155faf7181892b28699a519;hp=b6b4cc86e50c7eb36d26abb0620f0f5c3fbb09e0;hb=cb30963d222cb1e12af9bbf8dfed58001c9fcaf4;hpb=57a9797e0ac51eae3b8f3254627646b9698a60d2
+
+diff --git a/channels/chan_sip.c b/channels/chan_sip.c
+index b6b4cc8..b661f0d 100644
+--- a/channels/chan_sip.c
++++ b/channels/chan_sip.c
+@@ -8628,9 +8628,7 @@ static struct ast_frame *sip_read(struct ast_channel *ast)
+ 
+ 	sip_pvt_lock(p);
+ 	fr = sip_rtp_read(ast, p, &faxdetected);
+-	if (fr && fr->frametype != AST_FRAME_NULL) {
+-		p->lastrtprx = time(NULL);
+-	}
++	p->lastrtprx = time(NULL);
+ 
+ 	/* If we detect a CNG tone and fax detection is enabled then send us off to the fax extension */
+ 	if (faxdetected && ast_test_flag(&p->flags[1], SIP_PAGE2_FAX_DETECT_CNG)) {

@@ -4,10 +4,10 @@
 #
 ##############################################################
 ifeq ($(BR2_PACKAGE_ASTERISK_v11),y)
-ASTERISK_VERSION := 11.23.1
+ASTERISK_VERSION := 11.24.1
 else
  ifeq ($(BR2_PACKAGE_ASTERISK_v13),y)
-ASTERISK_VERSION := 13.11.2
+ASTERISK_VERSION := 13.12.1
  else
 ASTERISK_VERSION := 15.0.0
  endif
@@ -352,7 +352,6 @@ asterisk-clean:
 	rm -f $(TARGET_DIR)/usr/share/snmp/mibs/ASTERISK-MIB.txt
 	rm -f $(TARGET_DIR)/usr/share/snmp/mibs/DIGIUM-MIB.txt
 	-$(MAKE) -C $(ASTERISK_DIR) clean
-	rm -rf $(BUILD_DIR)/asterisk
 	rm -rf $(BUILD_DIR)/asterisk-$(ASTERISK_VERSION)
 
 asterisk-sounds-clean:

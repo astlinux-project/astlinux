@@ -1,5 +1,5 @@
---- asterisk-11.16.0/apps/app_voicemail.c.orig	2015-01-23 08:51:03.000000000 -0600
-+++ asterisk-11.16.0/apps/app_voicemail.c	2015-02-10 09:58:04.000000000 -0600
+--- asterisk-11/apps/app_voicemail.c.orig	2015-01-23 08:51:03.000000000 -0600
++++ asterisk-11/apps/app_voicemail.c	2015-02-10 09:58:04.000000000 -0600
 @@ -753,7 +753,7 @@
  	char mailbox[AST_MAX_EXTENSION]; /*!< Mailbox id, unique within vm context */
  	char password[80];               /*!< Secret pin code, numbers only */
@@ -145,7 +145,7 @@
  	}
  	if (stringp && (s = strsep(&stringp, ","))) {
  		ast_copy_string(vmu->pager, s, sizeof(vmu->pager));
-@@ -14084,7 +14100,7 @@
+@@ -14088,7 +14105,7 @@
  	}
  
  	populate_defaults(vmu);

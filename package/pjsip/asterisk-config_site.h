@@ -4,6 +4,14 @@
 
 #include <sys/select.h>
 
+/*
+ * Defining PJMEDIA_HAS_SRTP to 0 does NOT disable Asterisk's ability to use srtp.
+ * It only disables the pjmedia srtp transport which Asterisk doesn't use.
+ * The reason for the disable is that while Asterisk works fine with older libsrtp
+ * versions, newer versions of pjproject won't compile with them.
+ */
+#define PJMEDIA_HAS_SRTP 0
+
 #define PJ_HAS_IPV6 1
 #define NDEBUG 1
 #define PJ_MAX_HOSTNAME (256)
@@ -41,3 +49,9 @@
 /* Defaults too low for WebRTC */
 #define PJ_ICE_MAX_CAND 32
 #define PJ_ICE_MAX_CHECKS (PJ_ICE_MAX_CAND * 2)
+
+/* Increase limits to allow more formats */
+#define	PJMEDIA_MAX_SDP_FMT   64
+#define	PJMEDIA_MAX_SDP_BANDW   4
+#define	PJMEDIA_MAX_SDP_ATTR   (PJMEDIA_MAX_SDP_FMT*2 + 4)
+#define	PJMEDIA_MAX_SDP_MEDIA   16
