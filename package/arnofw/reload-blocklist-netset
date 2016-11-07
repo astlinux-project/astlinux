@@ -31,6 +31,7 @@ Available IPv4 Blocklist Netsets:
  firehol_level1: Blacklist composed from IP lists, providing maximum protection with minimum false positives.
  firehol_level2: Blacklist that track attacks, during about the last 48 hours.
  firehol_level3: Blacklist that track attacks, spyware, viruses, reported or detected in the last 30 days.
+ firehol_webclient: Blacklist made from blocklists that a web client should never talk to. Use with firehol_level1.
          voipbl: VoIP Blacklist - sponsored by ScopServ International - http://www.voipbl.org/
   spamhaus_drop: Spamhaus DROP (Don't Route Or Peer), consisting of netblocks that are "hijacked" by cyber-crime operations.
  spamhaus_edrop: Spamhaus EDROP is an extension of the DROP list that includes suballocated netblocks.
@@ -59,6 +60,11 @@ netset_url()
       ;;
     firehol_level3)
       URL="https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/firehol_level3.netset"
+      ALT_URL=""
+      AGE=3600
+      ;;
+    firehol_webclient)
+      URL="https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/firehol_webclient.netset"
       ALT_URL=""
       AGE=3600
       ;;
