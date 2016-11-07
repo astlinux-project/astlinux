@@ -19,9 +19,13 @@ Released @TBD@
 
 -- sqlite, version bump to 3.15.1
 
+-- libxml2, security fixes: CVE-2016-5131, CVE-2016-4658
+
 -- libusb, version bump to 1.0.21
 
 -- nano, version bump to 2.7.1
+
+-- reload-blocklist-netset (optional CRON script), add 'firehol_webclient' blocklist support.
 
 -- ca-certificates, update trusted root certificates 2016-11-02
 
@@ -43,6 +47,8 @@ Released @TBD@
 -- libpcap, version bump to 1.8.1
 
 -- tcpdump, version bump to 4.8.1
+
+-- stunnel, version bump to 5.37
 
 -- iproute2 (ip, tc, bridge, etc.) version bump to version 3.16.0, now including the 'bridge' utility.
    No longer use 'brctl' for managing bridge interfaces, instead use iproute2 tools.
