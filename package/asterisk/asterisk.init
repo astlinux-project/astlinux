@@ -31,11 +31,6 @@ init () {
 
   mkdir -p /var/tmp/asterisk/agi-bin
 
-  # Asterisk-GUI tmp directory
-  if [ -L /stat/var/lib/asterisk/static-http/config/tmp ]; then
-    mkdir -p -m 0700 /var/tmp/asterisk-gui
-  fi
-
   if [ ! -d /var/log/asterisk ]; then
     mkdir /var/log/asterisk
   fi
