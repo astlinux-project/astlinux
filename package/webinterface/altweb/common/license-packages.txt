@@ -47,13 +47,13 @@ OpenLDAP~Copyright (c) 1998-2016 The OpenLDAP Foundation. All rights reserved.
 darkstat~Copyright (c) 2001-2015 Emil Mikulic, et al.
 NUT~Copyright (c) 1999-2016  Russell Kroll, Arnaud Quette, et al.
 iftop~Copyright (c) 2002-2014 Paul Warren, Chris Lightfoot, et al.
-dnscrypt-proxy~Copyright (c) 2011-2016 Frank Denis
-libsodium~Copyright (c) 2013-2016 Frank Denis
+dnscrypt-proxy~Copyright (c) 2011-2016 Frank Denis.
+libsodium~Copyright (c) 2013-2016 Frank Denis.
 phoneprov-tools~Copyright (c) 2015-2016 Lonnie Abelbeck and Michael Keuter.
 smartmontools~Copyright (c) 2002-2016 Bruce Allen, Christian Franke, et al.
-Monit~Copyright (c) 2001-2016 Tildeslash. All rights reserved
-sqlite~Copyright (c) 1995-2016 SQLite Consortium
-sqliteodbc~Copyright (c) 2001-2016 Christian Werner
+Monit~Copyright (c) 2001-2016 Tildeslash. All rights reserved.
+sqlite~Copyright (c) 1995-2016 SQLite Consortium.
+sqliteodbc~Copyright (c) 2001-2016 Christian Werner.
 Fossil~Copyright (c) 2007-2016 D. Richard Hipp. All rights reserved.
 BusyBox~Copyright (c) 1998-2011 Erik Andersen, Rob Landley, Denys Vlasenko, et al.
 dhcp6c~Copyright (c) 1998-2008 WIDE Project with 2016 Debian patches.
@@ -62,3 +62,4 @@ stunnel~Copyright (c) 1998-2016 Michal Trojnara.
 unbound~Copyright (c) 2007-2016 NLnet Labs. All rights reserved.
 avahi~Copyright (c) 2004-2016 Lennart Poettering, Trent Lloyd, Avahi developers.
 Linux Kernel~Copyright (c) 1997-2016 The Linux Kernel Organization, Inc.; Linux is a Registered Trademark of Linus Torvalds.
+whois~Copyright (c) 1999-2016 Marco d'Itri.
