@@ -17,6 +17,8 @@ Released @TBD@
 
 ** System
 
+-- php, version bump to 5.6.28
+
 -- sqlite, version bump to 3.15.1
 
 -- libxml2, security fixes: CVE-2016-5131, CVE-2016-4658
