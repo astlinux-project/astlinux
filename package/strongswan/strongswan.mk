@@ -8,6 +8,8 @@ STRONGSWAN_VERSION = 5.5.1
 STRONGSWAN_SOURCE = strongswan-$(STRONGSWAN_VERSION).tar.bz2
 STRONGSWAN_SITE = https://download.strongswan.org
 STRONGSWAN_DEPENDENCIES = openssl host-pkg-config
+STRONGSWAN_TARGET_ETC = ipsec.conf ipsec.d ipsec.secrets strongswan.conf strongswan.d swanctl
+
 STRONGSWAN_CONF_OPT += \
 	--without-lib-prefix \
 	--enable-led=no \
@@ -53,6 +55,13 @@ STRONGSWAN_DEPENDENCIES += \
 endif
 
 define STRONGSWAN_POST_INSTALL
+	mkdir -p $(TARGET_DIR)/stat/etc/strongswan
+	for i in $(STRONGSWAN_TARGET_ETC); do \
+	  cp -a $(TARGET_DIR)/etc/$$i $(TARGET_DIR)/stat/etc/strongswan/ ; \
+	  rm -rf $(TARGET_DIR)/etc/$$i ; \
+	  ln -s /tmp/etc/strongswan/$$i $(TARGET_DIR)/etc/$$i ; \
+	done
+	rm -rf $(TARGET_DIR)/usr/share/strongswan
 	$(INSTALL) -m 0755 -D package/strongswan/ipsec.init $(TARGET_DIR)/etc/init.d/ipsec
 	ln -sf ../../init.d/ipsec $(TARGET_DIR)/etc/runlevels/default/S31ipsec
 	ln -sf ../../init.d/ipsec $(TARGET_DIR)/etc/runlevels/default/K20ipsec
@@ -63,12 +72,10 @@ STRONGSWAN_POST_INSTALL_TARGET_HOOKS = STRONGSWAN_POST_INSTALL
 STRONGSWAN_UNINSTALL_STAGING_OPT = --version
 
 define STRONGSWAN_UNINSTALL_TARGET_CMDS
+	rm -rf $(TARGET_DIR)/stat/etc/strongswan
 	rm -rf $(TARGET_DIR)/usr/lib/ipsec
 	rm -rf $(TARGET_DIR)/usr/libexec/ipsec
-	rm -rf $(TARGET_DIR)/etc/strongswan.*
-	rm -rf $(TARGET_DIR)/etc/ipsec.*
-	rm -rf $(TARGET_DIR)/etc/swanctl
-	rm -rf $(TARGET_DIR)/usr/share/strongswan
+	rm -f $(addprefix $(TARGET_DIR)/etc/, $(STRONGSWAN_TARGET_ETC))
 	rm -f $(TARGET_DIR)/etc/init.d/ipsec
 	rm -f $(TARGET_DIR)/etc/runlevels/default/S31ipsec
 	rm -f $(TARGET_DIR)/etc/runlevels/default/K20ipsec

@@ -2,19 +2,62 @@
 
 . /etc/rc.conf
 
-init ()
-{
-  :
+. /etc/init.d/functions.d/misc
+
+PIDFILE="/var/run/charon.pid"
+
+init () {
+
+  if ! SYS_is_vpn_type ipsec; then
+    exit
+  fi
+
+  if [ ! -d /mnt/kd/ipsec/strongswan ]; then
+    mkdir -p /mnt/kd/ipsec/strongswan
+    if [ -d /stat/etc/strongswan ]; then
+      cp -a /stat/etc/strongswan/* /mnt/kd/ipsec/strongswan/
+    fi
+  fi
+
+  ln -snf /mnt/kd/ipsec/strongswan /tmp/etc/strongswan
+
+  # Create lock dir managed by 'ipsec'
+  mkdir -p /var/lock/subsys
 }
 
 start ()
 {
-  :
+  if SYS_is_vpn_type ipsec; then
+
+    /usr/sbin/ipsec start >/dev/null
+  fi
 }
 
 stop ()
 {
-  :
+  if [ -f $PIDFILE ]; then
+
+    /usr/sbin/ipsec stop
+
+    # strongswan is known to leave PID files behind when something goes wrong, cleanup here
+    cnt=5
+    while [ $cnt -gt 0 ] && [ -f $PIDFILE ]; do
+      cnt=$((cnt - 1))
+      sleep 1
+    done
+    rm -f $PIDFILE
+    # and just to make sure they are really really dead at this point...
+    killall -9 charon >/dev/null 2>&1
+  fi
+}
+
+reload ()
+{
+  if [ -f $PIDFILE ]; then
+    /usr/sbin/ipsec reload
+  else
+    start
+  fi
 }
 
 case $1 in
@@ -38,8 +81,12 @@ restart)
   start
   ;;
 
+reload)
+  reload
+  ;;
+
 *)
-  echo "Usage: start|stop|restart" >&2
+  echo "Usage: start|stop|restart|reload" >&2
   exit 1
   ;;
 
