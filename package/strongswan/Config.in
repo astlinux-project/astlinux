@@ -1,0 +1,51 @@
+menuconfig BR2_PACKAGE_STRONGSWAN
+	bool "strongswan"
+	select BR2_PACKAGE_OPENSSL
+	help
+	  strongSwan is an OpenSource IPsec implementation for the
+	  Linux operating system. It is based on the discontinued
+	  FreeS/WAN project and the X.509 patch.
+
+	  The focus is on:
+	     - simplicity of configuration
+	     - strong encryption and authentication methods
+	     - powerful IPsec policies supporting large and complex VPN networks
+
+	  strongSwan provide many plugins. Only a few are presented here.
+
+	  https://www.strongswan.org/
+
+if BR2_PACKAGE_STRONGSWAN
+
+config BR2_PACKAGE_STRONGSWAN_AF_ALG
+	bool "Enable AF_ALG crypto interface to Linux Crypto API"
+
+config BR2_PACKAGE_STRONGSWAN_CHARON
+	bool "Enable the IKEv1/IKEv2 keying daemon charon"
+	default y
+
+if BR2_PACKAGE_STRONGSWAN_CHARON
+
+config BR2_PACKAGE_STRONGSWAN_EAP
+	bool "Enable EAP protocols"
+	default y
+	help
+	  Enable various EAP protocols:
+	    - mschapv2
+	    - tls
+	    - ttls
+	    - peap
+	    - identity
+	    - md5
+
+config BR2_PACKAGE_STRONGSWAN_SQLITE
+	bool "Enable SQLite database support"
+	depends on BR2_PACKAGE_SQLITE
+
+config BR2_PACKAGE_STRONGSWAN_VICI
+	bool "Enable vici/swanctl"
+	default y
+
+endif
+
+endif
