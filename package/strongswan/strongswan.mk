@@ -8,7 +8,7 @@ STRONGSWAN_VERSION = 5.5.1
 STRONGSWAN_SOURCE = strongswan-$(STRONGSWAN_VERSION).tar.bz2
 STRONGSWAN_SITE = https://download.strongswan.org
 STRONGSWAN_DEPENDENCIES = openssl host-pkg-config
-STRONGSWAN_TARGET_ETC = ipsec.conf ipsec.d ipsec.secrets strongswan.conf strongswan.d swanctl
+STRONGSWAN_TARGET_ETC = ipsec.conf ipsec.d ipsec.secrets strongswan.conf strongswan.d $(if $(BR2_PACKAGE_STRONGSWAN_VICI),swanctl)
 
 STRONGSWAN_CONF_OPT += \
 	--without-lib-prefix \
