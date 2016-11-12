@@ -26,7 +26,7 @@ STRONGSWAN_CONF_OPT += \
 	--enable-xauth-generic=yes \
 	--enable-xauth-eap=yes \
 	--enable-unity=no \
-	--enable-stroke=no \
+	--enable-stroke=yes \
 	--enable-sqlite=$(if $(BR2_PACKAGE_STRONGSWAN_SQLITE),yes,no) \
 	--enable-sql=$(if $(BR2_PACKAGE_STRONGSWAN_SQLITE),yes,no) \
 	--enable-attr-sql=$(if $(BR2_PACKAGE_STRONGSWAN_SQLITE),yes,no) \
@@ -65,9 +65,10 @@ STRONGSWAN_UNINSTALL_STAGING_OPT = --version
 define STRONGSWAN_UNINSTALL_TARGET_CMDS
 	rm -rf $(TARGET_DIR)/usr/lib/ipsec
 	rm -rf $(TARGET_DIR)/usr/libexec/ipsec
-	rm -rf $(TARGET_DIR)/etc/strongswan.d
+	rm -rf $(TARGET_DIR)/etc/strongswan.*
+	rm -rf $(TARGET_DIR)/etc/ipsec.*
+	rm -rf $(TARGET_DIR)/etc/swanctl
 	rm -rf $(TARGET_DIR)/usr/share/strongswan
-	rm -f $(TARGET_DIR)/etc/strongswan.conf
 	rm -f $(TARGET_DIR)/etc/init.d/ipsec
 	rm -f $(TARGET_DIR)/etc/runlevels/default/S31ipsec
 	rm -f $(TARGET_DIR)/etc/runlevels/default/K20ipsec
