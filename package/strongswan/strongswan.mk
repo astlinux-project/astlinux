@@ -61,7 +61,6 @@ define STRONGSWAN_POST_INSTALL
 	  rm -rf $(TARGET_DIR)/etc/$$i ; \
 	  ln -s /tmp/etc/strongswan/$$i $(TARGET_DIR)/etc/$$i ; \
 	done
-	rm -rf $(TARGET_DIR)/usr/share/strongswan
 	$(INSTALL) -m 0755 -D package/strongswan/ipsec.init $(TARGET_DIR)/etc/init.d/ipsec
 	ln -sf ../../init.d/ipsec $(TARGET_DIR)/etc/runlevels/default/S31ipsec
 	ln -sf ../../init.d/ipsec $(TARGET_DIR)/etc/runlevels/default/K20ipsec
@@ -75,6 +74,7 @@ define STRONGSWAN_UNINSTALL_TARGET_CMDS
 	rm -rf $(TARGET_DIR)/stat/etc/strongswan
 	rm -rf $(TARGET_DIR)/usr/lib/ipsec
 	rm -rf $(TARGET_DIR)/usr/libexec/ipsec
+	rm -rf $(TARGET_DIR)/usr/share/strongswan
 	rm -f $(addprefix $(TARGET_DIR)/etc/, $(STRONGSWAN_TARGET_ETC))
 	rm -f $(TARGET_DIR)/etc/init.d/ipsec
 	rm -f $(TARGET_DIR)/etc/runlevels/default/S31ipsec
