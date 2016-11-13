@@ -1,0 +1,15 @@
+--- strongswan-5.5.1/conf/strongswan.conf.orig	2016-11-13 14:37:20.044511922 -0600
++++ strongswan-5.5.1/conf/strongswan.conf	2016-11-13 14:39:31.565086615 -0600
+@@ -7,8 +7,10 @@
+ charon {
+ 	load_modular = yes
+ 	plugins {
+-		include strongswan.d/charon/*.conf
++		include /stat/etc/strongswan/strongswan.d/charon/*.conf
++		#include strongswan.d/charon/*.conf
+ 	}
+ }
+ 
+-include strongswan.d/*.conf
++include /stat/etc/strongswan/strongswan.d/*.conf
++#include strongswan.d/*.conf

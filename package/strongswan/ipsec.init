@@ -16,6 +16,11 @@ init () {
     mkdir -p /mnt/kd/ipsec/strongswan
     if [ -d /stat/etc/strongswan ]; then
       cp -a /stat/etc/strongswan/* /mnt/kd/ipsec/strongswan/
+
+      ## Remove /mnt/kd/ipsec/strongswan/ plugin .conf files so they don't get stale.
+      ## File strongswan.conf references the /stat/etc/strongswan/ versions by default.
+      rm /mnt/kd/ipsec/strongswan/strongswan.d/*.conf
+      rm /mnt/kd/ipsec/strongswan/strongswan.d/charon/*.conf
     fi
   fi
 
