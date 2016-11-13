@@ -38,6 +38,7 @@ STRONGSWAN_CONF_OPT += \
 	--enable-scripts=no \
 	--enable-vici=$(if $(BR2_PACKAGE_STRONGSWAN_VICI),yes,no) \
 	--enable-swanctl=$(if $(BR2_PACKAGE_STRONGSWAN_VICI),yes,no) \
+	--enable-addrblock=yes \
 	--enable-cmd=yes
 
 ifeq ($(BR2_PACKAGE_STRONGSWAN_EAP),y)
@@ -49,6 +50,16 @@ STRONGSWAN_CONF_OPT += \
 	--enable-eap-ttls \
 	--enable-eap-peap
 endif
+
+# Diable plugins so OpenSSL handles them
+STRONGSWAN_CONF_OPT += \
+	--disable-aes \
+	--disable-des \
+	--disable-rc2 \
+	--disable-md5 \
+	--disable-sha1 \
+	--disable-sha2 \
+	--disable-hmac
 
 ifeq ($(BR2_PACKAGE_STRONGSWAN_SQLITE),y)
 STRONGSWAN_DEPENDENCIES += \
