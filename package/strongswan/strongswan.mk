@@ -11,6 +11,7 @@ STRONGSWAN_DEPENDENCIES = openssl host-pkg-config
 STRONGSWAN_TARGET_ETC = ipsec.conf ipsec.d ipsec.secrets strongswan.conf strongswan.d $(if $(BR2_PACKAGE_STRONGSWAN_VICI),swanctl)
 
 STRONGSWAN_CONF_OPT += \
+	--disable-static \
 	--without-lib-prefix \
 	--enable-led=no \
 	--enable-pkcs11=no \
