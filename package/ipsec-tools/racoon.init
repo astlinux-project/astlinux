@@ -11,25 +11,23 @@ init()
 
 start()
 {
+  if SYS_is_vpn_type racoon || SYS_is_vpn_type ipsecmobile; then
 
-  if SYS_is_vpn_type racoon || \
-     SYS_is_vpn_type ipsecmobile; then
+    ## Stop strongSwan IPsec if it is running
+    if [ -f /etc/init.d/ipsec -a -f /var/run/charon.pid ]; then
+      service ipsec stop
+    fi
 
     /usr/sbin/racoon-ipsec start
-
   fi
-
 }
 
 stop()
 {
-
   if [ -f /tmp/etc/racoon.conf ]; then
 
     /usr/sbin/racoon-ipsec stop
-
   fi
-
 }
 
 case $1 in

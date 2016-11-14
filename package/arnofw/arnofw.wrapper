@@ -233,7 +233,7 @@ astlinux_wrapper()
     EXTERNAL_DHCP_SERVER=1
   fi
 
-  if isVPNtype racoon || isVPNtype ipsecmobile; then
+  if isVPNtype racoon || isVPNtype ipsecmobile || isVPNtype ipsec; then
     RP_FILTER=0
   fi
 
