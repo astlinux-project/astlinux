@@ -44,6 +44,13 @@ start ()
     fi
 
     /usr/sbin/ipsec start >/dev/null
+
+    # Wait for strongSwan to startup
+    cnt=10
+    while [ $cnt -gt 0 ] && [ ! -f $PIDFILE ]; do
+      cnt=$((cnt - 1))
+      sleep 1
+    done
   fi
 }
 
@@ -53,7 +60,7 @@ stop ()
 
     /usr/sbin/ipsec stop
 
-    # strongswan is known to leave PID files behind when something goes wrong, cleanup here
+    # strongSwan is known to leave PID files behind when something goes wrong, cleanup here
     cnt=5
     while [ $cnt -gt 0 ] && [ -f $PIDFILE ]; do
       cnt=$((cnt - 1))
