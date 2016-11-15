@@ -74,12 +74,13 @@ function restartPROCESS($process, $ret_good, $ret_fail, $start = 'start', $wait 
     $cmd .= ';service '.$process.' stop >/dev/null 2>/dev/null';
     $cmd .= ';sleep '.$wait;
     $cmd .= ';/usr/sbin/gen-rc-conf';
-    if ($process === 'openvpn' || $process === 'openvpnclient' || $process === 'racoon' || $process === 'pptpd') {
+    if ($process === 'openvpn' || $process === 'openvpnclient' ||
+        $process === 'racoon' || $process === 'ipsec' || $process === 'pptpd') {
       $cmd .= ';service iptables restart >/dev/null 2>/dev/null';
     }
     $cmd .= ';service '.$process.' '.$start.' >/dev/null 2>/dev/null';
   }
-  
+
   if ($pathOK) {
     putenv('PATH='.$path.':/sbin:/usr/sbin');
   }
@@ -118,6 +119,12 @@ function statusPROCESS($process) {
     }
   } elseif ($process === 'avahi') {
     if (is_file($path.'avahi-daemon/pid')) {
+      $str = $running;
+    } else {
+      $str = $stopped;
+    }
+  } elseif ($process === 'ipsec') {
+    if (is_file($path.'charon.pid')) {
       $str = $running;
     } else {
       $str = $stopped;

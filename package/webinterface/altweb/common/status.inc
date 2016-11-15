@@ -78,6 +78,7 @@ function getDaemons() {
   $status['dnsmasq'] = 0;
   $status['openvpn'] = 0;
   $status['racoon'] = 0;
+  $status['charon'] = 0;
   $status['pptpd'] = 0;
   $status['upsmon'] = 0;
   $status['syslogd'] = 0;
@@ -881,6 +882,21 @@ if ($daemon['racoon'] > 0) {
       putHtml("</table></pre>");
     }
     @unlink($tmpfile);
+  }
+}
+
+if ($daemon['charon'] > 0) {
+  if (getPREFdef($global_prefs, 'status_ipsec_associations') !== 'no') {
+    putHtml("<h2>IPsec Associations (strongSwan):</h2>");
+    putHtml("<pre>");
+
+    $output = array();
+    @exec('/usr/sbin/ipsec status', $output);
+    foreach ($output as $line) {
+      putText(rtrim($line));
+    }
+    unset($output);
+    putHtml("</pre>");
   }
 }
 

@@ -13,6 +13,7 @@
 // 09-06-2013, Added Shortcut support
 // 06-07-2016, Added Avahi mDNS/DNS-SD support
 // 09-21-2016, Added Reload Firewall Blocklist
+// 11-14-2016, Added IPsec strongSwan support
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -29,6 +30,7 @@ $select_reload = array (
   'openvpn' => 'Restart OpenVPN Server',
   'openvpnclient' => 'Restart OpenVPN Client',
   'racoon' => 'Restart IPsec VPN',
+  'ipsec' => 'Restart IPsec strongSwan',
   'pptpd' => 'Restart PPTP VPN Server',
   'fossil' => 'Restart Fossil Server',
   'ldap' => 'Reload LDAP Client',
@@ -262,6 +264,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 47, $result, 'init');
       } elseif ($process === 'avahi') {
         $result = restartPROCESS($process, 48, $result, 'init');
+      } elseif ($process === 'ipsec') {
+        $result = restartPROCESS($process, 49, $result, 'init');
       } elseif ($process === 'IPTABLES') {
         $result = restartPROCESS('iptables', 66, $result, 'reload');
       } elseif ($process === 'cron') {
@@ -301,6 +305,7 @@ require_once '../common/header.php';
       $dir === '/mnt/kd/dahdi' ||
       $dir === '/mnt/kd/openvpn' ||
       $dir === '/mnt/kd/openvpn/ccd' ||
+      $dir === '/mnt/kd/ipsec/strongswan' ||
       $dir === '/mnt/kd/rc.conf.d' ||
       $dir === '/mnt/kd/crontabs' ||
       $dir === '/mnt/kd/snmp' ||
@@ -405,6 +410,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Fossil Server'.statusPROCESS('fossil').'.</p>');
     } elseif ($result == 48) {
       putHtml('<p style="color: green;">mDNS/DNS-SD (Avahi)'.statusPROCESS('avahi').'.</p>');
+    } elseif ($result == 49) {
+      putHtml('<p style="color: green;">IPsec VPN (strongSwan)'.statusPROCESS('ipsec').'.</p>');
     } elseif ($result == 66) {
       putHtml('<p style="color: green;">Firewall Blocklist has been Reloaded.</p>');
     } elseif ($result == 99) {
@@ -583,6 +590,16 @@ require_once '../common/header.php';
       if (is_file($globfile) && is_writable($globfile)) {
         $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
         putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - X509 CN of OpenVPN Client</option>');
+      }
+    }
+    putHtml('</optgroup>');
+  }
+  if (is_dir('/mnt/kd/ipsec/strongswan') && count($globfiles = glob('/mnt/kd/ipsec/strongswan/*')) > 0) {
+    putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; IPsec strongSwan Configs &mdash;&mdash;&mdash;&mdash;">');
+    foreach ($globfiles as $globfile) {
+      if (is_file($globfile) && is_writable($globfile)) {
+        $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
+        putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - IPsec strongSwan Config</option>');
       }
     }
     putHtml('</optgroup>');
