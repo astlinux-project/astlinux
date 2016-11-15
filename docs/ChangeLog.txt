@@ -40,6 +40,9 @@ Released @TBD@
 -- libcurl (curl) version bump to 7.51.0, security fixes: CVE-2016-8615, CVE-2016-8616, CVE-2016-8617, CVE-2016-8618,
              CVE-2016-8619, CVE-2016-8620, CVE-2016-8621, CVE-2016-8622, CVE-2016-8623, CVE-2016-8624, CVE-2016-8625
 
+-- strongSwan, version 5.5.1, new package, a more feature rich alternative for IPsec VPN support.
+   More info: http://doc.astlinux.org/userdoc:tt_ipsec_vpn_strongswan
+
 -- OpenVPN, version bump to 2.3.13
 
 -- prosody, version bump to 0.9.11
@@ -51,6 +54,10 @@ Released @TBD@
 -- tcpdump, version bump to 4.8.1
 
 -- stunnel, version bump to 5.37
+
+-- shellinabox, version bump to 2.20
+
+-- msmtp, version bump to 1.6.6
 
 -- iproute2 (ip, tc, bridge, etc.) version bump to version 3.16.0, now including the 'bridge' utility.
    No longer use 'brctl' for managing bridge interfaces, instead use iproute2 tools.
@@ -73,7 +80,10 @@ Released @TBD@
 
 ** Web Interface
 
--- no change
+-- Network and Edit tab, add support for strongSwan IPsec VPN.
+   Note: "IPsec strongSwan" can only be enabled when "IPsec Peers" and "IPsec Mobile" are both disabled.
+
+-- Status tab, display "ipsec status" output in IPsec Associations (strongSwan).
 
 
 Additions for AstLinux 1.2.8:
