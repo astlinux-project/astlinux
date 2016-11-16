@@ -9,7 +9,7 @@
  #ifdef HAVE_STDIO_H
  #include <stdio.h>
  #endif
-@@ -531,6 +533,11 @@
+@@ -548,6 +550,11 @@
                  internal_error(S, SC_BAD_REQUEST, "[error] URL too long");
                  return NULL;
          }
