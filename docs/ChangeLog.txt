@@ -43,6 +43,7 @@ Released @TBD@
              CVE-2016-8619, CVE-2016-8620, CVE-2016-8621, CVE-2016-8622, CVE-2016-8623, CVE-2016-8624, CVE-2016-8625
 
 -- strongSwan, version 5.5.1, new package, a more feature rich alternative for IPsec VPN support.
+   New rc.conf variables are: IPSEC_ALLOWED_ENDPOINTS and IPSEC_ALLOWED_VPN_NETS
    More info: http://doc.astlinux.org/userdoc:tt_ipsec_vpn_strongswan
 
 -- OpenVPN, version bump to 2.3.13
@@ -84,6 +85,7 @@ Released @TBD@
 
 -- Network and Edit tab, add support for strongSwan IPsec VPN.
    Note: "IPsec strongSwan" can only be enabled when "IPsec Peers" and "IPsec Mobile" are both disabled.
+   More info: http://doc.astlinux.org/userdoc:tt_ipsec_vpn_strongswan
 
 -- Status tab, display "ipsec status" output in IPsec Associations (strongSwan).
 
