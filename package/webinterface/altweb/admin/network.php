@@ -2001,7 +2001,8 @@ require_once '../common/header.php';
   $sel = isVARtype('VPN', $db, $cur_db, 'openvpnclient') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="openvpnclient" name="openvpnclient"'.$sel.' />');
   putHtml('</td><td style="text-align: left;" colspan="5">');
-  putHtml('OpenVPN Client&nbsp;&ndash;');
+  putHtml('OpenVPN Client');
+  putHtml('&ndash;');
   putHtml('<input type="submit" value="OpenVPN Configuration" name="submit_edit_openvpnclient" class="button" />');
   putHtml('</td></tr>');
   
@@ -2009,7 +2010,8 @@ require_once '../common/header.php';
   $sel = isVARtype('VPN', $db, $cur_db, 'openvpn') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="openvpn" name="openvpn"'.$sel.' />');
   putHtml('</td><td style="text-align: left;" colspan="5">');
-  putHtml('OpenVPN Server&nbsp;&ndash;');
+  putHtml('OpenVPN Server');
+  putHtml('&ndash;');
   putHtml('<input type="submit" value="OpenVPN Configuration" name="submit_edit_openvpn" class="button" />');
   putHtml('</td></tr>');
   
@@ -2017,7 +2019,8 @@ require_once '../common/header.php';
   $sel = isVARtype('VPN', $db, $cur_db, 'racoon') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="racoon" name="racoon"'.$sel.' />');
   putHtml('</td><td style="text-align: left;" colspan="5">');
-  putHtml('IPsec Peers&nbsp;&ndash;');
+  putHtml('IPsec Peers');
+  putHtml('&ndash;');
   putHtml('<input type="submit" value="IPsec Configuration" name="submit_edit_racoon" class="button" />');
   putHtml('</td></tr>');
   
@@ -2025,7 +2028,8 @@ require_once '../common/header.php';
   $sel = isVARtype('VPN', $db, $cur_db, 'ipsecmobile') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="ipsecmobile" name="ipsecmobile"'.$sel.' />');
   putHtml('</td><td style="text-align: left;" colspan="5">');
-  putHtml('IPsec Mobile&nbsp;&ndash;');
+  putHtml('IPsec Mobile');
+  putHtml('&ndash;');
   putHtml('<input type="submit" value="IPsec Configuration" name="submit_edit_ipsecmobile" class="button" />');
   putHtml('</td></tr>');
   
@@ -2034,8 +2038,11 @@ require_once '../common/header.php';
     $sel = isVARtype('VPN', $db, $cur_db, 'ipsec') ? ' checked="checked"' : '';
     putHtml('<input type="checkbox" value="ipsec" name="ipsec"'.$sel.' />');
     putHtml('</td><td style="text-align: left;" colspan="5">');
-    putHtml('IPsec strongSwan&nbsp;&ndash;');
-    putHtml('<input type="submit" value="IPsec Configuration" name="submit_edit_ipsec" class="button" />');
+    putHtml('IPsec strongSwan');
+    if (is_writable('/mnt/kd/ipsec/strongswan/ipsec.conf')) {
+      putHtml('&ndash;');
+      putHtml('<input type="submit" value="IPsec Configuration" name="submit_edit_ipsec" class="button" />');
+    }
     putHtml('</td></tr>');
   }
   
@@ -2043,7 +2050,8 @@ require_once '../common/header.php';
   $sel = isVARtype('VPN', $db, $cur_db, 'pptp') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="pptp" name="pptp"'.$sel.' />');
   putHtml('</td><td style="text-align: left;" colspan="5">');
-  putHtml('PPTP Server&nbsp;&ndash;');
+  putHtml('PPTP Server');
+  putHtml('&ndash;');
   putHtml('<input type="submit" value="PPTP Configuration" name="submit_edit_pptp" class="button" />');
   putHtml('</td></tr>');
   
