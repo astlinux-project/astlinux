@@ -5,4 +5,4 @@ config BR2_PACKAGE_TIFF
 	help
 	  Library for handling TIFF (Tag Image File Format) images.
 
-	  http://www.libtiff.org/
+	  http://simplesystems.org/libtiff/
