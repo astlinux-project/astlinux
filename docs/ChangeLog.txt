@@ -17,6 +17,10 @@ Released @TBD@
 
 ** System
 
+-- Linux Kernel 3.2.84 (minor bump)
+
+-- RUNNIX, version bump to runnix-0.4-7972, with Linux Kernel 3.2.84, dropbear 2016.74
+
 -- php, version bump to 5.6.28
 
 -- sqlite, version bump to 3.15.1
