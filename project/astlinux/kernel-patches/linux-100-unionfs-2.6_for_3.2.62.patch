@@ -777,7 +777,7 @@ index 0000000..99fd7df
 --- /dev/null
 +++ b/fs/unionfs/Makefile
 @@ -0,0 +1,17 @@
-+UNIONFS_VERSION="2.6 (for 3.2.62)"
++UNIONFS_VERSION="2.6 (for 3.2.84)"
 +
 +EXTRA_CFLAGS += -DUNIONFS_VERSION=\"$(UNIONFS_VERSION)\"
 +
@@ -5852,7 +5852,7 @@ index 0000000..7a6d747
 +	struct iattr lower_ia;
 +
 +	/* check if user has permission to change inode */
-+	err = inode_change_ok(dentry->d_inode, ia);
++	err = setattr_prepare(dentry, ia);
 +	if (err)
 +		goto out_err;
 +
@@ -5889,7 +5889,7 @@ index 0000000..7a6d747
 +	lower_inode = lower_dentry->d_inode;
 +
 +	/* check if user has permission to change lower inode */
-+	err = inode_change_ok(lower_inode, ia);
++	err = setattr_prepare(lower_dentry, ia);
 +	if (err)
 +		goto out;
 +
