@@ -31,6 +31,8 @@ Released @TBD@
 
 -- libusb, version bump to 1.0.21
 
+-- tiff, version bump to 4.0.7, security fixes: 11 CVE's
+
 -- nano, version bump to 2.7.1
 
 -- reload-blocklist-netset (optional CRON script), add 'firehol_webclient' blocklist support.
@@ -63,6 +65,8 @@ Released @TBD@
 -- stunnel, version bump to 5.37
 
 -- shellinabox, version bump to 2.20
+
+-- ntpd/sntp, version bump to 4.2.8p9, security fixes: 2 medium-, 2 medium-/low-, and 5 low-severity
 
 -- msmtp, version bump to 1.6.6
 
