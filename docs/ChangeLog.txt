@@ -75,6 +75,9 @@ Released @TBD@
 
 -- whois, version 5.2.13, new package to perform Whois lookups for domains and IP's.
 
+-- arnofw (AIF), "adaptive-ban" plugin, asterisk filter, add chan_sip 'Not a local domain' regex and
+   chan_pjsip 'No matching endpoint found' regex.
+
 ** Asterisk
 
 -- Asterisk 11.24.1 (version bump) and 13.12.2 (version bump)
