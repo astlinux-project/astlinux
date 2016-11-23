@@ -172,7 +172,9 @@ filter_asterisk()
             -e "s/^${PREFIX}NOTICE.* .*: Registration from '.*' failed for '${HOST}' - No matching peer found$/\1/p" \
             -e "s/^${PREFIX}NOTICE.* .*: Registration from '.*' failed for '${HOST}' - Username\/auth name mismatch$/\1/p" \
             -e "s/^${PREFIX}NOTICE.* .*: Registration from '.*' failed for '${HOST}' - Device does not match ACL$/\1/p" \
+            -e "s/^${PREFIX}NOTICE.* .*: Registration from '.*' failed for '${HOST}' - Not a local domain$/\1/p" \
             -e "s/^${PREFIX}NOTICE.* .*: Rejecting '${HOST}' due to a failure to pass ACL '.*'$/\1/p" \
+            -e "s/^${PREFIX}NOTICE.* .*: Request from '.*' failed for '${HOST}' \(.*\) - No matching endpoint found$/\1/p" \
             -e "s/^${PREFIX}NOTICE.* '${HOST}' - Dialplan Noted Suspicious IP Address$/\1/p" \
             -e "s/^${PREFIX}NOTICE.* ${HOST} failed to authenticate as '.*'$/\1/p" \
             -e "s/^${PREFIX}NOTICE.* .*: No registration for peer '.*' \(from ${HOST}\)$/\1/p" \
