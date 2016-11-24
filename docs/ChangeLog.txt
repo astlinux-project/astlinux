@@ -80,7 +80,7 @@ Released @TBD@
 
 ** Asterisk
 
--- Asterisk 11.24.1 (version bump) and 13.12.2 (version bump)
+-- Asterisk 11.25.0 (version bump) and 13.13.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
