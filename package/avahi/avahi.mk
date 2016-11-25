@@ -10,6 +10,7 @@ AVAHI_SITE = https://github.com/lathiat/avahi/releases/download/v$(AVAHI_VERSION
 AVAHI_INSTALL_STAGING = YES
 
 AVAHI_CONF_ENV = \
+	ac_cv_func_chroot=no \
 	ac_cv_func_strtod=yes \
 	ac_fsusage_space=yes \
 	fu_cv_sys_stat_statfs2_bsize=yes \

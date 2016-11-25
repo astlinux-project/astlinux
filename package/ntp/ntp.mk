@@ -29,6 +29,11 @@ else
 NTP_CONF_OPT += --without-crypto
 endif
 
+ifeq ($(BR2_PACKAGE_LIBCAP),y)
+NTP_CONF_OPT += --enable-linuxcaps
+NTP_DEPENDENCIES += libcap
+endif
+
 NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTP_KEYGEN) += util/ntp-keygen
 NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTP_WAIT) += scripts/ntp-wait/ntp-wait
 NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTPDATE) += ntpdate/ntpdate

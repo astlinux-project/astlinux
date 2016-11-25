@@ -49,6 +49,12 @@ endif
 ASTERISK_CONFIGURE_ARGS+= \
 			--without-sdl
 
+ifeq ($(strip $(BR2_PACKAGE_LIBCAP)),y)
+ASTERISK_EXTRAS+=libcap
+ASTERISK_CONFIGURE_ARGS+= \
+			--with-cap="$(STAGING_DIR)/usr" 
+endif
+
 ifeq ($(strip $(BR2_PACKAGE_LIBXML2)),y)
 ASTERISK_EXTRAS+=libxml2
 ASTERISK_CONFIGURE_ARGS+= \
