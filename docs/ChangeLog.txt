@@ -31,6 +31,8 @@ Released @TBD@
 
 -- libusb, version bump to 1.0.21
 
+-- libcap, version 2.25, new package, user-space library for POSIX 1003.1e capabilities available in Linux kernels.
+
 -- tiff, version bump to 4.0.7, security fixes: 11 CVE's
 
 -- nano, version bump to 2.7.1
@@ -39,7 +41,7 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2016-11-02
 
--- Time Zone Database update, tzdata2016i and php-timezonedb-2016.9
+-- Time Zone Database update, tzdata2016j and php-timezonedb-2016.10
 
 ** Networking
 
