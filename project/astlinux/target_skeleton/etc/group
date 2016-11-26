@@ -10,7 +10,9 @@ cdrom:x:24:
 floppy:x:25:
 tape:x:26:
 audio:x:29:
+ntp:x:38:
 video:x:44:
+avahi:x:70:
 users:x:100:
 prosody:x:130:
 ldap:x:439:
