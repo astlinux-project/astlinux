@@ -6,12 +6,13 @@
 NTP_VERSION = 4.2.8p9
 NTP_SOURCE = ntp-$(NTP_VERSION).tar.gz
 NTP_SITE = https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2
-NTP_DEPENDENCIES = host-bison host-flex host-pkg-config
+NTP_DEPENDENCIES = host-bison host-flex host-pkg-config libcap
 
 NTP_CONF_OPT = \
 	--with-shared \
 	--program-transform-name=s,,, \
 	--with-yielding-select=yes \
+	--enable-linuxcaps \
 	--disable-debugging \
 	--disable-ipv6 \
 	--without-ntpsnmpd
@@ -27,11 +28,6 @@ NTP_CONF_OPT += --with-crypto
 NTP_DEPENDENCIES += openssl
 else
 NTP_CONF_OPT += --without-crypto
-endif
-
-ifeq ($(BR2_PACKAGE_LIBCAP),y)
-NTP_CONF_OPT += --enable-linuxcaps
-NTP_DEPENDENCIES += libcap
 endif
 
 NTP_INSTALL_FILES_$(BR2_PACKAGE_NTP_NTP_KEYGEN) += util/ntp-keygen
