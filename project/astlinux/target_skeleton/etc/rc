@@ -167,8 +167,7 @@ $fstab_tmp
 $fstab_var
 " > /tmp/etc/fstab
 
-  mkdir /var/spool /var/lib /var/lib/nfs
-  touch /var/lib/nfs/etab /var/lib/nfs/xtab /var/lib/nfs/rmtab
+  mkdir /var/spool /var/lib
   mkdir /var/empty /var/lock /var/db /var/run /var/racoon
   touch /var/run/utmp
   mkdir /var/run/screen /var/state /var/tmp /tmp/bin
