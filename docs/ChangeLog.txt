@@ -70,6 +70,15 @@ Released @TBD@
 
 -- ntpd/sntp, version bump to 4.2.8p9, security fixes: 2 medium-, 2 medium-/low-, and 5 low-severity
 
+-- ntpd, now runs with 'ntp' user/group permissions using the new libcap support, for added security.
+   Note: If you use a custom /mnt/kd/ntpd.conf and a persistent driftfile, you must create a directory with ntp:ntp permissions.
+         The new default, non-persistent driftfile location is: /var/lib/ntp/ntpd.drift
+   Example: "driftfile /mnt/kd/ntp/ntpd.drift" is defined in /mnt/kd/ntpd.conf
+            # mkdir /mnt/kd/ntp
+            # chown ntp:ntp /mnt/kd/ntp
+
+-- avahi, now runs with 'avahi' user/group permissions using the new libcap support, for added security.
+
 -- msmtp, version bump to 1.6.6
 
 -- iproute2 (ip, tc, bridge, etc.) version bump to version 3.16.0, now including the 'bridge' utility.
