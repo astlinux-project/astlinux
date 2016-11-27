@@ -10,7 +10,6 @@ AVAHI_SITE = https://github.com/lathiat/avahi/releases/download/v$(AVAHI_VERSION
 AVAHI_INSTALL_STAGING = YES
 
 AVAHI_CONF_ENV = \
-	ac_cv_func_chroot=no \
 	ac_cv_func_strtod=yes \
 	ac_fsusage_space=yes \
 	fu_cv_sys_stat_statfs2_bsize=yes \
@@ -76,10 +75,10 @@ AVAHI_CONF_OPT = \
 	--with-distro=none \
 	--disable-manpages \
 	$(if $(BR2_PACKAGE_AVAHI_AUTOIPD),--enable,--disable)-autoipd \
-	--with-avahi-user=nobody \
-	--with-avahi-group=nobody \
-	--with-autoipd-user=nobody \
-	--with-autoipd-group=nobody
+	--with-avahi-user=avahi \
+	--with-avahi-group=avahi \
+	--with-autoipd-user=avahi \
+	--with-autoipd-group=avahi
 
 AVAHI_DEPENDENCIES = \
 	$(if $(BR2_NEEDS_GETTEXT_IF_LOCALE),gettext) host-pkg-config
