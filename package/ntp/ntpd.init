@@ -6,8 +6,6 @@ PIDFILE="/var/run/ntpd.pid"
 
 DATA_DIR="/var/lib/ntp"
 
-NTPD_STARTED="$DATA_DIR/ntpd_started"
-
 init () {
 
   # So sntp doesn't complain
@@ -60,7 +58,7 @@ broadcast 224.0.1.1 ttl 1" >> /tmp/etc/ntpd.conf
 }
 
 start () {
-  local NTPAF="" UG first driftfile
+  local NTPAF="" UG="" first
 
   if [ -f /etc/ntpd.conf ]; then
 
@@ -79,20 +77,10 @@ start () {
         fi
         sleep 1
 
-        # workaround restart lockup, start ntpd with 'ntp' privileges at boot, then restart as 'root'
-        if [ -f $NTPD_STARTED ]; then
-          UG=""
-        else
-          UG="ntp:ntp"
-          driftfile="$(awk '/^driftfile / { print $2; nextfile; }' /etc/ntpd.conf)"
-          if [ -n "$driftfile" ] && [ -f "$driftfile" ]; then
-            chown $UG "$driftfile"
-          fi
-        fi
+        ## workaround restart lockup, can't start ntpd with 'ntp' privileges
+        ## UG="ntp:ntp"
         # Maintain the clock (small changes)
         ntpd $NTPAF -p $PIDFILE${UG:+ -u $UG} -g -c /etc/ntpd.conf
-
-        touch $NTPD_STARTED
       elif ( set -o noclobber; echo "$$" > /var/lock/ntpd-delayed.lock ) 2>/dev/null; then
         echo "ntpd: server unreachable, will automatically retry in 2 minutes"
         (
