@@ -64,7 +64,7 @@ Released @TBD@
 
 -- tcpdump, version bump to 4.8.1
 
--- stunnel, version bump to 5.37
+-- stunnel, version bump to 5.38
 
 -- shellinabox, version bump to 2.20
 
