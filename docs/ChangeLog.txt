@@ -23,7 +23,7 @@ Released @TBD@
 
 -- php, version bump to 5.6.28
 
--- sqlite, version bump to 3.15.1
+-- sqlite, version bump to 3.15.2
 
 -- Monit, version bump to 5.20.0
 
