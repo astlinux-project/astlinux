@@ -63,18 +63,25 @@ init () {
 }
 
 start () {
+  local first
 
   if [ -f /etc/chrony.conf ]; then
 
     # Set the clock (large change)
-    echo "Setting local time/date..."
-    if chronyd -q; then
-      if [ -r /dev/rtc ]; then
-        hwclock -wu --noadjfile 2>/dev/null
-      fi
+    first="$(awk '/^server / { print $2; nextfile; }' /etc/chrony.conf)"
+    if [ -z "$first" ]; then
+      first="$(awk '/^pool / { print $2; nextfile; }' /etc/chrony.conf)"
     fi
-    rm -f $PIDFILE
-    sleep 1
+    if [ -n "$first" ]; then
+      echo "Setting local system time using '$first'..."
+      if chronyd -q "server $first iburst"; then
+        if [ -r /dev/rtc ]; then
+          hwclock -wu --noadjfile 2>/dev/null
+        fi
+      fi
+      rm -f $PIDFILE
+      sleep 1
+    fi
 
     # Maintain the clock (small changes)
     echo "Starting NTP Daemon (chronyd)..."
