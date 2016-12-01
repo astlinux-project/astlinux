@@ -927,7 +927,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } elseif (isset($_POST['submit_edit_ntp'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
-    if (is_writable($file = '/mnt/kd/ntpd.conf')) {
+    if (is_writable($file = '/mnt/kd/chrony.conf')) {
       header('Location: /admin/edit.php?file='.$file);
       exit;
     }
@@ -1698,7 +1698,7 @@ require_once '../common/header.php';
   putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('NTP Server:');
-  if (! is_file('/mnt/kd/ntpd.conf')) {
+  if (! is_file('/mnt/kd/chrony.conf')) {
     if (($t_value = getVARdef($db, 'NTPSERVS', $cur_db)) === '') {
       $t_value = getVARdef($db, 'NTPSERV', $cur_db);
     }

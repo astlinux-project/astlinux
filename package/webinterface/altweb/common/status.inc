@@ -36,6 +36,7 @@
 // 10-28-2014, Added S.M.A.R.T Monitoring Status
 // 11-06-2014, Added Failover Status
 // 10-14-2016, Added Check for default admin password
+// 12-01-2016, Added chronyc to replace ntpq
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -73,7 +74,7 @@ if (getPREFdef($global_prefs, 'status_require_auth') === 'yes') {
 function getDaemons() {
 
   $status['asterisk'] = 0;
-  $status['ntpd'] = 0;
+  $status['chronyd'] = 0;
   $status['miniupnpd'] = 0;
   $status['dnsmasq'] = 0;
   $status['openvpn'] = 0;
@@ -705,24 +706,20 @@ if (is_file('/var/run/wan-failover.pid') && is_file('/var/log/wan-failover-statu
   }
 }
 
-if ($daemon['ntpd'] > 0) {
+if ($daemon['chronyd'] > 0) {
   if (getPREFdef($global_prefs, 'status_ntp_sessions') !== 'no') {
-    putHtml("<h2>NTP Peer States:</h2>");
+    putHtml("<h2>NTP Time Sources:</h2>");
     putHtml("<pre>");
-    $tmpfile = tempnam("/tmp", "PHP_");
-    shell('ntpq -pn 127.0.0.1 >'.$tmpfile, $status);
-    if ($status == 0) {
-      $ph = @fopen($tmpfile, "r");
-      while (! feof($ph)) {
-        if (($line = rtrim(fgets($ph, 1024))) !== '') {
-          putText($line);
-        }
-      }
-      fclose($ph);
-    } else {
-      putText('No NTP peers found');
+
+    $output = array();
+    @exec('/usr/bin/chronyc sources', $output);
+    if (strncmp(current($output), '210', 3) == 0) {
+      array_shift($output); // Skip first '210' line
     }
-    @unlink($tmpfile);
+    foreach ($output as $line) {
+      putText(rtrim($line));
+    }
+    unset($output);
     putHtml("</pre>");
   }
 }

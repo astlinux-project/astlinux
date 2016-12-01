@@ -50,7 +50,7 @@ require_once '../common/header.php';
         $dir === '/etc/dahdi' ||
         $file === '/etc/ssh/sshd_config' ||
         $file === '/stat/etc/rc.conf' ||
-        $file === '/var/db/ntpd.drift' ||
+        $file === '/var/lib/ntp/chrony.drift' ||
         $file === '/etc/udev/rules.d/70-persistent-net.rules' ||
         ($dir === '/etc' && (substr($file, -5) === '.conf'))) {
       if (is_file($file)) {

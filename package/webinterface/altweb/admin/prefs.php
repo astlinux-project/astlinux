@@ -588,7 +588,7 @@ require_once '../common/header.php';
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_ntp_sessions') !== 'no') ? ' checked="checked"' : '';
-  putHtml('<input type="checkbox" value="ntp_sessions" name="ntp_sessions"'.$sel.' /></td><td colspan="5">Show NTP Peer States</td></tr>');
+  putHtml('<input type="checkbox" value="ntp_sessions" name="ntp_sessions"'.$sel.' /></td><td colspan="5">Show NTP Time Sources</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_show_dhcp_leases') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="dhcp_leases" name="dhcp_leases"'.$sel.' /></td><td colspan="5">Show DHCP Leases</td></tr>');

@@ -632,9 +632,7 @@ require_once '../common/header.php';
   if (is_file($file = '/mnt/kd/crontabs/root')) {
     putHtml('<option value="'.$file.'">Cron Jobs for root</option>');
   }
-  if (is_file($file = '/mnt/kd/ntpd.drift')) {
-    putHtml('<option value="'.$file.'">NTP drift file</option>');
-  } elseif (is_file($file = '/var/db/ntpd.drift')) {
+  if (is_file($file = '/var/lib/ntp/chrony.drift')) {
     putHtml('<option value="'.$file.'">NTP drift file</option>');
   }
   if (is_file($file = '/etc/udev/rules.d/70-persistent-net.rules')) {

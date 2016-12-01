@@ -123,6 +123,12 @@ function statusPROCESS($process) {
     } else {
       $str = $stopped;
     }
+  } elseif ($process === 'ntpd') {
+    if (is_file($path.'chronyd.pid')) {
+      $str = $running;
+    } else {
+      $str = $stopped;
+    }
   } elseif ($process === 'ipsec') {
     if (is_file($path.'charon.pid')) {
       $str = $running;
@@ -181,7 +187,7 @@ function systemSHUTDOWN($myself, $result) {
 function systemREBOOT($myself, $result, $setup = FALSE) {
   global $global_prefs;
   
-  $count_down_secs = 120;                                     
+  $count_down_secs = 125;                                     
   
   if (($adjust = getPREFdef($global_prefs, 'system_reboot_timer_adjust')) !== '') {
     $count_down_secs += (int)$adjust;                                     
@@ -552,8 +558,8 @@ function parseRCconf($conffile) {
           $value = trim($value, ' ');
         }
         if ($var === 'NTPSERV' || $var === 'NTPSERVS') {
-          if (is_file('/mnt/kd/ntpd.conf')) {
-            $value = '#NTP server is specified in /mnt/kd/ntpd.conf';
+          if (is_file('/mnt/kd/chrony.conf')) {
+            $value = '#NTP server is specified in /mnt/kd/chrony.conf';
           }
         }
         if ($var === 'UPS_DRIVER' || $var === 'UPS_DRIVER_PORT') {
