@@ -187,7 +187,7 @@ function systemSHUTDOWN($myself, $result) {
 function systemREBOOT($myself, $result, $setup = FALSE) {
   global $global_prefs;
   
-  $count_down_secs = 125;                                     
+  $count_down_secs = 130;                                     
   
   if (($adjust = getPREFdef($global_prefs, 'system_reboot_timer_adjust')) !== '') {
     $count_down_secs += (int)$adjust;                                     
