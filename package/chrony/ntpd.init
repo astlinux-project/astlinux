@@ -74,7 +74,7 @@ start () {
     fi
     if [ -n "$first" ]; then
       echo "Setting local system time using '$first'..."
-      if chronyd -q "server $first iburst"; then
+      if chronyd -q -t 8 "server $first iburst"; then
         if [ -r /dev/rtc ]; then
           hwclock -wu --noadjfile 2>/dev/null
         fi

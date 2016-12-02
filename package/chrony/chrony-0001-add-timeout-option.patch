@@ -1,0 +1,69 @@
+From 35134848524fe06e3c87cf685eb1a4cb886625a8 Mon Sep 17 00:00:00 2001
+From: Miroslav Lichvar <mlichvar@redhat.com>
+Date: Thu, 1 Dec 2016 15:57:39 +0100
+Subject: main: add -t option to chronyd
+
+This option sets a timeout (in seconds) after which chronyd will exit.
+If the clock is not synchronised, it will exit with a non-zero status.
+This is useful with the -q or -Q option to shorten the maximum time
+waiting for measurements, or with the -r option to limit the time when
+chronyd is running, but still allow it to adjust the frequency of the
+system clock.
+---
+ main.c           | 19 ++++++++++++++++++-
+ 2 files changed, 25 insertions(+), 1 deletion(-)
+
+diff --git a/main.c b/main.c
+index 71916fa..63d9cdc 100644
+--- a/main.c
++++ b/main.c
+@@ -144,6 +144,16 @@ signal_cleanup(int x)
+ /* ================================================== */
+ 
+ static void
++quit_timeout(void *arg)
++{
++  /* Return with non-zero status if the clock is not synchronised */
++  exit_status = REF_GetOurStratum() >= NTP_MAX_STRATUM;
++  SCH_QuitProgram();
++}
++
++/* ================================================== */
++
++static void
+ ntp_source_resolving_end(void)
+ {
+   NSR_SetSourceResolvingEndHandler(NULL);
+@@ -359,7 +369,7 @@ int main
+   char *user = NULL;
+   struct passwd *pw;
+   int debug = 0, nofork = 0, address_family = IPADDR_UNSPEC;
+-  int do_init_rtc = 0, restarted = 0;
++  int do_init_rtc = 0, restarted = 0, timeout = 0;
+   int other_pid;
+   int scfilter_level = 0, lock_memory = 0, sched_priority = 0;
+   int system_log = 1;
+@@ -417,6 +427,10 @@ int main
+       ref_mode = REF_ModePrintOnce;
+       nofork = 1;
+       system_log = 0;
++    } else if (!strcmp("-t", *argv)) {
++      ++argv, --argc;
++      if (argc == 0 || sscanf(*argv, "%d", &timeout) != 1 || timeout <= 0)
++        LOG_FATAL(LOGF_Main, "Bad timeout");
+     } else if (!strcmp("-4", *argv)) {
+       address_family = IPADDR_INET4;
+     } else if (!strcmp("-6", *argv)) {
+@@ -545,6 +559,9 @@ int main
+   REF_SetModeEndHandler(reference_mode_end);
+   REF_SetMode(ref_mode);
+ 
++  if (timeout)
++    SCH_AddTimeoutByDelay(timeout, quit_timeout, NULL);
++
+   if (do_init_rtc) {
+     RTC_TimeInit(post_init_rtc_hook, NULL);
+   } else {
+-- 
+cgit v0.12
+
