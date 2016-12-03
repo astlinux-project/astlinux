@@ -78,6 +78,8 @@ start () {
         if [ -r /dev/rtc ]; then
           hwclock -wu --noadjfile 2>/dev/null
         fi
+      else
+        logger -s -t chronyd -p kern.info "Failed to set time using NTP server '$first', continuing in the background."
       fi
       rm -f $PIDFILE
       sleep 1
