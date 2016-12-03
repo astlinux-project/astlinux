@@ -63,4 +63,4 @@ avahi~Copyright (c) 2004-2016 Lennart Poettering, Trent Lloyd, Avahi developers.
 Linux Kernel~Copyright (c) 1997-2016 The Linux Kernel Organization, Inc.; Linux is a Registered Trademark of Linus Torvalds.
 whois~Copyright (c) 1999-2016 Marco d'Itri.
 strongSwan~Copyright (c) 2006-2016 Andreas Steffen, Tobias Brunner, et al.
-chrony~Copyright (c) 2009-2016 Miroslav Lichvar.
+chrony~Copyright (c) 1997-2016 Richard P. Curnow, Miroslav Lichvar.
