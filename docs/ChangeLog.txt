@@ -35,6 +35,8 @@ Released @TBD@
 
 -- tiff, version bump to 4.0.7, security fixes: 11 CVE's
 
+-- readline, version bump to 7.0
+
 -- nano, version bump to 2.7.1
 
 -- reload-blocklist-netset (optional CRON script), add 'firehol_webclient' blocklist support.
@@ -54,6 +56,11 @@ Released @TBD@
    New rc.conf variables are: IPSEC_ALLOWED_ENDPOINTS and IPSEC_ALLOWED_VPN_NETS
    More info: http://doc.astlinux.org/userdoc:tt_ipsec_vpn_strongswan
 
+-- chrony, version 2.4.1, new package to replace 'ntpd' as the NTP daemon, NTPv4 client and server.
+   Note: No configuration change for most users, though if you had a custom /mnt/kd/ntpd.conf file
+         you will have to generate a new /mnt/kd/chrony.conf file with similar but different syntax.
+   More info: http://doc.astlinux.org/userdoc:tt_ntp_client_server
+
 -- OpenVPN, version bump to 2.3.13
 
 -- prosody, version bump to 0.9.11
@@ -67,8 +74,6 @@ Released @TBD@
 -- stunnel, version bump to 5.38
 
 -- shellinabox, version bump to 2.20
-
--- ntpd/sntp, version bump to 4.2.8p9, security fixes: 2 medium-, 2 medium-/low-, and 5 low-severity
 
 -- avahi, now runs with 'avahi' user/group permissions using the new libcap support, for added security.
 
@@ -103,6 +108,8 @@ Released @TBD@
    More info: http://doc.astlinux.org/userdoc:tt_ipsec_vpn_strongswan
 
 -- Status tab, display "ipsec status" output in IPsec Associations (strongSwan).
+
+-- Status, Network, Edit, Prefs, System tabs, add support for 'chrony' instead of 'ntp' for network time.
 
 
 Additions for AstLinux 1.2.8:
