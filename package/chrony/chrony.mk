@@ -28,8 +28,12 @@ endif
 
 ifeq ($(BR2_PACKAGE_READLINE),y)
 CHRONY_DEPENDENCIES += readline
+CHRONY_CONF_OPT += --without-editline
+else ifeq ($(BR2_PACKAGE_LIBEDIT),y)
+CHRONY_DEPENDENCIES += libedit
+CHRONY_CONF_OPT += --without-readline
 else
-CHRONY_CONF_OPT += --disable-readline
+CHRONY_CONF_OPT += --without-editline --without-readline
 endif
 
 # If pps-tools is available, build it before so the package can use it

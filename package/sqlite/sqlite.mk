@@ -18,11 +18,14 @@ SQLITE_CONF_OPT = \
 	--enable-threadsafe \
 	--localstatedir=/var
 
-ifeq ($(BR2_PACKAGE_SQLITE_READLINE),y)
-SQLITE_DEPENDENCIES += ncurses readline
-SQLITE_CONF_OPT += --enable-readline
+ifeq ($(BR2_PACKAGE_READLINE),y)
+SQLITE_DEPENDENCIES += readline
+SQLITE_CONF_OPT += --disable-editline --enable-readline
+else ifeq ($(BR2_PACKAGE_LIBEDIT),y)
+SQLITE_DEPENDENCIES += libedit
+SQLITE_CONF_OPT += --enable-editline --disable-readline
 else
-SQLITE_CONF_OPT += --disable-readline
+SQLITE_CONF_OPT += --disable-editline --disable-readline
 endif
 
 define SQLITE_UNINSTALL_TARGET_CMDS
