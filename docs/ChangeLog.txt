@@ -33,6 +33,9 @@ Released @TBD@
 
 -- libcap, version 2.25, new package, user-space library for POSIX 1003.1e capabilities available in Linux kernels.
 
+-- libedit, version 20160903-3.1, new package, commonly used instead of the somewhat bloated readline (no longer enabled).
+   Utilized by commands: asterisk -r, sqlite3, chronyc, sftp, bc
+
 -- tiff, version bump to 4.0.7, security fixes: 11 CVE's
 
 -- readline, version bump to 7.0
@@ -89,7 +92,7 @@ Released @TBD@
 
 ** Asterisk
 
--- Asterisk 11.25.0 (version bump) and 13.13.0 (version bump)
+-- Asterisk 11.25.0 (version bump) and 13.12.2 (version bump)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
