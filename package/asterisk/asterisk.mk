@@ -52,9 +52,14 @@ ASTERISK_CONFIGURE_ARGS+= \
 ASTERISK_CONFIGURE_ARGS+= \
 			--without-cap
 
-# Asterisk does not work using system libedit with wide-char/UTF-8 support
+ifeq ($(strip $(BR2_PACKAGE_LIBEDIT)),y)
+ASTERISK_EXTRAS+=libedit
+ASTERISK_CONFIGURE_ARGS+= \
+			--with-libedit="$(STAGING_DIR)/usr" 
+else
 ASTERISK_CONFIGURE_ARGS+= \
 			--without-libedit
+endif
 
 ifeq ($(strip $(BR2_PACKAGE_LIBXML2)),y)
 ASTERISK_EXTRAS+=libxml2
