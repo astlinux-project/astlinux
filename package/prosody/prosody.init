@@ -2,6 +2,8 @@
 
 . /etc/rc.conf
 
+PIDFILE="/var/run/prosody/prosody.pid"
+
 DEFAULT_MODULES="roster saslauth tls disco \
 private vcard \
 legacyauth version uptime time ping pep register adhoc \
@@ -109,7 +111,7 @@ gen_xmpp_config()
   fi
 
   echo "
-pidfile = \"/var/run/prosody/prosody.pid\"
+pidfile = \"${PIDFILE}\"
 
 prosody_user = \"prosody\"
 prosody_group = \"prosody\"
@@ -245,24 +247,24 @@ start () {
   if [ -f /etc/prosody/prosody.cfg.lua ] && grep -q '^[^-]*"posix"' /etc/prosody/prosody.cfg.lua; then
     echo "Starting XMPP Server..."
 
-    su -p -s /bin/ash -c /usr/bin/prosody prosody
+    start-stop-daemon -S -x /usr/bin/prosody -n lua -p $PIDFILE -u prosody --chuid prosody:prosody
   fi
 }
 
 stop () {
 
-  if [ -f /var/run/prosody/prosody.pid ]; then
+  if [ -f $PIDFILE ]; then
     echo "Stopping XMPP Server..."
 
-    kill $(cat /var/run/prosody/prosody.pid) >/dev/null 2>&1
+    start-stop-daemon -K -q -n lua -p $PIDFILE -u prosody -s TERM
 
     # Wait for prosody to stop
     cnt=5
-    while [ $cnt -gt 0 ] && [ -f /var/run/prosody/prosody.pid ]; do
+    while [ $cnt -gt 0 ] && [ -f $PIDFILE ]; do
       cnt=$((cnt - 1))
       sleep 1
     done
-    rm -f /var/run/prosody/prosody.pid
+    rm -f $PIDFILE
   fi
 }
 
