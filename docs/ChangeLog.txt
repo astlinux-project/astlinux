@@ -38,8 +38,6 @@ Released @TBD@
 
 -- tiff, version bump to 4.0.7, security fixes: 11 CVE's
 
--- readline, version bump to 7.0
-
 -- nano, version bump to 2.7.1
 
 -- reload-blocklist-netset (optional CRON script), add 'firehol_webclient' blocklist support.
