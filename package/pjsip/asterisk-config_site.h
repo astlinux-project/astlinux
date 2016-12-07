@@ -26,7 +26,7 @@
 
 #define PJ_SCANNER_USE_BITWISE	0
 #define PJ_OS_HAS_CHECK_STACK	0
-#define PJ_LOG_MAX_LEVEL		3
+#define PJ_LOG_MAX_LEVEL		6
 #define PJ_ENABLE_EXTRA_CHECK	1
 #define PJSIP_MAX_TSX_COUNT		((64*1024)-1)
 #define PJSIP_MAX_DIALOG_COUNT	((64*1024)-1)
@@ -35,7 +35,16 @@
 #define PJ_DEBUG			0
 #define PJSIP_SAFE_MODULE		0
 #define PJ_HAS_STRICMP_ALNUM		0
-#define PJ_HASH_USE_OWN_TOLOWER		1
+
+/*
+ * Do not ever enable PJ_HASH_USE_OWN_TOLOWER because the algorithm is
+ * inconsistently used when calculating the hash value and doesn't
+ * convert the same characters as pj_tolower()/tolower().  Thus you
+ * can get different hash values if the string hashed has certain
+ * characters in it.  (ASCII '@', '[', '\\', ']', '^', and '_')
+ */
+#undef PJ_HASH_USE_OWN_TOLOWER
+
 /*
   It is imperative that PJSIP_UNESCAPE_IN_PLACE remain 0 or undefined.
   Enabling it will result in SEGFAULTS when URIs containing escape sequences are encountered.
