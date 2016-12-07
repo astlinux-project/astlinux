@@ -1,0 +1,113 @@
+--- chrony-2.4.1/client.c.orig	2016-12-07 10:48:18.897498568 -0600
++++ chrony-2.4.1/client.c	2016-12-07 11:09:14.876363047 -0600
+@@ -94,6 +94,100 @@
+ }
+ 
+ /* ================================================== */
++/* Tab-completion when editline/readline is available */
++
++#ifdef FEAT_READLINE
++static char *command_names[] = {
++  "accheck",
++  "activity",
++  "add peer",
++  "add server",
++  "allow",
++  "burst",
++  "clients",
++  "cmdaccheck",
++  "cmdallow",
++  "cmddeny",
++  "cyclelogs",
++  "delete",
++  "deny",
++  "dfreq",
++  "dns",
++  "doffset",
++  "dump",
++  "exit",
++  "help",
++  "keygen",
++  "local",
++  "makestep",
++  "manual on",
++  "manual off",
++  "manual delete",
++  "manual list",
++  "manual reset",
++  "maxdelay",
++  "maxdelaydevratio",
++  "maxdelayratio",
++  "maxpoll",
++  "maxupdateskew",
++  "minpoll",
++  "minstratum",
++  "ntpdata",
++  "offline",
++  "online",
++  "polltarget",
++  "quit",
++  "refresh",
++  "rekey",
++  "reselect",
++  "reselectdist",
++  "retries",
++  "rtcdata",
++  "serverstats",
++  "settime",
++  "smoothing",
++  "smoothtime",
++  "sources",
++  "sources -v",
++  "sourcestats",
++  "sourcestats -v",
++  "timeout",
++  "tracking",
++  "trimrtc",
++  "waitsync",
++  "writertc",
++  NULL
++};
++
++static char *
++command_name_generator(const char *text, int state)
++{
++  static int list_index, len;
++  char *name;
++
++  if (!state) {
++    list_index = 0;
++    len = strlen(text);
++  }
++
++  while ((name = command_names[list_index++])) {
++    if (strncmp(name, text, len) == 0) {
++      return strdup(name);
++    }
++  }
++
++  return NULL;
++}
++
++static char **
++command_name_completion(const char *text, int start, int end)
++{
++  rl_attempted_completion_over = 1;
++  return rl_completion_matches(text, command_name_generator);
++}
++#endif
++
++/* ================================================== */
+ /* Read a single line of commands from standard input.  Eventually we
+    might want to use the GNU readline library. */
+ 
+@@ -107,6 +148,9 @@
+ #ifdef FEAT_READLINE
+     char *cmd;
+ 
++    rl_attempted_completion_function = command_name_completion;
++    rl_basic_word_break_characters = "\t\n\r";
++
+     /* save line only if not empty */
+     cmd = readline(prompt);
+     if( cmd == NULL ) return( NULL );
