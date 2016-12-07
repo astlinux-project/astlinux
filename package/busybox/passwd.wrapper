@@ -27,7 +27,7 @@ CHECK_RESULT=$?
 
 if [ "$ARG_USER" != "root" ] || \
    [ $CHECK_RESULT -ne 0 ]; then
-  $BUSYBOX passwd $ARGS
+  $BUSYBOX passwd -a md5 $ARGS
   RESULT=$?
   if [ "$ARG_USER" = "root" ]; then
     echo "Password for Web interface 'admin' is unchanged"
