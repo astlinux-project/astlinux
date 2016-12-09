@@ -21,7 +21,7 @@ Released @TBD@
 
 -- RUNNIX, version bump to runnix-0.4-7972, with Linux Kernel 3.2.84, dropbear 2016.74
 
--- php, version bump to 5.6.28
+-- php, version bump to 5.6.29
 
 -- sqlite, version bump to 3.15.2
 
@@ -62,7 +62,7 @@ Released @TBD@
          you will have to generate a new /mnt/kd/chrony.conf file with similar but different syntax.
    More info: http://doc.astlinux.org/userdoc:tt_ntp_client_server
 
--- OpenVPN, version bump to 2.3.13
+-- OpenVPN, version bump to 2.3.14
 
 -- prosody, version bump to 0.9.11
 
@@ -90,7 +90,7 @@ Released @TBD@
 
 ** Asterisk
 
--- Asterisk 11.25.0 (version bump) and 13.12.2 (version bump)
+-- Asterisk 11.25.1 (version bump) and 13.12.2 (version bump)
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
