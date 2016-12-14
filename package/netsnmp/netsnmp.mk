@@ -40,6 +40,9 @@ else
 	NETSNMP_CONF_OPT += --with-endianness=little
 endif
 
+# libnl - nl_connect
+NETSNMP_CONF_OPT += --without-nl
+
 # OpenSSL
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
 	NETSNMP_DEPENDENCIES += openssl
