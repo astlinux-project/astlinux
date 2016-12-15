@@ -75,7 +75,9 @@ define STRONGSWAN_POST_INSTALL
 	  ln -s /tmp/etc/strongswan/$$i $(TARGET_DIR)/etc/$$i ; \
 	done
 	rm -rf $(TARGET_DIR)/usr/share/strongswan
-	$(INSTALL) -m 0755 -D package/strongswan/ipsec.init $(TARGET_DIR)/etc/init.d/ipsec
+	$(INSTALL) -m 755 -D package/strongswan/ipsec.init $(TARGET_DIR)/etc/init.d/ipsec
+	$(INSTALL) -m 644 -D package/strongswan/charon.logrotate $(TARGET_DIR)/etc/logrotate.d/charon
+	$(INSTALL) -m 644 -D package/strongswan/charon-logging.conf $(TARGET_DIR)/stat/etc/strongswan/strongswan.d/charon-logging.conf
 	ln -sf ../../init.d/ipsec $(TARGET_DIR)/etc/runlevels/default/S31ipsec
 	ln -sf ../../init.d/ipsec $(TARGET_DIR)/etc/runlevels/default/K20ipsec
 endef
