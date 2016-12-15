@@ -611,6 +611,9 @@ require_once '../common/header.php';
   if (is_file($file = '/var/log/openvpnclient.log')) {
     putHtml('<option value="'.$file.'">OpenVPN Client log</option>');
   }
+  if (is_file($file = '/var/log/charon.log')) {
+    putHtml('<option value="'.$file.'">IPsec strongSwan log</option>');
+  }
   if (is_file($file = '/var/log/ups.log')) {
     putHtml('<option value="'.$file.'">UPS Daemon Startup log</option>');
   }
