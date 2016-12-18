@@ -3,13 +3,14 @@
 # dnscrypt-proxy
 #
 #############################################################
-DNSCRYPT_PROXY_VERSION = 1.7.0
+DNSCRYPT_PROXY_VERSION = 1.8.0
 DNSCRYPT_PROXY_SOURCE = dnscrypt-proxy-$(DNSCRYPT_PROXY_VERSION).tar.bz2
-DNSCRYPT_PROXY_SITE = https://github.com/jedisct1/dnscrypt-proxy/releases/download/$(DNSCRYPT_PROXY_VERSION)
+DNSCRYPT_PROXY_SITE = https://download.dnscrypt.org/dnscrypt-proxy
 
 DNSCRYPT_PROXY_DEPENDENCIES += libsodium
 
 DNSCRYPT_PROXY_CONF_OPT = \
+	--with-included-ltdl \
 	--without-systemd \
 	--disable-plugins
 
