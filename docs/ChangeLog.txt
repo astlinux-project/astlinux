@@ -27,6 +27,8 @@ Released @TBD@
 
 -- Monit, version bump to 5.20.0
 
+-- logrotate, version bump to 3.11.0
+
 -- libxml2, security fixes: CVE-2016-5131, CVE-2016-4658
 
 -- libusb, version bump to 1.0.21
@@ -39,6 +41,8 @@ Released @TBD@
 -- tiff, version bump to 4.0.7, security fixes: 11 CVE's
 
 -- nano, version bump to 2.7.2
+
+-- strace, version bump to 4.15
 
 -- reload-blocklist-netset (optional CRON script), add 'firehol_webclient' blocklist support.
 
@@ -68,6 +72,10 @@ Released @TBD@
 
 -- ipset, version bump to 6.30
 
+-- dnscrypt-proxy, version bump to 1.8.0
+
+-- unbound (host), version bump to 1.6.0
+
 -- libpcap, version bump to 1.8.1
 
 -- tcpdump, version bump to 4.8.1
@@ -77,6 +85,8 @@ Released @TBD@
 -- shellinabox, version bump to 2.20
 
 -- avahi, now runs with 'avahi' user/group permissions using the new libcap support, for added security.
+
+-- miniupnpd, version bump to 2.0.20161216
 
 -- msmtp, version bump to 1.6.6
 
