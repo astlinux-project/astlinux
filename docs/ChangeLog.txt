@@ -44,6 +44,8 @@ Released @TBD@
 
 -- strace, version bump to 4.15
 
+-- sudo, version bump to 1.8.19p1
+
 -- reload-blocklist-netset (optional CRON script), add 'firehol_webclient' blocklist support.
 
 -- ca-certificates, update trusted root certificates 2016-11-02
