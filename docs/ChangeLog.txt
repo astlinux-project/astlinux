@@ -56,8 +56,8 @@ Released @TBD@
 
 -- OpenSSL, quasi-major version bump to 1.0.2j, LTS series.
 
--- libcurl (curl) version bump to 7.51.0, security fixes: CVE-2016-8615, CVE-2016-8616, CVE-2016-8617, CVE-2016-8618,
-             CVE-2016-8619, CVE-2016-8620, CVE-2016-8621, CVE-2016-8622, CVE-2016-8623, CVE-2016-8624, CVE-2016-8625
+-- libcurl (curl) version bump to 7.52.0, security fixes: CVE-2016-8615, CVE-2016-8616, CVE-2016-8617, CVE-2016-8618,
+   CVE-2016-8619, CVE-2016-8620, CVE-2016-8621, CVE-2016-8622, CVE-2016-8623, CVE-2016-8624, CVE-2016-8625, CVE-2016-9586
 
 -- strongSwan, version 5.5.1, new package, a more feature rich alternative for IPsec VPN support.
    New rc.conf variables are: IPSEC_ALLOWED_ENDPOINTS and IPSEC_ALLOWED_VPN_NETS
