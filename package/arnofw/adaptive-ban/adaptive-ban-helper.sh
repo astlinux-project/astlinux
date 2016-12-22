@@ -56,7 +56,14 @@ start_run()
     
     if [ ! -f "$file" ]; then
       log_msg "Input log file $file does not exist"
-      break
+      sleep 1
+      # Test again since the 'log_msg' may create the file after being rotated
+      if [ -f "$file" ]; then
+        log_msg "Input log file $file now exists, continuing..."
+      else
+        log_msg "Input log file $file does not exist, exiting..."
+        break
+      fi
     fi
     
     if [ "$filetime" != "$(date -r "$file" "+%s")" -o "$argstime" != "$(date -r "$ARGSFILE" "+%s")" ]; then
