@@ -26,10 +26,10 @@ restart () {
   fi
   if [ "$action" = "remote" ]; then
     echo "Starting Remote syslogd..."
-    syslogd -s $LOGSIZE -m 60 -b $NLOGS -L -R "$SYSLOGHOST"
+    syslogd -s $LOGSIZE -b $NLOGS -L -R "$SYSLOGHOST"
   else
     echo "Stopping Remote syslogd..."
-    syslogd -s $LOGSIZE -m 60 -b $NLOGS
+    syslogd -s $LOGSIZE -b $NLOGS
   fi
 }
 

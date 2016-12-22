@@ -16,7 +16,7 @@ start () {
   fi
 
   echo "Starting syslogd..."
-  syslogd -s $LOGSIZE -m 60 -b $NLOGS
+  syslogd -s $LOGSIZE -b $NLOGS
   klogd
 }
 
