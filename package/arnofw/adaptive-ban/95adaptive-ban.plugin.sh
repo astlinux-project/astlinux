@@ -2,16 +2,16 @@
 #            -= Arno's iptables firewall - Adaptive Ban plugin =-
 #
 PLUGIN_NAME="Adaptive Ban plugin"
-PLUGIN_VERSION="1.07"
+PLUGIN_VERSION="1.08"
 PLUGIN_CONF_FILE="adaptive-ban.conf"
 #
-# Last changed          : August 22, 2013
+# Last changed          : December 22, 2016
 # Requirements          : AIF 2.0.0+
 # Comments              : Parse a log file for failed access with offending IP addresses
 #                         Ban the IP address after multiple failed attempts
 #
-# Author                : (C) Copyright 2010-2013 by Lonnie Abelbeck
-# Homepage              : http://www.astlinux.org/
+# Author                : (C) Copyright 2010-2016 by Lonnie Abelbeck
+# Homepage              : http://www.astlinux-project.org/
 # Credits               : Fail2ban Project
 # Homepage              : http://www.fail2ban.org/
 # Credits               : Arno van Amersfoort
