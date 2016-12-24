@@ -19,7 +19,7 @@ Released @TBD@
 
 -- Linux Kernel 3.2.84 (minor bump)
 
--- RUNNIX, version bump to runnix-0.4-7972, with Linux Kernel 3.2.84, dropbear 2016.74
+-- RUNNIX, version bump to runnix-0.4-8057, with Linux Kernel 3.2.84, dropbear 2016.74, kexec 2.0.14
 
 -- php, version bump to 5.6.29
 
@@ -40,7 +40,7 @@ Released @TBD@
 
 -- tiff, version bump to 4.0.7, security fixes: 11 CVE's
 
--- kexec-tools, version bump to 2.0.14
+-- kexec, version bump to 2.0.14
 
 -- nano, version bump to 2.7.2
 
@@ -518,7 +518,7 @@ Released 2016-02-10
 
 -- ethtool, version bump to 4.2
 
--- kexec-tools, version bump to 2.0.11
+-- kexec, version bump to 2.0.11
 
 -- kernel-reboot, new command performs a reboot via kexec just as RUNNIX does, all changes to the run images and versions are honored.
    Reboots are 30-40 seconds faster using kernel-reboot. The kernel-reboot command replaces the sreboot script that has been removed.
@@ -920,7 +920,7 @@ Released 2015-02-12
 
 -- libsodium, version bump to 1.0.2
 
--- kexec-tools, version bump to 2.0.8
+-- kexec, version bump to 2.0.8
 
 -- Time Zone Database update, tzdata2015a and tzcode2015a
 
@@ -1217,7 +1217,7 @@ Released 2014-07-19
 
 -- ethtool, version bump to 3.14
 
--- kexec-tools, version bump to 2.0.6
+-- kexec, version bump to 2.0.6
 
 -- pcre, version bump to 8.35
 
@@ -1328,7 +1328,7 @@ Released 2014-04-24
 
 -- dosfstools, version bump to 3.0.25
 
--- kexec-tools, version bump to 2.0.4
+-- kexec, version bump to 2.0.4
 
 -- initrd and /etc/rc, On boot use 'e2fsck -y' instead of 'e2fsck -p' since common disk corruption will not be
    automatically fixed with '-p'.  Thanks to Martin Sunstrum for demonstrating the problem and testing.
