@@ -40,6 +40,8 @@ Released @TBD@
 
 -- tiff, version bump to 4.0.7, security fixes: 11 CVE's
 
+-- kexec-tools, version bump to 2.0.14
+
 -- nano, version bump to 2.7.2
 
 -- strace, version bump to 4.15
@@ -56,7 +58,7 @@ Released @TBD@
 
 -- OpenSSL, quasi-major version bump to 1.0.2j, LTS series.
 
--- libcurl (curl) version bump to 7.52.0, security fixes: CVE-2016-8615, CVE-2016-8616, CVE-2016-8617, CVE-2016-8618,
+-- libcurl (curl) version bump to 7.52.1, security fixes: CVE-2016-8615, CVE-2016-8616, CVE-2016-8617, CVE-2016-8618,
    CVE-2016-8619, CVE-2016-8620, CVE-2016-8621, CVE-2016-8622, CVE-2016-8623, CVE-2016-8624, CVE-2016-8625, CVE-2016-9586
 
 -- strongSwan, version 5.5.1, new package, a more feature rich alternative for IPsec VPN support.
@@ -73,6 +75,8 @@ Released @TBD@
 -- prosody, version bump to 0.9.11
 
 -- ipset, version bump to 6.30
+
+-- lighttpd, version bump to 1.4.44
 
 -- dnscrypt-proxy, version bump to 1.8.0
 
