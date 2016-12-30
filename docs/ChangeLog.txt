@@ -99,7 +99,7 @@ Released @TBD@
 -- iproute2 (ip, tc, bridge, etc.) version bump to version 3.16.0, now including the 'bridge' utility.
    No longer use 'brctl' for managing bridge interfaces, instead use iproute2 tools.
 
--- whois, version 5.2.13, new package to perform Whois lookups for domains and IP's.
+-- whois, version 5.2.14, new package to perform Whois lookups for domains and IP's.
 
 -- arnofw (AIF), "adaptive-ban" plugin, asterisk filter, add chan_sip 'Not a local domain' regex and
    chan_pjsip 'No matching endpoint found' regex.
