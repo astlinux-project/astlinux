@@ -4,11 +4,18 @@
 #
 #############################################################
 
-OPENVPN_VERSION = 2.3.14
+OPENVPN_VERSION = 2.4.0
 OPENVPN_SITE = http://swupdate.openvpn.net/community/releases
-OPENVPN_DEPENDENCIES = host-pkg-config
-OPENVPN_CONF_OPT = --disable-plugins --enable-iproute2
-OPENVPN_CONF_ENV = IFCONFIG=/sbin/ifconfig \
+OPENVPN_DEPENDENCIES = host-pkg-config openssl
+
+OPENVPN_CONF_OPT = \
+	--disable-debug \
+	--disable-plugins \
+	--enable-iproute2 \
+	--with-crypto-library=openssl
+
+OPENVPN_CONF_ENV = \
+	IFCONFIG=/sbin/ifconfig \
 	NETSTAT=/bin/netstat \
 	ROUTE=/sbin/route
 
@@ -22,11 +29,6 @@ ifeq ($(BR2_PACKAGE_OPENVPN_LZO),y)
 	OPENVPN_DEPENDENCIES += lzo
 else
 	OPENVPN_CONF_OPT += --disable-lzo
-endif
-
-ifeq ($(BR2_PACKAGE_OPENVPN_OPENSSL),y)
-	OPENVPN_CONF_OPT += --with-crypto-library=openssl
-	OPENVPN_DEPENDENCIES += openssl
 endif
 
 define OPENVPN_INSTALL_TARGET_CMDS

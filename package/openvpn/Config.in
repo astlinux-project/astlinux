@@ -1,5 +1,6 @@
 config BR2_PACKAGE_OPENVPN
 	bool "openvpn"
+	select BR2_PACKAGE_OPENSSL
  	help
 	  OpenVPN is a full-featured SSL VPN solution which can
 	  accomodate a wide range of configurations, including road
@@ -8,20 +9,15 @@ config BR2_PACKAGE_OPENVPN
 	  remote access solutions with load balancing, failover, and
 	  fine-grained access-controls.
 
-	  http://openvpn.sourceforge.net/
+	  http://openvpn.net/
+
+if BR2_PACKAGE_OPENVPN
 
 config BR2_PACKAGE_OPENVPN_LZO
 	bool "LZO compression"
 	default y
-	depends on BR2_PACKAGE_OPENVPN
 	select BR2_PACKAGE_LZO
 	help
 	  Enable LZO compression.
 
-config BR2_PACKAGE_OPENVPN_OPENSSL
-	bool "OpenSSL support"
-	default y
-	depends on BR2_PACKAGE_OPENVPN
-	select BR2_PACKAGE_OPENSSL
-	help
-	  Enable TLS-based key exchange and OpenSSL crypto support.
+endif

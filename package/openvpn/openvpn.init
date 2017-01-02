@@ -63,32 +63,12 @@ tls-auth $OVPN_TA 0}
 server $OVPN_SERVER${OVPN_SERVERV6:+
 server-ipv6 $OVPN_SERVERV6}
 verb $OVPN_VERBOSITY" > /tmp/etc/openvpn.conf
-    # push settings from the server to the client
-    if [ -n "$OVPN_PUSH1" ]; then
-      echo "push \"$OVPN_PUSH1\"" >> /tmp/etc/openvpn.conf
-    fi
-    if [ -n "$OVPN_PUSH2" ]; then
-      echo "push \"$OVPN_PUSH2\"" >> /tmp/etc/openvpn.conf
-    fi
-    if [ -n "$OVPN_PUSH3" ]; then
-      echo "push \"$OVPN_PUSH3\"" >> /tmp/etc/openvpn.conf
-    fi
-    if [ -n "$OVPN_PUSH4" ]; then
-    echo "push \"$OVPN_PUSH4\"" >> /tmp/etc/openvpn.conf
-    fi
-    # Deprecate OVPN_PUSH1-4 in favor of OVPN_PUSH
+
     IFS=$'\n'
     for i in $OVPN_PUSH; do
       echo "push \"$i\"" >> /tmp/etc/openvpn.conf
     done
 
-    if [ -n "$OVPN_OTHER1" ]; then
-      echo "$OVPN_OTHER1" >> /tmp/etc/openvpn.conf
-    fi
-    if [ -n "$OVPN_OTHER2" ]; then
-      echo "$OVPN_OTHER2" >> /tmp/etc/openvpn.conf
-    fi
-    # Deprecate OVPN_OTHER1-2 in favor of OVPN_OTHER
     IFS=$'\n'
     for i in $OVPN_OTHER; do
       echo "$i" >> /tmp/etc/openvpn.conf
