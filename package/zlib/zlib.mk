@@ -3,7 +3,7 @@
 # zlib
 #
 #############################################################
-ZLIB_VERSION = 1.2.8
+ZLIB_VERSION = 1.2.9
 ZLIB_SOURCE = zlib-$(ZLIB_VERSION).tar.gz
 ZLIB_SITE = http://downloads.sourceforge.net/project/libpng/zlib/$(ZLIB_VERSION)
 ZLIB_INSTALL_STAGING = YES
