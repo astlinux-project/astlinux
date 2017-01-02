@@ -23,7 +23,9 @@ Released @TBD@
 
 -- php, version bump to 5.6.29
 
--- sqlite, version bump to 3.15.2
+-- sqlite, version bump to 3.16.0
+
+-- sqliteodbc, version bump to 0.9995
 
 -- Monit, version bump to 5.20.0
 
@@ -38,11 +40,13 @@ Released @TBD@
 -- libedit, version 20160903-3.1, new package, commonly used instead of the somewhat bloated readline (no longer enabled).
    Utilized by commands: asterisk -r, sqlite3, chronyc, sftp, bc
 
+-- zlib, version bump to 1.2.9
+
 -- tiff, version bump to 4.0.7, security fixes: 11 CVE's
 
 -- kexec, version bump to 2.0.14
 
--- nano, version bump to 2.7.2
+-- nano, version bump to 2.7.3
 
 -- strace, version bump to 4.15
 
@@ -70,7 +74,7 @@ Released @TBD@
          you will have to generate a new /mnt/kd/chrony.conf file with similar but different syntax.
    More info: http://doc.astlinux-project.org/userdoc:tt_ntp_client_server
 
--- OpenVPN, version bump to 2.3.14
+-- OpenVPN, major version bump to 2.4.0, new features include AEAD (GCM) cipher and Elliptic Curve DH key exchange support.
 
 -- prosody, version bump to 0.9.11
 
@@ -78,7 +82,7 @@ Released @TBD@
 
 -- lighttpd, version bump to 1.4.44
 
--- dnscrypt-proxy, version bump to 1.8.0
+-- dnscrypt-proxy, version bump to 1.9.1
 
 -- unbound (host), version bump to 1.6.0
 
@@ -86,7 +90,7 @@ Released @TBD@
 
 -- tcpdump, version bump to 4.8.1
 
--- stunnel, version bump to 5.38
+-- stunnel, version bump to 5.39
 
 -- shellinabox, version bump to 2.20
 
