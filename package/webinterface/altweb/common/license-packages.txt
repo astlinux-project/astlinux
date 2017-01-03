@@ -6,19 +6,19 @@
 ## 3) Lines beginning with a '#' are treated as comments
 ##
 ex-vi~Copyright (c) 2001-2002 Caldera International Inc. All rights reserved.
-RUNNIX~Copyright (c) 2006-2016 Kristian Kielhofner, AstLinux Project.
+RUNNIX~Copyright (c) 2006-2017 Kristian Kielhofner, AstLinux Project.
 libSRTP~Copyright (c) 2001-2016 Cisco Systems, Inc. All rights reserved.
 iLBC CODEC~Copyright (c) 2011 The WebRTC project authors. All rights reserved.
-Web Interface~Copyright (c) 2008-2016 Lonnie Abelbeck.
+Web Interface~Copyright (c) 2008-2017 Lonnie Abelbeck.
 shellinabox~Copyright (c) 2008-2015 Markus Gutschke, Luka Krajger.
-Asterisk~Copyright (c) 1999-2016 Digium, Inc.
+Asterisk~Copyright (c) 1999-2017 Digium, Inc.
 DAHDI~Copyright (c) 2001-2015 Digium, Inc.
 libPRI~Copyright (c) 2001-2015 Digium, Inc.
 Arno's Firewall~Copyright (c) 2001-2016 Arno van Amersfoort.
 dnsmasq~Copyright (c) 2000-2015 Simon Kelley.
 OpenSSL~Copyright (c) 1998-2016 The OpenSSL Project. All rights reserved.
 OpenSSH~Copyright (c) 1995-2015 Tatu Ylonen, Espoo, Finland. All rights reserved.
-OpenVPN~Copyright (c) 2002-2016 OpenVPN Technologies, Inc.
+OpenVPN~Copyright (c) 2002-2017 OpenVPN Technologies, Inc.
 PHP~Copyright (c) 1999-2016 The PHP Group. All rights reserved.
 vsftpd~Copyright (c) 2001-2015 Daniel Jacobowitz.
 lighttpd~Copyright (c) 2004-2016 Jan Kneschke.
@@ -46,12 +46,12 @@ OpenLDAP~Copyright (c) 1998-2016 The OpenLDAP Foundation. All rights reserved.
 darkstat~Copyright (c) 2001-2015 Emil Mikulic, et al.
 NUT~Copyright (c) 1999-2016  Russell Kroll, Arnaud Quette, et al.
 iftop~Copyright (c) 2002-2014 Paul Warren, Chris Lightfoot, et al.
-dnscrypt-proxy~Copyright (c) 2011-2016 Frank Denis.
+dnscrypt-proxy~Copyright (c) 2011-2017 Frank Denis.
 libsodium~Copyright (c) 2013-2016 Frank Denis.
 phoneprov-tools~Copyright (c) 2015-2016 Lonnie Abelbeck and Michael Keuter.
 smartmontools~Copyright (c) 2002-2016 Bruce Allen, Christian Franke, et al.
 Monit~Copyright (c) 2001-2016 Tildeslash. All rights reserved.
-sqlite~Copyright (c) 1995-2016 SQLite Consortium.
+sqlite~Copyright (c) 1995-2017 SQLite Consortium.
 sqliteodbc~Copyright (c) 2001-2016 Christian Werner.
 Fossil~Copyright (c) 2007-2016 D. Richard Hipp. All rights reserved.
 BusyBox~Copyright (c) 1998-2011 Erik Andersen, Rob Landley, Denys Vlasenko, et al.
@@ -63,4 +63,4 @@ avahi~Copyright (c) 2004-2016 Lennart Poettering, Trent Lloyd, Avahi developers.
 Linux Kernel~Copyright (c) 1997-2016 The Linux Kernel Organization, Inc.; Linux is a Registered Trademark of Linus Torvalds.
 whois~Copyright (c) 1999-2016 Marco d'Itri.
 strongSwan~Copyright (c) 2006-2016 Andreas Steffen, Tobias Brunner, et al.
-chrony~Copyright (c) 1997-2016 Richard P. Curnow, Miroslav Lichvar.
+chrony~Copyright (c) 1997-2017 Richard P. Curnow, Miroslav Lichvar.

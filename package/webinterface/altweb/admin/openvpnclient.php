@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2013 Lonnie Abelbeck
+// Copyright (C) 2008-2017 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -378,7 +378,7 @@ require_once '../common/header.php';
   putHtml('<option value="yes"'.$sel.'>Yes</option>');
   putHtml('</select>');
   putHtml('</td><td style="text-align: right;" colspan="1">');
-  putHtml('Cipher:');
+  putHtml('Legacy Cipher:');
   putHtml('</td><td style="text-align: left;" colspan="2">');
   $cipher = getVARdef($db, 'OVPNC_CIPHER');
   putHtml('<select name="cipher_menu">');
