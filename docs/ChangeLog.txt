@@ -42,6 +42,8 @@ Released @TBD@
 
 -- zlib, version bump to 1.2.9
 
+-- lzo, version bump to 2.09
+
 -- tiff, version bump to 4.0.7, security fixes: 11 CVE's
 
 -- kexec, version bump to 2.0.14
