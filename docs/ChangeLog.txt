@@ -23,7 +23,7 @@ Released @TBD@
 
 -- php, version bump to 5.6.29
 
--- sqlite, version bump to 3.16.0
+-- sqlite, version bump to 3.16.1
 
 -- sqliteodbc, version bump to 0.9995
 
@@ -40,7 +40,7 @@ Released @TBD@
 -- libedit, version 20160903-3.1, new package, commonly used instead of the somewhat bloated readline (no longer enabled).
    Utilized by commands: asterisk -r, sqlite3, chronyc, sftp, bc
 
--- zlib, version bump to 1.2.9
+-- zlib, version bump to 1.2.10
 
 -- lzo, version bump to 2.09
 
