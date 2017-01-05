@@ -110,6 +110,8 @@ Released @TBD@
 -- arnofw (AIF), "adaptive-ban" plugin, asterisk filter, add chan_sip 'Not a local domain' regex and
    chan_pjsip 'No matching endpoint found' regex.
 
+-- arnofw (AIF), add support for BLOCKED_HOST_LOG inbound/outbound selectively.
+
 ** Asterisk
 
 -- Asterisk 11.25.1 (version bump) and 13.12.2 (version bump)
@@ -135,6 +137,8 @@ Released @TBD@
 -- Status, Network, Edit, Prefs, System tabs, add support for 'chrony' instead of 'ntp' for network time.
 
 -- System tab, add View System Files: [ IPsec strongSwan log ]
+
+-- Firewall sub-tab, add "Log Denied attempts by a blocked host" inbound/outbound selectively.
 
 
 Additions for AstLinux 1.2.8:
