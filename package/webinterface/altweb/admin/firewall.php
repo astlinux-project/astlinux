@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2016 Lonnie Abelbeck
+// Copyright (C) 2008-2017 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -23,6 +23,7 @@
 // 06-12-2016, Added "Pass LAN->LAN" action
 // 07-10-2016, Added Deny LAN to DMZ for specified LAN Interfaces
 // 09-14-2016, Added BLOCK_NETSET_DIR support
+// 01-05-2017, Added BLOCKED_HOST_LOG direction support
 //
 // System location of /mnt/kd/rc.conf.d directory
 $FIREWALLCONFDIR = '/mnt/kd/rc.conf.d';
@@ -142,6 +143,13 @@ $lan_default_policy_label = array (
 $dmz_default_policy_label = array (
   '0' => 'Pass DMZ->EXT',
   '1' => 'Deny DMZ->EXT'
+);
+
+$log_blocked_label = array (
+  '0' => 'Disabled',
+  '1' => 'Inbound &amp; Outbound',
+  '2' => 'Inbound only',
+  '3' => 'Outbound only'
 );
 
 // Get arno firewall version
@@ -384,7 +392,7 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
     $value = 'BLOCK_NETSET_DIR="/mnt/kd/blocklists"';
     fwrite($fp, $value."\n");
   }
-  $value = 'BLOCKED_HOST_LOG='.(isset($_POST['log_blocked']) ? '1' : '0');
+  $value = 'BLOCKED_HOST_LOG="'.$_POST['log_blocked'].'"';
   fwrite($fp, $value."\n");
   
   fwrite($fp, "### gui.firewall.conf - end ###\n");
@@ -1120,11 +1128,19 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
   putHtml('<tr class="dtrow1"><td width="75" style="text-align: right;">');
   $sel = (getVARdef($vars, 'BLOCK_NETSET_DIR') === '/mnt/kd/blocklists') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="block_netset_dir" name="block_netset_dir"'.$sel.' /></td><td>Block Host/CIDR using *.netset file(s) in the directory /mnt/kd/blocklists</td></tr>');
-  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  $sel = (getVARdef($vars, 'BLOCKED_HOST_LOG') == 1) ? ' checked="checked"' : '';
-  putHtml('<input type="checkbox" value="log_blocked" name="log_blocked"'.$sel.' /></td><td>Log Denied attempts by a blocked host</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td width="75" style="text-align: right;">&nbsp;</td><td>');
+  putHtml('Log Denied attempts by a blocked host:');
+  $log_blocked = getVARdef($vars, 'BLOCKED_HOST_LOG');
+  putHtml('<select name="log_blocked">');
+  foreach ($log_blocked_label as $key => $value) {
+    $sel = ($log_blocked == $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
   putHtml('</table>');
-  
   putHtml('</form>');
   putHtml('</center></td></tr></table>');
   putHtml('</center>');
