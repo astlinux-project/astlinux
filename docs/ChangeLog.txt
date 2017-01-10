@@ -48,7 +48,7 @@ Released @TBD@
 
 -- kexec, version bump to 2.0.14
 
--- nano, version bump to 2.7.3
+-- nano, version bump to 2.7.4
 
 -- strace, version bump to 4.15
 
@@ -78,7 +78,7 @@ Released @TBD@
 
 -- OpenVPN, major version bump to 2.4.0, new features include AEAD (GCM) cipher and Elliptic Curve DH key exchange support.
 
--- prosody, version bump to 0.9.11
+-- prosody, version bump to 0.9.12
 
 -- ipset, version bump to 6.30
 
