@@ -55,6 +55,11 @@ init () {
     httpdir="/dev/null"
   fi
   httpscert="${HTTPSCERT:-/etc/ssl/default_https.pem}"
+  if [ -n "$HTTPSCHAIN" -a -f "$HTTPSCHAIN" ]; then
+    httpschain="$HTTPSCHAIN"
+  else
+    httpschain=""
+  fi
   if [ "$HTTP_LISTING" = "no" ]; then
     http_listing="disable"
   else
@@ -144,6 +149,7 @@ init () {
   sed -i -e "s|@HOSTNAME@|${HOSTNAME}|g" \
          -e "s|@HTTPDIR@|${httpdir}|g" \
          -e "s|@HTTPSCERT@|${httpscert}|g" \
+         -e "s|@HTTPSCHAIN@|${httpschain}|g" \
          -e "s|@HTTP_LISTING@|${http_listing}|g" \
          -e "s|@HTTPS_LISTING@|${https_listing}|g" \
          -e "s|@HTTP_ACCESSLOG@|${http_accesslog}|g" \
