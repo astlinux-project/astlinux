@@ -286,6 +286,7 @@ source "package/zlib/Config.in"
 endmenu
 
 menu "Crypto"
+source "package/acme/Config.in"
 source "package/beecrypt/Config.in"
 source "package/ca-certificates/Config.in"
 source "package/gnutls/Config.in"

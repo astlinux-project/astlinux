@@ -1,0 +1,7 @@
+config BR2_PACKAGE_ACME
+	bool "acme"
+	depends on BR2_PACKAGE_OPENSSL
+	help
+	  An ACME (Automated Certificate Management Environment) protocol client
+
+	  https://github.com/Neilpang/acme.sh
