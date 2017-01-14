@@ -82,7 +82,7 @@ Released @TBD@
 
 -- ipset, version bump to 6.30
 
--- lighttpd, version bump to 1.4.44
+-- lighttpd, version bump to 1.4.45
    New rc.conf variable: HTTPSCHAIN, optional path to the CA file for support of chained certificates.
 
 -- dnscrypt-proxy, version bump to 1.9.1
