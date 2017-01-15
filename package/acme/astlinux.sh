@@ -72,5 +72,22 @@ astlinux_deploy() {
     logger -s -t acme-client "New ACME certificates deployed for SIP-TLS and Asterisk restart when convenient requested"
   fi
 
+  if astlinux_is_acme_service prosody; then
+    service prosody stop
+    mkdir -p /mnt/kd/prosody/certs
+    if [ -f "$_cfullchain" ]; then
+      cat "$_cfullchain" > /mnt/kd/prosody/certs/server.crt
+    else
+      cat "$_ccert" > /mnt/kd/prosody/certs/server.crt
+    fi
+    cat "$_ckey" > /mnt/kd/prosody/certs/server.key
+    chmod 600 /mnt/kd/prosody/certs/server.key
+    chown prosody:prosody /mnt/kd/prosody/certs/server.crt
+    chown prosody:prosody /mnt/kd/prosody/certs/server.key
+    sleep 1
+    service prosody init
+    logger -s -t acme-client "New ACME certificates deployed for XMPP and Prosody restarted"
+  fi
+
   return 0
 }
