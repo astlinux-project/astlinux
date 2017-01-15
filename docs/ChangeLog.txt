@@ -52,7 +52,7 @@ Released @TBD@
 
 -- strace, version bump to 4.15
 
--- sudo, version bump to 1.8.19p1
+-- sudo, version bump to 1.8.19p2
 
 -- reload-blocklist-netset (optional CRON script), add 'firehol_webclient' blocklist support.
 
