@@ -8,6 +8,21 @@
 
 . /etc/rc.conf
 
+#service_type
+astlinux_is_acme_service()
+{
+  local service IFS
+
+  unset IFS
+  for service in $ACME_SERVICE; do
+    if [ "$service" = "$1" ]; then
+      return 0
+    fi
+  done
+
+  return 1
+}
+
 ########  Public functions #####################
 
 #domain keyfile certfile cafile fullchain
@@ -24,23 +39,27 @@ astlinux_deploy() {
   _debug _cca "$_cca"
   _debug _cfullchain "$_cfullchain"
 
-  if [ -n "$HTTPSCERT" -a "$HTTPS_ACME" = "yes" ]; then
-    service lighttpd stop
-    cat "$_ckey" "$_ccert" > "$HTTPSCERT"
-    chmod 600 "$HTTPSCERT"
-    if [ -n "$HTTPSCHAIN" ]; then
-      if [ -f "$_cfullchain" ]; then
-        cat "$_cfullchain" > "$HTTPSCHAIN"
-      else
-        rm -f "$HTTPSCHAIN"
+  if astlinux_is_acme_service lighttpd; then
+    if [ -z "$HTTPSCERT" ]; then
+      logger -s -t acme-client "Failed to deploy ACME certificates HTTPS, invalid HTTPSCERT path"
+    else
+      service lighttpd stop
+      cat "$_ckey" "$_ccert" > "$HTTPSCERT"
+      chmod 600 "$HTTPSCERT"
+      if [ -n "$HTTPSCHAIN" ]; then
+        if [ -f "$_cfullchain" ]; then
+          cat "$_cfullchain" > "$HTTPSCHAIN"
+        else
+          rm -f "$HTTPSCHAIN"
+        fi
       fi
+      sleep 1
+      service lighttpd init
+      logger -s -t acme-client "New ACME certificates deployed for HTTPS and Lighttpd restarted"
     fi
-    sleep 1
-    service lighttpd init
-    logger -s -t acme-client "New ACME certificates deployed for HTTPS and Lighttpd restarted"
   fi
 
-  if [ "$SIPTLSCERT_ACME" = "yes" ]; then
+  if astlinux_is_acme_service asterisk; then
     mkdir -p /mnt/kd/ssl/sip-tls/keys
     if [ -f "$_cfullchain" ]; then
       cat "$_cfullchain" > /mnt/kd/ssl/sip-tls/keys/server.crt
