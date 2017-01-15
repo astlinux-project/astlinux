@@ -37,20 +37,20 @@ astlinux_deploy() {
     fi
     sleep 1
     service lighttpd init
+    logger -s -t ${0##*/}[$$] "${BASH_SOURCE##*/}:$LINENO New ACME certificates deployed for HTTPS and Lighttpd restarted"
   fi
 
   if [ "$SIPTLSCERT_ACME" = "yes" ]; then
-# TODO.  Not sure what the right files to use are. Need to test.
-# See..
-# https://web.johncook.uk/articles/computing/lets-encrypt-launch
-# https://www.jedwarddurrett.com/20160604162607.php
-
     mkdir -p /mnt/kd/ssl/sip-tls/keys
-    cat "$_cfullchain" > /mnt/kd/ssl/sip-tls/keys/server.crt
+    if [ -f "$_cfullchain" ]; then
+      cat "$_cfullchain" > /mnt/kd/ssl/sip-tls/keys/server.crt
+    else
+      cat "$_ccert" > /mnt/kd/ssl/sip-tls/keys/server.crt
+    fi
     cat "$_ckey" > /mnt/kd/ssl/sip-tls/keys/server.key
     chmod 600 /mnt/kd/ssl/sip-tls/keys/server.key
-# How to tell Asterisk to reload certificate?
-# Hopefully just a reload (of just SIP or PJSIP?) and not a restart
+    asterisk -rx "core restart when convenient" >/dev/null 2>&1 &
+    logger -s -t ${0##*/}[$$] "${BASH_SOURCE##*/}:$LINENO New ACME certificates deployed for SIP-TLS and Asterisk restart when convenient requested"
   fi
 
   return 0
