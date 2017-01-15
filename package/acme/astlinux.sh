@@ -37,7 +37,7 @@ astlinux_deploy() {
     fi
     sleep 1
     service lighttpd init
-    logger -s -t ${0##*/}[$$] "${BASH_SOURCE##*/}:$LINENO New ACME certificates deployed for HTTPS and Lighttpd restarted"
+    logger -s -t acme-client "New ACME certificates deployed for HTTPS and Lighttpd restarted"
   fi
 
   if [ "$SIPTLSCERT_ACME" = "yes" ]; then
@@ -50,7 +50,7 @@ astlinux_deploy() {
     cat "$_ckey" > /mnt/kd/ssl/sip-tls/keys/server.key
     chmod 600 /mnt/kd/ssl/sip-tls/keys/server.key
     asterisk -rx "core restart when convenient" >/dev/null 2>&1 &
-    logger -s -t ${0##*/}[$$] "${BASH_SOURCE##*/}:$LINENO New ACME certificates deployed for SIP-TLS and Asterisk restart when convenient requested"
+    logger -s -t acme-client "New ACME certificates deployed for SIP-TLS and Asterisk restart when convenient requested"
   fi
 
   return 0
