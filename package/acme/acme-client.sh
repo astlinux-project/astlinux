@@ -25,14 +25,52 @@ if ! cd "$ACME_WORKING_DIR"; then
   exit 1
 fi
 
+CRON_FILE="/var/spool/cron/crontabs/root"
+
+CRON_UPDATE="/var/spool/cron/crontabs/cron.update"
+
+is_cron_entry()
+{
+  grep -q '/usr/sbin/acme-client ' "$CRON_FILE"
+}
+
 add_cron_entry()
 {
-  echo "acme-client: TODO installcronjob."
+  local min
+
+  if is_cron_entry; then
+    echo "acme-client: cron entry previously exists, no changes."
+    return
+  fi
+
+  # randomize minutes in the range of 4-56, 53 is a prime number
+  min=$(( RANDOM % 53 + 4 ))
+
+  echo "$min 1 * * * /usr/sbin/acme-client --cron >/dev/null 2>&1" >> "$CRON_FILE"
+  echo 'root' >> "$CRON_UPDATE"
+
+  if is_cron_entry; then
+    echo "acme-client: Successfully added cron entry."
+  else
+    echo "acme-client: Failed adding cron entry."
+  fi
 }
 
 del_cron_entry()
 {
-  echo "acme-client: TODO uninstallcronjob."
+  if ! is_cron_entry; then
+    echo "acme-client: cron entry does not exist, no changes."
+    return
+  fi
+
+  sed -i -e '/\/usr\/sbin\/acme-client /d' "$CRON_FILE"
+  echo 'root' >> "$CRON_UPDATE"
+
+  if ! is_cron_entry; then
+    echo "acme-client: Successfully removed cron entry."
+  else
+    echo "acme-client: Failed removing cron entry."
+  fi
 }
 
 no_op_arg()
