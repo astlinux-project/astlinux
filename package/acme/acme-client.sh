@@ -25,11 +25,49 @@ if ! cd "$ACME_WORKING_DIR"; then
   exit 1
 fi
 
-# Robust 'bash' method of creating/testing for a lockfile
-if ! ( set -o noclobber; echo "$$" > "$LOCKFILE" ) 2>/dev/null; then
-  echo "acme-client: already running, lockfile \"$LOCKFILE\" exists, process id: $(cat "$LOCKFILE")." >&2
-  exit 9
-fi
+add_cron_entry()
+{
+  echo "acme-client: TODO installcronjob."
+}
+
+del_cron_entry()
+{
+  echo "acme-client: TODO uninstallcronjob."
+}
+
+no_op_arg()
+{
+  echo "acme-client: The $1 option has been disabled."
+}
+
+special_arg_handler()
+{
+  local arg skip IFS
+
+  IFS='~'  # expand command-line args using the unique 'tilde' character
+  for arg in $*; do
+    skip=0
+    case "$arg" in
+      --installcronjob)
+        add_cron_entry ; skip=1 ;;
+      --uninstallcronjob)
+        del_cron_entry ; skip=1 ;;
+      --install)
+        no_op_arg "$arg" ; skip=1 ;;
+      --uninstall)
+        no_op_arg "$arg" ; skip=1 ;;
+      --upgrade)
+        no_op_arg "$arg" ; skip=1 ;;
+      --auto-upgrade)
+        no_op_arg "$arg" ; skip=1 ;;
+    esac
+    if [ $skip -eq 1 ]; then
+      return 0
+    fi
+  done
+
+  return 1
+}
 
 add_account_opts()
 {
@@ -48,6 +86,16 @@ add_account_opts()
     fi
   done
 }
+
+if special_arg_handler "$@"; then
+  exit 0
+fi
+
+# Robust 'bash' method of creating/testing for a lockfile
+if ! ( set -o noclobber; echo "$$" > "$LOCKFILE" ) 2>/dev/null; then
+  echo "acme-client: already running, lockfile \"$LOCKFILE\" exists, process id: $(cat "$LOCKFILE")." >&2
+  exit 9
+fi
 
 accountemail="$ACME_ACCOUNT_EMAIL"
 
