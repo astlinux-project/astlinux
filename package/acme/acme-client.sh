@@ -86,9 +86,9 @@ special_arg_handler()
   for arg in $*; do
     skip=0
     case "$arg" in
-      --installcronjob)
+      --installcronjob|--install-cronjob)
         add_cron_entry ; skip=1 ;;
-      --uninstallcronjob)
+      --uninstallcronjob|--uninstall-cronjob)
         del_cron_entry ; skip=1 ;;
       --install)
         no_op_arg "$arg" ; skip=1 ;;

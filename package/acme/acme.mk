@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-ACME_VERSION = 2.6.5-2017-01-13
+ACME_VERSION = 2.6.5
 ACME_SOURCE = acme.sh-$(ACME_VERSION).tar.gz
 ACME_SITE = http://files.astlinux-project.org
 
