@@ -40,7 +40,7 @@ Released @TBD@
 -- libedit, version 20160903-3.1, new package, commonly used instead of the somewhat bloated readline (no longer enabled).
    Utilized by commands: asterisk -r, sqlite3, chronyc, sftp, bc
 
--- zlib, version bump to 1.2.10
+-- zlib, version bump to 1.2.11
 
 -- lzo, version bump to 2.09
 
