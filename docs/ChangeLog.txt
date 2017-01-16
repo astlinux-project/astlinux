@@ -71,7 +71,7 @@ Released @TBD@
    New rc.conf variables are: IPSEC_ALLOWED_ENDPOINTS and IPSEC_ALLOWED_VPN_NETS
    More info: http://doc.astlinux-project.org/userdoc:tt_ipsec_vpn_strongswan
 
--- chrony, version 3.0-pre3, new package to replace 'ntpd' as the NTP daemon, NTPv4 client and server.
+-- chrony, version 3.0, new package to replace 'ntpd' as the NTP daemon, NTPv4 client and server.
    Note: No configuration change for most users, though if you had a custom /mnt/kd/ntpd.conf file
          you will have to generate a new /mnt/kd/chrony.conf file with similar but different syntax.
    More info: http://doc.astlinux-project.org/userdoc:tt_ntp_client_server
