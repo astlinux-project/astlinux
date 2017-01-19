@@ -56,7 +56,7 @@ Released @TBD@
 
 -- reload-blocklist-netset (optional CRON script), add 'firehol_webclient' blocklist support.
 
--- ca-certificates, update trusted root certificates 2016-11-02
+-- ca-certificates, update trusted root certificates 2017-01-18
 
 -- Time Zone Database update, tzdata2016j and php-timezonedb-2016.10
 
