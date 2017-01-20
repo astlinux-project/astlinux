@@ -21,7 +21,7 @@ Released @TBD@
 
 -- RUNNIX, version bump to runnix-0.4-8057, with Linux Kernel 3.2.84, dropbear 2016.74, kexec 2.0.14
 
--- php, version bump to 5.6.29
+-- php, version bump to 5.6.30
 
 -- sqlite, version bump to 3.16.2
 
