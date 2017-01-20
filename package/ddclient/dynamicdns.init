@@ -4,7 +4,7 @@
 
 gen_ddclient_conf()
 {
-  local use_web="" use_if="#" web_str delay service
+  local use_web="" use_if="#" web_str delay domain service
 
   if [ ! -x /usr/sbin/ddclient ]; then
     echo "dynamicdns: Script \"/usr/sbin/ddclient\" not found, exiting." >&2
@@ -25,6 +25,9 @@ gen_ddclient_conf()
   else
     web_str="$DDGETIP/"
   fi
+
+  # extract the root domain of DDHOST, used by some providers like Cloudflare
+  domain="$(echo $DDHOST | sed -n -r -e 's/^(.*\.|)([^.]+)\.([^.]+)$/\2.\3/p')"
 
   # Handle Service Types
   case "$DDSERVICE" in
@@ -61,6 +64,7 @@ gen_ddclient_conf()
     sed -i -e "s|@DDUSER@|${DDUSER}|g" \
            -e "s|@DDPASS@|${DDPASS}|g" \
            -e "s|@DDHOST@|${DDHOST}|g" \
+           -e "s|@DOMAIN@|${domain}|g" \
            -e "s|@EXTIF@|${EXTIF}|g" \
            -e "s|@EXT2IF@|${EXT2IF}|g" \
            -e "s|@DELAY@|${delay}|g" \

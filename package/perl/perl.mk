@@ -14,7 +14,7 @@ PERL_DEPENDENCIES = linux
 
 PERL_ARCHNAME = $(ARCH)-linux
 
-PERL_MODULES = constant version Carp Errno Fcntl PathTools POSIX Digest Socket IO XSLoader Exporter File-Find
+PERL_MODULES = constant version Carp Errno Fcntl PathTools POSIX Digest Socket IO XSLoader Exporter B File-Find JSON-PP
 PERL_MODULES += Digest/MD5 Digest/SHA Getopt/Long Time/Local File/Glob Sys/Hostname
 
 PERL_CROSS_VERSION = 1.0.3

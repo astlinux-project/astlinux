@@ -1,0 +1,29 @@
+--- a/ddclient
++++ b/ddclient
+@@ -1959,6 +1959,26 @@
+     if (! opt('exec')) {
+ 	debug("skipped network connection");
+ 	verbose("SENDING:", "%s", $request);
++    } elsif (($headers ne '')) {
++        $0 = sprintf("%s - curl (SSL w/headers) sending to %s port %s", $program, $peer, $port);
++        my $timeout = opt('timeout');
++        my @head_lines = split('\n', $headers);
++        my $head_args = '';
++        foreach my $head_line (@head_lines) {
++          $head_args .= "-H '$head_line' ";
++        }
++
++        $reply = <<`CURL_SSL_HEADERS`;
++/usr/bin/curl -si0 -X $method --user-agent '${program}/${version}' \\
++              --connect-timeout $timeout --max-time $timeout \\
++              ${head_args} \\
++              --data '${data}' \\
++              --url 'https://${server}/${url}' 2>/dev/null
++CURL_SSL_HEADERS
++
++        if (! $reply) {
++            warning("curl (SSL w/headers) cannot connect to $peer:$port");
++        }
+     } elsif ($use_ssl) {
+         $0 = sprintf("%s - curl (SSL) sending to %s port %s", $program, $peer, $port);
+         my $timeout = opt('timeout');

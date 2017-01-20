@@ -86,6 +86,7 @@ $select_dhcpv6_prefix_len = array (
 $select_dyndns = array (
   'User Defined&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;' => '',
   'ChangeIP' => 'changeip',
+  'Cloudflare' => 'cloudflare',
   'DNS-O-Matic' => 'default@dnsomatic.com',
   'DNS Park' => 'dnspark',
   'DtDNS' => 'dtdns',
