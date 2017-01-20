@@ -85,6 +85,8 @@ Released @TBD@
 -- lighttpd, version bump to 1.4.45
    New rc.conf variable: HTTPSCHAIN, optional path to the CA file for support of chained certificates.
 
+-- ddclient, add Cloudflare dynamic DNS service support using API v4, DDSERVICE="cloudflare".
+
 -- dnscrypt-proxy, version bump to 1.9.1
 
 -- unbound (host), version bump to 1.6.0
@@ -140,6 +142,8 @@ Released @TBD@
 -- System tab, add View System Files: [ IPsec strongSwan log ]
 
 -- Firewall sub-tab, add "Log Denied attempts by a blocked host" inbound/outbound selectively.
+
+-- Network tab, add Cloudflare dynamic DNS service support.
 
 
 Additions for AstLinux 1.2.8:
