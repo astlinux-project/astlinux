@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2016 Lonnie Abelbeck
+// Copyright (C) 2008-2017 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -40,6 +40,7 @@
 // 06-07-2016, Added Avahi mDNS/DNS-SD support
 // 07-15-2016, Added 4th LAN Interface
 // 11-14-2016, Added IPsec strongSwan support
+// 01-22-2017, Removed Dynamic DNS 'getip.krisk.org', map to default
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -106,7 +107,6 @@ $select_dyndns_getip = array (
   'User Defined&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;' => '',
   'myip.dnsomatic.com' => 'myip.dnsomatic.com',
   'checkip.dyndns.org' => 'checkip.dyndns.org',
-  'getip.krisk.org' => 'getip.krisk.org',
   'External Interface' => 'interface'
 );
 
@@ -2115,7 +2115,8 @@ require_once '../common/header.php';
   
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('DNS Get IPv4 Address:');
-  if (($t_value = getVARdef($db, 'DDGETIP', $cur_db)) === '') {
+  $t_value = getVARdef($db, 'DDGETIP', $cur_db);
+  if ($t_value  === '' || $t_value  === 'getip.krisk.org') {
     $t_value = 'myip.dnsomatic.com';
   }
   putHtml('<select name="dd_getip">');

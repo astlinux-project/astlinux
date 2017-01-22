@@ -13,7 +13,7 @@ gen_ddclient_conf()
 
   delay="360"
 
-  if [ -z "$DDGETIP" ]; then
+  if [ -z "$DDGETIP" -o "$DDGETIP" = "getip.krisk.org" ]; then
     web_str="myip.dnsomatic.com/"
   elif [ "$DDGETIP" = "interface" ]; then
     use_web="#"
