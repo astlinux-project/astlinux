@@ -8,7 +8,7 @@
 Additions for AstLinux 1.2.9:
 =============================
 
-Released @TBD@
+Released 2017-01-26
 
 ** IMPORTANT NOTICE
 
