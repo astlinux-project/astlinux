@@ -50,8 +50,6 @@ Released @TBD@
 
 -- nano, version bump to 2.7.4
 
--- screen, version bump to 4.5.0
-
 -- strace, version bump to 4.15
 
 -- sudo, version bump to 1.8.19p2
