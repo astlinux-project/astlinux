@@ -3,9 +3,9 @@
 # ddclient
 #
 #############################################################
-DDCLIENT_VERSION = 3.8.3
-DDCLIENT_SOURCE = ddclient-$(DDCLIENT_VERSION).tar.gz
-DDCLIENT_SITE = http://downloads.sourceforge.net/project/ddclient/ddclient/ddclient-$(DDCLIENT_VERSION)
+DDCLIENT_VERSION = 3.8.3-01
+DDCLIENT_SOURCE = ddclient-curl-$(DDCLIENT_VERSION).tar.gz
+DDCLIENT_SITE = https://github.com/astlinux-project/ddclient-curl/releases/download/$(DDCLIENT_VERSION)
 
 define DDCLIENT_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D package/ddclient/dynamicdns.init $(TARGET_DIR)/etc/init.d/dynamicdns

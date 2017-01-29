@@ -8,5 +8,5 @@ config BR2_PACKAGE_DDCLIENT
 	  DDclient is a Perl client used to update dynamic DNS entries for
 	  accounts on a Dynamic DNS Network Service Provider.
 
-	  http://sourceforge.net/projects/ddclient/
+	  https://github.com/astlinux-project/ddclient-curl
 

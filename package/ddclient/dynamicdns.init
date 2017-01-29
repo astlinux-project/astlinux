@@ -4,7 +4,8 @@
 
 gen_ddclient_conf()
 {
-  local use_web="" use_if="#" web_str delay domain service
+  local use_web="#" use_if="#" web_str delay domain service
+  local usev6_web="#" usev6_if="#" webv6_str
 
   if [ ! -x /usr/sbin/ddclient ]; then
     echo "dynamicdns: Script \"/usr/sbin/ddclient\" not found, exiting." >&2
@@ -14,16 +15,36 @@ gen_ddclient_conf()
   delay="360"
 
   if [ -z "$DDGETIP" -o "$DDGETIP" = "getip.krisk.org" ]; then
+    use_web=""
     web_str="myip.dnsomatic.com/"
   elif [ "$DDGETIP" = "interface" ]; then
-    use_web="#"
     use_if=""
-    web_str="$DDGETIP/"
+    web_str=""
     delay="120"
   elif [ "$DDGETIP" = "checkip.dyndns.org" -o "$DDGETIP" = "checkip.dyndns.com" ]; then
+    use_web=""
     web_str="$DDGETIP/, web-skip='IP Address'"
   else
-    web_str="$DDGETIP/"
+    use_web=""
+    case "$DDGETIP" in
+      dyndns|dnspark|he|whatismyv6|nsupdate.info) # builtinweb entries
+         web_str="$DDGETIP"  ;;
+      *) web_str="$DDGETIP/" ;;
+    esac
+  fi
+
+  if [ -z "$DDGETIPV6" -o "$DDGETIPV6" = "no" ]; then
+    webv6_str=""
+  elif [ "$DDGETIPV6" = "interface" ]; then
+    usev6_if=""
+    webv6_str=""
+  else
+    usev6_web=""
+    case "$DDGETIPV6" in
+      dyndns|dnspark|he|whatismyv6|nsupdate.info) # builtinweb entries
+         webv6_str="$DDGETIPV6"  ;;
+      *) webv6_str="$DDGETIPV6/" ;;
+    esac
   fi
 
   # extract the root domain of DDHOST, used by some providers like Cloudflare
@@ -71,6 +92,9 @@ gen_ddclient_conf()
            -e "s|@USE_WEB@|${use_web}|g" \
            -e "s|@USE_IF@|${use_if}|g" \
            -e "s|@WEB_STR@|${web_str}|g" \
+           -e "s|@USEV6_WEB@|${usev6_web}|g" \
+           -e "s|@USEV6_IF@|${usev6_if}|g" \
+           -e "s|@WEBV6_STR@|${webv6_str}|g" \
               /tmp/etc/ddclient.conf
 
     chmod 600 /tmp/etc/ddclient.conf
