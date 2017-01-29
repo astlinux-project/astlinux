@@ -10,6 +10,44 @@ Additions for AstLinux 1.2.10:
 
 Released @TBD@
 
+** System
+
+-- Fossil, version bump to 1.37
+
+-- pcre, version bump to 8.40
+
+** Networking
+
+-- OpenSSL, version bump to 1.0.2k, security fixes: CVE-2017-3731, CVE-2017-3732
+
+-- sngrep, version 1.4.2, new package, tool for displaying SIP call message flows from a terminal.
+
+-- ddclient, switch to ddclient-curl version 3.8.3-01, adds IPv6 and Hurricane Electric support
+   Cloudflare, FreeDNS, and HE Free DNS (Hurricane Electric) now support mixed IPv4/IPv6 DNS updates.
+   New rc.conf variable: DDGETIPV6, DDGETIPV6="" or DDGETIPV6="no" -> IPv6 dynamic DNS is disabled
+
+-- fping, version bump to 3.15
+
+-- stunnel, version bump to 5.40
+
+** Asterisk
+
+-- Asterisk 11.25.1 (no change) and 13.13.1 (version bump)
+
+-- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
+
+-- pjsip 2.5.5 (no change)
+
+-- libpri, version bump to 1.6.0
+
+-- (Custom Build Only) wanpipe, version 7.0.20 (no change)
+
+** Web Interface
+
+-- Network tab, add "HE Free DNS" Dynamic DNS Service Type and "checkip.dns.he.net" DNS Get IP selection.
+
+-- Network tab, add support for "DNS Get IPv6 Address:" using DDGETIPV6 rc.conf variable.
+
 
 Additions for AstLinux 1.2.9:
 =============================
