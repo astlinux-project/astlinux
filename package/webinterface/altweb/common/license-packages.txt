@@ -6,7 +6,7 @@
 ## 3) Lines beginning with a '#' are treated as comments
 ##
 ex-vi~Copyright (c) 2001-2002 Caldera International Inc. All rights reserved.
-RUNNIX~Copyright (c) 2006-2017 Kristian Kielhofner, AstLinux Project.
+RUNNIX~Copyright (c) 2006-2017 AstLinux Project, Kristian Kielhofner.
 libSRTP~Copyright (c) 2001-2016 Cisco Systems, Inc. All rights reserved.
 iLBC CODEC~Copyright (c) 2011 The WebRTC project authors. All rights reserved.
 Web Interface~Copyright (c) 2008-2017 Lonnie Abelbeck.
@@ -19,9 +19,9 @@ dnsmasq~Copyright (c) 2000-2015 Simon Kelley.
 OpenSSL~Copyright (c) 1998-2016 The OpenSSL Project. All rights reserved.
 OpenSSH~Copyright (c) 1995-2015 Tatu Ylonen, Espoo, Finland. All rights reserved.
 OpenVPN~Copyright (c) 2002-2017 OpenVPN Technologies, Inc.
-PHP~Copyright (c) 1999-2016 The PHP Group. All rights reserved.
+PHP~Copyright (c) 1999-2017 The PHP Group. All rights reserved.
 vsftpd~Copyright (c) 2001-2015 Daniel Jacobowitz.
-lighttpd~Copyright (c) 2004-2016 Jan Kneschke.
+lighttpd~Copyright (c) 2004-2017 Jan Kneschke.
 msmtp~Copyright (c) 2000-2016 Martin Lambers.
 libxml2~Copyright (c) 1998-2016 Daniel Veillard. All Rights Reserved.
 libtiff~Copyright (c) 1988-2015 Sam Leffler, Copyright (c) 1991-1997 Silicon Graphics, Inc.
@@ -31,16 +31,16 @@ ipset~Copyright (c) 2003-2016 Jozsef Kadlecsik.
 curl~Copyright (c) 1996-2016 Daniel Stenberg.
 rp-pppoe~Copyright (c) 2001-2012 Roaring Penguin Software Inc.
 zabbix~Copyright (c) 2000-2016 SIA Zabbix.
-zlib~Copyright (c) 1995-2013 Jean-loup Gailly.
+zlib~Copyright (c) 1995-2017 Jean-loup Gailly.
 SILK CODEC~Copyright (c) 2010-2016 Skype and/or Microsoft. All rights reserved. Licensed via Digium, Inc.
 SpanDSP~Copyright (c) 2003-2015 Steve Underwood. All rights reserved.
-Prosody~Copyright (c) 2008-2016 Matthew Wild and Waqas Hussain.
+Prosody~Copyright (c) 2008-2017 Matthew Wild and Waqas Hussain.
 Lua~Copyright (c) 1994-2012 Lua.org, PUC-Rio.  All rights reserved.
 perl~Copyright (c) 1987-2016 Larry Wall, et al.
 perl-cross~Copyright (c) 2009-2016 Alex Suykov.
 phpLiteAdmin~Copyright (c) 2011-2015 phpLiteAdmin (https://bitbucket.org/phpliteadmin/public)
-FOP2~Copyright (c) 2009-2016 House Internet S.R.L. (http://www.fop2.com)
-ddclient~Copyright (c) 1999-2015 Paul Burry, wimpunk, et al.
+FOP2~Copyright (c) 2009-2017 House Internet S.R.L. (http://www.fop2.com)
+ddclient-curl~Copyright (c) 1999-2017 David Kerr, Paul Burry, wimpunk, et al.
 vCard converter~Copyright (c) 2006-2013 Thomas Bruederli.
 OpenLDAP~Copyright (c) 1998-2016 The OpenLDAP Foundation. All rights reserved.
 darkstat~Copyright (c) 2001-2015 Emil Mikulic, et al.
@@ -53,7 +53,7 @@ smartmontools~Copyright (c) 2002-2016 Bruce Allen, Christian Franke, et al.
 Monit~Copyright (c) 2001-2016 Tildeslash. All rights reserved.
 sqlite~Copyright (c) 1995-2017 SQLite Consortium.
 sqliteodbc~Copyright (c) 2001-2016 Christian Werner.
-Fossil~Copyright (c) 2007-2016 D. Richard Hipp. All rights reserved.
+Fossil~Copyright (c) 2007-2017 D. Richard Hipp. All rights reserved.
 BusyBox~Copyright (c) 1998-2011 Erik Andersen, Rob Landley, Denys Vlasenko, et al.
 dhcp6c~Copyright (c) 1998-2008 WIDE Project with 2016 Debian patches.
 htop~Copyright (c) 2004-2012 Hisham Muhammad.

@@ -41,6 +41,7 @@
 // 07-15-2016, Added 4th LAN Interface
 // 11-14-2016, Added IPsec strongSwan support
 // 01-22-2017, Removed Dynamic DNS 'getip.krisk.org', map to default
+// 01-29-2017, Added DDGETIPV6 support
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -96,6 +97,7 @@ $select_dyndns = array (
   'DynDNS [static]' => 'statdns@dyndns.org',
   'EasyDNS' => 'easydns',
   'FreeDNS' => 'default@freedns.afraid.org',
+  'HE Free DNS' => 'he',
   'NameCheap' => 'namecheap',
   'No-IP' => 'default@no-ip.com',
   'nsupdate.info' => 'default@nsupdate.info',
@@ -106,8 +108,16 @@ $select_dyndns = array (
 $select_dyndns_getip = array (
   'User Defined&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;' => '',
   'myip.dnsomatic.com' => 'myip.dnsomatic.com',
+  'checkip.dns.he.net' => 'he',
   'checkip.dyndns.org' => 'checkip.dyndns.org',
   'External Interface' => 'interface'
+);
+
+$select_dyndns_getipv6 = array (
+  'User Defined&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;' => '',
+  'checkip.dns.he.net' => 'he',
+  'External Interface' => 'interface',
+  'Disabled' => 'no'
 );
 
 $select_ldap_deref = array (
@@ -634,6 +644,12 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
     $value = 'DDGETIP="'.$_POST['dd_getip'].'"';
   } else {
     $value = 'DDGETIP="'.tuq($_POST['other_dd_getip']).'"';
+  }
+  fwrite($fp, $value."\n");
+  if ($_POST['dd_getipv6'] !== '') {
+    $value = 'DDGETIPV6="'.$_POST['dd_getipv6'].'"';
+  } else {
+    $value = 'DDGETIPV6="'.tuq($_POST['other_dd_getipv6']).'"';
   }
   fwrite($fp, $value."\n");
   $value = 'DDHOST="'.tuq($_POST['dd_host']).'"';
@@ -2131,7 +2147,26 @@ require_once '../common/header.php';
   }
   putHtml('</select>');
   putHtml('<input type="text" size="36" maxlength="128" value="'.$t_value.'" name="other_dd_getip" /></td></tr>');
-  
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml('DNS Get IPv6 Address:');
+  $t_value = getVARdef($db, 'DDGETIPV6', $cur_db);
+  if ($t_value  === '') {
+    $t_value = 'no';
+  }
+  putHtml('<select name="dd_getipv6">');
+  foreach ($select_dyndns_getipv6 as $key => $value) {
+    if (strcasecmp($t_value, $value) == 0) {
+      $sel = ' selected="selected"';
+      $t_value = '';
+    } else {
+      $sel = '';
+    }
+    putHtml('<option value="'.$value.'"'.$sel.'>'.$key.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('<input type="text" size="36" maxlength="128" value="'.$t_value.'" name="other_dd_getipv6" /></td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   $value = getVARdef($db, 'DDHOST', $cur_db);
   putHtml('DNS Hostname:<input type="text" size="36" maxlength="128" value="'.$value.'" name="dd_host" /></td></tr>');
