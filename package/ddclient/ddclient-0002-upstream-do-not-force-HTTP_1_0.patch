@@ -1,0 +1,13 @@
+diff --git a/ddclient b/ddclient
+index 7e1eb89..74f4e96 100755
+--- a/ddclient
++++ b/ddclient
+@@ -2073,7 +2073,7 @@ USE_CURL_WITH_HEADERS
+         $0 = sprintf("%s - curl sending to %s", $program, "${protocol}://${server}/${url}");
+ 
+         $reply = <<`USE_CURL`;
+-/usr/bin/curl -s0 ${auth} --user-agent '${program}/${version}' \\
++/usr/bin/curl -s ${auth} --user-agent '${program}/${version}' \\
+               --connect-timeout $timeout --max-time $timeout $curlopt \\
+               --url '${protocol}://${server}/${url}' 2>/dev/null
+ USE_CURL
