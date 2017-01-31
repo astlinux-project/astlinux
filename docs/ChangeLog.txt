@@ -26,6 +26,8 @@ Released @TBD@
    Cloudflare, FreeDNS, and HE Free DNS (Hurricane Electric) now support mixed IPv4/IPv6 DNS updates.
    New rc.conf variable: DDGETIPV6, DDGETIPV6="" or DDGETIPV6="no" -> IPv6 dynamic DNS is disabled
 
+-- chrony, version bump to 3.1
+
 -- fping, version bump to 3.15
 
 -- stunnel, version bump to 5.40
