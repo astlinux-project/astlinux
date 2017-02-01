@@ -43,9 +43,10 @@ if [ -d /mnt/kd/fossil ]; then
   export FOSSIL_HOME="/mnt/kd/fossil"
 fi
 
-# Set persistant htop settings
+# Set persistant htop and sngrep settings
 if [ -d /mnt/kd/home ]; then
   export HTOPRC="/mnt/kd/home/.htoprc"
+  export SNGREPRC="/mnt/kd/home/.sngreprc"
 fi
 
 # Set UTF-8 character type for vi
