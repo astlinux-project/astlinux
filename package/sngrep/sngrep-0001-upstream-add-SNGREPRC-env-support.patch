@@ -1,0 +1,164 @@
+diff --git a/src/curses/ui_column_select.c b/src/curses/ui_column_select.c
+index 5fe6436..86d7ba1 100644
+--- a/src/curses/ui_column_select.c
++++ b/src/curses/ui_column_select.c
+@@ -373,21 +373,24 @@ column_select_save_columns(ui_t *ui)
+     FILE *fi, *fo;
+     char columnopt[128];
+     char line[1024];
+-    char *home = getenv("HOME");
++    char *rcfile;
+     char userconf[128], tmpfile[128];
+ 
+-    // No home dir...
+-    if (!home)
++    // Use current $SNGREPRC or $HOME/.sngreprc file
++    if (rcfile = getenv("SNGREPRC")) {
++        sprintf(userconf, "%s", rcfile);
++        sprintf(tmpfile, "%s.old", rcfile);
++    } else if (rcfile = getenv("HOME")) {
++        sprintf(userconf, "%s/.sngreprc", rcfile);
++        sprintf(tmpfile, "%s/.sngreprc.old", rcfile);
++    } else {
+         return;
+-
+-    // Read current $HOME/.sngreprc file
+-    sprintf(userconf, "%s/.sngreprc", home);
+-    sprintf(tmpfile, "%s/.sngreprc.old", home);
++    }
+ 
+     // Remove old config file
+     unlink(tmpfile);
+ 
+-    // Move home file to temporal dir
++    // Move user conf file to temporal file
+     rename(userconf, tmpfile);
+ 
+     // Create a new user conf file
+@@ -403,7 +406,7 @@ column_select_save_columns(ui_t *ui)
+         while (fgets(line, 1024, fi) != NULL) {
+             // Ignore lines starting with set (but keep settings)
+             if (strncmp(line, "set ", 4) || strncmp(line, "set cl.column", 13)) {
+-                // Put everyting in new .sngreprc file
++                // Put everyting in new user conf file
+                 fputs(line, fo);
+             }
+         }
+diff --git a/src/curses/ui_column_select.h b/src/curses/ui_column_select.h
+index 4181f33..83600d2 100644
+--- a/src/curses/ui_column_select.h
++++ b/src/curses/ui_column_select.h
+@@ -164,7 +164,7 @@ column_select_update_columns(ui_t *ui);
+  * @brief Save selected columns to user config file
+  *
+  * Remove previously configurated columns from user's
+- * $HOME/.sngreprc and add new ones
++ * $SNGREPRC or $HOME/.sngreprc and add new ones
+  *
+  * @param ui UI structure pointer
+  */
+diff --git a/src/curses/ui_settings.c b/src/curses/ui_settings.c
+index d765f0b..48c9f11 100644
+--- a/src/curses/ui_settings.c
++++ b/src/curses/ui_settings.c
+@@ -452,7 +452,7 @@ ui_settings_save(ui_t *ui)
+     int i;
+     FILE *fi, *fo;
+     char line[1024];
+-    char *home = getenv("HOME");
++    char *rcfile;
+     char userconf[128], tmpfile[128];
+     char field_value[180];
+     settings_entry_t *entry;
+@@ -460,20 +460,22 @@ ui_settings_save(ui_t *ui)
+     // Get panel information
+     settings_info_t *info = settings_info(ui);
+ 
+-    // No home dir...
+-    if (!home) {
+-        dialog_run("Unable to save configuration. User has no $HOME dir.");
++    // Use current $SNGREPRC or $HOME/.sngreprc file
++    if (rcfile = getenv("SNGREPRC")) {
++        sprintf(userconf, "%s", rcfile);
++        sprintf(tmpfile, "%s.old", rcfile);
++    } else if (rcfile = getenv("HOME")) {
++        sprintf(userconf, "%s/.sngreprc", rcfile);
++        sprintf(tmpfile, "%s/.sngreprc.old", rcfile);
++    } else {
++        dialog_run("Unable to save configuration. User has no $SNGREPRC or $HOME dir.");
+         return;
+     }
+ 
+-    // Read current $HOME/.sngreprc file
+-    sprintf(userconf, "%s/.sngreprc", home);
+-    sprintf(tmpfile, "%s/.sngreprc.old", home);
+-
+     // Remove old config file
+     unlink(tmpfile);
+ 
+-    // Move home file to temporal dir
++    // Move user conf file to temporal file
+     rename(userconf, tmpfile);
+ 
+     // Create a new user conf file
+@@ -487,7 +489,7 @@ ui_settings_save(ui_t *ui)
+         while (fgets(line, 1024, fi) != NULL) {
+             // Ignore lines starting with set (but keep set column ones)
+             if (strncmp(line, "set ", 4) || !strncmp(line, "set cl.column", 13)) {
+-                // Put everyting in new .sngreprc file
++                // Put everyting in new user conf file
+                 fputs(line, fo);
+             }
+         }
+diff --git a/src/option.c b/src/option.c
+index e6e3145..b1efa08 100644
+--- a/src/option.c
++++ b/src/option.c
+@@ -51,7 +51,7 @@ init_options()
+ {
+     // Custom user conf file
+     char userconf[128];
+-    char *home = getenv("HOME");
++    char *rcfile;
+     char pwd[MAX_SETTING_LEN];
+ 
+     // Defualt savepath is current directory
+@@ -75,9 +75,11 @@ init_options()
+     // Read options from configuration files
+     read_options("/etc/sngreprc");
+     read_options("/usr/local/etc/sngreprc");
+-    // Get user homedir configuration
+-    if (home) {
+-        sprintf(userconf, "%s/.sngreprc", home);
++    // Get user configuration
++    if (rcfile = getenv("SNGREPRC")) {
++        read_options(rcfile);
++    } else if (rcfile = getenv("HOME")) {
++        sprintf(userconf, "%s/.sngreprc", rcfile);
+         read_options(userconf);
+     }
+ 
+diff --git a/src/option.h b/src/option.h
+index 3f8fea4..58d8245 100644
+--- a/src/option.h
++++ b/src/option.h
+@@ -32,6 +32,7 @@
+  *  - Initialization
+  *  - \@sysdir\@/sngreprc
+  *  - $HOME/.sngreprc
++ *  - $SNGREPRC
+  *
+  * This is a basic approach to configuration, but at least a minimun is required
+  * for those who can not see all the list columns or want to disable colours in
+diff --git a/src/setting.h b/src/setting.h
+index 492a9a7..20c197c 100644
+--- a/src/setting.h
++++ b/src/setting.h
+@@ -32,6 +32,7 @@
+  *  - Initialization
+  *  - \@sysdir\@/sngreprc
+  *  - $HOME/.sngreprc
++ *  - $SNGREPRC
+  *
+  * This is a basic approach to configuration, but at least a minimun is required
+  * for those who can not see all the list columns or want to disable colours in
