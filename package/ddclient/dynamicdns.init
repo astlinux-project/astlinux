@@ -64,7 +64,7 @@ gen_ddclient_conf()
      *) service="$(echo "$DDSERVICE" | tr -d '^$*[]|"')" ;;  # sanitize for sed regex
   esac
 
-  if [ -n "$DDUSER" -a -n "$DDPASS" -a -n "$DDHOST" ]; then
+  if [ -n "$DDUSER" -a -n "$DDPASS" -a -n "$DDHOST" ] || [ -f /mnt/kd/ddclient.conf ]; then
 
     # Genearate /etc/ddclient.conf configuration file
     if [ -f /mnt/kd/ddclient.conf ]; then

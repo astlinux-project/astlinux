@@ -1041,6 +1041,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/pptp.php');
     exit;
+  } elseif (isset($_POST['submit_edit_ddclient'])) {
+    $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
+    if (is_writable($file = '/mnt/kd/ddclient.conf')) {
+      header('Location: /admin/edit.php?file='.$file);
+      exit;
+    }
   } elseif (isset($_POST['submit_edit_ldap'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     if (is_writable($file = '/mnt/kd/ldap.conf')) {
@@ -2109,6 +2115,10 @@ require_once '../common/header.php';
   $sel = ($dd_client === 'ddclient' || $dd_client === 'inadyn') ? ' selected="selected"' : '';
   putHtml('<option value="ddclient"'.$sel.'>enabled</option>');
   putHtml('</select>');
+  if (is_writable('/mnt/kd/ddclient.conf')) {
+    putHtml('&ndash;');
+    putHtml('<input type="submit" value="Dynamic DNS Configuration" name="submit_edit_ddclient" class="button" />');
+  }
   putHtml('</td></tr>');
   
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
