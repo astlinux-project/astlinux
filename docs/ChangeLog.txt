@@ -25,6 +25,10 @@ Released @TBD@
 -- ddclient, switch to ddclient-curl version 3.8.3-01, adds IPv6 and Hurricane Electric support
    Cloudflare, FreeDNS, and HE Free DNS (Hurricane Electric) now support mixed IPv4/IPv6 DNS updates.
    New rc.conf variable: DDGETIPV6, DDGETIPV6="" or DDGETIPV6="no" -> IPv6 dynamic DNS is disabled
+   More info: http://doc.astlinux-project.org/userdoc:tt_dynamic_dns_client
+
+-- tcpdump, version bump to 4.9.0
+   Fixes many CVE vulnerabilities that might of resulted in denial of service or the execution of arbitrary code.
 
 -- chrony, version bump to 3.1
 
@@ -46,9 +50,11 @@ Released @TBD@
 
 ** Web Interface
 
--- Network tab, add "HE Free DNS" Dynamic DNS Service Type and "checkip.dns.he.net" DNS Get IP selection.
-
--- Network tab, add support for "DNS Get IPv6 Address:" using DDGETIPV6 rc.conf variable.
+-- Network tab, Dynamic DNS Update:
+   == Add "HE Free DNS" Dynamic DNS Service Type and "checkip.dns.he.net" DNS Get IP selection.
+   == Add support for "DNS Get IPv6 Address:" using DDGETIPV6 rc.conf variable.
+   == Add button to edit "/mnt/kd/ddclient.conf" if it exists.
+   More info: http://doc.astlinux-project.org/userdoc:tt_dynamic_dns_client
 
 
 Additions for AstLinux 1.2.9:
