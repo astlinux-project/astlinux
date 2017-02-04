@@ -16,6 +16,8 @@ Released @TBD@
 
 -- pcre, version bump to 8.40
 
+-- jansson, version bump to 2.9 (Asterisk 13)
+
 ** Networking
 
 -- OpenSSL, version bump to 1.0.2k, security fixes: CVE-2017-3731, CVE-2017-3732
