@@ -1,0 +1,169 @@
+diff --git a/src/curses/ui_column_select.c b/src/curses/ui_column_select.c
+index 86d7ba1..d76be47 100644
+--- a/src/curses/ui_column_select.c
++++ b/src/curses/ui_column_select.c
+@@ -374,15 +374,34 @@ column_select_save_columns(ui_t *ui)
+     char columnopt[128];
+     char line[1024];
+     char *rcfile;
+-    char userconf[128], tmpfile[128];
++    char *userconf = NULL;
++    char *tmpfile  = NULL;
+ 
+     // Use current $SNGREPRC or $HOME/.sngreprc file
+     if (rcfile = getenv("SNGREPRC")) {
+-        sprintf(userconf, "%s", rcfile);
+-        sprintf(tmpfile, "%s.old", rcfile);
++        if (userconf = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
++            if (tmpfile = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
++                sprintf(userconf, "%s", rcfile);
++                sprintf(tmpfile, "%s.old", rcfile);
++            } else {
++                sng_free(userconf);
++                return;
++            }
++        } else {
++            return;
++        }
+     } else if (rcfile = getenv("HOME")) {
+-        sprintf(userconf, "%s/.sngreprc", rcfile);
+-        sprintf(tmpfile, "%s/.sngreprc.old", rcfile);
++        if (userconf = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
++            if (tmpfile = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
++                sprintf(userconf, "%s/.sngreprc", rcfile);
++                sprintf(tmpfile, "%s/.sngreprc.old", rcfile);
++            } else {
++                sng_free(userconf);
++                return;
++            }
++        } else {
++            return;
++        }
+     } else {
+         return;
+     }
+@@ -396,6 +415,8 @@ column_select_save_columns(ui_t *ui)
+     // Create a new user conf file
+     if (!(fo = fopen(userconf, "w"))) {
+         dialog_run("Unable to open %s: %s", userconf, strerror(errno));
++        sng_free(userconf);
++        sng_free(tmpfile);
+         return;
+     }
+ 
+@@ -430,6 +451,9 @@ column_select_save_columns(ui_t *ui)
+ 
+     // Show a information dialog
+     dialog_run("Column layout successfully saved to %s", userconf);
++
++    sng_free(userconf);
++    sng_free(tmpfile);
+ }
+ 
+ 
+diff --git a/src/curses/ui_settings.c b/src/curses/ui_settings.c
+index 48c9f11..2c7fe39 100644
+--- a/src/curses/ui_settings.c
++++ b/src/curses/ui_settings.c
+@@ -453,7 +453,8 @@ ui_settings_save(ui_t *ui)
+     FILE *fi, *fo;
+     char line[1024];
+     char *rcfile;
+-    char userconf[128], tmpfile[128];
++    char *userconf = NULL;
++    char *tmpfile  = NULL;
+     char field_value[180];
+     settings_entry_t *entry;
+ 
+@@ -462,11 +463,29 @@ ui_settings_save(ui_t *ui)
+ 
+     // Use current $SNGREPRC or $HOME/.sngreprc file
+     if (rcfile = getenv("SNGREPRC")) {
+-        sprintf(userconf, "%s", rcfile);
+-        sprintf(tmpfile, "%s.old", rcfile);
++        if (userconf = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
++            if (tmpfile = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
++                sprintf(userconf, "%s", rcfile);
++                sprintf(tmpfile, "%s.old", rcfile);
++            } else {
++                sng_free(userconf);
++                return;
++            }
++        } else {
++            return;
++        }
+     } else if (rcfile = getenv("HOME")) {
+-        sprintf(userconf, "%s/.sngreprc", rcfile);
+-        sprintf(tmpfile, "%s/.sngreprc.old", rcfile);
++        if (userconf = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
++            if (tmpfile = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
++                sprintf(userconf, "%s/.sngreprc", rcfile);
++                sprintf(tmpfile, "%s/.sngreprc.old", rcfile);
++            } else {
++                sng_free(userconf);
++                return;
++            }
++        } else {
++            return;
++        }
+     } else {
+         dialog_run("Unable to save configuration. User has no $SNGREPRC or $HOME dir.");
+         return;
+@@ -480,6 +499,8 @@ ui_settings_save(ui_t *ui)
+ 
+     // Create a new user conf file
+     if (!(fo = fopen(userconf, "w"))) {
++        sng_free(userconf);
++        sng_free(tmpfile);
+         return;
+     }
+ 
+@@ -510,4 +531,7 @@ ui_settings_save(ui_t *ui)
+     fclose(fo);
+ 
+     dialog_run("Settings successfully saved to %s", userconf);
++
++    sng_free(userconf);
++    sng_free(tmpfile);
+ }
+diff --git a/src/option.c b/src/option.c
+index b1efa08..641321a 100644
+--- a/src/option.c
++++ b/src/option.c
+@@ -50,7 +50,7 @@ int
+ init_options()
+ {
+     // Custom user conf file
+-    char userconf[128];
++    char *userconf = NULL;
+     char *rcfile;
+     char pwd[MAX_SETTING_LEN];
+ 
+@@ -79,8 +79,11 @@ init_options()
+     if (rcfile = getenv("SNGREPRC")) {
+         read_options(rcfile);
+     } else if (rcfile = getenv("HOME")) {
+-        sprintf(userconf, "%s/.sngreprc", rcfile);
+-        read_options(userconf);
++        if (userconf = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
++            sprintf(userconf, "%s/.sngreprc", rcfile);
++            read_options(userconf);
++            sng_free(userconf);
++        }
+     }
+ 
+     return 0;
+diff --git a/src/setting.h b/src/setting.h
+index 20c197c..65d7341 100644
+--- a/src/setting.h
++++ b/src/setting.h
+@@ -45,6 +45,9 @@
+ //! Max setting value
+ #define MAX_SETTING_LEN   1024
+ 
++//! Max extra length needed for "/.sngreprc.old"
++#define RCFILE_EXTRA_LEN   16
++
+ //! Shorter declarartion of setting_option struct
+ typedef struct setting_option setting_t;
+ 

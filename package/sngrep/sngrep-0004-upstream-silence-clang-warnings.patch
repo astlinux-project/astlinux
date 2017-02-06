@@ -1,0 +1,78 @@
+diff --git a/src/curses/ui_column_select.c b/src/curses/ui_column_select.c
+index d76be47..7bc8e71 100644
+--- a/src/curses/ui_column_select.c
++++ b/src/curses/ui_column_select.c
+@@ -378,9 +378,9 @@ column_select_save_columns(ui_t *ui)
+     char *tmpfile  = NULL;
+ 
+     // Use current $SNGREPRC or $HOME/.sngreprc file
+-    if (rcfile = getenv("SNGREPRC")) {
+-        if (userconf = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
+-            if (tmpfile = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
++    if ((rcfile = getenv("SNGREPRC"))) {
++        if ((userconf = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN))) {
++            if ((tmpfile = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN))) {
+                 sprintf(userconf, "%s", rcfile);
+                 sprintf(tmpfile, "%s.old", rcfile);
+             } else {
+@@ -390,9 +390,9 @@ column_select_save_columns(ui_t *ui)
+         } else {
+             return;
+         }
+-    } else if (rcfile = getenv("HOME")) {
+-        if (userconf = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
+-            if (tmpfile = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
++    } else if ((rcfile = getenv("HOME"))) {
++        if ((userconf = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN))) {
++            if ((tmpfile = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN))) {
+                 sprintf(userconf, "%s/.sngreprc", rcfile);
+                 sprintf(tmpfile, "%s/.sngreprc.old", rcfile);
+             } else {
+diff --git a/src/curses/ui_settings.c b/src/curses/ui_settings.c
+index 2c7fe39..3aba988 100644
+--- a/src/curses/ui_settings.c
++++ b/src/curses/ui_settings.c
+@@ -462,9 +462,9 @@ ui_settings_save(ui_t *ui)
+     settings_info_t *info = settings_info(ui);
+ 
+     // Use current $SNGREPRC or $HOME/.sngreprc file
+-    if (rcfile = getenv("SNGREPRC")) {
+-        if (userconf = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
+-            if (tmpfile = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
++    if ((rcfile = getenv("SNGREPRC"))) {
++        if ((userconf = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN))) {
++            if ((tmpfile = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN))) {
+                 sprintf(userconf, "%s", rcfile);
+                 sprintf(tmpfile, "%s.old", rcfile);
+             } else {
+@@ -474,9 +474,9 @@ ui_settings_save(ui_t *ui)
+         } else {
+             return;
+         }
+-    } else if (rcfile = getenv("HOME")) {
+-        if (userconf = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
+-            if (tmpfile = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
++    } else if ((rcfile = getenv("HOME"))) {
++        if ((userconf = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN))) {
++            if ((tmpfile = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN))) {
+                 sprintf(userconf, "%s/.sngreprc", rcfile);
+                 sprintf(tmpfile, "%s/.sngreprc.old", rcfile);
+             } else {
+diff --git a/src/option.c b/src/option.c
+index 641321a..77bdc3b 100644
+--- a/src/option.c
++++ b/src/option.c
+@@ -76,10 +76,10 @@ init_options()
+     read_options("/etc/sngreprc");
+     read_options("/usr/local/etc/sngreprc");
+     // Get user configuration
+-    if (rcfile = getenv("SNGREPRC")) {
++    if ((rcfile = getenv("SNGREPRC"))) {
+         read_options(rcfile);
+-    } else if (rcfile = getenv("HOME")) {
+-        if (userconf = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN)) {
++    } else if ((rcfile = getenv("HOME"))) {
++        if ((userconf = sng_malloc(strlen(rcfile) + RCFILE_EXTRA_LEN))) {
+             sprintf(userconf, "%s/.sngreprc", rcfile);
+             read_options(userconf);
+             sng_free(userconf);
