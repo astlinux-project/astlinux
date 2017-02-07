@@ -23,25 +23,25 @@ IPSEC_TOOLS_CONF_OPT = \
 	--localstatedir=/var \
 	--with-kernel-headers=$(STAGING_DIR)/usr/include
 
-ifeq ($(BR2_PACKAGE_IPSEC_TOOLS_ADMINPORT), y)
+ifeq ($(BR2_PACKAGE_IPSEC_TOOLS_ADMINPORT),y)
 IPSEC_TOOLS_CONF_OPT+= --enable-adminport
 else
 IPSEC_TOOLS_CONF_OPT+= --disable-adminport
 endif
 
-ifeq ($(BR2_PACKAGE_IPSEC_TOOLS_NATT), y)
+ifeq ($(BR2_PACKAGE_IPSEC_TOOLS_NATT),y)
 IPSEC_TOOLS_CONF_OPT+= --enable-natt
 else
 IPSEC_TOOLS_CONF_OPT+= --disable-natt
 endif
 
-ifeq ($(BR2_PACKAGE_IPSEC_TOOLS_FRAG), y)
+ifeq ($(BR2_PACKAGE_IPSEC_TOOLS_FRAG),y)
 IPSEC_TOOLS_CONF_OPT+= --enable-frag
 else
 IPSEC_TOOLS_CONF_OPT+= --disable-frag
 endif
 
-ifeq ($(BR2_PACKAGE_IPSEC_TOOLS_STATS), y)
+ifeq ($(BR2_PACKAGE_IPSEC_TOOLS_STATS),y)
 IPSEC_TOOLS_CONF_OPT+= --enable-stats
 else
 IPSEC_TOOLS_CONF_OPT+= --disable-stats
@@ -53,10 +53,10 @@ else
 IPSEC_TOOLS_CONF_OPT+= --disable-ipv6
 endif
 
-ifneq ($(BR2_PACKAGE_IPSEC_TOOLS_READLINE), y)
+ifneq ($(BR2_PACKAGE_IPSEC_TOOLS_READLINE),y)
 IPSEC_TOOLS_CONF_OPT+= --without-readline
 else
-IPSEC_DEPENDENCIES += readline
+IPSEC_TOOLS_DEPENDENCIES += readline
 endif
 
 ifeq ($(BR2_PACKAGE_IPSEC_SECCTX_DISABLE),y)
