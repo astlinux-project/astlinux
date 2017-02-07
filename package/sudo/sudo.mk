@@ -17,6 +17,7 @@ SUDO_CONF_OPT = \
 	--with-logging=syslog \
 	--without-interfaces \
 	--without-pam \
+	--without-ldap \
 	--with-env-editor
 
 # mksigname/mksiglist needs to run on build host to generate source files
