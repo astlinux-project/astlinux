@@ -36,7 +36,7 @@ Released @TBD@
 
 -- chrony, version bump to 3.1
 
--- fping, version bump to 3.15
+-- fping, version bump to 3.16
 
 -- stunnel, version bump to 5.40
 
