@@ -16,6 +16,8 @@ Released @TBD@
 
 -- pcre, version bump to 8.40
 
+-- e2fsprogs, version bump to 1.43.4
+
 -- busybox, syslogd: increase SYSLOGD_READ_BUFFER_SIZE from 256 to 512 to support longer log entries.
 
 -- jansson, version bump to 2.9 (Asterisk 13)
