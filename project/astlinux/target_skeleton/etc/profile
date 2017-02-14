@@ -54,7 +54,13 @@ if [ -f /usr/lib/locale/.locale ]; then
   alias vi="LC_CTYPE=$(cat /usr/lib/locale/.locale) vi"
 fi
 
-# Get the aliases and functions
-if [ -f ~/.bashrc ]; then
-	. ~/.bashrc
+if [ "$SHELL" = "/bin/rbash" ]; then
+  ## PATH is automatically set to: /usr/rbin:/mnt/kd/rbin
+  ## with our custom patched version of rbash
+  ## bash-4.1-static-rbash-PATH.patch
+  PS1='\[\033[01;34m\]\h\[\033[00m\] [\u] \$ '
+else
+  if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+  fi
 fi

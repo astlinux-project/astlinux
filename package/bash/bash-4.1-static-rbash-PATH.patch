@@ -1,0 +1,10 @@
+--- bash-4.1/shell.c.orig	2017-02-14 09:31:55.323058410 -0600
++++ bash-4.1/shell.c	2017-02-14 09:34:13.921161204 -0600
+@@ -1165,6 +1165,7 @@
+     temp++;
+   if (restricted || (STREQ (temp, RESTRICTED_SHELL_NAME)))
+     {
++      bind_variable ("PATH", "/usr/rbin:/mnt/kd/rbin", 0);
+       set_var_read_only ("PATH");
+       set_var_read_only ("SHELL");
+       set_var_read_only ("ENV");

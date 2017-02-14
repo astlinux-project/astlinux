@@ -27,12 +27,22 @@ define BASH_DEFAULT_SHELL
 endef
 endif
 
+define BASH_RESTRICTED_SHELL
+	ln -sf bash $(TARGET_DIR)/bin/rbash
+	# Define /usr/rbin with symlinks
+	rm -rf $(TARGET_DIR)/usr/rbin
+	$(INSTALL) -d -m 0755 $(TARGET_DIR)/usr/rbin
+	(for i in `cat package/bash/rbash_progs.txt`; \
+	do ln -s "../../$$i" $(TARGET_DIR)/usr/rbin/`basename "$$i"`; done)
+endef
+
 # Save the old sh file/link if there is one and symlink bash->sh
 define BASH_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) \
 		DESTDIR=$(TARGET_DIR) exec_prefix=/ install
 	rm -f $(TARGET_DIR)/bin/bashbug
 	$(BASH_DEFAULT_SHELL)
+	$(BASH_RESTRICTED_SHELL)
 endef
 
 # Restore the old shell file/link if there was one
