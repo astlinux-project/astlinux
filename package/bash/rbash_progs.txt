@@ -26,3 +26,4 @@ sbin/ss
 
 usr/sbin/fping
 usr/sbin/fping6
+usr/sbin/iftop
