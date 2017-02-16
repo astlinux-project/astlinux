@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2011 Lonnie Abelbeck
+// Copyright (C) 2008-2017 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -8,6 +8,7 @@
 
 // cli.php for AstLinux
 // 12-01-2011
+// 02-16-2017, Optionally allow "staff" access
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -22,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   header('Location: '.$myself.'?result='.$result);
   exit;
 } else { // Start of HTTP GET
-$ACCESS_RIGHTS = 'admin';
+$ACCESS_RIGHTS = $global_staff_enable_cli ? 'staff' : 'admin';
 require_once '../common/header.php';
 
   putHtml("<center>");

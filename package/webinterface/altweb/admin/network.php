@@ -42,6 +42,7 @@
 // 11-14-2016, Added IPsec strongSwan support
 // 01-22-2017, Removed Dynamic DNS 'getip.krisk.org', map to default
 // 01-29-2017, Added DDGETIPV6 support
+// 02-16-2017, Added Restart FTP Server support
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -461,10 +462,8 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   
   $value = 'FTPD="'.$_POST['ftp'].'"';
   fwrite($fp, "### FTP Server\n".$value."\n");
-  if (is_file('/mnt/kd/vsftpd.conf')) {
-    $value = 'FTPDOPTIONS="/mnt/kd/vsftpd.conf"';
-    fwrite($fp, "### deprecated vsftpd options\n".$value."\n");
-  }
+  $value = 'FTPD_WRITE="'.$_POST['ftpd_write'].'"';
+  fwrite($fp, $value."\n");
   
   $value = 'TFTPD="'.$_POST['tftp'].'"';
   fwrite($fp, "### TFTP Server\n".$value."\n");
@@ -1005,6 +1004,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/zabbix.php');
     exit;
+  } elseif (isset($_POST['submit_edit_vsftpd_conf'])) {
+    $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
+    if (is_writable($file = '/mnt/kd/vsftpd.conf')) {
+      header('Location: /admin/edit.php?file='.$file);
+      exit;
+    }
   } elseif (isset($_POST['submit_avahi'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     if (is_writable($file = '/mnt/kd/avahi/avahi-daemon.conf')) {
@@ -1150,6 +1155,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 48, $result, 'init');
       } elseif ($process === 'ipsec') {
         $result = restartPROCESS($process, 49, $result, 'init');
+      } elseif ($process === 'vsftpd') {
+        $result = restartPROCESS($process, 50, $result, 'init');
       }
     } else {
       $result = 2;
@@ -1244,6 +1251,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">mDNS/DNS-SD (Avahi)'.statusPROCESS('avahi').'.</p>');
     } elseif ($result == 49) {
       putHtml('<p style="color: green;">IPsec VPN (strongSwan)'.statusPROCESS('ipsec').'.</p>');
+    } elseif ($result == 50) {
+      putHtml('<p style="color: green;">FTP Server'.statusPROCESS('vsftpd').'.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 100) {
@@ -1323,6 +1332,8 @@ require_once '../common/header.php';
   putHtml('<option value="pptpd"'.$sel.'>Restart PPTP VPN Server</option>');
   $sel = ($reboot_restart === 'fossil') ? ' selected="selected"' : '';
   putHtml('<option value="fossil"'.$sel.'>Restart Fossil Server</option>');
+  $sel = ($reboot_restart === 'vsftpd') ? ' selected="selected"' : '';
+  putHtml('<option value="vsftpd"'.$sel.'>Restart FTP Server</option>');
   $sel = ($reboot_restart === 'ldap') ? ' selected="selected"' : '';
   putHtml('<option value="ldap"'.$sel.'>Reload LDAP Client</option>');
   $sel = ($reboot_restart === 'slapd') ? ' selected="selected"' : '';
@@ -1875,7 +1886,19 @@ require_once '../common/header.php';
   $value = getVARdef($db, 'FTPD', $cur_db);
   $sel = ($value === 'vsftpd' || $value === 'inetd') ? ' selected="selected"' : '';
   putHtml('<option value="vsftpd"'.$sel.'>enabled</option>');
-  putHtml('</select></td></tr>');
+  putHtml('</select>');
+  putHtml('&ndash;');
+  putHtml('<select name="ftpd_write">');
+  putHtml('<option value="yes">read/write</option>');
+  $value = getVARdef($db, 'FTPD_WRITE', $cur_db);
+  $sel = ($value === 'no') ? ' selected="selected"' : '';
+  putHtml('<option value="no"'.$sel.'>read-only</option>');
+  putHtml('</select>');
+  if (is_writable('/mnt/kd/vsftpd.conf')) {
+    putHtml('&ndash;');
+    putHtml('<input type="submit" value="FTP Server Configuration" name="submit_edit_vsftpd_conf" class="button" />');
+  }
+  putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('TFTP&nbsp;Server:');
   putHtml('<select name="tftp">');

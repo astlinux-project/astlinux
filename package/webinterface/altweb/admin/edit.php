@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2016 Lonnie Abelbeck
+// Copyright (C) 2008-2017 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -14,6 +14,7 @@
 // 06-07-2016, Added Avahi mDNS/DNS-SD support
 // 09-21-2016, Added Reload Firewall Blocklist
 // 11-14-2016, Added IPsec strongSwan support
+// 02-16-2017, Added Restart FTP Server support
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -33,6 +34,7 @@ $select_reload = array (
   'ipsec' => 'Restart IPsec strongSwan',
   'pptpd' => 'Restart PPTP VPN Server',
   'fossil' => 'Restart Fossil Server',
+  'vsftpd' => 'Restart FTP Server',
   'ldap' => 'Reload LDAP Client',
   'slapd' => 'Restart LDAP Server',
   'avahi' => 'Restart mDNS/DNS-SD',
@@ -73,7 +75,7 @@ $sys_label = array (
   'webgui-staff-backup.conf' => 'Staff Backup Password',
   'massdeployment.conf' => 'IP Phone Deployment Data',
   'webgui-massdeployment.conf' => 'IP Phone Deployment Data',
-  'vsftpd.conf' => 'Standalone FTPd Configuration'
+  'vsftpd.conf' => 'FTP Server Configuration'
 );
 
 $ast_label = array (
@@ -266,6 +268,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 48, $result, 'init');
       } elseif ($process === 'ipsec') {
         $result = restartPROCESS($process, 49, $result, 'init');
+      } elseif ($process === 'vsftpd') {
+        $result = restartPROCESS($process, 50, $result, 'init');
       } elseif ($process === 'IPTABLES') {
         $result = restartPROCESS('iptables', 66, $result, 'reload');
       } elseif ($process === 'cron') {
@@ -412,6 +416,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">mDNS/DNS-SD (Avahi)'.statusPROCESS('avahi').'.</p>');
     } elseif ($result == 49) {
       putHtml('<p style="color: green;">IPsec VPN (strongSwan)'.statusPROCESS('ipsec').'.</p>');
+    } elseif ($result == 50) {
+      putHtml('<p style="color: green;">FTP Server'.statusPROCESS('vsftpd').'.</p>');
     } elseif ($result == 66) {
       putHtml('<p style="color: green;">Firewall Blocklist has been Reloaded.</p>');
     } elseif ($result == 99) {

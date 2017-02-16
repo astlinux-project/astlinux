@@ -1009,4 +1009,5 @@ $global_staff_enable_sqldata = ($global_user === 'staff' && (getPREFdef($global_
 $global_staff_disable_staff = ($global_user === 'staff' && (getPREFdef($global_prefs, 'tab_staff_disable_staff') === 'yes'));
 $global_staff_enable_dnshosts = ($global_user === 'staff' && (getPREFdef($global_prefs, 'tab_dnshosts_disable_staff') === 'no'));
 $global_staff_enable_xmpp = ($global_user === 'staff' && (getPREFdef($global_prefs, 'tab_xmpp_disable_staff') === 'no'));
+$global_staff_enable_cli = ($global_user === 'staff' && (getPREFdef($global_prefs, 'tab_cli_disable_staff') === 'no'));
 ?>
