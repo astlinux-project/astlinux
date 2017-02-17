@@ -2,6 +2,22 @@
 
 . /etc/rc.conf
 
+gen_user_css()
+{
+  local x mark label result="" IFS
+
+  unset IFS
+  for x in $(ls -1 /usr/share/shellinabox/*.css); do
+    mark="$(echo "${x##*/}" | sed -n -r -e 's/^[0-9][0-9]([x-]).*$/\1/p' | tr 'x' '+')"
+    label="$(echo "${x##*/}" | sed -n -r -e 's/^[0-9][0-9][x-](.*)\.css$/\1/p' | tr '_' ' ')"
+    if [ -n "$mark" -a -n "$label" ]; then
+      result="$result${result:+,}${label}:${mark}${x}"
+    fi
+  done
+
+  echo "$result"
+}
+
 init () {
   :
 }
@@ -12,7 +28,8 @@ start () {
     echo "Starting shellinaboxd..."
 
     shellinaboxd -u root -g nobody --no-beep --background=/var/run/shellinaboxd.pid \
-                 --disable-ssl --localhost-only --service=/admin/cli/:nobody:nobody:/:/bin/login
+                 --disable-ssl --localhost-only --service=/admin/cli/:nobody:nobody:/:/bin/login \
+                 --user-css "$(gen_user_css)"
   fi
 }
 
