@@ -12,6 +12,9 @@ Released @TBD@
 
 ** System
 
+-- rbash, new command (part of bash package), a restricted login shell /bin/rbash for non-root users.
+   More info: http://doc.astlinux-project.org/userdoc:tt_restricted_user_login
+
 -- Fossil, version bump to 1.37
 
 -- pcre, version bump to 8.40
@@ -35,6 +38,9 @@ Released @TBD@
 
 -- tcpdump, version bump to 4.9.0
    Fixes many CVE vulnerabilities that might of resulted in denial of service or the execution of arbitrary code.
+
+-- vsftpd, add FTPD_WRITE rc.conf variable to select read/write or read-only access.
+   Note: The FTP server (vsftpd) is no longer enabled by default for new installs, use the Network tab to enable it.
 
 -- chrony, version bump to 3.1
 
@@ -61,6 +67,15 @@ Released @TBD@
    == Add support for "DNS Get IPv6 Address:" using DDGETIPV6 rc.conf variable.
    == Add button to edit "/mnt/kd/ddclient.conf" if it exists.
    More info: http://doc.astlinux-project.org/userdoc:tt_dynamic_dns_client
+
+-- Network and Edit tab, FTP Server:
+   == Add Restart FTP Server menu item.
+   == Add FTPD_WRITE rc.conf variable suppport with read/write, read-only menu.
+   == Add button to edit "/mnt/kd/vsftpd.conf" if it exists.
+
+-- CLI tab, add support for "staff" user when Prefs tab has unchecked: Disable CLI Tab for "staff" user.
+
+-- CLI tab, add user selectable styles; Black, White or Green on White or Black background, right-click for menu.
 
 
 Additions for AstLinux 1.2.9:
