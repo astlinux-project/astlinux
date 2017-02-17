@@ -236,6 +236,7 @@ p {
   background-color: #6E6E77;
   border: 2px #6E6E77 outset;
   padding: 1px 4px 2px 3px;
+  white-space: nowrap;
 }
 .actionText:visited {
   color: #FFA500;
