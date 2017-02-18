@@ -1,0 +1,40 @@
+diff --git a/ddclient b/ddclient
+index 74f4e96..8a83562 100755
+--- a/ddclient
++++ b/ddclient
+@@ -2044,7 +2044,7 @@ sub geturl {
+           $head_args .= "-H '$head_line' ";
+         }
+ 
+-        $0 = sprintf("%s - curl (w/headers) sending to %s", $program, "https://${server}/${url}");
++        $0 = sprintf("%s - curl (w/headers) sending to %s", $program, "https://${server}");
+ 
+         $reply = <<`USE_CURL_WITH_HEADERS`;
+ /usr/bin/curl -s -X $method --user-agent '${program}/${version}' \\
+@@ -2055,7 +2055,7 @@ sub geturl {
+ USE_CURL_WITH_HEADERS
+ 
+         if (! $reply) {
+-            warning("curl (w/headers) cannot connect to https://${server}/${url}");
++            warning("curl (w/headers) cannot connect to https://${server}");
+         }
+     } else {
+         my $timeout = opt('timeout');
+@@ -2070,7 +2070,7 @@ USE_CURL_WITH_HEADERS
+             $curlopt .= ' --insecure';
+         }
+ 
+-        $0 = sprintf("%s - curl sending to %s", $program, "${protocol}://${server}/${url}");
++        $0 = sprintf("%s - curl sending to %s", $program, "${protocol}://${server}");
+ 
+         $reply = <<`USE_CURL`;
+ /usr/bin/curl -s ${auth} --user-agent '${program}/${version}' \\
+@@ -2079,7 +2079,7 @@ USE_CURL_WITH_HEADERS
+ USE_CURL
+ 
+         if (! $reply) {
+-            warning("curl cannot connect to ${protocol}://${server}/${url}");
++            warning("curl cannot connect to ${protocol}://${server}");
+         }
+     }
+ 
