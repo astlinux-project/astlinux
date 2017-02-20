@@ -32,8 +32,9 @@ define BASH_RESTRICTED_SHELL
 	# Define /usr/rbin with symlinks
 	rm -rf $(TARGET_DIR)/usr/rbin
 	$(INSTALL) -d -m 0755 $(TARGET_DIR)/usr/rbin
-	(for i in `cat package/bash/rbash_progs.txt`; \
+	(for i in `cat package/bash/rbash/cmd_symlinks.txt`; \
 	do ln -s "../../$$i" $(TARGET_DIR)/usr/rbin/`basename "$$i"`; done)
+	$(INSTALL) -D -m 0755 package/bash/rbash/grep.sh $(TARGET_DIR)/usr/rbin/grep
 endef
 
 # Save the old sh file/link if there is one and symlink bash->sh
