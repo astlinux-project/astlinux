@@ -1,0 +1,9 @@
+config BR2_PACKAGE_GNTP_SEND
+	bool "gntp-send"
+	default n
+	help
+	  A command line tool for sending notifications to Growl.
+	  A library for integrating Growl into you C or C++ based applications.
+
+	  https://github.com/mattn/gntp-send
+
