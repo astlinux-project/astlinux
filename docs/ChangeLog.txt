@@ -27,11 +27,18 @@ Released @TBD@
 
 -- strace, version bump to 4.16
 
+-- pciutils, version bump to 3.5.3
+
 -- jansson, version bump to 2.9 (Asterisk 13)
 
 ** Networking
 
 -- OpenSSL, version bump to 1.0.2k, security fixes: CVE-2017-3731, CVE-2017-3732
+
+-- libcurl (curl) version bump to 7.53.0, security fixes: CVE-2017-2629
+
+-- gntp-send, version 0.3.4, new package, CLI tool for sending Growl (GNTP) notifications.
+   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk_call_notify
 
 -- sngrep, version 1.4.2, new package, tool for displaying SIP call message flows from a terminal.
 
@@ -50,7 +57,11 @@ Released @TBD@
 
 -- fping, version bump to 3.16
 
+-- ipset, version bump to 6.31
+
 -- stunnel, version bump to 5.40
+
+-- unbound (host), version bump to 1.6.1
 
 ** Asterisk
 
