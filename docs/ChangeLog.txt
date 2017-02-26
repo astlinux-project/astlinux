@@ -25,6 +25,10 @@ Released @TBD@
 
 -- busybox, syslogd: increase SYSLOGD_READ_BUFFER_SIZE from 256 to 512 to support longer log entries.
 
+-- nano, version bump to 2.7.5
+
+-- screen, version bump to 4.5.1
+
 -- strace, version bump to 4.16
 
 -- pciutils, version bump to 3.5.3
@@ -35,7 +39,7 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.0.2k, security fixes: CVE-2017-3731, CVE-2017-3732
 
--- libcurl (curl) version bump to 7.53.0, security fixes: CVE-2017-2629
+-- libcurl (curl) version bump to 7.53.1, security fixes: CVE-2017-2629
 
 -- gntp-send, version 0.3.4, new package, CLI tool for sending Growl (GNTP) notifications.
    More info: http://doc.astlinux-project.org/userdoc:tt_asterisk_call_notify
