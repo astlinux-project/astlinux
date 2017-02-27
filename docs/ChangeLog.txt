@@ -67,6 +67,11 @@ Released @TBD@
 
 -- unbound (host), version bump to 1.6.1
 
+-- arnofw (AIF), added "dyndns-ipv6-forward" plugin.  Provides EXT->LAN firewall 'ipv6-forward'
+   rules using hostnames (via periodic DNS lookups) rather than static IPv6 addresses.  Should the
+   hostname resolve to multiple IPv6 addresses, a rule for each address will be opened.  IPv6 only.
+   Note: A custom ddclient config may be used to publish local servers with dynamic DNS AAAA records.
+
 ** Asterisk
 
 -- Asterisk 11.25.1 (no change) and 13.14.0 (version bump)
