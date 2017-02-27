@@ -104,6 +104,15 @@ $(TARGET_DIR)$(ARNOFW_TARGET_BINARY): $(ARNOFW_DIR)/.patched
 	$(INSTALL) -m 0644 package/arnofw/dyndns-host-open/dyndns-host-open.conf \
 		$(TARGET_DIR)/stat$(ARNOFW_PLUGIN_CONFIG_DIR)/dyndns-host-open.conf
 	@echo
+	@echo "Install local version of DynDNS IPv6 Forward plugin."
+	@echo
+	$(INSTALL) -m 0644 package/arnofw/dyndns-ipv6-forward/50dyndns-ipv6-forward.plugin.sh \
+		$(TARGET_DIR)$(ARNOFW_PLUGIN_SCRIPT_DIR)/50dyndns-ipv6-forward.plugin
+	$(INSTALL) -m 0755 package/arnofw/dyndns-ipv6-forward/dyndns-ipv6-forward-helper.sh \
+		$(TARGET_DIR)$(ARNOFW_PLUGIN_SCRIPT_DIR)/dyndns-ipv6-forward-helper
+	$(INSTALL) -m 0644 package/arnofw/dyndns-ipv6-forward/dyndns-ipv6-forward.conf \
+		$(TARGET_DIR)/stat$(ARNOFW_PLUGIN_CONFIG_DIR)/dyndns-ipv6-forward.conf
+	@echo
 	@echo "Install local version of Traffic Shaper plugin."
 	@echo
 	$(INSTALL) -m 0644 package/arnofw/traffic-shaper/60traffic-shaper.plugin.sh \
