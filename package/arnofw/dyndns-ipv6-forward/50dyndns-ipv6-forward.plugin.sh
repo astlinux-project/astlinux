@@ -30,7 +30,7 @@ PLUGIN_CONF_FILE="dyndns-ipv6-forward.conf"
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 # ------------------------------------------------------------------------------
 
-DYNDNS_FORWARD_RULES="/var/tmp/aif-dyndns-forward-rules"
+DYNDNS_FORWARD_RULES="/var/tmp/aif-dyndns-ipv6-forward-rules"
 
 dyndns_forward_generate_rules()
 {
