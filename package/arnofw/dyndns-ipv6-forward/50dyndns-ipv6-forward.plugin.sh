@@ -53,12 +53,12 @@ dyndns_forward_generate_rules()
       IFS=' ,'
       for shost in $shosts; do
         for dhost in $dhosts; do
-          for port in $ports; do
-            for interface in $interfaces; do
+          for interface in $interfaces; do
+            for port in $ports; do
               echo "-A DYNDNS_IPV6_CHAIN -i $interface ! -o $interface -s $shost -d $dhost -p tcp --dport $port -j ACCEPT" >> "$rules_file"
             done
+            echo "-A DYNDNS_IPV6_CHAIN -i $interface ! -o $interface -s $shost -d $dhost -p icmpv6 --icmpv6-type echo-request -j ACCEPT" >> "$rules_file"
           done
-          echo "-A DYNDNS_IPV6_CHAIN -i $interface ! -o $interface -s $shost -d $dhost -p icmpv6 --icmpv6-type echo-request -j ACCEPT" >> "$rules_file"
         done
       done
     fi
@@ -79,12 +79,12 @@ dyndns_forward_generate_rules()
       IFS=' ,'
       for shost in $shosts; do
         for dhost in $dhosts; do
-          for port in $ports; do
-            for interface in $interfaces; do
+          for interface in $interfaces; do
+            for port in $ports; do
               echo "-A DYNDNS_IPV6_CHAIN -i $interface ! -o $interface -s $shost -d $dhost -p udp --dport $port -j ACCEPT" >> "$rules_file"
             done
+            echo "-A DYNDNS_IPV6_CHAIN -i $interface ! -o $interface -s $shost -d $dhost -p icmpv6 --icmpv6-type echo-request -j ACCEPT" >> "$rules_file"
           done
-          echo "-A DYNDNS_IPV6_CHAIN -i $interface ! -o $interface -s $shost -d $dhost -p icmpv6 --icmpv6-type echo-request -j ACCEPT" >> "$rules_file"
         done
       done
     fi
@@ -105,8 +105,8 @@ dyndns_forward_generate_rules()
       IFS=' ,'
       for shost in $shosts; do
         for dhost in $dhosts; do
-          for proto in $protos; do
-            for interface in $interfaces; do
+          for interface in $interfaces; do
+            for proto in $protos; do
               echo "-A DYNDNS_IPV6_CHAIN -i $interface ! -o $interface -s $shost -d $dhost -p $proto -j ACCEPT" >> "$rules_file"
             done
           done
