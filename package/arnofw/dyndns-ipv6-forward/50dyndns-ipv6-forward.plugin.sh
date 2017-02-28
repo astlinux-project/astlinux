@@ -55,9 +55,9 @@ dyndns_forward_generate_rules()
         for dhost in $dhosts; do
           for interface in $interfaces; do
             for port in $ports; do
-              echo "-A DYNDNS_IPV6_CHAIN -i $interface ! -o $interface -s $shost -d $dhost -p tcp --dport $port -j ACCEPT" >> "$rules_file"
+              echo "-A DYNDNS_FORWARD -i $interface ! -o $interface -s $shost -d $dhost -p tcp --dport $port -j ACCEPT" >> "$rules_file"
             done
-            echo "-A DYNDNS_IPV6_CHAIN -i $interface ! -o $interface -s $shost -d $dhost -p icmpv6 --icmpv6-type echo-request -j ACCEPT" >> "$rules_file"
+            echo "-A DYNDNS_FORWARD -i $interface ! -o $interface -s $shost -d $dhost -p icmpv6 --icmpv6-type echo-request -j ACCEPT" >> "$rules_file"
           done
         done
       done
@@ -81,9 +81,9 @@ dyndns_forward_generate_rules()
         for dhost in $dhosts; do
           for interface in $interfaces; do
             for port in $ports; do
-              echo "-A DYNDNS_IPV6_CHAIN -i $interface ! -o $interface -s $shost -d $dhost -p udp --dport $port -j ACCEPT" >> "$rules_file"
+              echo "-A DYNDNS_FORWARD -i $interface ! -o $interface -s $shost -d $dhost -p udp --dport $port -j ACCEPT" >> "$rules_file"
             done
-            echo "-A DYNDNS_IPV6_CHAIN -i $interface ! -o $interface -s $shost -d $dhost -p icmpv6 --icmpv6-type echo-request -j ACCEPT" >> "$rules_file"
+            echo "-A DYNDNS_FORWARD -i $interface ! -o $interface -s $shost -d $dhost -p icmpv6 --icmpv6-type echo-request -j ACCEPT" >> "$rules_file"
           done
         done
       done
@@ -107,7 +107,7 @@ dyndns_forward_generate_rules()
         for dhost in $dhosts; do
           for interface in $interfaces; do
             for proto in $protos; do
-              echo "-A DYNDNS_IPV6_CHAIN -i $interface ! -o $interface -s $shost -d $dhost -p $proto -j ACCEPT" >> "$rules_file"
+              echo "-A DYNDNS_FORWARD -i $interface ! -o $interface -s $shost -d $dhost -p $proto -j ACCEPT" >> "$rules_file"
             done
           done
         done
@@ -128,12 +128,12 @@ dyndns_forward_generate_rules()
 # Plugin start function
 plugin_start()
 {
-  # Create new DYNDNS_IPV6_CHAIN chain:
-  ip6tables -N DYNDNS_IPV6_CHAIN 2>/dev/null
-  ip6tables -F DYNDNS_IPV6_CHAIN
+  # Create new DYNDNS_FORWARD chain:
+  ip6tables -N DYNDNS_FORWARD 2>/dev/null
+  ip6tables -F DYNDNS_FORWARD
 
   # Insert rule into the main chain:
-  ip6tables -A POST_FORWARD_CHAIN -j DYNDNS_IPV6_CHAIN
+  ip6tables -A POST_FORWARD_CHAIN -j DYNDNS_FORWARD
 
   # Create the rules file
   dyndns_forward_generate_rules "$DYNDNS_FORWARD_RULES"
@@ -153,7 +153,7 @@ plugin_restart()
   "$PLUGIN_BIN_PATH/dyndns-ipv6-forward-helper" stop "$IP6TABLES"
 
   # Insert rule into the main chain:
-  ip6tables -A POST_FORWARD_CHAIN -j DYNDNS_IPV6_CHAIN
+  ip6tables -A POST_FORWARD_CHAIN -j DYNDNS_FORWARD
 
   # Re-create the rules file
   if dyndns_forward_generate_rules "$DYNDNS_FORWARD_RULES.tmp"; then
@@ -184,10 +184,10 @@ plugin_stop()
   # Remove the rules file
   rm -f "$DYNDNS_FORWARD_RULES"
 
-  ip6tables -D POST_FORWARD_CHAIN -j DYNDNS_IPV6_CHAIN 2>/dev/null
+  ip6tables -D POST_FORWARD_CHAIN -j DYNDNS_FORWARD 2>/dev/null
 
-  ip6tables -F DYNDNS_IPV6_CHAIN
-  ip6tables -X DYNDNS_IPV6_CHAIN 2>/dev/null
+  ip6tables -F DYNDNS_FORWARD
+  ip6tables -X DYNDNS_FORWARD 2>/dev/null
 
   return 0
 }

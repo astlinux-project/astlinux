@@ -27,8 +27,8 @@ start_run()
   while [ -f "$ARGSFILE" ]; do
   
     # Check whether chains exists
-    if ! check_for_chain DYNDNS_IPV6_CHAIN; then
-      log_msg "DYNDNS_IPV6_CHAIN does not exist"
+    if ! check_for_chain DYNDNS_FORWARD; then
+      log_msg "DYNDNS_FORWARD does not exist"
       break
     fi
     
@@ -80,7 +80,7 @@ status()
 
   echo "  DynDNS IPv6 Forward:"
   echo "  =============================="
-  ip6tables -n -L DYNDNS_IPV6_CHAIN | sed -n -e 's/^ACCEPT.*$/  &/p'
+  ip6tables -n -L DYNDNS_FORWARD | sed -n -e 's/^ACCEPT.*$/  &/p'
   echo "  ------------------------------"
   echo ""
   
@@ -91,28 +91,28 @@ apply_rules()
   local cnt rule end_cnt IFS
   
   # Count existing rules, to be deleted later
-  cnt=$(ip6tables -n -L DYNDNS_IPV6_CHAIN | grep -c '^ACCEPT')
+  cnt=$(ip6tables -n -L DYNDNS_FORWARD | grep -c '^ACCEPT')
 
   unset IFS
   cat "$1" | while read rule; do
     ip6tables $rule
     if [ $? -ne 0 -a $cnt -gt 0 ]; then
       # Keep pre-existing rules, delete incomplete set
-      end_cnt=$(ip6tables -n -L DYNDNS_IPV6_CHAIN | grep -c '^ACCEPT')
+      end_cnt=$(ip6tables -n -L DYNDNS_FORWARD | grep -c '^ACCEPT')
       while [ $end_cnt -gt $cnt ]; do
-        ip6tables -D DYNDNS_IPV6_CHAIN $end_cnt
+        ip6tables -D DYNDNS_FORWARD $end_cnt
         end_cnt=$((end_cnt-1))
       done
       break
     fi
   done
   
-  end_cnt=$(ip6tables -n -L DYNDNS_IPV6_CHAIN | grep -c '^ACCEPT')
+  end_cnt=$(ip6tables -n -L DYNDNS_FORWARD | grep -c '^ACCEPT')
   
   if [ $end_cnt -gt $cnt ]; then
     # Delete pre-existing rules
     while [ $cnt -gt 0 ]; do
-      ip6tables -D DYNDNS_IPV6_CHAIN 1
+      ip6tables -D DYNDNS_FORWARD 1
       cnt=$((cnt-1))
     done
   fi
