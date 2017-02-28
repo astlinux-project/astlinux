@@ -72,6 +72,11 @@ Released @TBD@
    hostname resolve to multiple IPv6 addresses, a rule for each address will be opened.  IPv6 only.
    Note: A custom ddclient config may be used to publish local servers with dynamic DNS AAAA records.
 
+-- arnofw (AIF), added "dyndns-ipv6-open" plugin.  Provides EXT->Local firewall 'ipv6-open'
+   rules using hostnames (via periodic DNS lookups) rather than static IPv6 addresses.  Should the
+   hostname resolve to multiple IPv6 addresses, a rule for each address will be opened.  IPv6 only.
+   Note: Similar functionality as the IPv4 dyndns-host-open plugin except using IPv6 with AAAA DNS records.
+
 ** Asterisk
 
 -- Asterisk 11.25.1 (no change) and 13.14.0 (version bump)
