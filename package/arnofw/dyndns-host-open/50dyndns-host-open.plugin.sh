@@ -44,7 +44,7 @@ dyndns_open_generate_rules()
   for rule in $DYNDNS_HOST_OPEN_TCP; do
     if parse_rule "$rule" DYNDNS_HOST_OPEN_TCP "interfaces-destips-hosts-ports"; then
 
-      echo "${INDENT}$(show_if_ip "$interfaces" "$destips")Allowing $hosts for TCP port(s): $ports"
+      echo "${INDENT}$(show_if_ip "$interfaces" "$destips")Allowing(IPv4) $hosts for TCP port(s): $ports"
 
       IFS=','
       for host in $hosts; do
@@ -66,7 +66,7 @@ dyndns_open_generate_rules()
   for rule in $DYNDNS_HOST_OPEN_UDP; do
     if parse_rule "$rule" DYNDNS_HOST_OPEN_UDP "interfaces-destips-hosts-ports"; then
 
-      echo "${INDENT}$(show_if_ip "$interfaces" "$destips")Allowing $hosts for UDP port(s): $ports"
+      echo "${INDENT}$(show_if_ip "$interfaces" "$destips")Allowing(IPv4) $hosts for UDP port(s): $ports"
 
       IFS=','
       for host in $hosts; do
@@ -88,7 +88,7 @@ dyndns_open_generate_rules()
   for rule in $DYNDNS_HOST_OPEN_IP; do
     if parse_rule "$rule" DYNDNS_HOST_OPEN_IP "interfaces-destips-hosts-protos"; then
 
-      echo "${INDENT}$(show_if_ip "$interfaces" "$destips")Allowing $hosts for IP protocol(s): $protos"
+      echo "${INDENT}$(show_if_ip "$interfaces" "$destips")Allowing(IPv4) $hosts for IP protocol(s): $protos"
 
       IFS=','
       for host in $hosts; do
@@ -110,7 +110,7 @@ dyndns_open_generate_rules()
   for rule in $DYNDNS_HOST_OPEN_ICMP; do
     if parse_rule "$rule" DYNDNS_HOST_OPEN_ICMP "interfaces-destips-hosts"; then
 
-      echo "${INDENT}$(show_if_ip "$interfaces" "$destips")Allowing $hosts for ICMP-requests(ping)"
+      echo "${INDENT}$(show_if_ip "$interfaces" "$destips")Allowing(IPv4) $hosts for ICMP-requests(ping)"
 
       IFS=','
       for host in $hosts; do
