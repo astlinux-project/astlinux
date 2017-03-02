@@ -48,7 +48,7 @@ Released @TBD@
 
 -- sngrep, version 1.4.2, new package, tool for displaying SIP call message flows from a terminal.
 
--- ddclient, switch to ddclient-curl version 3.8.3-01, adds IPv6 and Hurricane Electric support
+-- ddclient, switch to ddclient-curl version 3.8.3-02, adds IPv6 and Hurricane Electric support
    Cloudflare, FreeDNS, and HE Free DNS (Hurricane Electric) now support mixed IPv4/IPv6 DNS updates.
    New rc.conf variable: DDGETIPV6, DDGETIPV6="" or DDGETIPV6="no" -> IPv6 dynamic DNS is disabled
    More info: http://doc.astlinux-project.org/userdoc:tt_dynamic_dns_client
