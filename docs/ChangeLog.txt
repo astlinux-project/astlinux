@@ -31,9 +31,11 @@ Released @TBD@
 
 -- strace, version bump to 4.16
 
--- pciutils, version bump to 3.5.3
+-- pciutils, version bump to 3.5.4
 
 -- jansson, version bump to 2.9 (Asterisk 13)
+
+-- Time Zone Database update, tzdata2017a and php-timezonedb-2017.1
 
 ** Networking
 
@@ -66,6 +68,8 @@ Released @TBD@
 -- stunnel, version bump to 5.40
 
 -- unbound (host), version bump to 1.6.1
+
+-- whois, version bump to 5.2.15
 
 -- arnofw (AIF), added "dyndns-ipv6-forward" plugin.  Provides EXT->LAN firewall 'ipv6-forward'
    rules using hostnames (via periodic DNS lookups) rather than static IPv6 addresses.  Should the
