@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-FOSSIL_VERSION = 1.37
+FOSSIL_VERSION = 2.0
 FOSSIL_SOURCE = fossil-src-$(FOSSIL_VERSION).tar.gz
 FOSSIL_SITE = https://www.fossil-scm.org/fossil/uv/download
 FOSSIL_DEPENDENCIES = zlib openssl
