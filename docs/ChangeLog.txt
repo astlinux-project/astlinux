@@ -17,7 +17,7 @@ Released @TBD@
 
 -- sqlite, version bump to 3.17.0
 
--- Fossil, version bump to 1.37
+-- Fossil, version bump to 2.0, adds a hardened SHA1 implementation and understands SHA3-256 hashes.
 
 -- pcre, version bump to 8.40
 
