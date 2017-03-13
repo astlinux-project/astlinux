@@ -63,7 +63,7 @@ Released @TBD@
 
 -- fping, version bump to 3.16
 
--- ipset, version bump to 6.31
+-- ipset, version bump to 6.32
 
 -- stunnel, version bump to 5.40
 
@@ -90,6 +90,10 @@ Released @TBD@
 -- pjsip 2.5.5 (no change)
 
 -- libpri, version bump to 1.6.0
+
+-- FOP2, available version bump to 2.31.08.
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 -- (Custom Build Only) wanpipe, version 7.0.20 (no change)
 
