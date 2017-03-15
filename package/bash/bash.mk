@@ -18,6 +18,11 @@ ifeq ($(BR2_PACKAGE_BUSYBOX),y)
 BASH_DEPENDENCIES += busybox
 endif
 
+define BASH_LOADABLE_BUILTINS
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D)/examples/loadables sleep
+endef
+BASH_POST_BUILD_HOOKS = BASH_LOADABLE_BUILTINS
+
 ifeq ($(BR2_PACKAGE_BASH_DEFAULT_SHELL),y)
 define BASH_DEFAULT_SHELL
 	if [ -e $(TARGET_DIR)/bin/sh ]; then \
@@ -42,6 +47,7 @@ define BASH_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) \
 		DESTDIR=$(TARGET_DIR) exec_prefix=/ install
 	rm -f $(TARGET_DIR)/bin/bashbug
+	$(INSTALL) -D -m 0755 $(@D)/examples/loadables/sleep $(TARGET_DIR)/usr/lib/bash/sleep
 	$(BASH_DEFAULT_SHELL)
 	$(BASH_RESTRICTED_SHELL)
 endef
@@ -53,6 +59,7 @@ define BASH_UNINSTALL_TARGET_CMDS
 	if [ -e $(TARGET_DIR)/bin/sh.prebash ]; then \
 		mv -f $(TARGET_DIR)/bin/sh.prebash $(TARGET_DIR)/bin/sh; \
 	fi
+	rm -rf $(TARGET_DIR)/usr/lib/bash
 endef
 
 $(eval $(call AUTOTARGETS,package,bash))
