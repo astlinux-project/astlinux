@@ -331,6 +331,11 @@ start_monitor() {
     return 9
   fi
 
+  # Load 'sleep' builtin if it exists
+  if [ -f /usr/lib/bash/sleep ]; then
+    enable -f /usr/lib/bash/sleep sleep
+  fi
+
   trap 'test_switch' HUP
 
   trap 'remove_target_static_routes; rm -f "$LOCKFILE" "$PIDFILE"; exit $?' INT TERM EXIT

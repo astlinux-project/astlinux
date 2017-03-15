@@ -62,7 +62,12 @@ start_run()
     echo "asterisk-sip-monitor: already running, lockfile \"$LOCKFILE\" exists, process id: $(cat "$LOCKFILE")."
     return 9
   fi
-  
+
+  # Load 'sleep' builtin if it exists
+  if [ -f /usr/lib/bash/sleep ]; then
+    enable -f /usr/lib/bash/sleep sleep
+  fi
+
   trap 'rm -f "$LOCKFILE" "$PIDFILE"; exit $?' INT TERM EXIT
   
   echo "$BASHPID" > "$PIDFILE"

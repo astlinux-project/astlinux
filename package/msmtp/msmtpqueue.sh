@@ -25,7 +25,12 @@ flush()
     echo "msmtpqueue: already running, lockfile \"$LOCKFILE\" exists, process id: $(cat "$LOCKFILE")."
     return 9
   fi
-  
+
+  # Load 'sleep' builtin if it exists
+  if [ -f /usr/lib/bash/sleep ]; then
+    enable -f /usr/lib/bash/sleep sleep
+  fi
+
   trap 'rm -f "$LOCKFILE"; exit $?' INT TERM EXIT
   
   while true; do

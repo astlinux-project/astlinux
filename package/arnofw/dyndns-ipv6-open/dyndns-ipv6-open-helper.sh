@@ -16,7 +16,12 @@ start_run()
     echo "dyndns-ipv6-open-helper: already running, lockfile \"$LOCKFILE\" exists, process id: $(cat "$LOCKFILE")."
     return 9
   fi
-  
+
+  # Load 'sleep' builtin if it exists
+  if [ -f /usr/lib/bash/sleep ]; then
+    enable -f /usr/lib/bash/sleep sleep
+  fi
+
   trap 'rm -f "$LOCKFILE" "$ARGSFILE"; exit $?' INT TERM EXIT
   
   echo "$ARGS" > "$ARGSFILE"
