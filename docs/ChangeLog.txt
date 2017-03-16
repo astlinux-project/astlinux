@@ -12,8 +12,12 @@ Released @TBD@
 
 ** System
 
+-- Linux Kernel 3.2.87 (minor bump)
+
 -- rbash, new command (part of bash package), a restricted login shell /bin/rbash for non-root users.
    More info: http://doc.astlinux-project.org/userdoc:tt_restricted_user_login
+
+-- bash, add support for the loadable builtin 'sleep', automatically used in various background scripts.
 
 -- sqlite, version bump to 3.17.0
 
