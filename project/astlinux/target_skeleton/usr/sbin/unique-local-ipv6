@@ -1,0 +1,56 @@
+#!/bin/bash
+
+##
+## Generate an IPv6 ULA (Unique Local Address) Prefix
+##
+## Usage: unique-local-ipv6
+##
+## Outputs a pseudo-random /48 prefix out of the fd::/8 address space.
+##
+## Ref: 3.2.2.  Sample Code for Pseudo-Random Global ID Algorithm
+##      https://tools.ietf.org/html/rfc4193#section-3.2.2
+##
+
+##
+## Obtain the current time of day in 64-bit NTP format
+
+secs_nanosecs="$(date '+%s:%N')"
+secs="${secs_nanosecs%:*}"
+nanosecs="${secs_nanosecs#*:}"
+# Strip any leading 0's so nano-seconds does not look octal
+nanosecs=$((10#$nanosecs))
+# Adjust secs to match NTP time format, no practical need to mess with nano-seconds
+secs=$((secs + 2208988800))
+timestamp="$(printf '%08x%08x' $secs $nanosecs)"
+
+##
+## Obtain an EUI-64 identifier from the system
+
+mac="$(ip -o link show | sed -n -r -e 's|^.* link/ether ([0-9a-fA-F:]+) .*$|\1|p' | head -n1)"
+if [ -z "$mac" ]; then
+  echo "unique-local-ipv6: No MAC address found" >&2
+  exit 1
+fi
+
+B1="${mac%%:*}"
+B1="$(printf '%02x' $((16#$B1 ^ 16#02)))"
+B2="$(echo "$mac" | cut -d: -f2)"
+B3="$(echo "$mac" | cut -d: -f3)"
+B4="$(echo "$mac" | cut -d: -f4)"
+B5="$(echo "$mac" | cut -d: -f5)"
+B6="$(echo "$mac" | cut -d: -f6)"
+
+eui_64="${B1}${B2}${B3}fffe${B4}${B5}${B6}"
+
+##
+## Concatenate the time of day with the system-specific identifier
+## Compute an SHA-1 digest, use the least significant 40 bits as the Global ID
+
+# Use printf to suppress a trailing newline before sha1sum
+global_id="$(printf "$timestamp$eui_64" | sha1sum | cut -c 31-40)"
+
+##
+## Concatenate fc00::/7, the L bit set to 1 (ie. "fd"), and
+## the 40-bit Global ID to create a Local IPv6 address prefix
+
+echo "fd$global_id" | sed -n -r -e 's|^(....)(....)(....)$|\1:\2:\3::/48|p'
