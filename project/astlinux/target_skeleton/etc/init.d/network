@@ -610,9 +610,10 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
       if [ -n "$EXTIP_ALIAS" ]; then
         alias_interface add $EXTIF "$EXTIP_ALIAS"
       fi
-      if [ "$IPV6" = "yes" -a -n "$EXTIPV6" ] && \
-         [ "$DHCPV6_CLIENT_ENABLE" != "yes" -o "$DHCPV6_CLIENT_REQUEST_ADDRESS" = "no" ]; then
-        ip -6 addr add $EXTIPV6 dev $EXTIF
+      if [ "$IPV6" = "yes" ] && [ "$DHCPV6_CLIENT_ENABLE" != "yes" -o "$DHCPV6_CLIENT_REQUEST_ADDRESS" = "no" ]; then
+        if [ -n "$EXTIPV6" ]; then
+          ip -6 addr add $EXTIPV6 dev $EXTIF
+        fi
       fi
       ip link set dev $EXTIF up
       if [ "$IPV6" = "yes" -a "$DHCPV6_CLIENT_ENABLE" = "yes" ]; then
@@ -628,9 +629,15 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
     if [ -n "$EXTGW" ]; then
       ip route add default via $EXTGW dev $EXTIF
     fi
-    if [ "$IPV6" = "yes" -a -n "$EXTGWIPV6" ] && \
-       [ "$DHCPV6_CLIENT_ENABLE" != "yes" -o "$DHCPV6_CLIENT_REQUEST_ADDRESS" = "no" ]; then
-      ip -6 route add default via $EXTGWIPV6 dev $EXTIF metric 1
+    if [ "$IPV6" = "yes" ] && [ "$DHCPV6_CLIENT_ENABLE" != "yes" -o "$DHCPV6_CLIENT_REQUEST_ADDRESS" = "no" ]; then
+      if [ -n "$EXTIPV6" ]; then
+        if [ -n "$EXTGWIPV6" ]; then
+          ip -6 route add default via $EXTGWIPV6 dev $EXTIF metric 1
+        else
+          # Use Router Advertisements to set the default route
+          sysctl -w net/ipv6/conf/${EXTIF}/accept_ra=2 >/dev/null
+        fi
+      fi
     fi
     #end static IP
   fi
@@ -669,10 +676,16 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
     ifplugd -apq -t2 -u3 -d3 -i $EXTIF -r /etc/ifplugd/udhcpc.action
 
     # No DHCPv6 - Static IPv6 if defined
-    if [ "$IPV6" = "yes" -a -n "$EXTIPV6" -a -n "$EXTGWIPV6" ] && \
-       [ "$DHCPV6_CLIENT_ENABLE" != "yes" -o "$DHCPV6_CLIENT_REQUEST_ADDRESS" = "no" ]; then
-      ip -6 addr add $EXTIPV6 dev $EXTIF
-      ip -6 route add default via $EXTGWIPV6 dev $EXTIF metric 1
+    if [ "$IPV6" = "yes" ] && [ "$DHCPV6_CLIENT_ENABLE" != "yes" -o "$DHCPV6_CLIENT_REQUEST_ADDRESS" = "no" ]; then
+      if [ -n "$EXTIPV6" ]; then
+        ip -6 addr add $EXTIPV6 dev $EXTIF
+        if [ -n "$EXTGWIPV6" ]; then
+          ip -6 route add default via $EXTGWIPV6 dev $EXTIF metric 1
+        else
+          # Use Router Advertisements to set the default route
+          sysctl -w net/ipv6/conf/${EXTIF}/accept_ra=2 >/dev/null
+        fi
+      fi
     fi
   fi
 
