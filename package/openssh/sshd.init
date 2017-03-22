@@ -32,6 +32,9 @@ Port $PORT" >> /tmp/etc/ssh/sshd_config
 PermitRootLogin ${SSHDROOT:-yes}
 PasswordAuthentication ${SSHD_PASS_AUTH:-yes}
 
+UseDNS no
+PubkeyAcceptedKeyTypes=+ssh-dss
+
 IPQoS		cs2 af41
 
 Subsystem       sftp    /usr/libexec/sftp-server" >> /tmp/etc/ssh/sshd_config

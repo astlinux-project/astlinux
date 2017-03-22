@@ -172,7 +172,7 @@ filter_sshd()
   local file="$1" PREFIX="$2" HOST="$3"
 
   sed -n -r -e "s/^${PREFIX}Failed (password|publickey) for .* from ${HOST}( port [0-9]*)?( ssh[0-9]*)?$/\2/p" \
-            -e "s/^${PREFIX}[iI](llegal|nvalid) user .* from ${HOST}[[:space:]]*$/\2/p" \
+            -e "s/^${PREFIX}[iI](llegal|nvalid) user .* from ${HOST}( port [0-9]*)?$/\2/p" \
                "$file" >"$TEMPFILE"
 }
 
