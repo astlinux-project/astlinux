@@ -48,6 +48,8 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.0.2k, security fixes: CVE-2017-3731, CVE-2017-3732
 
+-- OpenSSH, version bump to 7.5p1, allow PubkeyAcceptedKeyTypes 'ssh-dss' for backward compatibility.
+
 -- libcurl (curl) version bump to 7.53.1, security fixes: CVE-2017-2629
 
 -- gntp-send, version 0.3.4, new package, CLI tool for sending Growl (GNTP) notifications.
