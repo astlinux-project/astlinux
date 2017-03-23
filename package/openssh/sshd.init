@@ -31,6 +31,7 @@ Port $PORT" >> /tmp/etc/ssh/sshd_config
     echo "
 PermitRootLogin ${SSHDROOT:-yes}
 PasswordAuthentication ${SSHD_PASS_AUTH:-yes}
+ChallengeResponseAuthentication no
 
 UseDNS no
 PubkeyAcceptedKeyTypes +ssh-dss
