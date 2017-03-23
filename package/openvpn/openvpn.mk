@@ -4,7 +4,7 @@
 #
 #############################################################
 
-OPENVPN_VERSION = 2.4.0
+OPENVPN_VERSION = 2.4.1
 OPENVPN_SITE = http://swupdate.openvpn.net/community/releases
 OPENVPN_DEPENDENCIES = host-pkg-config openssl
 

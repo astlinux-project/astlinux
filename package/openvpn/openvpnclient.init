@@ -84,6 +84,9 @@ verb $OVPNC_VERBOSITY" > /tmp/etc/openvpnclient.conf
     if [ -n "$OVPNC_NSCERTTYPE" ]; then
       echo "ns-cert-type $OVPNC_NSCERTTYPE" >> /tmp/etc/openvpnclient.conf
     fi
+    if [ -n "$OVPNC_REMOTE_CERT_TLS" ]; then
+      echo "remote-cert-tls $OVPNC_REMOTE_CERT_TLS" >> /tmp/etc/openvpnclient.conf
+    fi
 
     # Static settings -- fine for most users
     echo "# Static settings
