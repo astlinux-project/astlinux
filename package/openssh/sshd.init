@@ -33,7 +33,7 @@ PermitRootLogin ${SSHDROOT:-yes}
 PasswordAuthentication ${SSHD_PASS_AUTH:-yes}
 
 UseDNS no
-PubkeyAcceptedKeyTypes=+ssh-dss
+PubkeyAcceptedKeyTypes +ssh-dss
 
 IPQoS		cs2 af41
 
