@@ -4,8 +4,6 @@ rtc
 ##
 ## Ethernet support
 ## Virtual first, then Emulated
-##
-#hv_netvsc
 virtio-pci
 vmxnet3
 pcnet32
