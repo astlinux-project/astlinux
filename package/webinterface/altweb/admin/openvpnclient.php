@@ -11,6 +11,7 @@
 // 08-13-2010, Added QoS Passthrough, setting passtos
 // 02-13-2013, Added OpenVPN 2.3 IPv6 support
 // 02-23-2013, Added User/Pass support
+// 03-24-2017, Change from OVPNC_NSCERTTYPE to OVPNC_REMOTE_CERT_TLS
 //
 // System location of /mnt/kd/rc.conf.d directory
 $OVPNCONFDIR = '/mnt/kd/rc.conf.d';
@@ -129,7 +130,7 @@ function saveOVPNCsettings($conf_dir, $conf_file) {
   }
   fwrite($fp, "### Auth User/Pass\n".$value."\n");
   
-  $value = 'OVPNC_NSCERTTYPE="'.$_POST['nscerttype'].'"';
+  $value = 'OVPNC_REMOTE_CERT_TLS="'.$_POST['nscerttype'].'"';
   fwrite($fp, "### nsCertType\n".$value."\n");
   
   $value = 'OVPNC_REMOTE="'.tuq($_POST['remote']).'"';
@@ -455,15 +456,18 @@ require_once '../common/header.php';
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
-  putHtml('Require nsCertType:');
+  putHtml('Require TLS Cert:');
   putHtml('</td><td style="text-align: left;" colspan="4">');
-  $nscerttype = getVARdef($db, 'OVPNC_NSCERTTYPE');
+  if (($nscerttype = getVARdef($db, 'OVPNC_REMOTE_CERT_TLS')) === '') {
+    $nscerttype = getVARdef($db, 'OVPNC_NSCERTTYPE');
+  }
   putHtml('<select name="nscerttype">');
   foreach ($nscerttype_menu as $key => $value) {
     $sel = ($nscerttype === $key) ? ' selected="selected"' : '';
     putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
   }
   putHtml('</select>');
+  putHtml('<i>(nsCertType)</i>');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
