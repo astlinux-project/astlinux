@@ -14,6 +14,9 @@ Released @TBD@
 
 -- Linux Kernel 3.2.87 (minor bump)
 
+-- genx86_64-vm board type, add support for Hyper-V VM's with hv_netvsc and hv_utils kernel drivers.
+   More info: http://doc.astlinux-project.org/userdoc:guest_vm_hyperv
+
 -- rbash, new command (part of bash package), a restricted login shell /bin/rbash for non-root users.
    More info: http://doc.astlinux-project.org/userdoc:tt_restricted_user_login
 
@@ -49,6 +52,8 @@ Released @TBD@
 -- OpenSSL, version bump to 1.0.2k, security fixes: CVE-2017-3731, CVE-2017-3732
 
 -- OpenSSH, version bump to 7.5p1, allow PubkeyAcceptedKeyTypes 'ssh-dss' for backward compatibility.
+
+-- OpenVPN, version bump to 2.4.1, add rc.conf variable OVPNC_REMOTE_CERT_TLS to replace deprecated OVPNC_NSCERTTYPE
 
 -- libcurl (curl) version bump to 7.53.1, security fixes: CVE-2017-2629
 
