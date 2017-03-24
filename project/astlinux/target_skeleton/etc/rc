@@ -213,8 +213,14 @@ $fstab_var
     ;;
 
   genx86_64-vm)
+    # Xen
     if [ -f /sys/hypervisor/type ] && grep -q 'xen' /sys/hypervisor/type; then
       modprobe xen-netfront
+    fi
+    # Hyper-V
+    if lscpu | grep -q -i '^hypervisor vendor: *microsoft'; then
+      modprobe hv_netvsc
+      modprobe hv_utils
     fi
     ;;
 
