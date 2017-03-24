@@ -131,6 +131,8 @@ Released @TBD@
 
 -- CLI tab, add user selectable styles; Black, White or Green on White or Black background, right-click for menu.
 
+-- Network -> OpenVPN Client sub-tab, generate OVPNC_REMOTE_CERT_TLS instead of the deprecated OVPNC_NSCERTTYPE
+
 
 Additions for AstLinux 1.2.9:
 =============================
