@@ -454,16 +454,18 @@ function parseOpenVPNlog($log) {
           $status['header']['CommonName'] = $linetokens[2];
           $status['header']['RealAddr'] = $linetokens[3];
           $status['header']['VirtAddr'] = $linetokens[4];
-          $status['header']['BytesRcv'] = $linetokens[5];
-          $status['header']['BytesSnd'] = $linetokens[6];
-          $status['header']['Since'] = $linetokens[7];
+          $status['header']['Virt6Addr'] = $linetokens[5];
+          $status['header']['BytesRcv'] = $linetokens[6];
+          $status['header']['BytesSnd'] = $linetokens[7];
+          $status['header']['Since'] = $linetokens[8];
         } elseif ($linetokens[0] === "CLIENT_LIST") {
           $status['clients'][$cid]['CommonName'] = $linetokens[1];
           $status['clients'][$cid]['RealAddr'] = $linetokens[2];
           $status['clients'][$cid]['VirtAddr'] = $linetokens[3];
-          $status['clients'][$cid]['BytesRcv'] = $linetokens[4];
-          $status['clients'][$cid]['BytesSnd'] = $linetokens[5];
-          $status['clients'][$cid]['Since'] = $linetokens[6];
+          $status['clients'][$cid]['Virt6Addr'] = $linetokens[4];
+          $status['clients'][$cid]['BytesRcv'] = $linetokens[5];
+          $status['clients'][$cid]['BytesSnd'] = $linetokens[6];
+          $status['clients'][$cid]['Since'] = $linetokens[7];
           $cid++;
         }
       }
@@ -821,6 +823,7 @@ if ($daemon['openvpn'] > 0 && getPREFdef($global_prefs, 'status_openvpn_client_s
       echo "<td>", $openvpn['header']['CommonName'], "</td>";
       echo "<td>", $openvpn['header']['RealAddr'], "</td>";
       echo "<td>", $openvpn['header']['VirtAddr'], "</td>";
+      echo "<td>", $openvpn['header']['Virt6Addr'], "</td>";
       echo "<td>", $openvpn['header']['BytesRcv'], "</td>";
       echo "<td>", $openvpn['header']['BytesSnd'], "</td>";
       echo "<td>", $openvpn['header']['Since'], "</td>";
@@ -829,6 +832,7 @@ if ($daemon['openvpn'] > 0 && getPREFdef($global_prefs, 'status_openvpn_client_s
         echo "<td>", $openvpn['clients'][$i]['CommonName'], "</td>";
         echo "<td>", $openvpn['clients'][$i]['RealAddr'], "</td>";
         echo "<td>", $openvpn['clients'][$i]['VirtAddr'], "</td>";
+        echo "<td>", $openvpn['clients'][$i]['Virt6Addr'], "</td>";
         echo "<td>", $openvpn['clients'][$i]['BytesRcv'], "</td>";
         echo "<td>", $openvpn['clients'][$i]['BytesSnd'], "</td>";
         echo "<td>", $openvpn['clients'][$i]['Since'], "</td>";
