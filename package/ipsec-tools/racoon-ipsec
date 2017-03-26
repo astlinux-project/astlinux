@@ -433,26 +433,26 @@ sanity_check_options()
 {
   local keyword IFS
 
-  if ! _ismember "$p1_encrypt" des 3des blowfish cast128 \
+  if ! is_member "$p1_encrypt" des 3des blowfish cast128 \
                                aes "aes 128" "aes 192" "aes 256" \
                                camellia; then
     bad_config "unknown IPsec phase 1 encryption type '$p1_encrypt'."
     return 1
   fi
 
-  if ! _ismember "$p1_hash" md5 sha1 sha256 sha384 sha512; then
+  if ! is_member "$p1_hash" md5 sha1 sha256 sha384 sha512; then
     bad_config "unknown IPsec phase 1 hash type '$p1_hash'."
     return 1
   fi
 
-  if ! _ismember "$p1_dhgrp" modp768 modp1024 modp1536 modp2048 \
+  if ! is_member "$p1_dhgrp" modp768 modp1024 modp1536 modp2048 \
                              modp3072 modp4096 modp6144 modp8192 \
                              1 2 5 14 15 16 17 18; then
     bad_config "unknown IPsec phase 1 DH group type '$p1_dhgrp'."
     return 1
   fi
 
-  if ! _ismember "$p2_pfsgrp" none modp768 modp1024 modp1536 modp2048 \
+  if ! is_member "$p2_pfsgrp" none modp768 modp1024 modp1536 modp2048 \
                               modp3072 modp4096 modp6144 modp8192 \
                               1 2 5 14 15 16 17 18; then
     bad_config "unknown IPsec phase 2 PFS group type '$p2_pfsgrp'."
@@ -461,7 +461,7 @@ sanity_check_options()
 
   IFS=','
   for keyword in $p2_encrypt; do
-    if ! _ismember "$keyword" des 3des des_iv64 des_iv32 rc5 rc4 idea 3idea \
+    if ! is_member "$keyword" des 3des des_iv64 des_iv32 rc5 rc4 idea 3idea \
                               cast128 blowfish null_enc twofish rijndael \
                               aes "aes 128" "aes 192" "aes 256" \
                               camellia; then
@@ -472,7 +472,7 @@ sanity_check_options()
 
   IFS=','
   for keyword in $p2_auth; do
-    if ! _ismember "$keyword" des 3des des_iv64 des_iv32 hmac_md5 hmac_sha1 \
+    if ! is_member "$keyword" des 3des des_iv64 des_iv32 hmac_md5 hmac_sha1 \
                               hmac_sha256 hmac_sha384 hmac_sha512 \
                               non_auth; then
       bad_config "unknown IPsec phase 2 authentication type '$keyword'."
@@ -567,9 +567,23 @@ bad_config()
   touch /tmp/etc/racoon_bad_config
 }
 
+is_member()
+{
+  local ARG="$1" ELEM IFS
+  shift
+
+  unset IFS
+  for ELEM in "$@"; do
+    if [ "$ARG" = "$ELEM" ]; then
+      return 0
+    fi
+  done
+
+  return 1
+}
+
 . /etc/rc.conf
 
-. /etc/init.d/functions.d/bash/ipcalc
 . /etc/init.d/functions.d/network
 . /etc/init.d/functions.d/misc
 
