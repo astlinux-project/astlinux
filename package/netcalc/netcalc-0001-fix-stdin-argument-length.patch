@@ -1,0 +1,35 @@
+From 1163f6a698c54624c653bb1142018f01d6d1d865 Mon Sep 17 00:00:00 2001
+From: Lonnie Abelbeck <lonnie@abelbeck.com>
+Date: Sun, 26 Mar 2017 09:50:50 -0500
+Subject: [PATCH] Fix stdin argument length, Issue #7
+
+---
+ netcalc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/netcalc.c b/netcalc.c
+index b194905..0775b00 100644
+--- a/netcalc.c
++++ b/netcalc.c
+@@ -167,9 +167,9 @@ int get_stdin(char *args[])
+ 
+ 	memset(buf, 0, sizeof(buf));
+ 
+-	argmax = (IFNAMSIZ + 1 > 19) ? IFNAMSIZ + 1 : 19;
+-	arg1 = (char *)calloc(1, argmax);
+-	arg2 = (char *)calloc(1, 16);
++	argmax = ARGLEN - 1;
++	arg1 = (char *)calloc(1, ARGLEN);
++	arg2 = (char *)calloc(1, ARGLEN);
+ 	memset(sbuf, 0, sizeof(sbuf));
+ 	memset(dbuf, 0, sizeof(dbuf));
+ 
+@@ -221,7 +221,7 @@ int get_stdin(char *args[])
+ 	}
+ 	y++;
+ 	z = 0;
+-	while (y < strlen(dbuf) && z < 15 && dbuf[y] != ' ') {
++	while (y < strlen(dbuf) && z < argmax && dbuf[y] != ' ') {
+ 		arg2[z] = dbuf[y];
+ 		y++;
+ 		z++;
