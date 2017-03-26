@@ -1,0 +1,9 @@
+config BR2_PACKAGE_NETCALC
+	bool "netcalc"
+	help
+	  netcalc is a slimmed down clone of sipcalc, using the output
+	  format of ipcalc. It is written in C and has very few dependencies.
+	  Both IPv4 and IPv6 is supported.
+
+	  https://github.com/troglobit/netcalc
+

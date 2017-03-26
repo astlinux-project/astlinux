@@ -436,6 +436,7 @@ endmenu
 menu "Miscellaneous"
 source "package/htpasswd/Config.in"
 source "package/mac2vendor/Config.in"
+source "package/netcalc/Config.in"
 source "package/qemu/Config.in"
 source "package/shared-mime-info/Config.in"
 source "package/zoneinfo/Config.in"
