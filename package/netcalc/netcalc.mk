@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-NETCALC_VERSION = 2.1-beta1
+NETCALC_VERSION = 2.1-694614e
 NETCALC_SOURCE = netcalc-$(NETCALC_VERSION).tar.gz
 NETCALC_SITE = http://files.astlinux-project.org
 #NETCALC_SITE = https://github.com/troglobit/netcalc/releases/download/v$(NETCALC_VERSION)
