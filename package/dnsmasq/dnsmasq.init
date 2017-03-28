@@ -2,7 +2,6 @@
 
 . /etc/rc.conf
 
-. /etc/init.d/functions.d/bash/ipcalc
 . /etc/init.d/functions.d/network
 . /etc/init.d/functions.d/misc
 
@@ -182,24 +181,39 @@ dhcp-range=$tag,$prefix,ra-only,64,$leasetime"
 addDNSMASQnet()
 {
   # args: IF, IP, NM, tag
-  local ipbase dstart dend ipstart ipend leasetime NETWORK
+  local max_hosts range_min range_max ip_min ip_max leasetime
 
   if [ -n "$1" -a "$1" != "none" -a -n "$2" -a -n "$3" ]; then
     leasetime="${DHCP_LEASETIME:-24}h"
     if isDHCPinterface $1; then
-      eval $(ipcalc -n "$2" "$3")
-      ipbase=$(_isdottedquad $NETWORK)
-
       if [ -n "$DHCPRANGE" ]; then
-        dstart=$(echo $DHCPRANGE | cut -d: -f1)
-        dend=$(echo $DHCPRANGE | cut -d: -f2)
+        range_min=$(echo "$DHCPRANGE" | cut -d: -f1)
+        range_max=$(echo "$DHCPRANGE" | cut -d: -f2)
       else
-        dstart=100
-        dend=220
+        range_min=100
+        range_max=220
       fi
-      ipstart=$(($ipbase + $dstart))
-      ipend=$(($ipbase + $dend))
-      trueDNSMASQnet $4 $2 $(_mkdottedquad $ipstart) $(_mkdottedquad $ipend) $leasetime
+
+      max_hosts="$(netcalc "$2" "$3" | sed -n -r -e 's/^Hosts\/Net *: *([0-9]+).*$/\1/p')"
+      if [ -n "$max_hosts" ]; then
+        if [ $range_max -gt $max_hosts ]; then
+          range_max=$(($max_hosts - ($max_hosts / 4) - 1))
+        fi
+        if [ $range_min -ge $range_max ]; then
+          range_min=$(($range_max - ($max_hosts / 4) - 1))
+        fi
+        if [ $range_min -le 0 ]; then
+          range_min=$((($max_hosts / 4) + 1))
+        fi
+        if [ $range_max -le $range_min ]; then
+          range_max=$(($range_min + ($max_hosts / 4) + 1))
+        fi
+      fi
+
+      ip_min="$(netcalc -R "$range_min:$range_max" "$2" "$3" | sed -n -r -e 's/^RangeMin *: *([0-9.]+).*$/\1/p')"
+      ip_max="$(netcalc -R "$range_min:$range_max" "$2" "$3" | sed -n -r -e 's/^RangeMax *: *([0-9.]+).*$/\1/p')"
+
+      trueDNSMASQnet $4 $2 "$ip_min" "$ip_max" $leasetime
 
       addIPV6net $1 $4 $leasetime
     else
