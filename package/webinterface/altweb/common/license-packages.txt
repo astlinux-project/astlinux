@@ -65,3 +65,4 @@ whois~Copyright (c) 1999-2016 Marco d'Itri.
 strongSwan~Copyright (c) 2006-2016 Andreas Steffen, Tobias Brunner, et al.
 chrony~Copyright (c) 1997-2017 Richard P. Curnow, Miroslav Lichvar.
 gntp-send~Copyright (c) 2009-2016 Yasuhiro Matsumoto.
+netcalc~Copyright (c) 2003-2017 Simon Ekstrand, Joachim Nilsson.
