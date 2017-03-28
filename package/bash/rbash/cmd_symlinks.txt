@@ -11,6 +11,7 @@ usr/bin/clear
 usr/bin/host
 usr/bin/nslookup
 usr/bin/htop
+usr/bin/netcalc
 usr/bin/top
 usr/bin/traceroute
 usr/bin/traceroute6
