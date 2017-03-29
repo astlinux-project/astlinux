@@ -20,6 +20,8 @@ Released @TBD@
 -- rbash, new command (part of bash package), a restricted login shell /bin/rbash for non-root users.
    More info: http://doc.astlinux-project.org/userdoc:tt_restricted_user_login
 
+-- netcalc, new command, IPv4 and IPv6 network calculator.  Also used by dnsmasq init.d script.
+
 -- unique-local-ipv6, new command to generate a pseudo-random IPv6 ULA (Unique Local Address) /48 Prefix for
    local, VPN, etc. use.  These prefixes are not globally routable without some Network Prefix Translation (NPTv6).
 
@@ -52,6 +54,7 @@ Released @TBD@
 -- OpenSSL, version bump to 1.0.2k, security fixes: CVE-2017-3731, CVE-2017-3732
 
 -- OpenSSH, version bump to 7.5p1, allow PubkeyAcceptedKeyTypes 'ssh-dss' for backward compatibility.
+   Updated /etc/ssh/moduli DH group parameters file, starting with 2048-bit length.
 
 -- OpenVPN, version bump to 2.4.1, add rc.conf variable OVPNC_REMOTE_CERT_TLS to replace deprecated OVPNC_NSCERTTYPE
 
@@ -64,6 +67,7 @@ Released @TBD@
 
 -- ddclient, switch to ddclient-curl version 3.8.3-02, adds IPv6 and Hurricane Electric support
    Cloudflare, FreeDNS, and HE Free DNS (Hurricane Electric) now support mixed IPv4/IPv6 DNS updates.
+   Added script get-ipv6-from-ipv4 to retrieve a neighboring IPv6 address to be published as an AAAA record.
    New rc.conf variable: DDGETIPV6, DDGETIPV6="" or DDGETIPV6="no" -> IPv6 dynamic DNS is disabled
    More info: http://doc.astlinux-project.org/userdoc:tt_dynamic_dns_client
 
