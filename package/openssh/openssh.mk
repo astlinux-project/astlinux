@@ -38,7 +38,7 @@ endef
 
 define OPENSSH_INSTALL_MODULI
 	grep '^#' $(@D)/moduli > $(@D)/moduli.astlinux
-	echo '# Note: Entries limited to bit sizes greater than 2000 and less than 5000' >> $(@D)/moduli.astlinux
+	echo '# Note: DH group entries using lengths greater than 2000-bits and less than 5000-bits' >> $(@D)/moduli.astlinux
 	awk '/^[^#]/ && $$5 > 2000 && $$5 < 5000' $(@D)/moduli >> $(@D)/moduli.astlinux
 	$(INSTALL) -D -m 644 $(@D)/moduli.astlinux $(TARGET_DIR)/stat/etc/ssh/moduli
 endef
