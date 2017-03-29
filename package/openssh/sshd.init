@@ -2,6 +2,24 @@
 
 . /etc/rc.conf
 
+upgrade_moduli()
+{
+  local old_file="$1" new_file="$2" old_ver new_ver
+
+  if [ ! -f "$old_file" ]; then
+    return 0
+  fi
+
+  old_ver="$(sed -n -r -e '1 s/^#.* moduli,v ([0-9.]+) .*$/\1/p' "$old_file")"
+  new_ver="$(sed -n -r -e '1 s/^#.* moduli,v ([0-9.]+) .*$/\1/p' "$new_file")"
+
+  if [ "$old_ver" != "$new_ver" ]; then
+    return 0
+  fi
+
+  return 1
+}
+
 init () {
   mkdir -p /var/run/sshd
 
@@ -52,9 +70,9 @@ Subsystem       sftp    /usr/libexec/sftp-server" >> /tmp/etc/ssh/sshd_config
   if [ ! -L /tmp/etc/ssh ]; then
     cp -a /stat/etc/ssh/* /tmp/etc/ssh/
   else
-    # or even if it is...
-    if [ ! -f /tmp/etc/ssh/moduli ]; then
-      cp -p /stat/etc/ssh/moduli /tmp/etc/ssh/
+    if upgrade_moduli /tmp/etc/ssh/moduli /stat/etc/ssh/moduli; then
+      echo "Upgrading ssh DH primes in /etc/ssh/moduli"
+      cp -p /stat/etc/ssh/moduli /tmp/etc/ssh/moduli
     fi
   fi
 

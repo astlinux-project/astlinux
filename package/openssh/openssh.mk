@@ -36,6 +36,15 @@ define OPENSSH_INSTALL_INITSCRIPT
 	ln -snf /tmp/etc/ssh $(TARGET_DIR)/etc/ssh
 endef
 
+define OPENSSH_INSTALL_MODULI
+	grep '^#' $(@D)/moduli > $(@D)/moduli.astlinux
+	echo '# Note: Entries limited to bit sizes greater than 2000 and less than 5000' >> $(@D)/moduli.astlinux
+	awk '/^[^#]/ && $$5 > 2000 && $$5 < 5000' $(@D)/moduli >> $(@D)/moduli.astlinux
+	$(INSTALL) -D -m 644 $(@D)/moduli.astlinux $(TARGET_DIR)/stat/etc/ssh/moduli
+endef
+
 OPENSSH_POST_INSTALL_TARGET_HOOKS += OPENSSH_INSTALL_INITSCRIPT
+
+OPENSSH_POST_INSTALL_TARGET_HOOKS += OPENSSH_INSTALL_MODULI
 
 $(eval $(call AUTOTARGETS,package,openssh))
