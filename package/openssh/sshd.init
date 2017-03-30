@@ -71,7 +71,7 @@ Subsystem       sftp    /usr/libexec/sftp-server" >> /tmp/etc/ssh/sshd_config
     cp -a /stat/etc/ssh/* /tmp/etc/ssh/
   else
     if upgrade_moduli /tmp/etc/ssh/moduli /stat/etc/ssh/moduli; then
-      echo "Upgrading ssh DH primes in /etc/ssh/moduli"
+      echo "Upgrading ssh DH groups in /etc/ssh/moduli"
       cp -p /stat/etc/ssh/moduli /tmp/etc/ssh/moduli
     fi
   fi
