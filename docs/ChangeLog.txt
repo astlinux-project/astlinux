@@ -86,6 +86,8 @@ Released @TBD@
 
 -- ipset, version bump to 6.32
 
+-- strongSwan, version bump to 5.5.2
+
 -- stunnel, version bump to 5.40
 
 -- unbound (host), version bump to 1.6.1
