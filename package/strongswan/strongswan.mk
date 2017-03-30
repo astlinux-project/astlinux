@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-STRONGSWAN_VERSION = 5.5.1
+STRONGSWAN_VERSION = 5.5.2
 STRONGSWAN_SOURCE = strongswan-$(STRONGSWAN_VERSION).tar.bz2
 STRONGSWAN_SITE = https://download.strongswan.org
 STRONGSWAN_DEPENDENCIES = openssl host-pkg-config
@@ -27,6 +27,7 @@ STRONGSWAN_CONF_OPT += \
 	--enable-tnccs-11=no \
 	--enable-tnccs-20=no \
 	--enable-tnccs-dynamic=no \
+	--enable-tpm=no \
 	--enable-xauth-generic=yes \
 	--enable-xauth-eap=yes \
 	--enable-unity=yes \
