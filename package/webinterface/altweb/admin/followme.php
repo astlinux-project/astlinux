@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2016 Lonnie Abelbeck
+// Copyright (C) 2008-2017 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -8,6 +8,7 @@
 
 // followme.php for AstLinux
 // 12-05-2008
+// 04-01-2017, Add enable_callee_prompt support
 //
 // -- extensions.conf snippet --
 // [macro-local-followme] 
@@ -148,14 +149,20 @@ function addFMextension($family, $key, $method, $time_class, $enabled, $number, 
   global $global_prefs;
   global $MAXNUM;
   
-  $count = 0;
   for ($i = 0; $i < $MAXNUM; $i++) {
     $my_enabled[$i] = '0';
+  }
+
+  $count = 0;
+  for ($i = 0; $i < $MAXNUM; $i++) {
     foreach ($enabled as $val) {
       if ($val == $i) {
         if ($number[$i] !== '') {
           $my_enabled[$i] = '1';
           $count++;
+          if ($method == 4) { // Only one number allowed with "enable_callee_prompt=>false"
+            break 2;
+          }
         }
         break;
       }
@@ -175,6 +182,8 @@ function addFMextension($family, $key, $method, $time_class, $enabled, $number, 
   if (isFMextension($key, $fname)) {
     shell('sed -i "/^\['.$key.'\]/,/^\[/ s/^number.*/;deleted;&/" '.$fname.' >/dev/null', $status);
     shell('sed -i "/^;deleted;number/ d" '.$fname.' >/dev/null', $status);
+    shell('sed -i "/^\['.$key.'\]/,/^\[/ s/^enable_callee_prompt.*/;deleted;&/" '.$fname.' >/dev/null', $status);
+    shell('sed -i "/^;deleted;enable_callee_prompt/ d" '.$fname.' >/dev/null', $status);
     if ($count > 0) {
       if ($method == 1) {
         $cmd = 'a'.chr(92).chr(10).'number=>';
@@ -194,6 +203,8 @@ function addFMextension($family, $key, $method, $time_class, $enabled, $number, 
           }
         }
       }
+      $value = ($method == 4) ? 'false' : 'true';
+      $cmd .= 'a'.chr(92).chr(10).'enable_callee_prompt=>'.$value.chr(10);
       shell('sed -i "/^\['.$key.'\]/ {'.chr(10).$cmd.'}" '.$fname.' >/dev/null', $status);
     }
   } elseif ($count > 0) {
@@ -215,6 +226,8 @@ function addFMextension($family, $key, $method, $time_class, $enabled, $number, 
         }
       }
     }
+    $value = ($method == 4) ? 'false' : 'true';
+    $cmd .= 'enable_callee_prompt=>'.$value.chr(10);
     if (($value = tuq(getPREFdef($global_prefs, 'followme_number_context_cmdstr'))) !== '') {
       $cmd .= 'context=>'.$value.chr(10);
     }
@@ -406,19 +419,27 @@ require_once '../common/header.php';
     putHtml('<input type="text" size="5" maxlength="3" name="timeout'.$i.'" value="'.$ldata['timeout'][$i].'" />');
     putHtml('secs</td></tr>');
   }
-  if ($MAXNUM != 1) {
-    putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
-    putHtml('<strong>Dial Method:</strong>');
-    putHtml('</td></tr>');
-    putHtml('<tr class="dtrow1"><td>&nbsp;</td><td>');
-    putHtml('Dial Numbers:');
-    putHtml('<select name="method">');
-    putHtml('<option value="0">One at a Time</option>');
+
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
+  putHtml('<strong>Dial Method:</strong>');
+  putHtml('</td></tr>');
+  putHtml('<tr class="dtrow1"><td>&nbsp;</td><td>');
+  putHtml('Dial Numbers:');
+  putHtml('<select name="method">');
+  if ($MAXNUM == 1) {
+    putHtml('<option value="0">With callee prompt</option>');
+    $sel = ($ldata['method'] === '4') ? ' selected="selected"' : '';
+    putHtml('<option value="4"'.$sel.'>Without callee prompt</option>');
+  } else {
+    putHtml('<option value="0">One at a Time with callee prompt</option>');
     $sel = ($ldata['method'] === '1') ? ' selected="selected"' : '';
-    putHtml('<option value="1"'.$sel.'>All at Once</option>');
-    putHtml('</select>');
-    putHtml('</td></tr>');
+    putHtml('<option value="1"'.$sel.'>All at Once with callee prompt</option>');
+    $sel = ($ldata['method'] === '4') ? ' selected="selected"' : '';
+    putHtml('<option value="4"'.$sel.'>Single number without callee prompt</option>');
   }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
   if (($value = getPREFdef($global_prefs, 'followme_schedule_menu_cmdstr')) !== '') {
     $menu = explode('~', $value);
     putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
