@@ -8,7 +8,7 @@ Follow-Me Tab:
 The Follow-Me tab uses Asterisk's internal database (astdb) to maintain a list of
 Follow-Me numbers and their state.
 
-In particular, Asterisk 1.4 supports a Follow-Me application, which makes adding this feature
+In particular, Asterisk supports a Follow-Me application, which makes adding this feature
 into your dialplan about as easy as it gets.
 
 Credit: Darrick Hartman
@@ -18,8 +18,8 @@ Credit: Darrick Hartman
 exten => s,1,GotoIf($[${DB_EXISTS(followme/${ARG1})}=0]?nofollow)
 exten => s,n,GotoIf($[${DB_RESULT:0:1}=0]?nofollow:follow)
 exten => s,n(follow),Dial(SIP/${ARG1},20) 
-exten => s,n,Followme(${ARG1},san) 
-exten => s,n,Goto(s-${DIALSTATUS},1) 
+exten => s,n,Followme(${ARG1},sn) 
+exten => s,n,Goto(s-NOANSWER,1) 
 exten => s,n(nofollow),Dial(SIP/${ARG1},20) 
 exten => s,n,Goto(s-${DIALSTATUS},1) 
 exten => s-NOANSWER,1,Voicemail(${ARG1},u)  ; If unavailable, send to voicemail
@@ -81,11 +81,11 @@ administrator can define the format rule or simply uncheck to disable this featu
 All three security levels are supported by the Follow-Me tab: admin, staff and 'numbered' user.
 The non-admin 'numbered' user can only edit the status of their Follow-Me numbers.
 
-Finally, it is suggested in the Prefs tab to have
-
-_X_ Use Asterisk Manager Interface for Asterisk Commands
-
-checked, since the performance of the Follow-Me tab will be greatly improved.
+Note that when the web interface, Follow-Me -> Dial Numbers: [ Single number without callee prompt ]
+is selected, the Followme() application immediately handles the number using the specified dialplan context.
+For this "without callee prompt" case, the Followme() application does not return, any NOANSWER or BUSY
+Dial() ${DIALSTATUS} values either need to be handled in your dialplan when dialing Follow-Me numbers,
+or use the destination device (Cell/Mobile Phone Voicemail) to handle exceptions.
 
 
 [[sysdial-dialplan]]
