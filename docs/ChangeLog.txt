@@ -106,13 +106,13 @@ Released @TBD@
 
 ** Asterisk
 
--- Asterisk 11.25.1 (no change) and 13.14.0 (version bump)
+-- Asterisk 11.25.1 (no change) and 13.15.0 (version bump)
 
 -- Asterisk 11 and 13, backport Asterisk 14 "followme" application feature "enable_callee_prompt".
 
 -- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
 
--- pjsip 2.5.5 (no change)
+-- pjsip 2.6 (version bump)
 
 -- libpri, version bump to 1.6.0
 
