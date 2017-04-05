@@ -4,12 +4,10 @@
 #
 ################################################################################
 
-PJSIP_VERSION = 2.5.5
+PJSIP_VERSION = 2.6
 PJSIP_SOURCE = pjproject-$(PJSIP_VERSION).tar.bz2
 PJSIP_SITE = http://www.pjsip.org/release/$(PJSIP_VERSION)
 PJSIP_INSTALL_STAGING = YES
-
-PJSIP_DEPENDENCIES = libsrtp
 
 define PJSIP_CUSTOM_CONFIG
 	cp package/pjsip/asterisk-config_site.h $(@D)/pjlib/include/pj/config_site.h
@@ -31,7 +29,6 @@ PJSIP_CONF_OPT = \
 	--disable-g722-codec \
 	--disable-g7221-codec \
 	--disable-opencore-amr \
-	--disable-webrtc \
 	--disable-silk \
 	--disable-opus \
 	--disable-video \
@@ -46,7 +43,8 @@ PJSIP_CONF_OPT = \
 	--disable-openh264 \
 	--disable-ipp \
 	--without-external-pa \
-	--with-external-srtp
+	--without-external-srtp \
+	--without-external-webrtc
 
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
 PJSIP_CONF_OPT += --with-ssl=$(STAGING_DIR)/usr
