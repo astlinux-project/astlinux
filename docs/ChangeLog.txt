@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 3.2.87 (minor bump)
+-- Linux Kernel 3.2.88 (minor bump)
 
 -- genx86_64-vm board type, add support for Hyper-V VM's with hv_netvsc and hv_utils kernel drivers.
    More info: http://doc.astlinux-project.org/userdoc:guest_vm_hyperv
