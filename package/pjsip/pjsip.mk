@@ -38,13 +38,13 @@ PJSIP_CONF_OPT = \
 	--disable-oss \
 	--disable-sdl \
 	--disable-libyuv \
+	--disable-libwebrtc \
 	--disable-resample \
 	--disable-ffmpeg \
 	--disable-openh264 \
 	--disable-ipp \
 	--without-external-pa \
-	--without-external-srtp \
-	--without-external-webrtc
+	--without-external-srtp
 
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
 PJSIP_CONF_OPT += --with-ssl=$(STAGING_DIR)/usr
