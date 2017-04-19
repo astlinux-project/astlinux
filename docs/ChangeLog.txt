@@ -58,7 +58,7 @@ Released @TBD@
 
 -- OpenVPN, version bump to 2.4.1, add rc.conf variable OVPNC_REMOTE_CERT_TLS to replace deprecated OVPNC_NSCERTTYPE
 
--- libcurl (curl) version bump to 7.53.1, security fixes: CVE-2017-2629
+-- libcurl (curl) version bump to 7.54.0, security fixes: CVE-2017-2629, CVE-2017-7468
 
 -- gntp-send, version 0.3.4, new package, CLI tool for sending Growl (GNTP) notifications.
    More info: http://doc.astlinux-project.org/userdoc:tt_asterisk_call_notify
