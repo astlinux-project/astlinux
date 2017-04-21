@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2016 Lonnie Abelbeck
+// Copyright (C) 2008-2017 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -575,14 +575,14 @@ require_once '../common/header.php';
   <tr><td style="text-align: center;" colspan="3">
   <h2>Set Management Passwords:</h2>
   </td></tr><tr><td class="dialogText" style="text-align: right;">
-  New&nbsp;Password:<input type="password" size="18" maxlength="15" name="pass1" />
+  New&nbsp;Password:<input type="password" size="18" maxlength="32" name="pass1" />
   </td><td width="30">&nbsp;</td><td style="text-align: center;">
   <select name="user_pass">
   <option value="admin">Username:&nbsp;admin</option>
   <option value="staff">Username:&nbsp;staff</option>
   </select>
   </td></tr><tr><td class="dialogText" style="text-align: right;">
-  Confirm&nbsp;Password:<input type="password" size="18" maxlength="15" name="pass2" />
+  Confirm&nbsp;Password:<input type="password" size="18" maxlength="32" name="pass2" />
   </td><td>&nbsp;</td><td style="text-align: center;">
   <input type="submit" value="Set Password" name="submit_password" />
   </td></tr></table>
