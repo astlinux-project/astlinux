@@ -20,7 +20,7 @@ Released @TBD@
 -- rbash, new command (part of bash package), a restricted login shell /bin/rbash for non-root users.
    More info: http://doc.astlinux-project.org/userdoc:tt_restricted_user_login
 
--- netcalc, new command, IPv4 and IPv6 network calculator.  Also used by dnsmasq init.d script.
+-- netcalc, version 2.1.2, new command, IPv4 and IPv6 network calculator.  Also used by dnsmasq init.d script.
 
 -- unique-local-ipv6, new command to generate a pseudo-random IPv6 ULA (Unique Local Address) /48 Prefix for
    local, VPN, etc. use.  These prefixes are not globally routable without some Network Prefix Translation (NPTv6).
