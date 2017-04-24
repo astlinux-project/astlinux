@@ -64,6 +64,8 @@ Released @TBD@
 
 -- libcurl (curl) version bump to 7.54.0, security fixes: CVE-2017-2629, CVE-2017-7468
 
+-- lighttpd, add runtime configuration 'server.stream-response-body = 2' to prevent buffering in /var/tmp/ .
+
 -- gntp-send, version 0.3.4, new package, CLI tool for sending Growl (GNTP) notifications.
    More info: http://doc.astlinux-project.org/userdoc:tt_asterisk_call_notify
 
