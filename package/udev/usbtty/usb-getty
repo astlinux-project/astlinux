@@ -1,0 +1,29 @@
+#!/bin/bash
+
+devname="$2"
+
+if [ "$1" != "udev" -o -z "$devname" ]; then
+  echo "usb-getty: Only to be called via udev" >&2
+  exit 0
+fi
+
+if [ ! -f /etc/rc.conf ]; then
+  exit 0
+fi
+
+. /etc/rc.conf
+
+if [ "$USBTTY" != "yes" ]; then
+  exit 0
+fi
+
+if [ ! -c "$devname" ]; then
+  logger -t usbtty -p kern.info "Device not found: $devname"
+  exit 0
+fi
+
+baud_rate="${USBTTY_BAUD_RATE:-115200}"
+
+term_type="${USBTTY_TERM_TYPE:-vt100}"
+
+/usr/share/usbtty/usb-getty-background "$devname" "$baud_rate" "$term_type" >/dev/null 2>&1 &

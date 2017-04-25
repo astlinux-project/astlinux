@@ -1,0 +1,21 @@
+#!/bin/bash
+
+devname="$1"
+baud_rate="$2"
+term_type="$3"
+
+if [ -z "$devname" -o -z "$baud_rate" -o -z "$term_type" ]; then
+  echo "usb-getty-background: Invalid args" >&2
+  exit 0
+fi
+
+LOCKFILE="/var/lock/usbtty-${devname##*/}.lock"
+
+if ( set -o noclobber; echo "$$" > "$LOCKFILE" ) 2>/dev/null; then
+  logger -t usbtty -p kern.info "Connected: devname=$devname baud_rate=$baud_rate term_type=$term_type"
+  while [ -c "$devname" ]; do
+    /sbin/getty -L "$baud_rate" "$devname" "$term_type"
+  done
+  logger -t usbtty -p kern.info "Disconnected: devname=$devname"
+  rm -f "$LOCKFILE"
+fi

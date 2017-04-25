@@ -402,6 +402,9 @@ $fstab_var
     fi
   done
 
+  if [ "$USBTTY" = "yes" ]; then
+    /sbin/udevadm trigger --action=add --subsystem-match=tty --sysname-match='ttyUSB[0-9]'
+  fi
 }
 
 shutdown() {
