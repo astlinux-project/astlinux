@@ -12,10 +12,10 @@ fi
 LOCKFILE="/var/lock/usbtty-${devname##*/}.lock"
 
 if ( set -o noclobber; echo "$$" > "$LOCKFILE" ) 2>/dev/null; then
-  logger -t usbtty -p kern.info "Connected: devname=$devname baud_rate=$baud_rate term_type=$term_type"
+  logger -t usbtty -p kern.info "Connected: $devname baud_rate=$baud_rate term_type=$term_type"
   while [ -c "$devname" ]; do
     /sbin/getty -L "$baud_rate" "$devname" "$term_type"
   done
-  logger -t usbtty -p kern.info "Disconnected: devname=$devname"
+  logger -t usbtty -p kern.info "Disconnected: $devname"
   rm -f "$LOCKFILE"
 fi

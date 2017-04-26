@@ -26,4 +26,21 @@ baud_rate="${USBTTY_BAUD_RATE:-115200}"
 
 term_type="${USBTTY_TERM_TYPE:-vt100}"
 
+# Sanity check Baud Rate
+case $baud_rate in
+    9600) ;;
+   19200) ;;
+   38400) ;;
+   57600) ;;
+  115200) ;;
+  230400) ;;
+  460800) ;;
+  500000) ;;
+  576000) ;;
+  921600) ;;
+       *) baud_rate="115200"
+          logger -t usbtty -p kern.info "Unknown Baud Rate, defaulting to: $baud_rate"
+          ;;
+esac
+
 /usr/share/usbtty/usb-getty-background "$devname" "$baud_rate" "$term_type" >/dev/null 2>&1 &
