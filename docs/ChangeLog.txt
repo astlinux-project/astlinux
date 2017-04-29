@@ -45,6 +45,8 @@ Released @TBD@
 
 -- busybox, syslogd: increase SYSLOGD_READ_BUFFER_SIZE from 256 to 512 to support longer log entries.
 
+-- logrotate, version bump to 3.12.1
+
 -- nano, version bump to 2.7.5
 
 -- screen, version bump to 4.5.1
@@ -92,6 +94,8 @@ Released @TBD@
 
 -- chrony, version bump to 3.1
 
+-- miniupnpd, version bump to 2.0.20170421
+
 -- fping, version bump to 3.16
 
 -- ipset, version bump to 6.32
@@ -100,7 +104,7 @@ Released @TBD@
 
 -- stunnel, version bump to 5.40
 
--- unbound (host), version bump to 1.6.1
+-- unbound (host), version bump to 1.6.2
 
 -- whois, version bump to 5.2.15
 
