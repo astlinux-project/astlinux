@@ -92,6 +92,9 @@ Released @TBD@
 -- When a Static IPv6 external interface is defined (EXTIPV6) with an undefined IPv6 Gateway entry (EXTGWIPV6),
    now automatically use Router Advertisements to set the default route.
 
+-- network, add PHYETH_DISABLE_OFFLOAD rc.conf variable to disable hardware network interface offloading,
+   disabled by default. Example: PHYETH_DISABLE_OFFLOAD="tso gso gro"
+
 -- chrony, version bump to 3.1
 
 -- miniupnpd, version bump to 2.0.20170421
