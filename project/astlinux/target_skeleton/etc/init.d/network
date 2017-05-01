@@ -247,6 +247,24 @@ alias_interface()
   esac
 }
 
+phyeth_disable_offload()
+{
+  local eth off off_list="$1" IFS
+
+  logger -s -t network -p kern.info "Disabling \"$off_list\" offload on all configured ethernet interfaces."
+
+  unset IFS
+  for eth in $EXTIF $EXT2IF $PPPOEIF $INTIF $INT2IF $INT3IF $INT4IF $DMZIF $BRIDGE0 $BRIDGE1 $BRIDGE2; do
+    case $eth in
+      eth*)
+        for off in $off_list; do
+          ethtool -K $eth $off off 2>/dev/null
+        done
+        ;;
+    esac
+  done
+}
+
 init () {
 
   mkdir -p /tmp/etc/wide-dhcpv6
@@ -434,6 +452,10 @@ start () {
       MTU="$(echo $i | cut -d: -f2)"
       ip link set dev $IF mtu $MTU
     done
+  fi
+
+  if [ -n "$PHYETH_DISABLE_OFFLOAD" ]; then
+    phyeth_disable_offload "$PHYETH_DISABLE_OFFLOAD"
   fi
 
   if [ -n "$INTIF" -a -n "$INTIP" -a -n "$INTNM" -a "$INTIF" != "none" ]; then
