@@ -3,7 +3,7 @@
 # ddclient
 #
 #############################################################
-DDCLIENT_VERSION = 3.8.3-02
+DDCLIENT_VERSION = 3.8.3-03
 DDCLIENT_SOURCE = ddclient-curl-$(DDCLIENT_VERSION).tar.gz
 DDCLIENT_SITE = https://github.com/astlinux-project/ddclient-curl/releases/download/$(DDCLIENT_VERSION)
 
