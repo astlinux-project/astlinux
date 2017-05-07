@@ -25,6 +25,7 @@ Released @TBD@
 -- core system, usbtty, automatically spawn getty for selected usb tty serial devices.
    Supported USB-serial adapters include FTDI and PL2303 and must register as /dev/ttyUSB0, ttyUSB1, etc.
    New rc.conf variables: USBTTY, USBTTY_BAUD_RATE and USBTTY_TERM_TYPE
+   More info: http://doc.astlinux-project.org/userdoc:usbtty_serial_login
 
 -- unique-local-ipv6, new command to generate a pseudo-random IPv6 ULA (Unique Local Address) /48 Prefix for
    local, VPN, etc. use.  These prefixes are not globally routable without some Network Prefix Translation (NPTv6).
