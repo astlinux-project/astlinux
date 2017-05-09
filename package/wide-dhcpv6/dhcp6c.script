@@ -1,0 +1,11 @@
+#!/bin/bash
+
+export PATH="/usr/bin:/bin:/usr/sbin:/sbin"
+
+SCRIPTFILE="/mnt/kd/dhcp6c.script"
+
+if [ -x $SCRIPTFILE ]; then
+  $SCRIPTFILE >/dev/null 2>&1 &
+fi
+
+exit 0

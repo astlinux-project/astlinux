@@ -62,6 +62,7 @@ gen_nopd_dhcp6c_conf()
 interface $interface {
   send ia-na 1;
   send rapid-commit;
+  script \"/etc/dhcp6c.script\";
 };
 
 id-assoc na 1 { };"
@@ -88,6 +89,7 @@ interface $interface {"
     echo "  send ia-pd 1;"
   fi
   echo "  send rapid-commit;"
+  echo "  script \"/etc/dhcp6c.script\";"
   echo "};"
 
   if [ "$DHCPV6_CLIENT_REQUEST_ADDRESS" != "no" ]; then
@@ -494,6 +496,14 @@ start () {
     ip link set dev $INT4IF up
   fi
 
+  if [ -n "$DMZIF" -a -n "$DMZIP" -a -n "$DMZNM" -a "$DMZIF" != "none" ]; then
+    ip addr add $DMZIP/$DMZNM brd + dev $DMZIF
+    if [ "$IPV6" = "yes" -a -n "$DMZIPV6" ]; then
+      ip -6 addr add $DMZIPV6 dev $DMZIF
+    fi
+    ip link set dev $DMZIF up
+  fi
+
   if [ -n "$WANDELAY" ]; then
     echo "Sleeping for $WANDELAY seconds before I bring up $EXTIF..."
     sleep $WANDELAY
@@ -709,15 +719,6 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
         fi
       fi
     fi
-  fi
-
-  ##DMZ Network
-  if [ -n "$DMZIF" -a -n "$DMZIP" -a -n "$DMZNM" -a "$DMZIF" != "none" ]; then
-    ip addr add $DMZIP/$DMZNM brd + dev $DMZIF
-    if [ "$IPV6" = "yes" -a -n "$DMZIPV6" ]; then
-      ip -6 addr add $DMZIPV6 dev $DMZIF
-    fi
-    ip link set dev $DMZIF up
   fi
 
   ##IPv6 Tunnel
