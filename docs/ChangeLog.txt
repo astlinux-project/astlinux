@@ -96,6 +96,8 @@ Released @TBD@
 -- network, add PHYETH_DISABLE_OFFLOAD rc.conf variable to disable hardware network interface offloading,
    disabled by default. Example: PHYETH_DISABLE_OFFLOAD="tso gso gro"
 
+-- wide-dhcpv6, add support for optional script '/mnt/kd/dhcp6c.script', enabled if it exists and is executable.
+
 -- chrony, version bump to 3.1
 
 -- miniupnpd, version bump to 2.0.20170421
