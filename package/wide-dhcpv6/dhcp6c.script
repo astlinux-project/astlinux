@@ -1,10 +1,107 @@
 #!/bin/bash
 
+. /etc/rc.conf
+
 export PATH="/usr/bin:/bin:/usr/sbin:/sbin"
 
 SCRIPTFILE="/mnt/kd/dhcp6c.script"
 
+find_first_autoconfig_if()
+{
+  local interface="" iname IFS
+
+  unset IFS
+  for iname in $IPV6_AUTOCONF; do
+    case $iname in
+      INTIF)
+        if [ -n "$INTIF" -a "$INTIF" != "none" -a -n "$INTIP" -a -n "$INTNM" ]; then
+          interface="$INTIF"
+        fi
+        ;;
+      INT2IF)
+        if [ -n "$INT2IF" -a "$INT2IF" != "none" -a -n "$INT2IP" -a -n "$INT2NM" ]; then
+          interface="$INT2IF"
+        fi
+        ;;
+      INT3IF)
+        if [ -n "$INT3IF" -a "$INT3IF" != "none" -a -n "$INT3IP" -a -n "$INT3NM" ]; then
+          interface="$INT3IF"
+        fi
+        ;;
+      INT4IF)
+        if [ -n "$INT4IF" -a "$INT4IF" != "none" -a -n "$INT4IP" -a -n "$INT4NM" ]; then
+          interface="$INT4IF"
+        fi
+        ;;
+      DMZIF)
+        if [ -n "$DMZIF" -a "$DMZIF" != "none" -a -n "$DMZIP" -a -n "$DMZNM" ]; then
+          interface="$DMZIF"
+        fi
+        ;;
+    esac
+    if [ -n "$interface" ]; then
+      break
+    fi
+  done
+
+  echo "$interface"
+}
+
+find_prefix_len()
+{
+  case "${DHCPV6_CLIENT_PREFIX_LEN:-60}" in
+    64) cut_chars="1-19"
+        prefix_label="::/64"
+        ;;
+    60) cut_chars="1-18"
+        prefix_label="0::/60"
+        ;;
+    56) cut_chars="1-17"
+        prefix_label="00::/56"
+        ;;
+    52) cut_chars="1-16"
+        prefix_label="000::/52"
+        ;;
+    48) cut_chars="1-15"
+        prefix_label="0000::/48"
+        ;;
+     *) cut_chars=""
+        prefix_label=""
+        ;;
+  esac
+}
+
+setup_env()
+{
+  local ipv6 ipv6_ex cut_chars prefix_label
+
+  dhcp6c_interface="$(find_first_autoconfig_if)"
+  dhcp6c_prefix=""
+  dhcp6c_prefix_base=""
+
+  if [ -n "$dhcp6c_interface" ]; then
+    ipv6="$(ip -6 -o addr show dev $dhcp6c_interface scope global 2>/dev/null | \
+            sed -n -r -e 's|^.* inet6 ([0-9a-fA-F:]+)/.*$|\1|p' | \
+            head -n1)"
+
+    if [ -n "$ipv6" ]; then
+      ipv6_ex="$(netcalc "$ipv6" | sed -n -r -e 's/^Expanded IPv6 *: *([0-9a-fA-F:]+).*$/\1/p')"
+
+      find_prefix_len
+      if [ -n "$cut_chars" -a -n "$prefix_label" ]; then
+        dhcp6c_prefix_base="$(echo "$ipv6_ex" | cut -c $cut_chars)"
+        if [ -n "$dhcp6c_prefix_base" ]; then
+          dhcp6c_prefix="$dhcp6c_prefix_base$prefix_label"
+        fi
+      fi
+    fi
+  fi
+}
+
 if [ -x $SCRIPTFILE ]; then
+  setup_env
+  export dhcp6c_interface dhcp6c_prefix dhcp6c_prefix_base
+
   $SCRIPTFILE >/dev/null 2>&1 &
 fi
 
