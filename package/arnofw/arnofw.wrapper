@@ -222,11 +222,20 @@ astlinux_wrapper()
   fi
 
   EXT_IF_DHCP_IP=0
-  if [ -n "$EXTIF" -a -z "$EXTIP" ] && [ "$EXTIF" != "ppp0" -o -z "$PPPOEIF" ]; then
-    EXT_IF_DHCP_IP=1
+  EXT_IF_DHCPV6_IPV6=0
+  if [ -n "$EXTIF" ] && [ "$EXTIF" != "ppp0" -o -z "$PPPOEIF" ]; then
+    if [ -z "$EXTIP" ]; then
+      EXT_IF_DHCP_IP=1
+    elif [ "$IPV6" = "yes" -a "$DHCPV6_CLIENT_ENABLE" = "yes" ]; then
+      EXT_IF_DHCPV6_IPV6=1
+    fi
   fi
-  if [ -n "$EXT2IF" -a -z "$EXT2IP" ] && [ "$EXT2IF" != "ppp0" -o -z "$PPPOEIF" ]; then
-    EXT_IF_DHCP_IP=1
+  if [ -n "$EXT2IF" ] && [ "$EXT2IF" != "ppp0" -o -z "$PPPOEIF" ]; then
+    if [ -z "$EXT2IP" ]; then
+      EXT_IF_DHCP_IP=1
+    elif [ "$IPV6" = "yes" -a "$EXT2DHCPV6_CLIENT_ENABLE" = "yes" ]; then
+      EXT_IF_DHCPV6_IPV6=1
+    fi
   fi
 
   if [ "$EXTDHCP" = "yes" -a -n "$EXTIP" -a -n "$EXTGW" -a -z "$EXT2IF" -a -z "$PPPOEIF" ]; then

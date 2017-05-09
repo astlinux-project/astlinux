@@ -1,0 +1,39 @@
+diff --git a/bin/arno-iptables-firewall b/bin/arno-iptables-firewall
+index 50b024c..1ee713f 100755
+--- a/bin/arno-iptables-firewall
++++ b/bin/arno-iptables-firewall
+@@ -2698,9 +2698,11 @@ setup_ext_input_chain()
+     echo " Enabling support for DHCP-assigned-IP (DHCP client)"
+     # Allow this host to be an DHCP client:
+     ip4tables -A EXT_INPUT_CHAIN -p udp --sport 67 --dport 68 -j ACCEPT
++  fi
++  if [ "$EXT_IF_DHCP_IP" = "1" -o "$EXT_IF_DHCPV6_IPV6" = "1" ]; then
+     if [ "$IPV6_SUPPORT" = "1" ]; then
+       # Allow this host to be an DHCPv6 client:
+-      ip6tables -A EXT_INPUT_CHAIN -p udp --sport 547 --dport 546 -j ACCEPT
++      ip6tables -A EXT_INPUT_CHAIN -s fe80::/10 -p udp --sport 547 --dport 546 -j ACCEPT
+     fi
+   fi
+ 
+diff --git a/etc/arno-iptables-firewall/firewall.conf b/etc/arno-iptables-firewall/firewall.conf
+index e3c8894..766cbdd 100644
+--- a/etc/arno-iptables-firewall/firewall.conf
++++ b/etc/arno-iptables-firewall/firewall.conf
+@@ -39,10 +39,16 @@
+ EXT_IF=""
+ 
+ # Enable if THIS machines (dynamically) obtains its IP through (IPv4) DHCP
+-# and/or (IPv6) DHCPv6 (from your ISP)
++# and possibly (IPv6) DHCPv6 (from your ISP)
+ # ------------------------------------------------------------------------------
+ EXT_IF_DHCP_IP=0
+ 
++# Enable if THIS machines (dynamically) obtains its IP through (IPv6) DHCPv6
++# and not (IPv4) DHCP. Applies only when EXT_IF_DHCP_IP is set to "0".
++# (IPv6 Only)
++# ------------------------------------------------------------------------------
++EXT_IF_DHCPV6_IPV6=0
++
+ # (EXPERT SETTING!) Here you can override your external(!) IPv4 subnet(s).
+ # Normally these are (attempted to be) autodetected, so leaving this empty
+ # should work for most scenarios. This setting is used when eg. running a DHCP
