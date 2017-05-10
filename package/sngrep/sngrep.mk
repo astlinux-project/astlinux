@@ -4,16 +4,16 @@
 #
 ################################################################################
 
-SNGREP_VERSION = 1.4.2
+SNGREP_VERSION = 1.4.3
 SNGREP_SOURCE = sngrep-$(SNGREP_VERSION).tar.gz
-SNGREP_SITE = http://files.astlinux-project.org
-#SNGREP_SITE = https://github.com/irontec/sngrep/releases
+SNGREP_SITE = https://github.com/irontec/sngrep/releases/download/v$(SNGREP_VERSION)
 SNGREP_AUTORECONF = YES
 SNGREP_DEPENDENCIES = libpcap ncurses
 
 SNGREP_CONF_OPT = \
 	--disable-unicode \
-	--enable-ipv6
+	--enable-ipv6 \
+	--enable-eep
 
 # openssl and gnutls can't be enabled at the same time.
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
