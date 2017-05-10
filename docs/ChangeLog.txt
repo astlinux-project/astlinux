@@ -76,7 +76,7 @@ Released @TBD@
 -- gntp-send, version 0.3.4, new package, CLI tool for sending Growl (GNTP) notifications.
    More info: http://doc.astlinux-project.org/userdoc:tt_asterisk_call_notify
 
--- sngrep, version 1.4.2, new package, tool for displaying SIP call message flows from a terminal.
+-- sngrep, version 1.4.3, new package, tool for displaying SIP call message flows from a terminal.
 
 -- ddclient, switch to ddclient-curl version 3.8.3-03, adds IPv6 and Hurricane Electric support
    Cloudflare, FreeDNS, and HE Free DNS (Hurricane Electric) now support mixed IPv4/IPv6 DNS updates.
@@ -97,6 +97,7 @@ Released @TBD@
    disabled by default. Example: PHYETH_DISABLE_OFFLOAD="tso gso gro"
 
 -- wide-dhcpv6, add support for optional script '/mnt/kd/dhcp6c.script', enabled if it exists and is executable.
+   More info: http://doc.astlinux-project.org/userdoc:tt-dhcpv6-prefix-delegation#dhcpv6_client_action_script
 
 -- chrony, version bump to 3.1
 
