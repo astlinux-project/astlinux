@@ -43,7 +43,7 @@ use_prefix_len()
 
 setup_env()
 {
-  local conffile pd_1 prefix_len prefix_if first_if interface ipv6 ipv6_ex cut_chars prefix_label IFS
+  local conffile pd_1 prefix_len prefix_if interface ipv6 ipv6_ex cut_chars prefix_label IFS
 
   ## Globals to export
   dhcp6c_interface=""
@@ -67,25 +67,21 @@ setup_env()
 
   prefix_len="$(echo "$pd_1" | sed -n -r -e 's/^ +prefix +::\/([0-9]+) .*$/\1/p')"
   prefix_if="$(echo "$pd_1" | sed -n -r -e 's/^ +prefix-interface +([^ ]+) .*$/\1/p')"
-  first_if=""
 
   unset IFS
   for interface in $prefix_if; do
     dhcp6c_prefix_interfaces="$dhcp6c_prefix_interfaces,$interface"
     dhcp6c_prefix_addresses="$dhcp6c_prefix_addresses,$(get_ipv6_global_addr $interface)"
-    if [ -z "$first_if" ]; then
-      first_if="$interface"
-    fi
   done
   # remove leading comma, this method keeps the pairs comma-aligned
   dhcp6c_prefix_interfaces="${dhcp6c_prefix_interfaces#,}"
   dhcp6c_prefix_addresses="${dhcp6c_prefix_addresses#,}"
 
-  if [ -z "$first_if" ]; then
+  if [ -z "$dhcp6c_prefix_addresses" ]; then
     return
   fi
 
-  ipv6="$(get_ipv6_global_addr $first_if)"
+  ipv6="$(echo "$dhcp6c_prefix_addresses" | cut -d',' -f1)"
 
   if [ -n "$ipv6" ]; then
     ipv6_ex="$(netcalc "$ipv6" | sed -n -r -e 's/^Expanded IPv6 *: *([0-9a-fA-F:]+).*$/\1/p')"
