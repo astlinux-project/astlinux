@@ -638,22 +638,26 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
       ip link set dev $EXTIF up
       ;;
     *)
+      up_delay=0
       ip addr add $EXTIP/$EXTNM brd + dev $EXTIF
       if [ -n "$EXTIP_ALIAS" ]; then
         alias_interface add $EXTIF "$EXTIP_ALIAS"
       fi
-      if [ "$IPV6" = "yes" ] && [ "$DHCPV6_CLIENT_ENABLE" != "yes" -o "$DHCPV6_CLIENT_REQUEST_ADDRESS" = "no" ]; then
-        if [ -n "$EXTIPV6" ]; then
-          ip -6 addr add $EXTIPV6 dev $EXTIF
+      if [ "$IPV6" = "yes" ]; then
+        if [ "$DHCPV6_CLIENT_ENABLE" = "yes" ]; then
+          up_delay=4
+          init_dhcp6c extif $EXTIF
+          ifplugd -apq -t2 -u3 -d3 -i $EXTIF -r /etc/ifplugd/dhcp6c.action
+        fi
+        if [ "$DHCPV6_CLIENT_ENABLE" != "yes" -o "$DHCPV6_CLIENT_REQUEST_ADDRESS" = "no" ]; then
+          if [ -n "$EXTIPV6" ]; then
+            ip -6 addr add $EXTIPV6 dev $EXTIF
+          fi
         fi
       fi
       ip link set dev $EXTIF up
-      if [ "$IPV6" = "yes" -a "$DHCPV6_CLIENT_ENABLE" = "yes" ]; then
-        sleep 4
-        init_dhcp6c extif $EXTIF
-        dhcp6c -c /etc/wide-dhcpv6/dhcp6c-$EXTIF.conf -p /var/run/dhcp6c-$EXTIF.pid $EXTIF
-        ifplugd -apq -t2 -u3 -d3 -i $EXTIF -r /etc/ifplugd/dhcp6c.action
-        sleep 2
+      if [ $up_delay -gt 0 ]; then
+        sleep $up_delay
       fi
       ;;
     esac
