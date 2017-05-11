@@ -6,6 +6,8 @@ export PATH="/usr/bin:/bin:/usr/sbin:/sbin"
 
 SCRIPTFILE="/mnt/kd/dhcp6c.script"
 
+CACHEFILE="/var/db/dhcp6c_cache"
+
 get_ipv6_global_addr()
 {
   local interface="$1"
@@ -41,6 +43,32 @@ use_prefix_len()
   esac
 }
 
+update_cache()
+{
+  local changed
+
+  echo "## dhcp6c cache
+dhcp6c_interface=$dhcp6c_interface
+dhcp6c_address=$dhcp6c_address
+dhcp6c_prefix_interfaces=$dhcp6c_prefix_interfaces
+dhcp6c_prefix_addresses=$dhcp6c_prefix_addresses" > "$CACHEFILE.new"
+  chmod 600 "$CACHEFILE.new"
+
+  if [ -f "$CACHEFILE" ] && cmp -s "$CACHEFILE" "$CACHEFILE.new"; then
+    changed="no"
+    rm -f "$CACHEFILE.new"
+  else
+    if [ -f "$CACHEFILE" ]; then
+      changed="yes"
+    else
+      changed=""
+    fi
+    mv "$CACHEFILE.new" "$CACHEFILE"
+  fi
+
+  echo "$changed"
+}
+
 setup_env()
 {
   local conffile pd_1 prefix_len prefix_if interface ipv6 ipv6_ex cut_chars prefix_label IFS
@@ -48,6 +76,7 @@ setup_env()
   ## Globals to export
   dhcp6c_interface=""
   dhcp6c_address=""
+  dhcp6c_changed=""
   dhcp6c_prefix_interfaces=""
   dhcp6c_prefix_addresses=""
   dhcp6c_prefix=""
@@ -77,6 +106,8 @@ setup_env()
   dhcp6c_prefix_interfaces="${dhcp6c_prefix_interfaces#,}"
   dhcp6c_prefix_addresses="${dhcp6c_prefix_addresses#,}"
 
+  dhcp6c_changed="$(update_cache)"
+
   if [ -z "$dhcp6c_prefix_addresses" ]; then
     return
   fi
@@ -99,7 +130,7 @@ setup_env()
 
 if [ -x $SCRIPTFILE ]; then
   setup_env
-  export dhcp6c_interface dhcp6c_address
+  export dhcp6c_interface dhcp6c_address dhcp6c_changed
   export dhcp6c_prefix_interfaces dhcp6c_prefix_addresses
   export dhcp6c_prefix dhcp6c_prefix_base dhcp6c_prefix_len
 
