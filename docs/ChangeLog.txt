@@ -67,7 +67,8 @@ Released @TBD@
 -- OpenSSH, version bump to 7.5p1, allow PubkeyAcceptedKeyTypes 'ssh-dss' for backward compatibility.
    Updated /etc/ssh/moduli DH group parameters file, starting with 2048-bit length.
 
--- OpenVPN, version bump to 2.4.1, add rc.conf variable OVPNC_REMOTE_CERT_TLS to replace deprecated OVPNC_NSCERTTYPE
+-- OpenVPN, version bump to 2.4.2, security fixes: CVE-2017-7478, CVE-2017-7479
+   Add rc.conf variable OVPNC_REMOTE_CERT_TLS to replace deprecated OVPNC_NSCERTTYPE
 
 -- libcurl (curl) version bump to 7.54.0, security fixes: CVE-2017-2629, CVE-2017-7468
 
