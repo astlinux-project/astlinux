@@ -62,7 +62,6 @@ gen_nopd_dhcp6c_conf()
 interface $interface {
   send ia-na 1;
   send rapid-commit;
-  script \"/etc/dhcp6c.script\";
 };
 
 id-assoc na 1 { };"
@@ -645,7 +644,7 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
       fi
       if [ "$IPV6" = "yes" ]; then
         if [ "$DHCPV6_CLIENT_ENABLE" = "yes" ]; then
-          up_delay=4
+          up_delay=10
           init_dhcp6c extif $EXTIF
           ifplugd -apq -t2 -u3 -d3 -i $EXTIF -r /etc/ifplugd/dhcp6c.action
         fi
@@ -656,9 +655,10 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
         fi
       fi
       ip link set dev $EXTIF up
-      if [ $up_delay -gt 0 ]; then
-        sleep $up_delay
-      fi
+      while [ $up_delay -gt 0 ] && [ ! -f /var/db/dhcp6c_cache ]; do
+        up_delay=$((up_delay - 1))
+        sleep 1
+      done
       ;;
     esac
 
@@ -702,14 +702,20 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
 
   #DHCP
   if [ -n "$EXTIF" -a -z "$EXTIP" ] && ! isextppp extif; then
+    up_delay=0
     ip link set dev $EXTIF up
     sleep 4
     if [ "$IPV6" = "yes" -a "$DHCPV6_CLIENT_ENABLE" = "yes" ]; then
+      up_delay=10
       init_dhcp6c extif $EXTIF
       dhcp6c -c /etc/wide-dhcpv6/dhcp6c-$EXTIF.conf -p /var/run/dhcp6c-$EXTIF.pid $EXTIF
     fi
     udhcpc -b -T2 -t6 -S -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXTIF.pid -i $EXTIF
     ifplugd -apq -t2 -u3 -d3 -i $EXTIF -r /etc/ifplugd/udhcpc.action
+    while [ $up_delay -gt 0 ] && [ ! -f /var/db/dhcp6c_cache ]; do
+      up_delay=$((up_delay - 1))
+      sleep 1
+    done
 
     # No DHCPv6 - Static IPv6 if defined
     if [ "$IPV6" = "yes" ] && [ "$DHCPV6_CLIENT_ENABLE" != "yes" -o "$DHCPV6_CLIENT_REQUEST_ADDRESS" = "no" ]; then

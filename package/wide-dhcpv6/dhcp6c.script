@@ -128,8 +128,11 @@ setup_env()
   fi
 }
 
+## Setup environmental variables
+## Create dhcp6c_cache file
+setup_env
+
 if [ -x $SCRIPTFILE ]; then
-  setup_env
   export dhcp6c_interface dhcp6c_address dhcp6c_changed
   export dhcp6c_prefix_interfaces dhcp6c_prefix_addresses
   export dhcp6c_prefix dhcp6c_prefix_base dhcp6c_prefix_len
