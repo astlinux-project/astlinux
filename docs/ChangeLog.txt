@@ -165,6 +165,8 @@ Released @TBD@
 
 -- Follow-Me tab, add support for enable_callee_prompt, adding "Single number without callee prompt" dial method.
 
+-- Status tab, add IPv6 Prefixes and IPv6 Address in a row, when applicable.
+
 
 Additions for AstLinux 1.2.9:
 =============================
