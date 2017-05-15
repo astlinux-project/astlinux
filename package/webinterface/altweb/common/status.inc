@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2016 Lonnie Abelbeck
+// Copyright (C) 2008-2017 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -37,6 +37,7 @@
 // 11-06-2014, Added Failover Status
 // 10-14-2016, Added Check for default admin password
 // 12-01-2016, Added chronyc to replace ntpq
+// 05-15-2017, Added IPv6 Prefixes/Address
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -341,6 +342,47 @@ function noASTERISKsounds($asterisk) {
   return($status != 0);
 }
 
+// Function: getIPV6address
+//
+function getIPV6address() {
+
+  if (! is_file('/proc/net/if_inet6')) {
+    return(NULL);
+  }
+
+  $cmd  = '. /etc/rc.conf';
+  $cmd .= ';/sbin/ip -6 -o addr show dev "$EXTIF" scope global 2>/dev/null';
+  $cmd .= ' | awk \'$3 == "inet6" { split($4, field, "/"); print field[1]; nextfile; }\'';
+  $cmd .= ';echo "#next#"';
+  $cmd .= ';/sbin/ip -6 -o addr show scope global 2>/dev/null';
+  $cmd .= ' | awk \'$2 != "\'"$EXTIF"\'" && $3 == "inet6" { print $4; }\'';
+
+  $output = array();
+  @exec($cmd, $output);
+
+  $status['address'] = '';
+
+  $state = 0;
+  $pnum = 0;
+  foreach ($output as $line) {
+    if ($line[0] === '#') {
+      $state++;
+      continue;
+    }
+    if ($state == 0) {          // IPv6 Address
+      $status['address'] = $line;
+    } elseif ($state == 1) {    // IPv6 Prefixes
+      if (preg_match('/^[0-9a-fA-F:]+\/([0-9]+)/', $line, $match)) {
+        if ($match[1] >= 32 && $match[1] <= 64) {
+          $status['prefixes'][$pnum] = $line;
+          $pnum++;
+        }
+      }
+    }
+  }
+  return($status);
+}
+
 // Function: parseMINIUPNPDleases
 //
 function parseMINIUPNPDleases($log) {
@@ -528,6 +570,23 @@ if ($line !== '') {
   echo '<td>&nbsp;</td><td>&nbsp;</td>';
 }
 putHtml('</tr>');
+// IPv6
+if (! is_null($ipv6_addr = getIPV6address())) {
+  echo '<tr ', ($i++ % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
+  if ((count($ipv6_addr['prefixes'])) > 0) {
+    echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', 'IPv6 Prefixes:', '</td>';
+    echo '<td style="text-align: left;">';
+    foreach ($ipv6_addr['prefixes'] as $line) {
+      echo $line, '<br />';
+    }
+    echo '</td>';
+  } else {
+    echo '<td>&nbsp;</td><td>&nbsp;</td>';
+  }
+  echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', 'IPv6 Address:', '</td>';
+  echo '<td style="text-align: left;">', ($ipv6_addr['address'] !== '' ? $ipv6_addr['address'] : 'Link-local'), '</td>';
+  putHtml('</tr>');
+}
 // DNS
 if (isDNSCRYPT()) {
   echo '<tr ', ($i++ % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
