@@ -149,7 +149,7 @@ define BUSYBOX_INSTALL_TARGET_CMDS
 	fi
 	$(BUSYBOX_INSTALL_MDEV_CONF)
 	$(INSTALL) -m 0755 -D package/busybox/passwd.wrapper $(TARGET_DIR)/usr/bin/passwd
-	$(INSTALL) -m 0755 -D package/busybox/shutdown.wrapper $(TARGET_DIR)/usr/bin/shutdown
+	$(INSTALL) -m 0755 -D package/busybox/shutdown.wrapper $(TARGET_DIR)/sbin/shutdown
 endef
 
 define BUSYBOX_UNINSTALL_TARGET_CMDS
