@@ -15,9 +15,7 @@ BOARDS_SMP64="genx86_64 genx86_64-serial"
 
 BOARDS_SMP64VM="genx86_64-vm"
 
-BOARDS_SMP="geni586 geni586-serial"
-
-BOARDS_NO_SMP="net5501 alix"
+BOARDS_SMP32="geni586 geni586-serial"
 
 RUNFS_DIR="output/build/runfs"
 
@@ -48,11 +46,6 @@ build_board()
   mv "${ASTVER}.img.gz" "$output_path/img/${ASTVER}-${board}/${board}-${ASTVER#astlinux-}-${ASTERISK_VERSION}.img.gz"
 
   rm -rf "${ASTVER}"
-}
-
-set_smp_kernel()
-{
-  sed -i 's:^BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="[^"]*":BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="project/astlinux/geni586/linux-smp.config":' .config
 }
 
 set_smp64vm_kernel()
@@ -163,24 +156,13 @@ for asterisk in ast11 ast13; do
     exit 1
   fi
 
-  # Non-SMP Builds
+  # SMP32 Builds
   echo "Cleaning out any existing builds..."
   rm -rf output
 
   cp "$CONFIG" .config
 
-  for board in $BOARDS_NO_SMP; do
-    build_board "$FIRMWARE"
-  done
-
-  # SMP Builds
-  echo "Cleaning out any existing builds..."
-  rm -rf output
-
-  cp "$CONFIG" .config
-  set_smp_kernel
-
-  for board in $BOARDS_SMP; do
+  for board in $BOARDS_SMP32; do
     build_board "$FIRMWARE"
   done
 
@@ -213,9 +195,9 @@ rm -rf output
 
 cp runnix-iso.config .config
 
-for board in $BOARDS_NO_SMP $BOARDS_SMP $BOARDS_SMP64 $BOARDS_SMP64VM; do
+for board in $BOARDS_SMP32 $BOARDS_SMP64 $BOARDS_SMP64VM; do
   ISO_NAME="${ASTVER}-${board}.iso"
-  if [ "${board}" != "${board%-serial}" -o "$board" = "alix" -o "$board" = "net5501" ]; then
+  if [ "${board}" != "${board%-serial}" ]; then
     SERIAL="serial"
     ISO_NAME="${ISO_NAME%-serial.iso}"
     ISO_NAME="${ISO_NAME%.iso}-serial.iso"
