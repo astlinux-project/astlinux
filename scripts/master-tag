@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TVER="1.2"
+TVER="1.3"
 
 BRANCH="1.0"
 
