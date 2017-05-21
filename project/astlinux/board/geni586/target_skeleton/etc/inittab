@@ -5,10 +5,10 @@
 #
 
 console::sysinit:/etc/rc sysinit
-console::respawn:/sbin/getty -L 19200 /dev/tty1 linux
+console::respawn:/sbin/getty -L 115200 /dev/tty1 linux
 
-# ttyS0::respawn:/sbin/getty -L 19200 /dev/ttyS0 vt100
-# ttyS1::respawn:/sbin/getty -L 19200 /dev/ttyS1 vt100
+# ttyS0::respawn:/sbin/getty -L 115200 /dev/ttyS0 vt100
+# ttyS1::respawn:/sbin/getty -L 115200 /dev/ttyS1 vt100
 
 # Stuff to do before rebooting
 ::ctrlaltdel:/sbin/reboot
