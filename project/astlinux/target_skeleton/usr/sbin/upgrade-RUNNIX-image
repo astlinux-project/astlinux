@@ -76,7 +76,7 @@ check() {
       IS_SERIAL="-serial"
       ARCH="${ARCH}${IS_SERIAL}"
     fi
-  elif [ "$ARCH" = "net5501" -o "$ARCH" = "alix" -o "$ARCH" = "net4801" -o "$ARCH" = "wrap" ]; then
+  elif [ "$ARCH" = "net5501" -o "$ARCH" = "alix" ]; then
     IS_SERIAL="-serial"
   fi
 

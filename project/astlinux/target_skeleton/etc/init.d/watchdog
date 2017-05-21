@@ -3,11 +3,7 @@
 . /etc/rc.conf
 
 if [ "$WDMODULE" = "auto" ]; then
-  if grep -q "astlinux=net4801" /proc/cmdline; then
-    WDMODULE="scx200_wdt"
-  elif grep -q "astlinux=wrap" /proc/cmdline; then
-    WDMODULE="scx200_wdt"
-  elif grep -q "astlinux=net5501" /proc/cmdline; then
+  if grep -q "astlinux=net5501" /proc/cmdline; then
     WDMODULE="geodewdt"
   elif grep -q "astlinux=alix" /proc/cmdline; then
     WDMODULE="geodewdt"

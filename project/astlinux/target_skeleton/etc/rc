@@ -178,21 +178,6 @@ $fstab_var
 
   case $ASTLINUX in
 
-  net4801)
-    modprobe leds_net48xx
-    sleep 1
-    echo 1 >/sys/class/leds/net48xx::error/brightness
-    ;;
-
-  wrap)
-    modprobe scx200_gpio
-    modprobe leds_wrap
-    modprobe ledtrig-heartbeat
-    modprobe ledtrig-netdev
-    sleep 1
-    echo 1 >/sys/class/leds/wrap::error/brightness
-    ;;
-
   net5501)
     modprobe cs5535_mfd
     modprobe gpio_cs5535

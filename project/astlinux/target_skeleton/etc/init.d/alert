@@ -117,16 +117,6 @@ start () {
   welcome_msg
 
   # Turn OFF the errorled (after finshed booting) 
-  if grep -q "astlinux=net4801" /proc/cmdline; then
-
-    echo 0 > /sys/class/leds/net48xx::error/brightness
-  fi
-
-  if grep -q "astlinux=wrap" /proc/cmdline; then
-
-    echo 0 > /sys/class/leds/wrap::error/brightness
-  fi
-
   if grep -q "astlinux=net5501" /proc/cmdline; then
 
     echo 0 >/sys/class/leds/error/brightness
@@ -137,22 +127,11 @@ start () {
     echo 0 > /sys/class/leds/alix:2/brightness
   fi
 
-  # LED control for Alix and WRAP boards (after finished booting)
+  # LED control for Alix board (after finished booting)
   # "/mnt/kd/rc.ledcontrol" can override these settings
   if [ -x /mnt/kd/rc.ledcontrol ]; then
     /mnt/kd/rc.ledcontrol
   else
-    if grep -q "astlinux=wrap" /proc/cmdline; then
-    
-      echo heartbeat > /sys/class/leds/wrap::power/trigger
-      # echo ide-disk > /sys/class/leds/wrap::error/trigger
-      if [ -n "$EXTIF" ]; then
-        echo netdev > /sys/class/leds/wrap::extra/trigger
-        echo "$EXTIF" > /sys/class/leds/wrap::extra/device_name 
-        echo "link tx rx" > /sys/class/leds/wrap::extra/mode
-      fi   
-    fi
-    
     if grep -q "astlinux=alix" /proc/cmdline; then
     
       echo heartbeat > /sys/class/leds/alix:1/trigger
@@ -177,21 +156,6 @@ start () {
 stop () {
 
   # Turn on the errorled (on reboot/shutdown)
-  if grep -q "astlinux=net4801" /proc/cmdline; then
-
-    echo 1 > /sys/class/leds/net48xx::error/brightness
-  fi
-
-  if grep -q "astlinux=wrap" /proc/cmdline; then
-
-    echo none > /sys/class/leds/wrap::power/trigger
-    echo 1 > /sys/class/leds/wrap::power/brightness    
-    # echo none > /sys/class/leds/wrap::error/trigger
-    echo 1 > /sys/class/leds/wrap::error/brightness
-    echo none > /sys/class/leds/wrap::extra/trigger
-    echo 0 > /sys/class/leds/wrap::extra/brightness
-  fi
-
   if grep -q "astlinux=net5501" /proc/cmdline; then
 
     echo 1 >/sys/class/leds/error/brightness
