@@ -52,62 +52,6 @@ unmount_tmpfs_runup() {
   rmdir /tmp/runup
 }
 
-mirror_bootonly_runnix() {
-  local action="$1"
-
-  if [ ! -x /sbin/findfs ]; then
-    return 2
-  fi
-
-  # Check if a BOOTONLY drive exists.
-  LABEL=$(/sbin/findfs LABEL=BOOTONLY 2>/dev/null)
-  if [ -n "$LABEL" ]; then
-    mkdir /tmp/bootonly >/dev/null
-    if ! mount -t vfat -o rw "$LABEL" /tmp/bootonly >/dev/null; then
-      rmdir /tmp/bootonly
-      return 1
-    fi
-  else
-    # No BOOTONLY drive
-    return 1
-  fi
-
-  # Mirror the runnix files from the RUNNIX drive to the BOOTONLY drive.
-  if [ -f /tmp/bootonly/runnix -a -f "$BASE/ver" -a -f "$BASE/runnix" -a -f "$BASE/runnix.img" ]; then
-    for install in ver runnix runnix.img; do
-      if [ -f "/tmp/bootonly/$install" ]; then
-        rm -f "/tmp/bootonly/$install"
-      fi
-      cp -a "$BASE/$install" "/tmp/bootonly/$install"
-    done
-
-    if [ "$action" = "upgrade" ]; then
-      for install in memtest boot.msg syslinux.cfg; do
-        if [ -f "$BASE/$install" ]; then
-          if [ -f "/tmp/bootonly/$install" ]; then
-            rm -f "/tmp/bootonly/$install"
-          fi
-          cp -a "$BASE/$install" "/tmp/bootonly/$install"
-        fi
-      done
-    fi
-
-    if [ -f "$BASE/Xver" -a -f "$BASE/Xrunnix" -a -f "$BASE/Xrunnix.img" ]; then
-      for install in Xver Xrunnix Xrunnix.img; do
-        if [ -f "/tmp/bootonly/$install" ]; then
-          rm -f "/tmp/bootonly/$install"
-        fi
-        cp -a "$BASE/$install" "/tmp/bootonly/$install"
-      done
-    fi
-  fi
-
-  cd /tmp
-  umount /tmp/bootonly
-  rmdir /tmp/bootonly
-  return 0
-}
-
 check() {
   IS_SERIAL=""
   
@@ -271,8 +215,6 @@ upgrade() {
     
     echo "$VER" > $BASE/ver
     rm -r $BASE/rtmp/
-    
-    mirror_bootonly_runnix upgrade
   else
     unmount_tmpfs_runup
     rm -r $BASE/rtmp/
@@ -343,8 +285,6 @@ revert() {
     echo $VER > $BASE/Xver
     echo $XVER > $BASE/ver
     mount -o ro,remount /oldroot/cdrom >/dev/null
-    
-    mirror_bootonly_runnix revert
   else
     echo "Revert failed, unable to exchange files."
     exit $RED

@@ -41,7 +41,6 @@ editConf()
 }
 
 ASTRW_FORMAT=
-BOOT_ONLY=
 DUMP_PARTITIONS=
 GZIP=
 
@@ -49,9 +48,6 @@ while [ $# -ge 1 ]; do
   case "$1" in
   -A)
     ASTRW_FORMAT=1
-    ;;
-  -B)
-    BOOT_ONLY=1
     ;;
   -p)
     DUMP_PARTITIONS=1
@@ -195,11 +191,7 @@ fi
 
 sudo losetup -o $(($p1*512)) ${LOOPD}1 runnix.img
 
-if [ -n "$BOOT_ONLY" ]; then
-  LABEL="BOOTONLY"
-else
-  LABEL="RUNNIX"
-fi
+LABEL="RUNNIX"
 sudo mkdosfs -F 16 -n $LABEL ${LOOPD}1
 
 echo "
@@ -224,13 +216,7 @@ fi
 sudo mkdir -p /mnt/runnix
 sudo mount -t vfat ${LOOPD}1 /mnt/runnix
 
-if [ -n "$BOOT_ONLY" ]; then
-  for install in $(ls -1 $RUNFS_DIR | grep -v '^os$'); do
-    sudo cp -P --preserve=mode,timestamps ${RUNFS_DIR}/${install} /mnt/runnix
-  done
-else
-  sudo cp -r -P --preserve=mode,timestamps ${RUNFS_DIR}/. /mnt/runnix
-fi
+sudo cp -r -P --preserve=mode,timestamps ${RUNFS_DIR}/. /mnt/runnix
 
 # run this in a subshell, since we change subdirectory
 (
@@ -268,11 +254,7 @@ fi
 
 sudo losetup -d ${LOOPD}0
 
-if [ -n "$BOOT_ONLY" ]; then
-  IMG_NAME="runnix-$RUNNIX_VER-bootonly.img"
-else
-  IMG_NAME="$ASTVER.img"
-fi
+IMG_NAME="$ASTVER.img"
 
 mv -f runnix.img $IMG_NAME
 
