@@ -3,7 +3,7 @@
 ## http://crosstool-ng.org
 ##
 ## Building the eglibc toolchain for AstLinux 1.x using Buildroot
-## The resulting toolchain is output to $HOME/astlinux/x-tools-1.20.0-3.2p1
+## The resulting toolchain is output to $HOME/astlinux/x-tools-1.20.0-3.16
 ## Make sure you have a $HOME/astlinux/ directory.
 ##
 ## Note: If "crosstool-ng-1.20.0" is already installed, jump to "## Build i586 32-bit toolchain ##"
@@ -21,10 +21,10 @@ sudo make install
 ##
 ## Build i586 32-bit toolchain ##
 cd ~/source-control
-mkdir ctng-1.20.0-3.2
-cd ctng-1.20.0-3.2
-# then copy the "crosstool-ng-src/ct-ng-1.20.0-3.2.config" file from the SVN to ".config" here
-cp ~/astlinux/1.0/crosstool-ng-src/ct-ng-1.20.0-3.2.config .config
+mkdir ctng-1.20.0-3.16
+cd ctng-1.20.0-3.16
+# then copy the "crosstool-ng-src/ct-ng-1.20.0-3.16.config" file from the SVN to ".config" here
+cp ~/astlinux/1.0/crosstool-ng-src/ct-ng-1.20.0-3.16.config .config
 # leave as configured, just look, don't make any changes
 ct-ng menuconfig
 # run shell script "crosstool-ng-src/get-files.sh" located in the SVN
@@ -34,8 +34,8 @@ ct-ng build
 # takes 50-70 min.
 ##
 ## Build x86_64 64-bit toolchain ##
-# copy the "crosstool-ng-src/ct-ng-1.20.0-3.2-x86_64.config" file from the SVN to ".config" here
-cp ~/astlinux/1.0/crosstool-ng-src/ct-ng-1.20.0-3.2-x86_64.config .config
+# copy the "crosstool-ng-src/ct-ng-1.20.0-3.16-x86_64.config" file from the SVN to ".config" here
+cp ~/astlinux/1.0/crosstool-ng-src/ct-ng-1.20.0-3.16-x86_64.config .config
 # again, start the toolchain build process
 ct-ng build
 # takes 30-50 min.

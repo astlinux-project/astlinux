@@ -1,0 +1,10 @@
+--- dahdi-linux-2.8.0.1/drivers/dahdi/Kbuild.orig	2017-05-21 14:49:59.714846097 -0500
++++ dahdi-linux-2.8.0.1/drivers/dahdi/Kbuild	2017-05-21 14:51:11.730334517 -0500
+@@ -45,7 +45,6 @@
+ 
+ obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_WCFXO)		+= wcfxo.o
+ obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_TOR2)		+= tor2.o
+-obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_PCIRADIO)		+= pciradio.o
+ endif
+ 
+ obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_XPP)		+= xpp/

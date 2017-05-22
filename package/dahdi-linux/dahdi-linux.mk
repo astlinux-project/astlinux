@@ -39,7 +39,7 @@ $(DAHDI_LINUX_DIR)/.source: $(DL_DIR)/$(DAHDI_LINUX_SOURCE)  | $(DAHDI_LINUX_PRE
 	zcat $(DL_DIR)/$(DAHDI_LINUX_SOURCE) | tar -C $(BUILD_DIR) $(TAR_OPTIONS) -
 ifeq ($(strip $(BR2_PACKAGE_DAHDI_OSLEC)),y)
 	mkdir -p $(DAHDI_LINUX_DIR)/drivers/staging/echo
-	cp -a $(BUILD_DIR)/linux-$(LINUX_VERSION)/drivers/staging/echo/* $(DAHDI_LINUX_DIR)/drivers/staging/echo
+	cp -a $(BUILD_DIR)/linux-$(LINUX_VERSION)/drivers/misc/echo/* $(DAHDI_LINUX_DIR)/drivers/staging/echo
 	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ oslec-$(DAHDI_LINUX_VERSION_TUPLE)-\*.patch
 endif
 ifeq ($(BR2_PACKAGE_DAHDI_HFCS),y)
