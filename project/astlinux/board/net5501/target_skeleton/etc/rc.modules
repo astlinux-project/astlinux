@@ -1,5 +1,5 @@
 ## These modules get modprobe'd when the system starts up.
-rtc
+##
 ## Uncomment any additional modules you need.
 ##
 ## Ethernet support

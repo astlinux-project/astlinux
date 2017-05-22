@@ -228,17 +228,16 @@ $fstab_var
     (while read i; do
      if [ "$i" = "sleep" ]; then
        sleep 2
-     else
+     elif [ "$i" != "rtc" ]; then
        modprobe $i 2>/dev/null
      fi
      done)
     sleep 5
   fi
 
-  #set the clock to zulu time -- but only after modules (including rtc)
-  #have been loaded above.
-  if [ -r /dev/rtc ]; then
-    hwclock -su 2>/dev/null
+  #set the clock to zulu time, assuming rtc-cmos built-in to kernel
+  if [ -r /dev/rtc0 ]; then
+    hwclock -su --rtc /dev/rtc0 2>/dev/null
   fi
 
   #Apply IO schedulers
@@ -414,8 +413,8 @@ shutdown() {
   sync
   sleep 2
 
-  if [ -r /dev/rtc ]; then
-    hwclock -wu 2>/dev/null
+  if [ -r /dev/rtc0 ]; then
+    hwclock -wu --rtc /dev/rtc0 2>/dev/null
   fi
 
   umount -a -r 2>/dev/null

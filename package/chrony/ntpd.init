@@ -75,8 +75,8 @@ start () {
     if [ -n "$first" ]; then
       echo "Setting local system time using '$first'..."
       if chronyd -q -t 8 "server $first iburst"; then
-        if [ -r /dev/rtc ]; then
-          hwclock -wu --noadjfile 2>/dev/null
+        if [ -r /dev/rtc0 ]; then
+          hwclock -wu --noadjfile --rtc /dev/rtc0 2>/dev/null
         fi
       else
         logger -s -t chronyd -p kern.info "Failed to set time using NTP server '$first', continuing in the background."

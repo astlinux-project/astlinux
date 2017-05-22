@@ -72,8 +72,8 @@ start () {
 
       # Set the clock (large change)
       if sntp $NTPAF -S -t4 $first; then
-        if [ -r /dev/rtc ]; then
-          hwclock -wu --noadjfile 2>/dev/null
+        if [ -r /dev/rtc0 ]; then
+          hwclock -wu --noadjfile --rtc /dev/rtc0 2>/dev/null
         fi
         sleep 1
 
