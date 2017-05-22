@@ -148,9 +148,6 @@ init() {
   mkdir -p /dev/pts
   mount -t devpts none /dev/pts
 
-  mkdir -p /dev/usb
-  mount -t usbfs usbfs /proc/bus/usb
-
   mkdir -p /tmp/etc/modprobe.d
   echo '## Auto-generated file, do not edit!!' >/tmp/etc/modprobe.d/alias.conf
 
