@@ -178,9 +178,9 @@ $fstab_var
   net5501)
     modprobe cs5535_mfd
     modprobe gpio_cs5535
-    modprobe leds_net5501
+    modprobe leds_gpio
     sleep 1
-    echo 1 >/sys/class/leds/error/brightness
+    echo 1 >/sys/class/leds/net5501:1/brightness
     ;;
 
   alix)
@@ -188,7 +188,6 @@ $fstab_var
     modprobe gpio_cs5535
     modprobe leds_gpio
     modprobe ledtrig-heartbeat
-    modprobe ledtrig-netdev
     sleep 1
     echo 1 >/sys/class/leds/alix:1/brightness
     echo 1 >/sys/class/leds/alix:2/brightness

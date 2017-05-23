@@ -119,29 +119,13 @@ start () {
   # Turn OFF the errorled (after finshed booting) 
   if grep -q "astlinux=net5501" /proc/cmdline; then
 
-    echo 0 >/sys/class/leds/error/brightness
+    echo 0 >/sys/class/leds/net5501:1/brightness
   fi
 
   if grep -q "astlinux=alix" /proc/cmdline; then
 
-    echo 0 > /sys/class/leds/alix:2/brightness
-  fi
-
-  # LED control for Alix board (after finished booting)
-  # "/mnt/kd/rc.ledcontrol" can override these settings
-  if [ -x /mnt/kd/rc.ledcontrol ]; then
-    /mnt/kd/rc.ledcontrol
-  else
-    if grep -q "astlinux=alix" /proc/cmdline; then
-    
-      echo heartbeat > /sys/class/leds/alix:1/trigger
-      # echo ide-disk > /sys/class/leds/alix:2/trigger
-      if [ -n "$EXTIF" ]; then
-        echo netdev > /sys/class/leds/alix:3/trigger
-        echo "$EXTIF" > /sys/class/leds/alix:3/device_name 
-        echo "link tx rx" > /sys/class/leds/alix:3/mode
-      fi  
-    fi
+    echo heartbeat >/sys/class/leds/alix:1/trigger
+    echo 0 >/sys/class/leds/alix:2/brightness
   fi
 
   # Generate Alert Sounds (after finished booting)
@@ -158,17 +142,14 @@ stop () {
   # Turn on the errorled (on reboot/shutdown)
   if grep -q "astlinux=net5501" /proc/cmdline; then
 
-    echo 1 >/sys/class/leds/error/brightness
+    echo 1 >/sys/class/leds/net5501:1/brightness
   fi
 
   if grep -q "astlinux=alix" /proc/cmdline; then
 
-    echo none > /sys/class/leds/alix:1/trigger
-    echo 1 > /sys/class/leds/alix:1/brightness
-    # echo none > /sys/class/leds/alix:2/trigger
-    echo 1 > /sys/class/leds/alix:2/brightness
-    echo none > /sys/class/leds/alix:3/trigger
-    echo 0 > /sys/class/leds/alix:3/brightness
+    echo none >/sys/class/leds/alix:1/trigger
+    echo 1 >/sys/class/leds/alix:1/brightness
+    echo 1 >/sys/class/leds/alix:2/brightness
   fi
 
   # Generate Alert Sounds (on reboot/shutdown)
