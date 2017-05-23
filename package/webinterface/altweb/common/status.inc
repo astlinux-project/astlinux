@@ -610,15 +610,15 @@ if (isDNSCRYPT()) {
 echo '<tr ', ($i++ % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
 echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', 'System Time:', '</td>';
 echo '<td style="text-align: left;">', date('l, M d H:i:s T Y'), '</td>';
-$line = trim(shell_exec('grep "^Mem[TF]" /proc/meminfo 2>/dev/null'));
+$line = trim(shell_exec('grep "^Mem[TA]" /proc/meminfo 2>/dev/null'));
 $mstr = '';
-if (($pos = strpos($line, 'MemTotal')) !== FALSE) {
+if (($pos = strpos($line, 'MemTotal:')) !== FALSE) {
   $mem = (int)(((int)trim(substr($line, $pos + 9)) + 512)/1024);
   $mstr .= $mem.' MB, ';
 }
-if (($pos = strpos($line, 'MemFree')) !== FALSE) {
-  $mem = (int)(((int)trim(substr($line, $pos + 8)) + 512)/1024);
-  $mstr .= 'Free '.$mem.' MB';
+if (($pos = strpos($line, 'MemAvailable:')) !== FALSE) {
+  $mem = (int)(((int)trim(substr($line, $pos + 13)) + 512)/1024);
+  $mstr .= 'Available '.$mem.' MB';
 }
 echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', 'RAM Memory:', '</td>';
 echo '<td style="text-align: left;">', $mstr, '</td>';

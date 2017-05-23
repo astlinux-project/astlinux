@@ -18,14 +18,14 @@ dev_to_ipv4_networks()
 
 welcome_msg()
 {
-  local asterisk="" memtotal memfree board release
+  local asterisk="" memtotal memavail board release
 
   if [ -x /usr/sbin/asterisk ]; then
     asterisk="$(/usr/sbin/asterisk -V)"
   fi
 
   memtotal="$(awk '/^MemTotal:/ { print int(($2 + 512) / 1024) }' /proc/meminfo)"
-  memfree="$(awk '/^MemFree:/ { print int(($2 + 512) / 1024) }' /proc/meminfo)"
+  memavail="$(awk '/^MemAvailable:/ { print int(($2 + 512) / 1024) }' /proc/meminfo)"
 
   board="$(cat /proc/cmdline | sed -n -r -e 's:^.* astlinux=([^ ]+).*$:\1:p')"
   if [ "$board" = "geni586" -o "$board" = "genx86_64" ]; then
@@ -43,7 +43,7 @@ welcome_msg()
        Hostname: $HOSTNAME
          Domain: $DOMAIN
           Linux: $(uname -r -m)
-     RAM Memory: $memtotal MB, Free $memfree MB
+     RAM Memory: $memtotal MB, Available $memavail MB
      Board Type: $board
 
       Interface: $EXTIF (External)   IPv4 Address: $(dev_to_ipv4_addresses $EXTIF)${INTIF:+
