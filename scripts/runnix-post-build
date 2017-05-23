@@ -9,7 +9,7 @@ base="${target%/output/target}"
 
 make_release_version()
 {
-  RUNBASE="0.4"
+  RUNBASE="0.5"
   RUNREV="$(LANG=C svn info | awk -F': ' '/^Last Changed Rev:/ { print $2 }')"
   RUNEXTRA=""
 

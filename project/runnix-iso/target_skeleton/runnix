@@ -109,6 +109,10 @@ do_shell () {
 
   /bin/sh -i </dev/console >/dev/console 2>/dev/console
 
+  # Unmount all file systems or remount 'ro' if busy
+  sync
+  umount -a -r 2>/dev/null
+
   # and reboot when done
   reboot -f
 }

@@ -19,7 +19,7 @@ MEMTEST_DIR="output/build/memtest86+-${MEMTEST_VER// /}"
 
 make_release_version()
 {
-  RUNBASE="0.4"
+  RUNBASE="0.5"
   RUNREV="$(LANG=C svn info | awk -F': ' '/^Last Changed Rev:/ { print $2 }')"
   RUNEXTRA=""
 
