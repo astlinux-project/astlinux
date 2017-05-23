@@ -10,7 +10,7 @@ init () {
 
 start () {
 
-  if [ -x /usr/sbin/acpid -a -e /proc/acpi/event ]; then
+  if [ -x /usr/sbin/acpid -a -e /dev/input/event0 ]; then
     echo "Starting acpid..."
 
     /usr/sbin/acpid -p $PIDFILE
