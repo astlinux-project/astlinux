@@ -10,7 +10,8 @@ init () {
 
 start () {
 
-  if [ -x /usr/sbin/acpid -a -e /dev/input/event0 ]; then
+  ## Only checking for (power) button
+  if [ -x /usr/sbin/acpid -a -e /sys/bus/acpi/drivers/button ]; then
     echo "Starting acpid..."
 
     /usr/sbin/acpid -p $PIDFILE
