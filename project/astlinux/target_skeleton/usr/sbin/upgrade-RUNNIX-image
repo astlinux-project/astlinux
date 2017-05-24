@@ -6,8 +6,9 @@ ORANGE=2
 # green color message for web interface
 GREEN=0
 #
-# Default RUNNIX Repository
-SRC_URL="https://mirror.astlinux-project.org/runnix4"
+# Default RUNNIX Repositories
+SRC_URL4="https://mirror.astlinux-project.org/runnix4"
+SRC_URL5="https://mirror.astlinux-project.org/runnix5"
 #
 # Default RUNNIX Version (use if no local 'ver' file)
 RUN_VER="runnix-0.2.1"
@@ -299,6 +300,13 @@ if [ -d /tmp/up ]; then
 elif [ -d /tmp/runup ]; then
   echo "RUNNIX Upgrade in Progress, please wait..."
   exit $ORANGE
+fi
+
+# runnix-0.5 requires a CPU with PAE
+if grep -q '^flags.*:.* pae ' /proc/cpuinfo; then
+  SRC_URL="$SRC_URL5"
+else
+  SRC_URL="$SRC_URL4"
 fi
 
 case $1 in
