@@ -5,12 +5,5 @@ config BR2_TARGET_RUNNIX
 	help
 	  The runnix bootloader for x86 systems
 
-	  http://www.runnix.org
-
-config BR2_TARGET_RUNNIX_NDEV
-	string "runnix_ndev"
-	default ""
-	depends on BR2_TARGET_RUNNIX
-	help
-	  Internet to boot from in os/default.conf (usually "eth0").
+	  http://www.astlinux-project.org
 
