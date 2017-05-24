@@ -224,6 +224,8 @@ $fstab_var
     (while read i; do
      if [ "$i" = "sleep" ]; then
        sleep 2
+     elif [ "$i" = "virtio-pci" ]; then
+       modprobe virtio_net 2>/dev/null
      elif [ "$i" != "rtc" ]; then
        modprobe $i 2>/dev/null
      fi

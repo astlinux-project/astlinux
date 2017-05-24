@@ -166,6 +166,9 @@ if [ -z "$DEVICE" ]; then
   done
 fi
 
+# Control kernel console messages
+sysctl -w kernel.printk="3 4 1 3" >/dev/null
+
 hostname runnix
 
 # Loader not found

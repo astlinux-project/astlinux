@@ -4,7 +4,7 @@
 ##
 ## Ethernet support
 ## Virtual first, then Emulated
-virtio-pci
+virtio_net
 vmxnet3
 pcnet32
 e1000
