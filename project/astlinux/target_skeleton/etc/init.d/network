@@ -516,8 +516,8 @@ start () {
     br[012])
       ip link set dev $PPPOEIF up
       # because bridging does weird and unpleasant things to PPPoE packets
-      echo "0" > /proc/sys/net/bridge/bridge-nf-call-iptables
-      echo "0" > /proc/sys/net/bridge/bridge-nf-filter-pppoe-tagged
+      sysctl -w net/bridge/bridge-nf-call-iptables=0 >/dev/null
+      sysctl -w net/bridge/bridge-nf-filter-pppoe-tagged=0 >/dev/null
       ;;
     esac
 
