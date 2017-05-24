@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-QEMU_VERSION = 2.6.2
+QEMU_VERSION = 2.9.0
 QEMU_SOURCE = qemu-$(QEMU_VERSION).tar.bz2
 QEMU_SITE = http://wiki.qemu.org/download
 
@@ -68,41 +68,42 @@ QEMU_OPTS += --disable-vnc
 endif
 
 define QEMU_CONFIGURE_CMDS
-	( cd $(@D);                                     \
-		LIBS='$(QEMU_LIBS)'                     \
-		$(TARGET_CONFIGURE_OPTS)                \
-		$(TARGET_CONFIGURE_ARGS)                \
-		$(QEMU_VARS)                            \
-		./configure                             \
-			--prefix=/usr                   \
-			--cross-prefix=$(TARGET_CROSS)  \
-			--sysconfdir=/etc               \
-			--with-system-pixman            \
-			--audio-drv-list=               \
-			--enable-kvm                    \
-			--enable-attr                   \
-			--enable-vhost-net              \
-			--enable-uuid                   \
-			--disable-bsd-user              \
-			--disable-xen                   \
-			--disable-slirp                 \
-			--disable-virtfs                \
-			--disable-brlapi                \
-			--disable-curses                \
-			--disable-curl                  \
-			--disable-bluez                 \
-			--disable-vde                   \
-			--disable-linux-aio             \
-			--disable-cap-ng                \
-			--disable-docs                  \
-			--disable-spice                 \
-			--disable-rbd                   \
-			--disable-libiscsi              \
-			--disable-usb-redir             \
-			--disable-strip                 \
-			--disable-seccomp               \
-			--disable-sparse                \
-			$(QEMU_OPTS)                    \
+	( cd $(@D); \
+		LIBS='$(QEMU_LIBS)' \
+		$(TARGET_CONFIGURE_OPTS) \
+		$(TARGET_CONFIGURE_ARGS) \
+		CPP="$(TARGET_CC) -E" \
+		$(QEMU_VARS) \
+		./configure \
+			--prefix=/usr \
+			--cross-prefix=$(TARGET_CROSS) \
+			--sysconfdir=/etc \
+			--with-system-pixman \
+			--audio-drv-list= \
+			--enable-kvm \
+			--enable-attr \
+			--enable-vhost-net \
+			--enable-uuid \
+			--disable-bsd-user \
+			--disable-xen \
+			--disable-slirp \
+			--disable-virtfs \
+			--disable-brlapi \
+			--disable-curses \
+			--disable-curl \
+			--disable-bluez \
+			--disable-vde \
+			--disable-linux-aio \
+			--disable-cap-ng \
+			--disable-docs \
+			--disable-spice \
+			--disable-rbd \
+			--disable-libiscsi \
+			--disable-usb-redir \
+			--disable-strip \
+			--disable-seccomp \
+			--disable-sparse \
+			$(QEMU_OPTS) \
 	)
 endef
 
