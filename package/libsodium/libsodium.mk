@@ -3,7 +3,7 @@
 # libsodium
 #
 #############################################################
-LIBSODIUM_VERSION = 1.0.11
+LIBSODIUM_VERSION = 1.0.12
 LIBSODIUM_SOURCE = libsodium-$(LIBSODIUM_VERSION).tar.gz
 LIBSODIUM_SITE = https://github.com/jedisct1/libsodium/releases/download/$(LIBSODIUM_VERSION)
 
