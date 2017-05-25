@@ -4,7 +4,7 @@
 #
 #############################################################
 
-SUDO_VERSION = 1.8.19p2
+SUDO_VERSION = 1.8.20
 SUDO_SITE = http://www.sudo.ws/sudo/dist
 
 # This is to avoid sudo's make install from chown()ing files which fails
