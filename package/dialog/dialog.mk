@@ -3,7 +3,7 @@
 # dialog
 #
 #############################################################
-DIALOG_VERSION = 1.2-20150125
+DIALOG_VERSION = 1.3-20170509
 DIALOG_SOURCE = dialog-$(DIALOG_VERSION).tgz
 DIALOG_SITE = ftp://invisible-island.net/dialog
 DIALOG_DEPENDENCIES = host-pkg-config ncurses
@@ -15,7 +15,7 @@ DIALOG_CONF_OPT = \
 	NCURSES_CONFIG=$(STAGING_DIR)/usr/bin/ncurses5-config
 
 ifneq ($(BR2_ENABLE_LOCALE),y)
-DIALOG_DEPENDENCIES+=libiconv
+DIALOG_DEPENDENCIES += libiconv
 endif
 
 define DIALOG_INSTALL_TARGET_CMDS
