@@ -13,6 +13,7 @@ Released @TBD@
 ** IMPORTANT NOTICE
 
 -- "net5501" and "alix" board types have reached end-of-life.  AstLinux 1.2.10 was the last supported version.
+   A custom build can still be used to generate 'run' images for "net5501" and "alix" board types.
 
 -- Current supported board types are: "geni586", "geni586-serial", "genx86_64", "genx86_64-serial" and "genx86_64-vm"
 
@@ -31,7 +32,7 @@ Released @TBD@
 
 -- libsodium, version bump to 1.0.12
 
--- sqlite, version bump to 3.18.2
+-- sqlite, version bump to 3.19.2
 
 -- tiff, version bump to 4.0.8, security fixes: 13 CVE's
 
