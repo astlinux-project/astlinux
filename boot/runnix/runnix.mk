@@ -4,7 +4,7 @@
 #
 #############################################################
 
-RUNNIX_VERSION = 0.5-8335
+RUNNIX_VERSION = 0.5-8348
 RUNNIX_SOURCE = runnix-$(RUNNIX_VERSION).tar.gz
 RUNNIX_SITE = http://mirror.astlinux-project.org/runnix5
 
