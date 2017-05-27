@@ -23,7 +23,8 @@ Released @TBD@
 
 -- Linux Kernel 3.16.43 (major bump)
 
--- RUNNIX, version bump to runnix-0.5-8335, with Linux Kernel 3.16.43, dropbear 2017.75
+-- RUNNIX, version bump to runnix-0.5-8348, with Linux Kernel 3.16.43, dropbear 2017.75
+   Added kernel drivers: virtio_net and virtio-scsi
    Note: Now uses a PAE kernel for full RAM support
 
 -- r8168 version bump to 8.044.02 RealTek PCI-Express Gigabit Ethernet Linux driver
