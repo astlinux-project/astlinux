@@ -7,6 +7,7 @@
 RUNNIX_VERSION = 0.5-8348
 RUNNIX_SOURCE = runnix-$(RUNNIX_VERSION).tar.gz
 RUNNIX_SITE = http://mirror.astlinux-project.org/runnix5
+RUNNIX_DEPENDENCIES = host-fdisk
 
 RUNFS_DIR = $(BUILD_DIR)/runfs
 
