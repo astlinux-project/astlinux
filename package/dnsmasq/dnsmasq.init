@@ -165,7 +165,7 @@ addIPV6net()
     esac
   done
 
-  if [ "$dhcpv6" = "yes" -a "$DHCPV6_CLIENT_REQUEST_PREFIX" != "no" ]; then
+  if [ "$dhcpv6" = "yes" -a "$DHCPV6_CLIENT_REQUEST_PREFIX" != "no" -a -z "$prefix" ]; then
     echo "
 dhcp-range=$tag,::1,constructor:$interface,ra-only,$leasetime"
     return 0
