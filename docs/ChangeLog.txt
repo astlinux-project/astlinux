@@ -45,6 +45,13 @@ Released @TBD@
 
 -- dnscrypt-proxy, version bump to 1.9.5
 
+-- network, DHCPv6 Prefix Delegation, previously any Network tab -> 'IPv6 Autoconfig: [enabled]' received
+   a Prefix Delegation (PD) regardless if 'IPv6/nn' was defined or not. Now a change such that 'IPv6/nn' must not
+   be defined for that internal interface to receive a PD.
+   If 'IPv6 Autoconfig: [enabled]' and 'IPv6/nn' is defined, 'IPv6/nn' is used for Autoconfig for that interface.
+
+-- arnofw (AIF), added "net-prefix-translation" plugin.  Provides NPTv6 (Network Prefix Translation) for IPv6
+
 ** Asterisk
 
 -- Asterisk 11.25.1 (no change) and 13.15.1 (no change)
