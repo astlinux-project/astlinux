@@ -101,11 +101,6 @@ plugin_start()
 {
   local global_prefix local_prefix eif IFS
 
-  #### remove when in main script ####
-  ip6tables -t nat -F
-  ip6tables -t nat -X
-  ####
-
   ip6tables -t nat -N NET_PREFIX_TRANSLATION_IN 2>/dev/null
   ip6tables -t nat -F NET_PREFIX_TRANSLATION_IN
 
