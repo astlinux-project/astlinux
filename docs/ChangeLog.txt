@@ -43,6 +43,8 @@ Released @TBD@
 
 ** Networking
 
+-- OpenSSL, version bump to 1.0.2l, security fixes: none
+
 -- dnscrypt-proxy, version bump to 1.9.5
 
 -- network, DHCPv6 Prefix Delegation, previously any Network tab -> 'IPv6 Autoconfig: [enabled]' received
@@ -51,6 +53,9 @@ Released @TBD@
    If 'IPv6 Autoconfig: [enabled]' and 'IPv6/nn' is defined, 'IPv6/nn' is used for Autoconfig for that interface.
 
 -- arnofw (AIF), added "net-prefix-translation" plugin.  Provides NPTv6 (Network Prefix Translation) for IPv6
+
+-- wide-dhcpv6, when the optional script '/mnt/kd/dhcp6c.script' does not exist, by default generate a syslog
+   and reload the "net-prefix-translation" plugin (if enabled) on a prefix change.
 
 ** Asterisk
 
