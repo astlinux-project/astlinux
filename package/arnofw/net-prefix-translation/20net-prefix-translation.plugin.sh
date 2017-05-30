@@ -114,6 +114,10 @@ plugin_start()
 
   global_prefix="$(net_prefix_translation_global_prefix)"
 
+  if [ ! -f "$NET_PREFIX_TRANSLATION_GLOBAL_IPV6" ]; then
+    : > "$NET_PREFIX_TRANSLATION_GLOBAL_IPV6"
+  fi
+
   if [ -z "$global_prefix" ]; then
     echo "${INDENT}Network Prefix Translation Global Prefix: Not Found"
     return 1
@@ -207,6 +211,7 @@ plugin_status()
     done
 
     echo "$global_prefix" > "$NET_PREFIX_TRANSLATION_GLOBAL_IPV6"
+
     echo "  Network Prefix Translation Global Prefix (updated): $global_prefix"
   else
     echo "  Network Prefix Translation Global Prefix needs updating to: $global_prefix"
