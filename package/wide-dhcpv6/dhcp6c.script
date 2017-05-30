@@ -138,6 +138,21 @@ if [ -x $SCRIPTFILE ]; then
   export dhcp6c_prefix dhcp6c_prefix_base dhcp6c_prefix_len
 
   $SCRIPTFILE >/dev/null 2>&1 &
+else
+  if [ -n "$dhcp6c_prefix" ]; then
+    case "$dhcp6c_changed" in
+      yes) changed=" (changed)" ;;
+       no) changed=" (no change)" ;;
+        *) changed="" ;;
+    esac
+    logger -t dhcp6c -p kern.info "IPv6 Prefix$changed: $dhcp6c_prefix"
+
+    if [ "$dhcp6c_changed" != "no" ]; then
+      if [ -f /var/tmp/aif-net-prefix-translation-global-ipv6 ]; then
+        arno-iptables-firewall status-plugins net-prefix-translation >/dev/null 2>&1 &
+      fi
+    fi
+  fi
 fi
 
 exit 0
