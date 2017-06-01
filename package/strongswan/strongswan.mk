@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-STRONGSWAN_VERSION = 5.5.2
+STRONGSWAN_VERSION = 5.5.3
 STRONGSWAN_SOURCE = strongswan-$(STRONGSWAN_VERSION).tar.bz2
 STRONGSWAN_SITE = https://download.strongswan.org
 STRONGSWAN_DEPENDENCIES = openssl host-pkg-config
