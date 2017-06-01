@@ -110,7 +110,7 @@ delete_sound_files() {
 
   unset IFS
   cat "$file" | while read filename; do
-    rm -f "$ASTURW$dir/$filename"
+    rm -f "$dir/$filename"
   done
 }
 
@@ -221,14 +221,6 @@ remove() {
   reload_asterisk_moh $type
 }
 
-remove_all() {
-
-  rm -rf $ASTURW$BASE/sounds/
-  rm -rf $ASTURW$BASE/moh/
-  
-  reload_asterisk_moh moh
-}
-
 show() {
   local str=""
 
@@ -291,22 +283,12 @@ remove)
   exit $GREEN
   ;;
 
-remove-all)
-  if [ -n "$2" ]; then
-    echo "Usage: upgrade-asterisk-sounds remove-all"
-    exit 1
-  fi
-  remove_all
-  echo "Successful remove-all, all ASTURW sounds and moh files have been removed."
-  exit $GREEN
-  ;;
-
 show)
   show
   ;;
 
 *)
-  echo "Usage: upgrade-asterisk-sounds upgrade|remove|remove-all|show"
+  echo "Usage: upgrade-asterisk-sounds upgrade|remove|show"
   echo "                                 core|extra|moh"
   echo "                                   $LANGUAGES"
   echo "                                     $CODECS"
