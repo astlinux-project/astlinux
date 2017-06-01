@@ -37,13 +37,17 @@ Released @TBD@
 
 -- tiff, version bump to 4.0.8, security fixes: 13 CVE's
 
--- sudo, version bump to 1.8.20
+-- sudo, version bump to 1.8.20p2, security fix: CVE-2017-1000367
 
 -- dialog, version bump to 1.3-20170509
+
+-- strace, version bump to 4.17
 
 ** Networking
 
 -- OpenSSL, version bump to 1.0.2l, security fixes: none
+
+-- strongSwan, version bump to 5.5.3, security fixes: CVE-2017-9022, CVE-2017-9023
 
 -- dnscrypt-proxy, version bump to 1.9.5
 
@@ -53,6 +57,8 @@ Released @TBD@
    If 'IPv6 Autoconfig: [enabled]' and 'IPv6/nn' is defined, 'IPv6/nn' is used for Autoconfig for that interface.
 
 -- arnofw (AIF), added "net-prefix-translation" plugin.  Provides NPTv6 (Network Prefix Translation) for IPv6
+
+-- arnofw (AIF), "traffic-shaper" plugin, use fq_codel (Fair Queueing CoDel) for both 'htb' and 'hfsc' types.
 
 -- wide-dhcpv6, when the optional script '/mnt/kd/dhcp6c.script' does not exist, by default generate a syslog
    and reload the "net-prefix-translation" plugin (if enabled) on a prefix change.
