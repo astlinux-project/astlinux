@@ -2,11 +2,11 @@
 #      -= Arno's iptables firewall - HTB & HFSC traffic shaper plugin =-
 #
 PLUGIN_NAME="Traffic-Shaper plugin"
-PLUGIN_VERSION="1.2.09-astlinux"
+PLUGIN_VERSION="1.3.00"
 PLUGIN_CONF_FILE="traffic-shaper.conf"
 #
-# Last changed          : December 30, 2015
-# Requirements          : kernel 2.6 + iproute2
+# Last changed          : June 1, 2017
+# Requirements          : kernel 3.16 + iproute2
 # Comments              : This plugin will shape traffic. It borrows heavily on
 #                         the logic of Maciej's original script (below), with
 #                         some minor changes to the actual bins that traffic
@@ -15,6 +15,7 @@ PLUGIN_CONF_FILE="traffic-shaper.conf"
 #                         transfer).
 #                  [LRA]: Added htb support from astshape in AstLinux
 #                  [LRA]: Classify by DSCP class
+#                  [LRA]: Use sch_fq_codel instead of sch_sfq
 # Author                : (C) Copyright 2008-2010 by Philip Prindeville
 # Credits               : Maciej Blizinski
 # Credits               : Kristian Kielhofner
@@ -185,6 +186,16 @@ classify_by_dscp_class()
   iptables -t mangle -A SHAPER_CHAIN -m dscp --dscp-class CS1 -j CLASSIFY --set-class 1:60
 }
 
+outgoing_fair_queueing_codel()
+{
+  tc qdisc add dev $1 parent 1:10 handle 10: fq_codel quantum 300 noecn
+  tc qdisc add dev $1 parent 1:20 handle 20: fq_codel quantum 300 noecn
+  tc qdisc add dev $1 parent 1:30 handle 30: fq_codel quantum 300 noecn
+  tc qdisc add dev $1 parent 1:40 handle 40: fq_codel noecn
+  tc qdisc add dev $1 parent 1:50 handle 50: fq_codel noecn
+  tc qdisc add dev $1 parent 1:60 handle 60: fq_codel noecn
+}
+
 incoming_traffic_limit()
 {
   # Skip if DOWNLINK is 0
@@ -236,6 +247,7 @@ plugin_start_hfsc()
   modprobe_multi nf_nat ip_nat
 
   modprobe sch_hfsc
+  modprobe sch_fq_codel
 
   printf "${INDENT}Shaping as (Down/Up) %d/%d kb/s using '%s' for interface: %s\n" $DOWNLINK $UPLINK hfsc "$SHAPER_IF"
 
@@ -292,6 +304,8 @@ plugin_start_hfsc()
         sc m1           0 d    4s m2 1kbit \
         ul rate ${UPLINK}kbit
 
+      outgoing_fair_queueing_codel $eif1
+
       incoming_traffic_limit $eif1
 
       disable_ethernet_offloading $eif1
@@ -309,6 +323,9 @@ plugin_start_htb()
 {
   # Some required modules are already loaded by the main script:
   modprobe_multi nf_nat ip_nat
+
+  modprobe sch_htb
+  modprobe sch_fq_codel
 
   printf "${INDENT}Shaping as (Down/Up) %d/%d kb/s using '%s' for interface: %s\n" $DOWNLINK $UPLINK htb "$SHAPER_IF"
 
@@ -351,13 +368,7 @@ plugin_start_htb()
       # p2p class 1:60
       tc class add dev $eif1 parent 1:1 classid 1:60 htb rate $((5*$UPLINK/10))kbit burst 6k prio 6
 
-      # all get Stochastic Fairness
-      tc qdisc add dev $eif1 parent 1:10 handle 10: sfq perturb 10
-      tc qdisc add dev $eif1 parent 1:20 handle 20: sfq perturb 10
-      tc qdisc add dev $eif1 parent 1:30 handle 30: sfq perturb 10
-      tc qdisc add dev $eif1 parent 1:40 handle 40: sfq perturb 10
-      tc qdisc add dev $eif1 parent 1:50 handle 50: sfq perturb 10
-      tc qdisc add dev $eif1 parent 1:60 handle 60: sfq perturb 10
+      outgoing_fair_queueing_codel $eif1
 
       incoming_traffic_limit $eif1
 
