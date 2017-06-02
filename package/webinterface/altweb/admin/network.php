@@ -43,6 +43,7 @@
 // 01-22-2017, Removed Dynamic DNS 'getip.krisk.org', map to default
 // 01-29-2017, Added DDGETIPV6 support
 // 02-16-2017, Added Restart FTP Server support
+// 06-02-2017, Added selectable Prefix Delegation interfaces
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -382,15 +383,29 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
 
   $value = 'NODHCP="'.getNODHCP_value().'"';
   fwrite($fp, "### No DHCP on interfaces\n".$value."\n");
-  
-  $x_value = $_POST['int_autoconf'];
-  $x_value .= $_POST['int2_autoconf'];
-  $x_value .= $_POST['int3_autoconf'];
-  $x_value .= $_POST['int4_autoconf'];
-  $x_value .= $_POST['dmz_autoconf'];
+
+  $tokens = explode('~', $_POST['int_autoconf']);
+  $x_value = $tokens[0];
+  $y_value = $tokens[1];
+  $tokens = explode('~', $_POST['int2_autoconf']);
+  $x_value .= $tokens[0];
+  $y_value .= $tokens[1];
+  $tokens = explode('~', $_POST['int3_autoconf']);
+  $x_value .= $tokens[0];
+  $y_value .= $tokens[1];
+  $tokens = explode('~', $_POST['int4_autoconf']);
+  $x_value .= $tokens[0];
+  $y_value .= $tokens[1];
+  $tokens = explode('~', $_POST['dmz_autoconf']);
+  $x_value .= $tokens[0];
+  $y_value .= $tokens[1];
+
   $value = 'IPV6_AUTOCONF="'.trim($x_value).'"';
   fwrite($fp, "### IPv6 Autoconfig\n".$value."\n");
-  
+
+  $value = 'IPV6_PREFIX_DELEGATION="'.trim($y_value).'"';
+  fwrite($fp, "### IPv6 Prefix Delegation\n".$value."\n");
+
   $value = 'FWVERS="'.$_POST['firewall'].'"';
   fwrite($fp, "### Firewall Type\n".$value."\n");
 
@@ -1564,8 +1579,15 @@ require_once '../common/header.php';
   putHtml('&nbsp;&nbsp;IPv6 Autoconfig:');
   putHtml('<select name="int_autoconf">');
   putHtml('<option value="">disabled</option>');
-  $sel = isVARtype('IPV6_AUTOCONF', $db, $cur_db, 'INTIF') ? ' selected="selected"' : '';
-  putHtml('<option value=" INTIF"'.$sel.'>enabled</option>');
+  if (isVARtype('IPV6_PREFIX_DELEGATION', $db, $cur_db, 'INTIF')) {
+    $sel1 = '';
+    $sel2 = ' selected="selected"';
+  } else {
+    $sel1 = isVARtype('IPV6_AUTOCONF', $db, $cur_db, 'INTIF') ? ' selected="selected"' : '';
+    $sel2 = '';
+  }
+  putHtml('<option value=" INTIF~"'.$sel1.'>enabled</option>');
+  putHtml('<option value=" INTIF~ INTIF"'.$sel2.'>Assign GUA Prefix</option>');
   putHtml('</select>');
   $value = getVARdef($db, 'INTIPV6', $cur_db);
   putHtml('&ndash;&nbsp;IPv6/nn:<input type="text" size="45" maxlength="43" value="'.$value.'" name="int_ipv6" />');
@@ -1596,8 +1618,15 @@ require_once '../common/header.php';
   putHtml('&nbsp;&nbsp;IPv6 Autoconfig:');
   putHtml('<select name="int2_autoconf">');
   putHtml('<option value="">disabled</option>');
-  $sel = isVARtype('IPV6_AUTOCONF', $db, $cur_db, 'INT2IF') ? ' selected="selected"' : '';
-  putHtml('<option value=" INT2IF"'.$sel.'>enabled</option>');
+  if (isVARtype('IPV6_PREFIX_DELEGATION', $db, $cur_db, 'INT2IF')) {
+    $sel1 = '';
+    $sel2 = ' selected="selected"';
+  } else {
+    $sel1 = isVARtype('IPV6_AUTOCONF', $db, $cur_db, 'INT2IF') ? ' selected="selected"' : '';
+    $sel2 = '';
+  }
+  putHtml('<option value=" INT2IF~"'.$sel1.'>enabled</option>');
+  putHtml('<option value=" INT2IF~ INT2IF"'.$sel2.'>Assign GUA Prefix</option>');
   putHtml('</select>');
   $value = getVARdef($db, 'INT2IPV6', $cur_db);
   putHtml('&ndash;&nbsp;IPv6/nn:<input type="text" size="45" maxlength="43" value="'.$value.'" name="int2_ipv6" />');
@@ -1628,8 +1657,15 @@ require_once '../common/header.php';
   putHtml('&nbsp;&nbsp;IPv6 Autoconfig:');
   putHtml('<select name="int3_autoconf">');
   putHtml('<option value="">disabled</option>');
-  $sel = isVARtype('IPV6_AUTOCONF', $db, $cur_db, 'INT3IF') ? ' selected="selected"' : '';
-  putHtml('<option value=" INT3IF"'.$sel.'>enabled</option>');
+  if (isVARtype('IPV6_PREFIX_DELEGATION', $db, $cur_db, 'INT3IF')) {
+    $sel1 = '';
+    $sel2 = ' selected="selected"';
+  } else {
+    $sel1 = isVARtype('IPV6_AUTOCONF', $db, $cur_db, 'INT3IF') ? ' selected="selected"' : '';
+    $sel2 = '';
+  }
+  putHtml('<option value=" INT3IF~"'.$sel1.'>enabled</option>');
+  putHtml('<option value=" INT3IF~ INT3IF"'.$sel2.'>Assign GUA Prefix</option>');
   putHtml('</select>');
   $value = getVARdef($db, 'INT3IPV6', $cur_db);
   putHtml('&ndash;&nbsp;IPv6/nn:<input type="text" size="45" maxlength="43" value="'.$value.'" name="int3_ipv6" />');
@@ -1660,8 +1696,15 @@ require_once '../common/header.php';
   putHtml('&nbsp;&nbsp;IPv6 Autoconfig:');
   putHtml('<select name="int4_autoconf">');
   putHtml('<option value="">disabled</option>');
-  $sel = isVARtype('IPV6_AUTOCONF', $db, $cur_db, 'INT4IF') ? ' selected="selected"' : '';
-  putHtml('<option value=" INT4IF"'.$sel.'>enabled</option>');
+  if (isVARtype('IPV6_PREFIX_DELEGATION', $db, $cur_db, 'INT4IF')) {
+    $sel1 = '';
+    $sel2 = ' selected="selected"';
+  } else {
+    $sel1 = isVARtype('IPV6_AUTOCONF', $db, $cur_db, 'INT4IF') ? ' selected="selected"' : '';
+    $sel2 = '';
+  }
+  putHtml('<option value=" INT4IF~"'.$sel1.'>enabled</option>');
+  putHtml('<option value=" INT4IF~ INT4IF"'.$sel2.'>Assign GUA Prefix</option>');
   putHtml('</select>');
   $value = getVARdef($db, 'INT4IPV6', $cur_db);
   putHtml('&ndash;&nbsp;IPv6/nn:<input type="text" size="45" maxlength="43" value="'.$value.'" name="int4_ipv6" />');
@@ -1692,8 +1735,15 @@ require_once '../common/header.php';
   putHtml('&nbsp;&nbsp;IPv6 Autoconfig:');
   putHtml('<select name="dmz_autoconf">');
   putHtml('<option value="">disabled</option>');
-  $sel = isVARtype('IPV6_AUTOCONF', $db, $cur_db, 'DMZIF') ? ' selected="selected"' : '';
-  putHtml('<option value=" DMZIF"'.$sel.'>enabled</option>');
+  if (isVARtype('IPV6_PREFIX_DELEGATION', $db, $cur_db, 'DMZIF')) {
+    $sel1 = '';
+    $sel2 = ' selected="selected"';
+  } else {
+    $sel1 = isVARtype('IPV6_AUTOCONF', $db, $cur_db, 'DMZIF') ? ' selected="selected"' : '';
+    $sel2 = '';
+  }
+  putHtml('<option value=" DMZIF~"'.$sel1.'>enabled</option>');
+  putHtml('<option value=" DMZIF~ DMZIF"'.$sel2.'>Assign GUA Prefix</option>');
   putHtml('</select>');
   $value = getVARdef($db, 'DMZIPV6', $cur_db);
   putHtml('&ndash;&nbsp;IPv6/nn:<input type="text" size="45" maxlength="43" value="'.$value.'" name="dmz_ipv6" />');

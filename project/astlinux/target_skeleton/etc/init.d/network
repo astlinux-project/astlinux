@@ -105,31 +105,31 @@ id-assoc pd 1 {"
 
     id=0
     unset IFS
-    for iname in $IPV6_AUTOCONF; do
+    for iname in $IPV6_PREFIX_DELEGATION; do
       int=""
       case $iname in
         INTIF)
-          if [ -n "$INTIF" -a "$INTIF" != "none" -a -n "$INTIP" -a -n "$INTNM" -a -z "$INTIPV6" ]; then
+          if [ -n "$INTIF" -a "$INTIF" != "none" -a -n "$INTIP" -a -n "$INTNM" ]; then
             int="$INTIF"
           fi
           ;;
         INT2IF)
-          if [ -n "$INT2IF" -a "$INT2IF" != "none" -a -n "$INT2IP" -a -n "$INT2NM" -a -z "$INT2IPV6" ]; then
+          if [ -n "$INT2IF" -a "$INT2IF" != "none" -a -n "$INT2IP" -a -n "$INT2NM" ]; then
             int="$INT2IF"
           fi
           ;;
         INT3IF)
-          if [ -n "$INT3IF" -a "$INT3IF" != "none" -a -n "$INT3IP" -a -n "$INT3NM" -a -z "$INT3IPV6" ]; then
+          if [ -n "$INT3IF" -a "$INT3IF" != "none" -a -n "$INT3IP" -a -n "$INT3NM" ]; then
             int="$INT3IF"
           fi
           ;;
         INT4IF)
-          if [ -n "$INT4IF" -a "$INT4IF" != "none" -a -n "$INT4IP" -a -n "$INT4NM" -a -z "$INT4IPV6" ]; then
+          if [ -n "$INT4IF" -a "$INT4IF" != "none" -a -n "$INT4IP" -a -n "$INT4NM" ]; then
             int="$INT4IF"
           fi
           ;;
         DMZIF)
-          if [ -n "$DMZIF" -a "$DMZIF" != "none" -a -n "$DMZIP" -a -n "$DMZNM" -a -z "$DMZIPV6" ]; then
+          if [ -n "$DMZIF" -a "$DMZIF" != "none" -a -n "$DMZIP" -a -n "$DMZNM" ]; then
             int="$DMZIF"
           fi
           ;;

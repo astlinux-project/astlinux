@@ -5,6 +5,23 @@
 . /etc/init.d/functions.d/network
 . /etc/init.d/functions.d/misc
 
+is_prefix_delegation()
+{
+  local dhcpv6_pd="" x IFS
+
+  if [ "$DHCPV6_CLIENT_ENABLE" = "yes" ]; then
+    unset IFS
+    for x in $IPV6_PREFIX_DELEGATION; do
+      if [ "$x" = "$1" ]; then
+        dhcpv6_pd="yes"
+        break
+      fi
+    done
+  fi
+
+  echo "$dhcpv6_pd"
+}
+
 addr_to_prefix64()
 {
   local cnt=1 prefix="" next
@@ -118,7 +135,7 @@ no-dhcp-interface=$1"
 addIPV6net()
 {
   # args: IF, tag, leasetime
-  local interface="$1" tag="$2" leasetime="$3" dhcpv6="" prefix="" iname IFS
+  local interface="$1" tag="$2" leasetime="$3" dhcpv6_pd="" prefix="" iname IFS
 
   if [ "$IPV6" != "yes" ]; then
     return 2
@@ -129,35 +146,35 @@ addIPV6net()
     case $iname in
       INTIF)
         if [ "$tag" = "lan" ]; then
-          dhcpv6="$DHCPV6_CLIENT_ENABLE"
+          dhcpv6_pd="$(is_prefix_delegation "$iname")"
           prefix="$(addr_to_prefix64 "$INTIPV6")"
           break
         fi
         ;;
       INT2IF)
         if [ "$tag" = "lan2" ]; then
-          dhcpv6="$DHCPV6_CLIENT_ENABLE"
+          dhcpv6_pd="$(is_prefix_delegation "$iname")"
           prefix="$(addr_to_prefix64 "$INT2IPV6")"
           break
         fi
         ;;
       INT3IF)
         if [ "$tag" = "lan3" ]; then
-          dhcpv6="$DHCPV6_CLIENT_ENABLE"
+          dhcpv6_pd="$(is_prefix_delegation "$iname")"
           prefix="$(addr_to_prefix64 "$INT3IPV6")"
           break
         fi
         ;;
       INT4IF)
         if [ "$tag" = "lan4" ]; then
-          dhcpv6="$DHCPV6_CLIENT_ENABLE"
+          dhcpv6_pd="$(is_prefix_delegation "$iname")"
           prefix="$(addr_to_prefix64 "$INT4IPV6")"
           break
         fi
         ;;
       DMZIF)
         if [ "$tag" = "dmz" ]; then
-          dhcpv6="$DHCPV6_CLIENT_ENABLE"
+          dhcpv6_pd="$(is_prefix_delegation "$iname")"
           prefix="$(addr_to_prefix64 "$DMZIPV6")"
           break
         fi
@@ -165,7 +182,7 @@ addIPV6net()
     esac
   done
 
-  if [ "$dhcpv6" = "yes" -a "$DHCPV6_CLIENT_REQUEST_PREFIX" != "no" -a -z "$prefix" ]; then
+  if [ "$dhcpv6_pd" = "yes" -a "$DHCPV6_CLIENT_REQUEST_PREFIX" != "no" ]; then
     echo "
 dhcp-range=$tag,::1,constructor:$interface,ra-only,$leasetime"
     return 0
