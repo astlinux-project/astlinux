@@ -2420,7 +2420,7 @@ index ab1f18d..a12f82a 100644
  
  	if ((fp = fopen(keyfile, "r")) == NULL) {
 -		dprintf(LOG_ERR, FNAME, "failed to open %s: %s", keyfile,
-+		debug_printf(LOG_ERR, FNAME, "failed to open %s: %s", keyfile,
++		debug_printf(LOG_NOTICE, FNAME, "failed to open %s: %s", keyfile,
  		    strerror(errno));
  		return (-1);
  	}
