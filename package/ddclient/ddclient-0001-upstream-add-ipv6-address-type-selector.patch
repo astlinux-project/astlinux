@@ -1,0 +1,176 @@
+From e1b846ed6058b292766d5f94df6bfb62b2fb4a49 Mon Sep 17 00:00:00 2001
+From: Lonnie Abelbeck <lonnie@abelbeck.com>
+Date: Tue, 6 Jun 2017 13:08:57 -0500
+Subject: [PATCH] get-ipv6-from-ipv4.pl, add optional options: gua, ula, lla or
+ all. Defaults to: gua
+
+---
+ contrib/get-ipv6-from-ipv4/get-ipv6-from-ipv4.pl | 97 +++++++++++++++++++-----
+ 1 file changed, 76 insertions(+), 21 deletions(-)
+
+diff --git a/contrib/get-ipv6-from-ipv4/get-ipv6-from-ipv4.pl b/contrib/get-ipv6-from-ipv4/get-ipv6-from-ipv4.pl
+index fc6209b..32781b9 100644
+--- a/contrib/get-ipv6-from-ipv4/get-ipv6-from-ipv4.pl
++++ b/contrib/get-ipv6-from-ipv4/get-ipv6-from-ipv4.pl
+@@ -3,7 +3,7 @@
+ ##
+ ## Get IPv6 global address given it's IPv4 address or hostname
+ ##
+-## Usage: get-ipv6-from-ipv4 address|hostname
++## Usage: get-ipv6-from-ipv4 address|hostname [gua|ula|lla|all]
+ ##
+ ## Return IPv6 global address in stdout
+ ##
+@@ -13,8 +13,10 @@
+ 
+ my $hostv4 = $ARGV[0];
+ 
++my $type = $ARGV[1];
++
+ sub usage {
+-  print STDERR "Usage: get-ipv6-from-ipv4 address|hostname\n";
++  print STDERR "Usage: get-ipv6-from-ipv4 address|hostname [gua|ula|lla|all]\n";
+   exit 1;
+ }
+ 
+@@ -28,6 +30,10 @@ sub error {
+   usage;
+ }
+ 
++if (!defined $type || ($type ne 'ula' && $type ne 'lla' && $type ne 'all')) {
++  $type = 'gua';
++}
++
+ # Add hostv4 entry to ARP table
+ `fping -c 1 $hostv4 >/dev/null 2>&1`;
+ 
+@@ -41,9 +47,29 @@ sub error {
+   error "No entry in ARP table for host: $hostv4";
+ }
+ 
++my $gua_srcv6;
++my $ula_srcv6;
++my $srcv6;
++my $ipv6;
+ my $ip_cmd = `ip -6 -o addr show dev $int scope global 2>/dev/null`;
+-
+-my $srcv6 = $1 if $ip_cmd =~ /^.*? inet6 ([0-9a-fA-F:]+)\//s;
++my @lines = split('\n', $ip_cmd);
++foreach my $line (@lines) {
++  if ($line =~ /^.* inet6 ([0-9a-fA-F:]+)\//) {
++    $ipv6 = $1;
++    if ($ipv6 =~ /^fd/i) {
++      $ula_srcv6 = $ipv6 if !defined $ula_srcv6;
++    } else {
++      $gua_srcv6 = $ipv6 if !defined $gua_srcv6;
++    }
++  }
++}
++if ($type eq 'ula') {
++  $srcv6 = $gua_srcv6 if defined $gua_srcv6;
++  $srcv6 = $ula_srcv6 if defined $ula_srcv6;
++} else {
++  $srcv6 = $ula_srcv6 if defined $ula_srcv6;
++  $srcv6 = $gua_srcv6 if defined $gua_srcv6;
++}
+ 
+ if (!defined $srcv6) {
+   error "No IPv6 global address for interface: $int";
+@@ -56,51 +82,80 @@ sub error {
+ sleep 5;
+ 
+ # Output the first IPv6 global address matching the MAC address
+-my $llhostv6;
+-my $hostv6;
++my $gua_hostv6;
++my $ula_hostv6;
++my $lla_hostv6;
+ $ip_cmd = `ip -6 neigh show dev $int`;
+-my @lines = split('\n', $ip_cmd);
++@lines = split('\n', $ip_cmd);
+ foreach my $line (@lines) {
+   if ($line =~ /^fe80::/i) {
+     if ($line =~ /^([0-9a-f:]+) .*lladdr ${mac}/i) {
+-      $llhostv6 = $1;
++      $lla_hostv6 = $1 if !defined $lla_hostv6;
+     }
+   } else {
+     if ($line =~ /^([0-9a-f:]+) .*lladdr ${mac}/i) {
+-      $hostv6 = $1;
+-      last;
++      $ipv6 = $1;
++      if ($ipv6 =~ /^fd/i) {
++        $ula_hostv6 = $ipv6 if !defined $ula_hostv6;
++      } else {
++        $gua_hostv6 = $ipv6 if !defined $gua_hostv6;
++      }
+     }
+   }
+ }
+-if (defined $hostv6) {
+-  print "$hostv6\n";
++if (defined $gua_hostv6 && $type eq 'gua') {
++  print "$gua_hostv6\n";
++  exit 0;
++} elsif (defined $ula_hostv6 && $type eq 'ula') {
++  print "$ula_hostv6\n";
+   exit 0;
+-} elsif (!defined $llhostv6) {
++} elsif (defined $lla_hostv6 && $type eq 'lla') {
++  print "$lla_hostv6\n";
++  exit 0;
++}
++if (!defined $lla_hostv6) {
+   exit 1;
+ }
+ 
+ # Generate the IPv6 EUI-64 format from the prefix and link-local host
+ my @p = split(':', $srcv6);
+-my @h = split(':', $llhostv6);
+-$hostv6 = join(':', $p[0], $p[1], $p[2], $p[3], $h[$#h-3], $h[$#h-2], $h[$#h-1], $h[$#h]);
++my @h = split(':', $lla_hostv6);
++$ipv6 = join(':', $p[0], $p[1], $p[2], $p[3], $h[$#h-3], $h[$#h-2], $h[$#h-1], $h[$#h]);
+ 
+ # Try again with the IPv6 EUI-64 format
+-`fping6 -I $int -c 2 -S $srcv6 $hostv6 >/dev/null 2>&1`;
++`fping6 -I $int -c 2 -S $srcv6 $ipv6 >/dev/null 2>&1`;
+ 
+ # Wait for Neighbor Discovery to settle
+ sleep 1;
+ 
+ # Output the first IPv6 global address matching the MAC address
+-undef $hostv6;
++undef $gua_hostv6;
++undef $ula_hostv6;
+ $ip_cmd = `ip -6 neigh show dev $int`;
+ @lines = split('\n', $ip_cmd);
+ foreach my $line (@lines) {
+   if (!($line =~ /^fe80::/i)) {
+     if ($line =~ /^([0-9a-f:]+) .*lladdr ${mac}/i) {
+-      $hostv6 = $1;
+-      last;
++      $ipv6 = $1;
++      if ($ipv6 =~ /^fd/i) {
++        $ula_hostv6 = $ipv6 if !defined $ula_hostv6;
++      } else {
++        $gua_hostv6 = $ipv6 if !defined $gua_hostv6;
++      }
+     }
+   }
+ }
+-print "$hostv6\n" if defined $hostv6;
+-exit 0;
++if ($type eq 'all') {
++  print "$gua_hostv6\n" if defined $gua_hostv6;
++  print "$ula_hostv6\n" if defined $ula_hostv6;
++  print "$lla_hostv6\n" if defined $lla_hostv6;
++  exit 0;
++}
++if (defined $gua_hostv6 && $type eq 'gua') {
++  print "$gua_hostv6\n";
++  exit 0;
++} elsif (defined $ula_hostv6 && $type eq 'ula') {
++  print "$ula_hostv6\n";
++  exit 0;
++}
++exit 1;
