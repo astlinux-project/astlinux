@@ -5,7 +5,7 @@ PLUGIN_NAME="Network Prefix Translation plugin"
 PLUGIN_VERSION="1.00"
 PLUGIN_CONF_FILE="net-prefix-translation.conf"
 #
-# Last changed          : May 28, 2017
+# Last changed          : June 7, 2017
 # Requirements          : AIF 2.0.1g+, ip6tables NETMAP support
 # Comments              : NPTv6 (Network Prefix Translation) for IPv6
 #                         Perform a 1:1 mapping of ULA <-> GUA prefixes
@@ -40,7 +40,8 @@ net_prefix_translation_global_ipv6()
   IFS=' ,'
   for lan in $NET_PREFIX_TRANSLATION_IF; do
     ip -6 -o addr show dev $lan scope global 2>/dev/null \
-      | awk '$3 == "inet6" { print $4; }'
+      | awk '$3 == "inet6" { print $4; }' \
+      | grep -i -v '^fd'
   done
 }
 
@@ -115,6 +116,8 @@ plugin_start()
 
   if [ -z "$global_prefix" ]; then
     echo "${INDENT}Network Prefix Translation Global Prefix: Not Found"
+
+    : > "$NET_PREFIX_TRANSLATION_GLOBAL_IPV6"
     return 1
   fi
 
@@ -183,6 +186,16 @@ plugin_status()
 
   if [ -z "$global_prefix" ]; then
     echo "  Network Prefix Translation Global Prefix: Not Found"
+
+    if [ -n "$old_prefix" ]; then
+      if [ "$NET_PREFIX_TRANSLATION_UPDATE_ON_STATUS" != "0" ]; then
+        # update rules
+        ip6tables -t nat -F NET_PREFIX_TRANSLATION_IN
+        ip6tables -t nat -F NET_PREFIX_TRANSLATION_OUT
+
+        : > "$NET_PREFIX_TRANSLATION_GLOBAL_IPV6"
+      fi
+    fi
     return 0
   fi
 
