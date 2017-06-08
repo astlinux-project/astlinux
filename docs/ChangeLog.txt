@@ -21,9 +21,9 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 3.16.43 (major bump)
+-- Linux Kernel 3.16.44 (major bump)
 
--- RUNNIX, version bump to runnix-0.5-8348, with Linux Kernel 3.16.43, dropbear 2017.75
+-- RUNNIX, version bump to runnix-0.5-8385, with Linux Kernel 3.16.44, dropbear 2017.75
    Added kernel drivers: virtio_net and virtio-scsi
    Note: Now uses a PAE kernel for full RAM support
 
