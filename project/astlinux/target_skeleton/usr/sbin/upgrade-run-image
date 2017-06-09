@@ -139,6 +139,10 @@ check() {
         ARCH="genx86_64"
       elif [ "$ARCH" = "genx86_64" -a "$ARCH_BITS" = "32" ]; then
         ARCH="geni586"
+      elif [ "$ARCH" = "genx86_64" -a "$ARCH_BITS" = "vm" ]; then
+        ARCH="genx86_64-vm"
+      elif [ "$ARCH" = "genx86_64-vm" -a "$ARCH_BITS" = "64" ]; then
+        ARCH="genx86_64"
       fi
     elif echo $i | grep -q "console="; then
       SERIAL=`echo $i | sed -e 's/console=//'`
@@ -349,7 +353,7 @@ check)
   if [ -n "$2" ]; then
     SRC_URL=$2
   else
-    echo "Usage: upgrade-run-image check firmware_repository_url [32|64]"
+    echo "Usage: upgrade-run-image check firmware_repository_url [32|64|vm]"
     exit 1
   fi
   ARCH_BITS="$3"
@@ -362,7 +366,7 @@ upgrade)
   if [ -n "$2" ]; then
     SRC_URL=$2
   else
-    echo "Usage: upgrade-run-image upgrade firmware_repository_url [32|64]"
+    echo "Usage: upgrade-run-image upgrade firmware_repository_url [32|64|vm]"
     exit 1
   fi
   ARCH_BITS="$3"
@@ -385,7 +389,7 @@ revert)
   ;;
   
 *)
-  echo "Usage: upgrade-run-image check|upgrade|show|revert firmware_repository_url [32|64]"
+  echo "Usage: upgrade-run-image check|upgrade|show|revert firmware_repository_url [32|64|vm]"
   exit 1
   ;;
   
