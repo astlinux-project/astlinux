@@ -33,9 +33,12 @@ Released @TBD@
 
 -- genx86_64-vm board type, add support for virtio-scsi as a bootable disk driver, also added to RUNNIX.
 
+-- linux, add kernel patch 'x86: HPET force enable for e6xx based systems', for Soekris net6501
+   and other e6xx based non-ACPI systems, HPET will now get enabled resulting in a usable clocksource.
+
 -- libsodium, version bump to 1.0.12
 
--- sqlite, version bump to 3.19.2
+-- sqlite, version bump to 3.19.3
 
 -- tiff, version bump to 4.0.8, security fixes: 13 CVE's
 
