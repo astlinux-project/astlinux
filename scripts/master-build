@@ -65,6 +65,12 @@ unset_major_pci_packages()
   sed -i 's:^# BR2_PACKAGE_DAHDI_NO_CARD_FIRMWARE .*$:BR2_PACKAGE_DAHDI_NO_CARD_FIRMWARE=y:' .config
 }
 
+set_openvmtools_package()
+{
+  # enable BR2_PACKAGE_OPENVMTOOLS
+  sed -i 's:^# BR2_PACKAGE_OPENVMTOOLS .*$:BR2_PACKAGE_OPENVMTOOLS=y:' .config
+}
+
 set_asterisk_version()
 {
   case $1 in
@@ -183,6 +189,7 @@ for asterisk in ast11 ast13; do
   cp "x86_64-configs/$CONFIG" .config
   set_smp64vm_kernel
   unset_major_pci_packages
+  set_openvmtools_package
 
   for board in $BOARDS_SMP64VM; do
     build_board "$FIRMWARE"

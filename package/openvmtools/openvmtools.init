@@ -1,0 +1,68 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+PIDFILE="/var/run/vmtoolsd.pid"
+
+test_if_in_vmware()
+{
+  if ! lscpu | grep -q -i '^hypervisor vendor: *vmware'; then
+    return 1
+  fi
+
+  if ! vmware-checkvm >/dev/null 2>&1; then
+    return 1
+  fi
+
+  return 0
+}
+
+init () {
+  :
+}
+
+start () {
+
+  if [ "$VMWARE_TOOLS" != "no" ] && test_if_in_vmware; then
+    echo "Starting VMware (vmtoolsd) daemon..."
+
+    vmtoolsd -b $PIDFILE
+  fi
+}
+
+stop () {
+
+  if [ -f $PIDFILE ]; then
+    echo "Stopping VMware (vmtoolsd) daemon..."
+    kill $(cat $PIDFILE) >/dev/null 2>&1
+    rm -f $PIDFILE
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+

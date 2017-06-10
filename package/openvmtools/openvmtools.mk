@@ -39,11 +39,23 @@ else
 OPENVMTOOLS_CONF_OPT += --without-ssl
 endif
 
-define OPENVMTOOLS_POST_INSTALL_TARGET_THINGIES
+define OPENVMTOOLS_POST_INSTALL
 	rm -f $(TARGET_DIR)/etc/vmware-tools/scripts/vmware/network
 	rm -f $(TARGET_DIR)/lib/udev/rules.d/99-vmware-scsi-udev.rules
+	$(INSTALL) -m 0755 -D package/openvmtools/openvmtools.init $(TARGET_DIR)/etc/init.d/openvmtools
+	ln -sf ../../init.d/openvmtools $(TARGET_DIR)/etc/runlevels/default/S01openvmtools
+	ln -sf ../../init.d/openvmtools $(TARGET_DIR)/etc/runlevels/default/K94openvmtools
 endef
 
-OPENVMTOOLS_POST_INSTALL_TARGET_HOOKS += OPENVMTOOLS_POST_INSTALL_TARGET_THINGIES
+OPENVMTOOLS_POST_INSTALL_TARGET_HOOKS += OPENVMTOOLS_POST_INSTALL
+
+define OPENVMTOOLS_UNINSTALL_TARGET_CMDS
+	rm -rf $(TARGET_DIR)/etc/vmware-tools
+	rm -rf $(TARGET_DIR)/usr/lib/open-vm-tools
+	rm -rf $(TARGET_DIR)/usr/share/open-vm-tools
+	rm -f $(TARGET_DIR)/etc/init.d/openvmtools
+	rm -f $(TARGET_DIR)/etc/runlevels/default/S01openvmtools
+	rm -f $(TARGET_DIR)/etc/runlevels/default/K94openvmtools
+endef
 
 $(eval $(call AUTOTARGETS,package,openvmtools))
