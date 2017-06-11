@@ -52,6 +52,8 @@ Released @TBD@
 
 -- strace, version bump to 4.17
 
+-- ca-certificates, update trusted root certificates 2017-06-07
+
 ** Networking
 
 -- OpenSSL, version bump to 1.0.2l, security fixes: none
@@ -67,8 +69,10 @@ Released @TBD@
    for the interface to receive a Prefix Delegation via the DHCPv6 client.  This is a change.
    "Assign GUA Prefix" only applies if Network tab -> Connection Type: includes DHCPv6.
    New rc.conf variable: IPV6_PREFIX_DELEGATION
+   More info: http://doc.astlinux-project.org/userdoc:tt-dhcpv6-prefix-delegation
 
 -- arnofw (AIF), added "net-prefix-translation" plugin.  Provides NPTv6 (Network Prefix Translation) for IPv6
+   More info: http://doc.astlinux-project.org/userdoc:tt_ipv6_ula_nptv6_config
 
 -- arnofw (AIF), "traffic-shaper" plugin, use fq_codel (Fair Queueing CoDel) for both 'htb' and 'hfsc' types.
 
@@ -95,6 +99,7 @@ Released @TBD@
 
 -- Network tab, IPv6 Autoconfig, add selectable interfaces for Prefix Delegation by selecting "Assign GUA Prefix"
    Note: "Assign GUA Prefix" only applies if Network tab -> Connection Type: includes DHCPv6.
+   More info: http://doc.astlinux-project.org/userdoc:tt-dhcpv6-prefix-delegation
 
 
 Additions for AstLinux 1.2.10:
