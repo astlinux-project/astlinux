@@ -58,11 +58,17 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.0.2l, security fixes: none
 
+-- libcurl (curl) version bump to 7.54.1, security fixes: CVE-2017-9502
+
 -- strongSwan, version bump to 5.5.3, security fixes: CVE-2017-9022, CVE-2017-9023
 
 -- dnscrypt-proxy, version bump to 1.9.5
 
 -- openldap, version bump to 2.4.45
+
+-- unbound (host), version bump to 1.6.3
+
+-- whois, version bump to 5.2.16
 
 -- network, DHCPv6 Prefix Delegation, previously any Network tab -> 'IPv6 Autoconfig: [enabled]' received
    a Prefix Delegation (PD). Now the added selection 'IPv6 Autoconfig: [Assign GUA Prefix]' is required
