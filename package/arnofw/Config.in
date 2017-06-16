@@ -1,8 +1,9 @@
 config BR2_PACKAGE_ARNOFW
-        bool "Arno's Firewall Support"
-        default n
-        help
-		Arno's IPtables Firewall is a complete
-		Firewall script.	
+	bool "Arno's Firewall Support"
+	default n
+	help
+	  Arno's IPtables Firewall is a complete Firewall script.	
 
-		http://rocky.molphys.leidenuniv.nl/
+	  https://github.com/arno-iptables-firewall/aif/
+
+	  http://rocky.eld.leidenuniv.nl/
