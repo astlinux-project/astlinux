@@ -1,6 +1,6 @@
 --- dahdi-linux-2.6.1/drivers/dahdi/wcfxo.c.orig	2012-10-13 09:35:10.000000000 -0500
 +++ dahdi-linux-2.6.1/drivers/dahdi/wcfxo.c	2012-10-13 09:35:18.000000000 -0500
-@@ -239,6 +239,13 @@
+@@ -240,6 +240,13 @@
  	{ "CTR21", 0, 0, 3, 0, 0, 3, 0 },	/* Austria, Belgium, Denmark, Finland, France, Germany, 
  										   Greece, Iceland, Ireland, Italy, Luxembourg, Netherlands,
  										   Norway, Portugal, Spain, Sweden, Switzerland, and UK */

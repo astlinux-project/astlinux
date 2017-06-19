@@ -148,6 +148,10 @@ init() {
   mkdir -p /dev/pts
   mount -t devpts none /dev/pts
 
+  mkdir -p /dev/shm
+  mount -t tmpfs -o size=512k none /dev/shm
+  fstab_shm="none    /dev/shm        tmpfs   size=512k       0       0"
+
   mkdir -p /tmp/etc/modprobe.d
   echo '## Auto-generated file, do not edit!!' >/tmp/etc/modprobe.d/alias.conf
 
@@ -162,6 +166,7 @@ proc    /proc           proc    defaults        0       0${fstab_dev:+
 $fstab_dev}
 $fstab_tmp
 $fstab_var
+$fstab_shm
 " > /tmp/etc/fstab
 
   mkdir /var/spool /var/lib

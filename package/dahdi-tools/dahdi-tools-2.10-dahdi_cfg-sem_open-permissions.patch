@@ -1,0 +1,11 @@
+--- dahdi-tools-2.10.2/dahdi_cfg.c.orig	2017-06-18 18:46:49.667304804 -0500
++++ dahdi-tools-2.10.2/dahdi_cfg.c	2017-06-18 18:48:29.185005158 -0500
+@@ -1706,7 +1706,7 @@
+ 		exit(1);
+ 	}
+ 
+-	lock = sem_open(SEM_NAME, O_CREAT, O_RDWR, 1);
++	lock = sem_open(SEM_NAME, O_CREAT, (S_IRUSR | S_IWUSR), 1);
+ 	if (SEM_FAILED == lock) {
+ 		perror("Unable to create 'dahdi_cfg' mutex");
+ 		exit_code = 1;

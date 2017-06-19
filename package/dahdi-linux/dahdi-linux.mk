@@ -3,15 +3,7 @@
 # dahdi-linux
 #
 ##############################################################
-ifeq ($(BR2_PACKAGE_RHINO),y)
-DAHDI_LINUX_VERSION := 2.8.0.1
-else
- ifeq ($(BR2_PACKAGE_WANPIPE),y)
-DAHDI_LINUX_VERSION := 2.8.0.1
- else
-DAHDI_LINUX_VERSION := 2.8.0.1
- endif
-endif
+DAHDI_LINUX_VERSION := 2.10.2
 DAHDI_LINUX_SOURCE := dahdi-linux-$(DAHDI_LINUX_VERSION).tar.gz
 DAHDI_LINUX_SITE := http://downloads.asterisk.org/pub/telephony/dahdi-linux/releases
 DAHDI_LINUX_DIR := $(BUILD_DIR)/dahdi-linux-$(DAHDI_LINUX_VERSION)
@@ -53,14 +45,14 @@ endif
 
 $(DAHDI_LINUX_DRIVERS_DIR)/$(DAHDI_LINUX_BINARY): $(DAHDI_LINUX_DIR)/.source
 	$(MAKE) -C $(DAHDI_LINUX_DIR) \
-		HOSTCC=gcc CC=$(TARGET_CC) ARCH=$(KERNEL_ARCH) \
+		HOSTCC=gcc CC=$(TARGET_CC) LD=$(TARGET_LD) ARCH=$(KERNEL_ARCH) \
 		KVERS=$(LINUX_VERSION_PROBED) KSRC=$(LINUX_DIR) PWD=$(DAHDI_LINUX_DIR)
 
 $(DAHDI_LINUX_DIR)/include/dahdi/kernel.h: $(DAHDI_LINUX_DIR)/.source
 
 $(STAGING_DIR)/usr/include/dahdi/kernel.h: $(DAHDI_LINUX_DIR)/include/dahdi/kernel.h
 	$(MAKE1) -C $(DAHDI_LINUX_DIR) \
-		HOSTCC=gcc CC=$(TARGET_CC) ARCH=$(KERNEL_ARCH) \
+		HOSTCC=gcc CC=$(TARGET_CC) LD=$(TARGET_LD) ARCH=$(KERNEL_ARCH) \
 		DESTDIR=$(STAGING_DIR) KVERS=$(LINUX_VERSION_PROBED) \
 		KSRC=$(LINUX_DIR) PWD=$(DAHDI_LINUX_DIR) \
 		install-include
@@ -68,16 +60,12 @@ $(STAGING_DIR)/usr/include/dahdi/kernel.h: $(DAHDI_LINUX_DIR)/include/dahdi/kern
 $(TARGET_DIR)/$(DAHDI_LINUX_TARGET_BINARY): $(DAHDI_LINUX_DRIVERS_DIR)/$(DAHDI_LINUX_BINARY)
 	mkdir -p $(TARGET_DIR)$(PERLLIBDIR)
 	$(MAKE1) -C $(DAHDI_LINUX_DIR) \
-		HOSTCC=gcc CC=$(TARGET_CC) ARCH=$(KERNEL_ARCH) \
+		HOSTCC=gcc CC=$(TARGET_CC) LD=$(TARGET_LD) ARCH=$(KERNEL_ARCH) \
 		DESTDIR=$(TARGET_DIR) KVERS=$(LINUX_VERSION_PROBED) \
 		KSRC=$(LINUX_DIR) PWD=$(DAHDI_LINUX_DIR) \
 		PERLLIBDIR=$(PERLLIBDIR) \
 		install
 	rm -rf $(TARGET_DIR)/usr/include
-	# Remove duplicate dahdi firmware files in target /usr/lib/hotplug/firmware
-	if [ -d $(TARGET_DIR)/usr/lib/hotplug/firmware ]; then \
-		find $(TARGET_DIR)/usr/lib/hotplug/firmware/ -type f -name "*dahdi-fw-*" -print0 | xargs -0 rm -f ; \
-	fi
 ifeq ($(BR2_PACKAGE_DAHDI_NO_CARD_FIRMWARE),y)
 	find $(TARGET_DIR)/lib/firmware/ -type f -name "*dahdi-fw-*" -print0 | xargs -0 rm -f
 endif

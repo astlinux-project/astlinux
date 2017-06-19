@@ -4,18 +4,6 @@
 
 init () {
 
-  # Manually create /dev/dahdi if no udev
-  if [ ! -d /dev/dahdi -a ! -x /sbin/udevd ]; then
-    mkdir -p /dev/dahdi
-    mknod /dev/dahdi/ctl c 196 0
-    mknod /dev/dahdi/timer c 196 253
-    mknod /dev/dahdi/channel c 196 254
-    mknod /dev/dahdi/pseudo c 196 255
-    for i in `seq 1 250`; do
-      mknod /dev/dahdi/$i c 196 $i
-    done
-  fi
-
   if [ -d /mnt/kd/dahdi ]; then
     ln -snf /mnt/kd/dahdi /tmp/etc/dahdi
   fi
