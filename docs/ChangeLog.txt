@@ -36,11 +36,15 @@ Released @TBD@
 -- linux, add kernel patch 'x86: HPET force enable for e6xx based systems', for Soekris net6501
    and other e6xx based non-ACPI systems, HPET will now get enabled resulting in a usable clocksource.
 
+-- core system, mount /dev/shm on tmpfs to support POSIX semaphores (DAHDI uses them).
+
 -- libsodium, version bump to 1.0.12
 
 -- sqlite, version bump to 3.19.3
 
 -- tiff, version bump to 4.0.8, security fixes: 13 CVE's
+
+-- expat, version bump to 2.2.1, security fixes: CVE-2016-9063, CVE-2017-9233
 
 -- sudo, version bump to 1.8.20p2, security fix: CVE-2017-1000367
 
@@ -92,11 +96,11 @@ Released @TBD@
 
 -- Asterisk 11.25.1 (no change) and 13.16.0 (version bump)
 
--- DAHDI, dahdi-linux 2.8.0.1 (no change) and dahdi-tools 2.8.0 (no change)
+-- DAHDI, dahdi-linux 2.10.2 (version bump) and dahdi-tools 2.10.2 (version bump)
 
 -- pjsip 2.6 (no change)
 
--- FOP2, available version bump to 2.31.09.
+-- FOP2, available version bump to 2.31.10.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
    More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
