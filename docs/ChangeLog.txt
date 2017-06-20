@@ -23,20 +23,25 @@ Released @TBD@
 
 -- Linux Kernel 3.16.44 (major bump)
 
--- RUNNIX, version bump to runnix-0.5-8385, with Linux Kernel 3.16.44, dropbear 2017.75
-   Added kernel drivers: virtio_net and virtio-scsi
+-- RUNNIX, version bump to runnix-0.5-8405, with Linux Kernel 3.16.44, dropbear 2017.75
+   Added kernel drivers: virtio_net, virtio-scsi and vmw_pvscsi
    Note: Now uses a PAE kernel for full RAM support
 
 -- igb, version bump to 5.3.5.4, Intel Gigabit Ethernet Network Driver
 
 -- r8168 version bump to 8.044.02 RealTek PCI-Express Gigabit Ethernet Linux driver
 
+-- genx86_64-vm board type, add support for VMware Tools (open-vm-tools 10.1.5).
+
 -- genx86_64-vm board type, add support for virtio-scsi as a bootable disk driver, also added to RUNNIX.
+
+-- genx86_64-vm board type, add support for vmw_pvscsi as a bootable disk driver, also added to RUNNIX.
+   ESXi Config: SCSI Controllor 0 [ VMware Paravirtual ]
 
 -- linux, add kernel patch 'x86: HPET force enable for e6xx based systems', for Soekris net6501
    and other e6xx based non-ACPI systems, HPET will now get enabled resulting in a usable clocksource.
 
--- core system, mount /dev/shm on tmpfs to support POSIX semaphores (DAHDI uses them).
+-- core system, mount /dev/shm on tmpfs to support POSIX named semaphores (DAHDI uses them).
 
 -- libsodium, version bump to 1.0.12
 
