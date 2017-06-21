@@ -40,8 +40,9 @@ OPENVMTOOLS_CONF_OPT += --without-ssl
 endif
 
 define OPENVMTOOLS_POST_INSTALL
-	rm -f $(TARGET_DIR)/etc/vmware-tools/scripts/vmware/network
 	rm -f $(TARGET_DIR)/lib/udev/rules.d/99-vmware-scsi-udev.rules
+	$(INSTALL) -m 0755 -D package/openvmtools/vmware-tools/scripts/vmware/network $(TARGET_DIR)/etc/vmware-tools/scripts/vmware/network
+	$(INSTALL) -m 0644 -D package/openvmtools/vmware-tools/tools.conf $(TARGET_DIR)/etc/vmware-tools/tools.conf
 	$(INSTALL) -m 0755 -D package/openvmtools/openvmtools.init $(TARGET_DIR)/etc/init.d/openvmtools
 	ln -sf ../../init.d/openvmtools $(TARGET_DIR)/etc/runlevels/default/S01openvmtools
 	ln -sf ../../init.d/openvmtools $(TARGET_DIR)/etc/runlevels/default/K94openvmtools

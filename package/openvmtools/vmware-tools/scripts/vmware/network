@@ -1,0 +1,75 @@
+#!/bin/sh
+##########################################################
+# Copyright (C) 2001-2016 VMware, Inc. All rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU Lesser General Public License as published
+# by the Free Software Foundation version 2.1 and no later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the Lesser GNU General Public
+# License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA.
+#
+##########################################################
+
+
+#
+# network (Linux) - Modified for AstLinux
+#
+
+echo `date` ": Executing '$0'"
+echo
+
+#
+# ifplugd_action -- up|down
+#
+# Find any ifplugd processes, extract the interface and script
+#
+
+ifplugd_action()
+{
+  local action="$1" x interface_script interface script IFS
+
+  interface_script="$(ps | sed -n -r -e 's/^.*ifplugd[ ].* -i ([^ ]+).* -r ([^ ]+).*$/\1~\2/p')"
+
+  unset IFS
+  for x in $interface_script; do
+    interface="$(echo "$x" | cut -s -d'~' -f1)"
+    script="$(echo "$x" | cut -s -d'~' -f2)"
+    if [ -n "$interface" -a -n "$script" ]; then
+      if [ -x "$script" ]; then
+        $script $interface $action
+      fi
+    fi
+  done
+}
+
+#
+# main --
+#
+
+main() {
+   exitCode=0
+
+   case "$1" in
+      poweron-vm)
+         ;;
+      suspend-vm)
+         ifplugd_action down
+         ;;
+      resume-vm)
+         ifplugd_action up
+         ;;
+      *)
+         ;;
+   esac
+
+   return $exitCode
+}
+
+main "$@"
