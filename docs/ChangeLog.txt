@@ -67,6 +67,8 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.0.2l, security fixes: none
 
+-- OpenVPN, version bump to 2.4.3, security fixes: CVE-2017-7521, CVE-2017-7522
+
 -- libcurl (curl) version bump to 7.54.1, security fixes: CVE-2017-9502
 
 -- strongSwan, version bump to 5.5.3, security fixes: CVE-2017-9022, CVE-2017-9023
