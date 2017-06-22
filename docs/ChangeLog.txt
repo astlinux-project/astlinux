@@ -61,6 +61,8 @@ Released @TBD@
 
 -- strace, version bump to 4.17
 
+-- jansson, version bump to 2.10 (Asterisk 13)
+
 -- ca-certificates, update trusted root certificates 2017-06-07
 
 ** Networking
