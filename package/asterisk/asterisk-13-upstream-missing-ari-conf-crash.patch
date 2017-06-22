@@ -1,0 +1,295 @@
+From: George Joseph <gjoseph@digium.com>
+Date: Tue, 13 Jun 2017 16:33:34 +0000 (-0600)
+Subject: res_ari:  Add "module loaded" check to ari stubs
+X-Git-Url: http://git.asterisk.org/gitweb/?p=asterisk%2Fasterisk.git;a=commitdiff_plain;h=7901b9853e8f60e1d2dce44ce81dec6f7f866ccc
+
+res_ari:  Add "module loaded" check to ari stubs
+
+The recent change to make the use of LOAD_DECLINE more consistent
+caused res_ari to unload itself before declining if the ari.conf
+file wasn't found.  The ari stubs though still tried to use the
+configuration resulting in segfaults.
+
+This patch creates a new CHECK_ARI_MODULE_LOADED macro which tests
+to see if res_ari is actually loaded and causes the stubs to also
+decline if it isn't.  The macro was then added to the mustache
+template's "load_module" function.
+
+ASTERISK-27026 #close
+Reported-by: Ronald Raikes
+
+Change-Id: I263d56efa628ee3c411bdcd16d49af6260c6c91d
+---
+
+diff --git a/include/asterisk/ari.h b/include/asterisk/ari.h
+index cad9b32..f83df04 100644
+--- a/include/asterisk/ari.h
++++ b/include/asterisk/ari.h
+@@ -266,4 +266,14 @@ void ast_ari_response_created(struct ast_ari_response *response,
+  */
+ void ast_ari_response_alloc_failed(struct ast_ari_response *response);
+ 
++/*! \brief Determines whether the res_ari module is loaded */
++#define CHECK_ARI_MODULE_LOADED()				\
++	do {							\
++		if (!ast_module_check("res_ari.so")		\
++			|| !ast_ari_oom_json()) {	\
++			return AST_MODULE_LOAD_DECLINE;		\
++		}						\
++	} while(0)
++
++
+ #endif /* _ASTERISK_ARI_H */
+diff --git a/res/res_ari_applications.c b/res/res_ari_applications.c
+index cb12e84..290719d 100644
+--- a/res/res_ari_applications.c
++++ b/res/res_ari_applications.c
+@@ -502,6 +502,10 @@ static int unload_module(void)
+ static int load_module(void)
+ {
+ 	int res = 0;
++
++	CHECK_ARI_MODULE_LOADED();
++
++
+ 	stasis_app_ref();
+ 	res |= ast_ari_add_handler(&applications);
+ 	if (res) {
+diff --git a/res/res_ari_asterisk.c b/res/res_ari_asterisk.c
+index 1a574aa..73e4d0c 100644
+--- a/res/res_ari_asterisk.c
++++ b/res/res_ari_asterisk.c
+@@ -1223,6 +1223,10 @@ static int unload_module(void)
+ static int load_module(void)
+ {
+ 	int res = 0;
++
++	CHECK_ARI_MODULE_LOADED();
++
++
+ 	stasis_app_ref();
+ 	res |= ast_ari_add_handler(&asterisk);
+ 	if (res) {
+diff --git a/res/res_ari_bridges.c b/res/res_ari_bridges.c
+index 69d4d6e..b923330 100644
+--- a/res/res_ari_bridges.c
++++ b/res/res_ari_bridges.c
+@@ -1415,6 +1415,10 @@ static int unload_module(void)
+ static int load_module(void)
+ {
+ 	int res = 0;
++
++	CHECK_ARI_MODULE_LOADED();
++
++
+ 	stasis_app_ref();
+ 	res |= ast_ari_add_handler(&bridges);
+ 	if (res) {
+diff --git a/res/res_ari_channels.c b/res/res_ari_channels.c
+index f59f206..6217679 100644
+--- a/res/res_ari_channels.c
++++ b/res/res_ari_channels.c
+@@ -2479,6 +2479,10 @@ static int unload_module(void)
+ static int load_module(void)
+ {
+ 	int res = 0;
++
++	CHECK_ARI_MODULE_LOADED();
++
++
+ 	stasis_app_ref();
+ 	res |= ast_ari_add_handler(&channels);
+ 	if (res) {
+diff --git a/res/res_ari_device_states.c b/res/res_ari_device_states.c
+index a3711e6..fe1817d 100644
+--- a/res/res_ari_device_states.c
++++ b/res/res_ari_device_states.c
+@@ -333,6 +333,10 @@ static int unload_module(void)
+ static int load_module(void)
+ {
+ 	int res = 0;
++
++	CHECK_ARI_MODULE_LOADED();
++
++
+ 	stasis_app_ref();
+ 	res |= ast_ari_add_handler(&deviceStates);
+ 	if (res) {
+diff --git a/res/res_ari_endpoints.c b/res/res_ari_endpoints.c
+index 43d2558..a46b0dc 100644
+--- a/res/res_ari_endpoints.c
++++ b/res/res_ari_endpoints.c
+@@ -457,6 +457,10 @@ static int unload_module(void)
+ static int load_module(void)
+ {
+ 	int res = 0;
++
++	CHECK_ARI_MODULE_LOADED();
++
++
+ 	stasis_app_ref();
+ 	res |= ast_ari_add_handler(&endpoints);
+ 	if (res) {
+diff --git a/res/res_ari_events.c b/res/res_ari_events.c
+index fd208c5..b6a44d9 100644
+--- a/res/res_ari_events.c
++++ b/res/res_ari_events.c
+@@ -430,22 +430,29 @@ static int unload_module(void)
+ static int load_module(void)
+ {
+ 	int res = 0;
+-	struct ast_websocket_protocol *protocol;
+ 
+-	events.ws_server = ast_websocket_server_create();
+-	if (!events.ws_server) {
+-		return AST_MODULE_LOAD_DECLINE;
+-	}
++	CHECK_ARI_MODULE_LOADED();
+ 
+-	protocol = ast_websocket_sub_protocol_alloc("ari");
+-	if (!protocol) {
+-		ao2_ref(events.ws_server, -1);
+-		events.ws_server = NULL;
+-		return AST_MODULE_LOAD_DECLINE;
++	/* This is scoped to not conflict with CHECK_ARI_MODULE_LOADED */
++	{
++		struct ast_websocket_protocol *protocol;
++
++		events.ws_server = ast_websocket_server_create();
++		if (!events.ws_server) {
++			return AST_MODULE_LOAD_DECLINE;
++		}
++
++		protocol = ast_websocket_sub_protocol_alloc("ari");
++		if (!protocol) {
++			ao2_ref(events.ws_server, -1);
++			events.ws_server = NULL;
++			return AST_MODULE_LOAD_DECLINE;
++		}
++		protocol->session_attempted = ast_ari_events_event_websocket_ws_attempted_cb;
++		protocol->session_established = ast_ari_events_event_websocket_ws_established_cb;
++		res |= ast_websocket_server_add_protocol2(events.ws_server, protocol);
+ 	}
+-	protocol->session_attempted = ast_ari_events_event_websocket_ws_attempted_cb;
+-	protocol->session_established = ast_ari_events_event_websocket_ws_established_cb;
+-	res |= ast_websocket_server_add_protocol2(events.ws_server, protocol);
++
+ 	stasis_app_ref();
+ 	res |= ast_ari_add_handler(&events);
+ 	if (res) {
+diff --git a/res/res_ari_mailboxes.c b/res/res_ari_mailboxes.c
+index f85541c..600ecfd 100644
+--- a/res/res_ari_mailboxes.c
++++ b/res/res_ari_mailboxes.c
+@@ -339,6 +339,10 @@ static int unload_module(void)
+ static int load_module(void)
+ {
+ 	int res = 0;
++
++	CHECK_ARI_MODULE_LOADED();
++
++
+ 	stasis_app_ref();
+ 	res |= ast_ari_add_handler(&mailboxes);
+ 	if (res) {
+diff --git a/res/res_ari_playbacks.c b/res/res_ari_playbacks.c
+index 25e211c..106463b 100644
+--- a/res/res_ari_playbacks.c
++++ b/res/res_ari_playbacks.c
+@@ -291,6 +291,10 @@ static int unload_module(void)
+ static int load_module(void)
+ {
+ 	int res = 0;
++
++	CHECK_ARI_MODULE_LOADED();
++
++
+ 	stasis_app_ref();
+ 	res |= ast_ari_add_handler(&playbacks);
+ 	if (res) {
+diff --git a/res/res_ari_recordings.c b/res/res_ari_recordings.c
+index 29720a8..c43148d 100644
+--- a/res/res_ari_recordings.c
++++ b/res/res_ari_recordings.c
+@@ -807,6 +807,10 @@ static int unload_module(void)
+ static int load_module(void)
+ {
+ 	int res = 0;
++
++	CHECK_ARI_MODULE_LOADED();
++
++
+ 	stasis_app_ref();
+ 	res |= ast_ari_add_handler(&recordings);
+ 	if (res) {
+diff --git a/res/res_ari_sounds.c b/res/res_ari_sounds.c
+index 6d09d2c..e58ecd1 100644
+--- a/res/res_ari_sounds.c
++++ b/res/res_ari_sounds.c
+@@ -221,6 +221,10 @@ static int unload_module(void)
+ static int load_module(void)
+ {
+ 	int res = 0;
++
++	CHECK_ARI_MODULE_LOADED();
++
++
+ 	stasis_app_ref();
+ 	res |= ast_ari_add_handler(&sounds);
+ 	if (res) {
+diff --git a/rest-api-templates/res_ari_resource.c.mustache b/rest-api-templates/res_ari_resource.c.mustache
+index 921b007..b4d8010 100644
+--- a/rest-api-templates/res_ari_resource.c.mustache
++++ b/rest-api-templates/res_ari_resource.c.mustache
+@@ -262,30 +262,37 @@ static int unload_module(void)
+ static int load_module(void)
+ {
+ 	int res = 0;
++
++	CHECK_ARI_MODULE_LOADED();
++
+ {{#apis}}
+ {{#operations}}
+ {{#has_websocket}}
+-	struct ast_websocket_protocol *protocol;
++	/* This is scoped to not conflict with CHECK_ARI_MODULE_LOADED */
++	{
++		struct ast_websocket_protocol *protocol;
+ 
+-	{{full_name}}.ws_server = ast_websocket_server_create();
+-	if (!{{full_name}}.ws_server) {
+-		return AST_MODULE_LOAD_DECLINE;
+-	}
++		{{full_name}}.ws_server = ast_websocket_server_create();
++		if (!{{full_name}}.ws_server) {
++			return AST_MODULE_LOAD_DECLINE;
++		}
+ 
+-	protocol = ast_websocket_sub_protocol_alloc("{{websocket_protocol}}");
+-	if (!protocol) {
+-		ao2_ref({{full_name}}.ws_server, -1);
+-		{{full_name}}.ws_server = NULL;
+-		return AST_MODULE_LOAD_DECLINE;
+-	}
+-	protocol->session_attempted = ast_ari_{{c_name}}_{{c_nickname}}_ws_attempted_cb;
+-	protocol->session_established = ast_ari_{{c_name}}_{{c_nickname}}_ws_established_cb;
++		protocol = ast_websocket_sub_protocol_alloc("{{websocket_protocol}}");
++		if (!protocol) {
++			ao2_ref({{full_name}}.ws_server, -1);
++			{{full_name}}.ws_server = NULL;
++			return AST_MODULE_LOAD_DECLINE;
++		}
++		protocol->session_attempted = ast_ari_{{c_name}}_{{c_nickname}}_ws_attempted_cb;
++		protocol->session_established = ast_ari_{{c_name}}_{{c_nickname}}_ws_established_cb;
+ {{/has_websocket}}
+ {{#is_websocket}}
+-	res |= ast_websocket_server_add_protocol2({{full_name}}.ws_server, protocol);
++		res |= ast_websocket_server_add_protocol2({{full_name}}.ws_server, protocol);
++	}
+ {{/is_websocket}}
+ {{/operations}}
+ {{/apis}}
++
+ 	stasis_app_ref();
+ 	res |= ast_ari_add_handler(&{{root_full_name}});
+ 	if (res) {
