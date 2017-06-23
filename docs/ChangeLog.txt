@@ -36,7 +36,8 @@ Released @TBD@
 -- genx86_64-vm board type, add support for virtio-scsi as a bootable disk driver, also added to RUNNIX.
 
 -- genx86_64-vm board type, add support for vmw_pvscsi as a bootable disk driver, also added to RUNNIX.
-   ESXi Config: SCSI Controllor 0 [ VMware Paravirtual ]
+   ESXi Config: SCSI Controller [ VMware Paravirtual ]
+   More info: http://doc.astlinux-project.org/userdoc:guest_vm_vmware_vsphere
 
 -- linux, add kernel patch 'x86: HPET force enable for e6xx based systems', for Soekris net6501
    and other e6xx based non-ACPI systems, HPET will now get enabled resulting in a usable clocksource.
