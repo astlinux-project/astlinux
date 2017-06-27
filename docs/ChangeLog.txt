@@ -80,7 +80,9 @@ Released @TBD@
 
 -- openldap, version bump to 2.4.45
 
--- unbound (host), version bump to 1.6.3
+-- unbound (host), version bump to 1.6.4
+
+-- mtr, version bump to 0.92
 
 -- whois, version bump to 5.2.16
 
