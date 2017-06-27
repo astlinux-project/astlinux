@@ -28,3 +28,4 @@ usr/sbin/fping
 usr/sbin/fping6
 usr/sbin/iftop
 usr/sbin/mtr
+usr/sbin/mtr-packet

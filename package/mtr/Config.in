@@ -2,6 +2,7 @@ config BR2_PACKAGE_MTR
 	bool "mtr"
  	default n
 	select BR2_PACKAGE_NCURSES
+	select BR2_PACKAGE_LIBCAP
 	help
 	  My TraceRoute
 	  mtr combines the functionality of the 'traceroute' and 'ping'
