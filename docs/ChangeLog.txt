@@ -64,6 +64,10 @@ Released @TBD@
 
 -- jansson, version bump to 2.10 (Asterisk 13)
 
+-- acme-client, new command to generate Let's Encrypt certificates using the ACME protocol.
+   The acme-client command is a front-end to the core acme.sh script, version 2.7.2.
+   More info: http://doc.astlinux-project.org/userdoc:tt_acme_certificates
+
 -- ca-certificates, update trusted root certificates 2017-06-07
 
 ** Networking
