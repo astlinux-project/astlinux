@@ -78,9 +78,17 @@ no_op_arg()
   echo "acme-client: The $1 option has been disabled."
 }
 
+issue_without_dns()
+{
+  echo "acme-client: The '--issue' option also requires the '--dns' option."
+}
+
 special_arg_handler()
 {
-  local arg skip IFS
+  local arg skip issue dns IFS
+
+  issue=0
+  dns=0
 
   IFS='~'  # expand command-line args using the unique 'tilde' character
   for arg in $*; do
@@ -98,11 +106,20 @@ special_arg_handler()
         no_op_arg "$arg" ; skip=1 ;;
       --auto-upgrade)
         no_op_arg "$arg" ; skip=1 ;;
+      --issue)
+        issue=1 ;;
+      --dns)
+        dns=1 ;;
     esac
     if [ $skip -eq 1 ]; then
       return 0
     fi
   done
+
+  if [ $issue -eq 1 -a $dns -ne 1 ]; then
+    issue_without_dns
+    return 0
+  fi
 
   return 1
 }
