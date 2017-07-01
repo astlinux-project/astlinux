@@ -3,5 +3,6 @@ config BR2_PACKAGE_ACME
 	depends on BR2_PACKAGE_OPENSSL
 	help
 	  An ACME (Automated Certificate Management Environment) protocol client
+	  Managed using the "acme-client" command.
 
 	  https://github.com/Neilpang/acme.sh
