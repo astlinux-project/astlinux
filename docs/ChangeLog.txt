@@ -60,6 +60,8 @@ Released @TBD@
 
 -- dialog, version bump to 1.3-20170509
 
+-- logrotate, version bump to 3.12.3
+
 -- strace, version bump to 4.17
 
 -- jansson, version bump to 2.10 (Asterisk 13)
