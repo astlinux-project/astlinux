@@ -44,6 +44,8 @@ Released @TBD@
 
 -- core system, mount /dev/shm on tmpfs to support POSIX named semaphores (DAHDI uses them).
 
+-- php, version bump to 5.6.31, security fixes.
+
 -- libsodium, version bump to 1.0.12
 
 -- sqlite, version bump to 3.19.3
@@ -51,6 +53,8 @@ Released @TBD@
 -- tiff, version bump to 4.0.8, security fixes: 13 CVE's
 
 -- expat, version bump to 2.2.1, security fixes: CVE-2016-9063, CVE-2017-9233
+
+-- pcre, version bump to 8.41
 
 -- sudo, version bump to 1.8.20p2, security fix: CVE-2017-1000367
 
@@ -62,7 +66,9 @@ Released @TBD@
 
 -- logrotate, version bump to 3.12.3
 
--- strace, version bump to 4.17
+-- pciutils, version bump to 3.5.5
+
+-- strace, version bump to 4.18
 
 -- jansson, version bump to 2.10 (Asterisk 13)
 
