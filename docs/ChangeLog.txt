@@ -116,6 +116,8 @@ Released @TBD@
 -- wide-dhcpv6, by default generate a syslog and reload the "net-prefix-translation" plugin (if enabled)
    on a prefix change. The optional script '/mnt/kd/dhcp6c.script' can add additional actions.
 
+-- ddclient, configuration update of 'pairNIC' to 'pairDomains'
+
 ** Asterisk
 
 -- Asterisk 11.25.1 (no change) and 13.16.0 (version bump)
@@ -124,7 +126,7 @@ Released @TBD@
 
 -- pjsip 2.6 (no change)
 
--- FOP2, available version bump to 2.31.10.
+-- FOP2, available version bump to 2.31.11.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
    More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
