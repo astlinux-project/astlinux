@@ -103,7 +103,7 @@ $select_dyndns = array (
   'NameCheap' => 'namecheap',
   'No-IP' => 'default@no-ip.com',
   'nsupdate.info' => 'default@nsupdate.info',
-  'pairNIC' => 'default@pairnic.com',
+  'pairDomains' => 'default@pairnic.com',
   'ZoneEdit' => 'default@zoneedit.com'
 );
 

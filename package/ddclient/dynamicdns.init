@@ -59,7 +59,7 @@ gen_ddclient_conf()
     'default@no-ip.com') service="no-ip" ;;
     'default@freedns.afraid.org') service="freedns" ;;
     'default@dnsomatic.com') service="dnsomatic" ;;
-    'default@pairnic.com') service="pairnic" ;;
+    'default@pairnic.com') service="pairdomains" ;;
     'default@nsupdate.info') service="nsupdate-ipv4" ;;
      *) service="$(echo "$DDSERVICE" | tr -d '^$*[]|"')" ;;  # sanitize for sed regex
   esac
