@@ -196,10 +196,9 @@ init () {
     exit
   fi
 
-  if [ ! -d /mnt/kd/prosody ]; then
-    mkdir /mnt/kd/prosody
-    mkdir /mnt/kd/prosody/data
-    mkdir /mnt/kd/prosody/certs
+  if [ ! -d /mnt/kd/prosody/data ]; then
+    mkdir -p /mnt/kd/prosody/data
+    mkdir -p /mnt/kd/prosody/certs
     find /mnt/kd/prosody -print0 | xargs -0 chown prosody:prosody
     chmod 750 /mnt/kd/prosody/data
   fi
