@@ -55,7 +55,7 @@ astlinux_deploy() {
       fi
       sleep 1
       service lighttpd init
-      logger -s -t acme-client "New ACME certificates deployed for HTTPS and Lighttpd restarted"
+      logger -s -t acme-client "New ACME certificates deployed for HTTPS and 'lighttpd' restarted"
     fi
   fi
 
@@ -69,7 +69,7 @@ astlinux_deploy() {
     cat "$_ckey" > /mnt/kd/ssl/sip-tls/keys/server.key
     chmod 600 /mnt/kd/ssl/sip-tls/keys/server.key
     asterisk -rx "core restart when convenient" >/dev/null 2>&1 &
-    logger -s -t acme-client "New ACME certificates deployed for SIP-TLS and Asterisk restart when convenient requested"
+    logger -s -t acme-client "New ACME certificates deployed for SIP-TLS and 'asterisk' restart when convenient requested"
   fi
 
   if astlinux_is_acme_service prosody; then
@@ -86,7 +86,24 @@ astlinux_deploy() {
     chown prosody:prosody /mnt/kd/prosody/certs/server.key
     sleep 1
     service prosody init
-    logger -s -t acme-client "New ACME certificates deployed for XMPP and Prosody restarted"
+    logger -s -t acme-client "New ACME certificates deployed for XMPP and 'prosody' restarted"
+  fi
+
+  if astlinux_is_acme_service slapd; then
+    service slapd stop
+    mkdir -p /mnt/kd/ldap/certs
+    if [ -f "$_cfullchain" ]; then
+      cat "$_cfullchain" > /mnt/kd/ldap/certs/server.crt
+    else
+      cat "$_ccert" > /mnt/kd/ldap/certs/server.crt
+    fi
+    cat "$_ckey" > /mnt/kd/ldap/certs/server.key
+    chmod 600 /mnt/kd/ldap/certs/server.key
+    chown ldap:ldap /mnt/kd/ldap/certs/server.crt
+    chown ldap:ldap /mnt/kd/ldap/certs/server.key
+    sleep 1
+    service slapd init
+    logger -s -t acme-client "New ACME certificates deployed for LDAP and 'slapd' restarted"
   fi
 
   return 0
