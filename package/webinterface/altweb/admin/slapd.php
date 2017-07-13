@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2013 Lonnie Abelbeck
+// Copyright (C) 2013-2017 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
       $result = 2;
     }
-  } elseif (isset($_POST['submit_sip_tls'])) {
+  } elseif (isset($_POST['submit_self_signed_sip_tls'])) {
     $result = saveSLAPDsettings($SLAPDCONFDIR, $SLAPDCONFFILE);
     header('Location: /admin/siptlscert.php');
     exit;
@@ -186,15 +186,19 @@ require_once '../common/header.php';
   <table class="stdtable">
   <tr class="dtrow0"><td width="60">&nbsp;</td><td width="100">&nbsp;</td><td width="50">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td width="60">&nbsp;</td></tr>
 <?php
-if (! is_file('/mnt/kd/ssl/sip-tls/keys/server.crt') || ! is_file('/mnt/kd/ssl/sip-tls/keys/server.key')) {
+if ((! is_file('/mnt/kd/ssl/sip-tls/keys/server.crt') || ! is_file('/mnt/kd/ssl/sip-tls/keys/server.key')) &&
+    (! is_file('/mnt/kd/ldap/certs/server.crt') || ! is_file('/mnt/kd/ldap/certs/server.key'))) {
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
-  putHtml('<strong>Missing SIP-TLS Server Certificate:</strong> <i>(Shared with LDAP Server)</i>');
+  putHtml('<strong>Missing Server Certificate!</strong>');
   putHtml('</td></tr>');
 
+  putHtml('<tr class="dtrow1"><td style="text-align: center;" colspan="6">');
+  putHtml('How to Issue an ACME (Let\'s Encrypt) Certificate:'.includeTOPICinfo('ACME-Certificate'));
+  putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
-  putHtml('Create SIP-TLS<br />Server Certificate:');
+  putHtml('Non-ACME SIP-TLS<br />Server Certificate:');
   putHtml('</td><td style="text-align: left;" colspan="4">');
-  putHtml('<input type="submit" value="SIP-TLS Certificate" name="submit_sip_tls" class="button" />');
+  putHtml('<input type="submit" value="Self-Signed SIP-TLS Cert" name="submit_self_signed_sip_tls" class="button" />');
   putHtml('</td></tr>');
 }
 

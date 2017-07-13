@@ -44,6 +44,7 @@
 // 01-29-2017, Added DDGETIPV6 support
 // 02-16-2017, Added Restart FTP Server support
 // 06-02-2017, Added selectable Prefix Delegation interfaces
+// 07-12-2017, Added ACME (Let's Encrypt) Certificate configuration
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -474,7 +475,25 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   
   $value = 'SMTP_PASS="'.string2RCconfig(trim($_POST['smtp_pass'])).'"';
   fwrite($fp, "### SMTP Auth Password\n".$value."\n");
-  
+
+  $x_value = '';
+  if (isset($_POST['acme_lighttpd'])) {
+    $x_value .= ' lighttpd';
+  }
+  if (isset($_POST['acme_asterisk'])) {
+    $x_value .= ' asterisk';
+  }
+  if (isset($_POST['acme_prosody'])) {
+    $x_value .= ' prosody';
+  }
+  if (isset($_POST['acme_slapd'])) {
+    $x_value .= ' slapd';
+  }
+  $value = 'ACME_SERVICE="'.trim($x_value).'"';
+  fwrite($fp, "### ACME Certificate\n".$value."\n");
+  $value = 'ACME_ACCOUNT_EMAIL="'.tuq($_POST['acme_account_email']).'"';
+  fwrite($fp, $value."\n");
+
   $value = 'FTPD="'.$_POST['ftp'].'"';
   fwrite($fp, "### FTP Server\n".$value."\n");
   $value = 'FTPD_WRITE="'.$_POST['ftpd_write'].'"';
@@ -568,7 +587,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   fwrite($fp, "### HTTPS access logging\n".$value."\n");
   
   $value = 'HTTPSCERT="'.tuq($_POST['https_cert']).'"';
-  if (isset($_POST['create_cert']) && is_opensslHERE()) {
+  if (isset($_POST['submit_self_signed_https']) && isset($_POST['confirm_self_signed_https'])) {
     if (($countryName = getPREFdef($global_prefs, 'dn_country_name_cmdstr')) === '') {
       $countryName = 'US';
     }
@@ -598,6 +617,8 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
     }
   }
   fwrite($fp, "### HTTPS Certificate File\n".$value."\n");
+  $value = isset($_POST['acme_lighttpd']) ? 'HTTPSCHAIN="/mnt/kd/ssl/https_ca_chain.pem"' : 'HTTPSCHAIN=""';
+  fwrite($fp, $value."\n");
 
   $value = 'PHONEPROV_ALLOW="'.tuq($_POST['phoneprov_allow']).'"';
   fwrite($fp, "### /phoneprov/ Allowed IPs\n".$value."\n");
@@ -980,7 +1001,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/dnscrypt.php');
     exit;
-  } elseif (isset($_POST['submit_sip_tls'])) {
+  } elseif (isset($_POST['submit_self_signed_https'])) {
+    if (isset($_POST['confirm_self_signed_https'])) {
+      if (($result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE)) == 11) {
+        $result = 12;
+      }
+    } else {
+      $result = 2;
+    }
+  } elseif (isset($_POST['submit_self_signed_sip_tls'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/siptlscert.php');
     exit;
@@ -1212,6 +1241,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">System is Rebooting... back in <span id="count_down"><script language="JavaScript" type="text/javascript">document.write(count_down_secs);</script></span> seconds.</p>');
     } elseif ($result == 11) {
       putHtml('<p style="color: green;">Settings saved, click "Reboot/Restart" to apply any changed settings, a "Reboot System" is required for Interface changes.</p>');
+    } elseif ($result == 12) {
+      putHtml('<p style="color: green;">Settings saved, a new Self-Signed HTTPS certificate is installed, a "Reboot System" is required to apply changes.</p>');
     } elseif ($result == 21) {
       putHtml('<p style="color: green;">PPPoE has Restarted.</p>');
     } elseif ($result == 22) {
@@ -1881,7 +1912,39 @@ require_once '../common/header.php';
   }
   
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
-  
+
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>ACME (Let\'s Encrypt) Certificate:</strong>'.includeTOPICinfo('ACME-Certificate'));
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml('ACME Deploy Service:');
+  $sel = isVARtype('ACME_SERVICE', $db, $cur_db, 'lighttpd') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="acme_lighttpd" name="acme_lighttpd"'.$sel.' />&nbsp;HTTPS Server');
+  $sel = isVARtype('ACME_SERVICE', $db, $cur_db, 'asterisk') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="acme_asterisk" name="acme_asterisk"'.$sel.' />&nbsp;Asterisk SIP-TLS');
+  $sel = isVARtype('ACME_SERVICE', $db, $cur_db, 'prosody') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="acme_prosody" name="acme_prosody"'.$sel.' />&nbsp;XMPP Server');
+  $sel = isVARtype('ACME_SERVICE', $db, $cur_db, 'slapd') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="acme_slapd" name="acme_slapd"'.$sel.' />&nbsp;LDAP Server');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  $value = getVARdef($db, 'ACME_ACCOUNT_EMAIL', $cur_db);
+  putHtml('ACME Account Email Address:<input type="text" size="36" maxlength="128" value="'.$value.'" name="acme_account_email" /></td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml('Non-ACME Self-Signed HTTPS Certificate:');
+  putHtml('<input type="submit" value="Self-Signed HTTPS Cert" name="submit_self_signed_https" class="button" />');
+  putHtml('&ndash;');
+  putHtml('<input type="checkbox" value="self_signed_https" name="confirm_self_signed_https" />&nbsp;Confirm</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml('Non-ACME Self-Signed SIP-TLS Certificate:');
+  putHtml('<input type="submit" value="Self-Signed SIP-TLS Cert" name="submit_self_signed_sip_tls" class="button" /></td></tr>');
+
+  putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Network Services:</strong>');
   putHtml('</td></tr>');
@@ -1900,10 +1963,6 @@ require_once '../common/header.php';
     putHtml('Kamailio&nbsp;SIP&nbsp;Server:');
     putHtml('<input type="submit" value="Configure Kamailio" name="submit_kamailio" class="button" /></td></tr>');
   }
-
-  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
-  putHtml('Asterisk&nbsp;SIP-TLS Server Certificate:');
-  putHtml('<input type="submit" value="SIP-TLS Certificate" name="submit_sip_tls" class="button" /></td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('XMPP Server, Messaging and Presence:');
@@ -2068,15 +2127,8 @@ require_once '../common/header.php';
   putHtml('</td></tr>');
 
   $value = getVARdef($db, 'HTTPSCERT', $cur_db);
-  if (is_opensslHERE()) {
-    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="4">');
-    putHtml('HTTPS&nbsp;Certificate File:<input type="text" size="36" maxlength="64" value="'.$value.'" name="https_cert" /></td>');
-    putHtml('<td style="text-align: left;" colspan="2">');
-    putHtml('<input type="checkbox" value="create_cert" name="create_cert" />&nbsp;Create New HTTPS Certificate');
-  } else {
-    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
-    putHtml('HTTPS&nbsp;Certificate File:<input type="text" size="36" maxlength="64" value="'.$value.'" name="https_cert" />');
-  }
+  putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
+  putHtml('HTTPS&nbsp;Certificate File:<input type="text" size="36" maxlength="64" value="'.$value.'" name="https_cert" />');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');

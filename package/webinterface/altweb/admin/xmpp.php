@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2013-2016 Lonnie Abelbeck
+// Copyright (C) 2013-2017 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -294,7 +294,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (reloadModule('groups') === TRUE) {
       $result = 16;
     }
-  } elseif (isset($_POST['submit_sip_tls'])) {
+  } elseif (isset($_POST['submit_self_signed_sip_tls'])) {
     $result = saveXMPPsettings($XMPPCONFDIR, $XMPPCONFFILE);
     header('Location: /admin/siptlscert.php');
     exit;
@@ -373,15 +373,19 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow0"><td width="180">&nbsp;</td><td>&nbsp;</td></tr>');
 
 if ($global_admin) {
-if (! is_file('/mnt/kd/ssl/sip-tls/keys/server.crt') || ! is_file('/mnt/kd/ssl/sip-tls/keys/server.key')) {
+if ((! is_file('/mnt/kd/ssl/sip-tls/keys/server.crt') || ! is_file('/mnt/kd/ssl/sip-tls/keys/server.key')) &&
+    (! is_file('/mnt/kd/prosody/certs/server.crt') || ! is_file('/mnt/kd/prosody/certs/server.key'))) {
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
-  putHtml('<strong>Missing SIP-TLS Server Certificate:</strong> <i>(Shared with XMPP)</i>');
+  putHtml('<strong>Missing Server Certificate!</strong>');
   putHtml('</td></tr>');
 
+  putHtml('<tr class="dtrow1"><td style="text-align: center;" colspan="2">');
+  putHtml('How to Issue an ACME (Let\'s Encrypt) Certificate:'.includeTOPICinfo('ACME-Certificate'));
+  putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  putHtml('Create SIP-TLS<br />Server Certificate:');
+  putHtml('Non-ACME SIP-TLS<br />Server Certificate:');
   putHtml('</td><td style="text-align: left;">');
-  putHtml('<input type="submit" value="SIP-TLS Certificate" name="submit_sip_tls" class="button" />');
+  putHtml('<input type="submit" value="Self-Signed SIP-TLS Cert" name="submit_self_signed_sip_tls" class="button" />');
   putHtml('</td></tr>');
 }
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');

@@ -448,3 +448,150 @@ and the renamed file are reverted.
 Options:
   hex_revision_num    revert given FILE back to given REVISION
 
+[[ACME-Certificate]]
+
+---------------------------------
+ACME (Let's Encrypt) Certificates
+---------------------------------
+AstLinux uses the "acme-client" command as a front-end to the core acme.sh script provided by the https://github.com/Neilpang/acme.sh project.
+
+The acme-client command limits issued certificates to only use DNS challenge validation, as such you need a supported DNS provider, of which there are well over 20 as of this writing.
+
+The Command Line Interface (CLI) must be used to initially issue and deploy ACME certificates.
+
+
+------------------
+ACME Configuration
+------------------
+Use the web interface "Network tab -> ACME (Let's Encrypt) Certificate:" section to define which services will be deployed ACME certificates.
+
+The "ACME Account Email Address" registration email address is used for expiry notifications, while optional it seems like a good idea to specify.
+
+In order to apply web interface settings changes, use the CLI command:
+
+CLI> gen-rc-conf
+
+
+--------------------
+Issuing Certificates
+--------------------
+This example on host pbx4 uses the acme-client command, the core acme.sh version can be obtained by issuing:
+
+CLI> acme-client --version
+https://github.com/Neilpang/acme.sh
+v2.7.2
+
+Only DNS challenge validation is supported within AstLinux, as such you need a supported DNS provider, in this example we are using Cloudflare. We need to export the CF_Key and CF_Email variables, adjust to match your credentials ...
+
+CLI> export CF_Key="sdfdxxxxxxxosdfgje"
+CLI> export CF_Email="email@example.com"
+
+Other DNS providers require different exported variables, see the acme.sh documentation for the details.
+
+Now for the fundamental CLI command, where we issue a new certificate for the single domain "pbx4.example.org" ...
+
+CLI> acme-client --issue --dns dns_cf -d pbx4.example.org
+[Sat Jul  1 10:08:04 CDT 2017] Registering account
+[Sat Jul  1 10:08:06 CDT 2017] Registered
+[Sat Jul  1 10:08:06 CDT 2017] Update success.
+[Sat Jul  1 10:08:06 CDT 2017] ACCOUNT_THUMBPRINT='...'
+[Sat Jul  1 10:08:06 CDT 2017] Creating domain key
+[Sat Jul  1 10:08:07 CDT 2017] The domain key is here: /mnt/kd/acme/pbx4.example.org/pbx4.example.org.key
+[Sat Jul  1 10:08:07 CDT 2017] Single domain='pbx4.example.org'
+[Sat Jul  1 10:08:07 CDT 2017] Getting domain auth token for each domain
+[Sat Jul  1 10:08:07 CDT 2017] Getting webroot for domain='pbx4.example.org'
+[Sat Jul  1 10:08:07 CDT 2017] Getting new-authz for domain='pbx4.example.org'
+[Sat Jul  1 10:08:07 CDT 2017] The new-authz request is ok.
+[Sat Jul  1 10:08:08 CDT 2017] Found domain api file: /stat/etc/acme/dnsapi/dns_cf.sh
+[Sat Jul  1 10:08:09 CDT 2017] Adding record
+[Sat Jul  1 10:08:09 CDT 2017] Added, OK
+[Sat Jul  1 10:08:09 CDT 2017] Sleep 120 seconds for the txt records to take effect
+
+[Sat Jul  1 10:10:11 CDT 2017] Verifying:pbx4.example.org
+[Sat Jul  1 10:10:14 CDT 2017] Success
+[Sat Jul  1 10:10:16 CDT 2017] Verify finished, start to sign.
+[Sat Jul  1 10:10:16 CDT 2017] Cert success.
+-----BEGIN CERTIFICATE-----
+... snip ...
+-----END CERTIFICATE-----
+[Sat Jul  1 10:10:16 CDT 2017] Your cert is in  /mnt/kd/acme/pbx4.example.org/pbx4.example.org.cer 
+[Sat Jul  1 10:10:16 CDT 2017] Your cert key is in  /mnt/kd/acme/pbx4.example.org/pbx4.example.org.key 
+[Sat Jul  1 10:10:17 CDT 2017] The intermediate CA cert is in  /mnt/kd/acme/pbx4.example.org/ca.cer 
+[Sat Jul  1 10:10:17 CDT 2017] And the full chain certs is there:  /mnt/kd/acme/pbx4.example.org/fullchain.cer 
+
+After the certificates are issued, they need to be deployed to the various services that can utilize them.
+In this example only "HTTPS Server" is checked after "ACME Deploy Service:" in the web interface.
+
+CLI> acme-client --deploy --deploy-hook astlinux -d pbx4.example.org
+Stopping lighttpd...
+Starting lighttpd...
+acme-client: New ACME certificates deployed for HTTPS and 'lighttpd' restarted
+[Sat Jul  1 10:14:10 CDT 2017] Success
+
+While not required, it is a good idea to unset the exported variables above that contain the DNS challenge validation credentials.
+
+CLI> unset CF_Key
+CLI> unset CF_Email
+
+NOTE: The DNS challenge validation credentials remain stored in the /mnt/kd/acme/account.conf file so auto-renewals can be performed via cron.
+
+
+--------------------------
+Auto-Renewing Certificates
+--------------------------
+Let's Encrypt certificates are only valid for 90 days, renewable after 60 days from the issue date. As such it is important to automate the process of renewing the certificate, this can be done by installing a cron entry using the command:
+
+CLI> acme-client --install-cronjob
+acme-client: Successfully added cron entry.
+
+
+----------------------------
+Multiple Domain Certificates
+----------------------------
+In the example above only one domain pbx4.example.org was specified. Let's Encrypt allows multiple domains to be specified with valid "Subject Alternative Name" entries in a single certificate. This assumes the DNS A and/or AAAA and/or SRV record of each domain points to the server with the issued certificate.
+
+As an additional example let's say both example.org and subdomain pbx4.example.org are valid DNS entries you want to include in the "Subject Alternative Name" of the issued certificate.
+
+Proceed as above, but simply include -d example.org when issuing the certificate, (specify the more general domain first) ...
+
+CLI> acme-client --issue --dns dns_cf -d example.org -d pbx4.example.org
+
+Likewise, when deploying the certificate, though you only need to specify the first -d example.org domain ...
+
+CLI> acme-client --deploy --deploy-hook astlinux -d example.org
+
+
+-----------------------
+Additional CLI Commands
+-----------------------
+Some additional commands that may be useful to know ...
+
+List the issued certificate(s):
+
+CLI> acme-client --list
+
+Revoke an issued certificate by domain:
+
+CLI> acme-client --revoke -d pbx4.example.org
+
+Remove a certificate by domain:
+
+CLI> acme-client --remove -d pbx4.example.org
+
+
+----------------
+Advanced Options
+----------------
+For advanced users there may be situations where it would be useful to add special options for every occurrence of the acme-client command. Increasing the log-level and defining a log file would be one such example.
+
+The /mnt/kd/acme/account.opts file does not exist by default, and needs to be manually created to enable this feature.
+
+Example /mnt/kd/acme/account.opts file with persistent options added by acme-client to the acme.sh script:
+-- /mnt/kd/acme/account.opts --
+## acme.sh options
+
+log-level 3
+log /var/log/acme-client.log
+--
+
+

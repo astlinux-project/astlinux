@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2012 Lonnie Abelbeck
+// Copyright (C) 2008-2017 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -9,6 +9,7 @@
 // siptlscert.php for AstLinux
 // 11-12-2012
 // 12-14-2015, Added Signature Algorithm support
+// 07-12-2017, Added ACME warning
 //
 // System location of /mnt/kd/rc.conf.d directory
 $SIPTLSCERTCONFDIR = '/mnt/kd/rc.conf.d';
@@ -271,7 +272,7 @@ require_once '../common/header.php';
   <form id="iform" method="post" action="<?php echo $myself;?>">
   <table width="100%" class="stdtable">
   <tr><td style="text-align: center;" colspan="2">
-  <h2>Asterisk SIP-TLS Server Certificate:</h2>
+  <h2>Self-Signed SIP-TLS Server Certificate:</h2>
   </td></tr><tr><td width="240" style="text-align: center;">
   <input type="submit" class="formbtn" value="Save Settings" name="submit_save" />
   </td><td class="dialogText" style="text-align: center;">
@@ -280,6 +281,14 @@ require_once '../common/header.php';
   <table class="stdtable">
   <tr class="dtrow0"><td width="140">&nbsp;</td><td width="50">&nbsp;</td><td width="100">&nbsp;</td><td>&nbsp;</td><td width="100">&nbsp;</td><td width="80">&nbsp;</td></tr>
 <?php
+if (is_dir('/mnt/kd/acme')) {
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>ACME (Let\'s Encrypt) Certificate Exists!</strong>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="color: red; text-align: center;" colspan="6">');
+  putHtml('Warning: "Create New" may overwrite deployed ACME credentials.</td></tr>');
+}
 if ($openssl !== FALSE) {
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Server Certificate and Key:</strong>');
