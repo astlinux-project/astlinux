@@ -74,6 +74,7 @@ Released @TBD@
 
 -- acme-client, new command to generate Let's Encrypt certificates using the ACME protocol.
    The acme-client command is a front-end to the core acme.sh script, version 2.7.2.
+   New rc.conf variables: ACME_SERVICE and ACME_ACCOUNT_EMAIL
    More info: http://doc.astlinux-project.org/userdoc:tt_acme_certificates
 
 -- ca-certificates, update trusted root certificates 2017-06-07
@@ -139,6 +140,9 @@ Released @TBD@
 -- Network tab, IPv6 Autoconfig, add selectable interfaces for Prefix Delegation by selecting "Assign GUA Prefix"
    Note: "Assign GUA Prefix" only applies if Network tab -> Connection Type: includes DHCPv6.
    More info: http://doc.astlinux-project.org/userdoc:tt-dhcpv6-prefix-delegation
+
+-- Network tab, add "ACME (Let's Encrypt) Certificate" section with topic help info.
+   More info: http://doc.astlinux-project.org/userdoc:tt_acme_certificates
 
 
 Additions for AstLinux 1.2.10:
