@@ -2128,7 +2128,7 @@ require_once '../common/header.php';
 
   $value = getVARdef($db, 'HTTPSCERT', $cur_db);
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
-  putHtml('HTTPS&nbsp;Certificate File:<input type="text" size="36" maxlength="64" value="'.$value.'" name="https_cert" />');
+  putHtml('HTTPS&nbsp;Certificate File:<input type="text" size="45" maxlength="64" value="'.$value.'" name="https_cert" />');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
