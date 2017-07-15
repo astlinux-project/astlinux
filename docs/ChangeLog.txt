@@ -50,9 +50,9 @@ Released @TBD@
 
 -- sqlite, version bump to 3.19.3
 
--- tiff, version bump to 4.0.8, security fixes: 13 CVE's
+-- tiff, version bump to 4.0.8, security fixes: 13 CVE's and CVE-2017-10688
 
--- expat, version bump to 2.2.1, security fixes: CVE-2016-9063, CVE-2017-9233
+-- expat, version bump to 2.2.2, security fixes: CVE-2016-9063, CVE-2017-9233
 
 -- pcre, version bump to 8.41
 
@@ -121,7 +121,7 @@ Released @TBD@
 
 ** Asterisk
 
--- Asterisk 11.25.1 (no change) and 13.16.0 (version bump)
+-- Asterisk 11.25.1 (no change) and 13.17.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.10.2 (version bump) and dahdi-tools 2.10.2 (version bump)
 
