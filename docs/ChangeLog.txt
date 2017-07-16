@@ -144,6 +144,8 @@ Released @TBD@
 -- Network tab, add "ACME (Let's Encrypt) Certificate" section with topic help info.
    More info: http://doc.astlinux-project.org/userdoc:tt_acme_certificates
 
+-- Status tab, add optional "ACME Certificates" section, show via Prefs tab.
+
 
 Additions for AstLinux 1.2.10:
 =============================
