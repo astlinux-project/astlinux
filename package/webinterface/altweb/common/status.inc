@@ -38,6 +38,7 @@
 // 10-14-2016, Added Check for default admin password
 // 12-01-2016, Added chronyc to replace ntpq
 // 05-15-2017, Added IPv6 Prefixes/Address
+// 07-16-2017, Added ACME Certificates
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -759,6 +760,21 @@ if (is_file('/var/run/wan-failover.pid') && is_file('/var/log/wan-failover-statu
 
     $output = array();
     @exec('cat /var/log/wan-failover-status.log', $output);
+    foreach ($output as $line) {
+      putText(rtrim($line));
+    }
+    unset($output);
+    putHtml("</pre>");
+  }
+}
+
+if (is_dir('/mnt/kd/acme')) {
+  if (getPREFdef($global_prefs, 'status_show_acme_certificates') === 'yes') {
+    putHtml("<h2>ACME Certificates:</h2>");
+    putHtml("<pre>");
+
+    $output = array();
+    @exec('/usr/sbin/acme-client --list', $output);
     foreach ($output as $line) {
       putText(rtrim($line));
     }

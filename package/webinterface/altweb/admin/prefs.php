@@ -21,6 +21,7 @@
 // 12-16-2014, Added Show Monit Tab
 // 08-12-2015, Added Show Fossil Tab
 // 02-16-2017, Added Disable CLI Tab for "staff" user
+// 07-16-2017, Added Show ACME Certificates
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -55,6 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (! isset($_POST['wan_failover'])) {
       $value = 'status_show_wan_failover = no';
+      fwrite($fp, $value."\n");
+    }
+    if (isset($_POST['acme_certificates'])) {
+      $value = 'status_show_acme_certificates = yes';
       fwrite($fp, $value."\n");
     }
     if (! isset($_POST['ntp_sessions'])) {
@@ -591,6 +596,10 @@ require_once '../common/header.php';
   $sel = (getPREFdef($global_prefs, 'status_show_wan_failover') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="wan_failover" name="wan_failover"'.$sel.' /></td><td colspan="5">Show WAN Failover Status</td></tr>');
 
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'status_show_acme_certificates') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="acme_certificates" name="acme_certificates"'.$sel.' /></td><td colspan="5">Show ACME Certificates</td></tr>');
+ 
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_ntp_sessions') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="ntp_sessions" name="ntp_sessions"'.$sel.' /></td><td colspan="5">Show NTP Time Sources</td></tr>');
