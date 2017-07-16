@@ -146,6 +146,8 @@ Released @TBD@
 
 -- Status tab, add optional "ACME Certificates" section, show via Prefs tab.
 
+-- System tab, add "english-nz" (New Zealand) sound language.
+
 
 Additions for AstLinux 1.2.10:
 =============================
