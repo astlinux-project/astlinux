@@ -15,5 +15,9 @@ EXPAT_DEPENDENCIES = host-pkg-config
 
 EXPAT_CONF_ENV = CFLAGS='$(TARGET_CFLAGS) -DXML_POOR_ENTROPY'
 
+HOST_EXPAT_DEPENDENCIES = host-pkg-config
+
+HOST_EXPAT_CONF_ENV = CFLAGS='$(HOST_CFLAGS) -DXML_POOR_ENTROPY'
+
 $(eval $(call AUTOTARGETS,package,expat))
 $(eval $(call AUTOTARGETS,package,expat,host))
