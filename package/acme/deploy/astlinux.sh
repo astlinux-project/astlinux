@@ -57,6 +57,23 @@ astlinux_deploy() {
       service lighttpd init
       logger -s -t acme-client "New ACME certificates deployed for HTTPS and 'lighttpd' restarted"
     fi
+
+    ## stunnel server
+    if [ -n "$STUNNEL_SERVERS" ]; then
+      service stunnel stop
+    fi
+    mkdir -p /mnt/kd/ssl
+    if [ -f "$_cfullchain" ]; then
+      cat "$_ckey" "$_cfullchain" > /mnt/kd/ssl/https_stunnel_server.pem
+    else
+      cat "$_ckey" "$_ccert" > /mnt/kd/ssl/https_stunnel_server.pem
+    fi
+    chmod 600 /mnt/kd/ssl/https_stunnel_server.pem
+    if [ -n "$STUNNEL_SERVERS" ]; then
+      sleep 1
+      service stunnel init
+      logger -s -t acme-client "New ACME certificates deployed for HTTPS and 'stunnel' restarted"
+    fi
   fi
 
   if astlinux_is_acme_service asterisk; then

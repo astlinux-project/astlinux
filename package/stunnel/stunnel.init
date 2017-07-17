@@ -2,6 +2,8 @@
 
 . /etc/rc.conf
 
+STUNNEL_ACME_SERVER_CERT="/mnt/kd/ssl/https_stunnel_server.pem"
+
 gen_stunnel_config()
 {
   local type="$1" stunnel="$2" client="" IFS
@@ -68,6 +70,8 @@ init () {
       fi
       if [ -n "$STUNNEL_SERVER_CERT" ]; then
         SCERT="$STUNNEL_SERVER_CERT"
+      elif [ -f "$STUNNEL_ACME_SERVER_CERT" ]; then
+        SCERT="$STUNNEL_ACME_SERVER_CERT"
       elif [ -n "$HTTPSCERT" ]; then
         SCERT="$HTTPSCERT"
       else
