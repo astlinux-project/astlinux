@@ -4,14 +4,11 @@
 #
 #############################################################
 
-STUNNEL_VERSION = 5.40
+STUNNEL_VERSION = 5.42
 STUNNEL_SITE = http://www.usenix.org.uk/mirrors/stunnel/archive/5.x
 STUNNEL_DEPENDENCIES = openssl
 
-# We're patching configure.ac
-STUNNEL_AUTORECONF = YES
-
-STUNNEL_CONF_OPT += \
+STUNNEL_CONF_OPT = \
 	--with-ssl=$(STAGING_DIR)/usr \
 	--localstatedir=/var \
 	--disable-libwrap \
