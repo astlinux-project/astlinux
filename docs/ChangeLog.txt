@@ -99,6 +99,8 @@ Released @TBD@
 
 -- mtr, version bump to 0.92
 
+-- tcpdump, version bump to 4.9.1, security fix: CVE-2017-11108
+
 -- whois, version bump to 5.2.16
 
 -- network, DHCPv6 Prefix Delegation, previously any Network tab -> 'IPv6 Autoconfig: [enabled]' received
