@@ -79,6 +79,8 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2017-06-07
 
+-- mac2vendor, oui.txt database snapshot 2017-07-24
+
 ** Networking
 
 -- OpenSSL, version bump to 1.0.2l, security fixes: none
