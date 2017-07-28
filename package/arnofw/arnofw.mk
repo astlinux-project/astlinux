@@ -4,7 +4,7 @@
 #
 #############################################################
 
-ARNOFW_VERSION = 2.0.2-RC1
+ARNOFW_VERSION = 2.0.2
 ARNOFW_SOURCE = arno-iptables-firewall_$(ARNOFW_VERSION).tar.gz
 ARNOFW_SITE = https://github.com/arno-iptables-firewall/aif/releases/download/$(ARNOFW_VERSION)
 
