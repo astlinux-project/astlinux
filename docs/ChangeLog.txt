@@ -112,8 +112,9 @@ Released @TBD@
    New rc.conf variable: IPV6_PREFIX_DELEGATION
    More info: http://doc.astlinux-project.org/userdoc:tt-dhcpv6-prefix-delegation
 
--- arnofw (AIF), version bump to 2.0.2-RC1, added support for properly attaching nf_conntrack helpers.
+-- arnofw (AIF), version bump to 2.0.2, added support for properly attaching nf_conntrack helpers.
    As such net.netfilter.nf_conntrack_helper=0 and the the needed CT targets are created.
+   New Parasitic Network plugin, allows "clients" on the same subnet to use this device as a gateway upstream.
 
 -- arnofw (AIF), added "net-prefix-translation" plugin.  Provides NPTv6 (Network Prefix Translation) for IPv6
    More info: http://doc.astlinux-project.org/userdoc:tt_ipv6_ula_nptv6_config
