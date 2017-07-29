@@ -103,7 +103,7 @@ Released @TBD@
 
 -- tcpdump, version bump to 4.9.1, security fix: CVE-2017-11108
 
--- whois, version bump to 5.2.16
+-- whois, version bump to 5.2.17
 
 -- network, DHCPv6 Prefix Delegation, previously any Network tab -> 'IPv6 Autoconfig: [enabled]' received
    a Prefix Delegation (PD). Now the added selection 'IPv6 Autoconfig: [Assign GUA Prefix]' is required
