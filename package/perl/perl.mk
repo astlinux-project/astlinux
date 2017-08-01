@@ -5,21 +5,22 @@
 #############################################################
 
 PERL_VERSION_MAJOR = 24
-PERL_VERSION = 5.$(PERL_VERSION_MAJOR).0
+PERL_VERSION = 5.$(PERL_VERSION_MAJOR).2
 PERL_SITE = http://www.cpan.org/src/5.0
-PERL_SOURCE = perl-$(PERL_VERSION).tar.bz2
+PERL_SOURCE = perl-$(PERL_VERSION).tar.xz
 PERL_INSTALL_STAGING = YES
 # Depend on linux to define LINUX_VERSION_PROBED
 PERL_DEPENDENCIES = linux
 
 PERL_ARCHNAME = $(ARCH)-linux
 
-PERL_MODULES = constant version Carp Errno Fcntl PathTools POSIX Digest Socket IO XSLoader Exporter B File-Find JSON-PP
+PERL_MODULES = constant version base fields
+PERL_MODULES += Carp Errno Fcntl PathTools POSIX Digest Socket IO XSLoader Exporter B File-Find JSON-PP
 PERL_MODULES += Digest/MD5 Digest/SHA Getopt/Long Time/Local File/Glob Sys/Hostname
 
-PERL_CROSS_VERSION = 1.0.3
+PERL_CROSS_VERSION = 1.1.6
 PERL_CROSS_SITE = https://github.com/arsv/perl-cross/releases/download/$(PERL_CROSS_VERSION)
-PERL_CROSS_SOURCE = perl-$(PERL_VERSION)-cross-$(PERL_CROSS_VERSION).tar.gz
+PERL_CROSS_SOURCE = perl-cross-$(PERL_CROSS_VERSION).tar.gz
 
 # We use the perlcross hack to cross-compile perl. It should
 # be extracted over the perl sources, so we don't define that
@@ -48,10 +49,9 @@ PERL_CONF_OPT = \
 	--target=$(GNU_TARGET_NAME) \
 	--target-tools-prefix=$(TARGET_CROSS) \
 	--prefix=/usr \
-	-Accflags='-DAPPLLIB_EXP=\"/mnt/kd/perl:/usr/local/share/perl\"' \
 	-Dsitelib=/mnt/kd/perl \
 	-Dld="$(TARGET_CC_NOCCACHE)" \
-	-Dccflags="$(TARGET_CFLAGS)" \
+	-Dccflags="$(TARGET_CFLAGS) -DAPPLLIB_EXP=\\\"/mnt/kd/perl:/usr/local/share/perl\\\" " \
 	-Dldflags="$(TARGET_LDFLAGS) -lm" \
 	-Dmydomain="" \
 	-Dmyhostname="$(BR2_TARGET_GENERIC_HOSTNAME)" \
@@ -83,13 +83,13 @@ define PERL_BUILD_CMDS
 endef
 
 define PERL_INSTALL_STAGING_CMDS
-	$(TARGET_MAKE_ENV) $(MAKE1) -C $(@D) DESTDIR="$(STAGING_DIR)" install.perl
+	$(TARGET_MAKE_ENV) $(MAKE1) -C $(@D) DESTDIR="$(STAGING_DIR)" install.perl install.sym
 endef
 
 define PERL_INSTALL_TARGET_CMDS
 	# Undefine utils.lst file so cpan, corelist, ... perlthanks are not installed, keep shasum
 	echo "utils/shasum" > $(@D)/utils.lst
-	$(TARGET_MAKE_ENV) $(MAKE1) -C $(@D) DESTDIR="$(TARGET_DIR)" install.perl
+	$(TARGET_MAKE_ENV) $(MAKE1) -C $(@D) DESTDIR="$(TARGET_DIR)" install.perl install.sym
 	# Remove CORE dir
 	rm -rf $(TARGET_DIR)/usr/lib/perl5/$(PERL_VERSION)/$(PERL_ARCHNAME)/CORE
 	# Remove all .pod files
@@ -100,14 +100,12 @@ define PERL_INSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/lib/perl5/$(PERL_VERSION)/unicore/Name.pl
 	# Remove misc files
 	find $(TARGET_DIR)/usr/lib/perl5/ -name '.packlist' -print0 | xargs -0 rm -f
-	#
-	ln -sf perl$(PERL_VERSION) $(TARGET_DIR)/usr/bin/perl
 endef
 
 define PERL_CLEAN_CMDS
 	-$(MAKE1) -C $(@D) clean
 	rm -rf $(TARGET_DIR)/usr/lib/perl5/
-	rm -f $(TARGET_DIR)/usr/bin/perl $(TARGET_DIR)/usr/bin/perl$(PERL_VERSION)
+	rm -f $(TARGET_DIR)/usr/bin/perl
 endef
 
 $(eval $(call GENTARGETS,package,perl))
