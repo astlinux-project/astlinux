@@ -54,7 +54,7 @@ Released @TBD@
 
 -- tiff, version bump to 4.0.8, security fixes: 13 CVE's and CVE-2017-10688
 
--- expat, version bump to 2.2.2, security fixes: CVE-2016-9063, CVE-2017-9233
+-- expat, version bump to 2.2.3, security fixes: CVE-2016-9063, CVE-2017-9233
 
 -- pcre, version bump to 8.41
 
