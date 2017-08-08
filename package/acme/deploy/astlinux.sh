@@ -74,6 +74,14 @@ astlinux_deploy() {
       service stunnel init
       logger -s -t acme-client "New ACME certificates deployed for HTTPS and 'stunnel' restarted"
     fi
+
+    ## FOP2 server
+    if [ -f /var/run/fop2.pid -a -f /etc/fop2/fop2.cfg ]; then
+      if grep -q '^ssl_certificate_.*=.*/mnt/kd/ssl/https_stunnel_server.pem' /etc/fop2/fop2.cfg; then
+        service fop2 restart
+        logger -s -t acme-client "New ACME certificates deployed for HTTPS and 'fop2' restarted"
+      fi
+    fi
   fi
 
   if astlinux_is_acme_service asterisk; then
