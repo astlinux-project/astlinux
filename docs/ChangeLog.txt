@@ -105,6 +105,8 @@ Released @TBD@
 
 -- tcpdump, version bump to 4.9.1, security fix: CVE-2017-11108
 
+-- ngrep and sipgrep, add fix for IPv6 support.
+
 -- whois, version bump to 5.2.17
 
 -- network, DHCPv6 Prefix Delegation, previously any Network tab -> 'IPv6 Autoconfig: [enabled]' received
@@ -136,7 +138,7 @@ Released @TBD@
 
 -- pjsip 2.6 (no change)
 
--- FOP2, available version bump to 2.31.11.
+-- FOP2, available version bump to 2.31.12.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
    More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
