@@ -95,6 +95,7 @@ $select_dyndns = array (
   'DNS-O-Matic' => 'default@dnsomatic.com',
   'DNS Park' => 'dnspark',
   'DtDNS' => 'dtdns',
+  'DuckDNS' => 'duckdns',
   'DynDNS' => 'dyndns@dyndns.org',
   'DynDNS [custom]' => 'custom@dyndns.org',
   'DynDNS [static]' => 'statdns@dyndns.org',
