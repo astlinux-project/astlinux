@@ -2,7 +2,7 @@
 
 TVER="1.3"
 
-BRANCH="1.0"
+BRANCH="trunk"
 
 if [ "${1:0:4}" != "${TVER}." ]; then
   echo "Usage: master-tag ${TVER}.x"
@@ -67,7 +67,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-svn copy ${REPO_ROOT}/branches/${BRANCH} ${REPO_ROOT}/tags/${1} -m "create ${1} tag"
+svn copy ${REPO_ROOT}/${BRANCH} ${REPO_ROOT}/tags/${1} -m "create ${1} tag"
 
 mark_svn
 
