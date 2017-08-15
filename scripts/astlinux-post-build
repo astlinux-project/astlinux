@@ -3,20 +3,6 @@
 # Use BuildRoot "post-build" script to overly board specific files
 #
 
-make_release_version()
-{
-  ASTURL="$(LANG=C svn info | awk -F': ' '/^URL:/ { print $2 }')"
-  ASTBASE="$(basename ${ASTURL})"
-  ASTREV="$(LANG=C svn info | awk -F': ' '/^Last Changed Rev:/ { print $2 }')"
-  ASTEXTRA=""
-
-  if [ "$(cat "project/astlinux/target_skeleton/etc/astlinux-release")" = "svn" ]; then
-    ASTVER="astlinux-${ASTBASE}-${ASTREV}${ASTEXTRA}"
-  else
-    ASTVER="$(cat "project/astlinux/target_skeleton/etc/astlinux-release")${ASTEXTRA}"
-  fi
-}
-
 overlay_target()
 {
   local target_skeleton="$base/project/astlinux/board/$board/target_skeleton"
@@ -74,7 +60,8 @@ fi
 
 overlay_target
 
-make_release_version
+. "$base/scripts/astlinux_release_version.sh"
+astlinux_release_version
 echo ${ASTVER} > "$target/etc/astlinux-release"
 
 exit 0
