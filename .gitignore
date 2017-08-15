@@ -1,0 +1,24 @@
+#
+# Buildroot working files
+#
+/output
+/dl
+/.auto.deps
+/.config.cmd
+/.config.old
+/..config.tmp
+/.config
+*.depend
+*.o
+/*.patch
+/*.diff
+*.orig
+*.rej
+*~
+*.pyc
+#
+# AstLinux working files
+#
+/astlinux.board
+/initrd.arch
+/initrd.img
