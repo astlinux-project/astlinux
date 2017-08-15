@@ -1,7 +1,7 @@
 From d195ac7ddd53ac457c282581783ef5cd756b9608 Mon Sep 17 00:00:00 2001
 From: David Kerr <david@kerr.net>
 Date: Sat, 2 Jul 2016 14:05:24 -0400
-Subject: [PATCH 1/3] Add service types to database for audio streaming, device
+Subject: [PATCH 1/4] Add service types to database for audio streaming, device
  info, amazon fire and qnap nas devices.
 
 ---
@@ -9,7 +9,7 @@ Subject: [PATCH 1/3] Add service types to database for audio streaming, device
  1 file changed, 8 insertions(+)
 
 diff --git a/service-type-database/service-types b/service-type-database/service-types
-index 6e7e2cd..4bbf52a 100644
+index 6e7e2cd9..4bbf52a3 100644
 --- a/service-type-database/service-types
 +++ b/service-type-database/service-types
 @@ -139,6 +139,7 @@ _realplayfavs._tcp:RealPlayer Shared Favorites
@@ -42,7 +42,7 @@ index 6e7e2cd..4bbf52a 100644
 From d9caeb59739c4e8af6b0dfbffff8e4ed365d3beb Mon Sep 17 00:00:00 2001
 From: David Kerr <david@kerr.net>
 Date: Sat, 2 Jul 2016 18:14:24 -0400
-Subject: [PATCH 2/3] Adds support for filtering reflector advertisements This
+Subject: [PATCH 2/4] Adds support for filtering reflector advertisements This
  enhancement is provided courtesy of James Rudd <James.Rudd@sbhs.nsw.edu.au>
  and http://jrudd.org/2014/08/avahi-reflector-filtering-patch/
 
@@ -67,7 +67,7 @@ The filter also blocks local programs from seeing advertised programs so it is r
  6 files changed, 71 insertions(+), 2 deletions(-)
 
 diff --git a/avahi-core/core.h b/avahi-core/core.h
-index f50c612..1ebd27a 100644
+index f50c6128..1ebd27a0 100644
 --- a/avahi-core/core.h
 +++ b/avahi-core/core.h
 @@ -56,6 +56,7 @@ typedef struct AvahiServerConfig {
@@ -79,7 +79,7 @@ index f50c612..1ebd27a 100644
      int enable_wide_area;             /**< Enable wide area support */
      AvahiAddress wide_area_servers[AVAHI_WIDE_AREA_SERVERS_MAX]; /** Unicast DNS server to use for wide area lookup */
 diff --git a/avahi-core/server.c b/avahi-core/server.c
-index a2cb19a..1a91907 100644
+index a2cb19a8..1a91907d 100644
 --- a/avahi-core/server.c
 +++ b/avahi-core/server.c
 @@ -674,6 +674,40 @@ static void handle_response_packet(AvahiServer *s, AvahiDnsPacket *p, AvahiInter
@@ -171,7 +171,7 @@ index a2cb19a..1a91907 100644
      return ret;
  }
 diff --git a/avahi-daemon/avahi-daemon.conf b/avahi-daemon/avahi-daemon.conf
-index 95166f8..2c6c1fc 100644
+index 95166f80..2c6c1fcc 100644
 --- a/avahi-daemon/avahi-daemon.conf
 +++ b/avahi-daemon/avahi-daemon.conf
 @@ -57,6 +57,7 @@ publish-workstation=no
@@ -183,7 +183,7 @@ index 95166f8..2c6c1fc 100644
  [rlimits]
  #rlimit-as=
 diff --git a/avahi-daemon/main.c b/avahi-daemon/main.c
-index 10cb41e..346338f 100644
+index 10cb41e7..346338fb 100644
 --- a/avahi-daemon/main.c
 +++ b/avahi-daemon/main.c
 @@ -826,6 +826,18 @@ static int load_config_file(DaemonConfig *c) {
@@ -206,7 +206,7 @@ index 10cb41e..346338f 100644
                      avahi_log_error("Invalid configuration key \"%s\" in group \"%s\"\n", p->key, g->name);
                      goto finish;
 diff --git a/man/avahi-daemon.conf.5.xml.in b/man/avahi-daemon.conf.5.xml.in
-index 2d15017..dd91e60 100644
+index 2d15017a..dd91e60d 100644
 --- a/man/avahi-daemon.conf.5.xml.in
 +++ b/man/avahi-daemon.conf.5.xml.in
 @@ -327,6 +327,16 @@
@@ -227,7 +227,7 @@ index 2d15017..dd91e60 100644
  
    <section name="Section [rlimits]">
 diff --git a/service-type-database/service-types b/service-type-database/service-types
-index 4bbf52a..0b99d40 100644
+index 4bbf52a3..0b99d403 100644
 --- a/service-type-database/service-types
 +++ b/service-type-database/service-types
 @@ -238,4 +238,3 @@ _shifter._tcp:Window Shifter
@@ -239,7 +239,7 @@ index 4bbf52a..0b99d40 100644
 From c8723de8100cac0449514e095caa45eb6af416c6 Mon Sep 17 00:00:00 2001
 From: David Kerr <david@kerr.net>
 Date: Sun, 3 Jul 2016 21:46:11 -0400
-Subject: [PATCH 3/3] Uncommented the info messages and changed them to debug
+Subject: [PATCH 3/4] Uncommented the info messages and changed them to debug
  messages.  Added debug message for matches as well as rejects. I have found
  that it is extremely useful to see what mDNS-SD messages are matched or
  rejected in order to debug service discovery and therefore it is best if
@@ -250,7 +250,7 @@ Subject: [PATCH 3/3] Uncommented the info messages and changed them to debug
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/avahi-core/server.c b/avahi-core/server.c
-index 1a91907..018429c 100644
+index 1a91907d..018429cc 100644
 --- a/avahi-core/server.c
 +++ b/avahi-core/server.c
 @@ -689,9 +689,11 @@ static void handle_response_packet(AvahiServer *s, AvahiDnsPacket *p, AvahiInter
@@ -279,3 +279,31 @@ index 1a91907..018429c 100644
                  }
              }
  
+
+From 2e42c6416327c256ab70940c7341caf3830d5c24 Mon Sep 17 00:00:00 2001
+From: David Kerr <david@kerr.net>
+Date: Fri, 24 Feb 2017 23:43:33 -0500
+Subject: [PATCH 4/4] suppress warning message that avahi_server_add_address()
+ failed when disable-publishing=yes is set in conf file.  Fixes lathiat/avahi
+ issue #38
+
+---
+ avahi-core/iface.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/avahi-core/iface.c b/avahi-core/iface.c
+index 39a860ae..a68a4b90 100644
+--- a/avahi-core/iface.c
++++ b/avahi-core/iface.c
+@@ -74,7 +74,10 @@ void avahi_interface_address_update_rrs(AvahiInterfaceAddress *a, int remove_rrs
+             avahi_log_info("Registering new address record for %s on %s.%s.", t, a->interface->hardware->name, p == AVAHI_PROTO_UNSPEC ? "*" : avahi_proto_to_string(p));
+ 
+             if (avahi_server_add_address(m->server, a->entry_group, a->interface->hardware->index, p, 0, NULL, &a->address) < 0) {
+-                avahi_log_warn(__FILE__": avahi_server_add_address() failed: %s", avahi_strerror(m->server->error));
++                if (!m->server->config.disable_publishing || m->server->error != AVAHI_ERR_NOT_PERMITTED) {
++                    /* suppress warning if disable_publishing set as this is expected state */
++                    avahi_log_warn(__FILE__": avahi_server_add_address() failed: %s", avahi_strerror(m->server->error));
++                }
+                 avahi_s_entry_group_free(a->entry_group);
+                 a->entry_group = NULL;
+                 return;
