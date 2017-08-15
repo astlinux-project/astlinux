@@ -12,7 +12,7 @@
 # mkdir ~/source-control # used as example folder for these configs
 cd ~/source-control
 # run shell script "crosstool-ng-src/get-crosstool-ng.sh" located in the SVN
-sh ~/astlinux/1.0/crosstool-ng-src/get-crosstool-ng.sh
+sh ~/astlinux/trunk/crosstool-ng-src/get-crosstool-ng.sh
 cd crosstool-ng-1.20.0
 ./configure
 # Note: the 'gperf' package may need to be added to your system.
@@ -24,18 +24,18 @@ cd ~/source-control
 mkdir ctng-1.20.0-3.16
 cd ctng-1.20.0-3.16
 # then copy the "crosstool-ng-src/ct-ng-1.20.0-3.16.config" file from the SVN to ".config" here
-cp ~/astlinux/1.0/crosstool-ng-src/ct-ng-1.20.0-3.16.config .config
+cp ~/astlinux/trunk/crosstool-ng-src/ct-ng-1.20.0-3.16.config .config
 # leave as configured, just look, don't make any changes
 ct-ng menuconfig
 # run shell script "crosstool-ng-src/get-files.sh" located in the SVN
-sh ~/astlinux/1.0/crosstool-ng-src/get-files.sh
+sh ~/astlinux/trunk/crosstool-ng-src/get-files.sh
 # start the toolchain build process
 ct-ng build
 # takes 50-70 min.
 ##
 ## Build x86_64 64-bit toolchain ##
 # copy the "crosstool-ng-src/ct-ng-1.20.0-3.16-x86_64.config" file from the SVN to ".config" here
-cp ~/astlinux/1.0/crosstool-ng-src/ct-ng-1.20.0-3.16-x86_64.config .config
+cp ~/astlinux/trunk/crosstool-ng-src/ct-ng-1.20.0-3.16-x86_64.config .config
 # again, start the toolchain build process
 ct-ng build
 # takes 30-50 min.
