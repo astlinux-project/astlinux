@@ -93,6 +93,11 @@ set_asterisk_version()
   esac
 }
 
+if ! svn info >/dev/null 2>&1; then
+  echo "Using master-build requires a svn checkout, exiting."
+  exit 1
+fi
+
 if [ -z "$output_path" ]; then
   echo "usage: master-build output_path [ force ]"
   exit 1
