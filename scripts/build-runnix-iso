@@ -33,12 +33,11 @@ make_release_version()
 {
   RUNBASE="1.0"
   RUNREV="$(LANG=C svn info | awk -F': ' '/^Last Changed Rev:/ { print $2 }')"
-  RUNEXTRA=""
 
   if [ "$(cat "project/runnix-iso/target_skeleton/etc/runnix-release")" = "svn" ]; then
-    RUNVER="runnix-iso-${RUNBASE}-${RUNREV}${RUNEXTRA}"
+    RUNVER="runnix-iso-${RUNBASE}-${RUNREV}"
   else
-    RUNVER="$(cat "project/runnix-iso/target_skeleton/etc/runnix-release")${RUNEXTRA}"
+    RUNVER="$(cat "project/runnix-iso/target_skeleton/etc/runnix-release")"
   fi
 }
 
@@ -126,6 +125,11 @@ restore_state()
 umask 002
 
 PATH=/sbin:/usr/sbin:$PATH
+
+if ! svn info >/dev/null 2>&1; then
+  echo "Building runnix-iso requires a svn checkout, exiting."
+  exit 1
+fi
 
 ISO_DIR=""
 ISO_FILE=""

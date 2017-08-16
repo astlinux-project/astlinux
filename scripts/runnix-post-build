@@ -11,12 +11,11 @@ make_release_version()
 {
   RUNBASE="0.5"
   RUNREV="$(LANG=C svn info | awk -F': ' '/^Last Changed Rev:/ { print $2 }')"
-  RUNEXTRA=""
 
   if [ "$(cat "project/runnix/target_skeleton/etc/runnix-release")" = "svn" ]; then
-    RUNVER="runnix-${RUNBASE}-${RUNREV}${RUNEXTRA}"
+    RUNVER="runnix-${RUNBASE}-${RUNREV}"
   else
-    RUNVER="$(cat "project/runnix/target_skeleton/etc/runnix-release")${RUNEXTRA}"
+    RUNVER="$(cat "project/runnix/target_skeleton/etc/runnix-release")"
   fi
 }
 

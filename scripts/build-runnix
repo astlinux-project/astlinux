@@ -21,12 +21,11 @@ make_release_version()
 {
   RUNBASE="0.5"
   RUNREV="$(LANG=C svn info | awk -F': ' '/^Last Changed Rev:/ { print $2 }')"
-  RUNEXTRA=""
 
   if [ "$(cat "project/runnix/target_skeleton/etc/runnix-release")" = "svn" ]; then
-    RUNVER="runnix-${RUNBASE}-${RUNREV}${RUNEXTRA}"
+    RUNVER="runnix-${RUNBASE}-${RUNREV}"
   else
-    RUNVER="$(cat "project/runnix/target_skeleton/etc/runnix-release")${RUNEXTRA}"
+    RUNVER="$(cat "project/runnix/target_skeleton/etc/runnix-release")"
   fi
 }
 
@@ -82,6 +81,11 @@ restore_state()
 umask 002
 
 PATH=/sbin:/usr/sbin:$PATH
+
+if ! svn info >/dev/null 2>&1; then
+  echo "Building runnix requires a svn checkout, exiting."
+  exit 1
+fi
 
 if [ ! -f "$CONFIG" ]; then
   echo "The $CONFIG file does not exist, exiting."
