@@ -35,6 +35,9 @@ Further Details:
 - Get Started: https://doc.astlinux-project.org/devdoc:documentation
  
 -------------------------------------------------------------------------------
+Discussion Mailing Lists: http://www.astlinux-project.org/contact.html
+
+-------------------------------------------------------------------------------
 The AstLinux Team
 
 http://www.astlinux-project.org
