@@ -134,7 +134,7 @@ make oldconfig
 time make all
 
 if [ $? -eq 0 -a -f "$ROOTFS_SQUASHFS" -a -f "initrd.img" -a -d "$RUNNIX_DIR" -a -d "$RUNFS_DIR" ]; then
-  . ./scripts/astlinux_release_version.sh
+  . ./scripts/ver-label/astlinux_release_version.sh
   astlinux_release_version
   make_release
   make_runfs

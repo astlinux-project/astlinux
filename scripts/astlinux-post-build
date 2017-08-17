@@ -60,7 +60,7 @@ fi
 
 overlay_target
 
-. "$base/scripts/astlinux_release_version.sh"
+. "$base/scripts/ver-label/astlinux_release_version.sh"
 astlinux_release_version
 echo ${ASTVER} > "$target/etc/astlinux-release"
 

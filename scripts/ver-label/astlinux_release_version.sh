@@ -1,9 +1,8 @@
 ## astlinux_release_version.sh
 
-ASTBASE="1.3"
-
 astlinux_release_version()
 {
+  ASTBASE="1.3"
   if svn info >/dev/null 2>&1; then
     ASTREV="$(LANG=C svn info | awk -F': ' '/^Last Changed Rev:/ { print $2 }')"
     if [ -n "$ASTREV" ]; then

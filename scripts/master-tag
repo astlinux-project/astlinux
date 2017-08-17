@@ -41,6 +41,11 @@ Released @TBD@\
   fi
 }
 
+if ! svn info >/dev/null 2>&1; then
+  echo "Tagging astlinux requires a svn checkout, exiting."
+  exit 1
+fi
+
 REPO_ROOT="$(LANG=C svn info | awk -F': ' '/^Repository Root:/ { print $2 }')"
 
 if [ -z "$REPO_ROOT" ]; then

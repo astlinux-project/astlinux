@@ -7,23 +7,12 @@ target="$1"
 
 base="${target%/output/target}"
 
-make_release_version()
-{
-  RUNBASE="1.0"
-  RUNREV="$(LANG=C svn info | awk -F': ' '/^Last Changed Rev:/ { print $2 }')"
-
-  if [ "$(cat "project/runnix-iso/target_skeleton/etc/runnix-release")" = "svn" ]; then
-    RUNVER="runnix-iso-${RUNBASE}-${RUNREV}"
-  else
-    RUNVER="$(cat "project/runnix-iso/target_skeleton/etc/runnix-release")"
-  fi
-}
-
 ## Our target skeleton copying does not include dot-files
 ## Do it here:
 ln -snf "/tmp/.ssh" "$target/.ssh"
 
-make_release_version
+. "$base/scripts/ver-label/runnix_iso_release_version.sh"
+runnix_iso_release_version
 echo ${RUNVER} > "$target/etc/runnix-release"
 
 echo "
