@@ -18,15 +18,23 @@ Released @TBD@
 
 ** System
 
+-- acme-client, add DuckDNS DNS validation support
+
 -- e2fsprogs, version bump to 1.43.5
 
--- acme-client, add DuckDNS DNS validation support
+-- expat, version bump to 2.2.4
+
+-- sudo, version bump to 1.8.21
 
 ** Networking
 
 -- libcurl (curl) version bump to 7.55.1
 
+-- unbound (host), version bump to 1.6.5
+
 -- ddclient, ddclient-curl version 3.8.3-05, adds DuckDNS support for both IPv4 and IPv6
+
+-- whois, version bump to 5.2.18
 
 ** Asterisk
 
