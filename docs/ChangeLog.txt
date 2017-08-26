@@ -18,6 +18,10 @@ Released @TBD@
 
 ** System
 
+-- Linux Kernel 3.16.47, security and bug fixes.
+
+-- sqlite, version bump to 3.20.1
+
 -- acme-client, add DuckDNS DNS validation support
 
 -- e2fsprogs, version bump to 1.43.5
