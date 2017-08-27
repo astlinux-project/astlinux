@@ -4,7 +4,7 @@
 #
 #############################################################
 LIBSRTP_VERSION = 1.5.4
-LIBSRTP_SITE = http://files.astlinux-project.org
+LIBSRTP_SITE = https://s3.amazonaws.com/files.astlinux-project
 #LIBSRTP_SITE = https://github.com/cisco/libsrtp/releases
 LIBSRTP_SOURCE = libsrtp-$(LIBSRTP_VERSION).tar.gz
 LIBSRTP_INSTALL_STAGING = YES

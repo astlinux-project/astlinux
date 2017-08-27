@@ -6,7 +6,7 @@
 IKSEMEL_VERSION = 1.5-pre1
 IKSEMEL_SOURCE = iksemel-$(IKSEMEL_VERSION).tar.gz
 #IKSEMEL_SITE = http://iksemel.googlecode.com/files
-IKSEMEL_SITE = http://files.astlinux-project.org
+IKSEMEL_SITE = https://s3.amazonaws.com/files.astlinux-project
 IKSEMEL_DEPENDENCIES = openssl
 
 IKSEMEL_INSTALL_STAGING = YES

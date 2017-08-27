@@ -5,7 +5,7 @@
 #############################################################
 IPERF_VERSION = 2.0.9
 IPERF_SOURCE = iperf-$(IPERF_VERSION).tar.gz
-IPERF_SITE = http://files.astlinux-project.org
+IPERF_SITE = https://s3.amazonaws.com/files.astlinux-project
 #IPERF_SITE = http://downloads.sourceforge.net/project/iperf2
 
 IPERF_CONF_ENV = \

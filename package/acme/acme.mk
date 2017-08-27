@@ -6,7 +6,7 @@
 
 ACME_VERSION = 2.7.2
 ACME_SOURCE = acme.sh-$(ACME_VERSION).tar.gz
-ACME_SITE = http://files.astlinux-project.org
+ACME_SITE = https://s3.amazonaws.com/files.astlinux-project
 
 ACME_REMOVE_TARGET_DNSAPI = dns_myapi.sh dns_lexicon.sh $(if $(BR2_PACKAGE_BIND),,dns_nsupdate.sh) README.md
 

@@ -6,7 +6,7 @@
 
 LUASOCKET_VERSION = 3.0-rc1
 LUASOCKET_SOURCE = luasocket-$(LUASOCKET_VERSION).tar.gz
-LUASOCKET_SITE = http://files.astlinux-project.org
+LUASOCKET_SITE = https://s3.amazonaws.com/files.astlinux-project
 #LUASOCKET_SITE = http://github.com/diegonehab/luasocket/archive
 LUASOCKET_DEPENDENCIES = lua
 
