@@ -1,8 +1,8 @@
 #!/bin/bash
 # getter_better script from gumstix
 # what a great idea...
-#SITE="http://s3.amazonaws.com/files.astlinux-project"
-SITE="files.astlinux-project.org"
+#SITE="http://files.astlinux-project.org"
+SITE="https://s3.amazonaws.com/files.astlinux-project"
 
 WGET_ARGS="--passive-ftp --timeout=30 -c -t 2"
 
@@ -23,7 +23,7 @@ if [ $wget_rtn -ne 0 ]; then
     # Copy all params into an array
     for (( i=0; $?==0; i++ ));do a[$i]=$1; shift; done
     # Chop all but filename from last param and prepend out URL
-    a[$index]=${a[index]/*\//http:\/\/$SITE/}
+    a[$index]=${a[index]/*\//$SITE/}
     # Now wget that from our server
     wget $WGET_ARGS ${a[@]}
   )
