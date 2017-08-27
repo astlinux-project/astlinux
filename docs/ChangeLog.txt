@@ -20,6 +20,8 @@ Released @TBD@
 
 -- Linux Kernel 3.16.47, security and bug fixes.
 
+-- RUNNIX, version bump to runnix-0.5.1, with Linux Kernel 3.16.47, e2fsprogs 1.43.5
+
 -- sqlite, version bump to 3.20.1
 
 -- acme-client, add DuckDNS DNS validation support
@@ -48,7 +50,7 @@ Released @TBD@
 
 -- pjsip 2.6 (no change)
 
--- FOP2, available version bump to 2.31.13.
+-- FOP2, available version bump to 2.31.14.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
    More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
