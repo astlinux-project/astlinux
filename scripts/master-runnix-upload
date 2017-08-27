@@ -1,11 +1,11 @@
 #!/bin/bash
 
 if [ -z "$1" ]; then
-  echo "Usage: master-runnix-upload [runnix-0.5-]NNNN"
+  echo "Usage: master-runnix-upload [runnix-]n.n.n"
   exit 1
 fi
 
-runnix="runnix-0.5-${1#runnix-0.5-}"
+runnix="runnix-${1#runnix-}"
 
 if [ ! -f "$runnix.tar.gz" ]; then
   echo "master-runnix-upload: File not found: \"$runnix.tar.gz\""
