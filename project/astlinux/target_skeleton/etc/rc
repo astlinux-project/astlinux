@@ -15,8 +15,8 @@ ast_checkfs () {
   fi
 
   echo "Checking $1"
-  e2fsck -y $1 >/dev/null
 
+  e2fsck -y -C 0 $1
   status="$?"
 
   case $status in

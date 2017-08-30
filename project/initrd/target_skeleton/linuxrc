@@ -124,9 +124,7 @@ of RAM. You should consider getting more."
 
     echo "Checking asturw filesystem"
 
-    # check fsck here... (toss stdout, but keep stderr)
-
-    e2fsck -y $ASTURW >/dev/null
+    e2fsck -y -C 0 $ASTURW
     status=$?
 
     case $status in
