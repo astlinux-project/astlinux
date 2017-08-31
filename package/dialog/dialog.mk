@@ -5,7 +5,7 @@
 #############################################################
 DIALOG_VERSION = 1.3-20170509
 DIALOG_SOURCE = dialog-$(DIALOG_VERSION).tgz
-DIALOG_SITE = ftp://invisible-island.net/dialog
+DIALOG_SITE = ftp://ftp.invisible-island.net/dialog
 DIALOG_DEPENDENCIES = host-pkg-config ncurses
 
 DIALOG_CONF_OPT = \
