@@ -26,7 +26,7 @@ Released @TBD@
 
 -- acme-client, add DuckDNS DNS validation support
 
--- e2fsprogs, version bump to 1.43.5
+-- e2fsprogs, version bump to 1.43.6, enable e2fsck progress indicator when filesystem is not 'clean' on boot.
 
 -- expat, version bump to 2.2.4
 
