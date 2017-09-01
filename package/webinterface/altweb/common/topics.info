@@ -535,6 +535,7 @@ CLI> unset CF_Email
 
 NOTE: The DNS challenge validation credentials remain stored in the /mnt/kd/acme/account.conf file so auto-renewals can be performed via cron.
 
+SPECIAL NOTE: Depending on the acme.sh DNS provider script, some scripts store the exported credentials variable names exactly in /mnt/kd/acme/account.conf and others prepend SAVED_ to the variable names.  When the credentials variable names are stored exactly any later changes to the credentials must be done by editing /mnt/kd/acme/account.conf.  When the credentials variable names have SAVED_ prepended you may use "export ..." later to change the saved credentials.
 
 --------------------------
 Auto-Renewing Certificates
