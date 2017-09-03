@@ -75,7 +75,11 @@ LIBGLIB2_CONF_ENV = \
 	ac_cv_func_strtoull_l=no \
 	gt_cv_c_wchar_t=$(if $(BR2_USE_WCHAR),yes,no)
 
+LIBGLIB2_CONF_OPT = \
+	--disable-compile-warnings
+
 HOST_LIBGLIB2_CONF_OPT = \
+	--disable-compile-warnings \
 	--disable-coverage \
 	--disable-dtrace \
 	--disable-fam \
