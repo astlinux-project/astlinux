@@ -8,6 +8,11 @@ TARSNAP_VERSION = 1.0.39
 TARSNAP_SOURCE = tarsnap-autoconf-$(TARSNAP_VERSION).tgz
 TARSNAP_SITE = https://www.tarsnap.com/download
 
+## Tarsnap license:
+## Redistribution and use in source and binary forms, without modification,
+## is permitted for the sole purpose of using the "tarsnap" backup service
+## provided by Colin Percival.
+
 TARSNAP_DEPENDENCIES = openssl zlib e2fsprogs
 
 TARSNAP_CONF_OPT = \
