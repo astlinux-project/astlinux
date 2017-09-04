@@ -1,0 +1,16 @@
+config BR2_PACKAGE_TARSNAP
+	bool "tarsnap"
+	select BR2_PACKAGE_OPENSSL
+	select BR2_PACKAGE_ZLIB
+	select BR2_PACKAGE_E2FSPROGS
+	help
+	  "Online backups for the truly paranoid"
+	  Tarsnap is a secure, efficient online backup service:
+	  o Encryption: your data can only be accessed with your personal keys.
+	  o Source code: the client code is available.
+	  o Deduplication: only the unique data between your current files
+	    and encrypted archives is uploaded.
+
+	  https://www.tarsnap.com
+	  https://github.com/Tarsnap/tarsnap
+
