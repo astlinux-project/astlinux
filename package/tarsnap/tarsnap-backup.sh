@@ -15,6 +15,8 @@
 
 TARSNAP_PROG="/usr/bin/tarsnap"
 
+TARSNAP_KEYGEN_PROG="/usr/bin/tarsnap-keygen"
+
 TARSNAP_DIR="/mnt/kd/tarsnap"
 
 TARSNAP_CACHE_DIR="$TARSNAP_DIR/tarsnap-cache"
@@ -93,7 +95,7 @@ tarsnap_keygen()
     return 2
   fi
 
-  $TARSNAP_PROG --keyfile "$TARSNAP_KEY_FILE" --user "$user" --machine "$machine"
+  $TARSNAP_KEYGEN_PROG --keyfile "$TARSNAP_KEY_FILE" --user "$user" --machine "$machine"
 }
 
 error_notify()
