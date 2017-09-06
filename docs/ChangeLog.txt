@@ -28,6 +28,8 @@ Released @TBD@
 
 -- e2fsprogs, version bump to 1.43.6, enable e2fsck progress indicator when filesystem is not 'clean' on boot.
 
+-- libxml2, version bump to 2.9.5, security fixes: CVE-2017-9049, CVE-2017-9050, CVE-2017-9047, CVE-2017-9048, CVE-2017-5969
+
 -- expat, version bump to 2.2.4
 
 -- sudo, version bump to 1.8.21
