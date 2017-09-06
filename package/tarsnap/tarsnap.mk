@@ -25,8 +25,14 @@ TARSNAP_CONF_OPT = \
 
 define TARSNAP_POST_INSTALL
 	$(INSTALL) -m 0644 -D package/tarsnap/tarsnap.conf $(TARGET_DIR)/etc/tarsnap.conf
+	$(INSTALL) -m 0755 -D package/tarsnap/tarsnap-backup.sh $(TARGET_DIR)/usr/bin/tarsnap-backup
 endef
 
 TARSNAP_POST_INSTALL_TARGET_HOOKS = TARSNAP_POST_INSTALL
+
+define TARSNAP_UNINSTALL_TARGET_CMDS
+	rm -f $(TARGET_DIR)/etc/tarsnap.conf
+	rm -f $(TARGET_DIR)/usr/bin/tarsnap*
+endef
 
 $(eval $(call AUTOTARGETS,package,tarsnap))
