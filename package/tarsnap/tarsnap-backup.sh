@@ -25,6 +25,8 @@ TARSNAP_KEY_FILE="$TARSNAP_DIR/tarsnap.key"
 
 LOCKFILE="/var/lock/tarsnap-backup.lock"
 
+SCRIPTFILE="/mnt/kd/tarsnap-backup.script"
+
 if [ ! -x "$TARSNAP_PROG" ]; then
   echo "tarsnap-backup: executable file '$TARSNAP_PROG' not found." >&2
   exit 1
@@ -133,7 +135,7 @@ Backup on '$HOSTNAME': $MESG.
 
 do_backup()
 {
-  local dry_run="$1" opts cd_dir dir dirs file files includes rtn IFS
+  local dry_run="$1" opts cd_dir dir dirs file files includes archive rtn IFS
 
   if [ $dry_run -eq 1 ]; then
     echo "**** Dry Run ****"
@@ -188,7 +190,8 @@ do_backup()
   done
 
   if [ -n "$includes" ]; then
-    $TARSNAP_PROG -cf "${HOSTNAME}-${cd_dir##*/}-$(date +%Y%m%d-%H%M%S)" $opts -C $cd_dir $includes
+    archive="${HOSTNAME}-${cd_dir##*/}-$(date +%Y%m%d-%H%M%S)"
+    $TARSNAP_PROG -cf "$archive" $opts -C $cd_dir $includes
     rtn=$?
 
     if [ $dry_run -eq 1 ]; then
@@ -196,6 +199,9 @@ do_backup()
     fi
     if [ $rtn -ne 0 ]; then
       return $rtn
+    fi
+    if [ $dry_run -ne 1 ]; then
+      logger -s -t tarsnap-backup -p kern.info "Backup success, created Tarsnap archive: $archive"
     fi
   fi
 
@@ -214,7 +220,7 @@ do_backup()
     if [ "$ASTERISK_DAHDI_DISABLE" != "yes" ]; then
       dirs="$dirs asterisk dahdi fop2 phoneprov/templates"
     fi
-    files="*.conf rc.elocal rc.local rc.local.stop dnsmasq.static arno-iptables-firewall/custom-rules"
+    files="*.conf *.script rc.elocal rc.local rc.local.stop dnsmasq.static arno-iptables-firewall/custom-rules"
   fi
 
   includes=""
@@ -234,7 +240,6 @@ do_backup()
   for file in $files $BACKUP_KD_INCLUDE_FILES; do
     case "$file" in
       /*) ;;
-      *tarsnap*) ;;
       *) if [ -f "$file" ]; then
            includes="$includes${includes:+ }$file"
          fi
@@ -243,7 +248,8 @@ do_backup()
   done
 
   if [ -n "$includes" ]; then
-    $TARSNAP_PROG -cf "${HOSTNAME}-${cd_dir##*/}-$(date +%Y%m%d-%H%M%S)" $opts -C $cd_dir $includes
+    archive="${HOSTNAME}-${cd_dir##*/}-$(date +%Y%m%d-%H%M%S)"
+    $TARSNAP_PROG -cf "$archive" $opts -C $cd_dir $includes
     rtn=$?
 
     if [ $dry_run -eq 1 ]; then
@@ -251,6 +257,9 @@ do_backup()
     fi
     if [ $rtn -ne 0 ]; then
       return $rtn
+    fi
+    if [ $dry_run -ne 1 ]; then
+      logger -s -t tarsnap-backup -p kern.info "Backup success, created Tarsnap archive: $archive"
     fi
   fi
 
@@ -369,8 +378,19 @@ fi
 
 trap 'rm -f "$LOCKFILE"; error_notify "Backup interrupted" "$dry_run"; exit $?' INT TERM EXIT
 
+# External script args: (day 1-31) (month 1-12) (weekday 0-6)
+SCRIPT_ARGS="$(date '+%-d %-m %w')"
+
+if [ -x $SCRIPTFILE ]; then
+  $SCRIPTFILE PRE_BACKUP $SCRIPT_ARGS
+fi
+
 do_backup "$dry_run"
 rtn=$?
+
+if [ -x $SCRIPTFILE ]; then
+  $SCRIPTFILE POST_BACKUP $SCRIPT_ARGS
+fi
 
 rm -f "$LOCKFILE"
 trap - INT TERM EXIT
