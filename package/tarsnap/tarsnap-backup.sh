@@ -201,7 +201,7 @@ do_backup()
       return $rtn
     fi
     if [ $dry_run -ne 1 ]; then
-      logger -s -t tarsnap-backup -p kern.info "Backup success, created Tarsnap archive: $archive"
+      logger -s -t tarsnap-backup -p kern.info "Backup success: Created Tarsnap archive: $archive"
     fi
   fi
 
@@ -216,11 +216,11 @@ do_backup()
     dirs=""
     files=""
   else
-    dirs="rc.conf.d crontabs avahi arno-iptables-firewall/plugins monit openvpn ipsec ssl ssh ssh_keys ssh_root_keys"
+    dirs="rc.conf.d crontabs arno-iptables-firewall avahi monit openvpn ipsec snmp ssl ssh ssh_keys ssh_root_keys ups"
     if [ "$ASTERISK_DAHDI_DISABLE" != "yes" ]; then
-      dirs="$dirs asterisk dahdi fop2 phoneprov/templates"
+      dirs="$dirs asterisk dahdi fop2 custom-agi phoneprov/templates"
     fi
-    files="*.conf *.script rc.elocal rc.local rc.local.stop dnsmasq.static arno-iptables-firewall/custom-rules"
+    files="*.conf *.script rc.elocal rc.local rc.local.stop blocked-hosts dnsmasq.static webgui-prefs.txt"
   fi
 
   includes=""
@@ -259,7 +259,7 @@ do_backup()
       return $rtn
     fi
     if [ $dry_run -ne 1 ]; then
-      logger -s -t tarsnap-backup -p kern.info "Backup success, created Tarsnap archive: $archive"
+      logger -s -t tarsnap-backup -p kern.info "Backup success: Created Tarsnap archive: $archive"
     fi
   fi
 
