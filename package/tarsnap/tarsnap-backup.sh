@@ -210,7 +210,7 @@ do_backup()
     dirs=""
     files=""
   else
-    dirs="rc.conf.d crontabs avahi arno-iptables-firewall/plugins monit openvpn ipsec ssl"
+    dirs="rc.conf.d crontabs avahi arno-iptables-firewall/plugins monit openvpn ipsec ssl ssh ssh_keys ssh_root_keys"
     if [ "$ASTERISK_DAHDI_DISABLE" != "yes" ]; then
       dirs="$dirs asterisk dahdi fop2 phoneprov/templates"
     fi
