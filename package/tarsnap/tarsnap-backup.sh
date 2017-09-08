@@ -133,6 +133,123 @@ Backup on '$HOSTNAME': $MESG.
   done
 }
 
+date_to_days()
+{
+  local date="$1" year month day month_days
+
+  year="${date:0:4}"
+  month="${date:4:2}"
+  month="${month##0}"
+  day="${date:6:2}"
+  day="${day##0}"
+
+  case $month in
+     2) month_days=31 ;;
+     3) month_days=59 ;;
+     4) month_days=90 ;;
+     5) month_days=120 ;;
+     6) month_days=151 ;;
+     7) month_days=181 ;;
+     8) month_days=212 ;;
+     9) month_days=243 ;;
+    10) month_days=273 ;;
+    11) month_days=304 ;;
+    12) month_days=334 ;;
+     *) month_days=0 ;;
+  esac
+
+  echo "$((year*365 + month_days + day))"
+}
+
+do_prune()
+{
+  local dry_run="$1" age_days archive archives num_deleted num_failed IFS
+  local cur_date cur_days date days
+
+  age_days="${BACKUP_PRUNE_AGE_DAYS:-30}"
+  # Sanity check for a non-zero positive integer
+  case "$age_days" in
+    [1-9]) ;;
+    [1-9][0-9]*) ;;
+    *) logger -s -t tarsnap-backup -p kern.info "Prune failed: Invalid BACKUP_PRUNE_AGE_DAYS: $age_days"
+       return 2
+       ;;
+  esac
+
+  archives="$($TARSNAP_PROG --list-archives)"
+  if [ $? -ne 0 ]; then
+    if [ $dry_run -ne 1 ]; then
+      logger -s -t tarsnap-backup -p kern.info "Prune failed: Could not retrieve archive list"
+    fi
+    return 1
+  fi
+
+  cur_date="$(date +%Y%m%d)"
+  cur_days="$(date_to_days "$cur_date")"
+  num_deleted=0
+  num_failed=0
+
+  unset IFS
+  for archive in $archives; do
+
+    # Sanity check for known archive format
+    case "$archive" in
+      *-asturw-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9]) ;;
+          *-kd-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9]) ;;
+      *) continue
+         ;;
+    esac
+
+    # Never delete July 1'st archives for any year
+    case "$archive" in
+      *-[0-9][0-9][0-9][0-9]0701-[0-9][0-9][0-9][0-9][0-9][0-9])
+        continue
+        ;;
+    esac
+
+    date="$(echo "$archive" | sed -n -r -e 's/^.*-([0-9]{8})-[0-9]{6}$/\1/p')"
+    if [ -z "$date" ]; then
+      continue
+    fi
+    days="$(date_to_days "$date")"
+
+    # Keep 1'st of the month archives for a year
+    case "$archive" in
+      *-[0-9][0-9][0-9][0-9][0-9][0-9]01-[0-9][0-9][0-9][0-9][0-9][0-9])
+        if [ $((cur_days - days)) -le 365 ]; then
+          continue
+        fi
+        ;;
+    esac
+
+    if [ $((cur_days - days)) -gt $age_days ]; then
+      if [ $dry_run -eq 1 ]; then
+        echo "Dry-Run Delete Archive: $archive" >&2
+      else
+        $TARSNAP_PROG -d -f "$archive"
+        if [ $? -eq 0 ]; then
+          num_deleted=$((num_deleted+1))
+          echo "Delete success for archive: $archive" >&2
+        else
+          num_failed=$((num_failed+1))
+          echo "Delete failure for archive: $archive" >&2
+        fi
+      fi
+    fi
+  done
+
+  if [ $dry_run -ne 1 ]; then
+    if [ $num_deleted -ne 0 ]; then
+      logger -s -t tarsnap-backup -p kern.info "Prune success for '$num_deleted' archive(s)"
+    fi
+    if [ $num_failed -ne 0 ]; then
+      logger -s -t tarsnap-backup -p kern.info "Prune failed for '$num_failed' archive(s)"
+    fi
+  fi
+
+  return 0
+}
+
 do_backup()
 {
   local dry_run="$1" opts cd_dir dir dirs file files includes archive rtn IFS
@@ -387,6 +504,10 @@ fi
 
 do_backup "$dry_run"
 rtn=$?
+
+if [ $rtn -eq 0 -a -n "$BACKUP_PRUNE_AGE_DAYS" ]; then
+  do_prune "$dry_run"
+fi
 
 if [ -x $SCRIPTFILE ]; then
   $SCRIPTFILE POST_BACKUP $SCRIPT_ARGS
