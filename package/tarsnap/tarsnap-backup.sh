@@ -282,11 +282,10 @@ do_backup()
   for dir in $dirs $BACKUP_ASTURW_INCLUDE_DIRS; do
     case "$dir" in
       /*) ;;
-      mnt/kd*) ;;
-      stat/var/lib/asterisk*) ;;
-      stat/var/packages*) ;;
+      mnt*) ;;
+      usr*) ;;
+      lib*) ;;
       stat/var/www/cache*) ;;
-      usr/lib*) ;;
       *) if [ -d "$dir" ]; then
            includes="$includes${includes:+ }$dir"
          fi
@@ -297,7 +296,7 @@ do_backup()
   for file in $files $BACKUP_ASTURW_INCLUDE_FILES; do
     case "$file" in
       /*) ;;
-      mnt/kd*) ;;
+      mnt*) ;;
       stat/var/www/cache*) ;;
       *) if [ -f "$file" ]; then
            includes="$includes${includes:+ }$file"
