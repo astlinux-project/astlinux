@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-QEMU_VERSION = 2.9.0
+QEMU_VERSION = 2.10.0
 QEMU_SOURCE = qemu-$(QEMU_VERSION).tar.bz2
 QEMU_SITE = http://wiki.qemu.org/download
 
@@ -67,6 +67,12 @@ else
 QEMU_OPTS += --disable-vnc
 endif
 
+ifeq ($(BR2_PACKAGE_GNUTLS),y)
+QEMU_OPTS += --enable-gnutls
+else
+QEMU_OPTS += --disable-gnutls
+endif
+
 define QEMU_CONFIGURE_CMDS
 	( cd $(@D); \
 		LIBS='$(QEMU_LIBS)' \
@@ -83,7 +89,6 @@ define QEMU_CONFIGURE_CMDS
 			--enable-kvm \
 			--enable-attr \
 			--enable-vhost-net \
-			--enable-uuid \
 			--disable-bsd-user \
 			--disable-xen \
 			--disable-slirp \
