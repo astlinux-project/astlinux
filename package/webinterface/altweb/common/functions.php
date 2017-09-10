@@ -67,6 +67,8 @@ function restartPROCESS($process, $ret_good, $ret_fail, $start = 'start', $wait 
     $cmd .= ';service '.$process.' '.$start.' >/dev/null 2>/dev/null';
   } elseif ($start === 'reload') {
     $cmd .= ';service '.$process.' '.$start.' >/dev/null 2>/dev/null';
+  } elseif ($start === 'apply') {
+    $cmd .= ';/usr/sbin/gen-rc-conf';
   } elseif ($process === 'iptables') {
     $cmd .= ';/usr/sbin/gen-rc-conf';
     $cmd .= ';service iptables restart >/dev/null 2>/dev/null';
