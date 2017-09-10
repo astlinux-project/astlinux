@@ -290,6 +290,7 @@ source "package/acme/Config.in"
 source "package/beecrypt/Config.in"
 source "package/ca-certificates/Config.in"
 source "package/gnutls/Config.in"
+source "package/nettle/Config.in
 source "package/libgcrypt/Config.in"
 source "package/libgpg-error/Config.in"
 source "package/libnss/Config.in"
@@ -414,6 +415,8 @@ source "package/pcre/Config.in"
 source "package/popt/Config.in"
 source "package/readline/Config.in"
 source "package/slang/Config.in"
+source "package/libunistring/Config.in"
+source "package/libtasn1/Config.in"
 endmenu
 
 menu "JSON/XML"
