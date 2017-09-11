@@ -84,12 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = 999;                                 
   } elseif (isset($_POST['submit_save'])) {
     $result = saveBACKUPsettings($BACKUPCONFDIR, $BACKUPCONFFILE);
-  } elseif (isset($_POST['submit_restart'])) {
-    $result = 99;
-    if (isset($_POST['confirm_restart'])) {
-      $result = restartPROCESS('', 10, $result, 'apply');
-    } else {
-      $result = 2;
+    if ($result == 11) {
+      $result = restartPROCESS('', $result, 99, 'apply');
     }
   }
   header('Location: '.$myself.'?result='.$result);
@@ -109,14 +105,10 @@ require_once '../common/header.php';
   putHtml("<center>");
   if (isset($_GET['result'])) {
     $result = $_GET['result'];
-    if ($result == 2) {
-      putHtml('<p style="color: red;">No Action, check "Confirm" for this action.</p>');
-    } elseif ($result == 3) {
+    if ($result == 3) {
       putHtml('<p style="color: red;">Error creating file.</p>');
-    } elseif ($result == 10) {
-      putHtml('<p style="color: green;">Tarsnap Backup settings are applied.</p>');
     } elseif ($result == 11) {
-      putHtml('<p style="color: green;">Settings saved, click "Apply Changes" to apply Tarsnap Backup settings.</p>');
+      putHtml('<p style="color: green;">Tarsnap Backup settings are saved and applied.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {
@@ -135,12 +127,8 @@ require_once '../common/header.php';
   <table width="100%" class="stdtable">
   <tr><td style="text-align: center;" colspan="2">
   <h2>Tarsnap Backup Options:</h2>
-  </td></tr><tr><td width="380" style="text-align: center;">
-  <input type="submit" class="formbtn" value="Save Settings" name="submit_save" />
-  </td><td class="dialogText" style="text-align: center;">
-  <input type="submit" class="formbtn" value="Apply Changes" name="submit_restart" />
-  &ndash;
-  <input type="checkbox" value="restart" name="confirm_restart" />&nbsp;Confirm
+  </td></tr><tr><td style="text-align: center;" colspan="2">
+  <input type="submit" class="formbtn" value="Save and Apply Settings" name="submit_save" />
   </td></tr></table>
   <table class="stdtable">
   <tr class="dtrow0"><td width="100">&nbsp;</td><td width="100">&nbsp;</td><td width="100">&nbsp;</td><td>&nbsp;</td><td width="100">&nbsp;</td><td width="80">&nbsp;</td></tr>
