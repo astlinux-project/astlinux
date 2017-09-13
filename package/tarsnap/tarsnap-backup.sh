@@ -252,13 +252,10 @@ do_prune()
 
 do_backup()
 {
-  local dry_run="$1" opts cd_dir dir dirs file files includes archive rtn IFS
+  local dry_run="$1" cd_dir dir dirs file files includes archive rtn_output rtn new_data unique_data IFS
 
   if [ $dry_run -eq 1 ]; then
     echo "**** Dry Run ****"
-    opts="-v --dry-run --print-stats"
-  else
-    opts=""
   fi
 
   ##
@@ -307,8 +304,14 @@ do_backup()
 
   if [ -n "$includes" ]; then
     archive="${HOSTNAME}-${cd_dir##*/}-$(date +%Y%m%d-%H%M%S)"
-    $TARSNAP_PROG -cf "$archive" $opts -C $cd_dir $includes
-    rtn=$?
+    if [ $dry_run -eq 1 ]; then
+      $TARSNAP_PROG -cf "$archive" -v --dry-run --print-stats -C $cd_dir $includes
+      rtn=$?
+    else
+      rtn_output="$($TARSNAP_PROG -cf "$archive" --print-stats --humanize-numbers -C $cd_dir $includes 2>&1)"
+      rtn=$?
+      echo "$rtn_output" >&2
+    fi
 
     if [ $dry_run -eq 1 ]; then
       echo "**** Dry Run ****"
@@ -317,7 +320,10 @@ do_backup()
       return $rtn
     fi
     if [ $dry_run -ne 1 ]; then
-      logger -s -t tarsnap-backup -p kern.info "Backup success: Created Tarsnap archive: $archive"
+      new_data="$(echo "$rtn_output" | grep -i '^new data ' | sed -n -r -e 's/^.* ([0-9.]+ .*B)$/\1/p')"
+      unique_data="$(echo "$rtn_output" | grep -i '^ *(unique data) ' | sed -n -r -e 's/^.* ([0-9.]+ .*B)$/\1/p')"
+      logger -s -t tarsnap-backup -p kern.info \
+        "Backup success: Created Tarsnap archive: $archive${new_data:+, New Data: $new_data}${unique_data:+, Unique Archived: $unique_data}"
     fi
   fi
 
@@ -365,8 +371,14 @@ do_backup()
 
   if [ -n "$includes" ]; then
     archive="${HOSTNAME}-${cd_dir##*/}-$(date +%Y%m%d-%H%M%S)"
-    $TARSNAP_PROG -cf "$archive" $opts -C $cd_dir $includes
-    rtn=$?
+    if [ $dry_run -eq 1 ]; then
+      $TARSNAP_PROG -cf "$archive" -v --dry-run --print-stats -C $cd_dir $includes
+      rtn=$?
+    else
+      rtn_output="$($TARSNAP_PROG -cf "$archive" --print-stats --humanize-numbers -C $cd_dir $includes 2>&1)"
+      rtn=$?
+      echo "$rtn_output" >&2
+    fi
 
     if [ $dry_run -eq 1 ]; then
       echo "**** Dry Run ****"
@@ -375,7 +387,10 @@ do_backup()
       return $rtn
     fi
     if [ $dry_run -ne 1 ]; then
-      logger -s -t tarsnap-backup -p kern.info "Backup success: Created Tarsnap archive: $archive"
+      new_data="$(echo "$rtn_output" | grep -i '^new data ' | sed -n -r -e 's/^.* ([0-9.]+ .*B)$/\1/p')"
+      unique_data="$(echo "$rtn_output" | grep -i '^ *(unique data) ' | sed -n -r -e 's/^.* ([0-9.]+ .*B)$/\1/p')"
+      logger -s -t tarsnap-backup -p kern.info \
+        "Backup success: Created Tarsnap archive: $archive${new_data:+, New Data: $new_data}${unique_data:+, Unique Archived: $unique_data}"
     fi
   fi
 
