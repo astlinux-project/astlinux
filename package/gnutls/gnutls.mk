@@ -8,8 +8,6 @@ GNUTLS_VERSION_MAJOR = 3.5
 GNUTLS_VERSION = $(GNUTLS_VERSION_MAJOR).15
 GNUTLS_SOURCE = gnutls-$(GNUTLS_VERSION).tar.xz
 GNUTLS_SITE = https://www.gnupg.org/ftp/gcrypt/gnutls/v$(GNUTLS_VERSION_MAJOR)
-GNUTLS_LICENSE = LGPL-2.1+ (core library), GPL-3.0+ (gnutls-openssl library)
-GNUTLS_LICENSE_FILES = doc/COPYING doc/COPYING.LESSER
 GNUTLS_DEPENDENCIES = libunistring libtasn1 nettle pcre
 GNUTLS_CONF_OPT = \
 	--disable-doc \
@@ -56,23 +54,11 @@ endif
 # libidn support for nommu must exclude the crywrap wrapper (uses fork)
 GNUTLS_CONF_OPT += $(if $(BR2_USE_MMU),,--disable-crywrap)
 
-ifeq ($(BR2_PACKAGE_CRYPTODEV_LINUX),y)
-GNUTLS_CONF_OPT += --enable-cryptodev
-GNUTLS_DEPENDENCIES += cryptodev-linux
-endif
-
 ifeq ($(BR2_PACKAGE_LIBIDN),y)
 GNUTLS_CONF_OPT += --with-idn
 GNUTLS_DEPENDENCIES += libidn
 else
 GNUTLS_CONF_OPT += --without-idn
-endif
-
-ifeq ($(BR2_PACKAGE_P11_KIT),y)
-GNUTLS_CONF_OPT += --with-p11-kit
-GNUTLS_DEPENDENCIES += p11-kit
-else
-GNUTLS_CONF_OPT += --without-p11-kit
 endif
 
 ifeq ($(BR2_PACKAGE_ZLIB),y)
