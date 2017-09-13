@@ -11,6 +11,8 @@ QEMU_NET_BRIDGE=br0
 # QEMU_NET_MACADDR=52:54:00:12:34:56 -- Optional, leave blank for QEMU to assign
 QEMU_BLOCK_DEVICE=virtio
 QEMU_VNC_DISPLAY=1
+# QEMU_VNC_TLS="yes" -- Optional, if not set then VNC sessions will be unencrypted (default)
+QEMU_VNC_TLS_DIR=/mnt/kd/ssl/qemu
 
 . /etc/rc.conf
 
@@ -101,6 +103,21 @@ start () {
       fi
     done
 
+    # Do we want VNC sessions encrypted?
+    QemuVnc="-vnc :$QEMU_VNC_DISPLAY,websocket"
+    QemuVncTls=""
+    if  [ "$QEMU_VNC_TLS" = "yes" ] && [ -n "$QEMU_VNC_TLS_DIR" ]; then
+      if [ -d "$QEMU_VNC_TLS_DIR" ] &&
+         [ -s "${QEMU_VNC_TLS_DIR}/ca-cert.pem" ] &&
+         [ -s "${QEMU_VNC_TLS_DIR}/server-cert.pem" ] &&
+         [ -s "${QEMU_VNC_TLS_DIR}/server-key.pem" ]; then
+        QemuVncTls="-object tls-creds-x509,dir=$QEMU_VNC_TLS_DIR,id=tls0,endpoint=server,verify-peer=no"
+        QemuVnc="${QemuVnc},tls-creds=tls0"
+      else
+        /usr/bin/logger -s -p user.err -id -t qemu "ERROR: TLS credentials missing in $QEMU_VNC_TLS_DIR.  Exiting"
+        exit
+      fi
+    fi
 
     # Load required modules in case they are not already loaded... kvm kvm-amd or kvm-intel and vhost_net
     /bin/grep "flags" /proc/cpuinfo | /bin/grep " lm" > /dev/null
@@ -158,8 +175,10 @@ start () {
         $QemuVCpuStr \
         -qmp tcp:localhost:4444,server,nowait \
         -daemonize \
-        -usbdevice tablet \
-        -display vnc=:$QEMU_VNC_DISPLAY
+        -usb \
+        -device usb-tablet \
+        $QemuVncTls \
+        $QemuVnc
 
     if [ $? == 1 ]; then
       # Something went wrong.
