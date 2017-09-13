@@ -131,5 +131,18 @@ astlinux_deploy() {
     logger -s -t acme-client "New ACME certificates deployed for LDAP and 'slapd' restarted"
   fi
 
+  # Qemu VNC TLS certificates
+  if astlinux_is_acme_service qemu; then
+    cert_dir="${QEMU_VNC_TLS_DIR:-/mnt/kd/ssl/qemu}"
+    mkdir -p "${cert_dir}"
+    cat "$_cca" > "${cert_dir}/ca-cert.pem"
+    chmod 600 "${cert_dir}/ca-cert.pem"
+    cat "$_ccert" > "${cert_dir}/server-cert.pem"
+    chmod 600 "${cert_dir}/server-cert.pem"
+    cat "$_ckey" >"${cert_dir}/server-key.pem"
+    chmod 600 "${cert_dir}/server-key.pem"
+    logger -s -t acme-client "New ACME certificates deployed for Qemu VNC TLS.  Qemu NOT restarted"
+  fi
+
   return 0
 }
