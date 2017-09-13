@@ -67,3 +67,4 @@ chrony~Copyright (c) 1997-2017 Richard P. Curnow, Miroslav Lichvar.
 gntp-send~Copyright (c) 2009-2016 Yasuhiro Matsumoto.
 netcalc~Copyright (c) 2003-2017 Simon Ekstrand, Joachim Nilsson.
 acme.sh~Copyright (c) 2016-2017 Neilpang.
+Tarsnap~Copyright (c) 2006-2017 Tarsnap Backup Inc. All rights reserved.
