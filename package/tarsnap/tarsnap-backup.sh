@@ -283,6 +283,7 @@ do_backup()
       usr*) ;;
       lib*) ;;
       stat/var/www/cache*) ;;
+      lost+found*) ;;
       *) if [ -d "$dir" ]; then
            includes="$includes${includes:+ }$dir"
          fi
@@ -351,7 +352,8 @@ do_backup()
   for dir in $dirs $BACKUP_KD_INCLUDE_DIRS; do
     case "$dir" in
       /*) ;;
-      *tarsnap*) ;;
+      tarsnap*) ;;
+      lost+found*) ;;
       *) if [ -d "$dir" ]; then
            includes="$includes${includes:+ }$dir"
          fi
