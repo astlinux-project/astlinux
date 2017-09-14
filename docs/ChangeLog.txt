@@ -32,9 +32,17 @@ Released @TBD@
 
 -- expat, version bump to 2.2.4
 
--- sudo, version bump to 1.8.21
+-- strace, version bump to 4.19
+
+-- sudo, version bump to 1.8.21p2
 
 ** Networking
+
+-- tarsnap, version 1.0.39, new package; remote, online, “Trust No One” encrypted backups using the Tarsnap Backup service.
+   New rc.conf variables: BACKUP_KD_DEFAULTS, BACKUP_KD_INCLUDE_DIRS, BACKUP_KD_INCLUDE_FILES
+                          BACKUP_ASTURW_DEFAULTS, BACKUP_ASTURW_INCLUDE_DIRS, BACKUP_ASTURW_INCLUDE_FILES
+                          BACKUP_PRUNE_AGE_DAYS, BACKUP_NOTIFY, BACKUP_NOTIFY_FROM
+   More info: http://doc.astlinux-project.org/userdoc:tt_tarsnap_online_backup
 
 -- libcurl (curl) version bump to 7.55.1
 
@@ -42,7 +50,14 @@ Released @TBD@
 
 -- ddclient, ddclient-curl version 3.8.3-05, adds DuckDNS support for both IPv4 and IPv6
 
+-- tcpdump, version bump to 4.9.2, security fixes: 92 CVE's
+
 -- whois, version bump to 5.2.18
+
+-- iperf, version bump to 2.0.10
+
+-- OpenVPN, /usr/sbin/openvpn-tls-verify script, optionally source gui.openvpn.conf allowing the latest
+   OVPN_VALIDCLIENTS from the web interface to be used without restarting OpenVPN server.
 
 ** Asterisk
 
@@ -59,6 +74,8 @@ Released @TBD@
 ** Web Interface
 
 -- Network tab, add DuckDNS Dynamic DNS menu item
+
+-- Network tab, add Data Backup / Tarsnap Backup Options sub-tab.  Used with CLI tarsnap-backup.
 
 
 Additions for AstLinux 1.3.0:
