@@ -52,12 +52,16 @@ Released @TBD@
 
 -- tcpdump, version bump to 4.9.2, security fixes: 92 CVE's
 
+-- chrony, version bump to 3.2
+
 -- whois, version bump to 5.2.18
 
 -- iperf, version bump to 2.0.10
 
 -- OpenVPN, /usr/sbin/openvpn-tls-verify script, optionally source gui.openvpn.conf allowing the latest
    OVPN_VALIDCLIENTS from the web interface to be used without restarting OpenVPN server.
+
+-- arnofw (AIF), reload-blocklist-netset cron script, update using new FireHOL URL's
 
 ** Asterisk
 
