@@ -19,9 +19,17 @@
 ## the defined 'AGE' value.
 ##
 
+. /etc/rc.conf
+
 DIR="$1"
 
 UPDATES=0
+
+FIREHOL="${BLOCKLIST_FIREHOL_ROOT_URL:-https://iplists.firehol.org/files}"
+
+VOIPBL="${BLOCKLIST_VOIPBL_ROOT_URL:-http://www.voipbl.org/update/}"
+
+SPAMHAUS="${BLOCKLIST_SPAMHAUS_ROOT_URL:-https://www.spamhaus.org/drop}"
 
 list_netsets()
 {
@@ -49,44 +57,44 @@ netset_url()
   case $netset in
   ## IPv4
     firehol_level1)
-      URL="https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/firehol_level1.netset"
+      URL="$FIREHOL/firehol_level1.netset"
       ALT_URL=""
       AGE=3600
       ;;
     firehol_level2)
-      URL="https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/firehol_level2.netset"
+      URL="$FIREHOL/firehol_level2.netset"
       ALT_URL=""
       AGE=3600
       ;;
     firehol_level3)
-      URL="https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/firehol_level3.netset"
+      URL="$FIREHOL/firehol_level3.netset"
       ALT_URL=""
       AGE=3600
       ;;
     firehol_webclient)
-      URL="https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/firehol_webclient.netset"
+      URL="$FIREHOL/firehol_webclient.netset"
       ALT_URL=""
       AGE=3600
       ;;
      voipbl)
-      URL="http://www.voipbl.org/update/"
-      ALT_URL="https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/voipbl.netset"
+      URL="$VOIPBL"
+      ALT_URL="$FIREHOL/voipbl.netset"
       AGE=43200
       ;;
     spamhaus_drop)
-      URL="https://www.spamhaus.org/drop/drop.txt"
-      ALT_URL="https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/spamhaus_drop.netset"
+      URL="$SPAMHAUS/drop.txt"
+      ALT_URL="$FIREHOL/spamhaus_drop.netset"
       AGE=43200
       ;;
     spamhaus_edrop)
-      URL="https://www.spamhaus.org/drop/edrop.txt"
-      ALT_URL="https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/spamhaus_edrop.netset"
+      URL="$SPAMHAUS/edrop.txt"
+      ALT_URL="$FIREHOL/spamhaus_edrop.netset"
       AGE=43200
       ;;
 
   ## IPv6
     spamhaus_dropv6)
-      URL="https://www.spamhaus.org/drop/dropv6.txt"
+      URL="$SPAMHAUS/dropv6.txt"
       ALT_URL=""
       AGE=43200
       ;;
