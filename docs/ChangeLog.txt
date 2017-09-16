@@ -38,7 +38,7 @@ Released @TBD@
 
 ** Networking
 
--- tarsnap, version 1.0.39, new package; remote, online, “Trust No One” encrypted backups using the Tarsnap Backup service.
+-- tarsnap, version 1.0.39, new package; remote, online, "Trust No One" encrypted backups using the Tarsnap Backup service.
    New rc.conf variables: BACKUP_KD_DEFAULTS, BACKUP_KD_INCLUDE_DIRS, BACKUP_KD_INCLUDE_FILES
                           BACKUP_ASTURW_DEFAULTS, BACKUP_ASTURW_INCLUDE_DIRS, BACKUP_ASTURW_INCLUDE_FILES
                           BACKUP_PRUNE_AGE_DAYS, BACKUP_NOTIFY, BACKUP_NOTIFY_FROM
