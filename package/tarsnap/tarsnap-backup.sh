@@ -411,7 +411,8 @@ Options:
   --uninstall-cronjob  Remove cron entry
   --cron               Called via cron to perform standard backup
   --dry-run            Optional with --cron, don't create an archive, simulate doing so.
-  --list               Same as 'tarsnap --list-archives'
+  --list               Sorted 'tarsnap --list-archives'
+  --sort method        Optional with --list, sort by name, time or no, defaults to name.
   --stats              Same as 'tarsnap --print-stats'
   --version            Same as 'tarsnap --version'
   --help               Show this help text
@@ -420,7 +421,7 @@ Options:
 }
 
 ARGS="$(getopt --name tarsnap-backup \
-               --long keygen:,machine:,install-cronjob,uninstall-cronjob,cron,dry-run,list,stats,version,help \
+               --long keygen:,machine:,install-cronjob,uninstall-cronjob,cron,dry-run,list,sort:,stats,version,help \
                --options Vh \
                -- "$@")"
 if [ $? -ne 0 ]; then
@@ -435,6 +436,7 @@ uninstall_cronjob=0
 cron=0
 dry_run=0
 list=0
+sort="name"
 stats=0
 version=0
 while [ $# -gt 0 ]; do
@@ -446,6 +448,7 @@ while [ $# -gt 0 ]; do
     --cron)  cron=1 ;;
     --dry-run)  dry_run=1 ;;
     --list)  list=1 ;;
+    --sort)  sort="$2"; shift ;;
     --stats)  stats=1 ;;
     -V|--version)  version=1 ;;
     -h|--help)  usage ;;
@@ -478,7 +481,17 @@ tarsnap-backup --keygen me@example.com [ --machine machine-name ]
 fi
 
 if [ $list -eq 1 ]; then
-  $TARSNAP_PROG --list-archives
+  case "$sort" in
+    name) $TARSNAP_PROG --list-archives | sort
+          ;;
+    time) $TARSNAP_PROG -v --list-archives | sort -k2,3 | cut -d$'\t' -f1
+          ;;
+     no*) $TARSNAP_PROG --list-archives
+          ;;
+       *) echo "tarsnap-backup: Invalid --sort option: $sort" >&2
+          exit 1
+          ;;
+  esac
   exit
 fi
 
