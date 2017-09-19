@@ -4,7 +4,7 @@
 #
 #############################################################
 
-E1000E_VERSION = 3.3.5
+E1000E_VERSION = 3.3.6
 E1000E_SOURCE:=e1000e-$(E1000E_VERSION).tar.gz
 E1000E_SITE = http://downloads.sourceforge.net/project/e1000/e1000e%20stable/$(E1000E_VERSION)
 E1000E_DEPENDENCIES = linux
