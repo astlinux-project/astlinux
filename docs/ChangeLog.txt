@@ -22,6 +22,8 @@ Released @TBD@
 
 -- RUNNIX, version bump to runnix-0.5.1, with Linux Kernel 3.16.47, e2fsprogs 1.43.5
 
+-- e1000e version bump to 3.3.6 Intel PCI-Express PRO/1000 Ethernet Linux driver
+
 -- sqlite, version bump to 3.20.1
 
 -- acme-client, add DuckDNS DNS validation support
