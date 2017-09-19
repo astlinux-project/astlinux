@@ -413,7 +413,7 @@ Options:
   --dry-run            Optional with --cron, don't create an archive, simulate doing so.
   --list               Sorted 'tarsnap --list-archives'
   --sort method        Optional with --list, sort by name, time or no, defaults to name.
-  --stats              Same as 'tarsnap --print-stats'
+  --stats [name]       Same as 'tarsnap --print-stats', optional archive name.
   --version            Same as 'tarsnap --version'
   --help               Show this help text
 "
@@ -456,6 +456,7 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
+arg_name="$1"
 
 if [ $version -eq 1 ]; then
   $TARSNAP_PROG --version
@@ -496,7 +497,11 @@ if [ $list -eq 1 ]; then
 fi
 
 if [ $stats -eq 1 ]; then
-  $TARSNAP_PROG --print-stats
+  if [ -n "$arg_name" ]; then
+    $TARSNAP_PROG --print-stats -f "$arg_name"
+  else
+    $TARSNAP_PROG --print-stats
+  fi
   exit
 fi
 
