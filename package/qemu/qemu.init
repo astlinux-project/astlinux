@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Default settings. Override in user.conf file.
-QEMU_START=yes
+# QEMU_ENABLE=yes -- required, must be set in user.conf
 # QEMU_CDROM_IMAGE=/path/to/iso/file -- Optional.
 # QEMU_RUN_IMAGE=/path/to/vm/image -- Required, must be set in user.conf file
 # QEMU_MEM=1024 -- (value in MB) default set below to lesser of 50% of total memory or 90% of free memory
@@ -12,13 +12,31 @@ QEMU_NET_BRIDGE=br0
 QEMU_BLOCK_DEVICE=virtio
 QEMU_VNC_DISPLAY=1
 # QEMU_VNC_TLS="yes" -- Optional, if not set then VNC sessions will be unencrypted (default)
-QEMU_VNC_TLS_DIR=/mnt/kd/ssl/qemu
+QEMU_VNC_TLS_DIR=/mnt/kd/qemu
 
 . /etc/rc.conf
 
+init () {
+
+  if [ "$QEMU_ENABLE" = "yes" ]; then
+    if [ ! -d /mnt/kd/qemu ]; then
+      mkdir /mnt/kd/qemu
+      if [ -d /stat/etc/qemu ]; then
+        cp -a /stat/etc/qemu/* /mnt/kd/qemu/
+      fi
+    fi
+
+    if [ -d /tmp/etc/qemu ]; then
+      rm -rf /tmp/etc/qemu
+    fi
+    ln -snf /mnt/kd/qemu /tmp/etc/qemu
+  fi
+
+}
+
 start () {
 
-  if [ "$QEMU_START" = "yes" ] && [ -n "$QEMU_RUN_IMAGE" ]; then
+  if [ "$QEMU_ENABLE" = "yes" ] && [ -n "$QEMU_RUN_IMAGE" ]; then
     echo "Starting qemu..."
     # find system memory in MB
     TotMem=$(free -m | awk '/^Mem:/{print $2}')
@@ -106,17 +124,34 @@ start () {
     # Do we want VNC sessions encrypted?
     QemuVnc="-vnc :$QEMU_VNC_DISPLAY,websocket"
     QemuVncTls=""
-    if  [ "$QEMU_VNC_TLS" = "yes" ] && [ -n "$QEMU_VNC_TLS_DIR" ]; then
-      if [ -d "$QEMU_VNC_TLS_DIR" ] &&
-         [ -s "${QEMU_VNC_TLS_DIR}/ca-cert.pem" ] &&
-         [ -s "${QEMU_VNC_TLS_DIR}/server-cert.pem" ] &&
-         [ -s "${QEMU_VNC_TLS_DIR}/server-key.pem" ]; then
-        QemuVncTls="-object tls-creds-x509,dir=$QEMU_VNC_TLS_DIR,id=tls0,endpoint=server,verify-peer=no"
-        QemuVnc="${QemuVnc},tls-creds=tls0"
-      else
-        /usr/bin/logger -s -p user.err -id -t qemu "ERROR: TLS credentials missing in $QEMU_VNC_TLS_DIR.  Exiting"
-        exit
+    TLSmsg=""
+    if  [ "$QEMU_VNC_TLS" = "yes" ] && [ -n "${QEMU_VNC_TLS_DIR}" ]; then
+      # User requested TLS sessions.
+      if [ ! -d "${QEMU_VNC_TLS_DIR}" ] ||
+         [ ! -s "${QEMU_VNC_TLS_DIR}/ca-cert.pem" ] ||
+         [ ! -s "${QEMU_VNC_TLS_DIR}/server-cert.pem" ] ||
+         [ ! -s "${QEMU_VNC_TLS_DIR}/server-key.pem" ]; then
+        # We do not have set of certificate files.  Attempt to use ACME issued...
+        if [ -d "/etc/acme/${DOMAIN}" ] &&
+            [ -s "/etc/acme/${DOMAIN}/ca.cer" ] &&
+            [ -s "/etc/acme/${DOMAIN}/${DOMAIN}.cer" ] &&
+            [ -s "/etc/acme/${DOMAIN}/${DOMAIN}.key" ]; then
+          # We have ACME issued certificates for this domain, use them
+          /usr/bin/logger -s -p user.notice -id -t qemu "NOTICE: Creating links to ACME certificates for ${DOMAIN} in ${QEMU_VNC_TLS_DIR}"
+          mkdir -p "${QEMU_VNC_TLS_DIR}"
+          ln -s -f "/etc/acme/${DOMAIN}/ca.cer" "${QEMU_VNC_TLS_DIR}/ca-cert.pem"
+          ln -s -f "/etc/acme/${DOMAIN}/${DOMAIN}.cer" "${QEMU_VNC_TLS_DIR}/server-cert.pem"
+          ln -s -f "/etc/acme/${DOMAIN}/${DOMAIN}.key" "${QEMU_VNC_TLS_DIR}/server-key.pem"
+        else
+          # No certificates available, abort, user will have to manually fix.
+          /usr/bin/logger -s -p user.err -id -t qemu "ERROR: TLS credentials missing in ${QEMU_VNC_TLS_DIR} and no ACME certificates available for ${DOMAIN}.  Exiting"
+          exit
+        fi
       fi
+      # We have a set of certificate files.
+      QemuVncTls="-object tls-creds-x509,dir=${QEMU_VNC_TLS_DIR},id=tls0,endpoint=server,verify-peer=no"
+      QemuVnc="${QemuVnc},tls-creds=tls0"
+      TLSmsg="  TLS encryption required."
     fi
 
     # Load required modules in case they are not already loaded... kvm kvm-amd or kvm-intel and vhost_net
@@ -164,7 +199,6 @@ start () {
     fi
 
     # And now run qemu.
-    /usr/bin/logger -s -p user.info -id -t qemu "Run image $QEMU_RUN_IMAGE with $QemuMemory MB of Memory and $QemuVCpu CPU cores on Network $QEMU_NET_BRIDGE.  Console on VNC port 590$QEMU_VNC_DISPLAY"
     eval /usr/bin/qemu \
         -m $QemuMemory \
         $QemuNetdev \
@@ -184,6 +218,8 @@ start () {
       # Something went wrong.
       /usr/bin/logger -s -p user.err -id -t qemu "ERROR: Failed to run image $QEMU_RUN_IMAGE"
       exit
+    else
+      /usr/bin/logger -s -p user.info -id -t qemu "Running $QEMU_RUN_IMAGE with $QemuMemory MB of Memory and $QemuVCpu CPU cores on Network $QEMU_NET_BRIDGE.  Console on VNC port 590$QEMU_VNC_DISPLAY WebSocket 570$QEMU_VNC_DISPLAY.$TLSmsg"
     fi
   fi
 }
@@ -221,6 +257,7 @@ stop)
   ;;
 
 init)
+  init
   start
   ;;
 
