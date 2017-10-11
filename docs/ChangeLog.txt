@@ -27,7 +27,7 @@ Released @TBD@
 
 -- ipset, version bump to 6.34
 
--- unbound (host), version bump to 1.6.6
+-- unbound (host), version bump to 1.6.7
 
 -- sngrep, version bump to 1.4.4
 
