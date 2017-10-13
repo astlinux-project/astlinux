@@ -321,9 +321,8 @@ start () {
   local IF
 
   # IPv6
-  if [ "$IPV6" = "yes" ]; then
+  if [ "$IPV6" = "yes" -o -n "$BRIDGE0" -o -n "$BRIDGE1" -o -n "$BRIDGE2" ]; then
     modprobe ipv6
-    
     # Disable IPv6 Autoconf by default
     IFS=$'\n'
     for line in $(sysctl -a 2>/dev/null | cut -d' ' -f1 | \
