@@ -16,6 +16,9 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2017-09-20
 
+-- Update build system tools:
+   == automake, version bump to 1.15.1
+
 ** Networking
 
 -- OpenVPN, version bump to 2.4.4, security fix: CVE-2017-12166
