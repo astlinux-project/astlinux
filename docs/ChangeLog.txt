@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Monit, version bump to 5.24.0
 
+-- logrotate, version bump to 3.13.0
+
 -- ca-certificates, update trusted root certificates 2017-09-20
 
 -- Update build system tools:
