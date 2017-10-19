@@ -16,7 +16,6 @@ MODULE_INIT_TOOLS_CONF_OPT = \
 # module-init-tools-3.11-add-manpages-config-option.patch is modifying
 # configure.ac and Makefile.am
 MODULE_INIT_TOOLS_AUTORECONF=YES
-HOST_MODULE_INIT_TOOLS_AUTORECONF=YES
 HOST_MODULE_INIT_TOOLS_CONF_ENV = ac_cv_prog_DOCBOOKTOMAN=''
 
 $(eval $(call AUTOTARGETS,package,module-init-tools))

@@ -10,7 +10,6 @@ LZO_INSTALL_STAGING = YES
 # Ships a beta libtool version hence our patch doesn't apply.
 # Run autoreconf to regenerate ltmain.sh.
 LZO_AUTORECONF = YES
-HOST_LZO_AUTORECONF = YES
 
 $(eval $(call AUTOTARGETS,package,lzo))
 $(eval $(call AUTOTARGETS,package,lzo,host))
