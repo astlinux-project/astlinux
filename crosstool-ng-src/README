@@ -14,8 +14,12 @@ cd ~/source-control
 # run shell script "crosstool-ng-src/get-crosstool-ng.sh" located in the SVN
 sh ~/astlinux/trunk/crosstool-ng-src/get-crosstool-ng.sh
 cd crosstool-ng-1.20.0
+# If your system has gperf version 3.1 or later than you need to apply
+# this patch and run autoconf before the configure step.
+patch -p1 < ~/astlinux/trunk/crosstool-ng-src/gperf-function-signature.patch
+autoconf
+# Now good to go....
 ./configure
-# Note: the 'gperf' package may need to be added to your system.
 make
 sudo make install
 ##
