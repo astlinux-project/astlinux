@@ -12,6 +12,8 @@ Released @TBD@
 
 ** System
 
+-- sqlite, version bump to 3.21.0, security fixes: CVE-2017-13685, CVE-2017-15286
+
 -- e2fsprogs, version bump to 1.43.7
 
 -- libxml2, version bump to 2.9.6
@@ -22,6 +24,8 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2017-09-20
 
+-- Time Zone Database update, tzdata2017c and php-timezonedb-2017.3
+
 -- Update build system tools:
    == automake, version bump to 1.15.1
 
@@ -29,7 +33,7 @@ Released @TBD@
 
 -- OpenVPN, version bump to 2.4.4, security fix: CVE-2017-12166
 
--- libcurl (curl) version bump to 7.56.0, security fix: CVE-2017-1000254
+-- libcurl (curl) version bump to 7.56.1, security fixes: CVE-2017-1000254, CVE-2017-1000257
 
 -- dnsmasq, version bump to 2.78, security fixes: CVE-2017-13704, CVE-2017-14491, CVE-2017-14492, CVE-2017-14493
                                                   CVE-2017-14494, CVE-2017-14496, CVE-2017-14495
