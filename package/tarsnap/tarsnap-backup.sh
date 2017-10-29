@@ -58,10 +58,10 @@ add_cron_entry()
     return
   fi
 
-  # randomize minutes in the range of 4-56, 53 is a prime number
-  min=$(( RANDOM % 53 + 4 ))
+  # randomize minutes in the range of 6-58, 53 is a prime number
+  min=$(( RANDOM % 53 + 6 ))
 
-  echo "$min 2 * * * /usr/bin/tarsnap-backup --cron >/dev/null 2>&1" >> "$CRON_FILE"
+  echo "$min 0 * * * /usr/bin/tarsnap-backup --cron >/dev/null 2>&1" >> "$CRON_FILE"
   echo 'root' >> "$CRON_UPDATE"
 
   if is_cron_entry; then
