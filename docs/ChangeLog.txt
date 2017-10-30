@@ -16,6 +16,11 @@ Released @TBD@
 
 -- php, version bump to 5.6.32, security fixes.
 
+-- empty, version 0.6.20b, new package; similar functionality to 'expect', allows scripting interactive sessions
+
+-- acme-client, add --deploy-hook 'custom' which executes the script "/mnt/kd/acme-deploy-custom.script".
+   Arguments: acme-deploy-custom.script domain key_file cert_file ca_file fullchain_file
+
 -- e2fsprogs, version bump to 1.43.7
 
 -- libxml2, version bump to 2.9.6
