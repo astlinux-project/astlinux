@@ -25,6 +25,8 @@ Released @TBD@
 
 -- libxml2, version bump to 2.9.6
 
+-- expat, version bump to 2.2.5
+
 -- Monit, version bump to 5.24.0
 
 -- logrotate, version bump to 3.13.0
