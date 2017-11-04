@@ -1,0 +1,106 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+CONFIG_DIR="/mnt/kd/wireguard"
+
+CONFIG_FILE="$CONFIG_DIR/${WIREGUARD_IF:-wg0}.conf"
+
+LOCK_FILE="/var/lock/wireguard.lock"
+
+init () {
+
+  if [ -z "$WIREGUARD_IP" ]; then
+    exit
+  fi
+
+  if [ ! -f "$CONFIG_FILE" ]; then
+    echo "Missing configuration file: $CONFIG_FILE" >&2
+    exit
+  fi
+
+  if [ "$(stat -c '%a' $CONFIG_DIR)" != "700" ]; then
+    echo "Setting directory $CONFIG_DIR permissions to '700'" >&2
+    chmod 700 $CONFIG_DIR
+  fi
+
+  ln -snf $CONFIG_DIR /tmp/etc/wireguard
+}
+
+start () {
+  local wg_if x
+
+  if [ -f $LOCK_FILE ]; then
+    stop
+    sleep 1
+  fi
+
+  if [ -n "$WIREGUARD_IP" -a -f "$CONFIG_FILE" ]; then
+    echo "Starting WireGuard VPN..."
+
+    wg_if="${WIREGUARD_IF:-wg0}"
+
+    ip link add name $wg_if type wireguard
+    ip addr add $WIREGUARD_IP/${WIREGUARD_NM:-255.255.255.0} dev $wg_if
+    if [ "$IPV6" = "yes" -a -n "$WIREGUARD_IPV6" ]; then
+      ip -6 addr add $WIREGUARD_IPV6 dev $wg_if
+    fi
+
+    wg setconf $wg_if $CONFIG_FILE
+
+    if [ -n "$WIREGUARD_MTU" ]; then
+      ip link set dev $wg_if mtu $WIREGUARD_MTU
+    fi
+    ip link set dev $wg_if up
+
+    echo "$wg_if" > $LOCK_FILE
+
+    ## Add any static routes
+    for x in $WIREGUARD_ROUTES; do
+      ip route add $x dev $wg_if
+    done
+  fi
+}
+
+stop () {
+  local wg_if
+
+  if [ -f $LOCK_FILE ]; then
+    echo "Stopping WireGuard VPN..."
+
+    wg_if="$(cat $LOCK_FILE)"
+
+    ip link set dev $wg_if down
+    ip link delete $wg_if type wireguard
+
+    rm -f $LOCK_FILE
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 1
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+
