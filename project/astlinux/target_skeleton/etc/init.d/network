@@ -321,7 +321,7 @@ start () {
   local IF
 
   # IPv6
-  if [ "$IPV6" = "yes" -o -n "$BRIDGE0" -o -n "$BRIDGE1" -o -n "$BRIDGE2" ]; then
+  if [ "$IPV6" = "yes" -o -n "$BRIDGE0" -o -n "$BRIDGE1" -o -n "$BRIDGE2" -o -n "$WIREGUARD_IP" ]; then
     modprobe ipv6
     # Disable IPv6 Autoconf by default
     IFS=$'\n'
