@@ -314,6 +314,25 @@ astlinux_wrapper()
     fi
   fi
 
+  if [ -n "$WIREGUARD_IP" ]; then
+    addINTERNALnet "${WIREGUARD_IF:-wg0}" "$WIREGUARD_IP" "${WIREGUARD_NM:-255.255.255.0}"
+    if [ -n "$WIREGUARD_ALLOWLAN" ]; then
+      unset IFS
+      for lan in $WIREGUARD_ALLOWLAN; do
+        allowif="$(getLANinterface "$lan")"
+        if [ $? -eq 0 ]; then
+          IFS=' ,'
+          for intf in $INT_IF; do
+            if [ "$intf" = "$allowif" ]; then
+              IF_TRUSTS="$IF_TRUSTS${IF_TRUSTS:+|}$allowif ${WIREGUARD_IF:-wg0}"
+              break
+            fi
+          done
+        fi
+      done
+    fi
+  fi
+
   if [ -n "$ALLOWLANS" ]; then
     IFS='~'
     for lans in $ALLOWLANS; do
