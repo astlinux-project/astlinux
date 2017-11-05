@@ -8,6 +8,32 @@ CONFIG_FILE="$CONFIG_DIR/${WIREGUARD_IF:-wg0}.conf"
 
 LOCK_FILE="/var/lock/wireguard.lock"
 
+get_wg_routes()
+{
+  local allowed_ips x route IFS
+
+  allowed_ips="$(wg show "$1" allowed-ips)"
+
+  unset IFS
+  for x in $allowed_ips; do
+    route="$(echo "$x" | sed -n -r -e 's#^([0-9a-fA-F:.]+/[0-9]+)$#\1#p')"
+    if [ -n "$route" ]; then
+      echo "$route"
+    fi
+  done
+}
+
+add_route()
+{
+  local route="$1" dev="$2"
+
+  case $route in
+    */0) return ;;
+  esac
+
+  ip route add $route dev $dev
+}
+
 init () {
 
   if [ -z "$WIREGUARD_IP" ]; then
@@ -28,7 +54,7 @@ init () {
 }
 
 start () {
-  local wg_if x
+  local wg_if x IFS
 
   if [ -f $LOCK_FILE ]; then
     stop
@@ -55,10 +81,20 @@ start () {
 
     echo "$wg_if" > $LOCK_FILE
 
-    ## Add any static routes
-    for x in $WIREGUARD_ROUTES; do
-      ip route add $x dev $wg_if
-    done
+    if [ -z "$WIREGUARD_ROUTES" -a "$WIREGUARD_AUTO_ROUTES" != "no" ]; then
+      ## Auto-Add routes
+      unset IFS
+      for x in $(get_wg_routes $wg_if | sort -nr -k2 -t'/'); do
+        if ! ip route get $x 2>/dev/null | grep -q " dev $wg_if "; then
+          add_route $x $wg_if
+        fi
+      done
+    else
+      ## Add any static routes
+      for x in $WIREGUARD_ROUTES; do
+        add_route $x $wg_if
+      done
+    fi
   fi
 }
 
