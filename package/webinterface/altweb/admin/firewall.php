@@ -24,6 +24,7 @@
 // 07-10-2016, Added Deny LAN to DMZ for specified LAN Interfaces
 // 09-14-2016, Added BLOCK_NETSET_DIR support
 // 01-05-2017, Added BLOCKED_HOST_LOG direction support
+// 11-06-2017, Added WIREGUARD_ALLOWLAN support
 //
 // System location of /mnt/kd/rc.conf.d directory
 $FIREWALLCONFDIR = '/mnt/kd/rc.conf.d';
@@ -338,6 +339,8 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   $value = 'OVPNC_ALLOWLAN="'.(isset($_POST['is_ovpnc_allowlan']) ? $_POST['ovpnc_allowlan'] : '').'"';
   fwrite($fp, $value."\n");
   $value = 'OVPN_ALLOWLAN="'.(isset($_POST['is_ovpn_allowlan']) ? $_POST['ovpn_allowlan'] : '').'"';
+  fwrite($fp, $value."\n");
+  $value = 'WIREGUARD_ALLOWLAN="'.(isset($_POST['is_wireguard_allowlan']) ? $_POST['wireguard_allowlan'] : '').'"';
   fwrite($fp, $value."\n");
   $value = 'OPEN_ICMP='.(isset($_POST['allow_icmp']) ? '1' : '0');
   fwrite($fp, $value."\n");
@@ -1080,6 +1083,18 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
   putHtml('<select name="ovpn_allowlan">');
   foreach ($lan_permutations_label as $key => $value) {
     $sel = ($ovpn_allowlan === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('LAN Interface(s)</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td width="75" style="text-align: right;">');
+  $wireguard_allowlan = getVARdef($vars, 'WIREGUARD_ALLOWLAN');
+  $sel = ($wireguard_allowlan !== '') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="is_wireguard_allowlan" name="is_wireguard_allowlan"'.$sel.' /></td><td>Allow WireGuard VPN  tunnel to the');
+  putHtml('<select name="wireguard_allowlan">');
+  foreach ($lan_permutations_label as $key => $value) {
+    $sel = ($wireguard_allowlan === $key) ? ' selected="selected"' : '';
     putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
   }
   putHtml('</select>');
