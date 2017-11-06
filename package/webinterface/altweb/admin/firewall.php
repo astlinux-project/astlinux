@@ -1091,7 +1091,7 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
   putHtml('<tr class="dtrow1"><td width="75" style="text-align: right;">');
   $wireguard_allowlan = getVARdef($vars, 'WIREGUARD_ALLOWLAN');
   $sel = ($wireguard_allowlan !== '') ? ' checked="checked"' : '';
-  putHtml('<input type="checkbox" value="is_wireguard_allowlan" name="is_wireguard_allowlan"'.$sel.' /></td><td>Allow WireGuard VPN  tunnel to the');
+  putHtml('<input type="checkbox" value="is_wireguard_allowlan" name="is_wireguard_allowlan"'.$sel.' /></td><td>Allow WireGuard VPN tunnel to the');
   putHtml('<select name="wireguard_allowlan">');
   foreach ($lan_permutations_label as $key => $value) {
     $sel = ($wireguard_allowlan === $key) ? ' selected="selected"' : '';
