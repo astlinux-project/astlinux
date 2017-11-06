@@ -42,7 +42,7 @@ init () {
 
   if [ ! -f "$CONFIG_FILE" ]; then
     echo "Missing configuration file: $CONFIG_FILE" >&2
-    exit
+    exit 1
   fi
 
   if [ "$(stat -c '%a' $CONFIG_DIR)" != "700" ]; then
@@ -72,7 +72,10 @@ start () {
       ip -6 addr add $WIREGUARD_IPV6 dev $wg_if
     fi
 
-    wg setconf $wg_if $CONFIG_FILE
+    if ! wg setconf $wg_if $CONFIG_FILE; then
+      ip link delete $wg_if type wireguard
+      exit 1
+    fi
 
     if [ -n "$WIREGUARD_MTU" ]; then
       ip link set dev $wg_if mtu $WIREGUARD_MTU
