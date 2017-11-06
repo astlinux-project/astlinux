@@ -39,6 +39,7 @@
 // 12-01-2016, Added chronyc to replace ntpq
 // 05-15-2017, Added IPv6 Prefixes/Address
 // 07-16-2017, Added ACME Certificates
+// 11-06-2017, Added WireGuard VPN Status
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -982,6 +983,21 @@ if ($daemon['pptpd'] > 0) {
     putHtml("<pre>");
     $line = trim(shell_exec('. /etc/rc.conf; echo "$PPTP_SUBNET"'));
     putText('PPTP VPN Server is active on subnet: '.$line);
+    putHtml("</pre>");
+  }
+}
+
+if (is_file('/var/lock/wireguard.lock')) {
+  if (getPREFdef($global_prefs, 'status_wireguard_vpn') !== 'no') {
+    putHtml("<h2>WireGuard VPN Status:</h2>");
+    putHtml("<pre>");
+
+    $output = array();
+    @exec('/usr/bin/wg show | sed -n \'/^peer:/,$ p\'', $output);
+    foreach ($output as $line) {
+      putText(rtrim($line));
+    }
+    unset($output);
     putHtml("</pre>");
   }
 }

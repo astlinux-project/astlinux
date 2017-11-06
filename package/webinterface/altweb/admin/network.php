@@ -1207,6 +1207,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 49, $result, 'init');
       } elseif ($process === 'vsftpd') {
         $result = restartPROCESS($process, 50, $result, 'init');
+      } elseif ($process === 'wireguard') {
+        $result = restartPROCESS($process, 51, $result, 'init');
       }
     } else {
       $result = 2;
@@ -1305,6 +1307,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">IPsec VPN (strongSwan)'.statusPROCESS('ipsec').'.</p>');
     } elseif ($result == 50) {
       putHtml('<p style="color: green;">FTP Server'.statusPROCESS('vsftpd').'.</p>');
+    } elseif ($result == 51) {
+      putHtml('<p style="color: green;">WireGuard VPN'.statusPROCESS('wireguard').'.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 100) {
@@ -1382,6 +1386,10 @@ require_once '../common/header.php';
   putHtml('<option value="ipsec"'.$sel.'>Restart IPsec strongSwan</option>');
   $sel = ($reboot_restart === 'pptpd') ? ' selected="selected"' : '';
   putHtml('<option value="pptpd"'.$sel.'>Restart PPTP VPN Server</option>');
+  if (is_file('/etc/init.d/wireguard')) {
+    $sel = ($reboot_restart === 'wireguard') ? ' selected="selected"' : '';
+    putHtml('<option value="wireguard"'.$sel.'>Restart WireGuard VPN</option>');
+  }
   $sel = ($reboot_restart === 'fossil') ? ' selected="selected"' : '';
   putHtml('<option value="fossil"'.$sel.'>Restart Fossil Server</option>');
   $sel = ($reboot_restart === 'vsftpd') ? ' selected="selected"' : '';

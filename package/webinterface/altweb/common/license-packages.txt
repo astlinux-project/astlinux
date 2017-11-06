@@ -69,3 +69,4 @@ netcalc~Copyright (c) 2003-2017 Simon Ekstrand, Joachim Nilsson.
 acme.sh~Copyright (c) 2016-2017 Neilpang.
 Tarsnap~Copyright (c) 2006-2017 Tarsnap Backup Inc. All rights reserved.
 empty~Copyright (c) 2005-2015 Mikhail E. Zakharov.
+WireGuard~Copyright (c) 2015-2017 Jason A. Donenfeld. All rights reserved.

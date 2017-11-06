@@ -15,6 +15,7 @@
 // 09-21-2016, Added Reload Firewall Blocklist
 // 11-14-2016, Added IPsec strongSwan support
 // 02-16-2017, Added Restart FTP Server support
+// 11-06-2017, Added WireGuard VPN Support
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -33,6 +34,7 @@ $select_reload = array (
   'racoon' => 'Restart IPsec VPN',
   'ipsec' => 'Restart IPsec strongSwan',
   'pptpd' => 'Restart PPTP VPN Server',
+  'wireguard' => 'Restart WireGuard VPN',
   'fossil' => 'Restart Fossil Server',
   'vsftpd' => 'Restart FTP Server',
   'ldap' => 'Reload LDAP Client',
@@ -57,6 +59,9 @@ if (is_file('/etc/init.d/kamailio')) {
 }
 $select_reload['IPTABLES'] = 'Reload Firewall Blocklist';
 $select_reload['cron'] = 'Reload Cron for root';
+if (! is_file('/etc/init.d/wireguard')) {
+  unset($select_reload['wireguard']);
+}
 
 $sys_label = array (
   'ddclient.conf' => 'DDclient Dynamic DNS Config',
@@ -270,6 +275,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 49, $result, 'init');
       } elseif ($process === 'vsftpd') {
         $result = restartPROCESS($process, 50, $result, 'init');
+      } elseif ($process === 'wireguard') {
+        $result = restartPROCESS($process, 51, $result, 'init');
       } elseif ($process === 'IPTABLES') {
         $result = restartPROCESS('iptables', 66, $result, 'reload');
       } elseif ($process === 'cron') {
@@ -310,6 +317,7 @@ require_once '../common/header.php';
       $dir === '/mnt/kd/openvpn' ||
       $dir === '/mnt/kd/openvpn/ccd' ||
       $dir === '/mnt/kd/ipsec/strongswan' ||
+      $dir === '/mnt/kd/wireguard' ||
       $dir === '/mnt/kd/rc.conf.d' ||
       $dir === '/mnt/kd/crontabs' ||
       $dir === '/mnt/kd/snmp' ||
@@ -418,6 +426,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">IPsec VPN (strongSwan)'.statusPROCESS('ipsec').'.</p>');
     } elseif ($result == 50) {
       putHtml('<p style="color: green;">FTP Server'.statusPROCESS('vsftpd').'.</p>');
+    } elseif ($result == 51) {
+      putHtml('<p style="color: green;">WireGuard VPN'.statusPROCESS('wireguard').'.</p>');
     } elseif ($result == 66) {
       putHtml('<p style="color: green;">Firewall Blocklist has been Reloaded.</p>');
     } elseif ($result == 99) {
@@ -610,6 +620,16 @@ require_once '../common/header.php';
       if (is_file($globfile) && is_writable($globfile)) {
         $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
         putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - IPsec strongSwan Config</option>');
+      }
+    }
+    putHtml('</optgroup>');
+  }
+  if (is_dir('/mnt/kd/wireguard') && count($globfiles = glob('/mnt/kd/wireguard/*')) > 0) {
+    putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; WireGuard VPN Configs &mdash;&mdash;&mdash;&mdash;">');
+    foreach ($globfiles as $globfile) {
+      if (is_file($globfile) && is_writable($globfile)) {
+        $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
+        putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - WireGuard VPN Config</option>');
       }
     }
     putHtml('</optgroup>');

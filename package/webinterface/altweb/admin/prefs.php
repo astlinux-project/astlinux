@@ -22,6 +22,7 @@
 // 08-12-2015, Added Show Fossil Tab
 // 02-16-2017, Added Disable CLI Tab for "staff" user
 // 07-16-2017, Added Show ACME Certificates
+// 11-06-2017, Added Show WireGuard VPN Status
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -80,6 +81,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (! isset($_POST['pptp_server'])) {
       $value = 'status_pptp_server = no';
+      fwrite($fp, $value."\n");
+    }
+    if (! isset($_POST['wireguard_vpn'])) {
+      $value = 'status_wireguard_vpn = no';
       fwrite($fp, $value."\n");
     }
     if (! isset($_POST['active_chan'])) {
@@ -615,7 +620,10 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_pptp_server') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="pptp_server" name="pptp_server"'.$sel.' /></td><td colspan="5">Show PPTP VPN Status</td></tr>');
-  
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'status_wireguard_vpn') !== 'no') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="wireguard_vpn" name="wireguard_vpn"'.$sel.' /></td><td colspan="5">Show WireGuard VPN Status</td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_show_active_chan') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="active_chan" name="active_chan"'.$sel.' /></td><td colspan="5">Show Active Channels</td></tr>');

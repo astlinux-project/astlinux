@@ -161,6 +161,12 @@ function statusPROCESS($process) {
     } else {
       $str = $stopped;
     }
+  } elseif ($process === 'wireguard') {
+    if (is_file('/var/lock/wireguard.lock')) {
+      $str = $running;
+    } else {
+      $str = $stopped;
+    }
   }
   if ($str === '') {
     if (is_file($path.$process.'.pid')) {
