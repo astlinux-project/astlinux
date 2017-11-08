@@ -2,6 +2,8 @@
 
 . /etc/rc.conf
 
+. /etc/init.d/functions.d/misc
+
 CONFIG_DIR="/mnt/kd/wireguard"
 
 CONFIG_FILE="$CONFIG_DIR/${WIREGUARD_IF:-wg0}.conf"
@@ -34,20 +36,39 @@ add_route()
   ip route add $route dev $dev
 }
 
+gen_wireguard_initial_conf()
+{
+
+  echo "[Interface]
+PrivateKey = $(wg genkey)
+ListenPort = 51820
+
+## Example:
+## Uncomment and replace the entries with your Peer's configuration
+#[Peer]
+#PublicKey = HIgo9xNzJMWLKASShiTqIybxZ0U3wGLiUeJ1PKf8ykw=
+#Endpoint = 10.10.1.60:51820
+#AllowedIPs = 10.4.0.2/32, 192.168.200.1/24
+#PersistentKeepalive = 0
+"
+}
+
 init () {
 
-  if [ -z "$WIREGUARD_IP" ]; then
+  if ! SYS_is_vpn_type wireguard; then
     exit
   fi
 
-  if [ ! -f "$CONFIG_FILE" ]; then
-    echo "Missing configuration file: $CONFIG_FILE" >&2
-    exit 1
-  fi
-
-  if [ "$(stat -c '%a' $CONFIG_DIR)" != "700" ]; then
+  if [ ! -d $CONFIG_DIR ]; then
+    mkdir -m 0700 -p $CONFIG_DIR
+  elif [ "$(stat -c '%a' $CONFIG_DIR)" != "700" ]; then
     echo "Setting directory $CONFIG_DIR permissions to '700'" >&2
     chmod 700 $CONFIG_DIR
+  fi
+
+  if [ ! -f "$CONFIG_FILE" ]; then
+    gen_wireguard_initial_conf > $CONFIG_FILE
+    chmod 600 $CONFIG_FILE
   fi
 
   ln -snf $CONFIG_DIR /tmp/etc/wireguard
@@ -61,7 +82,7 @@ start () {
     sleep 1
   fi
 
-  if [ -n "$WIREGUARD_IP" -a -f "$CONFIG_FILE" ]; then
+  if SYS_is_vpn_type wireguard && [ -n "$WIREGUARD_IP" -a -f "$CONFIG_FILE" ]; then
     echo "Starting WireGuard VPN..."
 
     wg_if="${WIREGUARD_IF:-wg0}"
