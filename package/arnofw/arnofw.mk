@@ -104,6 +104,11 @@ define ARNOFW_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0644 package/arnofw/pptp-vpn/50pptp-vpn.plugin.sh $(TARGET_DIR)/$(ARNOFW_SCRIPT_DIR)/plugins/50pptp-vpn.plugin
 	$(INSTALL) -m 0644 package/arnofw/pptp-vpn/pptp-vpn-astlinux.conf $(TARGET_DIR)/stat/$(ARNOFW_CONFIG_DIR)/plugins/pptp-vpn.conf
 	##
+	## Install local version of WireGuard VPN plugin
+	##
+	$(INSTALL) -m 0644 package/arnofw/wireguard-vpn/50wireguard-vpn.plugin.sh $(TARGET_DIR)/$(ARNOFW_SCRIPT_DIR)/plugins/50wireguard-vpn.plugin
+	$(INSTALL) -m 0644 package/arnofw/wireguard-vpn/wireguard-vpn-astlinux.conf $(TARGET_DIR)/stat/$(ARNOFW_CONFIG_DIR)/plugins/wireguard-vpn.conf
+	##
 	## Install local version of miniupnpd plugin
 	##
 	$(INSTALL) -m 0644 package/arnofw/miniupnpd/50miniupnpd.plugin.sh $(TARGET_DIR)/$(ARNOFW_SCRIPT_DIR)/plugins/50miniupnpd.plugin

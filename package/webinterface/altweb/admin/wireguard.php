@@ -31,8 +31,6 @@ if (is_file($WIREGUARDCONFFILE)) {
 // Function: saveWIREGUARDsettings
 //
 function saveWIREGUARDsettings($conf_dir, $conf_file) {
-  global $openssl;
-  
   $result = 11;
 
   if (! is_dir($conf_dir)) {
@@ -71,6 +69,9 @@ function saveWIREGUARDsettings($conf_dir, $conf_file) {
   }
   $value = 'WIREGUARD_MTU="'.$value.'"';
   fwrite($fp, "### WireGuard interface MTU\n".$value."\n");
+
+  $value = 'WIREGUARD_TUNNEL_HOSTS="'.tuq($_POST['wireguard_tunnel_hosts']).'"';
+  fwrite($fp, "### Allowed External Hosts\n".$value."\n");
 
   fwrite($fp, "### gui.wireguard.conf - end ###\n");
   fclose($fp);
@@ -212,6 +213,18 @@ require_once '../common/header.php';
     $value = 'default';
   }
   putHtml('<input type="text" size="8" maxlength="8" value="'.$value.'" name="wireguard_mtu" />');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>Firewall Options:</strong>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('External Hosts:</td><td style="text-align: left;" colspan="4">');
+  if (($value = getVARdef($db, 'WIREGUARD_TUNNEL_HOSTS')) === '') {
+    $value = '0/0';
+  }
+  putHtml('<input type="text" size="48" maxlength="256" value="'.$value.'" name="wireguard_tunnel_hosts" />');
   putHtml('</td></tr>');
 
   if (($public_key = trim(shell_exec("/usr/bin/wg show '$wg_if' public-key 2>/dev/null"))) !== '') {
