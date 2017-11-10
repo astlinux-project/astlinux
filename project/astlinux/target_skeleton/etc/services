@@ -398,4 +398,5 @@ xmpp-server	5269/tcp	jabber-server	# Jabber Server Connection
 mdns		5353/udp			# Multicast DNS (mDNS)
 vnc		5900/tcp			# (VNC) Remote Desktop Protocol
 vnc		5900/udp			# (VNC) Remote Desktop Protocol
+wireguard	51820/udp			# WireGuard VPN
 
