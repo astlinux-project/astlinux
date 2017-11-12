@@ -4,7 +4,7 @@
 #
 #############################################################
 
-SMARTMONTOOLS_VERSION = 6.5
+SMARTMONTOOLS_VERSION = 6.6
 SMARTMONTOOLS_SITE = http://downloads.sourceforge.net/project/smartmontools/smartmontools/$(SMARTMONTOOLS_VERSION)
 
 define SMARTMONTOOLS_LATEST_DRIVEDB
@@ -16,6 +16,7 @@ endef
 SMARTMONTOOLS_POST_EXTRACT_HOOKS += SMARTMONTOOLS_LATEST_DRIVEDB
 
 SMARTMONTOOLS_CONF_OPT = \
+	--without-gnupg \
 	--without-libcap-ng \
 	--without-nvme-devicescan
 
