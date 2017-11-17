@@ -317,7 +317,7 @@ require_once '../common/header.php';
       $dir === '/mnt/kd/openvpn' ||
       $dir === '/mnt/kd/openvpn/ccd' ||
       $dir === '/mnt/kd/ipsec/strongswan' ||
-      $dir === '/mnt/kd/wireguard' ||
+      $dir === '/mnt/kd/wireguard/peer' ||
       $dir === '/mnt/kd/rc.conf.d' ||
       $dir === '/mnt/kd/crontabs' ||
       $dir === '/mnt/kd/snmp' ||
@@ -624,12 +624,12 @@ require_once '../common/header.php';
     }
     putHtml('</optgroup>');
   }
-  if (is_dir('/mnt/kd/wireguard') && count($globfiles = glob('/mnt/kd/wireguard/*')) > 0) {
+  if (is_dir('/mnt/kd/wireguard/peer') && count($globfiles = glob('/mnt/kd/wireguard/peer/*.peer')) > 0) {
     putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; WireGuard VPN Configs &mdash;&mdash;&mdash;&mdash;">');
     foreach ($globfiles as $globfile) {
       if (is_file($globfile) && is_writable($globfile)) {
         $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
-        putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - WireGuard VPN Config</option>');
+        putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - WireGuard VPN Peer Config</option>');
       }
     }
     putHtml('</optgroup>');

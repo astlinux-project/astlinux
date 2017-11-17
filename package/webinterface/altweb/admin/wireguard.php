@@ -70,6 +70,9 @@ function saveWIREGUARDsettings($conf_dir, $conf_file) {
   $value = 'WIREGUARD_MTU="'.$value.'"';
   fwrite($fp, "### WireGuard interface MTU\n".$value."\n");
 
+  $value = 'WIREGUARD_LISTEN_PORT="'.tuq($_POST['wireguard_listen_port']).'"';
+  fwrite($fp, "### UDP Listen Port\n".$value."\n");
+
   $value = 'WIREGUARD_TUNNEL_HOSTS="'.tuq($_POST['wireguard_tunnel_hosts']).'"';
   fwrite($fp, "### Allowed External Hosts\n".$value."\n");
 
@@ -94,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } elseif (isset($_POST['submit_edit_wireguard'])) {
     $result = saveWIREGUARDsettings($WIREGUARDCONFDIR, $WIREGUARDCONFFILE);
-    if (is_writable($file = '/mnt/kd/wireguard/'.$_POST['wireguard_if'].'.conf')) {
+    if (is_writable($file = '/mnt/kd/wireguard/peer/'.$_POST['wireguard_if'].'.peer')) {
       header('Location: /admin/edit.php?file='.$file);
       exit;
     } else {
@@ -213,6 +216,14 @@ require_once '../common/header.php';
     $value = 'default';
   }
   putHtml('<input type="text" size="8" maxlength="8" value="'.$value.'" name="wireguard_mtu" />');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('UDP Listen Port:</td><td style="text-align: left;" colspan="4">');
+  if (($value = getVARdef($db, 'WIREGUARD_LISTEN_PORT')) === '') {
+    $value = '51820';
+  }
+  putHtml('<input type="text" size="8" maxlength="5" value="'.$value.'" name="wireguard_listen_port" />');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
