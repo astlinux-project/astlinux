@@ -58,7 +58,7 @@ Released @TBD@
 -- WireGuard VPN, version 0.0.20171111, new package; an extremely simple yet fast and modern VPN
                                                      that utilizes state-of-the-art cryptography.
    New rc.conf variables: WIREGUARD_IP, WIREGUARD_NM, WIREGUARD_IPV6, WIREGUARD_ROUTES, WIREGUARD_AUTO_ROUTES
-                          WIREGUARD_IF, WIREGUARD_MTU, WIREGUARD_ALLOWLAN, WIREGUARD_TUNNEL_HOSTS
+                          WIREGUARD_IF, WIREGUARD_MTU, WIREGUARD_LISTEN_PORT, WIREGUARD_ALLOWLAN, WIREGUARD_TUNNEL_HOSTS
    More info: http://doc.astlinux-project.org/userdoc:tt_wireguard_vpn
 
 -- ipset, version bump to 6.34
