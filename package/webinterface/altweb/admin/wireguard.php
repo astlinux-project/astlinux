@@ -238,14 +238,16 @@ require_once '../common/header.php';
   putHtml('<input type="text" size="48" maxlength="256" value="'.$value.'" name="wireguard_tunnel_hosts" />');
   putHtml('</td></tr>');
 
-  if (($public_key = trim(shell_exec("/usr/bin/wg show '$wg_if' public-key 2>/dev/null"))) !== '') {
-    putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
-    putHtml('<strong>This Peer\'s Public Key:</strong>');
-    putHtml('</td></tr>');
+  if (is_file('/var/lock/wireguard.lock')) {
+    if (($public_key = trim(shell_exec("/usr/bin/wg show '$wg_if' public-key 2>/dev/null"))) !== '') {
+      putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+      putHtml('<strong>This Peer\'s Public Key:</strong>');
+      putHtml('</td></tr>');
 
-    putHtml('<tr class="dtrow1"><td class="dialogText" style="text-align: center; padding-top: 0px; padding-bottom: 0px;" colspan="6">');
-    putHtml("<pre>$public_key</pre>");
-    putHtml('</td></tr>');
+      putHtml('<tr class="dtrow1"><td class="dialogText" style="text-align: center; padding-top: 0px; padding-bottom: 0px;" colspan="6">');
+      putHtml("<pre>$public_key</pre>");
+      putHtml('</td></tr>');
+    }
   }
 
   putHtml('</table>');
