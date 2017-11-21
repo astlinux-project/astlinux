@@ -16,6 +16,8 @@ Released @TBD@
 
 -- php, version bump to 5.6.32, security fixes.
 
+-- busybox, lineedit: do not tab-complete any strings which have control characters: CVE-2017-16544
+
 -- empty, version 0.6.20b, new package; similar functionality to 'expect', allows scripting interactive sessions
 
 -- acme-client, add --deploy-hook 'custom' which executes the script "/mnt/kd/acme-deploy-custom.script".
@@ -26,6 +28,8 @@ Released @TBD@
 -- libxml2, version bump to 2.9.6
 
 -- expat, version bump to 2.2.5
+
+-- tiff, version bump to 4.0.9, security fixes.
 
 -- Monit, version bump to 5.25.1
 
