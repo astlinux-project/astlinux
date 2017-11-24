@@ -200,7 +200,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $srcfile .= ' -e "s/^wan-failover.script$/&/p" -e "s/^phoneprov-reload.script$/&/p"';
       $srcfile .= ' -e "s/^custom-agi$/&/p" -e "s/^avahi$/&/p"';
       $srcfile .= ' -e "s/^crontabs$/&/p" -e "s/^snmp$/&/p" -e "s/^fop2$/&/p" -e "s/^kamailio$/&/p" -e "s/^monit$/&/p"';
-      $srcfile .= ' -e "s/^openvpn$/&/p" -e "s/^ipsec$/&/p" -e "s/^dahdi$/&/p" -e "s/^ssl$/&/p" -e "s/^ups$/&/p")';
+      $srcfile .= ' -e "s/^openvpn$/&/p" -e "s/^ipsec$/&/p" -e "s/^wireguard$/&/p"';
+      $srcfile .= ' -e "s/^dahdi$/&/p" -e "s/^ssl$/&/p" -e "s/^ups$/&/p")';
       $srcfile .= $firewall;
       $srcfile .= $templates;
     } elseif ($backup_type === 'cdr') {
