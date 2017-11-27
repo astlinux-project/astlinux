@@ -60,6 +60,9 @@ function saveWIREGUARDsettings($conf_dir, $conf_file) {
   $value = 'WIREGUARD_AUTO_ROUTES="'.(isset($_POST['wireguard_auto_routes']) ? 'yes' : 'no').'"';
   fwrite($fp, "### WireGuard Auto Routes\n".$value."\n");
 
+  $value = 'WIREGUARD_DNS_UPDATE="'.(isset($_POST['wireguard_dns_update']) ? 'yes' : 'no').'"';
+  fwrite($fp, "### Continually Update DNS Endpoints\n".$value."\n");
+
   $value = 'WIREGUARD_IF="'.$_POST['wireguard_if'].'"';
   fwrite($fp, "### WireGuard interface\n".$value."\n");
 
@@ -191,6 +194,13 @@ require_once '../common/header.php';
   putHtml('Create routes for Allowed IP\'s for all peers');
   putHtml('<br /><br />');
   putHtml('<i>(Ignored if "IPv4/IPv6 Routes" is defined)</i>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('DNS Update:</td><td style="text-align: left;" colspan="4">');
+  $sel = (getVARdef($db, 'WIREGUARD_DNS_UPDATE') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="wireguard_dns_update" name="wireguard_dns_update"'.$sel.' />');
+  putHtml('Continually Update DNS Endpoints for peers');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');

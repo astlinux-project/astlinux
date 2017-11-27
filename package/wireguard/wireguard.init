@@ -14,6 +14,9 @@ CONFIG_FILE="/tmp/etc/wireguard/${WIREGUARD_IF:-wg0}.conf"
 
 LOCK_FILE="/var/lock/wireguard.lock"
 
+WIREGUARD_MONITOR_LOCKFILE="/var/lock/wireguard-monitor.lock"
+WIREGUARD_MONITOR_PIDFILE="/var/run/wireguard-monitor.pid"
+
 get_wg_routes()
 {
   local allowed_ips x route IFS
@@ -157,11 +160,34 @@ start () {
         add_route $x $wg_if
       done
     fi
+
+    if [ "$WIREGUARD_DNS_UPDATE" = "yes" ]; then
+      echo "Starting wireguard-monitor..."
+
+      ## Start the background process
+      wireguard-monitor
+    fi
   fi
 }
 
 stop () {
-  local wg_if
+  local cnt wg_if
+
+  if [ -f "$WIREGUARD_MONITOR_PIDFILE" ]; then
+    echo "Stopping wireguard-monitor..."
+
+    ## kill $(cat $WIREGUARD_MONITOR_PIDFILE)
+    ## is not necessary.  Removing the PID file is sufficient
+    ## because the background process monitors its PID file.
+    rm -f "$WIREGUARD_MONITOR_PIDFILE"
+
+    ## Wait for the background process to exit
+    cnt=5
+    while [ $cnt -gt 0 -a -f "$WIREGUARD_MONITOR_LOCKFILE" ]; do
+      cnt=$((cnt - 1))
+      sleep 1
+    done
+  fi
 
   if [ -f $LOCK_FILE ]; then
     echo "Stopping WireGuard VPN..."
