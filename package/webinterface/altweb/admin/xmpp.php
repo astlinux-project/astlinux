@@ -489,7 +489,7 @@ if ((! is_file('/mnt/kd/ssl/sip-tls/keys/server.crt') || ! is_file('/mnt/kd/ssl/
   putHtml('Admin Users:');
   putHtml('</td><td style="text-align: left;">');
   $value = getVARdef($vars, 'XMPP_ADMIN_USERS');
-  putHtml('<input type="text" size="56" maxlength="200" name="xmpp_admin_users" value="'.$value.'" />');
+  putHtml('<input type="text" size="56" maxlength="512" name="xmpp_admin_users" value="'.$value.'" />');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
@@ -535,7 +535,7 @@ if ($value === '') {
   putHtml('PubSub Admins:');
   putHtml('</td><td style="text-align: left;">');
   $value = getVARdef($vars, 'XMPP_PUBSUB_ADMINS');
-  putHtml('<input type="text" size="56" maxlength="200" name="xmpp_pubsub_admins" value="'.$value.'" />');
+  putHtml('<input type="text" size="56" maxlength="512" name="xmpp_pubsub_admins" value="'.$value.'" />');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');

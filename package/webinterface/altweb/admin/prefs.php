@@ -721,7 +721,7 @@ require_once '../common/header.php';
   putHtml('<input type="checkbox" value="system_logs" name="system_logs"'.$sel.' /></td><td colspan="5">Show Latest System Logs</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">Hide Log Words:</td><td colspan="4">');
   $value = getPREFdef($global_prefs, 'status_exclude_logs_cmdstr');
-  putHtml('<input type="text" size="48" maxlength="128" value="'.$value.'" name="exclude_logs" /></td></tr>');
+  putHtml('<input type="text" size="48" maxlength="512" value="'.$value.'" name="exclude_logs" /></td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_exclude_extensions') === 'yes') ? ' checked="checked"' : '';
