@@ -60,7 +60,8 @@ Released @TBD@
 
 -- OpenVPN, version bump to 2.4.4, security fix: CVE-2017-12166
 
--- libcurl (curl) version bump to 7.56.1, security fixes: CVE-2017-1000254, CVE-2017-1000257
+-- libcurl (curl) version bump to 7.57.0, security fixes: CVE-2017-1000254, CVE-2017-1000257, CVE-2017-8816
+                                                          CVE-2017-8817, CVE-2017-8818
 
 -- dnsmasq, version bump to 2.78, security fixes: CVE-2017-13704, CVE-2017-14491, CVE-2017-14492, CVE-2017-14493
                                                   CVE-2017-14494, CVE-2017-14496, CVE-2017-14495
