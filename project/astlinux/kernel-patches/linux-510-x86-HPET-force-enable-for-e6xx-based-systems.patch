@@ -31,7 +31,7 @@ diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
 index 6ed0bb7..aa0d390 100644
 --- a/include/linux/pci_ids.h
 +++ b/include/linux/pci_ids.h
-@@ -2859,6 +2859,7 @@
+@@ -2867,6 +2867,7 @@
  #define PCI_DEVICE_ID_INTEL_82372FB_1	0x7601
  #define PCI_DEVICE_ID_INTEL_SCH_LPC	0x8119
  #define PCI_DEVICE_ID_INTEL_SCH_IDE	0x811a
