@@ -12,6 +12,10 @@ Released @TBD@
 
 ** System
 
+-- Linux Kernel 3.16.51, security and bug fixes.
+
+-- RUNNIX, version bump to runnix-0.5.2, with Linux Kernel 3.16.51, e2fsprogs 1.43.7
+
 -- sqlite, version bump to 3.21.0, security fixes: CVE-2017-13685, CVE-2017-15286
 
 -- php, version bump to 5.6.32, security fixes.
