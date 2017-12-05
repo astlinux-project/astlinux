@@ -1,0 +1,132 @@
+#!/bin/bash
+
+BASE_VER="3.16."
+
+if [ -z "$1" -o -z "$2" ]; then
+  echo "
+Usage: $0 FROM_minor_version TO_minor_version
+Example: $0 44 47
+Base Version: ${BASE_VER}xx
+
+Note: Can be run multiple times as needed.
+"
+  exit 1
+fi
+
+if [ "${1//./}" != "${1}" ]; then
+  echo "$0: '$1' is not a single number"
+  exit 1
+fi
+
+if [ "${2//./}" != "${2}" ]; then
+  echo "$0: '$2' is not a single number"
+  exit 1
+fi
+
+if [ $2 -le $1 ]; then
+  echo "$0: 'to_ver' must be greater than 'from_ver'"
+  exit 1
+fi
+
+error_restore_exit()
+{
+  mv .config.save .config
+  exit 1
+}
+
+CONFIGS="$(ls -1 astlinux-*[.]config)"
+CONFIGS="$CONFIGS $(ls -1 x86_64-configs/astlinux-*[.]config)"
+CONFIGS="$CONFIGS runnix.config runnix-iso.config"
+
+CT_CONFIGS="$(ls -1 crosstool-ng-src/ct-ng-*[.]config)"
+
+LINUX32_CONFIGS="$(ls -1 project/astlinux/geni586/linux*[.]config)"
+LINUX32_CONFIGS="$LINUX32_CONFIGS $(ls -1 project/runnix/geni586/linux*[.]config)"
+LINUX32_CONFIGS="$LINUX32_CONFIGS $(ls -1 project/runnix-iso/geni586/linux*[.]config)"
+
+LINUX64_CONFIGS="$(ls -1 project/astlinux/genx86_64/linux*[.]config)"
+
+unset IFS
+for config in $CONFIGS $CT_CONFIGS crosstool-ng-src/get-files.sh; do
+  if grep -q "linux-${BASE_VER//./[.]}${1}" "$config"; then
+    echo "Command: sed -i \"s:linux-${BASE_VER//./[.]}${1}:linux-${BASE_VER}${2}:\" \"$config\""
+    sed -i "s:linux-${BASE_VER//./[.]}${1}:linux-${BASE_VER}${2}:" "$config"
+  fi
+done
+
+mv .config .config.save
+
+unset IFS
+for linux in $LINUX32_CONFIGS; do
+  case "$linux" in
+    */astlinux/*) configs="$(ls -1 astlinux-*[.]config)" ;;
+    */runnix/*) configs="runnix.config" ;;
+    */runnix-iso/*) configs="runnix-iso.config" ;;
+    *) configs="" ;;
+  esac
+
+  if [ -z "$configs" ]; then
+    echo "$0: No config found for linux: $linux"
+    error_restore_exit
+  fi
+
+  for config in $configs; do
+    echo "Kernel i386: $linux, Using config: $config"
+    cp "$config" .config
+    make linux-dirclean
+    make linux-patch
+    if [ $? -ne 0 ]; then
+      error_restore_exit
+    fi
+    (
+      cd output/build/linux-custom/
+      cp "../../../$linux" .config
+      ARCH=i386 make oldconfig
+      echo "========"
+      diff -u "../../../$linux" .config
+      echo "========"
+      cp .config "../../../$linux"
+    )
+    break
+  done
+done
+
+unset IFS
+for linux in $LINUX64_CONFIGS; do
+  case "$linux" in
+    */astlinux/*) configs="$(ls -1 x86_64-configs/astlinux-*[.]config)" ;;
+    *) configs="" ;;
+  esac
+
+  if [ -z "$configs" ]; then
+    echo "$0: No config found for linux: $linux"
+    error_restore_exit
+  fi
+
+  for config in $configs; do
+    echo "Kernel x86_64: $linux, Using config: $config"
+    cp "$config" .config
+    make linux-dirclean
+    make linux-patch
+    if [ $? -ne 0 ]; then
+      error_restore_exit
+    fi
+    (
+      cd output/build/linux-custom/
+      cp "../../../$linux" .config
+      ARCH=x86_64 make oldconfig
+      echo "========"
+      diff -u "../../../$linux" .config
+      echo "========"
+      cp .config "../../../$linux"
+    )
+    break
+  done
+done
+
+echo ""
+echo "Back to Working Config..."
+echo ""
+mv .config.save .config
+make linux-dirclean
+
