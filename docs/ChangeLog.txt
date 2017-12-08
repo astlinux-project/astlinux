@@ -60,7 +60,7 @@ Released @TBD@
 
 ** Networking
 
--- OpenSSL, version bump to 1.0.2m, security fixes: CVE-2017-3735, CVE-2017-3736
+-- OpenSSL, version bump to 1.0.2n, security fixes: CVE-2017-3735, CVE-2017-3736, CVE-2017-3737, CVE-2017-3738
 
 -- OpenVPN, version bump to 2.4.4, security fix: CVE-2017-12166
 
