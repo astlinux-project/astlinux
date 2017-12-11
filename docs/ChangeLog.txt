@@ -70,7 +70,7 @@ Released @TBD@
 -- dnsmasq, version bump to 2.78, security fixes: CVE-2017-13704, CVE-2017-14491, CVE-2017-14492, CVE-2017-14493
                                                   CVE-2017-14494, CVE-2017-14496, CVE-2017-14495
 
--- WireGuard VPN, version 0.0.20171127, new package; an extremely simple yet fast and modern VPN
+-- WireGuard VPN, version 0.0.20171211, new package; an extremely simple yet fast and modern VPN
                                                      that utilizes state-of-the-art cryptography.
    New rc.conf variables: WIREGUARD_IP, WIREGUARD_NM, WIREGUARD_IPV6, WIREGUARD_ROUTES, WIREGUARD_AUTO_ROUTES
                           WIREGUARD_IF, WIREGUARD_MTU, WIREGUARD_LISTEN_PORT, WIREGUARD_ALLOWLAN, WIREGUARD_TUNNEL_HOSTS
