@@ -4,12 +4,15 @@
 #
 ################################################################################
 
-WHOIS_VERSION = 5.2.18
+WHOIS_VERSION = 5.2.19
 WHOIS_SITE = http://ftp.debian.org/debian/pool/main/w/whois
 WHOIS_SOURCE = whois_$(WHOIS_VERSION).tar.xz
 
-# take precedence over busybox implementation
-WHOIS_DEPENDENCIES = $(if $(BR2_PACKAGE_BUSYBOX),busybox)
+WHOIS_DEPENDENCIES = host-pkg-config $(if $(BR2_PACKAGE_BUSYBOX),busybox)
+
+ifeq ($(BR2_PACKAGE_LIBIDN),y)
+WHOIS_DEPENDENCIES += libidn
+endif
 
 define WHOIS_CONFIGURE_CMDS
 	# Not all perl's include 'autodie' module
