@@ -85,6 +85,10 @@ Released @TBD@
 
 -- stunnel, version bump to 5.44
 
+-- miniupnpd, version bump to 2.0.20171212
+
+-- whois, version bump to 5.2.19
+
 ** Asterisk
 
 -- Asterisk 11.25.3 (no change) and 13.18.3 (version bump)
