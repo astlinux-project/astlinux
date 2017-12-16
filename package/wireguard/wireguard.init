@@ -14,6 +14,8 @@ CONFIG_FILE="/tmp/etc/wireguard/${WIREGUARD_IF:-wg0}.conf"
 
 LOCK_FILE="/var/lock/wireguard.lock"
 
+SCRIPT_FILE="/mnt/kd/wireguard.script"
+
 WIREGUARD_MONITOR_LOCKFILE="/var/lock/wireguard-monitor.lock"
 WIREGUARD_MONITOR_PIDFILE="/var/run/wireguard-monitor.pid"
 
@@ -161,6 +163,10 @@ start () {
       done
     fi
 
+    if [ -x $SCRIPT_FILE ]; then
+      $SCRIPT_FILE POST_UP $wg_if
+    fi
+
     if [ "$WIREGUARD_DNS_UPDATE" = "yes" ]; then
       echo "Starting wireguard-monitor..."
 
@@ -193,6 +199,10 @@ stop () {
     echo "Stopping WireGuard VPN..."
 
     wg_if="$(cat $LOCK_FILE)"
+
+    if [ -x $SCRIPT_FILE ]; then
+      $SCRIPT_FILE PRE_DOWN $wg_if
+    fi
 
     ip link set dev $wg_if down
     ip link delete $wg_if type wireguard
