@@ -111,6 +111,8 @@ Released @TBD@
 
 -- Firewall sub-tab, add WIREGUARD_ALLOWLAN rc.conf variable support.
 
+-- Edit and System tab, include all /mnt/kd/*.script files for editing and backup/restore.
+
 
 Additions for AstLinux 1.3.1:
 =============================
