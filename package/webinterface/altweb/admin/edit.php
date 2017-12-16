@@ -599,6 +599,10 @@ require_once '../common/header.php';
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
     putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - DHCPv6 Client Shell Script</option>');
   }
+  if (is_writable($file = '/mnt/kd/tarsnap-backup.script')) {
+    $sel = ($file === $openfile) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - Tarsnap Backup Shell Script</option>');
+  }
   if (is_writable($file = '/mnt/kd/wan-failover.script')) {
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
     putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - WAN Failover Shell Script</option>');
@@ -631,6 +635,10 @@ require_once '../common/header.php';
         $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
         putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - WireGuard VPN Peer Config</option>');
       }
+    }
+    if (is_writable($file = '/mnt/kd/wireguard.script')) {
+      $sel = ($file === $openfile) ? ' selected="selected"' : '';
+      putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - WireGuard VPN Shell Script</option>');
     }
     putHtml('</optgroup>');
   }
@@ -721,6 +729,10 @@ require_once '../common/header.php';
         $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
         putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - IP Phone Template Config</option>');
       }
+    }
+    if (is_writable($file = '/mnt/kd/phoneprov-reload.script')) {
+      $sel = ($file === $openfile) ? ' selected="selected"' : '';
+      putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - PhoneProv Reload Shell Script</option>');
     }
     putHtml('</optgroup>');
   }

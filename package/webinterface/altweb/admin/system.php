@@ -18,6 +18,7 @@
 // 02-01-2010, Added Asterisk Sounds upgrade, remove, show
 // 01-16-2011, Added runnix check, upgrade, show, revert
 // 07-21-2013, Added Add-On Packages
+// 12-16-2017, Updated backup files
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -194,10 +195,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $templates = '';
       }
       $srcfile = '$(ls -1 /mnt/kd/ | sed -n -e "s/^rc.conf.d$/&/p" -e "s/^ssh_keys$/&/p"';
-      $srcfile .= ' -e "s/^.*[.]conf$/&/p" -e "s/^webgui-prefs.txt$/&/p" -e "s/^ast.*/&/p"';
+      $srcfile .= ' -e "s/^.*[.]conf$/&/p" -e "s/^.*[.]script$/&/p" -e "s/^webgui-prefs.txt$/&/p" -e "s/^ast.*/&/p"';
       $srcfile .= ' -e "s/^blocked-hosts$/&/p" -e "s/^dnsmasq.static$/&/p" -e "s/^hosts$/&/p" -e "s/^ethers$/&/p"';
       $srcfile .= ' -e "s/^rc.local$/&/p" -e "s/^rc.local.stop$/&/p" -e "s/^rc.elocal$/&/p" -e "s/^rc.ledcontrol$/&/p"';
-      $srcfile .= ' -e "s/^wan-failover.script$/&/p" -e "s/^phoneprov-reload.script$/&/p"';
       $srcfile .= ' -e "s/^custom-agi$/&/p" -e "s/^avahi$/&/p"';
       $srcfile .= ' -e "s/^crontabs$/&/p" -e "s/^snmp$/&/p" -e "s/^fop2$/&/p" -e "s/^kamailio$/&/p" -e "s/^monit$/&/p"';
       $srcfile .= ' -e "s/^openvpn$/&/p" -e "s/^ipsec$/&/p" -e "s/^wireguard$/&/p"';

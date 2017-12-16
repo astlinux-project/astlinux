@@ -84,14 +84,14 @@ fi
 # Restore basic configuration files
 #
 if ! restore_files astdb astdb.sqlite3 asterisk-odbc.sqlite3 webgui-prefs.txt blocked-hosts dnsmasq.static \
-                   rc.local rc.local.stop rc.elocal rc.ledcontrol wan-failover.script phoneprov-reload.script \
+                   rc.local rc.local.stop rc.elocal rc.ledcontrol \
                    ast-crash hosts ethers; then
   exit 2
 fi
 
-# Find, and restore all base *.conf files contained in the restore archive
+# Find, and restore all base *.conf and *.script files contained in the restore archive
 #
-if ! restore_files $(tar tf "$RESTORE" | sed -n -e 's/^[^/]*[.]conf$/&/p'); then
+if ! restore_files $(tar tf "$RESTORE" | sed -n -e 's/^[^/]*[.]conf$/&/p' -e 's/^[^/]*[.]script$/&/p'); then
   exit 2
 fi
 
