@@ -59,8 +59,8 @@ if (is_file('/etc/init.d/kamailio')) {
 }
 $select_reload['IPTABLES'] = 'Reload Firewall Blocklist';
 $select_reload['cron'] = 'Reload Cron for root';
-if (! is_file('/etc/init.d/wireguard')) {
-  unset($select_reload['wireguard']);
+if (! is_file('/etc/init.d/zabbix')) {
+  unset($select_reload['zabbix']);
 }
 
 $sys_label = array (

@@ -1393,10 +1393,8 @@ require_once '../common/header.php';
   putHtml('<option value="ipsec"'.$sel.'>Restart IPsec strongSwan</option>');
   $sel = ($reboot_restart === 'pptpd') ? ' selected="selected"' : '';
   putHtml('<option value="pptpd"'.$sel.'>Restart PPTP VPN Server</option>');
-  if (is_file('/etc/init.d/wireguard')) {
-    $sel = ($reboot_restart === 'wireguard') ? ' selected="selected"' : '';
-    putHtml('<option value="wireguard"'.$sel.'>Restart WireGuard VPN</option>');
-  }
+  $sel = ($reboot_restart === 'wireguard') ? ' selected="selected"' : '';
+  putHtml('<option value="wireguard"'.$sel.'>Restart WireGuard VPN</option>');
   $sel = ($reboot_restart === 'fossil') ? ' selected="selected"' : '';
   putHtml('<option value="fossil"'.$sel.'>Restart Fossil Server</option>');
   $sel = ($reboot_restart === 'vsftpd') ? ' selected="selected"' : '';
@@ -1421,8 +1419,10 @@ require_once '../common/header.php';
   putHtml('<option value="ups"'.$sel.'>Restart UPS Daemon</option>');
   $sel = ($reboot_restart === 'prosody') ? ' selected="selected"' : '';
   putHtml('<option value="prosody"'.$sel.'>Restart XMPP Server</option>');
-  $sel = ($reboot_restart === 'zabbix') ? ' selected="selected"' : '';
-  putHtml('<option value="zabbix"'.$sel.'>Restart Zabbix Monitor</option>');
+  if (is_file('/etc/init.d/zabbix')) {
+    $sel = ($reboot_restart === 'zabbix') ? ' selected="selected"' : '';
+    putHtml('<option value="zabbix"'.$sel.'>Restart Zabbix Monitor</option>');
+  }
   $sel = ($reboot_restart === 'asterisk') ? ' selected="selected"' : '';
   putHtml('<option value="asterisk"'.$sel.'>Restart Asterisk</option>');
   if (is_addon_package('fop2')) {
