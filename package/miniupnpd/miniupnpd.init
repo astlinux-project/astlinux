@@ -144,23 +144,23 @@ init () {
   echo "## Auto generated file. Do not edit.
 ext_ifname=$EXTIF" > $MINIUPNPD_CONF
   if is_upnp_enabled INTIF && is_interface_enabled "$INTIF" "$INTIP" "$INTNM"; then
-    echo "listening_ip=$INTIP/$INTNM" >> $MINIUPNPD_CONF
+    echo "listening_ip=$INTIF" >> $MINIUPNPD_CONF
     RULES="$RULES${RULES:+\n}allow 1024-65535 $(get_cidr $INTIP $INTNM) 1024-65535"
   fi
   if is_upnp_enabled INT2IF && is_interface_enabled "$INT2IF" "$INT2IP" "$INT2NM"; then
-    echo "listening_ip=$INT2IP/$INT2NM" >> $MINIUPNPD_CONF
+    echo "listening_ip=$INT2IF" >> $MINIUPNPD_CONF
     RULES="$RULES${RULES:+\n}allow 1024-65535 $(get_cidr $INT2IP $INT2NM) 1024-65535"
   fi
   if is_upnp_enabled INT3IF && is_interface_enabled "$INT3IF" "$INT3IP" "$INT3NM"; then
-    echo "listening_ip=$INT3IP/$INT3NM" >> $MINIUPNPD_CONF
+    echo "listening_ip=$INT3IF" >> $MINIUPNPD_CONF
     RULES="$RULES${RULES:+\n}allow 1024-65535 $(get_cidr $INT3IP $INT3NM) 1024-65535"
   fi
   if is_upnp_enabled INT4IF && is_interface_enabled "$INT4IF" "$INT4IP" "$INT4NM"; then
-    echo "listening_ip=$INT4IP/$INT4NM" >> $MINIUPNPD_CONF
+    echo "listening_ip=$INT4IF" >> $MINIUPNPD_CONF
     RULES="$RULES${RULES:+\n}allow 1024-65535 $(get_cidr $INT4IP $INT4NM) 1024-65535"
   fi
   if is_upnp_enabled DMZIF && is_interface_enabled "$DMZIF" "$DMZIP" "$DMZNM"; then
-    echo "listening_ip=$DMZIP/$DMZNM" >> $MINIUPNPD_CONF
+    echo "listening_ip=$DMZIF" >> $MINIUPNPD_CONF
     RULES="$RULES${RULES:+\n}allow 1024-65535 $(get_cidr $DMZIP $DMZNM) 1024-65535"
   fi
 
