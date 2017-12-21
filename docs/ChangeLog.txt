@@ -76,7 +76,7 @@ Released @TBD@
 
 -- rsync, security fixes: CVE-2017-17433, CVE-2017-17434, CVE-2017-16548
 
--- WireGuard VPN, version 0.0.20171211, new package; an extremely simple yet fast and modern VPN
+-- WireGuard VPN, version 0.0.20171221, new package; an extremely simple yet fast and modern VPN
                                                      that utilizes state-of-the-art cryptography.
    New rc.conf variables: WIREGUARD_IP, WIREGUARD_NM, WIREGUARD_IPV6, WIREGUARD_ROUTES, WIREGUARD_AUTO_ROUTES
                           WIREGUARD_IF, WIREGUARD_MTU, WIREGUARD_LISTEN_PORT, WIREGUARD_ALLOWLAN, WIREGUARD_TUNNEL_HOSTS
