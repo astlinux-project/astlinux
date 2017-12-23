@@ -7,7 +7,7 @@ ORANGE=2
 GREEN=0
 #
 # sounds repository
-SRC_URL="http://downloads.asterisk.org/pub/telephony/sounds"
+SRC_URL="https://downloads.asterisk.org/pub/telephony/sounds"
 #
 # CODEC's
 CODECS="ulaw|alaw|gsm|wav|g729|g722"

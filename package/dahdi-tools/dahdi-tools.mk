@@ -5,7 +5,7 @@
 ##############################################################
 DAHDI_TOOLS_VERSION := 2.10.2
 DAHDI_TOOLS_SOURCE := dahdi-tools-$(DAHDI_TOOLS_VERSION).tar.gz
-DAHDI_TOOLS_SITE := http://downloads.asterisk.org/pub/telephony/dahdi-tools/releases
+DAHDI_TOOLS_SITE := https://downloads.asterisk.org/pub/telephony/dahdi-tools/releases
 DAHDI_TOOLS_DIR := $(BUILD_DIR)/dahdi-tools-$(DAHDI_TOOLS_VERSION)
 DAHDI_TOOLS_BINARY := dahdi_cfg
 DAHDI_TOOLS_TARGET_BINARY := usr/sbin/dahdi_cfg

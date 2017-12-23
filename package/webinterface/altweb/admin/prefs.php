@@ -1084,7 +1084,7 @@ require_once '../common/header.php';
   
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">Sounds Pkg URL:</td><td colspan="4">');
   if (($value = getPREFdef($global_prefs, 'system_asterisk_sounds_url')) === '') {
-    $value = 'http://downloads.asterisk.org/pub/telephony/sounds';
+    $value = 'https://downloads.asterisk.org/pub/telephony/sounds';
   }
   putHtml('<input type="text" size="48" maxlength="128" value="'.$value.'" name="sounds_url" /></td></tr>');
   

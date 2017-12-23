@@ -34,7 +34,7 @@ if (($REPOSITORY_URL = tuq(getPREFdef($global_prefs, 'system_firmware_repository
 }
 
 if (($SOUNDS_URL = tuq(getPREFdef($global_prefs, 'system_asterisk_sounds_url'))) === '') {
-  $SOUNDS_URL = 'http://downloads.asterisk.org/pub/telephony/sounds';
+  $SOUNDS_URL = 'https://downloads.asterisk.org/pub/telephony/sounds';
 }
 
 $sounds_type_menu = array (

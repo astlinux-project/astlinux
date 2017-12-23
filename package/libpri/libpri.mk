@@ -6,7 +6,7 @@
 
 LIBPRI_VERSION = 1.6.0
 LIBPRI_SOURCE = libpri-$(LIBPRI_VERSION).tar.gz
-LIBPRI_SITE = http://downloads.asterisk.org/pub/telephony/libpri/releases
+LIBPRI_SITE = https://downloads.asterisk.org/pub/telephony/libpri/releases
 LIBPRI_INSTALL_STAGING = YES
 LIBPRI_DEPENDENCIES += dahdi-tools
 
