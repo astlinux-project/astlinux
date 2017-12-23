@@ -97,7 +97,7 @@ Released @TBD@
 
 ** Asterisk
 
--- Asterisk 11.25.3 (no change) and 13.18.4 (version bump)
+-- Asterisk 11.25.3 (no change) and 13.18.5 (version bump)
 
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
