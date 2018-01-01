@@ -93,7 +93,7 @@ Released @TBD@
 
 -- miniupnpd, version bump to 2.0.20171212
 
--- whois, version bump to 5.2.19
+-- whois, version bump to 5.2.20
 
 ** Asterisk
 
