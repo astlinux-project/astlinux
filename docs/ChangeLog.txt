@@ -20,7 +20,7 @@ Released @TBD@
 
 -- sqlite, version bump to 3.21.0, security fixes: CVE-2017-13685, CVE-2017-15286
 
--- php, version bump to 5.6.32, security fixes.
+-- php, version bump to 5.6.33, security fixes.
 
 -- busybox, lineedit: do not tab-complete any strings which have control characters: CVE-2017-16544
             bunzip2: fix runCnt overflow: CVE-2017-15873
