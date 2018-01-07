@@ -113,7 +113,12 @@ CREATE TABLE 'cdr' (
   'amaflags' INTEGER,
   'accountcode' TEXT,
   'uniqueid' TEXT,
-  'userfield' TEXT
+  'userfield' TEXT,
+  'answer' TEXT,
+  'end' TEXT,
+  'linkedid' TEXT,
+  'peeraccount' TEXT,
+  'sequence' TEXT
 );
 CREATE VIEW 'standard' AS SELECT calldate, clid, dst, dcontext, billsec, userfield from cdr ORDER BY calldate DESC;
 EOF
