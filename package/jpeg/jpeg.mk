@@ -3,7 +3,7 @@
 # jpeg (libjpeg)
 #
 #############################################################
-JPEG_VERSION = 9b
+JPEG_VERSION = 9c
 JPEG_SITE = http://www.ijg.org/files
 JPEG_SOURCE = jpegsrc.v$(JPEG_VERSION).tar.gz
 JPEG_INSTALL_STAGING = YES
