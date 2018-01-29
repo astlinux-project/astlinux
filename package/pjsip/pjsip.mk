@@ -4,9 +4,9 @@
 #
 ################################################################################
 
-PJSIP_VERSION = 2.6
+PJSIP_VERSION = 2.7.1
 PJSIP_SOURCE = pjproject-$(PJSIP_VERSION).tar.bz2
-PJSIP_SITE = http://www.pjsip.org/release/$(PJSIP_VERSION)
+PJSIP_SITE = https://raw.githubusercontent.com/asterisk/third-party/master/pjproject/$(PJSIP_VERSION)
 PJSIP_INSTALL_STAGING = YES
 
 define PJSIP_CUSTOM_CONFIG
