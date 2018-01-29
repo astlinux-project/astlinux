@@ -1,6 +1,6 @@
 --- a/configure.ac	2017-03-31 09:15:57.593261737 -0500
 +++ b/configure.ac	2017-03-31 09:17:32.969716649 -0500
-@@ -55,9 +55,9 @@
+@@ -56,9 +56,9 @@
      LIBS=""
      AC_SEARCH_LIBS([readline],[edit],[
        AC_DEFINE([HAVE_EDITLINE],1,Define to use BSD editline)
