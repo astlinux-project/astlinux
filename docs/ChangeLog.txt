@@ -28,7 +28,7 @@ Released @TBD@
 
 -- libcurl (curl) version bump to 7.58.0, security fix: CVE-2018-1000007
 
--- WireGuard VPN, version bump to 0.0.20180118
+-- WireGuard VPN, version bump to 0.0.20180202
 
 -- ipset, version bump to 6.35
 
