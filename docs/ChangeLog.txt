@@ -18,6 +18,8 @@ Released @TBD@
 
 -- e2fsprogs, version bump to 1.43.8
 
+-- ethtool, version bump to 4.15
+
 -- sudo, version bump to 1.8.22
 
 -- ca-certificates, update trusted root certificates 2018-01-17
