@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-QEMU_VERSION = 2.10.0
+QEMU_VERSION = 2.11.0
 QEMU_SOURCE = qemu-$(QEMU_VERSION).tar.bz2
 QEMU_SITE = http://wiki.qemu.org/download
 
@@ -84,7 +84,6 @@ define QEMU_CONFIGURE_CMDS
 			--prefix=/usr \
 			--cross-prefix=$(TARGET_CROSS) \
 			--sysconfdir=/etc \
-			--with-system-pixman \
 			--audio-drv-list= \
 			--enable-kvm \
 			--enable-attr \
