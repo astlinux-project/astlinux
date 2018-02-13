@@ -46,11 +46,15 @@ Released @TBD@
 
 ** Asterisk
 
--- Asterisk 11.25.3 (no change) and 13.19.0 (version bump)
+-- Asterisk 11.25.3 (no change) and 13.19.1 (version bump)
 
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
 -- pjsip 2.7.1 (version bump)
+
+-- FOP2, available version bump to 2.31.17.
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
