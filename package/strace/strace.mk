@@ -4,9 +4,12 @@
 #
 #############################################################
 
-STRACE_VERSION = 4.20
+STRACE_VERSION = 4.21
 STRACE_SOURCE = strace-$(STRACE_VERSION).tar.xz
 STRACE_SITE = http://downloads.sourceforge.net/project/strace/strace/$(STRACE_VERSION)
+
+STRACE_CONF_OPT = \
+	--enable-mpers=no
 
 define STRACE_REMOVE_STRACE_GRAPH
 	rm -f $(TARGET_DIR)/usr/bin/strace-graph
