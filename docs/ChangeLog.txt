@@ -12,11 +12,13 @@ Released @TBD@
 
 ** System
 
+-- igb, version 5.3.5.4, add patch from upstream Linux kernel: Use smp_rmb rather than read_barrier_depends
+
 -- sqlite, version bump to 3.22.0
 
 -- libjpeg, version bump to 9c
 
--- e2fsprogs, version bump to 1.43.8
+-- e2fsprogs, version bump to 1.43.9
 
 -- ethtool, version bump to 4.15
 
