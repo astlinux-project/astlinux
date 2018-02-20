@@ -4,9 +4,9 @@
 #
 ################################################################################
 
-FOSSIL_VERSION = 2.0
+FOSSIL_VERSION = 2.5
 FOSSIL_SOURCE = fossil-src-$(FOSSIL_VERSION).tar.gz
-FOSSIL_SITE = https://www.fossil-scm.org/fossil/uv/download
+FOSSIL_SITE = https://www.fossil-scm.org/fossil/uv
 FOSSIL_DEPENDENCIES = zlib openssl
 
 define FOSSIL_CONFIGURE_CMDS

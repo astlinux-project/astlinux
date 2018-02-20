@@ -30,7 +30,7 @@ init()
       mkdir $TMPDIR
     fi
     if [ ! -f $REPO ]; then
-      fossil init --admin-user admin $REPO >/dev/null
+      fossil init --sha1 --admin-user admin $REPO >/dev/null
 
       fossil user password admin astlinux -R $REPO >/dev/null
       fossil user default admin -R $REPO >/dev/null
