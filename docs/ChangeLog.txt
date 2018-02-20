@@ -14,6 +14,8 @@ Released @TBD@
 
 -- igb, version 5.3.5.4, add patch from upstream Linux kernel: Use smp_rmb rather than read_barrier_depends
 
+-- Fossil, version bump to 2.5, adds numerous enhancements to the look and feel of the web interface
+
 -- sqlite, version bump to 3.22.0
 
 -- libjpeg, version bump to 9c
