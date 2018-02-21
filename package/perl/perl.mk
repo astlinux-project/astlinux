@@ -5,8 +5,8 @@
 #############################################################
 
 PERL_VERSION_MAJOR = 24
-PERL_VERSION = 5.$(PERL_VERSION_MAJOR).2
-PERL_SITE = http://www.cpan.org/src/5.0
+PERL_VERSION = 5.$(PERL_VERSION_MAJOR).3
+PERL_SITE = https://www.cpan.org/src/5.0
 PERL_SOURCE = perl-$(PERL_VERSION).tar.xz
 PERL_INSTALL_STAGING = YES
 # Depend on linux to define LINUX_VERSION_PROBED
@@ -18,7 +18,7 @@ PERL_MODULES = constant version base fields
 PERL_MODULES += Carp Errno Fcntl PathTools POSIX Digest Socket IO XSLoader Exporter B File-Find JSON-PP
 PERL_MODULES += Digest/MD5 Digest/SHA Getopt/Long Time/Local File/Glob Sys/Hostname
 
-PERL_CROSS_VERSION = 1.1.6
+PERL_CROSS_VERSION = 1.1.8
 PERL_CROSS_SITE = https://github.com/arsv/perl-cross/releases/download/$(PERL_CROSS_VERSION)
 PERL_CROSS_SOURCE = perl-cross-$(PERL_CROSS_VERSION).tar.gz
 
