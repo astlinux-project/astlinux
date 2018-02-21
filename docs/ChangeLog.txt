@@ -22,6 +22,8 @@ Released @TBD@
 
 -- e2fsprogs, version bump to 1.43.9
 
+-- perl, version bump to 5.24.3 using perlcross 1.1.8
+
 -- ethtool, version bump to 4.15
 
 -- strace, version bump to 4.21
