@@ -34,6 +34,8 @@ Released @TBD@
 
 -- Time Zone Database update, tzdata2018c and php-timezonedb-2018.3
 
+-- mac2vendor, oui.txt database snapshot 2018-02-22
+
 -- (Custom Build Only) flashrom, version bump to 1.0
 
 ** Networking
