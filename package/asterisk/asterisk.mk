@@ -336,7 +336,7 @@ endif
 
 asterisk: $(TARGET_DIR)/$(ASTERISK_TARGET_BINARY)
 
-asterisk-source: $(ASTERISK_DIR)/.patched
+asterisk-patch: $(ASTERISK_DIR)/.patched
 
 asterisk-clean:
 	rm -Rf $(STAGING_DIR)/usr/include/asterisk
