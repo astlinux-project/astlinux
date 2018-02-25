@@ -12,6 +12,10 @@ Released @TBD@
 
 ** System
 
+-- Linux Kernel 3.16.54, security and bug fixes.
+
+-- RUNNIX, version bump to runnix-0.5.3, with Linux Kernel 3.16.54, e2fsprogs 1.43.9
+
 -- igb, version 5.3.5.4, add patch from upstream Linux kernel: Use smp_rmb rather than read_barrier_depends
 
 -- Fossil, version bump to 2.5, adds numerous enhancements to the look and feel of the web interface
