@@ -20,6 +20,9 @@ Released @TBD@
 
 -- Fossil, version bump to 2.5, adds numerous enhancements to the look and feel of the web interface
 
+-- zabbix, version bump to 3.0.14, adds TLS encryption support
+   Note: Now requires a Zabbix server with version 3.0 or greater.
+
 -- sqlite, version bump to 3.22.0
 
 -- libjpeg, version bump to 9c
