@@ -4,7 +4,7 @@
 #
 #############################################################
 
-ZABBIX_VERSION = 2.2.18
+ZABBIX_VERSION = 3.0.14
 ZABBIX_SOURCE = zabbix-$(ZABBIX_VERSION).tar.gz
 ZABBIX_SITE = http://downloads.sourceforge.net/sourceforge/zabbix
 
@@ -13,23 +13,30 @@ ZABBIX_CONF_OPT = \
 	--enable-agent \
 	--enable-ipv6
 
-ifeq ($(strip $(BR2_PACKAGE_ZABBIX_PROXY)),y)
+ifeq ($(BR2_PACKAGE_ZABBIX_PROXY),y)
 ZABBIX_DEPENDENCIES += sqlite fping
 ZABBIX_CONF_OPT += \
 	--enable-proxy \
 	--with-sqlite3="$(STAGING_DIR)/usr"
 
- ifeq ($(strip $(BR2_PACKAGE_CURL)),y)
+ ifeq ($(BR2_PACKAGE_CURL),y)
 ZABBIX_DEPENDENCIES += libcurl
 ZABBIX_CONF_OPT += \
 	--with-libcurl="$(STAGING_DIR)/usr/bin/curl-config"
  endif
 
- ifeq ($(strip $(BR2_PACKAGE_NETSNMP)),y)
+ ifeq ($(BR2_PACKAGE_NETSNMP),y)
 ZABBIX_DEPENDENCIES += netsnmp
 ZABBIX_CONF_OPT += \
 	--with-net-snmp="$(STAGING_DIR)/usr/bin/net-snmp-config"
  endif
+endif
+
+ifeq ($(BR2_PACKAGE_OPENSSL),y)
+ZABBIX_DEPENDENCIES += openssl
+ZABBIX_CONF_OPT += --with-openssl=$(STAGING_DIR)/usr
+else
+ZABBIX_CONF_OPT += --with-openssl=no
 endif
 
 define ZABBIX_INSTALL_TARGET_CMDS
