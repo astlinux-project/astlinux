@@ -1,0 +1,66 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+PIDFILE="/var/run/lldpd.pid"
+
+init () {
+
+  if [ -f /mnt/kd/lldpd.conf ]; then
+    ln -sf /mnt/kd/lldpd.conf /tmp/etc/lldpd.conf
+  else
+    if [ -L /tmp/etc/lldpd.conf ]; then
+      rm -f /tmp/etc/lldpd.conf
+    fi
+  fi
+}
+
+start () {
+  local OPTIONS
+
+  if [ -f /etc/lldpd.conf ]; then
+
+    OPTIONS="$LLDP_OPTIONS"
+
+    echo "Starting LLDP Daemon (lldpd)..."
+    lldpd $OPTIONS -O /etc/lldpd.conf
+  fi
+}
+
+stop () {
+
+  if [ -f $PIDFILE ]; then
+
+    echo "Stopping LLDP Daemon (lldpd)..."
+    kill $(cat $PIDFILE) >/dev/null 2>&1
+    rm -f $PIDFILE
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+
