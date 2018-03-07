@@ -3,7 +3,7 @@
 # sqliteodbc
 #
 #############################################################
-SQLITEODBC_VERSION = 0.9995
+SQLITEODBC_VERSION = 0.9996
 SQLITEODBC_SOURCE = sqliteodbc-$(SQLITEODBC_VERSION).tar.gz
 SQLITEODBC_SITE = http://www.ch-werner.de/sqliteodbc
 SQLITEODBC_SUBDIR = sqliteodbc-$(SQLITEODBC_VERSION)
