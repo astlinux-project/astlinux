@@ -27,6 +27,8 @@ Released @TBD@
 
 -- sqlite, version bump to 3.22.0
 
+-- sqliteodbc, version bump to 0.9996
+
 -- libjpeg, version bump to 9c
 
 -- e2fsprogs, version bump to 1.43.9
@@ -39,7 +41,7 @@ Released @TBD@
 
 -- sudo, version bump to 1.8.22
 
--- ca-certificates, update trusted root certificates 2018-01-17
+-- ca-certificates, update trusted root certificates 2018-03-07
 
 -- Time Zone Database update, tzdata2018c and php-timezonedb-2018.3
 
@@ -57,7 +59,7 @@ Released @TBD@
 
 -- OpenVPN, version bump to 2.4.5
 
--- ipset, version bump to 6.35
+-- ipset, version bump to 6.36
 
 -- sngrep, version bump to 1.4.5
 
