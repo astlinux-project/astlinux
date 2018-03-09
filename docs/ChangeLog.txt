@@ -31,6 +31,8 @@ Released @TBD@
 
 -- libjpeg, version bump to 9c
 
+-- libxml2, version bump to 2.9.8
+
 -- e2fsprogs, version bump to 1.43.9
 
 -- perl, version bump to 5.24.3 using perlcross 1.1.8
