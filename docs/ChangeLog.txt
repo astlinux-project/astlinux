@@ -33,11 +33,13 @@ Released @TBD@
 
 -- libxml2, version bump to 2.9.8
 
--- e2fsprogs, version bump to 1.43.9
+-- e2fsprogs, version bump to 1.44.0
 
 -- perl, version bump to 5.24.3 using perlcross 1.1.8
 
 -- ethtool, version bump to 4.15
+
+-- logrotate, version bump to 3.14.0
 
 -- strace, version bump to 4.21
 
