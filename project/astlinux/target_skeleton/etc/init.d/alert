@@ -34,6 +34,12 @@ welcome_msg()
     fi
   fi
 
+  if [ -x /usr/sbin/system-vendor ]; then
+    vendor="$(/usr/sbin/system-vendor 2>/dev/null)"
+  else
+    vendor=""
+  fi
+
   release="$(cat /etc/astlinux-release)"
 
   echo -e "\n\n\033[40m\033[1;32m  Welcome to AstLinux, Release: ${release}${asterisk:+ - $asterisk}  \033[0m"
@@ -44,7 +50,8 @@ welcome_msg()
          Domain: $DOMAIN
           Linux: $(uname -r -m)
      RAM Memory: $memtotal MB, Available $memavail MB
-     Board Type: $board
+     Board Type: $board${vendor:+
+       Hardware: $vendor}
 
       Interface: $EXTIF (External)   IPv4 Address: $(dev_to_ipv4_addresses $EXTIF)${INTIF:+
       Interface: $INTIF (1st LAN)    IPv4 Network: $(dev_to_ipv4_networks $INTIF)}${INT2IF:+

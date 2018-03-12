@@ -1,0 +1,10 @@
+config BR2_PACKAGE_SYSTEM_VENDOR
+	bool "system-vendor"
+	default n
+	help
+	  A shell script and text database file used to fingerprint
+	  system vendor hardware, and generate an informative model name.
+
+	  Lonnie Abelbeck
+	  https://www.astlinux-project.org/
+
