@@ -8,5 +8,5 @@ config BR2_PACKAGE_PHONEPROV_TOOLS
 	  sip.conf and extensions.conf includes files.
 
 	  Lonnie Abelbeck and Michael Keuter
-	  http://www.astlinux.org/
+	  https://www.astlinux-project.org/
 
