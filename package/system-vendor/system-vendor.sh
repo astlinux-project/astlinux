@@ -78,7 +78,7 @@ if [ -z "$cpu_info" ]; then
   exit 1
 fi
 
-## Find most occurring ethernet MAC vendor
+## Find most occurring ethernet MAC vendor, starting with the NIC count
 eth_sig="$(eth_signature "$(eth_list)")"
 
 if [ -z "$eth_sig" ]; then
@@ -90,7 +90,7 @@ fi
 vendor_id="$(printf '%s%s' "$cpu_info" "$eth_sig" | sha1sum | cut -c 33-40)"
 
 if [ -n "$vendor_test" ]; then
-  echo "${vendor_id}~${vendor_test}"
+  echo "${vendor_id}~${vendor_test} NIC x${eth_sig%??????}"
   exit 0
 fi
 
