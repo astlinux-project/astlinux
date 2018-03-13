@@ -45,6 +45,11 @@ Released @TBD@
 
 -- sudo, version bump to 1.8.22
 
+-- system-vendor, new command to identify common hardware.  The system-vendor command is automatically
+   called at startup to create the /tmp/etc/system-vendor file, symlinked as /etc/system-vendor .
+   Note: If 'system-vendor' shows no output, issue 'system-vendor XYZ Hardware Model' and a fingerprint will be
+         generated, contact the developers to include the entry in future /usr/share/system-vendor.ids files.
+
 -- ca-certificates, update trusted root certificates 2018-03-07
 
 -- Time Zone Database update, tzdata2018c and php-timezonedb-2018.3
@@ -87,7 +92,7 @@ Released @TBD@
 
 ** Web Interface
 
--- no change
+-- Status tab, add Hardware: system-vendor info when available.
 
 
 Additions for AstLinux 1.3.2:
