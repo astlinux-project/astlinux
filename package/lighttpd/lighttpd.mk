@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LIGHTTPD_VERSION = 1.4.45
+LIGHTTPD_VERSION = 1.4.49
 LIGHTTPD_SITE = http://download.lighttpd.net/lighttpd/releases-1.4.x
 LIGHTTPD_DEPENDENCIES = host-pkg-config
 LIGHTTPD_CONF_OPT = \
@@ -12,6 +12,10 @@ LIGHTTPD_CONF_OPT = \
 	--libexecdir=/usr/lib \
 	--localstatedir=/var \
 	$(if $(BR2_LARGEFILE),,--disable-lfs)
+
+LIGHTTPD_CONF_ENV = \
+	ac_cv_func_sendfile=no \
+	ac_cv_func_sendfile64=no
 
 ifeq ($(BR2_PACKAGE_LIGHTTPD_OPENSSL),y)
 LIGHTTPD_DEPENDENCIES += openssl
@@ -35,7 +39,7 @@ LIGHTTPD_CONF_OPT += --without-bzip2
 endif
 
 ifeq ($(BR2_PACKAGE_LIGHTTPD_PCRE),y)
-LIGHTTPD_CONF_ENV = PCRECONFIG=$(STAGING_DIR)/usr/bin/pcre-config
+LIGHTTPD_CONF_ENV += PCRECONFIG=$(STAGING_DIR)/usr/bin/pcre-config
 LIGHTTPD_DEPENDENCIES += pcre
 LIGHTTPD_CONF_OPT += --with-pcre
 else
