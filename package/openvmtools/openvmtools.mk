@@ -4,8 +4,8 @@
 #
 ################################################################################
 
-OPENVMTOOLS_VERSION = 10.1.5
-OPENVMTOOLS_SOURCE = open-vm-tools-$(OPENVMTOOLS_VERSION)-5055683.tar.gz
+OPENVMTOOLS_VERSION = 10.1.15
+OPENVMTOOLS_SOURCE = open-vm-tools-$(OPENVMTOOLS_VERSION)-6677369.tar.gz
 OPENVMTOOLS_SITE = https://github.com/vmware/open-vm-tools/releases/download/stable-$(OPENVMTOOLS_VERSION)
 
 OPENVMTOOLS_AUTORECONF = YES
