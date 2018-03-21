@@ -18,6 +18,8 @@ Released @TBD@
 
 -- igb, version 5.3.5.4, add patch from upstream Linux kernel: Use smp_rmb rather than read_barrier_depends
 
+-- genx86_64-vm board type, version bump VMware Tools to open-vm-tools 10.1.15
+
 -- Fossil, version bump to 2.5, adds numerous enhancements to the look and feel of the web interface
 
 -- zabbix, version bump to 3.0.14, adds TLS encryption support
@@ -45,6 +47,8 @@ Released @TBD@
 
 -- sudo, version bump to 1.8.22
 
+-- unixodbc, version bump to 2.3.6
+
 -- system-vendor, new command to identify common hardware.  The system-vendor command is automatically
    called at startup to create the /tmp/etc/system-vendor file, symlinked as /etc/system-vendor .
    Note: If 'system-vendor' shows no output, issue 'system-vendor XYZ Hardware Model' and a fingerprint will be
@@ -60,7 +64,7 @@ Released @TBD@
 
 ** Networking
 
--- libcurl (curl) version bump to 7.58.0, security fix: CVE-2018-1000007
+-- libcurl (curl) version bump to 7.59.0, security fixes: CVE-2018-1000007, CVE-2018-1000120, CVE-2018-1000121, CVE-2018-1000122
 
 -- rsync, version bump to 3.1.3, security fix: CVE-2018-5764
 
@@ -68,11 +72,13 @@ Released @TBD@
 
 -- OpenVPN, version bump to 2.4.5
 
+-- lighttpd, version bump to 1.4.49
+
 -- ipset, version bump to 6.36
 
 -- sngrep, version bump to 1.4.5
 
--- unbound (host), version bump to 1.6.8, security fix: CVE-2017-15105
+-- unbound (host), version bump to 1.7.0, security fix: CVE-2017-15105
 
 -- miniupnpd, version bump to 2.0.20180203
 
@@ -80,7 +86,7 @@ Released @TBD@
 
 ** Asterisk
 
--- Asterisk 11.25.3 (no change) and 13.19.2 (version bump)
+-- Asterisk 11.25.3 (no change) and 13.20.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
