@@ -22,6 +22,7 @@ PJSIP_CONF_ENV = \
 PJSIP_CONF_OPT = \
 	--disable-speex-codec \
 	--disable-speex-aec \
+	--disable-bcg729 \
 	--disable-gsm-codec \
 	--disable-ilbc-codec \
 	--disable-l16-codec \
