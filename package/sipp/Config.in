@@ -1,0 +1,12 @@
+config BR2_PACKAGE_SIPP
+	bool "sipp"
+	select BR2_PACKAGE_LIBPCAP
+	select BR2_PACKAGE_NCURSES
+	select BR2_PACKAGE_OPENSSL
+	default n
+	help
+
+	  SIPp - a SIP protocol testing tool
+
+	  https://github.com/SIPp/sipp
+
