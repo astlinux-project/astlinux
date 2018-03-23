@@ -11,6 +11,7 @@
 ## More Info: http://doc.astlinux.org/userdoc:tt_ip_phone_provisioning
 ## Yealink HTTPS provisioning
 #dhcp-mac=set:yealink,00:15:65:*:*:*
+#dhcp-mac=set:yealink,80:5e:c0:*:*:*
 #dhcp-option=tag:yealink,option:tftp-server,"https://pbx/phoneprov/yealink/"
 ## SNOM HTTPS provisioning
 #dhcp-mac=set:snom,00:04:13:*:*:*
