@@ -78,11 +78,15 @@ Released @TBD@
 
 -- sngrep, version bump to 1.4.5
 
+-- openldap, version bump to 2.4.46
+
 -- unbound (host), version bump to 1.7.0, security fix: CVE-2017-15105
 
 -- miniupnpd, version bump to 2.0.20180203
 
 -- whois, version bump to 5.3.0
+
+-- (Custom Build Only) sipp, new package, version 3.5.1; SIPp - a SIP protocol testing tool
 
 ** Asterisk
 
