@@ -4,7 +4,7 @@
 #
 #############################################################
 
-E2FSPROGS_VERSION = 1.44.0
+E2FSPROGS_VERSION = 1.44.1
 E2FSPROGS_SITE = http://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v$(E2FSPROGS_VERSION)
 E2FSPROGS_INSTALL_STAGING = YES
 E2FSPROGS_INSTALL_STAGING_OPT = DESTDIR=$(STAGING_DIR) LDCONFIG=true install-libs
@@ -32,7 +32,8 @@ E2FSPROGS_CONF_OPT = \
 	--enable-fsck \
 	--disable-e2initrd-helper \
 	--disable-testio-debug \
-	--disable-rpath
+	--disable-rpath \
+	--enable-symlink-install
 
 # Some programs are built for the host, but use definitions guessed by
 # the configure script (i.e with the cross-compiler). Help them by
@@ -67,44 +68,14 @@ E2FSPROGS_BINTARGETS_$(BR2_PACKAGE_E2FSPROGS_LOGSAVE) += usr/sbin/logsave
 E2FSPROGS_BINTARGETS_$(BR2_PACKAGE_E2FSPROGS_LSATTR) += usr/bin/lsattr
 E2FSPROGS_BINTARGETS_$(BR2_PACKAGE_E2FSPROGS_MKE2FS) += usr/sbin/mke2fs
 E2FSPROGS_BINTARGETS_$(BR2_PACKAGE_E2FSPROGS_MKLOSTFOUND) += usr/sbin/mklost+found
+E2FSPROGS_BINTARGETS_$(BR2_PACKAGE_E2FSPROGS_TUNE2FS) += usr/sbin/tune2fs
 E2FSPROGS_BINTARGETS_ += usr/sbin/e4crypt
-
-# files to remove
-E2FSPROGS_TXTTARGETS_ = \
-	usr/sbin/mkfs.ext[234] \
-	usr/sbin/mkfs.ext4dev \
-	usr/sbin/fsck.ext[234] \
-	usr/sbin/fsck.ext4dev \
-	usr/sbin/tune2fs
 
 define E2FSPROGS_TARGET_REMOVE_UNNEEDED
 	rm -f $(addprefix $(TARGET_DIR)/, $(E2FSPROGS_BINTARGETS_))
-	rm -f $(addprefix $(TARGET_DIR)/, $(E2FSPROGS_TXTTARGETS_))
 endef
 
 E2FSPROGS_POST_INSTALL_TARGET_HOOKS += E2FSPROGS_TARGET_REMOVE_UNNEEDED
-
-define E2FSPROGS_TARGET_MKE2FS_SYMLINKS
-	ln -sf mke2fs $(TARGET_DIR)/usr/sbin/mkfs.ext2
-	ln -sf mke2fs $(TARGET_DIR)/usr/sbin/mkfs.ext3
-	ln -sf mke2fs $(TARGET_DIR)/usr/sbin/mkfs.ext4
-	ln -sf mke2fs $(TARGET_DIR)/usr/sbin/mkfs.ext4dev
-endef
-
-ifeq ($(BR2_PACKAGE_E2FSPROGS_MKE2FS),y)
-E2FSPROGS_POST_INSTALL_TARGET_HOOKS += E2FSPROGS_TARGET_MKE2FS_SYMLINKS
-endif
-
-define E2FSPROGS_TARGET_E2FSCK_SYMLINKS
-	ln -sf e2fsck $(TARGET_DIR)/usr/sbin/fsck.ext2
-	ln -sf e2fsck $(TARGET_DIR)/usr/sbin/fsck.ext3
-	ln -sf e2fsck $(TARGET_DIR)/usr/sbin/fsck.ext4
-	ln -sf e2fsck $(TARGET_DIR)/usr/sbin/fsck.ext4dev
-endef
-
-ifeq ($(BR2_PACKAGE_E2FSPROGS_E2FSCK),y)
-E2FSPROGS_POST_INSTALL_TARGET_HOOKS += E2FSPROGS_TARGET_E2FSCK_SYMLINKS
-endif
 
 # If BusyBox is included, its configuration may supply its own variant
 # of ext2-related tools. Since Buildroot desires having full blown
@@ -127,14 +98,6 @@ define E2FSPROGS_REMOVE_BUSYBOX_APPLETS
 	rm -f $(TARGET_DIR)/sbin/e2label
 endef
 E2FSPROGS_PRE_INSTALL_TARGET_HOOKS += E2FSPROGS_REMOVE_BUSYBOX_APPLETS
-endif
-
-define E2FSPROGS_TARGET_TUNE2FS_SYMLINK
-	ln -sf e2label $(TARGET_DIR)/usr/sbin/tune2fs
-endef
-
-ifeq ($(BR2_PACKAGE_E2FSPROGS_TUNE2FS),y)
-E2FSPROGS_POST_INSTALL_TARGET_HOOKS += E2FSPROGS_TARGET_TUNE2FS_SYMLINK
 endif
 
 $(eval $(call AUTOTARGETS,package,e2fsprogs))
