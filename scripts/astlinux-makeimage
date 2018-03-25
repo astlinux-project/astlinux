@@ -166,12 +166,12 @@ fi
 echo "Disk Geometry: CYL=$CYL HEADS=$HEADS SECTORS=$SECTORS"
 
 ( if [ $AST_SIZE -gt 0 ]; then
-    echo -e "n\np\n1\n\n+${DOS_SIZE}M\nt\n6\na\n1"
+    echo -e "n\np\n1\n\n+${DOS_SIZE}M\nt\n6\na"
     echo -e "n\np\n2\n\n+${AST_SIZE}M\nt\n2\n83"
   elif [ $DOS_SIZE -lt $DISK_SIZE ]; then
-    echo -e "n\np\n1\n\n+${DOS_SIZE}M\nt\n6\na\n1"
+    echo -e "n\np\n1\n\n+${DOS_SIZE}M\nt\n6\na"
   else
-    echo -e "n\np\n1\n\n\nt\n6\na\n1"
+    echo -e "n\np\n1\n\n\nt\n6\na"
   fi
   echo "w"
 ) | sudo $HOST_BIN/fdisk -c=dos -u=cylinders -C $CYL -H $HEADS -S $SECTORS ${LOOPD}0
