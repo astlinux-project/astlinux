@@ -108,7 +108,7 @@ define UTIL_LINUX_REMOVE_BINARIES
 	  rm -f $(TARGET_DIR)/sbin/$$i ; \
 	done
 	## Removing selected /usr/bin binaries
-	for i in colcrt colrm column rev tailf script scriptreplay flock ipcmk ipcrm lsns look mcookie namei; do \
+	for i in colcrt colrm column rev tailf pg script scriptreplay flock ipcmk ipcrm lsns look mcookie namei; do \
 	  rm -f $(TARGET_DIR)/usr/bin/$$i ; \
 	done
 	## Removing selected /usr/sbin binaries
