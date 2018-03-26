@@ -131,6 +131,7 @@ echo "
 Runnix version '$RUNVER' starting..."
 
 mount -t proc none /proc
+mount -t sysfs none /sys
 mount -t tmpfs none /tmp
 mkdir /tmp/etc
 
