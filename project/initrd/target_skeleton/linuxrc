@@ -27,47 +27,6 @@ image_to_tmpfs() {
   fi
 }
 
-geninstall () {
-
-  echo "
-
-
-You have selected to install $PRODUCT to your hard drive.
-Attempting to find hard drive(s)..."
-
-  for i in `echo $DRIVES | sed -e "s/$CDROM //"`; do
-    if fdisk -l /dev/$i | grep -qi disk; then
-      VDISKS="$VDISKS $i"
-    fi
-  done
-
-  echo "I have found the following drives:"
-
-  for j in "$VDISKS"; do
-    echo "$j"
-  done
-
-  echo "
-Which drive would you like to install to?"
-  read -p"Please choose: " RESPONSE
-
-  if ! echo $VDISKS | grep -q $RESPONSE; then
-    echo "That is not a valid hard drive!"
-    halt
-  fi
-
-  echo "Continuing with install to $RESPONSE"
-
-  if ! dd if=/cdrom/$ASTINS.img of=/dev/$RESPONSE; then
-    echo "Install failed."
-  else
-    echo "Installation Successful! Please restart your
-machine and remove the cd-rom."
-  fi
-
-  halt
-}
-
 astlive () {
 
   # Mount root, image, etc.
@@ -211,15 +170,6 @@ exec /sbin/init ${CMDLINE}
 EOF
 }
 
-astinstall () {
-  echo ""
-}
-
-pwareinstall () {
-  echo ""
-}
-
-
 # Get kernel CMDLINE
 mount -t proc none /proc
 mount -t sysfs none /sys
@@ -272,11 +222,6 @@ for i in ${CMDLINE}; do
     ASTINS=`echo $i | awk '/^astins=/ { print substr($0, 8); }'`
     ;;
 
-  astinstall)
-    PRODUCT="AstLinux"
-    geninstall
-    ;;
-
   newinstall)
     export PRODUCT="AstLinux"
     exec /sbin/init ${CMDLINE}
@@ -284,11 +229,6 @@ for i in ${CMDLINE}; do
 
   astlive)
     astlive
-    ;;
-
-  pwareinstall)
-    PRODUCT="PBXWare"
-    geninstall
     ;;
 
   esac
