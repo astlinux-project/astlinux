@@ -3,71 +3,11 @@
 export PATH=/bin:/sbin
 
 case $1 in
+
 install)
-  echo "
-
-
-
-You have selected to install $PRODUCT to your hard drive.
-Attempting to find hard drive(s)..."
-
-  DRIVES="hda hdb hdc hdd hde hdf hdg hdh sda sdb sdc sdd"
-
-  for i in `echo $DRIVES | sed -e "s/$CDROM //"`; do
-    if fdisk -l /dev/$i | grep -qi disk; then
-      VDISKS="$VDISKS $i"
-    fi
-  done
-
-  echo "I have found the following drives:"
-
-  for j in "$VDISKS"; do
-    echo "$j"
-  done
-
-  echo "
-Which drive would you like to install to?"
-  read -p"Please choose: " RESPONSE
-
-  if ! echo $VDISKS | grep -q $RESPONSE; then
-    echo "That is not a valid hard drive!"
-    reboot
-  fi
-
-  echo "Continuing with install to $RESPONSE"
-
-  if ! mount -t tmpfs -o size=32m none /tmp; then
-    echo "Creating RamDisk failed."
-    reboot
-  fi
-
-  echo "Created RamDisk successfully!"
-
-  case $ASTIMG in
-  *.gz)
-    echo "Decompressing image..."
-    gunzip -c /cdrom/$ASTIMG > /tmp/$ASTIMG
-    sleep 5
-    ;;
-  *.bz2)
-    echo "Decompressing image..."
-    bunzip2 -c /cdrom/$ASTIMG > /tmp/$ASTIMG
-    sleep 5
-    ;;
-  *)
-    cp /cdrom/$ASTIMG /tmp/$ASTIMG
-    ;;
-  esac
-
-  if ! dd if=/tmp/$ASTIMG of=/dev/$RESPONSE; then
-    echo "Install failed."
-    halt
-  fi
-
-  echo "Installation Successful! Please restart your
-machine and remove the cd-rom."
-  sleep 10
-  reboot
+  echo "Installation not supported here."
+  sleep 2
+  reboot -f
   ;;
 
 shutdown)
