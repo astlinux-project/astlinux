@@ -25,7 +25,7 @@ Released @TBD@
 -- zabbix, version bump to 3.0.14, adds TLS encryption support
    Note: Now requires a Zabbix server with version 3.0 or greater.
 
--- php, version bump to 5.6.34, security fix: CVE-2018-7584
+-- php, version bump to 5.6.35, security fix: CVE-2018-7584
 
 -- sqlite, version bump to 3.22.0
 
