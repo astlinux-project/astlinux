@@ -9,6 +9,6 @@ config BR2_PACKAGE_IPERF3
 	  It's a redesign of the NLANR/DAST iperf(2) and is not
 	  backward compatible.
 
-	  https://iperf.fr
+	  https://software.es.net/iperf/
 	  https://github.com/esnet/iperf
 
