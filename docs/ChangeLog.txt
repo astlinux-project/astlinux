@@ -47,6 +47,8 @@ Released @TBD@
 
 -- logrotate, version bump to 3.14.0
 
+-- screen, version bump to 4.6.2
+
 -- strace, version bump to 4.21
 
 -- sudo, version bump to 1.8.22
@@ -79,6 +81,8 @@ Released @TBD@
 -- OpenVPN, version bump to 2.4.5
 
 -- lighttpd, version bump to 1.4.49
+
+-- iperf3, major version bump to 3.5
 
 -- ipset, version bump to 6.36
 
