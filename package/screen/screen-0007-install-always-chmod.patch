@@ -16,7 +16,7 @@ index 65549e9..3c12fdb 100644
 +++ b/Makefile.in
 @@ -84,7 +84,8 @@ screen: $(OFILES)
  
- install_bin: .version screen
+ install_bin: .version screen installdirs
  	$(INSTALL_PROGRAM) screen $(DESTDIR)$(bindir)/$(SCREEN)
 -	-chown root $(DESTDIR)$(bindir)/$(SCREEN) && chmod 4755 $(DESTDIR)$(bindir)/$(SCREEN)
 +	-chown root $(DESTDIR)$(bindir)/$(SCREEN)

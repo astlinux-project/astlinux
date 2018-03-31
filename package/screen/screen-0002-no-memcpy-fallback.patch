@@ -46,7 +46,7 @@ diff --git a/configure.ac b/configure.ac
 index 27690a6..b8e3bec 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1145,7 +1145,7 @@ AC_TRY_LINK(,[getttyent();], AC_DEFINE(GETTTYENT))
+@@ -1119,7 +1119,7 @@ AC_TRY_LINK(,[getttyent();], AC_DEFINE(GETTTYENT))
  AC_CHECKING(fdwalk)
  AC_TRY_LINK([#include <stdlib.h>], [fdwalk(NULL, NULL);],AC_DEFINE(HAVE_FDWALK))
  
@@ -55,7 +55,7 @@ index 27690a6..b8e3bec 100644
  AC_TRY_RUN([
  main() {
    char buf[10];
-@@ -1175,22 +1175,6 @@ main() {
+@@ -1149,22 +1149,6 @@ main() {
    exit(0); /* libc version works properly.  */
  }], AC_DEFINE(USEMEMMOVE))
  

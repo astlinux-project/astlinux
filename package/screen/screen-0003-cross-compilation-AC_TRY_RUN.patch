@@ -53,7 +53,7 @@ index b8e3bec..c4b7cd4 100644
  rm -f /tmp/conftest*
  fi
  
-@@ -624,7 +628,8 @@ main()
+@@ -598,7 +622,8 @@ main()
    exit(0);
  }
  ],AC_NOTE(- select is ok),
@@ -63,7 +63,7 @@ index b8e3bec..c4b7cd4 100644
  
  dnl
  dnl    ****  termcap or terminfo  ****
-@@ -666,7 +671,8 @@ main()
+@@ -640,7 +645,8 @@ main()
  {
   exit(strcmp(tgoto("%p1%d", 0, 1), "1") ? 0 : 1);
  }], AC_NOTE(- you use the termcap database),
@@ -73,7 +73,7 @@ index b8e3bec..c4b7cd4 100644
  AC_CHECKING(ospeed)
  AC_TRY_LINK(extern short ospeed;,ospeed=5;,,AC_DEFINE(NEED_OSPEED))
  
-@@ -801,7 +807,8 @@ main()
+@@ -775,7 +781,8 @@ main()
      else
        AC_NOTE(- can't determine - assume ptys are world accessable)
      fi
@@ -83,7 +83,7 @@ index b8e3bec..c4b7cd4 100644
  )
  rm -f conftest_grp
  fi
-@@ -885,7 +892,7 @@ AC_EGREP_CPP(yes,
+@@ -859,7 +866,7 @@ AC_EGREP_CPP(yes,
  #endif
  ], load=1)
  fi
@@ -92,7 +92,7 @@ index b8e3bec..c4b7cd4 100644
  AC_CHECKING(for kernelfile)
  for core in /unix /vmunix /dynix /hp-ux /xelos /dev/ksyms /kernel/unix /kernel/genunix /unicos /mach /netbsd /386bsd /dgux /bsd /stand/vmunix; do
    if test -f $core || test -c $core; then
-@@ -1078,7 +1085,7 @@ main()
+@@ -1052,7 +1059,7 @@ main()
  #endif
    exit(0);
  }
@@ -101,7 +101,7 @@ index b8e3bec..c4b7cd4 100644
  
  fi
  
-@@ -1158,7 +1165,7 @@ main() {
+@@ -1132,7 +1139,7 @@ main() {
    if (strncmp(buf, "cdedef", 6))
      exit(1);
    exit(0); /* libc version works properly.  */
@@ -110,7 +110,7 @@ index b8e3bec..c4b7cd4 100644
  
  AC_TRY_RUN([
  #define bcopy(s,d,l) memmove(d,s,l)
-@@ -1173,7 +1180,8 @@ main() {
+@@ -1147,7 +1154,8 @@ main() {
    if (strncmp(buf, "cdedef", 6))
      exit(1);
    exit(0); /* libc version works properly.  */

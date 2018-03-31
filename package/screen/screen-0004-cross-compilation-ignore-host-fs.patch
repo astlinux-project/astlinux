@@ -52,7 +52,7 @@ index c4b7cd4..9cf7cee 100644
  oldlibs="$LIBS"
  LIBS="$LIBS -lpyr"
  AC_CHECKING(Pyramid OSX)
-@@ -679,17 +681,21 @@ AC_TRY_LINK(extern short ospeed;,ospeed=5;,,AC_DEFINE(NEED_OSPEED))
+@@ -653,17 +655,21 @@ AC_TRY_LINK(extern short ospeed;,ospeed=5;,,AC_DEFINE(NEED_OSPEED))
  dnl
  dnl    ****  PTY specific things  ****
  dnl
@@ -74,7 +74,7 @@ index c4b7cd4..9cf7cee 100644
  
  AC_CHECK_FUNCS(getpt)
  
-@@ -699,6 +705,7 @@ AC_CHECK_FUNCS(openpty,,
+@@ -673,6 +679,7 @@ AC_CHECK_FUNCS(openpty,,
  [AC_CHECK_LIB(util,openpty, [AC_DEFINE(HAVE_OPENPTY)] [LIBS="$LIBS -lutil"])])
  fi
  
@@ -82,7 +82,7 @@ index c4b7cd4..9cf7cee 100644
  AC_CHECKING(for ptyranges)
  if test -d /dev/ptym ; then
  pdir='/dev/ptym'
-@@ -722,6 +729,7 @@ p1=`echo $ptys | tr ' ' '\012' | sed -e 's/^.*\(.\)$/\1/g'  | sort -u | tr -d '\
+@@ -696,6 +703,7 @@ p1=`echo $ptys | tr ' ' '\012' | sed -e 's/^.*\(.\)$/\1/g'  | sort -u | tr -d '\
  AC_DEFINE_UNQUOTED(PTYRANGE0,"$p0")
  AC_DEFINE_UNQUOTED(PTYRANGE1,"$p1")
  fi
@@ -90,7 +90,7 @@ index c4b7cd4..9cf7cee 100644
  
  dnl    ****  pty mode/group handling ****
  dnl
-@@ -869,14 +877,16 @@ fi
+@@ -843,14 +851,16 @@ fi
  dnl
  dnl    ****  loadav  ****
  dnl
@@ -108,7 +108,7 @@ index c4b7cd4..9cf7cee 100644
  olibs="$LIBS"
  LIBS="$LIBS -lkvm"
  AC_CHECKING(getloadavg with -lkvm)
-@@ -1094,13 +1104,18 @@ dnl    ****  libraries  ****
+@@ -1068,13 +1078,18 @@ dnl    ****  libraries  ****
  dnl
  
  AC_CHECKING(for crypt and sec libraries)
