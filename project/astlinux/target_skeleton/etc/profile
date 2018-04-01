@@ -51,10 +51,8 @@ alias ...='cd ../..'
 alias md='mkdir'
 alias rd='rmdir'
 
-# prefer less over more
-if [ -x /usr/bin/less ]; then
-  alias more=less
-  export PAGER=less
+if [ -x /bin/more ]; then
+  export PAGER="/bin/more"
 fi
 
 # Set Fossil home directory
