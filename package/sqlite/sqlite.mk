@@ -6,7 +6,7 @@
 
 SQLITE_VERSION = 3230000
 SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VERSION).tar.gz
-SQLITE_SITE = http://www.sqlite.org/2018
+SQLITE_SITE = https://www.sqlite.org/2018
 SQLITE_INSTALL_STAGING = YES
 
 # sqlite-0001-editline-configure-fix.patch
