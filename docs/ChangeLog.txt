@@ -27,7 +27,7 @@ Released @TBD@
 
 -- php, version bump to 5.6.35, security fix: CVE-2018-7584
 
--- sqlite, version bump to 3.22.0
+-- sqlite, version bump to 3.23.0
 
 -- sqliteodbc, version bump to 0.9996
 
