@@ -1,0 +1,66 @@
+From: Robert Wolf <r.wolf.debian@atlas.cz>
+Date: Mon, 11 Jan 2016 14:21:40 +0100
+Subject: Server should not bind control port if there is no shared secret
+
+And add two additional check of shared secret
+- checks validity of the read shared secret and set ctlkey structure
+  pointer not NULL only if there is really any shared secret.
+- check if ctlkey is NULL or if shared secret is NULL or empty
+  (pointer is not NULL, but there are no data - length is 0).
+
+This resolved upstream issue #36:
+- https://sourceforge.net/p/wide-dhcpv6/bugs/36
+
+Closes: #799080
+---
+ dhcp6_ctl.c | 16 +++++++++++++---
+ dhcp6s.c    |  2 +-
+ 2 files changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/dhcp6_ctl.c b/dhcp6_ctl.c
+index dc6c323..056b550 100644
+--- a/dhcp6_ctl.c
++++ b/dhcp6_ctl.c
+@@ -166,9 +166,14 @@ dhcp6_ctl_authinit(keyfile, keyinfop, digestlenp)
+ 		    strerror(errno));
+ 		return (-1);
+ 	}
+-	if (fgets(line, sizeof(line), fp) == NULL && ferror(fp)) {
+-		debug_printf(LOG_ERR, FNAME, "failed to read key file: %s",
+-		    strerror(errno));
++	if (fgets(line, sizeof(line), fp) == NULL) {
++		if (ferror(fp)) {
++			debug_printf(LOG_ERR, FNAME, "failed to read key file: %s",
++			    strerror(errno));
++		} else {
++			debug_printf(LOG_INFO, FNAME, "no shared key. shared key file "
++			    "is empty. dhcp6s will not listen on a control port.");
++		}
+ 		goto fail;
+ 	}
+ 	if ((secretlen = base64_decodestring(line, secret, sizeof(secret)))
+@@ -176,6 +181,11 @@ dhcp6_ctl_authinit(keyfile, keyinfop, digestlenp)
+ 		debug_printf(LOG_ERR, FNAME, "failed to decode base64 string");
+ 		goto fail;
+ 	}
++	if (secretlen == 0) {
++		debug_printf(LOG_INFO, FNAME, "no shared key found. dhcp6s will "
++		    "not listen on a control port.");
++		goto fail;
++	}
+ 	if ((ctlkey = malloc(sizeof(*ctlkey))) == NULL) {
+ 		debug_printf(LOG_WARNING, FNAME, "failed to allocate control key");
+ 		goto fail;
+diff --git a/dhcp6s.c b/dhcp6s.c
+index a230d75..1942d8d 100644
+--- a/dhcp6s.c
++++ b/dhcp6s.c
+@@ -573,7 +573,7 @@ server6_init()
+ 	freeaddrinfo(res);
+ 
+ 	/* set up control socket */
+-	if (ctlkey == NULL)
++	if (ctlkey == NULL || ctlkey->secret == NULL || ctlkey->secretlen == 0)
+ 		debug_printf(LOG_NOTICE, FNAME, "skip opening control port");
+ 	else if (dhcp6_ctl_init(ctladdr, ctlport,
+ 	    DHCP6CTL_DEF_COMMANDQUEUELEN, &ctlsock)) {
