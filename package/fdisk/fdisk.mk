@@ -21,7 +21,7 @@ HOST_FDISK_CONF_OPT += \
 	--disable-makeinstall-chown \
 	--disable-nls \
 	--disable-bash-completion \
-	--without-bashcompletiondir \
+	--with-bashcompletiondir="" \
 	--without-tinfo \
 	--without-readline \
 	--without-utempter \
