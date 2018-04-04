@@ -25,6 +25,8 @@ Released @TBD@
 -- zabbix, version bump to 3.0.14, adds TLS encryption support
    Note: Now requires a Zabbix server with version 3.0 or greater.
 
+-- beep, security fix: CVE-2018-0492
+
 -- php, version bump to 5.6.35, security fix: CVE-2018-7584
 
 -- sqlite, version bump to 3.23.0
@@ -36,6 +38,8 @@ Released @TBD@
 -- libusb, version bump to 1.0.22
 
 -- libxml2, version bump to 2.9.8
+
+-- pcre, version bump to 8.42
 
 -- e2fsprogs, version bump to 1.44.1
 
@@ -80,6 +84,8 @@ Released @TBD@
 
 -- OpenVPN, version bump to 2.4.5
 
+-- chrony, version bump to 3.3
+
 -- lighttpd, version bump to 1.4.49
 
 -- iperf3, major version bump to 3.5
@@ -95,6 +101,8 @@ Released @TBD@
 -- miniupnpd, version bump to 2.0.20180203
 
 -- whois, version bump to 5.3.0
+
+-- wide-dhcpv6, add Debian patches, including "dhcpv6-ignore-advertise-messages-with-none-of-reques" fix
 
 -- (Custom Build Only) sipp, new package, version 3.5.1; SIPp - a SIP protocol testing tool
 
