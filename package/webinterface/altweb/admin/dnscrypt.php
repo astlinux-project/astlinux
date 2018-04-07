@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2014 Lonnie Abelbeck
+// Copyright (C) 2018 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -8,6 +8,7 @@
 
 // dnscrypt.php for AstLinux
 // 02-08-2014
+// 04-06-2018, Added Import sdns:// Stamp
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -25,6 +26,81 @@ $verbosity_menu = array (
   '5' => 'notice',
   '6' => 'info'
 );
+
+// Function: urlsafe_b64decode
+//
+function urlsafe_b64decode($data)
+{
+  $data = preg_replace('/[\t-\x0d\s]/', '', strtr($data, '-_', '+/'));
+  $mod4 = strlen($data) % 4;
+  if ($mod4) {
+    $data .= substr('====', $mod4);
+  }
+  return base64_decode($data, TRUE);
+}
+
+// Function: import_dnscrypt_stamp
+//
+function import_dnscrypt_stamp($stamp) {
+
+  $prefix = 'sdns://';
+  $prefix_len = strlen($prefix);
+
+  if (strncasecmp($stamp, $prefix, $prefix_len) == 0) {
+    $in = substr($stamp, $prefix_len);
+  } else {
+    $in = $stamp;
+  }
+  if (($data = urlsafe_b64decode($in)) === FALSE) {
+    return(FALSE);
+  }
+  $extract = @unpack('Cident/V2props/Caddr_len', $data);
+  if ($extract['ident'] != 1) {
+    return(FALSE);
+  }
+  if (($addr_len = $extract['addr_len']) == 0) {
+    return(FALSE);
+  }
+  $extract = @unpack('Cident/V2props/Caddr_len/a'.$addr_len.'addr/Cpk_len/C32pk/Cname_len', $data);
+  if ($extract['pk_len'] != 32) {
+    return(FALSE);
+  }
+  if (($name_len = $extract['name_len']) == 0) {
+    return(FALSE);
+  }
+  $extract = @unpack('Cident/V2props/Caddr_len/a'.$addr_len.'addr/Cpk_len/C32pk/Cname_len/a'.$name_len.'name', $data);
+
+  // Sanity check for successful unpack
+  if (! isset($extract['name'])) {
+    return(FALSE);
+  }
+
+  $pk = '';
+  for ($i = 1; $i <= 32; $i += 2) {
+    $j = $i + 1;
+    $pk .= sprintf('%02X%02X%s', $extract["pk$i"], $extract["pk$j"], ($j < 32 ? ':' : ''));
+  }
+
+  $dnscrypt['server_address'] = $extract['addr'];
+  $dnscrypt['provider_name'] = $extract['name'];
+  $dnscrypt['provider_key'] = $pk;
+
+  return($dnscrypt);
+}
+
+// Function: get_dnscrypt_stamp
+//
+function get_dnscrypt_stamp($stamp, &$result) {
+
+  if ($stamp === '') {
+    return(FALSE);
+  }
+
+  if (($dnscrypt = import_dnscrypt_stamp($stamp)) === FALSE) {
+    $result = 5;
+  }
+  return($dnscrypt);
+}
 
 // Function: saveDNSCRYPTsettings
 //
@@ -48,27 +124,35 @@ function saveDNSCRYPTsettings($conf_dir, $conf_file) {
   $value = 'DNSCRYPT_EPHEMERAL_KEYS="'.$_POST['ephemeral_keys'].'"';
   fwrite($fp, "### Ephemeral Keys\n".$value."\n");
 
-  $value = 'DNSCRYPT_SERVER_ADDRESS="'.tuq($_POST['server_address']).'"';
-  fwrite($fp, "### Server Address\n".$value."\n");
+  if (($dnscrypt = get_dnscrypt_stamp(trim($_POST['import_stamp']), $result)) !== FALSE) {
+    $addr = 'DNSCRYPT_SERVER_ADDRESS="'.$dnscrypt['server_address'].'"';
+    $name = 'DNSCRYPT_PROVIDER_NAME="'.$dnscrypt['provider_name'].'"';
+    $key = 'DNSCRYPT_PROVIDER_KEY="'.$dnscrypt['provider_key'].'"';
+  } else {
+    $addr = 'DNSCRYPT_SERVER_ADDRESS="'.tuq($_POST['server_address']).'"';
+    $name = 'DNSCRYPT_PROVIDER_NAME="'.tuq($_POST['provider_name']).'"';
+    $key = 'DNSCRYPT_PROVIDER_KEY="'.tuq($_POST['provider_key']).'"';
+  }
+  fwrite($fp, "### Server Address\n".$addr."\n");
+  fwrite($fp, "### Provider Name\n".$name."\n");
+  fwrite($fp, "### Provider Key\n".$key."\n");
 
-  $value = 'DNSCRYPT_PROVIDER_NAME="'.tuq($_POST['provider_name']).'"';
-  fwrite($fp, "### Provider Name\n".$value."\n");
-
-  $value = 'DNSCRYPT_PROVIDER_KEY="'.tuq($_POST['provider_key']).'"';
-  fwrite($fp, "### Provider Key\n".$value."\n");
-
-  $value = 'DNSCRYPT_2SERVER_ADDRESS="'.tuq($_POST['server_address2']).'"';
-  fwrite($fp, "### 2nd Server Address\n".$value."\n");
-
-  $value = 'DNSCRYPT_2PROVIDER_NAME="'.tuq($_POST['provider_name2']).'"';
-  fwrite($fp, "### 2nd Provider Name\n".$value."\n");
-
-  $value = 'DNSCRYPT_2PROVIDER_KEY="'.tuq($_POST['provider_key2']).'"';
-  fwrite($fp, "### 2nd Provider Key\n".$value."\n");
+  if (($dnscrypt = get_dnscrypt_stamp(trim($_POST['import_stamp2']), $result)) !== FALSE) {
+    $addr = 'DNSCRYPT_2SERVER_ADDRESS="'.$dnscrypt['server_address'].'"';
+    $name = 'DNSCRYPT_2PROVIDER_NAME="'.$dnscrypt['provider_name'].'"';
+    $key = 'DNSCRYPT_2PROVIDER_KEY="'.$dnscrypt['provider_key'].'"';
+  } else {
+    $addr = 'DNSCRYPT_2SERVER_ADDRESS="'.tuq($_POST['server_address2']).'"';
+    $name = 'DNSCRYPT_2PROVIDER_NAME="'.tuq($_POST['provider_name2']).'"';
+    $key = 'DNSCRYPT_2PROVIDER_KEY="'.tuq($_POST['provider_key2']).'"';
+  }
+  fwrite($fp, "### 2nd Server Address\n".$addr."\n");
+  fwrite($fp, "### 2nd Provider Name\n".$name."\n");
+  fwrite($fp, "### 2nd Provider Key\n".$key."\n");
 
   fwrite($fp, "### gui.dnscrypt.conf - end ###\n");
   fclose($fp);
-  
+
   return($result);
 }
 
@@ -108,6 +192,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: red;">No Action, check "Confirm" for this action.</p>');
     } elseif ($result == 3) {
       putHtml('<p style="color: red;">Error creating file.</p>');
+    } elseif ($result == 5) {
+      putHtml('<p style="color: red;">Import Stamp skipped, not a valid DNSCrypt stamp.</p>');
     } elseif ($result == 10) {
       putHtml('<p style="color: green;">DNSCrypt Proxy Server'.statusPROCESS('dnscrypt').'.</p>');
     } elseif ($result == 11) {
@@ -184,6 +270,12 @@ require_once '../common/header.php';
   putHtml('<strong>Primary Server:</strong>');
   putHtml('</td></tr>');
 
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Import sdns:// Stamp:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  putHtml('<input type="text" size="80" maxlength="512" value="" name="import_stamp" />');
+  putHtml('</td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="color: orange; text-align: center;" colspan="6">');
   putHtml('Note: Any empty fields below use the OpenDNS defaults.');
   putHtml('</td></tr>');
@@ -213,6 +305,12 @@ require_once '../common/header.php';
 
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Secondary Server:</strong> <i>(optional)</i>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Import sdns:// Stamp:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  putHtml('<input type="text" size="80" maxlength="512" value="" name="import_stamp2" />');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="color: orange; text-align: center;" colspan="6">');
