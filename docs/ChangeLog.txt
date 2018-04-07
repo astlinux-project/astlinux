@@ -122,6 +122,10 @@ Released @TBD@
 
 -- Status tab, add Hardware: system-vendor info when available.
 
+-- Network tab, DNSCrypt sub-tab, add support for Import sdns:// Stamp
+   Public Resolvers: https://download.dnscrypt.info/dnscrypt-resolvers/v2/public-resolvers.md
+   More Info: http://doc.astlinux-project.org/userdoc:tt_dnscrypt_proxy
+
 
 Additions for AstLinux 1.3.2:
 =============================
