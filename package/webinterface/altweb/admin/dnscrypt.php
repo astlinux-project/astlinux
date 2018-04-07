@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2018 Lonnie Abelbeck
+// Copyright (C) 2014-2018 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -84,6 +84,12 @@ function import_dnscrypt_stamp($stamp) {
   $dnscrypt['server_address'] = $extract['addr'];
   $dnscrypt['provider_name'] = $extract['name'];
   $dnscrypt['provider_key'] = $pk;
+
+  // dnscrypt-proxy 1.9.5 does not work with [IPv6] bracket-format addresses missing the port
+  // Add the default port 443 for [IPv6] if missing
+  if (substr($dnscrypt['server_address'], -1) === ']') {
+    $dnscrypt['server_address'] .= ':443';
+  }
 
   return($dnscrypt);
 }
