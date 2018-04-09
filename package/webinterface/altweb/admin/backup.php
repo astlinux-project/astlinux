@@ -61,11 +61,11 @@ function saveBACKUPsettings($conf_dir, $conf_file) {
   fwrite($fp, $value."\n");
   $value = 'BACKUP_ASTURW_INCLUDE_FILES="'.tuq($_POST['asturw_include_files']).'"';
   fwrite($fp, $value."\n");
-  
+
   fwrite($fp, "### Automatic Archive Aging\n");
   $value = 'BACKUP_PRUNE_AGE_DAYS="'.$_POST['prune_age'].'"';
   fwrite($fp, $value."\n");
-  
+
   fwrite($fp, "### Email Notifications\n");
   $value = 'BACKUP_NOTIFY="'.tuq($_POST['notify']).'"';
   fwrite($fp, $value."\n");
@@ -74,14 +74,14 @@ function saveBACKUPsettings($conf_dir, $conf_file) {
 
   fwrite($fp, "### gui.backup.conf - end ###\n");
   fclose($fp);
-  
+
   return($result);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $result = saveBACKUPsettings($BACKUPCONFDIR, $BACKUPCONFFILE);
     if ($result == 11) {
@@ -246,7 +246,7 @@ require_once '../common/header.php';
 
   putHtml('</table>');
   putHtml('</form>');
-  
+
   putHtml('</center></td></tr></table>');
   putHtml('</center>');
 } // End of HTTP GET

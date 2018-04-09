@@ -93,7 +93,7 @@ function getPhase1str($encrypt, $hash, $dhgroup, $lifetime) {
   global $p1_encrypt_menu;
   global $p1_hash_menu;
   global $p1_dhgroup_menu;
-  
+
   $str = $p1_encrypt_menu[$encrypt].' / '.$p1_hash_menu[$hash].' / '.$p1_dhgroup_menu[$dhgroup];
   if ($lifetime === '') {
     $lifetime='none';
@@ -109,7 +109,7 @@ function getPhase2str($encrypt, $auth, $pfsgroup, $lifetime) {
   global $p1_encrypt_menu;
   global $p2_auth_menu;
   global $p2_pfsgroup_menu;
-  
+
   $str = '';
   foreach ($p1_encrypt_menu as $key => $value) {
     if (inStringList($key, $encrypt, ',')) {
@@ -161,10 +161,10 @@ function saveIPSECsettings($conf_dir, $conf_file, $db, $delete = NULL) {
     return(3);
   }
   fwrite($fp, "### gui.ipsec.conf - start ###\n###\n");
-  
+
   $value = 'IPSEC_LOGLEVEL="'.$_POST['log_level'].'"';
   fwrite($fp, "### Log Level\n".$value."\n");
-  
+
   $value = 'IPSEC_PSK_ASSOCIATIONS="';
   fwrite($fp, "### Peer Tunnels\n".$value."\n");
   if (($n = count($db['data'])) > 0) {
@@ -209,10 +209,10 @@ function saveIPSECsettings($conf_dir, $conf_file, $db, $delete = NULL) {
     }
   }
   fwrite($fp, '"'."\n");
-  
+
   fwrite($fp, "### gui.ipsec.conf - end ###\n");
   fclose($fp);
-  
+
   return(11);
 }
 
@@ -220,7 +220,7 @@ function saveIPSECsettings($conf_dir, $conf_file, $db, $delete = NULL) {
 //
 function parseIPSECconf($vars) {
   $id = 0;
-  
+
   if (($line = getVARdef($vars, 'IPSEC_PSK_ASSOCIATIONS')) !== '') {
     $linetokens = explode("\n", $line);
     foreach ($linetokens as $data) {
@@ -283,13 +283,13 @@ function addTunnel(&$db, $id) {
   $local_net = tuq($_POST['local_net']);
   $remote_host = tuq($_POST['remote_host']);
   $remote_net = tuq($_POST['remote_net']);
-  
+
   if (($method = $_POST['method']) === 'psk') {
     $key = tuq($_POST['key']);
   } else {
     $key = '';
   }
-  
+
   if ($remote_host === '') {
     return(FALSE);
   }
@@ -301,12 +301,12 @@ function addTunnel(&$db, $id) {
       $remote_net === '') {
     return(2);
   }
-  
+
   $p1_encrypt = $_POST['p1_encrypt'];
   $p1_hash = $_POST['p1_hash'];
   $p1_dhgroup = $_POST['p1_dhgroup'];
   $p1_lifetime = tuq($_POST['p1_lifetime']);
-  
+
   $p2_encrypt = '';
   if (isset($_POST['p2_encrypt'])) {
     $p2_encrypts = $_POST['p2_encrypt'];
@@ -315,7 +315,7 @@ function addTunnel(&$db, $id) {
     }
   }
   $p2_encrypt = trim($p2_encrypt, ' ,');
-  
+
   $p2_auth = '';
   if (isset($_POST['p2_auth'])) {
     $p2_auths = $_POST['p2_auth'];
@@ -324,14 +324,14 @@ function addTunnel(&$db, $id) {
     }
   }
   $p2_auth = trim($p2_auth, ' ,');
-  
+
   $p2_pfsgroup = $_POST['p2_pfsgroup'];
   $p2_lifetime = tuq($_POST['p2_lifetime']);
   $nat_t = $_POST['nat_t'];
   if (($auto_establish = tuq($_POST['auto_establish'])) === 'none' ) {
     $auto_establish = '';
   }
-  
+
   $db['data'][$id]['local_host'] = $local_host;
   $db['data'][$id]['local_net'] = $local_net;
   $db['data'][$id]['remote_host'] = $remote_host;
@@ -350,7 +350,7 @@ function addTunnel(&$db, $id) {
 
   return(TRUE);
 }
-    
+
 if (is_file($IPSECCONFFILE)) {
   $vars = parseRCconf($IPSECCONFFILE);
 } else {
@@ -361,7 +361,7 @@ $db = parseIPSECconf($vars);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $n = count($db['data']);
     $id = $n;
@@ -515,7 +515,7 @@ require_once '../common/header.php';
   putHtml('</select>');
   putHtml('</td></tr>');
   putHtml('</table>');
-  
+
   if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $n = count($db['data']);
@@ -541,10 +541,10 @@ require_once '../common/header.php';
     $ldb['p2_lifetime'] = '3600';
   }
   $openssl = ipsecSETUP($ldb['remote_host']);
-  
+
   putHtml('<table width="100%" class="datatable">');
   putHtml('<tr>');
-  
+
   if (($n = count($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Remote-Host", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Remote-Net", "</td>";
@@ -585,10 +585,10 @@ require_once '../common/header.php';
   } else {
     echo '<td style="text-align: center;">No IPsec Peers are defined.', '</td>';
   }
-  
+
   putHtml('</tr>');
   putHtml('</table>');
-  
+
   putHtml('<table width="100%" class="stdtable">');
   putHtml('<tr class="dtrow0"><td width="100">&nbsp;</td><td width="100">&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td width="100">&nbsp;</td><td width="100">&nbsp;</td></tr>');
 
@@ -606,7 +606,7 @@ require_once '../common/header.php';
   putHtml('</td><td class="dialogText" style="text-align: right;" colspan="3">');
   putHtml('Local-Net:<input type="text" size="32" maxlength="64" name="local_net" value="'.$ldb['local_net'].'" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td class="dialogText" style="text-align: center;" colspan="3">');
   putHtml('NAT Traversal:');
   $nat_t = $ldb['nat_t'];
@@ -620,7 +620,7 @@ require_once '../common/header.php';
   $value = ($ldb['auto_establish'] === '') ? 'none' : $ldb['auto_establish'];
   putHtml('Auto-Establish-IP:<input type="text" size="32" maxlength="64" name="auto_establish" value="'.$value.'" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Phase 1 - Authentication:</strong>');
   putHtml('</td></tr>');
@@ -636,7 +636,7 @@ require_once '../common/header.php';
   }
   putHtml('</select>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Hash:');
   putHtml('</td><td style="text-align: left;" colspan="4">');
@@ -648,7 +648,7 @@ require_once '../common/header.php';
   }
   putHtml('</select>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('DH Group:');
   putHtml('</td><td style="text-align: left;" colspan="2">');
@@ -664,11 +664,11 @@ require_once '../common/header.php';
   putHtml('Lifetime:<input type="text" size="8" maxlength="16" name="p1_lifetime" value="'.$value.'" />');
   putHtml('secs');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Phase 2 - SA/Key Exchange:</strong>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Encryption:');
   putHtml('</td><td style="text-align: left;" colspan="4">');
@@ -678,7 +678,7 @@ require_once '../common/header.php';
     putHtml('<input type="checkbox" name="p2_encrypt[]" value="'.$key.'"'.$sel.' />'.$value);
   }
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Authentication:');
   putHtml('</td><td style="text-align: left;" colspan="4">');
@@ -704,7 +704,7 @@ require_once '../common/header.php';
   putHtml('Lifetime:<input type="text" size="8" maxlength="16" name="p2_lifetime" value="'.$value.'" />');
   putHtml('secs');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Tunnel Identity:</strong>');
   putHtml('</td></tr>');
@@ -732,9 +732,9 @@ require_once '../common/header.php';
     putHtml('</td></tr>');
   }
   putHtml('</table>');
-  
+
   putHtml('</form>');
-  
+
   if ($openssl !== FALSE) {
     putHtml('<form method="post" action="'.$myself.'" enctype="multipart/form-data">');
     putHtml('<table width="70%" class="datatable">');
@@ -771,7 +771,7 @@ require_once '../common/header.php';
     putHtml('</table>');
     putHtml('</form>');
   }
-  
+
   putHtml('</center></td></tr></table>');
   putHtml('</center>');
 } // End of HTTP GET

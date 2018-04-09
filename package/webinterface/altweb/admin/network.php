@@ -162,7 +162,7 @@ $select_upnp = array (
 //
 function checkNETWORKsettings() {
   global $FIREWALLCONFFILE;
-  
+
   $eth[] = $_POST['ext_eth'];
   $eth[] = $_POST['ext2_eth'];
   $eth[] = $_POST['int_eth'];
@@ -170,7 +170,7 @@ function checkNETWORKsettings() {
   $eth[] = $_POST['int3_eth'];
   $eth[] = $_POST['int4_eth'];
   $eth[] = $_POST['dmz_eth'];
-  
+
   foreach ($eth as $ki => $i) {
     foreach ($eth as $kj => $j) {
       if ($ki != $kj && $i !== '' && $j !== '') {
@@ -180,13 +180,13 @@ function checkNETWORKsettings() {
       }
     }
   }
-  
+
   if ($_POST['dmz_eth'] !== '') {
     if ($_POST['int_eth'] === '' && $_POST['int2_eth'] === '' && $_POST['int3_eth'] === '' && $_POST['int4_eth'] === '') {
       return(101);
     }
   }
-  
+
   if ($_POST['firewall'] === 'arno') {
     if (! is_file($FIREWALLCONFFILE)) {
       return(102);
@@ -221,10 +221,10 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
     return(3);
   }
   fwrite($fp, "### gui.network.conf - start ###\n###\n");
-  
+
   $value = 'IPV6="'.$_POST['ipv6'].'"';
   fwrite($fp, "### IP Version\n".$value."\n");
-  
+
   if ($_POST['ip_type'] === 'pppoe') {
     $x_value = 'PPPOEIF="'.$_POST['ext_eth'].'"';
     $value = 'EXTIF="ppp0"';
@@ -234,21 +234,21 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   }
   fwrite($fp, "### External PPPoE Interface\n".$x_value."\n");
   fwrite($fp, "### External Interface\n".$value."\n");
-  
+
   if ($_POST['ip_type'] === 'dhcp' || $_POST['ip_type'] === 'dhcp-dhcpv6') {
     $value = 'EXTIP=""';
   } else {
     $value = 'EXTIP="'.tuq($_POST['static_ip']).'"';
   }
   fwrite($fp, "### External Static IPv4\n".$value."\n");
-  
+
   if ($_POST['ip_type'] === 'dhcp' || $_POST['ip_type'] === 'dhcp-dhcpv6') {
     $value = 'EXTNM=""';
   } else {
     $value = 'EXTNM="'.tuq($_POST['mask_ip']).'"';
   }
   fwrite($fp, "### External Static IPv4 NetMask\n".$value."\n");
-  
+
   if ($_POST['ip_type'] === 'dhcp' || $_POST['ip_type'] === 'dhcp-dhcpv6') {
     $value = 'EXTGW=""';
   } else {
@@ -262,7 +262,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
     $value = 'DHCPV6_CLIENT_ENABLE="no"';
   }
   fwrite($fp, "### DHCPv6\n".$value."\n");
-  
+
   $value = tuq($_POST['static_ipv6']);
   if ($value !== '' && strpos($value, '/') === FALSE) {
     $value="$value/64";
@@ -279,40 +279,40 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
 
   $value = 'PPPOEUSER="'.tuq($_POST['user_pppoe']).'"';
   fwrite($fp, "### PPPoE Username\n".$value."\n");
-  
+
   $value = 'PPPOEPASS="'.string2RCconfig(trim($_POST['pass_pppoe'])).'"';
   fwrite($fp, "### PPPoE Password\n".$value."\n");
-  
+
   $value = 'HOSTNAME="'.tuq($_POST['hostname']).'"';
   fwrite($fp, "### Hostname\n".$value."\n");
-  
+
   $value = 'DOMAIN="'.tuq($_POST['domain']).'"';
   fwrite($fp, "### Domain\n".$value."\n");
-  
+
   $value = isset($_POST['local_domain']) ? 'LOCALDNS_LOCAL_DOMAIN="yes"' : 'LOCALDNS_LOCAL_DOMAIN="no"';
   fwrite($fp, "### Local Domain\n".$value."\n");
-  
+
   $value = 'DNS="'.tuq($_POST['dns']).'"';
   fwrite($fp, "### DNS Servers\n".$value."\n");
-  
+
   $value = 'VLANS="'.tuq($_POST['vlans']).'"';
   fwrite($fp, "### VLAN Interfaces\n".$value."\n");
-  
+
   $value = isset($_POST['vlan_cos']) ? 'VLANCOS="yes"' : 'VLANCOS=""';
   fwrite($fp, "### VLAN COS\n".$value."\n");
-  
+
   $value = 'EXT2IF="'.$_POST['ext2_eth'].'"';
   fwrite($fp, "### External Failover Interface\n".$value."\n");
 
   $value = 'INTIF="'.$_POST['int_eth'].'"';
   fwrite($fp, "### 1st LAN Interface\n".$value."\n");
-  
+
   $value = 'INTIP="'.tuq($_POST['int_ip']).'"';
   fwrite($fp, "### 1st LAN IPv4\n".$value."\n");
-    
+
   $value = 'INTNM="'.tuq($_POST['int_mask_ip']).'"';
   fwrite($fp, "### 1st LAN NetMask\n".$value."\n");
-    
+
   $value = tuq($_POST['int_ipv6']);
   if ($value !== '' && strpos($value, '/') === FALSE) {
     $value="$value/64";
@@ -322,10 +322,10 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
 
   $value = 'INT2IF="'.$_POST['int2_eth'].'"';
   fwrite($fp, "### 2nd LAN Interface\n".$value."\n");
-  
+
   $value = 'INT2IP="'.tuq($_POST['int2_ip']).'"';
   fwrite($fp, "### 2nd LAN IPv4\n".$value."\n");
-    
+
   $value = 'INT2NM="'.tuq($_POST['int2_mask_ip']).'"';
   fwrite($fp, "### 2nd LAN NetMask\n".$value."\n");
 
@@ -338,10 +338,10 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
 
   $value = 'INT3IF="'.$_POST['int3_eth'].'"';
   fwrite($fp, "### 3rd LAN Interface\n".$value."\n");
-  
+
   $value = 'INT3IP="'.tuq($_POST['int3_ip']).'"';
   fwrite($fp, "### 3rd LAN IPv4\n".$value."\n");
-    
+
   $value = 'INT3NM="'.tuq($_POST['int3_mask_ip']).'"';
   fwrite($fp, "### 3rd LAN NetMask\n".$value."\n");
 
@@ -370,13 +370,13 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
 
   $value = 'DMZIF="'.$_POST['dmz_eth'].'"';
   fwrite($fp, "### DMZ Interface\n".$value."\n");
-  
+
   $value = 'DMZIP="'.tuq($_POST['dmz_ip']).'"';
   fwrite($fp, "### DMZ IPv4\n".$value."\n");
-    
+
   $value = 'DMZNM="'.tuq($_POST['dmz_mask_ip']).'"';
   fwrite($fp, "### DMZ NetMask\n".$value."\n");
-  
+
   $value = tuq($_POST['dmz_ipv6']);
   if ($value !== '' && strpos($value, '/') === FALSE) {
     $value="$value/64";
@@ -426,23 +426,23 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
     }
   }
   fwrite($fp, "### NTP Servers\n".$value."\n");
-  
+
   if ($_POST['timezone'] !== '') {
     $value = 'TIMEZONE="'.$_POST['timezone'].'"';
   } else {
     $value = 'TIMEZONE="'.tuq($_POST['other_timezone']).'"';
   }
   fwrite($fp, "### UNIX Timezone\n".$value."\n");
-    
+
   $value = 'SMTP_SERVER="'.tuq($_POST['smtp_server']).'"';
   fwrite($fp, "### SMTP Server\n".$value."\n");
-  
+
   $value = 'SMTP_DOMAIN="'.tuq($_POST['smtp_domain']).'"';
   fwrite($fp, "### SMTP Domain\n".$value."\n");
-  
+
   $value = 'SMTP_AUTH="'.$_POST['smtp_auth'].'"';
   fwrite($fp, "### SMTP Authentication Type\n".$value."\n");
-  
+
   $value = 'SMTP_PORT="'.tuq($_POST['smtp_port']).'"';
   fwrite($fp, "### SMTP TCP Port\n".$value."\n");
 
@@ -474,7 +474,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
 
   $value = 'SMTP_USER="'.tuq($_POST['smtp_user']).'"';
   fwrite($fp, "### SMTP Auth Username\n".$value."\n");
-  
+
   $value = 'SMTP_PASS="'.string2RCconfig(trim($_POST['smtp_pass'])).'"';
   fwrite($fp, "### SMTP Auth Password\n".$value."\n");
 
@@ -500,16 +500,16 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   fwrite($fp, "### FTP Server\n".$value."\n");
   $value = 'FTPD_WRITE="'.$_POST['ftpd_write'].'"';
   fwrite($fp, $value."\n");
-  
+
   $value = 'TFTPD="'.$_POST['tftp'].'"';
   fwrite($fp, "### TFTP Server\n".$value."\n");
-  
+
   $value = 'CLI_PROXY_SERVER="'.$_POST['cli_proxy'].'"';
   fwrite($fp, "### CLI Proxy Server\n".$value."\n");
-  
+
   $value = 'NETSTAT_SERVER="'.$_POST['netstat_server'].'"';
   fwrite($fp, "### NetStat Server\n".$value."\n");
-  
+
   $x_value = '';
   if (isset($_POST['netstat_EXTIF'])) {
     $x_value .= ' EXTIF';
@@ -566,28 +566,28 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
 
   $value = 'HTTPDIR="'.tuq($_POST['http_dir']).'"';
   fwrite($fp, "### HTTP Server Directory\n".$value."\n");
-  
+
   $value = isset($_POST['http_cgi']) ? 'HTTPCGI="yes"' : 'HTTPCGI="no"';
   fwrite($fp, "### HTTP CGI\n".$value."\n");
-  
+
   $value = isset($_POST['http_listing']) ? 'HTTP_LISTING="yes"' : 'HTTP_LISTING="no"';
   fwrite($fp, "### HTTP directory listing\n".$value."\n");
-  
+
   $value = isset($_POST['http_accesslog']) ? 'HTTP_ACCESSLOG="yes"' : 'HTTP_ACCESSLOG="no"';
   fwrite($fp, "### HTTP access logging\n".$value."\n");
-  
+
   $value = 'HTTPSDIR="'.tuq($_POST['https_dir']).'"';
   fwrite($fp, "### HTTPS Server Directory\n".$value."\n");
-  
+
   $value = isset($_POST['https_cgi']) ? 'HTTPSCGI="yes"' : 'HTTPSCGI="no"';
   fwrite($fp, "### HTTPS CGI\n".$value."\n");
-  
+
   $value = isset($_POST['https_listing']) ? 'HTTPS_LISTING="yes"' : 'HTTPS_LISTING="no"';
   fwrite($fp, "### HTTPS directory listing\n".$value."\n");
-  
+
   $value = isset($_POST['https_accesslog']) ? 'HTTPS_ACCESSLOG="yes"' : 'HTTPS_ACCESSLOG="no"';
   fwrite($fp, "### HTTPS access logging\n".$value."\n");
-  
+
   $value = 'HTTPSCERT="'.tuq($_POST['https_cert']).'"';
   if (isset($_POST['submit_self_signed_https']) && isset($_POST['confirm_self_signed_https'])) {
     if (($countryName = getPREFdef($global_prefs, 'dn_country_name_cmdstr')) === '') {
@@ -624,7 +624,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
 
   $value = 'PHONEPROV_ALLOW="'.tuq($_POST['phoneprov_allow']).'"';
   fwrite($fp, "### /phoneprov/ Allowed IPs\n".$value."\n");
-  
+
   $x_value = '';
   if (isset($_POST['openvpn'])) {
     $x_value .= ' openvpn';
@@ -649,7 +649,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   }
   $value = 'VPN="'.trim($x_value).'"';
   fwrite($fp, "### VPN Type\n".$value."\n");
-  
+
   fwrite($fp, "### IPv6 DHCPv6 Client Options\n");
   $value = 'DHCPV6_CLIENT_REQUEST_ADDRESS="'.$_POST['dhcpv6_client_request_address'].'"';
   fwrite($fp, $value."\n");
@@ -670,7 +670,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   }
   $value = 'IPV6_TUNNEL="'.$value.'"';
   fwrite($fp, "### IPv6 Tunnel\n".$value."\n");
-  
+
   fwrite($fp, "### Dynamic DNS\n");
   $value = 'DDCLIENT="'.$_POST['dd_client'].'"';
   fwrite($fp, $value."\n");
@@ -698,7 +698,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   fwrite($fp, $value."\n");
   $value = 'DDPASS="'.string2RCconfig(trim($_POST['dd_pass'])).'"';
   fwrite($fp, $value."\n");
-  
+
   fwrite($fp, "### Safe Asterisk - SIP Monitoring\n");
   $value = 'SAFE_ASTERISK="'.$_POST['safe_asterisk'].'"';
   fwrite($fp, $value."\n");
@@ -773,7 +773,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   fwrite($fp, $value."\n");
   $value = 'UPS_KILL_POWER="'.$_POST['ups_kill_power'].'"';
   fwrite($fp, $value."\n");
-  
+
   fwrite($fp, "### Fossil - Software Configuration Management\n");
   $value = 'FOSSIL_SERVER="'.$_POST['fossil_server'].'"';
   fwrite($fp, $value."\n");
@@ -808,7 +808,7 @@ function createOTHERconfs($sys_file, $cur_file, $net_file) {
   $openvpn_id = 0;
   $openvpnclient_id = 0;
   $user_id = 0;
-  
+
   if (($n = count($cur_db['data'])) > 0) {
     for ($i = 0; $i < $n; $i++) {
       if ($cur_db['data'][$i]['value'] !== getVARdef($sys_db, $cur_db['data'][$i]['var'])) {
@@ -830,7 +830,7 @@ function createOTHERconfs($sys_file, $cur_file, $net_file) {
       }
     }
   }
-  
+
   if (($n = $openvpn_id) > 0) {
     if (($fp = @fopen('/mnt/kd/rc.conf.d/gui.openvpn.conf', 'wb')) === FALSE) {
       return(FALSE);
@@ -843,7 +843,7 @@ function createOTHERconfs($sys_file, $cur_file, $net_file) {
     fwrite($fp, "### gui.openvpn.conf - end ###\n");
     fclose($fp);
   }
-  
+
   if (($n = $openvpnclient_id) > 0) {
     if (($fp = @fopen('/mnt/kd/rc.conf.d/gui.openvpnclient.conf', 'wb')) === FALSE) {
       return(FALSE);
@@ -856,7 +856,7 @@ function createOTHERconfs($sys_file, $cur_file, $net_file) {
     fwrite($fp, "### gui.openvpnclient.conf - end ###\n");
     fclose($fp);
   }
-  
+
   $user_conf = '/mnt/kd/rc.conf.d/user.conf';
   if (($n = $user_id) > 0) {
     if (($fp = @fopen($user_conf, 'wb')) === FALSE) {
@@ -883,7 +883,7 @@ function createOTHERconfs($sys_file, $cur_file, $net_file) {
 // Function: createUSERconf
 //
 function createUSERconf($user_conf) {
-  
+
   if (is_file($user_conf)) {
     return(TRUE);
   }
@@ -897,14 +897,14 @@ function createUSERconf($user_conf) {
   fwrite($fp, "###\n\n\n\n");
   fwrite($fp, "### user.conf - end ###\n");
   fclose($fp);
-  
+
   return(TRUE);
 }
 
 // Function: isVARtype
 //
 function isVARtype($var, $db, $cur_db, $type) {
-  
+
   $tokens = explode(' ', getVARdef($db, $var, $cur_db));
   foreach ($tokens as $token) {
     if ($token === $type) {
@@ -949,7 +949,7 @@ function getNODHCP_value() {
     'dmz_dhcp'  => 'dmz_eth'
   );
   $rtn = '';
-  
+
   foreach ($entries as $key => $value) {
     if ($_POST[$key] === 'nodhcp') {
       if (($str = $_POST[$value]) !== '') {
@@ -957,14 +957,14 @@ function getNODHCP_value() {
       }
     }
   }
-  
+
   return(trim($rtn));
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
   } elseif (isset($_POST['submit_edit_failover'])) {
@@ -1230,7 +1230,7 @@ $ACCESS_RIGHTS = 'admin';
 require_once '../common/header.php';
 
   $eth = getETHinterfaces();
-  
+
   if (is_file($NETCONFFILE)) {
     $db = parseRCconf($NETCONFFILE);
     $cur_db = parseRCconf($CONFFILE);
@@ -1238,7 +1238,7 @@ require_once '../common/header.php';
     $db = parseRCconf($CONFFILE);
     $cur_db = NULL;
   }
-  
+
   if (isset($_GET['reboot_restart'])) {
     $reboot_restart = $_GET['reboot_restart'];
   } else {
@@ -1465,7 +1465,7 @@ require_once '../common/header.php';
   putHtml('<option value="yes"'.$sel.'>IPv4 &amp; IPv6</option>');
   putHtml('</select>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('Connection Type:');
   putHtml('<select name="ip_type">');
@@ -1503,7 +1503,7 @@ require_once '../common/header.php';
   putHtml('<td style="text-align: left;" colspan="2">');
   $sel = (getVARdef($db, 'VLANCOS', $cur_db) !== '') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="vlan_cos" name="vlan_cos"'.$sel.' />&nbsp;VLAN COS</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>External Static IPv4 Settings:</strong>&nbsp;<i>(Cleared for DHCP)</i>');
   putHtml('</td></tr>');
@@ -1516,7 +1516,7 @@ require_once '../common/header.php';
   putHtml('<td style="text-align: right;" colspan="2">');
   $value = getVARdef($db, 'EXTGW', $cur_db);
   putHtml('IPv4 Gateway:<input type="text" size="18" maxlength="15" value="'.$value.'" name="gateway_ip" /></td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>External Static IPv6 Settings:</strong>');
   putHtml('</td></tr>');
@@ -1526,7 +1526,7 @@ require_once '../common/header.php';
   putHtml('<td style="text-align: left;" colspan="3">');
   $value = getVARdef($db, 'EXTGWIPV6', $cur_db);
   putHtml('IPv6 Gateway:<input type="text" size="38" maxlength="39" value="'.$value.'" name="gateway_ipv6" /></td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>External DHCPv6 Client Settings:</strong>');
   putHtml('</td></tr>');
@@ -1580,9 +1580,9 @@ require_once '../common/header.php';
   $value = getVARdef($db, 'PPPOEPASS', $cur_db);
   $value = htmlspecialchars(RCconfig2string($value));
   putHtml('PPPoE Password:<input type="password" size="24" maxlength="64" value="'.$value.'" name="pass_pppoe" /></td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>External Failover Interface:</strong>');
   putHtml('</td></tr>');
@@ -1602,7 +1602,7 @@ require_once '../common/header.php';
   putHtml('<input type="submit" value="WAN Failover Configuration" name="submit_edit_failover" class="button" /></td></tr>');
 
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Internal Interfaces:</strong>');
   putHtml('</td></tr>');
@@ -1626,7 +1626,7 @@ require_once '../common/header.php';
   }
   putHtml('NetMask:<input type="text" size="16" maxlength="15" value="'.$value.'" name="int_mask_ip" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('&nbsp;&nbsp;IPv6 Autoconfig:');
   putHtml('<select name="int_autoconf">');
@@ -1644,7 +1644,7 @@ require_once '../common/header.php';
   $value = getVARdef($db, 'INTIPV6', $cur_db);
   putHtml('&ndash;&nbsp;IPv6/nn:<input type="text" size="45" maxlength="43" value="'.$value.'" name="int_ipv6" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('<strong>2nd LAN Interface:</strong>');
   putHtml('<select name="int2_eth">');
@@ -1665,7 +1665,7 @@ require_once '../common/header.php';
   }
   putHtml('NetMask:<input type="text" size="16" maxlength="15" value="'.$value.'" name="int2_mask_ip" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('&nbsp;&nbsp;IPv6 Autoconfig:');
   putHtml('<select name="int2_autoconf">');
@@ -1683,7 +1683,7 @@ require_once '../common/header.php';
   $value = getVARdef($db, 'INT2IPV6', $cur_db);
   putHtml('&ndash;&nbsp;IPv6/nn:<input type="text" size="45" maxlength="43" value="'.$value.'" name="int2_ipv6" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('<strong>3rd LAN Interface:</strong>');
   putHtml('<select name="int3_eth">');
@@ -1704,7 +1704,7 @@ require_once '../common/header.php';
   }
   putHtml('NetMask:<input type="text" size="16" maxlength="15" value="'.$value.'" name="int3_mask_ip" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('&nbsp;&nbsp;IPv6 Autoconfig:');
   putHtml('<select name="int3_autoconf">');
@@ -1722,7 +1722,7 @@ require_once '../common/header.php';
   $value = getVARdef($db, 'INT3IPV6', $cur_db);
   putHtml('&ndash;&nbsp;IPv6/nn:<input type="text" size="45" maxlength="43" value="'.$value.'" name="int3_ipv6" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('<strong>4th LAN Interface:</strong>');
   putHtml('<select name="int4_eth">');
@@ -1743,7 +1743,7 @@ require_once '../common/header.php';
   }
   putHtml('NetMask:<input type="text" size="16" maxlength="15" value="'.$value.'" name="int4_mask_ip" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('&nbsp;&nbsp;IPv6 Autoconfig:');
   putHtml('<select name="int4_autoconf">');
@@ -1761,7 +1761,7 @@ require_once '../common/header.php';
   $value = getVARdef($db, 'INT4IPV6', $cur_db);
   putHtml('&ndash;&nbsp;IPv6/nn:<input type="text" size="45" maxlength="43" value="'.$value.'" name="int4_ipv6" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('<strong>The DMZ Interface:</strong>');
   putHtml('<select name="dmz_eth">');
@@ -1782,7 +1782,7 @@ require_once '../common/header.php';
   }
   putHtml('NetMask:<input type="text" size="16" maxlength="15" value="'.$value.'" name="dmz_mask_ip" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('&nbsp;&nbsp;IPv6 Autoconfig:');
   putHtml('<select name="dmz_autoconf">');
@@ -1800,7 +1800,7 @@ require_once '../common/header.php';
   $value = getVARdef($db, 'DMZIPV6', $cur_db);
   putHtml('&ndash;&nbsp;IPv6/nn:<input type="text" size="45" maxlength="43" value="'.$value.'" name="dmz_ipv6" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
 
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
@@ -1826,9 +1826,9 @@ require_once '../common/header.php';
     putHtml('&ndash;');
     putHtml('<input type="submit" value="Configure Plugin" name="submit_edit_plugin" class="button" /></td></tr>');
   }
-  
+
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Network Time Settings:</strong>');
   putHtml('</td></tr>');
@@ -1872,9 +1872,9 @@ require_once '../common/header.php';
   }
   putHtml('</select>');
   putHtml('<input type="text" size="32" maxlength="64" value="'.$t_value.'" name="other_timezone" /></td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Outbound SMTP Mail Relay:</strong>');
   if (is_file('/usr/sbin/testmail')) {
@@ -1931,7 +1931,7 @@ require_once '../common/header.php';
     putHtml('SMTP Local Aliases:');
     putHtml('<input type="submit" value="Edit Local Aliases" name="submit_smtp_aliases" class="button" /></td></tr>');
   }
-  
+
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
 
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
@@ -1978,7 +1978,7 @@ require_once '../common/header.php';
     putHtml('DNSCrypt Proxy Server:');
     putHtml('<input type="submit" value="Configure DNSCrypt" name="submit_dnscrypt" class="button" /></td></tr>');
   }
-  if (is_file('/etc/init.d/kamailio') && 
+  if (is_file('/etc/init.d/kamailio') &&
      (is_file('/mnt/kd/kamailio/kamailio.cfg') || is_file('/mnt/kd/kamailio/kamailio-local.cfg'))) {
     putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
     putHtml('Kamailio&nbsp;SIP&nbsp;Server:');
@@ -2048,7 +2048,7 @@ require_once '../common/header.php';
   putHtml('</select>');
   putHtml('&nbsp;<i>(https://'.$_SERVER['HTTP_HOST'].'/admin/cli/ or CLI Tab)</i>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('NetStat&nbsp;Server:');
   putHtml('<select name="netstat_server">');
@@ -2075,7 +2075,7 @@ require_once '../common/header.php';
   $sel = isVARtype('NETSTAT_CAPTURE', $db, $cur_db, 'DMZIF') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="netstat_DMZIF" name="netstat_DMZIF"'.$sel.' />&nbsp;DMZ');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml("Universal Plug'n'Play Server:");
   $upnp_natpmp = getVARdef($db, 'UPNP_ENABLE_NATPMP', $cur_db) === 'yes' ? 'yes' : 'no';
@@ -2121,7 +2121,7 @@ require_once '../common/header.php';
   $value = getVARdef($db, 'HTTPDIR', $cur_db);
   putHtml('HTTP&nbsp;&nbsp;Server Directory:<input type="text" size="45" maxlength="64" value="'.$value.'" name="http_dir" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('HTTP&nbsp;&nbsp;Server Options:');
   $sel = (getVARdef($db, 'HTTPCGI', $cur_db) === 'yes') ? ' checked="checked"' : '';
@@ -2136,7 +2136,7 @@ require_once '../common/header.php';
   $value = getVARdef($db, 'HTTPSDIR', $cur_db);
   putHtml('HTTPS&nbsp;Server Directory:<input type="text" size="45" maxlength="64" value="'.$value.'" name="https_dir" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('HTTPS&nbsp;Server Options:');
   $sel = (getVARdef($db, 'HTTPSCGI', $cur_db) === 'yes') ? ' checked="checked"' : '';
@@ -2165,7 +2165,7 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: right;">');
   putHtml('<strong>VPN Type:</strong>');
   putHtml('</td><td style="text-align: left;" colspan="5">&nbsp;</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = isVARtype('VPN', $db, $cur_db, 'openvpnclient') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="openvpnclient" name="openvpnclient"'.$sel.' />');
@@ -2174,7 +2174,7 @@ require_once '../common/header.php';
   putHtml('&ndash;');
   putHtml('<input type="submit" value="OpenVPN Configuration" name="submit_edit_openvpnclient" class="button" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = isVARtype('VPN', $db, $cur_db, 'openvpn') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="openvpn" name="openvpn"'.$sel.' />');
@@ -2183,7 +2183,7 @@ require_once '../common/header.php';
   putHtml('&ndash;');
   putHtml('<input type="submit" value="OpenVPN Configuration" name="submit_edit_openvpn" class="button" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = isVARtype('VPN', $db, $cur_db, 'racoon') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="racoon" name="racoon"'.$sel.' />');
@@ -2192,7 +2192,7 @@ require_once '../common/header.php';
   putHtml('&ndash;');
   putHtml('<input type="submit" value="IPsec Configuration" name="submit_edit_racoon" class="button" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = isVARtype('VPN', $db, $cur_db, 'ipsecmobile') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="ipsecmobile" name="ipsecmobile"'.$sel.' />');
@@ -2201,7 +2201,7 @@ require_once '../common/header.php';
   putHtml('&ndash;');
   putHtml('<input type="submit" value="IPsec Configuration" name="submit_edit_ipsecmobile" class="button" />');
   putHtml('</td></tr>');
-  
+
 if (is_file('/etc/init.d/ipsec')) {
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = isVARtype('VPN', $db, $cur_db, 'ipsec') ? ' checked="checked"' : '';
@@ -2236,11 +2236,11 @@ if (is_file('/etc/init.d/wireguard')) {
 }
 
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>IPv6 Tunnel (6in4, 6to4):</strong>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('IPv6 Tunnel Type:');
   $ipv6_tunnel = explode('~', getVARdef($db, 'IPV6_TUNNEL', $cur_db));
@@ -2257,9 +2257,9 @@ if (is_file('/etc/init.d/wireguard')) {
   $value = isset($ipv6_tunnel[2]) ? $ipv6_tunnel[2] : '';
   putHtml('&ndash;&nbsp;Endpoint IPv6/nn:<input type="text" size="45" maxlength="43" value="'.$value.'" name="ipv6_tunnel_endpoint" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Dynamic DNS Update:</strong>');
   if (($dd_client = getVARdef($db, 'DDCLIENT', $cur_db)) === '') {
@@ -2277,7 +2277,7 @@ if (is_file('/etc/init.d/wireguard')) {
     putHtml('<input type="submit" value="Dynamic DNS Configuration" name="submit_edit_ddclient" class="button" />');
   }
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('DNS Service Type:');
   if (($t_value = getVARdef($db, 'DDSERVICE', $cur_db)) === '') {
@@ -2295,7 +2295,7 @@ if (is_file('/etc/init.d/wireguard')) {
   }
   putHtml('</select>');
   putHtml('<input type="text" size="56" maxlength="200" value="'.$t_value.'" name="other_dd_service" /></td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('DNS Get IPv4 Address:');
   $t_value = getVARdef($db, 'DDGETIP', $cur_db);
@@ -2344,9 +2344,9 @@ if (is_file('/etc/init.d/wireguard')) {
   $value = getVARdef($db, 'DDPASS', $cur_db);
   $value = htmlspecialchars(RCconfig2string($value));
   putHtml('DNS Password:<input type="password" size="24" maxlength="64" value="'.$value.'" name="dd_pass" /></td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Safe Asterisk &amp; SIP Monitoring:</strong>');
   putHtml('</td></tr>');
@@ -2363,7 +2363,7 @@ if (is_file('/etc/init.d/wireguard')) {
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   $value = getVARdef($db, 'SAFE_ASTERISK_NOTIFY_FROM', $cur_db);
   putHtml('Notify Email Address From:<input type="text" size="36" maxlength="128" value="'.$value.'" name="safe_asterisk_notify_from" /></td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   $value = getVARdef($db, 'MONITOR_ASTERISK_SIP_TRUNKS', $cur_db);
   putHtml('Monitor SIP Trunks:<input type="text" size="82" maxlength="256" value="'.$value.'" name="monitor_sip_trunks" /></td></tr>');
@@ -2377,9 +2377,9 @@ if (is_file('/etc/init.d/wireguard')) {
   $sel = (getVARdef($db, 'MONITOR_ASTERISK_SIP_STATUS_UPDATES', $cur_db) === 'yes') ? ' selected="selected"' : '';
   putHtml('<option value="yes"'.$sel.'>enabled</option>');
   putHtml('</select></td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
 
   putHtml('<strong>LDAP Client System Defaults:</strong>');
@@ -2423,9 +2423,9 @@ if (is_file('/etc/init.d/wireguard')) {
   }
 
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
-  
+
   putHtml('<strong>UPS Monitoring &amp; Shutdown:</strong>');
   putHtml('</td></tr>');
   if (! is_file('/mnt/kd/ups/ups.conf')) {
@@ -2457,7 +2457,7 @@ if (is_file('/etc/init.d/wireguard')) {
   putHtml('</td><td style="text-align: left;" colspan="3">');
   $value = getVARdef($db, 'UPS_MONITOR_HOST', $cur_db);
   putHtml('Network NUT ups@host:<input type="text" size="24" maxlength="256" value="'.$value.'" name="ups_monitor_host" /></td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
   if (($value = getVARdef($db, 'UPS_MONITOR_USER', $cur_db)) === '') {
     $value = 'monuser';
@@ -2483,12 +2483,12 @@ if (is_file('/etc/init.d/wireguard')) {
   $sel = (getVARdef($db, 'UPS_KILL_POWER', $cur_db) === 'yes') ? ' selected="selected"' : '';
   putHtml('<option value="yes"'.$sel.'>enabled</option>');
   putHtml('</select></td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
-  
+
 if (is_file('/etc/init.d/fossil')) {
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
-  
+
   putHtml('<strong>Fossil &ndash; Software Configuration Management:</strong>');
   putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
@@ -2522,7 +2522,7 @@ if (is_file('/usr/bin/tarsnap-backup')) {
 }
 
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
-  
+
   putHtml('<strong>Advanced Configuration:</strong>');
   putHtml('</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');

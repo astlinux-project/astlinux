@@ -39,7 +39,7 @@ function opensslDELETEkeys($ssl) {
 function opensslGETclients($ssl) {
 
   $client_list = array();
-  
+
   if (is_dir($ssl['key_dir'])) {
     foreach (glob($ssl['key_dir'].'/*.key') as $key) {
       if (is_file($key)) {
@@ -64,11 +64,11 @@ function opensslCREATEdn($commonName, $ssl) {
   }
   return($dn);
 }
-  
+
 // Function: opensslCREATEselfCert()
 //
 function opensslCREATEselfCert($ssl) {
-  
+
   if (($privkey = openssl_pkey_new($ssl['configArgs'])) === FALSE) {
     return(FALSE);
   }
@@ -94,7 +94,7 @@ function opensslCREATEselfCert($ssl) {
 // Function: opensslCREATEserverCert()
 //
 function opensslCREATEserverCert($ssl) {
-  
+
   if (($privkey = openssl_pkey_new($ssl['configArgs'])) === FALSE) {
     return(FALSE);
   }
@@ -120,7 +120,7 @@ function opensslCREATEserverCert($ssl) {
 // Function: opensslCREATEclientCert()
 //
 function opensslCREATEclientCert($client, $ssl) {
-  
+
   if (($privkey = openssl_pkey_new($ssl['configArgs'])) === FALSE) {
     return(FALSE);
   }
@@ -146,7 +146,7 @@ function opensslCREATEclientCert($client, $ssl) {
 // Function: opensslCREATEhttpsCert()
 //
 function opensslCREATEhttpsCert($countryName, $stateName, $localityName, $orgName, $orgUnit, $commonName, $email, $fname) {
-  
+
   $dn = array(
     'countryName' => $countryName,
     'stateOrProvinceName' => $stateName,
@@ -167,7 +167,7 @@ function opensslCREATEhttpsCert($countryName, $stateName, $localityName, $orgNam
     'x509_extensions' => 'v3_ca',
     'encrypt_key' => FALSE
   );
-  
+
   if (($privkey = openssl_pkey_new($configArgs)) === FALSE) {
     return(FALSE);
   }
@@ -208,9 +208,9 @@ function opensslRANDOMpass($length = 6) {
   // $data = trim(shell_exec('openssl rand -base64 24 2>/dev/null'));
   $data = base64_encode(openssl_random_pseudo_bytes(24));
   $dataLen = strlen($data);
-  
+
   $mask = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  
+
   $n = 0;
   for ($i = 0; $i < $dataLen; $i++) {
     if (strpos($mask, $data[$i]) !== FALSE) {
@@ -229,7 +229,7 @@ function opensslRANDOMpass($length = 6) {
 //
 function opensslPKCS12str($ssl, $commonName, $pass) {
   $p12 = '';
-  
+
   if (strlen($pass) > 3) {
     $extraArgs['friendly_name'] = $commonName;
     if (($caStr = @file_get_contents($ssl['key_dir'].'/ca.crt')) !== FALSE) {

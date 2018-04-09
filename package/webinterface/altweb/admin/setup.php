@@ -56,11 +56,11 @@ function getACTIONresult($result) {
 //
 function cancelSETUP() {
   global $global_prefs;
-  
+
   $status = (getPREFdef($global_prefs, 'status_require_auth') === 'yes') ? '/admin/status.php' : '/status.php';
 
   header('Location: '.$status);
-  exit;                                                                                
+  exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -145,14 +145,14 @@ require_once '../common/header.php';
   <table class="stdtable">
   <tr class="dtrow0"><td width="50">&nbsp;</td><td width="90">&nbsp;</td><td width="90">&nbsp;</td><td>&nbsp;</td><td width="90">&nbsp;</td><td width="90">&nbsp;</td></tr>
 <?php
-  
+
   if (is_file($INITIAL_SETUP)) {
     $action = trim(shell_exec($INITIAL_SETUP.' status 2>/dev/null'));
   } else {
     $action = 'Your AstLinux version does not support this Setup Tab.';
   }
   $end_with_continue = FALSE;
-  
+
   if (strncmp($action, 'ok-format', 9) == 0) {
     putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
     putHtml('<strong>Step 1 - Format Data Partitions on Drive:</strong>');
@@ -235,7 +235,7 @@ require_once '../common/header.php';
     putHtml('<tr class="dtrow1"><td style="text-align: center;" colspan="6">');
     putHtml('<input type="submit" class="formbtn" value="Cancel" name="submit_cancel" /></td></tr>');
   }
-  
+
   putHtml("</table>");
   putHtml('</form>');
   putHtml("</center></td></tr></table>");

@@ -88,7 +88,7 @@ function parseUserPass($user_pass, $type) {
 //
 function saveOVPNCsettings($conf_dir, $conf_file) {
   global $openssl;
-  
+
   $result = 11;
 
   if (! is_dir($conf_dir)) {
@@ -98,25 +98,25 @@ function saveOVPNCsettings($conf_dir, $conf_file) {
     return(3);
   }
   fwrite($fp, "### gui.openvpnclient.conf - start ###\n###\n");
-  
+
   $value = 'OVPNC_DEV="'.$_POST['device'].'"';
   fwrite($fp, "### Device\n".$value."\n");
-  
+
   $value = 'OVPNC_PORT="'.tuq($_POST['port']).'"';
   fwrite($fp, "### Port Number\n".$value."\n");
-  
+
   $value = 'OVPNC_PROTOCOL="'.$_POST['protocol'].'"';
   fwrite($fp, "### Protocol\n".$value."\n");
-  
+
   $value = 'OVPNC_VERBOSITY="'.$_POST['verbosity'].'"';
   fwrite($fp, "### Log Verbosity\n".$value."\n");
-  
+
   $value = 'OVPNC_LZO="'.$_POST['compression'].'"';
   fwrite($fp, "### Compression\n".$value."\n");
-  
+
   $value = 'OVPNC_QOS="'.$_POST['qos_passthrough'].'"';
   fwrite($fp, "### QoS Passthrough\n".$value."\n");
-  
+
   $value = 'OVPNC_CIPHER="'.$_POST['cipher_menu'].'"';
   fwrite($fp, "### Cipher\n".$value."\n");
 
@@ -129,16 +129,16 @@ function saveOVPNCsettings($conf_dir, $conf_file) {
     $value = 'OVPNC_USER_PASS=""';
   }
   fwrite($fp, "### Auth User/Pass\n".$value."\n");
-  
+
   $value = 'OVPNC_REMOTE_CERT_TLS="'.$_POST['nscerttype'].'"';
   fwrite($fp, "### nsCertType\n".$value."\n");
-  
+
   $value = 'OVPNC_REMOTE="'.tuq($_POST['remote']).'"';
   fwrite($fp, "### Server Network\n".$value."\n");
-  
+
   $value = 'OVPNC_SERVER="'.tuq($_POST['server']).'"';
   fwrite($fp, "### Server Network\n".$value."\n");
-  
+
   $value = 'OVPNC_OTHER="';
   fwrite($fp, "### Raw Commands\n".$value."\n");
   $value = stripshellsafe($_POST['other']);
@@ -147,7 +147,7 @@ function saveOVPNCsettings($conf_dir, $conf_file) {
     fwrite($fp, $value."\n");
   }
   fwrite($fp, '"'."\n");
-  
+
   if ($openssl !== FALSE) {
     $value = 'OVPNC_CA="'.$openssl['ca_crt'].'"';
     fwrite($fp, "### CA File\n".$value."\n");
@@ -162,17 +162,17 @@ function saveOVPNCsettings($conf_dir, $conf_file) {
     }
     fwrite($fp, "### TLS-Auth File\n".$value."\n");
   }
-  
+
   fwrite($fp, "### gui.openvpnclient.conf - end ###\n");
   fclose($fp);
-  
+
   return($result);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $result = saveOVPNCsettings($OVPNCONFDIR, $OVPNCONFFILE);
   } elseif (isset($_POST['submit_restart'])) {
@@ -347,7 +347,7 @@ require_once '../common/header.php';
   }
   putHtml('<input type="text" size="8" maxlength="10" value="'.$value.'" name="port" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Log Verbosity:');
   putHtml('</td><td style="text-align: left;" colspan="1">');
@@ -368,7 +368,7 @@ require_once '../common/header.php';
   putHtml('<option value="no"'.$sel.'>No</option>');
   putHtml('</select>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('QoS Passthrough:');
   putHtml('</td><td style="text-align: left;" colspan="1">');
@@ -389,7 +389,7 @@ require_once '../common/header.php';
   }
   putHtml('</select>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Device:');
   putHtml('</td><td style="text-align: left;" colspan="1">');
@@ -410,7 +410,7 @@ require_once '../common/header.php';
   }
   putHtml('</select>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Raw Commands:');
   putHtml('</td><td style="text-align: left;" colspan="4">');
@@ -499,19 +499,19 @@ require_once '../common/header.php';
   }
   putHtml('<input type="text" size="32" maxlength="128" value="'.$value.'" name="server" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Client Certificate and Key:</strong>');
   putHtml('</td></tr>');
   putHtml('</table>');
   putHtml('</form>');
-  
+
   if (opensslOPENVPNCis_valid($openssl)) {
     putHtml('<p style="color: green;">Required Client Credentials are defined.</p>');
   } else {
     putHtml('<p style="color: red;">Not all required Client Credential files are defined.</p>');
   }
-  
+
   putHtml('<form method="post" action="'.$myself.'" enctype="multipart/form-data">');
   putHtml('<table width="90%" class="datatable">');
   putHtml('<tr class="dtrow1"><td width="70" style="text-align: right;">');
@@ -546,7 +546,7 @@ require_once '../common/header.php';
   putHtml('</td></tr>');
   putHtml('</table>');
   putHtml('</form>');
-  
+
   putHtml('<form method="post" action="'.$myself.'">');
   putHtml('<table class="stdtable">');
   putHtml('<tr><td class="dialogText">');
@@ -556,7 +556,7 @@ require_once '../common/header.php';
   putHtml('</td></tr>');
   putHtml('</table>');
   putHtml('</form>');
-  
+
   putHtml('</center></td></tr></table>');
   putHtml('</center>');
   putHtml('<script language="JavaScript" type="text/javascript">');

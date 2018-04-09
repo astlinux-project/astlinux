@@ -14,14 +14,14 @@ into your dialplan about as easy as it gets.
 Credit: Darrick Hartman
 ---- /etc/asterisk/extensions.conf snippet ----
 
-[macro-local-followme] 
+[macro-local-followme]
 exten => s,1,GotoIf($[${DB_EXISTS(followme/${ARG1})}=0]?nofollow)
 exten => s,n,GotoIf($[${DB_RESULT:0:1}=0]?nofollow:follow)
-exten => s,n(follow),Dial(SIP/${ARG1},20) 
-exten => s,n,Followme(${ARG1},sn) 
-exten => s,n,Goto(s-NOANSWER,1) 
-exten => s,n(nofollow),Dial(SIP/${ARG1},20) 
-exten => s,n,Goto(s-${DIALSTATUS},1) 
+exten => s,n(follow),Dial(SIP/${ARG1},20)
+exten => s,n,Followme(${ARG1},sn)
+exten => s,n,Goto(s-NOANSWER,1)
+exten => s,n(nofollow),Dial(SIP/${ARG1},20)
+exten => s,n,Goto(s-${DIALSTATUS},1)
 exten => s-NOANSWER,1,Voicemail(${ARG1},u)  ; If unavailable, send to voicemail
 exten => s-BUSY,1,Voicemail(${ARG1},b)  ; If busy, send to voicemail w/ busy ann
 exten => _s-.,1,Goto(s-NOANSWER,1)
@@ -62,13 +62,13 @@ exten => s,n,GotoIf($[${FM_SCHEDULE}=1]?100)  ; Never
 exten => s,n,GotoIf($[${FM_COUNT}=0]?100)     ; No Numbers Defined
 exten => s,n,GotoIf($[${FM_SCHEDULE}=2]?50)   ; Skip Local Dial
 ; Local Dial then Follow-Me then Voicemail
-exten => s,n,Dial(SIP/${ARG1},20) 
+exten => s,n,Dial(SIP/${ARG1},20)
 exten => s,n,Goto(50)
 ; Follow-Me then Voicemail
-exten => s,50,Followme(${ARG1},sn) 
+exten => s,50,Followme(${ARG1},sn)
 exten => s,n,Voicemail(${ARG1},u)
 ; Local Dial then Voicemail
-exten => s,100,Dial(SIP/${ARG1},20) 
+exten => s,100,Dial(SIP/${ARG1},20)
 exten => s,n,Voicemail(${ARG1},u)
 
 ---- /etc/asterisk/extensions.conf snippet ----
@@ -514,10 +514,10 @@ CLI> acme-client --issue --dns dns_cf -d pbx4.example.org
 -----BEGIN CERTIFICATE-----
 ... snip ...
 -----END CERTIFICATE-----
-[Sat Jul  1 10:10:16 CDT 2017] Your cert is in  /mnt/kd/acme/pbx4.example.org/pbx4.example.org.cer 
-[Sat Jul  1 10:10:16 CDT 2017] Your cert key is in  /mnt/kd/acme/pbx4.example.org/pbx4.example.org.key 
-[Sat Jul  1 10:10:17 CDT 2017] The intermediate CA cert is in  /mnt/kd/acme/pbx4.example.org/ca.cer 
-[Sat Jul  1 10:10:17 CDT 2017] And the full chain certs is there:  /mnt/kd/acme/pbx4.example.org/fullchain.cer 
+[Sat Jul  1 10:10:16 CDT 2017] Your cert is in  /mnt/kd/acme/pbx4.example.org/pbx4.example.org.cer
+[Sat Jul  1 10:10:16 CDT 2017] Your cert key is in  /mnt/kd/acme/pbx4.example.org/pbx4.example.org.key
+[Sat Jul  1 10:10:17 CDT 2017] The intermediate CA cert is in  /mnt/kd/acme/pbx4.example.org/ca.cer
+[Sat Jul  1 10:10:17 CDT 2017] And the full chain certs is there:  /mnt/kd/acme/pbx4.example.org/fullchain.cer
 
 After the certificates are issued, they need to be deployed to the various services that can utilize them.
 In this example only "HTTPS Server" is checked after "ACME Deploy Service:" in the web interface.

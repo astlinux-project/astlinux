@@ -60,7 +60,7 @@ function create_sql_tables()
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! ($global_admin || $global_staff_enable_sqldata)) {
-    $result = 999;                                 
+    $result = 999;
   }
   header('Location: '.$myself.'?result='.$result);
   exit;

@@ -40,7 +40,7 @@ function saveWIREGUARDsettings($conf_dir, $conf_file) {
     return(3);
   }
   fwrite($fp, "### gui.wireguard.conf - start ###\n###\n");
-  
+
   $value = 'WIREGUARD_IP="'.tuq($_POST['wireguard_ip']).'"';
   fwrite($fp, "### WireGuard VPN IP\n".$value."\n");
 
@@ -81,14 +81,14 @@ function saveWIREGUARDsettings($conf_dir, $conf_file) {
 
   fwrite($fp, "### gui.wireguard.conf - end ###\n");
   fclose($fp);
-  
+
   return($result);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $result = saveWIREGUARDsettings($WIREGUARDCONFDIR, $WIREGUARDCONFFILE);
   } elseif (isset($_POST['submit_restart'])) {

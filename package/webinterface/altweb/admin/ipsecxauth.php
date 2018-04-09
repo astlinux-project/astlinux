@@ -65,7 +65,7 @@ function saveIPSECsettings($conf_dir, $conf_file, $db, $delete = NULL) {
     return(3);
   }
   fwrite($fp, "### gui.ipsecxauth.conf - start ###\n###\n");
-  
+
   $value = 'IPSECM_XAUTH_USER_PASS="';
   fwrite($fp, "### Authentication\n".$value."\n");
   if (count($db['data']) > 0) {
@@ -87,37 +87,37 @@ function saveIPSECsettings($conf_dir, $conf_file, $db, $delete = NULL) {
     }
   }
   fwrite($fp, '"'."\n");
-  
+
   $value = 'IPSECM_XAUTH_POOLSIZE="'.$_POST['pool_size'].'"';
   fwrite($fp, "### Pool Size\n".$value."\n");
-  
+
   $value = 'IPSECM_XAUTH_POOLBASE="'.tuq($_POST['pool_base']).'"';
   fwrite($fp, "### Pool Base\n".$value."\n");
-  
+
   $value = 'IPSECM_XAUTH_POOLMASK="'.tuq($_POST['pool_mask']).'"';
   fwrite($fp, "### Pool Mask\n".$value."\n");
-  
+
   $value = 'IPSECM_XAUTH_DNS="'.tuq($_POST['dns']).'"';
   fwrite($fp, "### MS DNS\n".$value."\n");
-  
+
   $value = 'IPSECM_XAUTH_WINS="'.tuq($_POST['wins']).'"';
   fwrite($fp, "### MS WINS\n".$value."\n");
-  
+
   $value = 'IPSECM_XAUTH_NETWORK="'.tuq($_POST['network']).'"';
   fwrite($fp, "### Network\n".$value."\n");
-  
+
   $value = 'IPSECM_XAUTH_DOMAIN="'.tuq($_POST['domain']).'"';
   fwrite($fp, "### Default Domain\n".$value."\n");
-  
+
   $value = 'IPSECM_XAUTH_BANNER="'.tuq($_POST['banner']).'"';
   fwrite($fp, "### Login Message\n".$value."\n");
-  
+
   $value = 'IPSECM_XAUTH_SAVE_PASSWD="'.$_POST['save_passwd'].'"';
   fwrite($fp, "### Save Password\n".$value."\n");
-  
+
   fwrite($fp, "### gui.ipsecxauth.conf - end ###\n");
   fclose($fp);
-  
+
   return($result);
 }
 
@@ -127,17 +127,17 @@ function addUserPass(&$db, $id) {
 
   $user = str_replace(' ', '', stripshellsafe($_POST['user']));
   $pass = str_replace(' ', '', stripshellsafe($_POST['pass']));
-  
+
   if ($user === '') {
     return(FALSE);
   }
   if ($pass === '') {
     return(1);
   }
-  
+
   $db['data'][$id]['user'] = $user;
   $db['data'][$id]['pass'] = $pass;
-  
+
   return(TRUE);
 }
 
@@ -151,7 +151,7 @@ $db = ipsecGETclients($vars);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save']) || isset($_POST['submit_ipsec_config'])) {
     $n = count($db['data']);
     $id = $n;
@@ -240,7 +240,7 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
   putHtml('<strong>XAuth Client Options:</strong>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   putHtml('Max. Connections:');
   putHtml('</td><td style="text-align: left;">');
@@ -300,7 +300,7 @@ require_once '../common/header.php';
   $value = getVARdef($vars, 'IPSECM_XAUTH_BANNER');
   putHtml('<input type="text" size="56" maxlength="200" name="banner" value="'.$value.'" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   putHtml('Save Remote Password:');
   putHtml('</td><td style="text-align: left;">');
@@ -312,7 +312,7 @@ require_once '../common/header.php';
   putHtml('<option value="yes"'.$sel.'>Yes</option>');
   putHtml('</select>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
   putHtml('<strong>Client Credentials:</strong>');
   putHtml('</td></tr>');
@@ -327,10 +327,10 @@ require_once '../common/header.php';
   putHtml('<input type="password" size="36" maxlength="128" name="pass" value="'.$ldb['pass'].'" />');
   putHtml('</td></tr>');
   putHtml('</table>');
-  
+
   putHtml('<table width="66%" class="datatable">');
   putHtml("<tr>");
-  
+
   if (($n = count($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Users", "</td>";
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Delete", "</td>";

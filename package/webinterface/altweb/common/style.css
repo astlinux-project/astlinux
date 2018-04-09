@@ -349,7 +349,7 @@ p {
 .pagination a, .pagination a:visited {
   padding: 0 5px;
   border: 1px solid #54545C;
-  text-decoration: none; 
+  text-decoration: none;
   color: black;
 }
 .pagination a:hover, .pagination a:active {

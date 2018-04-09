@@ -14,11 +14,11 @@
 // exten => s,n,GotoIf($["${DB_RESULT}" = "0"]?110)
 // exten => s,n,GotoIf($["${DB_RESULT}" = "2"]?120)
 // exten => s,n,Goto(blacklist,s,1)        ; "1" TN in blacklist database, answer and Zapateller
-// 
+//
 // exten => s,110,Goto(blacklist,no-answer,1) ; "0" TN in blacklist, don't answer
-// 
+//
 // exten => s,120,Goto(voicemail-ivr,s,1)  ; "2" TN in blacklist, direct to voicemail
-// 
+//
 // exten => s,200,NoOp(Valid TN:${CALLERID(num)})
 // -- end snippet --
 
@@ -31,13 +31,13 @@ require_once '../common/functions.php';
 if (($value = getPREFdef($global_prefs, 'blacklist_action_menu_cmdstr')) === '') {
   $value = 'No Answer~Zapateller~Voicemail';
 }
-$BLACKLISTMENU = explode('~', $value);                                                 
+$BLACKLISTMENU = explode('~', $value);
 
 // Function: blacklistaction
 //
 function blacklistaction($val) {
   global $BLACKLISTMENU;
- 
+
   $status = "Undefined";
   $i = 0;
   foreach ($BLACKLISTMENU as $value) {
@@ -100,7 +100,7 @@ require_once '../common/header.php';
 
   $db = parseAstDB($family);
   $dbcomment = parseAstDB($familycomment);
-  
+
   if (($n = count($db['data'])) > 0) {
     for ($i = 0; $i < $n; $i++) {
       $key = $db['data'][$i]['key'];
@@ -116,7 +116,7 @@ require_once '../common/header.php';
       $db['data'][$i]['comment'] = $comment;
     }
   }
-  
+
   $ldb['comment'] = '';
   $ldb['key'] = '';
   $RESULT_NUMBER = '';
@@ -139,7 +139,7 @@ require_once '../common/header.php';
       $ldb['comment'] = rawurldecode($_GET['comment']);
     }
   }
-  
+
 require_once '../common/result.php';
 ?>
   <center>
@@ -175,7 +175,7 @@ require_once '../common/result.php';
   putHtml('Comment<i>(optional)</i>:<input type="text" size="40" maxlength="40" name="comment" value="'.htmlspecialchars($ldb['comment']).'" />');
   putHtml('</td></tr>');
   putHtml('</table>');
-  
+
   putHtml('<table width="100%" class="datatable">');
   putHtml("<tr>");
 
@@ -193,11 +193,11 @@ require_once '../common/result.php';
       echo '<td style="text-align: center;">', '<input type="checkbox" name="delete[]" value="', $db['data'][$i]['key'], '" />', '</td>';
     }
   } else {
-    if ($db['status'] == 0) {                                                                    
-      echo '<td style="text-align: center;">No Database Entries for: ', $db['family'], '</td>';  
-    } else {                                                                                     
+    if ($db['status'] == 0) {
+      echo '<td style="text-align: center;">No Database Entries for: ', $db['family'], '</td>';
+    } else {
       echo '<td style="text-align: center; color: red;">', asteriskERROR($db['status']), '</td>';
-    }                                    
+    }
   }
   putHtml("</tr>");
   putHtml("</table>");

@@ -32,7 +32,7 @@ $check_interval_menu = array (
 // Function: saveMONITsettings
 //
 function saveMONITsettings($conf_dir, $conf_file) {
-  
+
   $result = 11;
 
   if (! is_dir($conf_dir)) {
@@ -58,14 +58,14 @@ function saveMONITsettings($conf_dir, $conf_file) {
 
   fwrite($fp, "### gui.monit.conf - end ###\n");
   fclose($fp);
-  
+
   return($result);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $result = saveMONITsettings($MONITCONFDIR, $MONITCONFFILE);
   } elseif (isset($_POST['submit_restart'])) {

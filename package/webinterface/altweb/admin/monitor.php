@@ -39,7 +39,7 @@ function parseMONITORfiles($dir, $username) {
                 $db['data'][$id]['name'] = $value;
                 $db['data'][$id]['size'] = $stat['size'];
                 $db['data'][$id]['mtime'] = $stat['mtime'];
-                
+
                 if ($id++ > 998) {  // Sanity limit
                   break;
                 }
@@ -52,7 +52,7 @@ function parseMONITORfiles($dir, $username) {
     fclose($ph);
   }
   @unlink($tmpfile);
-  
+
   // Sort by date, newest on top
   if ($id > 1) {
     foreach ($db['data'] as $key => $row) {
@@ -60,7 +60,7 @@ function parseMONITORfiles($dir, $username) {
     }
     array_multisort($mtime, SORT_DESC, SORT_NUMERIC, $db['data']);
   }
-  
+
   return($db);
 }
 
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
   header('Location: '.$myself.'?result='.$result);
   exit;
-} elseif (isset($_GET['file']) && (getPREFdef($global_prefs, 'monitor_play_inline') === '')) { 
+} elseif (isset($_GET['file']) && (getPREFdef($global_prefs, 'monitor_play_inline') === '')) {
   $file = rawurldecode($_GET['file']);
   $result = 5;
   if (strstr($file, '../') !== FALSE) {
@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Transfer-Encoding: binary');
     header('Content-Length: '.filesize($file));
     ob_clean();
-    flush();                   
+    flush();
     @readfile($file);
     exit;
   }
@@ -156,7 +156,7 @@ require_once '../common/insert-wav-inline.php';
   </table>
 <?php
   $db = parseMONITORfiles($MONITORDIR, $global_user);
-  
+
   $inlineType = getPREFdef($global_prefs, 'monitor_play_inline');
   $action = ($inlineType !== '') ? 'Play' : 'Get';
   $datef = (getPREFdef($global_prefs, 'voicemail_24_hour_format') === 'yes') ? 'Y-m-d H:i' : 'Y-m-d h:ia';

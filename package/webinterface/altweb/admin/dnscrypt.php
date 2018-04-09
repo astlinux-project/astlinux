@@ -123,7 +123,7 @@ function saveDNSCRYPTsettings($conf_dir, $conf_file) {
 
   $value = 'DNSCRYPT_PROXY="'.$_POST['proxy'].'"';
   fwrite($fp, "### DNSCrypt Enable\n".$value."\n");
-  
+
   $value = 'DNSCRYPT_VERBOSITY="'.$_POST['verbosity'].'"';
   fwrite($fp, "### Log Level\n".$value."\n");
 
@@ -165,7 +165,7 @@ function saveDNSCRYPTsettings($conf_dir, $conf_file) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $result = saveDNSCRYPTsettings($DNSCRYPTCONFDIR, $DNSCRYPTCONFFILE);
   } elseif (isset($_POST['submit_restart'])) {
@@ -347,7 +347,7 @@ require_once '../common/header.php';
 
   putHtml('</table>');
   putHtml('</form>');
-  
+
   putHtml('</center></td></tr></table>');
   putHtml('</center>');
 } // End of HTTP GET

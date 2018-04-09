@@ -27,7 +27,7 @@ $data = '';
 //
 function buildData($str) {
   global $data;
-  
+
   $data .= $str."\n";
 }
 
@@ -151,7 +151,7 @@ if ($opts['type'] === 'aastra') {
 }
 
 if (($ldapconn = LDAP_Client($opts['tls'], $uri, $dn)) !== FALSE) {
-  
+
   $name = $opts['search'];
   $filter = "(|(sn=$name*)(givenname=$name*))";
   $justthese = array('cn', 'sn', 'givenname', 'displayname', 'telephonenumber', 'mobile', 'cellphone', 'homephone');
@@ -242,8 +242,8 @@ if ($opts['type'] === 'aastra') {
   header('Content-Type: text/html');
 }
 header('Content-Length: '.strlen($data));
-ob_clean();       
-flush();                   
+ob_clean();
+flush();
 echo $data;
 exit;
 ?>

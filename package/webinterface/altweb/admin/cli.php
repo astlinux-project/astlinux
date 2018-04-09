@@ -18,7 +18,7 @@ require_once '../common/functions.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   }
   header('Location: '.$myself.'?result='.$result);
   exit;

@@ -88,7 +88,7 @@ function getTimezoneList() {
     'GMT',
     'UTC'
   );
-  
+
   return($timezones);
 }
 

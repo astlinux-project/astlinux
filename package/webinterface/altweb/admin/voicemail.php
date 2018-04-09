@@ -34,7 +34,7 @@ function asteriskAMI_UserEvent($user, $pass, $event) {
   fputs($socket, "Username: $user\r\n");
   fputs($socket, "Secret: $pass\r\n");
   fputs($socket, "Events: off\r\n\r\n");
-  
+
   fputs($socket, "Action: UserEvent\r\n");
   foreach ($event_list as $value) {
     fputs($socket, "$value\r\n");
@@ -101,7 +101,7 @@ function getVMdataTXT($path) {
     }
   }
   fclose($ph);
-    
+
   return(isset($vm['origtime']) ? $vm : FALSE);
 }
 
@@ -123,19 +123,19 @@ function parseVOICEMAILfiles($dir, $username) {
             $path = $dir.$value.'.txt';
             if (is_file($path)) {
               $tokens = explode('/', $value);
-              if (isset($tokens[3]) && $tokens[3] !== '' && 
+              if (isset($tokens[3]) && $tokens[3] !== '' &&
                 ($username === 'admin' || $username === 'staff' || $username === '' || $username === $tokens[1])) {
                 if (($vm_data = getVMdataTXT($path)) !== FALSE) {
                   $db['data'][$id]['context'] = $tokens[0];
                   $db['data'][$id]['mbox'] = $tokens[1];
                   $db['data'][$id]['folder'] = $tokens[2];
                   $db['data'][$id]['basename'] = $tokens[3];
-              
+
                   $db['data'][$id]['cidname'] = $vm_data['cidname'];
                   $db['data'][$id]['cidnum'] = $vm_data['cidnum'];
                   $db['data'][$id]['duration'] = $vm_data['duration'];
                   $db['data'][$id]['origtime'] = $vm_data['origtime'];
-              
+
                   // Give priority to .wav (PCM) over .WAV (GSM)
                   if (is_file($dir.$value.'.wav')) {
                     $db['data'][$id]['suffix'] = '.wav';
@@ -157,7 +157,7 @@ function parseVOICEMAILfiles($dir, $username) {
     fclose($ph);
   }
   @unlink($tmpfile);
-  
+
   // Sort by mbox first, then by date, newest on top
   if ($id > 1) {
     foreach ($db['data'] as $key => $row) {
@@ -166,7 +166,7 @@ function parseVOICEMAILfiles($dir, $username) {
     }
     array_multisort($mbox, SORT_ASC, SORT_NUMERIC, $origtime, SORT_DESC, SORT_NUMERIC, $db['data']);
   }
-  
+
   return($db);
 }
 
@@ -174,7 +174,7 @@ function parseVOICEMAILfiles($dir, $username) {
 //
 function notifyVMdir($dir, $path, $count, $fop2) {
   global $global_prefs;
-  
+
   $value = substr($path, strlen($dir));
   $tokens = explode('/', $value);
   $context = $tokens[0];
@@ -273,15 +273,15 @@ function delVMmessage($path) {
 // Function: moveVMmessage
 //
 function moveVMmessage($msg, $folder) {
-  
+
   if (! is_dir($msg['dir'].$msg['context'].'/'.$msg['mbox'].'/'.$folder)) {
     return(FALSE);
   }
-  
+
   $prefix = substr($msg['basename'], 0, (strlen($msg['basename']) - 4));
   $fpath = $msg['dir'].$msg['context'].'/'.$msg['mbox'].'/'.$msg['folder'].'/'.$msg['basename'];
   $tpath = $msg['dir'].$msg['context'].'/'.$msg['mbox'].'/'.$folder.'/'.$prefix.'9999';
-  
+
   foreach (glob($fpath.'*') as $msgfile) {
     if (is_file($msgfile)) {
       if (($pos = strrpos(basename($msgfile), '.')) !== FALSE) {
@@ -292,7 +292,7 @@ function moveVMmessage($msg, $folder) {
   }
   $cnt = sequenceVMdir($fpath);
   notifyVMdir($msg['dir'], $fpath, $cnt, FALSE);
-  
+
   $cnt = sequenceVMdir($tpath);
   notifyVMdir($msg['dir'], $tpath, $cnt, TRUE);
 
@@ -327,7 +327,7 @@ function xferVMmsg($dir, $path, $folder) {
 //
 function getXFERcmd($data) {
   $path = $data['context'].'/'.$data['mbox'].'/'.$data['folder'].'/'.$data['basename'];
-  
+
   if ($data['folder'] === 'INBOX') {
     $cmd['href'] = 'xfer_old='.$path;
     $cmd['action'] = '&raquo;Old';
@@ -409,7 +409,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Transfer-Encoding: binary');
     header('Content-Length: '.filesize($file));
     ob_clean();
-    flush();                   
+    flush();
     @readfile($file);
     exit;
   }
@@ -433,7 +433,7 @@ require_once '../common/insert-wav-inline.php';
       }
     }
   }
-  
+
   putHtml('<center>');
   if (isset($_GET['result'])) {
     $result = $_GET['result'];
@@ -467,12 +467,12 @@ require_once '../common/insert-wav-inline.php';
   </table>
 <?php
   $db = parseVOICEMAILfiles($VOICEMAILDIR, $global_user);
-  
+
   $inlineType = getPREFdef($global_prefs, 'monitor_play_inline');
   $action = ($inlineType !== '') ? 'Play' : 'Get';
   $datef = (getPREFdef($global_prefs, 'voicemail_24_hour_format') === 'yes') ? 'Y-m-d H:i' : 'Y-m-d h:ia';
   $context = (getPREFdef($global_prefs, 'voicemail_show_context') === 'yes');
-  
+
   putHtml('<table width="100%" class="datatable">');
   putHtml("<tr>");
 
@@ -503,7 +503,7 @@ require_once '../common/insert-wav-inline.php';
       echo '<td style="text-align: center;">', secs2minsec($data['duration']), '</td>';
       echo '<td style="text-align: left;">', date($datef, $data['origtime']), '</td>';
       echo '<td style="text-align: center;">', ($data['folder'] !== 'INBOX' && $data['folder'] !== 'Old') ? '&nbsp;' : '<a href="'.$myself.'?'.$cmd['href'].'" class="actionText">'.$cmd['action'].'</a>', '</td>';
-      
+
       echo '<td style="text-align: center;">';
       if (isset($file) && $file === $path.$data['suffix']) {
         insertWAVinline($cacheLink, $inlineType);
@@ -511,7 +511,7 @@ require_once '../common/insert-wav-inline.php';
         echo ($data['suffix'] === '') ? '&nbsp;' : '<a href="'.$myself.'?file='.$path.$data['suffix'].'" class="actionText">'.$action.'</a>';
       }
       echo '</td>';
-      
+
       echo '<td style="text-align: left;">', $data['cidname'], '</td>';
       echo '<td style="text-align: left;">', $data['cidnum'], '</td>';
       echo '<td style="text-align: center;">', '<input type="checkbox" name="delete[]" value="', $path, '" />', '</td>';

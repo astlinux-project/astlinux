@@ -55,7 +55,7 @@ $timeout_menu = array (
 //
 function saveZABBIXsettings($conf_dir, $conf_file) {
   global $ZABBIX_PROXY_EXE;
-  
+
   $result = 11;
 
   if (! is_dir($conf_dir)) {
@@ -75,7 +75,7 @@ function saveZABBIXsettings($conf_dir, $conf_file) {
     $value = 'ZABBIX_SERVER=""';
   }
   fwrite($fp, "### Server\n".$value."\n");
-  
+
   $value = 'ZABBIX_SERVER_PORT="'.tuq($_POST['zabbix_server_port']).'"';
   fwrite($fp, "### Server Port\n".$value."\n");
 
@@ -87,18 +87,18 @@ function saveZABBIXsettings($conf_dir, $conf_file) {
 
   $value = 'ZABBIX_STARTAGENTS="'.$_POST['zabbix_startagents'].'"';
   fwrite($fp, "### StartAgents\n".$value."\n");
-  
+
   $value = 'ZABBIX_DEBUGLEVEL="'.$_POST['zabbix_debuglevel'].'"';
   fwrite($fp, "### DebugLevel\n".$value."\n");
-  
+
   $value = 'ZABBIX_TIMEOUT="'.$_POST['zabbix_timeout'].'"';
   fwrite($fp, "### Timeout\n".$value."\n");
-  
+
 if (is_file($ZABBIX_PROXY_EXE)) {
 
   $value = 'ZABBIX_PROXY="'.$_POST['zabbix_proxy'].'"';
   fwrite($fp, "### Proxy Enable\n".$value."\n");
-  
+
   $value = 'ZABBIX_PROXY_HOSTNAME="'.tuq($_POST['zabbix_proxy_hostname']).'"';
   fwrite($fp, "### Proxy Hostname\n".$value."\n");
 
@@ -111,14 +111,14 @@ if (is_file($ZABBIX_PROXY_EXE)) {
 
   fwrite($fp, "### gui.zabbix.conf - end ###\n");
   fclose($fp);
-  
+
   return($result);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $result = saveZABBIXsettings($ZABBIXCONFDIR, $ZABBIXCONFFILE);
   } elseif (isset($_POST['submit_restart'])) {
@@ -212,7 +212,7 @@ require_once '../common/header.php';
   $value = $datatokens[1];
   putHtml('<input type="text" size="56" maxlength="128" value="'.$value.'" name="zabbix_server" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Server Port:');
   putHtml('</td><td style="text-align: left;" colspan="4">');
@@ -221,7 +221,7 @@ require_once '../common/header.php';
   }
   putHtml('<input type="text" size="8" maxlength="12" value="'.$value.'" name="zabbix_server_port" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Zabbix Agent:</strong>');
   putHtml('</td></tr>');
@@ -243,7 +243,7 @@ require_once '../common/header.php';
   }
   putHtml('<input type="text" size="8" maxlength="12" value="'.$value.'" name="agent_listenport" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('StartAgents:');
   putHtml('</td><td style="text-align: left;" colspan="4">');
@@ -337,7 +337,7 @@ if (is_file($ZABBIX_PROXY_EXE)) {
 
   putHtml('</table>');
   putHtml('</form>');
-  
+
   putHtml('</center></td></tr></table>');
   putHtml('</center>');
 } // End of HTTP GET

@@ -147,7 +147,7 @@ function saveXMPPsettings($conf_dir, $conf_file) {
 
   fwrite($fp, "### gui.xmpp.conf - end ###\n");
   fclose($fp);
-  
+
   return($result);
 }
 
@@ -157,7 +157,7 @@ function changeUserPass() {
 
   $user = str_replace(' ', '', stripshellsafe($_POST['user']));
   $pass = str_replace(' ', '', stripshellsafe($_POST['pass']));
-  
+
   if ($user === '') {
     return(FALSE);
   }
@@ -179,7 +179,7 @@ function addUserPass() {
 
   $user = str_replace(' ', '', stripshellsafe($_POST['user']));
   $pass = str_replace(' ', '', stripshellsafe($_POST['pass']));
-  
+
   if ($user === '') {
     return(FALSE);
   }
@@ -245,7 +245,7 @@ $db = xmppGETclients($vars);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! ($global_admin || $global_staff_enable_xmpp)) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $ok = 0;
     $n = count($db['data']);
@@ -566,10 +566,10 @@ if (is_file('/mnt/kd/prosody/prosody.cfg.lua')) {
   putHtml('<input type="password" size="46" maxlength="128" name="pass" value="" />');
   putHtml('</td></tr>');
   putHtml('</table>');
-  
+
   putHtml('<table width="66%" class="datatable">');
   putHtml("<tr>");
-  
+
   if (($n = count($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Users", "</td>";
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Delete", "</td>";

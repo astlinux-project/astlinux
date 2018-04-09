@@ -37,7 +37,7 @@ $data = '';
 //
 function buildData($str) {
   global $data;
-  
+
   $data .= $str."\n";
 }
 
@@ -73,7 +73,7 @@ if ($opts['type'] === 'aastra') {
 }
 
   $db = parseAstDB($familyname);
-  
+
   // Sort by Name
   if (($n = count($db['data'])) > 0) {
     foreach ($db['data'] as $key => $row) {
@@ -81,7 +81,7 @@ if ($opts['type'] === 'aastra') {
     }
     array_multisort($name, SORT_ASC, SORT_STRING, $db['data']);
   }
-  
+
   if (($n = count($db['data'])) > 0) {
     for ($i = 0; $i < $n; $i++) {
       $number = $ext_prefix.$db['data'][$i]['key'];
@@ -129,8 +129,8 @@ if ($opts['type'] === 'aastra') {
   header('Content-Type: text/html');
 }
 header('Content-Length: '.strlen($data));
-ob_clean();       
-flush();                   
+ob_clean();
+flush();
 echo $data;
 exit;
 ?>

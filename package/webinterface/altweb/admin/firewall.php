@@ -163,7 +163,7 @@ $log_blocked_label = array (
 function getARNOvars($db) {
   global $action_label;
   global $action_arno;
-  
+
   $sep = '~';
   $col = '~';
 
@@ -171,7 +171,7 @@ function getARNOvars($db) {
     $tcp = '';
     $udp = '';
     $ip = '';
-    
+
     if (($n = count($db['data'])) > 0) {
       for ($i = 0; $i < $n; $i++) {
         $data = $db['data'][$i];
@@ -278,7 +278,7 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
     return(3);
   }
   fwrite($fp, "### gui.firewall.conf - start ###\n###\n");
-  
+
   $value = 'GUI_FIREWALL_RULES="';
   fwrite($fp, "### Generic Firewall Rules\n".$value."\n");
   if (($n = count($db['data'])) > 0) {
@@ -313,20 +313,20 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
     }
   }
   fwrite($fp, '"'."\n");
-  
+
   $arno = getARNOvars($db);
   foreach ($arno as $key => $value) {
     if ($value !== '') {
       fwrite($fp, $key.'="'.$value.'"'."\n");
     }
   }
-  
+
   fwrite($fp, "### Reset Unused\n");
   $value = 'OPEN_TCP=""';
   fwrite($fp, $value."\n");
   $value = 'OPEN_UDP=""';
   fwrite($fp, $value."\n");
-  
+
   fwrite($fp, "### Options\n");
   $value = 'LAN_INET_DEFAULT_POLICY_DROP="'.$_POST['lan_DP'].'"';
   fwrite($fp, $value."\n");
@@ -346,7 +346,7 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   fwrite($fp, $value."\n");
   $value = 'OPEN_ICMPV6='.(isset($_POST['allow_icmpv6']) ? '1' : '0');
   fwrite($fp, $value."\n");
-  
+
   fwrite($fp, "### Logging\n");
   $value = 'DMZ_INPUT_DENY_LOG='.(isset($_POST['log_dmz']) ? '1' : '0');
   fwrite($fp, $value."\n");
@@ -368,7 +368,7 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   fwrite($fp, $value."\n");
   $value = 'FORWARD_DROP_LOG='.(isset($_POST['log_forward']) ? '1' : '0');
   fwrite($fp, $value."\n");
-  
+
   if (isset($_POST['shaper_enable_type'])) {
     fwrite($fp, "### Traffic Shaping\n");
     $value = 'SHAPETYPE="'.$_POST['shaper_enable_type'].'"';
@@ -383,7 +383,7 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
     $value = 'VOIPPORTS="'.tuq($_POST['shaper_voipports']).'"';
     fwrite($fp, $value."\n");
   }
-  
+
   fwrite($fp, "### Block All Traffic\n");
   $value = 'BLOCK_HOSTS="'.tuq($_POST['hosts_blocked']).'"';
   fwrite($fp, $value."\n");
@@ -397,10 +397,10 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   }
   $value = 'BLOCKED_HOST_LOG="'.$_POST['log_blocked'].'"';
   fwrite($fp, $value."\n");
-  
+
   fwrite($fp, "### gui.firewall.conf - end ###\n");
   fclose($fp);
-  
+
   if (! is_null($TRAFFIC_SHAPER_FILE)) {
     if (isset($_POST['shaper_enable_type'])) {
       $shaper_enable = ($_POST['shaper_enable_type'] === '') ? '0' : '1';
@@ -409,7 +409,7 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
       }
     }
   }
-  
+
   return(11);
 }
 
@@ -418,7 +418,7 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
 function editTRAFFICshaper($fname, $shaper_enable) {
 
   shell('sed -i \'/^ENABLED=/ s/=.*/='.$shaper_enable.'/\' '.$fname.' >/dev/null', $status);
-  
+
   return($status);
 }
 
@@ -431,7 +431,7 @@ function upgradeARNOfirewall($action) {
   if (is_file($file)) {
     shell("$file $action >/dev/null 2>/dev/null", $status);
   }
-  
+
   return($status);
 }
 
@@ -440,7 +440,7 @@ function upgradeARNOfirewall($action) {
 function parseFIREWALLconf($vars) {
   $id = 0;
   $delim = '~';
-  
+
   if (($line = getVARdef($vars, 'GUI_FIREWALL_RULES')) !== '') {
     $linetokens = explode("\n", $line);
     foreach ($linetokens as $data) {
@@ -464,7 +464,7 @@ function parseFIREWALLconf($vars) {
       }
     }
   }
-  
+
   // Sort by action first, then by hash data
   if ($id > 1) {
     foreach ($db['data'] as $key => $row) {
@@ -473,7 +473,7 @@ function parseFIREWALLconf($vars) {
     }
     array_multisort($action, SORT_ASC, SORT_STRING, $hash, SORT_ASC, SORT_STRING, $db['data']);
   }
-  
+
   return($db);
 }
 
@@ -513,7 +513,7 @@ function addFWRule(&$db, $id) {
   $d_uport = isset($_POST['d_uport']) ? str_replace(' ', '', tuq($_POST['d_uport'])) : '';
   $e_addr = isset($_POST['e_addr']) ? str_replace(' ', '', tuq($_POST['e_addr'])) : '';
   $comment = isset($_POST['comment']) ? tuq($_POST['comment']) : '';
-  
+
   switch ($action) {
   case 'PASS_EXT_LOCAL':
   case 'PASS_DMZ_LOCAL':
@@ -581,12 +581,12 @@ function addFWRule(&$db, $id) {
     $d_lport = '';
     $d_uport = '';
   }
-  
+
   if (($eid = existFWRule($db, $action, $proto, $s_addr, $s_lport, $s_uport, $d_addr, $d_lport, $d_uport, $e_addr)) !== FALSE) {
     $db['data'][$eid]['comment'] = $comment;
     return(0);
   }
-  
+
   $db['data'][$id]['enabled'] = '1';
   $db['data'][$id]['action'] = $action;
   $db['data'][$id]['proto'] = $proto;
@@ -598,7 +598,7 @@ function addFWRule(&$db, $id) {
   $db['data'][$id]['d_uport'] = $d_uport;
   $db['data'][$id]['comment'] = $comment;
   $db['data'][$id]['e_addr'] = $e_addr;
-  
+
   return(TRUE);
 }
 
@@ -624,7 +624,7 @@ $db = parseFIREWALLconf($vars);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $disabled = $_POST['disabled'];
     $id = count($db['data']);
@@ -834,7 +834,7 @@ require_once '../common/header.php';
   <input type="submit" class="formbtn" value="Delete Checked" name="submit_delete" />
   </td></tr>
   </table>
-  
+
 <?php
   if (isset($_GET['id'])) {
     $id = $_GET['id'];
@@ -900,10 +900,10 @@ require_once '../common/header.php';
   putHtml('0/0 = Any Host&nbsp;&nbsp;&nbsp;0-65535 = Any Port&nbsp;&nbsp;&nbsp;p1,p2,p3-p4 = Multiple Ports');
   putHtml('</td></tr>');
   putHtml('</table>');
-  
+
   putHtml('<table width="100%" class="datatable">');
   putHtml('<tr>');
-  
+
   if (($n = count($db['data'])) > 0) {
     echo '<td>&nbsp;</td>';
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Action", "</td>";
@@ -961,7 +961,7 @@ require_once '../common/header.php';
   putHtml('</tr>');
   putHtml('<tr><td colspan="7">&nbsp;</td></tr>');
   putHtml('</table>');
-  
+
 if (! is_null($TRAFFIC_SHAPER_FILE)) {
   putHtml('<table width="100%" class="stdtable">');
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
@@ -976,7 +976,7 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
   putHtml('<option value="hfsc"'.$sel.'>Enabled&nbsp;[hfsc]</option>');
   putHtml('</select>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td width="175" style="text-align: right;">');
   putHtml('Downlink Speed:');
   putHtml('</td><td style="text-align: left;">');
@@ -1012,7 +1012,7 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
   putHtml('</td></tr>');
   putHtml('</table>');
 }
-  
+
   putHtml('<table width="100%" class="stdtable">');
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
   putHtml('<strong>Firewall Options:</strong>');
@@ -1128,7 +1128,7 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
   $sel = (getVARdef($vars, 'FORWARD_DROP_LOG') == 1) ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="log_forward" name="log_forward"'.$sel.' /></td><td>Log Denied attempts to forward packets</td></tr>');
   putHtml('</table>');
-  
+
   putHtml('<table width="100%" class="stdtable">');
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
   putHtml('<strong>Block All Traffic by Host/CIDR:</strong>');

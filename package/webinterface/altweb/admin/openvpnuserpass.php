@@ -56,7 +56,7 @@ function saveOPENVPNsettings($conf_dir, $conf_file, $db, $delete = NULL) {
     return(3);
   }
   fwrite($fp, "### gui.openvpnuserpass.conf - start ###\n###\n");
-  
+
   $value = 'OVPN_USER_PASS="';
   fwrite($fp, "### Authentication\n".$value."\n");
   if (count($db['data']) > 0) {
@@ -78,10 +78,10 @@ function saveOPENVPNsettings($conf_dir, $conf_file, $db, $delete = NULL) {
     }
   }
   fwrite($fp, '"'."\n");
-  
+
   fwrite($fp, "### gui.openvpnuserpass.conf - end ###\n");
   fclose($fp);
-  
+
   return($result);
 }
 
@@ -91,17 +91,17 @@ function addUserPass(&$db, $id) {
 
   $user = str_replace(' ', '', stripshellsafe($_POST['user']));
   $pass = str_replace(' ', '', stripshellsafe($_POST['pass']));
-  
+
   if ($user === '') {
     return(FALSE);
   }
   if ($pass === '') {
     return(1);
   }
-  
+
   $db['data'][$id]['user'] = $user;
   $db['data'][$id]['pass'] = $pass;
-  
+
   return(TRUE);
 }
 
@@ -115,7 +115,7 @@ $db = openvpnGETclients($vars);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save']) || isset($_POST['submit_openvpn_config'])) {
     $n = count($db['data']);
     $id = $n;
@@ -203,7 +203,7 @@ require_once '../common/header.php';
 
   putHtml('<table width="100%" class="stdtable">');
   putHtml('<tr class="dtrow0"><td width="160">&nbsp;</td><td>&nbsp;</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
   putHtml('<strong>Client Credentials:</strong>');
   putHtml('</td></tr>');
@@ -218,10 +218,10 @@ require_once '../common/header.php';
   putHtml('<input type="password" size="36" maxlength="128" name="pass" value="'.$ldb['pass'].'" />');
   putHtml('</td></tr>');
   putHtml('</table>');
-  
+
   putHtml('<table width="66%" class="datatable">');
   putHtml("<tr>");
-  
+
   if (($n = count($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Users", "</td>";
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Delete", "</td>";

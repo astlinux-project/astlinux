@@ -16,15 +16,15 @@
 // exten => s,n,GotoIf($["${DB_RESULT}" = "3"]?130)
 // exten => s,n,GotoIf($["${DB_RESULT}" = "4"]?140)
 // exten => s,n,Goto(whitelist,s,1)        ; "1" TN in whitelist database, Priority
-// 
+//
 // exten => s,110,Goto(voicemail-ivr,s,1)  ; "0" TN in whitelist, direct to voicemail
-// 
+//
 // exten => s,120,Goto(whitelist,standard,1)  ; "2" TN in whitelist, Standard
-// 
+//
 // exten => s,130,Goto(whitelist,followme,1)  ; "3" TN in whitelist, Follow-Me
-// 
+//
 // exten => s,140,Goto(whitelist,ivr,1)  ; "4" TN in whitelist, IVR
-// 
+//
 // exten => s,200,NoOp(Valid TN:${CALLERID(num)})
 // -- end snippet --
 
@@ -36,17 +36,17 @@ require_once '../common/functions.php';
 
 if (($value = getPREFdef($global_prefs, 'whitelist_action_menu_cmdstr')) === '') {
   $value = 'Voicemail~Priority~Standard~Follow-Me~IVR';
-}                                     
+}
 $WHITELISTMENU = explode('~', $value);
 
 // Function: whitelistaction
 //
 function whitelistaction($val) {
   global $WHITELISTMENU;
-  
+
   $status = "Undefined";
   $i = 0;
-  foreach ($WHITELISTMENU as $value) {                                     
+  foreach ($WHITELISTMENU as $value) {
     if ($value !== '') {
       if ($val == $i) {
         $status = $value;
@@ -54,14 +54,14 @@ function whitelistaction($val) {
       }
       $i++;
     }
-  }                                                                                  
+  }
   return($status);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_staff) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_add'])) {
     $cidnum = tuqd($_POST['cidnum']);
     $action = $_POST['action'];
@@ -122,7 +122,7 @@ require_once '../common/header.php';
       $db['data'][$i]['comment'] = $comment;
     }
   }
-  
+
   $ldb['comment'] = '';
   $ldb['key'] = '';
   $RESULT_NUMBER = '';
@@ -168,13 +168,13 @@ require_once '../common/result.php';
   putHtml('<select name="action">');
 
   $i = 0;
-  foreach ($WHITELISTMENU as $value) {                                     
+  foreach ($WHITELISTMENU as $value) {
     if ($value !== '') {
       $sel = ((string)$i === $ldb['value']) ? ' selected="selected"' : '';
       putHtml('<option value="'.$i.'"'.$sel.'>'.$value.'</option>');
       $i++;
     }
-  }                                                                                  
+  }
   putHtml('</select>');
   putHtml('</td></tr>');
   putHtml('<tr><td class="dialogText" style="text-align: right;" colspan="2">');
@@ -199,11 +199,11 @@ require_once '../common/result.php';
       echo '<td style="text-align: center;">', '<input type="checkbox" name="delete[]" value="', $db['data'][$i]['key'], '" />', '</td>';
     }
   } else {
-    if ($db['status'] == 0) {                                                                    
-      echo '<td style="text-align: center;">No Database Entries for: ', $db['family'], '</td>';  
-    } else {                                                                                     
+    if ($db['status'] == 0) {
+      echo '<td style="text-align: center;">No Database Entries for: ', $db['family'], '</td>';
+    } else {
       echo '<td style="text-align: center; color: red;">', asteriskERROR($db['status']), '</td>';
-    }                                    
+    }
   }
   putHtml("</tr>");
   putHtml("</table>");

@@ -20,7 +20,7 @@
 // Usage: curl --data-urlencode 'num=2223334444' --data-urlencode 'ext=default' --insecure https://pbx/dialproxy.php
 //
 // [webinterface] manager.conf context must contain
-// read = command,call,originate                               
+// read = command,call,originate
 // write = command,call,originate
 //
 // Asterisk "astdb" database actionlist DIALPROXY-default
@@ -61,8 +61,8 @@ function myexit($status, $statusStr) {
   }
   header('Content-Type: text/plain');
   header('Content-Length: '.(strlen($statusStr)+1));
-  ob_clean();       
-  flush();                   
+  ob_clean();
+  flush();
   echo $statusStr, "\n";
   exit($status);
 }
@@ -79,7 +79,7 @@ function AMIcommand($cmd, &$result) {
   fputs($socket, "Username: webinterface\r\n");
   fputs($socket, "Secret: webinterface\r\n");
   fputs($socket, "Events: off\r\n\r\n");
-  
+
   fputs($socket, "Action: command\r\n");
   fputs($socket, "Command: $cmd\r\n\r\n");
 
@@ -117,7 +117,7 @@ function AMIcommand($cmd, &$result) {
     $info = stream_get_meta_data($socket);
   }
   fclose($socket);
-  
+
   return($info['timed_out'] ? 3 : 0);
 }
 
@@ -139,7 +139,7 @@ function AMIoriginate($num, $channel, $opts) {
   fputs($socket, "Username: webinterface\r\n");
   fputs($socket, "Secret: webinterface\r\n");
   fputs($socket, "Events: off\r\n\r\n");
-  
+
   fputs($socket, "Action: originate\r\n");
   fputs($socket, "Channel: $channel\r\n");
   fputs($socket, "Exten: ".$opts['dialprefix']."$num\r\n");
@@ -176,7 +176,7 @@ function AMIoriginate($num, $channel, $opts) {
     $info = stream_get_meta_data($socket);
   }
   fclose($socket);
-  
+
   return($info['timed_out'] ? 3 : 0);
 }
 

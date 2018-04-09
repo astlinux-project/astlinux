@@ -28,7 +28,7 @@ $action_menu = array (
 //
 function exportLDIF($rootpw, $ou) {
   global $global_prefs;
-  
+
   if ($rootpw === '') {
     return(10);
   }
@@ -59,8 +59,8 @@ function exportLDIF($rootpw, $ou) {
     header('Content-Type: text/plain');
     header('Content-Disposition: attachment; filename="'.$tmpfile.'"');
     header('Content-Length: '.filesize($prefix.$tmpfile));
-    ob_clean();       
-    flush();                   
+    ob_clean();
+    flush();
     @readfile($prefix.$tmpfile);
     @unlink($prefix.$tmpfile);
     exit;
@@ -224,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   $rootpw = isset($_POST['rootpw']) ? tuqd($_POST['rootpw']) : '';
   if (! $global_staff) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_action'])) {
     $action = $_POST['addressbook_action'];
     if ($action === 'export') {
@@ -232,7 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($action === 'revert') {
       $result = revertLDIF($rootpw, 'addressbook');
     } else {
-      $result = 11;                                 
+      $result = 11;
     }
   } elseif (isset($_POST['submit_ldif'], $_FILES['import_ldif'])) {
     $result = 1;

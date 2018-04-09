@@ -21,7 +21,7 @@ function insertWAVinline($wavfile, $type) {
   } else {
     $wavURL = $wavfile;
   }
-  
+
   if ($type === 'html5' || $type === 'html5-http') {
     echo '<audio src="'.$wavURL.'" autoplay="autoplay" controls="controls">';
   }
@@ -47,11 +47,11 @@ function insertWAVinline($wavfile, $type) {
 // Function: unique_string()
 //
 function unique_string($len = 8) {
-  
+
   $letters = 'abcefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   $unique = substr(str_shuffle($letters), 0, $len);
   $unique .= date('is');
-  
+
   return($unique);
 }
 

@@ -20,7 +20,7 @@ require_once '../common/header.php';
   $file = isset($_GET['file']) ? $_GET['file'] : '';
   $pos = strrpos($file, '/');
   $dir = substr($file, 0, $pos);
-  
+
   putHtml("<center>");
   if ($file === '') {
     putHtml('<p style="color: red;">Invalid Entry.</p>');
@@ -65,7 +65,7 @@ require_once '../common/header.php';
     }
   }
   putHtml("</center>");
-  
+
   if ($file !== '') {
     putHtml("<pre>");
     if (($fp = @fopen($file, "rb")) !== FALSE) {
@@ -76,11 +76,11 @@ require_once '../common/header.php';
         fgets($fp, 1024);
         echo "<strong>----- File too large to display, showing the end of the file -----</strong>\n";
       }
-      while (! feof($fp)) {                   
-        if (($line = fgets($fp, 1024)) != '') {      
+      while (! feof($fp)) {
+        if (($line = fgets($fp, 1024)) != '') {
           echo htmlspecialchars($line);
-        }                
-      }                                    
+        }
+      }
       fclose($fp);
     }
     putHtml("</pre>");

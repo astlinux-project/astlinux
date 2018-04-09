@@ -77,7 +77,7 @@ $addon_package_type_menu = array (
 //
 function putACTIONresult($result_str, $status) {
   global $myself;
-  
+
   if ($status == 0) {
     $result = 100;
   } elseif ($status == 2) {
@@ -95,7 +95,7 @@ function putACTIONresult($result_str, $status) {
 //
 function getACTIONresult($result) {
   $str = 'No Action.';
-  
+
   if (isset($_GET['result_str'])) {
     $str = rawurldecode($_GET['result_str']);
   }
@@ -132,9 +132,9 @@ function uncompressARCHIVE($name, $suffix) {
 // Function: restoreBASICconfig
 //
 function restoreBASICconfig($name) {
-  
+
   $target = '/mnt/kd';
-  
+
   // Helper script
   shell('/usr/sbin/restore-basic-conf "'.$name.'" "'.$target.'" >/dev/null 2>/dev/null', $status);
   if ($status != 0) {
@@ -146,7 +146,7 @@ function restoreBASICconfig($name) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_password'])) {
     if (isset($_POST['pass1'])) {
       $pass1 = tuqd($_POST['pass1']);
@@ -251,8 +251,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       header('Content-Disposition: attachment; filename="'.$tmpfile.'"');
       header('Content-Transfer-Encoding: binary');
       header('Content-Length: '.filesize($prefix.$tmpfile));
-      ob_clean();       
-      flush();                   
+      ob_clean();
+      flush();
       @readfile($prefix.$tmpfile);
       @unlink($prefix.$tmpfile);
       exit;
@@ -333,7 +333,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } elseif (isset($_POST['sounds_submit'])) {
     $result = 99;
     $action = $_POST['sounds_action'];
-    if (isset($_POST['sounds_type'], $_POST['sounds_lang'], $_POST['sounds_codec']) && 
+    if (isset($_POST['sounds_type'], $_POST['sounds_lang'], $_POST['sounds_codec']) &&
         ($_POST['sounds_type'] !== '' || $action === 'show')) {
       $type = tuq($_POST['sounds_type']);
       $lang = tuq($_POST['sounds_lang']);
@@ -480,31 +480,31 @@ require_once '../common/header.php';
   } else {
     $reboot_delay = '0';
   }
-  
+
   if (isset($_GET['firmware_action'])) {
     $firmware_action = $_GET['firmware_action'];
   } else {
     $firmware_action = 'check';
   }
-  
+
   if (isset($_GET['sounds_action'])) {
     $sounds_action = $_GET['sounds_action'];
   } else {
     $sounds_action = 'upgrade';
   }
-  
+
   if (isset($_GET['addon_package_action'])) {
     $addon_package_action = $_GET['addon_package_action'];
   } else {
     $addon_package_action = 'upgrade';
   }
-  
+
   if (isset($_GET['runnix_action'])) {
     $runnix_action = $_GET['runnix_action'];
   } else {
     $runnix_action = 'check';
   }
-  
+
   putHtml("<center>");
   if (isset($_GET['result'])) {
     $result = $_GET['result'];
@@ -594,7 +594,7 @@ require_once '../common/header.php';
   </td><td style="text-align: center;">
   <h2>Configuration/File Backup:</h2>
   </td></tr><tr><td style="text-align: center;">
-  
+
   <select name="view_file">
 <?php
   putHtml('<optgroup label="&mdash; System Configuration &mdash;">');
@@ -686,7 +686,7 @@ require_once '../common/header.php';
     putHtml('</optgroup>');
   }
   putHtml('</select>');
-  
+
   putHtml('</td><td style="text-align: center;">');
   putHtml('<select name="backup_type">');
   $sel = (getPREFdef($global_prefs, 'system_backup_asturw') === 'yes') ? '&amp; unionfs ' : '';
@@ -746,7 +746,7 @@ require_once '../common/header.php';
   putHtml('</td></tr><tr><td class="dialogText" style="text-align: center;" colspan="2">');
   putHtml('<strong>Repository URL:</strong> '.$REPOSITORY_URL);
   putHtml('</td></tr>');
-  
+
 if (is_file('/usr/sbin/upgrade-asterisk-sounds')) {
   putHtml('<tr><td style="text-align: center;" colspan="2">');
   putHtml('<h2>Asterisk Sounds Packages:</h2>');
@@ -844,7 +844,7 @@ if (is_file('/usr/sbin/upgrade-RUNNIX-image')) {
 
   putHtml('</table>');
   putHtml('</form>');
-  
+
   putHtml('<form method="post" action="'.$myself.'" enctype="multipart/form-data">');
   putHtml('<table width="100%" class="stdtable">');
   putHtml('<tr><td style="text-align: center;">');
@@ -859,11 +859,11 @@ if (is_file('/usr/sbin/upgrade-RUNNIX-image')) {
   putHtml('</form>');
 
   $db = parseRCconf($CONFFILE);
-  
+
   putHtml('<h2>System Configuration Variables:</h2>');
   putHtml('<table width="100%" class="datatable">');
   putHtml('<tr>');
-  
+
   if (($n = count($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Variable", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Configuration Value", "</td>";

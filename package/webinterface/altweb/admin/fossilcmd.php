@@ -40,7 +40,7 @@ function multi_args($args) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_action'])) {
     $result = 10;
     $action = $_POST['fossil_action'];
@@ -56,7 +56,7 @@ require_once '../common/header.php';
 
   $action = isset($_GET['action']) ? $_GET['action'] : '';
   $arg = isset($_GET['arg']) ? tuq(rawurldecode($_GET['arg'])) : '';
-  
+
   if ($action === 'status') {
     $arg_str = '';
   } elseif ($action === 'diff') {
@@ -131,11 +131,11 @@ if (is_file('/var/run/fossil.pid')) {
         fgets($fp, 1024);
         echo "<strong>----- Result too large to display, showing the end of the output -----</strong>\n";
       }
-      while (! feof($fp)) {                   
-        if (($line = fgets($fp, 1024)) != '') {      
+      while (! feof($fp)) {
+        if (($line = fgets($fp, 1024)) != '') {
           echo htmlspecialchars($line);
-        }                
-      }                                    
+        }
+      }
       fclose($fp);
     }
     @unlink($tmpfile);

@@ -53,7 +53,7 @@ function getACTIONresult($result) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_send_email'])) {
     $to = tuqd($_POST['to_email']);
     $from = tuqd($_POST['from_email']);

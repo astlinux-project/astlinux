@@ -27,7 +27,7 @@ function ipsecSETUP($peer) {
   $ssl['ca_crt'] = $ssl['key_dir'].'/ca.crt';
   $ssl['peer_crt'] = $ssl['key_dir'].'/peer.crt';
   $ssl['peer_key'] = $ssl['key_dir'].'/peer.key';
-  
+
   if (! is_dir($ssl['base_dir'])) {
     if (! @mkdir($ssl['base_dir'], 0755)) {
       return(FALSE);
@@ -54,7 +54,7 @@ function ipsecSETUP($peer) {
 // Function: getCREDinfo()
 //
 function getCREDinfo($ssl, $type, &$CommonName) {
-  
+
   $CommonName = '';
   $str = 'Undefined&nbsp;&ndash;&nbsp;';
   if ($ssl !== FALSE) {

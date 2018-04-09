@@ -42,7 +42,7 @@ header('Content-Disposition: inline; filename="'.$topic.'.txt"');
 header('Content-Transfer-Encoding: binary');
 header('Content-Length: '.filesize($tmpfile));
 ob_clean();
-flush();                   
+flush();
 @readfile($tmpfile);
 @unlink($tmpfile);
 exit;

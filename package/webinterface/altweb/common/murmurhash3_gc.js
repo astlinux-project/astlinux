@@ -1,14 +1,14 @@
 /**
  * JS Implementation of MurmurHash3 (r136) (as of May 20, 2011)
- * 
+ *
  * @author <a href="mailto:gary.court@gmail.com">Gary Court</a>
  * @see http://github.com/garycourt/murmurhash-js
  * @author <a href="mailto:aappleby@gmail.com">Austin Appleby</a>
  * @see http://sites.google.com/site/murmurhash/
- * 
+ *
  * @param {string} key ASCII only
  * @param {number} seed Positive integer only
- * @return {number} 32-bit positive integer hash 
+ * @return {number} 32-bit positive integer hash
  */
 
 function murmurhash3_32_gc(key, seed) {
@@ -22,7 +22,7 @@ function murmurhash3_32_gc(key, seed) {
 	i = 0;
 	
 	while (i < bytes) {
-	  	k1 = 
+	  	k1 =
 	  	  ((key.charCodeAt(i) & 0xff)) |
 	  	  ((key.charCodeAt(++i) & 0xff) << 8) |
 	  	  ((key.charCodeAt(++i) & 0xff) << 16) |

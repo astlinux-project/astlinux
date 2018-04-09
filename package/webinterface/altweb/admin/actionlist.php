@@ -11,7 +11,7 @@
 // 06-26-2014, Added larger User Data field
 //
 // -- extensions.conf snippet --
-// 
+//
 //; Actionlist Menu: No Monitoring~Monitor
 //[default]
 //exten => 100,1,Macro(monitor-gui,${CALLERID(num)})
@@ -57,14 +57,14 @@ function is_actiondata($val) {
 //
 function actionlistaction($val) {
   global $ACTIONLISTMENU;
-  
+
   if (is_actiondata($val)) {
     return($val);
   }
-  
+
   $status = "Undefined";
   $i = 0;
-  foreach ($ACTIONLISTMENU as $value) {                                     
+  foreach ($ACTIONLISTMENU as $value) {
     if ($value !== '') {
       if ($value[0] !== '-') {
         if ($val == $i) {
@@ -74,14 +74,14 @@ function actionlistaction($val) {
         $i++;
       }
     }
-  }                                                                                  
+  }
   return($status);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_staff) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_add'])) {
     $actionkey = tuqd($_POST['actionkey']);
     if (($action = $_POST['action']) === '') {
@@ -130,7 +130,7 @@ require_once '../common/header.php';
 
   $db = parseAstDB($family);
   $dbcomment = parseAstDB($familycomment);
-  
+
   if (($n = count($db['data'])) > 0) {
     for ($i = 0; $i < $n; $i++) {
       $key = $db['data'][$i]['key'];
@@ -159,7 +159,7 @@ require_once '../common/header.php';
       }
     }
   }
-  
+
   putHtml('<center>');
   if (isset($_GET['result'])) {
     $result = $_GET['result'];
@@ -180,10 +180,10 @@ require_once '../common/header.php';
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {
       putHtml('<p style="color: red;">Permission denied for user "'.$global_user.'".</p>');
-    } else {                                                                    
-      putHtml('<p>&nbsp;</p>');                                                     
-    }                                                                           
-  } else {                                                                      
+    } else {
+      putHtml('<p>&nbsp;</p>');
+    }
+  } else {
     putHtml('<p>&nbsp;</p>');
   }
   putHtml('</center>');
@@ -209,7 +209,7 @@ require_once '../common/header.php';
   putHtml('<option value="">User Data&nbsp;&nbsp;&nbsp;&gt;&gt;&gt;</option>');
 
   $i = 0;
-  foreach ($ACTIONLISTMENU as $value) {                                     
+  foreach ($ACTIONLISTMENU as $value) {
     if ($value !== '') {
       if ($value[0] !== '-') {
         $sel = (! is_actiondata($ldb['value']) && (string)$i === $ldb['value']) ? ' selected="selected"' : '';
@@ -221,7 +221,7 @@ require_once '../common/header.php';
         putHtml('<option value="" disabled="disabled">'.$value.'</option>');
       }
     }
-  }                                                                                  
+  }
   putHtml('</select>');
   putHtml('</td></tr>');
   putHtml('<tr><td class="dialogText" style="text-align: right;" colspan="2">');
@@ -245,7 +245,7 @@ require_once '../common/header.php';
       putHtml("</tr>");
       echo '<tr ', ($i % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
       echo '<td><a href="'.$myself.'?key='.rawurlencode($db['data'][$i]['key']).'" class="actionText">'.$db['data'][$i]['key'].'</a>', '</td>';
-      
+
       $value = actionlistaction($db['data'][$i]['value']);
       if (strlen($value) > 46) {
         $value = wordwrap(htmlspecialchars($value), 40, '<br />', TRUE);
@@ -253,16 +253,16 @@ require_once '../common/header.php';
         $value = htmlspecialchars($value);
       }
       echo '<td>', $value, '</td>';
-      
+
       echo '<td>', htmlspecialchars($db['data'][$i]['comment']), '</td>';
       echo '<td style="text-align: center;">', '<input type="checkbox" name="delete[]" value="', $db['data'][$i]['key'], '" />', '</td>';
     }
   } else {
-    if ($db['status'] == 0) {                                                                    
-      echo '<td style="text-align: center;">No Database Entries for: ', $db['family'], '</td>';  
-    } else {                                                                                     
+    if ($db['status'] == 0) {
+      echo '<td style="text-align: center;">No Database Entries for: ', $db['family'], '</td>';
+    } else {
       echo '<td style="text-align: center; color: red;">', asteriskERROR($db['status']), '</td>';
-    }                                    
+    }
   }
   putHtml("</tr>");
   putHtml("</table>");

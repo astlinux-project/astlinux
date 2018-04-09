@@ -11,17 +11,17 @@
 // 04-01-2017, Add enable_callee_prompt support
 //
 // -- extensions.conf snippet --
-// [macro-local-followme] 
+// [macro-local-followme]
 // exten => s,1,GotoIf($[${DB_EXISTS(followme/${ARG1})}=0]?nofollow)
 // exten => s,n,GotoIf($[${DB_RESULT:0:1}=0]?nofollow:follow)
-// exten => s,n(follow),Dial(SIP/${ARG1},20) 
-// exten => s,n,Followme(${ARG1},san) 
-// exten => s,n,Goto(s-${DIALSTATUS},1) 
-// exten => s,n(nofollow),Dial(SIP/${ARG1},20) 
-// exten => s,n,Goto(s-${DIALSTATUS},1) 
+// exten => s,n(follow),Dial(SIP/${ARG1},20)
+// exten => s,n,Followme(${ARG1},san)
+// exten => s,n,Goto(s-${DIALSTATUS},1)
+// exten => s,n(nofollow),Dial(SIP/${ARG1},20)
+// exten => s,n,Goto(s-${DIALSTATUS},1)
 // exten => s-NOANSWER,1,Voicemail(${ARG1},u)  ; If unavailable, send to voicemail
 // exten => s-BUSY,1,Voicemail(${ARG1},b)  ; If busy, send to voicemail w/ busy ann
-// exten => _s-.,1,Goto(s-NOANSWER,1) 
+// exten => _s-.,1,Goto(s-NOANSWER,1)
 // -- end of snippet --
 //
 // System location of the asterisk followme.conf
@@ -81,7 +81,7 @@ function fmDBtoDATA($db, $key) {
       } else {
         $d = $i;
       }
-      
+
       $data[$d]['key'] = $db['data'][$i]['key'];
       $tokens = explode('~', $db['data'][$i]['value']);
       if (isset($tokens[0]) && $tokens[0] !== '') {
@@ -113,7 +113,7 @@ function fmDBtoDATA($db, $key) {
 //
 function isFMextension($key, $fname) {
   $result = FALSE;
-  
+
   if (($ph = popen('sed -n "/^\['.$key.'\]/ s/^\['.$key.'.*/'.$key.'/p" '.$fname, "r")) !== FALSE) {
     if (! feof($ph)) {
       if (($line = trim(fgets($ph, 1024))) === $key) {
@@ -148,7 +148,7 @@ function delFMextension($family, $key, $fname) {
 function addFMextension($family, $key, $method, $time_class, $enabled, $number, $timeout, $fname) {
   global $global_prefs;
   global $MAXNUM;
-  
+
   for ($i = 0; $i < $MAXNUM; $i++) {
     $my_enabled[$i] = '0';
   }
@@ -178,7 +178,7 @@ function addFMextension($family, $key, $method, $time_class, $enabled, $number, 
   if (! is_file($fname)) {
     return(0);
   }
-  
+
   if (isFMextension($key, $fname)) {
     shell('sed -i "/^\['.$key.'\]/,/^\[/ s/^number.*/;deleted;&/" '.$fname.' >/dev/null', $status);
     shell('sed -i "/^;deleted;number/ d" '.$fname.' >/dev/null', $status);
@@ -247,7 +247,7 @@ function reloadFMmodule($cmd, $fname) {
   if (is_file($fname)) {
     $status = asteriskCMD($cmd, '');
     if ($status == 0) {
-      $result = 10;                                 
+      $result = 10;
     } elseif ($status == 1101) {
       $result = 1101;
     } elseif ($status == 1102) {
@@ -262,7 +262,7 @@ function reloadFMmodule($cmd, $fname) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if ($global_staff_disable_followme) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_add'])) {
     if (isset($_POST['key'])) {
       $key = tuqd($_POST['key']);
@@ -286,7 +286,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $timeout[$i] = tuq($_POST["timeout$i"]);
         if ($USE_RULES && $number[$i] !== '') {
           if (! preg_match("/$NUMBER_FORMAT/", $number[$i])) {
-            $result = 12;                                 
+            $result = 12;
             header('Location: '.$myself.'?result='.$result);
             exit;
           }
@@ -295,10 +295,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if (addFMextension($family, $key, $method, $time_class, $enabled, $number, $timeout, $FOLLOWMECONF) == 0) {
         $result = reloadFMmodule($RELOAD_FOLLOWME_CMD, $FOLLOWMECONF);
       } else {
-        $result = 99;                                 
+        $result = 99;
       }
     } else {
-      $result = 2;                                 
+      $result = 2;
     }
   } elseif (isset($_POST['submit_delete'])) {
     $delete = $_POST['delete'];
@@ -306,7 +306,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if (delFMextension($family, $delete[$i], $FOLLOWMECONF) == 0) {
         $result = reloadFMmodule($RELOAD_FOLLOWME_CMD, $FOLLOWMECONF);
       } else {
-        $result = 99;                                 
+        $result = 99;
       }
     }
   }
@@ -355,7 +355,7 @@ require_once '../common/header.php';
   <form method="post" action="<?php echo $myself;?>">
 <?php
   $db = parseAstDB($family);
-  
+
   $def_data['key'] = '';
   $def_data['method'] = '0';
   $def_data['time_class'] = '0';
@@ -365,14 +365,14 @@ require_once '../common/header.php';
     $def_data['timeout'][$i] = '45';
   }
   $ldata = $def_data;
-    
+
   $MANAGE = $global_staff;
   if (($data = fmDBtoDATA($db, ($MANAGE ? FALSE : $global_user))) !== NULL) {
     if (count($data) == 1) {
       $ldata = $data[0];
     }
   }
-  
+
   if (isset($_GET['key']) && $MANAGE) {
     $key = $_GET['key'];
     if (($n = count($data)) > 0) {
@@ -384,7 +384,7 @@ require_once '../common/header.php';
       }
     }
   }
-  
+
   putHtml('<table width="100%" class="stdtable">');
   putHtml('<tr><td style="text-align: center;" colspan="3">');
   putHtml('<h2>Follow-Me Number Management:</h2>');
@@ -403,7 +403,7 @@ require_once '../common/header.php';
   }
   putHtml('</td></tr>');
   putHtml('</table>');
-  
+
   putHtml('<table width="100%" class="stdtable">');
   putHtml('<tr class="dtrow0"><td width="50">&nbsp;</td><td>&nbsp;</td></tr>');
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
@@ -466,11 +466,11 @@ require_once '../common/header.php';
     putHtml('</td></tr>');
   }
   putHtml('</table>');
-  
+
   if ($MANAGE) {
     putHtml('<table width="100%" class="datatable">');
     putHtml("<tr>");
-  
+
     if (($n = count($data)) > 0) {
       echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Extension", "</td>";
       echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Follow-Me Numbers", "</td>";
@@ -483,11 +483,11 @@ require_once '../common/header.php';
         echo '<td style="text-align: center;">', '<input type="checkbox" name="delete[]" value="', $data[$i]['key'], '" />', '</td>';
       }
     } else {
-      if ($db['status'] == 0) {                                                                    
-        echo '<td style="text-align: center;">No Database Entries for: ', $db['family'], '</td>';  
-      } else {                                                                                     
+      if ($db['status'] == 0) {
+        echo '<td style="text-align: center;">No Database Entries for: ', $db['family'], '</td>';
+      } else {
         echo '<td style="text-align: center; color: red;">', asteriskERROR($db['status']), '</td>';
-      }                                    
+      }
     }
     putHtml("</tr>");
     putHtml("</table>");

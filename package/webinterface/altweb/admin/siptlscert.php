@@ -36,7 +36,7 @@ function siptlscert_openssl($keysize, $algorithm, $dnsname) {
   global $global_prefs;
   // System location of gui.network.conf file
   $NETCONFFILE = '/mnt/kd/rc.conf.d/gui.network.conf';
-  
+
   if ($keysize === '') {
     $keysize = '2048';
   }
@@ -100,7 +100,7 @@ $signature_algorithm_menu = array (
 //
 function saveSIPTLSCERTsettings($conf_dir, $conf_file) {
   global $openssl;
-  
+
   $result = 11;
 
   if (! is_dir($conf_dir)) {
@@ -110,7 +110,7 @@ function saveSIPTLSCERTsettings($conf_dir, $conf_file) {
     return(3);
   }
   fwrite($fp, "### gui.siptlscert.conf - start ###\n###\n");
-  
+
   $value = 'SIPTLSCERT_CERT_KEYSIZE="'.$_POST['key_size'].'"';
   fwrite($fp, "### Private Key Size\n".$value."\n");
 
@@ -122,14 +122,14 @@ function saveSIPTLSCERTsettings($conf_dir, $conf_file) {
 
   fwrite($fp, "### gui.siptlscert.conf - end ###\n");
   fclose($fp);
-  
+
   return($result);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $result = saveSIPTLSCERTsettings($SIPTLSCERTCONFDIR, $SIPTLSCERTCONFFILE);
   } elseif (isset($_POST['submit_edit_sip'])) {
@@ -218,7 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $readme .= "ca.crt - A self-signed Certificate Authority (CA).\n\n";
       $zip->addFromString($value.'/README.txt', $readme);
       $zip->close();
-    
+
       header('Content-Type: application/zip');
       header('Content-Disposition: attachment; filename="credentials-'.$value.'.zip"');
       header('Content-Transfer-Encoding: binary');
@@ -336,7 +336,7 @@ if ($openssl !== FALSE) {
   if (opensslSIPTLSis_valid($openssl)) {
     putHtml('<tr class="dtrow1"><td style="color: orange; text-align: center;" colspan="6">');
     putHtml('Note: "Create New" revokes all previous credentials.</td></tr>');
-    
+
     putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
     putHtml('<strong>Server Certificate Authority (CA):</strong>');
     putHtml('</td></tr>');
@@ -353,12 +353,12 @@ if ($openssl !== FALSE) {
 //    putHtml('<input type="text" size="24" maxlength="32" value="" name="new_client" />');
 //    putHtml('<input type="submit" value="New Client" name="submit_new_client" />');
 //    putHtml('</td></tr>');
-//  
+//
 //    putHtml('<tr><td colspan="6"><center>');
 //    $data = opensslGETclients($openssl);
 //    putHtml('<table width="85%" class="datatable">');
 //    putHtml("<tr>");
-//    
+//
 //    if (($n = count($data)) > 0) {
 //      echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Client Name", "</td>";
 //      echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Credentials", "</td>";

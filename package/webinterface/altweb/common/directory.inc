@@ -48,7 +48,7 @@ putHtml("</center>");
   </table>
 <?php
   $db = parseAstDB($familyname);
-  
+
   // Sort by Name
   if (($n = count($db['data'])) > 0) {
     foreach ($db['data'] as $key => $row) {
@@ -56,10 +56,10 @@ putHtml("</center>");
     }
     array_multisort($name, SORT_ASC, SORT_STRING, $db['data']);
   }
-  
+
   putHtml('<table class="datatable">');
   putHtml("<tr>");
-  
+
   if (($n = count($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Name", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Extension", "</td>";

@@ -35,7 +35,7 @@ function ipsecmobile_openssl($keysize, $algorithm, $dnsname) {
   global $global_prefs;
   // System location of gui.network.conf file
   $NETCONFFILE = '/mnt/kd/rc.conf.d/gui.network.conf';
-  
+
   if ($keysize === '') {
     $keysize = '2048';
   }
@@ -162,7 +162,7 @@ $signature_algorithm_menu = array (
 //
 function saveIPSECMsettings($conf_dir, $conf_file) {
   global $openssl;
-  
+
   $result = 11;
 
   if (! is_dir($conf_dir)) {
@@ -172,7 +172,7 @@ function saveIPSECMsettings($conf_dir, $conf_file) {
     return(3);
   }
   fwrite($fp, "### gui.ipsecmobile.conf - start ###\n###\n");
-  
+
   $value = 'IPSEC_LOGLEVEL="'.$_POST['log_level'].'"';
   fwrite($fp, "### Log Level\n".$value."\n");
 
@@ -261,17 +261,17 @@ if (opensslIPSECMOBILEis_valid($openssl)) {
   $value = 'IPSECM_RSA_KEY="'.$value.'"';
   fwrite($fp, "### Key File\n".$value."\n");
 }
-  
+
   fwrite($fp, "### gui.ipsecmobile.conf - end ###\n");
   fclose($fp);
-  
+
   return($result);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $result = saveIPSECMsettings($IPSECMCONFDIR, $IPSECMCONFFILE);
   } elseif (isset($_POST['submit_restart'])) {
@@ -365,7 +365,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $zip->addFromString($value.'/README.txt', opensslREADMEstr('', $value, $p12pass));
       }
       $zip->close();
-    
+
       header('Content-Type: application/zip');
       header('Content-Disposition: attachment; filename="credentials-'.$value.'.zip"');
       header('Content-Transfer-Encoding: binary');
@@ -452,7 +452,7 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Tunnel Options:</strong>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   putHtml('NAT Traversal:');
   putHtml('</td><td style="text-align: left;" colspan="2">');
@@ -465,7 +465,7 @@ require_once '../common/header.php';
     putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
   }
   putHtml('</select>');
-  
+
   putHtml('</td><td style="text-align: left;" colspan="3">');
   putHtml('Log Level:');
   if (($log_level = getVARdef($db, 'IPSEC_LOGLEVEL')) === '') {
@@ -478,7 +478,7 @@ require_once '../common/header.php';
   }
   putHtml('</select>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   putHtml('Optional&nbsp;<br />Static Routes:');
   putHtml('</td><td style="text-align: left;" colspan="5">');
@@ -496,7 +496,7 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Phase 1 - Authentication:</strong>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   putHtml('Auth Method:');
   putHtml('</td><td style="text-align: left;" colspan="2">');
@@ -661,7 +661,7 @@ if ($openssl !== FALSE) {
     putHtml('<input type="submit" value="Manual" name="submit_delete_all" />');
     putHtml('&ndash;');
     putHtml('<input type="checkbox" value="delete_all" name="confirm_delete_all" />&nbsp;Confirm</td></tr>');
-    
+
     putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
     putHtml('<strong>Peer Certificates and Keys:</strong>');
     putHtml('</td></tr>');
@@ -670,12 +670,12 @@ if ($openssl !== FALSE) {
     putHtml('<input type="text" size="24" maxlength="32" value="" name="new_client" />');
     putHtml('<input type="submit" value="New Peer" name="submit_new_client" />');
     putHtml('</td></tr>');
-  
+
     putHtml('<tr><td colspan="6"><center>');
     $data = opensslGETclients($openssl);
     putHtml('<table width="85%" class="datatable">');
     putHtml("<tr>");
-    
+
     if (($n = count($data)) > 0) {
       echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Peer Name", "</td>";
       echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Credentials", "</td>";
@@ -689,7 +689,7 @@ if ($openssl !== FALSE) {
     } else {
       echo '<td style="color: orange; text-align: center;">No IPsec Peer Credentials.', '</td>';
     }
-    
+
     putHtml("</tr>");
     putHtml("</table>");
     putHtml('</center></td></tr>');

@@ -21,7 +21,7 @@
 // exten => s,n,Set(CALLERID(name)=${HOME_CIDNAME})
 // exten => s,n,DIAL(${DB_RESULT},${DIALOUTTIME})
 // exten => s,n,Hangup
-// 
+//
 // exten => s,100,Playback(extras/num-not-in-db)
 // exten => s,n,Hangup
 // -- end of snippet --
@@ -42,7 +42,7 @@ if (($ext_digits = getPREFdef($global_prefs, 'sysdial_ext_digits_cmdstr')) === '
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_staff) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_add'])) {
     $speeddial = tuqd($_POST['speeddial']);
     $speeddialname = tuqd($_POST['speeddialname']);
@@ -81,7 +81,7 @@ require_once '../common/header.php';
 
   $db = parseAstDB($family);
   $dbname = parseAstDB($familyname);
-  
+
   // Sort by Number
   if (($n = count($db['data'])) > 0) {
     foreach ($db['data'] as $key => $row) {
@@ -174,10 +174,10 @@ require_once '../common/result.php';
   putHtml('&nbsp;Name:<input type="text" size="24" maxlength="64" name="speeddialname" value="'.htmlspecialchars($ldb['name']).'" />');
   putHtml('</td></tr>');
   putHtml('</table>');
-  
+
   putHtml('<table width="100%" class="datatable">');
   putHtml("<tr>");
-  
+
   if (($n = count($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Extension", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Speed Dial", "</td>";
@@ -192,11 +192,11 @@ require_once '../common/result.php';
       echo '<td style="text-align: center;">', '<input type="checkbox" name="delete[]" value="', $db['data'][$i]['key'], '" />', '</td>';
     }
   } else {
-    if ($db['status'] == 0) {                                                                    
-      echo '<td style="text-align: center;">No Database Entries for: ', $db['family'], '</td>';  
-    } else {                                                                                     
+    if ($db['status'] == 0) {
+      echo '<td style="text-align: center;">No Database Entries for: ', $db['family'], '</td>';
+    } else {
       echo '<td style="text-align: center; color: red;">', asteriskERROR($db['status']), '</td>';
-    }                                    
+    }
   }
   putHtml("</tr>");
   putHtml("</table>");

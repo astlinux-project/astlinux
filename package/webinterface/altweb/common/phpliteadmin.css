@@ -136,7 +136,7 @@ fieldset {
   border-top-right-radius: 5px;
   -moz-border-radius-bottomleft: 5px;
   -moz-border-radius-bottomright: 5px;
-  -moz-border-radius-topright: 5px; 
+  -moz-border-radius-topright: 5px;
   -webkit-box-shadow: 2px 2px 2px 2px rgba(33, 33, 33, 0.5);
   box-shadow: 2px 2px 2px 2px rgba(33, 33, 33, 0.5);
 }
@@ -164,7 +164,7 @@ fieldset {
   font-weight: bold;
   font-size: 12px;
   padding-left: 10px;
-  padding-right: 10px; 
+  padding-right: 10px;
   background-color: #3B3B3B;
   color: #FFF;
 }
@@ -240,7 +240,7 @@ fieldset {
 .help_list { padding: 10px; height: auto; }
 .headd {
   font-size: 14px;
-  font-weight: bold;       
+  font-weight: bold;
   display: block;
   padding: 10px;
   background-color: #CCC;
@@ -255,7 +255,7 @@ fieldset {
   display: block;
   position: absolute;
   right: 10px;
-  bottom: 10px;    
+  bottom: 10px;
 }
 .warning, .delete, .empty, .drop, .delete_db { color: red; }
 .sidebar_table { font-size: 11px; }

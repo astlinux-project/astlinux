@@ -35,7 +35,7 @@ require_once '../common/functions.php';
 // Function: getPOOLvars
 //
 function getPOOLvars($var) {
-  
+
   if ($var !== '') {
     $datatokens = explode(' ', $var);
     if (isset($datatokens[0], $datatokens[1], $datatokens[2])) {
@@ -48,7 +48,7 @@ function getPOOLvars($var) {
   // Set defaults
   // System location of gui.network.conf file
   $NETCONFFILE = '/mnt/kd/rc.conf.d/gui.network.conf';
-  
+
   $pool['num'] = '8';
   $pool['remote'] = '192.168.101.232-239';
   $pool['server'] = '192.168.101.240';
@@ -104,7 +104,7 @@ function savePPTPsettings($conf_dir, $conf_file, $db, $delete = NULL) {
     return(3);
   }
   fwrite($fp, "### gui.pptp.conf - start ###\n###\n");
-  
+
   $value = 'PPTP_USER_PASS="';
   fwrite($fp, "### Authentication\n".$value."\n");
   if (count($db['data']) > 0) {
@@ -126,7 +126,7 @@ function savePPTPsettings($conf_dir, $conf_file, $db, $delete = NULL) {
     }
   }
   fwrite($fp, '"'."\n");
-  
+
   $pool = $_POST['pool_num'];
   if (($value = str_replace(' ', '', tuq($_POST['pool_remote']))) !== '') {
     $pool .= ' '.$value;
@@ -140,38 +140,38 @@ function savePPTPsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   }
   $value = 'PPTP_POOL="'.$pool.'"';
   fwrite($fp, "### PPTP Address Pool\n".$value."\n");
-  
+
   if ($pool !== '') {
     $value = 'PPTP_SUBNET="'.str_replace(' ', '', tuq($_POST['subnet'])).'"';
   } else {
     $value = 'PPTP_SUBNET=""';
   }
   fwrite($fp, "### Routed PPTP Subnet\n".$value."\n");
-  
+
   $value = 'PPTP_VERBOSITY="'.$_POST['verbosity'].'"';
   fwrite($fp, "### Log Verbosity\n".$value."\n");
-  
+
   $value = 'PPTP_DNS="'.tuq($_POST['dns']).'"';
   fwrite($fp, "### MS DNS\n".$value."\n");
-  
+
   $value = 'PPTP_WINS="'.tuq($_POST['wins']).'"';
   fwrite($fp, "### MS WINS\n".$value."\n");
-  
+
   $value = 'PPTP_TUNNEL_EXTERNAL_HOSTS="'.tuq($_POST['tunnel_external_hosts']).'"';
   fwrite($fp, "### Allow External Hosts for Tunnel\n".$value."\n");
-  
+
   $value = 'PPTP_ALLOW_HOSTS="'.tuq($_POST['allow_hosts']).'"';
   fwrite($fp, "### Allow Hosts\n".$value."\n");
-  
+
   $value = 'PPTP_DENY_HOSTS="'.tuq($_POST['deny_hosts']).'"';
   fwrite($fp, "### Deny Hosts\n".$value."\n");
-  
+
   $value = 'PPTP_DENY_LOG="'.$_POST['deny_log'].'"';
   fwrite($fp, "### Log Deny Hosts\n".$value."\n");
-  
+
   fwrite($fp, "### gui.pptp.conf - end ###\n");
   fclose($fp);
-  
+
   return($result);
 }
 
@@ -181,17 +181,17 @@ function addUserPass(&$db, $id) {
 
   $user = str_replace(' ', '', stripshellsafe($_POST['user']));
   $pass = str_replace(' ', '', stripshellsafe($_POST['pass']));
-  
+
   if ($user === '') {
     return(FALSE);
   }
   if ($pass === '') {
     return(1);
   }
-  
+
   $db['data'][$id]['user'] = $user;
   $db['data'][$id]['pass'] = $pass;
-  
+
   return(TRUE);
 }
 
@@ -205,7 +205,7 @@ $db = pptpGETclients($vars);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $n = count($db['data']);
     $id = $n;
@@ -301,9 +301,9 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
   putHtml('<strong>Tunnel Options:</strong>');
   putHtml('</td></tr>');
-  
+
   $pool = getPOOLvars(getVARdef($vars, 'PPTP_POOL'));
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   putHtml('Max. Connections:');
   putHtml('</td><td style="text-align: left;">');
@@ -363,11 +363,11 @@ require_once '../common/header.php';
   }
   putHtml('</select>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
   putHtml('<strong>Firewall Options:</strong>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   putHtml('External Hosts:');
   putHtml('</td><td style="text-align: left;">');
@@ -376,11 +376,11 @@ require_once '../common/header.php';
   }
   putHtml('<input type="text" size="56" maxlength="200" name="tunnel_external_hosts" value="'.$value.'" />');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td class="dialogText" style="text-align: center;" colspan="2">');
   putHtml('<i>Default Policy is to allow after any "Allow/Deny" Hosts rules</i>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   putHtml('Allow Hosts:');
   putHtml('</td><td style="text-align: left;">');
@@ -404,7 +404,7 @@ require_once '../common/header.php';
   putHtml('<option value="yes"'.$sel.'>Yes</option>');
   putHtml('</select>');
   putHtml('</td></tr>');
-  
+
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
   putHtml('<strong>Client Credentials:</strong>');
   putHtml('</td></tr>');
@@ -419,10 +419,10 @@ require_once '../common/header.php';
   putHtml('<input type="password" size="36" maxlength="128" name="pass" value="'.$ldb['pass'].'" />');
   putHtml('</td></tr>');
   putHtml('</table>');
-  
+
   putHtml('<table width="66%" class="datatable">');
   putHtml("<tr>");
-  
+
   if (($n = count($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Users", "</td>";
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Delete", "</td>";

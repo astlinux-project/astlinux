@@ -140,7 +140,7 @@ header('Content-Type: text/html; charset=utf-8');
     $status = (getPREFdef($global_prefs, 'status_require_auth') === 'yes') ? '/admin/status.php' : '/status.php';
     $directory = (getPREFdef($global_prefs, 'directory_require_auth') === 'yes') ? '/admin/directory.php' : '/directory.php';
     $tabname = getTABname();
-    
+
     putHtml('<title>'.getTITLEname($global_prefs).'</title>');
     putHtml('<link rel="stylesheet" href="/common/style.css" type="text/css" />');
     putHtml('<!--[if IE 7]><link rel="stylesheet" href="/common/ie7.css" type="text/css" /><![endif]-->');
@@ -169,7 +169,7 @@ header('Content-Type: text/html; charset=utf-8');
     }
     putHtml('</head>');
     putHtml('<body>');
-    
+
     putHtml('<table class="headerTable"><tr>');
     putHtml('<td width="140"><img src="/common/logo-small.gif" width="113" height="23" alt="AstLinux" /></td>');
     putHtml('<td><h1>'.getTITLEname($global_prefs).'</h1></td>');
@@ -292,7 +292,7 @@ header('Content-Type: text/html; charset=utf-8');
     putHtml('</ul>');
     putHtml('</div>');
     putHtml('<br /><br />');
-    
+
     // non-staff and non-admin
     if (! ($global_staff ||
       $ACCESS_RIGHTS === 'all' ||

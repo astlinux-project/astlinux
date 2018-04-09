@@ -79,13 +79,13 @@ require_once $COMMON.'header.php';
   }
   putHtml("</td></tr>");
   putHtml("</table>");
-  
+
   $db = parseLICENSEpackages($LICENSEPKGSFILE);
-  
+
   putHtml('<h2>AstLinux Packages Licenses:</h2>');
   putHtml('<table width="100%" class="datatable">');
   putHtml('<tr>');
-  
+
   if (($n = count($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Package", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "License", "</td>";
@@ -111,7 +111,7 @@ require_once $COMMON.'header.php';
   putHtml("</table>");
   putHtml("</center></td></tr></table>");
   putHtml("</center>");
-  
+
 // End of HTTP GET
 require_once $COMMON.'footer.php';
 

@@ -11,7 +11,7 @@
 // 04-13-2008, Add user defined logfile location
 // 06-04-2008, Add Darrick Hartman's extra columns w/ Prefs option
 // 06-04-2008, Change CDR.csv to not be a binary image of Master.csv
-// 06-06-2008, Add filter by date for download CDR.csv 
+// 06-06-2008, Add filter by date for download CDR.csv
 // 08-19-2008, Add search text option
 // 08-19-2008, Add standard cdr-csv, default cdr-custom and special cdr-custom
 // 10-02-2008, Add optional last column CDR value
@@ -35,7 +35,7 @@ if (($CDRLOGFILE = getPREFdef($global_prefs, 'cdrlog_log_file_cmdstr')) === '') 
 //
 function getCDRdatabases() {
   global $CDRLOGFILE;
-  
+
   $path = dirname($CDRLOGFILE);
 
   foreach (glob($path.'/*.csv') as $globfile) {
@@ -189,18 +189,18 @@ function parseCDRline($line, $format, $match, $map) {
       $i++;
     }
   }
-  
+
   if (($lmatch = strlen($match)) > 0) {
     $date = trim($linetokens[$map['time']], '"');
     if (strncmp($date, $match, $lmatch)) {
       return(FALSE);
     }
   }
-  
+
   if ($format === 'raw') {
     return($line);
   }
-  
+
   $cid = trim($linetokens[$map['cid']], '"');
   $cidtokens = splitCIDfields($cid);
   $str  =  '"'.trim($linetokens[$map['time']], '"').'"';
@@ -252,7 +252,7 @@ function parseCDRlog(&$db, $match, $key, $map, $default, $extra, $last, $databas
     $logfile = $CDRLOGFILE;
   }
   $nlines = $db['dbLoadLengthNext'];
-  
+
   $lastmtime = @filemtime($logfile);
   if (isset($db['lastmtime'])) {
     if ($db['logfile'] === $logfile &&
@@ -337,7 +337,7 @@ function parseCDRlog(&$db, $match, $key, $map, $default, $extra, $last, $databas
           continue;
         }
       }
-      
+
       $db['data'][$id]['time'] = $k['time'];
       $db['data'][$id]['cidname'] = $k['cidname'];
       $db['data'][$id]['cidnum'] = $k['cidnum'];
@@ -394,7 +394,7 @@ function sortCDRdb(&$db, $sortby) {
       } else {
         $sorttype = SORT_STRING;
       }
-      
+
       if ($sortby === 'time' ||
           $sortby === 'cidnum' ||
           $sortby === 'ext' ||
@@ -498,7 +498,7 @@ function getDATEval($when, $offset, &$title) {
     $val = '';
     $title = 'All Dates';
   }
-  
+
   return($val);
 }
 
@@ -556,11 +556,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $search = isset($_POST['current_search']) ? $_POST['current_search'] : '';
       $key = isset($_POST['current_key']) ? $_POST['current_key'] : '';
       $name = 'CDR'.(($key === '') ? '' : '-'.$key).(($search === '') ? '' : '-'.rawurlencode($search)).'.csv';
-      header('Content-Type: application/octet-stream');             
+      header('Content-Type: application/octet-stream');
       header('Content-Disposition: attachment; filename="'.$name.'"');
-      header('Content-Transfer-Encoding: binary');                       
-      ob_clean();       
-      flush();                   
+      header('Content-Transfer-Encoding: binary');
+      ob_clean();
+      flush();
       for ($i = 0; $i < $n; $i++) {
         echo exportCDRline($db['data'][$i]), "\n";
       }
@@ -575,11 +575,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $format = $_POST['format_dl'];
       $match = $_POST['match_date'];
       $name = ($match === '') ? 'CDR.csv' : 'CDR-'.$match.'.csv';
-      header('Content-Type: application/octet-stream');             
+      header('Content-Type: application/octet-stream');
       header('Content-Disposition: attachment; filename="'.$name.'"');
-      header('Content-Transfer-Encoding: binary');                       
-      ob_clean();       
-      flush();                   
+      header('Content-Transfer-Encoding: binary');
+      ob_clean();
+      flush();
       $default = getPREFdef($global_prefs, 'cdrlog_default_format');
       $extra = getPREFdef($global_prefs, 'cdrlog_extra_show');
       $last = (getPREFdef($global_prefs, 'cdrlog_last_show') === 'yes') ? getPREFdef($global_prefs, 'cdrlog_last_cmd') : '';
@@ -610,7 +610,7 @@ require_once '../common/header.php';
   $extra = getPREFdef($global_prefs, 'cdrlog_extra_show');
   $last = (getPREFdef($global_prefs, 'cdrlog_last_show') === 'yes') ? getPREFdef($global_prefs, 'cdrlog_last_cmd') : '';
   $map = mapCDRvalues($default, $extra, $last);
-  
+
   if (isset($_GET['search'])) {
     $search = tuq(rawurldecode($_GET['search']));
     if (isset($_GET['key'])) {
@@ -622,7 +622,7 @@ require_once '../common/header.php';
     $search = '';
     $fkey = '';
   }
-  
+
   if (isset($_GET['previous_page'], $db['lastmtime'])) {
     $db['displayStart'] = max( $db['displayStart'] - $db['displayLength'], 0);
   } elseif (isset($_GET['next_page'], $db['lastmtime'])) {
@@ -644,17 +644,17 @@ require_once '../common/header.php';
     parseCDRlog($db, $search, $fkey, $map, $default, $extra, $last, $databases);
     sortCDRdb($db, 'time');
   }
-  
+
   $n = count($db['data']);
   if (($start = min( $n, $db['displayStart'])) < 0) {
     $start = 0;
   }
   $count = $db['displayLength'];
   $end = min( $n, $start + $count);
-  
+
   $info_str = 'Viewing '.($n > 0 ? ($start+1).'-'.$end.' of ' : '').$n.' selected records; ';
   $info_str .= ($db['match'] !== '') ? 'Matching "'.htmlspecialchars($db['match']).'"' : $db['totalCDRrecords'].' CDR\'s in database.';
-  
+
   putHtml('<center>');
   if (isset($_GET['result'])) {
     $result = $_GET['result'];
@@ -781,7 +781,7 @@ putHtml($sel.'</option>');
   </table>
   </form>
 <?php
-  
+
   $n = count($db['data']);
   if (($start = min( $n, $db['displayStart'])) < 0) {
     $start = 0;
@@ -789,7 +789,7 @@ putHtml($sel.'</option>');
   $count = $db['displayLength'];
   $end = min( $n, $start + $count);
   $npages = (int)ceil($n / $count);
-  
+
   if ($npages > 1) {
     echo '<div class="pagination">';
     echo '<ul>';
@@ -832,10 +832,10 @@ putHtml($sel.'</option>');
     }
     putHtml('</ul></div>');
   }
-  
+
   putHtml('<table width="100%" class="datatable">');
   putHtml("<tr>");
-  
+
   if ($start < $end) {
     echo '<td style="text-align: center;">', putCDRheader('time', 'Date - Time'), "</td>";
     echo '<td style="text-align: left;">', putCDRheader('cidname', 'CID Name'), "</td>";

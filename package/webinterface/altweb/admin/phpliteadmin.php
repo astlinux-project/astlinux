@@ -647,7 +647,7 @@ function subString($str)
 	return $str;
 }
 
-// checks the (new) name of a database file  
+// checks the (new) name of a database file
 function checkDbName($name)
 {
 	global $allowed_extensions;
@@ -855,7 +855,7 @@ if ($auth->isAuthorized())
 				rename($oldpath, $newpath);
 				$databases[$checkDB]['path'] = $newpath;
 				$databases[$checkDB]['name'] = basename($newpath);
-				$_SESSION[COOKIENAME.'currentDB'] = $databases[$checkDB]; 
+				$_SESSION[COOKIENAME.'currentDB'] = $databases[$checkDB];
 				$justrenamed = true;
 			}
 			else die($lang['err'].': '.$lang['rename_only_managed']);
@@ -989,7 +989,7 @@ if(isset($_GET['help']))
 	//help section array
 	$help = array
 	(
-		$lang['help1'] => sprintf($lang['help1_x'], PROJECT, PROJECT, PROJECT), $lang['help2'] => $lang['help2_x'], $lang['help3'] => $lang['help3_x'], 
+		$lang['help1'] => sprintf($lang['help1_x'], PROJECT, PROJECT, PROJECT), $lang['help2'] => $lang['help2_x'], $lang['help3'] => $lang['help3_x'],
 		$lang['help4'] => $lang['help4_x'], $lang['help5'] => $lang['help5_x'], $lang['help6'] => $lang['help6_x'],
 		$lang['help7'] => $lang['help7_x'], $lang['help8'] => $lang['help8_x'], $lang['help9'] => $lang['help9_x']
 	);
@@ -1013,7 +1013,7 @@ if(isset($_GET['help']))
 		echo "<div class='help_inner'>";
 		echo $val;
 		echo "</div>";
-		echo "<a class='help_top' href='#top'>".$lang['back_top']."</a>"; 
+		echo "<a class='help_top' href='#top'>".$lang['back_top']."</a>";
 		echo "</div>";
 	}
 	?>
@@ -1057,7 +1057,7 @@ if(!$auth->isAuthorized())
 	echo "<br/>";
 	//AstLinux//
 	//echo "<div style='text-align:center;'>";
-	//echo "<span style='font-size:11px;'>".$lang['powered']." <a href='".PROJECT_URL."' target='_blank' style='font-size:11px;'>".PROJECT."</a> | "; 
+	//echo "<span style='font-size:11px;'>".$lang['powered']." <a href='".PROJECT_URL."' target='_blank' style='font-size:11px;'>".PROJECT."</a> | ";
 	//printf($lang['page_gen'], $pageTimer);
 	//echo "</span></div>";
 	echo "</body></html>";
@@ -1173,7 +1173,7 @@ if(isset($_GET['action']) && isset($_GET['confirm']))
 					{
 						if(count($primary_keys)==1)
 						{
-							$query .= "PRIMARY KEY "; 
+							$query .= "PRIMARY KEY ";
 							if(isset($_POST[$i.'_autoincrement']) && $db->getType() != "SQLiteDatabase")
 								$query .=  "AUTOINCREMENT ";
 						}
@@ -1321,7 +1321,7 @@ if(isset($_GET['action']) && isset($_GET['confirm']))
 								echo "MISSING POST INDEX (".$i.":".$fields[$j].")<br><pre />";
 								var_dump($_POST);
 								echo "</pre><hr />";
-							} 
+							}
 							$value = $_POST[$i.":".$fields[$j]];
 						}
 						else
@@ -1735,7 +1735,7 @@ echo "</fieldset>";
 //- HTML: form to create a new database
 if($directory!==false && is_writable($directory))
 {
-	echo "<fieldset style='margin:15px;'><legend><b>".$lang['db_create']."</b> ".helpLink($lang['help2'])."</legend>"; 
+	echo "<fieldset style='margin:15px;'><legend><b>".$lang['db_create']."</b> ".helpLink($lang['help2'])."</legend>";
 	echo "<form name='create_database' method='post' action='".PAGE."'>";
 	echo "<input type='text' name='new_dbname' style='width:150px;'/> <input type='submit' value='".$lang['create']."' class='btn'/>";
 	echo "</form>";
@@ -2132,10 +2132,10 @@ if(isset($_GET['action']) && !isset($_GET['confirm']))
 			
 			echo "<fieldset style='float:left; max-width:350px;' id='exportoptions_sql'><legend><b>".$lang['options']."</b></legend>";
 			echo "<label><input type='checkbox' checked='checked' name='structure'/> ".$lang['export_struct']."</label> ".helpLink($lang['help5'])."<br/>";
-			echo "<label><input type='checkbox' checked='checked' name='data'/> ".$lang['export_data']."</label> ".helpLink($lang['help6'])."<br/>"; 
-			echo "<label><input type='checkbox' name='drop'/> ".$lang['add_drop']."</label> ".helpLink($lang['help7'])."<br/>"; 
+			echo "<label><input type='checkbox' checked='checked' name='data'/> ".$lang['export_data']."</label> ".helpLink($lang['help6'])."<br/>";
+			echo "<label><input type='checkbox' name='drop'/> ".$lang['add_drop']."</label> ".helpLink($lang['help7'])."<br/>";
 			echo "<label><input type='checkbox' checked='checked' name='transaction'/> ".$lang['add_transact']."</label> ".helpLink($lang['help8'])."<br/>";
-			echo "<label><input type='checkbox' checked='checked' name='comments'/> ".$lang['comments']."</label> ".helpLink($lang['help9'])."<br/>"; 
+			echo "<label><input type='checkbox' checked='checked' name='comments'/> ".$lang['comments']."</label> ".helpLink($lang['help9'])."<br/>";
 			echo "</fieldset>";
 			
 			echo "<fieldset style='float:left; max-width:350px; display:none;' id='exportoptions_csv'><legend><b>".$lang['options']."</b></legend>";
@@ -2244,7 +2244,7 @@ if(isset($_GET['action']) && !isset($_GET['confirm']))
 							$arr[$j] = $db->quote_id($field)." ".$operator;
 						
 						else{
-							if($operator == "LIKE%"){ 
+							if($operator == "LIKE%"){
 								$operator = "LIKE";
 								if(!preg_match('/(^%)|(%$)/', $value)) $value = '%'.$value.'%';
 							}
@@ -2299,7 +2299,7 @@ if(isset($_GET['action']) && !isset($_GET['confirm']))
 				{
 					if($target_table_type == 'view')
 					{
-						echo sprintf($lang['readonly_tbl'], htmlencode($target_table))." <a href='http://en.wikipedia.org/wiki/View_(database)' target='_blank'>http://en.wikipedia.org/wiki/View_(database)</a>"; 
+						echo sprintf($lang['readonly_tbl'], htmlencode($target_table))." <a href='http://en.wikipedia.org/wiki/View_(database)' target='_blank'>http://en.wikipedia.org/wiki/View_(database)</a>";
 						echo "<br/><br/>";	
 					}
 
@@ -2337,14 +2337,14 @@ if(isset($_GET['action']) && !isset($_GET['confirm']))
 								$pk_arr[] = $arr[$j][$col-1]+0;
 							else
 								// encode as json string
-								$pk_arr[] = $arr[$j][$col-1]; 
+								$pk_arr[] = $arr[$j][$col-1];
 						}
 						$pk = json_encode($pk_arr);
 						$tdWithClass = "<td class='td".($j%2 ? "1" : "2")."'>";
 						echo "<tr>";
 						if($target_table_type == 'table')
 						{
-							echo $tdWithClass."<a href='?table=".urlencode($target_table)."&amp;action=row_editordelete&amp;pk=".urlencode($pk)."&amp;type=edit' title='".$lang['edit']."' class='edit'><span>".$lang['edit']."</span></a></td>"; 
+							echo $tdWithClass."<a href='?table=".urlencode($target_table)."&amp;action=row_editordelete&amp;pk=".urlencode($pk)."&amp;type=edit' title='".$lang['edit']."' class='edit'><span>".$lang['edit']."</span></a></td>";
 							echo $tdWithClass."<a href='?table=".urlencode($target_table)."&amp;action=row_editordelete&amp;pk=".urlencode($pk)."&amp;type=delete' title='".$lang['del']."' class='delete'><span>".$lang['del']."</span></a></td>";
 						}
 						for($z=0; $z<sizeof($result); $z++)
@@ -2600,7 +2600,7 @@ if(isset($_GET['action']) && !isset($_GET['confirm']))
 				if($target_table_type == 'view')
 				{
 					//AstLinux// Remove WiKi link
-					echo sprintf($lang['readonly_tbl'], htmlencode($target_table)); 
+					echo sprintf($lang['readonly_tbl'], htmlencode($target_table));
 					echo "<br/><br/>";	
 				}
 				
@@ -2649,7 +2649,7 @@ if(isset($_GET['action']) && !isset($_GET['confirm']))
 								$pk_arr[] = $arr[$i][$col-1]+0;
 							else
 								// encode as json string
-								$pk_arr[] = $arr[$i][$col-1]; 
+								$pk_arr[] = $arr[$i][$col-1];
 						}
 						$pk = json_encode($pk_arr);
 						$tdWithClass = "<td class='td".($i%2 ? "1" : "2")."'>";
@@ -2728,7 +2728,7 @@ if(isset($_GET['action']) && !isset($_GET['confirm']))
 								// the first column (of any type) that is not the label-column
 								$potential_value_column = $i;
 							// check if the col is numeric
-							$typeAffinity = get_type_affinity($result[$i]['type']);  
+							$typeAffinity = get_type_affinity($result[$i]['type']);
 							if($typeAffinity=='INTEGER' || $typeAffinity=='REAL' || $typeAffinity=='NUMERIC')
 							{
 								// this is defined as a numeric column, so prefer this as a value column over $potential_value_column
@@ -2744,7 +2744,7 @@ if(isset($_GET['action']) && !isset($_GET['confirm']))
 								$_SESSION[COOKIENAME.$target_table.'chartvalues'] = $potential_value_column;
 							else
 								// it's hopeless, there is only 1 column
-								$_SESSION[COOKIENAME.$target_table.'chartvalues'] = 0;  
+								$_SESSION[COOKIENAME.$target_table.'chartvalues'] = 0;
 						}
 					}
 					
@@ -2795,7 +2795,7 @@ if(isset($_GET['action']) && !isset($_GET['confirm']))
 						if(chartWidth>1000)
 							chartWidth = 1000;
 							
-						var options = 
+						var options =
 						{
 							'width':chartWidth,
 							'height':<?php echo $height; ?>,
@@ -3329,7 +3329,7 @@ if(isset($_GET['action']) && !isset($_GET['confirm']))
 				echo "<input type='hidden' name='rows' value='".$num."'/>";
 				echo "<table border='0' cellpadding='2' cellspacing='1' class='viewTable'>";
 				echo "<tr>";
-				$headings = array($lang["fld"], $lang["type"], $lang["prim_key"]);    
+				$headings = array($lang["fld"], $lang["type"], $lang["prim_key"]);
 				if($db->getType() != "SQLiteDatabase") $headings[] = $lang["autoincrement"];
 				$headings[] = $lang["not_null"];
 				$headings[] = $lang["def_val"];
@@ -3545,9 +3545,9 @@ if(isset($_GET['action']) && !isset($_GET['confirm']))
 				echo $lang['before']."/".$lang['after'].": ";
 				echo "<select name='beforeafter'>";
 				echo "<option value=''></option>";
-				echo "<option value='BEFORE'>".$lang['before']."</option>"; 
-				echo "<option value='AFTER'>".$lang['after']."</option>"; 
-				echo "<option value='INSTEAD OF'>".$lang['instead']."</option>"; 
+				echo "<option value='BEFORE'>".$lang['before']."</option>";
+				echo "<option value='AFTER'>".$lang['after']."</option>";
+				echo "<option value='INSTEAD OF'>".$lang['instead']."</option>";
 				echo "</select>";
 				echo "<br/><br/>";
 				echo $lang['event'].": ";
@@ -3722,7 +3722,7 @@ if(!$target_table && !isset($_GET['confirm']) && (!isset($_GET['action']) || (is
 		echo "<b>".$lang['db_mod']."</b>: ".$db->getDate()."<br/>";
 		echo "<b>".$lang['sqlite_v']."</b>: ".$realVersion."<br/>";
 		//AstLinux//
-		//echo "<b>".$lang['sqlite_ext']."</b> ".helpLink($lang['help1']).": ".$db->getType()."<br/>"; 
+		//echo "<b>".$lang['sqlite_ext']."</b> ".helpLink($lang['help1']).": ".$db->getType()."<br/>";
 		echo "<b>".$lang['php_v']."</b>: ".phpversion()."<br/>";
 		echo "<b>".PROJECT." ".$lang["ver"]."</b>: ".VERSION;
 		//AstLinux//
@@ -3760,7 +3760,7 @@ if(!$target_table && !isset($_GET['confirm']) && (!isset($_GET['action']) || (is
 			else
 				$orderTag = "ASC";
 			echo "&amp;order=".$orderTag;
-			echo "'>".$lang['type']."</a> ".helpLink($lang['help3']); 
+			echo "'>".$lang['type']."</a> ".helpLink($lang['help3']);
 			if(isset($_SESSION[COOKIENAME.'sortTables']) && $_SESSION[COOKIENAME.'sortTables']=="type")
 				echo (($_SESSION[COOKIENAME.'orderTables']=="ASC") ? " <b>&uarr;</b>" : " <b>&darr;</b>");
 			echo "</td>";
@@ -3907,7 +3907,7 @@ if(!$target_table && !isset($_GET['confirm']) && (!isset($_GET['action']) || (is
 		echo "<legend><b>".$lang['create_view']." '".htmlencode($db->getName())."'</b></legend>";
 		echo "<form action='?action=view_create&amp;confirm=1' method='post'>";
 		echo $lang['name'].": <input type='text' name='viewname' style='width:200px;'/> ";
-		echo $lang['sel_state']." ".helpLink($lang['help4']).": <input type='text' name='select' style='width:400px;'/> "; 
+		echo $lang['sel_state']." ".helpLink($lang['help4']).": <input type='text' name='select' style='width:400px;'/> ";
 		echo "<input type='submit' name='createtable' value='".$lang['go']."' class='btn'/>";
 		echo "</form>";
 		echo "</fieldset>";
@@ -4058,11 +4058,11 @@ if(!$target_table && !isset($_GET['confirm']) && (!isset($_GET['action']) || (is
 		echo "</fieldset>";
 		
 		echo "<fieldset style='float:left; max-width:350px;' id='exportoptions_sql'><legend><b>".$lang['options']."</b></legend>";
-		echo "<label><input type='checkbox' checked='checked' name='structure'/> ".$lang['export_struct']."</label> ".helpLink($lang['help5'])."<br/>"; 
+		echo "<label><input type='checkbox' checked='checked' name='structure'/> ".$lang['export_struct']."</label> ".helpLink($lang['help5'])."<br/>";
 		echo "<label><input type='checkbox' checked='checked' name='data'/> ".$lang['export_data']."</label> ".helpLink($lang['help6'])."<br/>";
-		echo "<label><input type='checkbox' name='drop'/> ".$lang['add_drop']."</label> ".helpLink($lang['help7'])."<br/>"; 
+		echo "<label><input type='checkbox' name='drop'/> ".$lang['add_drop']."</label> ".helpLink($lang['help7'])."<br/>";
 		echo "<label><input type='checkbox' checked='checked' name='transaction'/> ".$lang['add_transact']."</label> ".helpLink($lang['help8'])."<br/>";
-		echo "<label><input type='checkbox' checked='checked' name='comments'/> ".$lang['comments']."</label> ".helpLink($lang['help9'])."<br/>"; 
+		echo "<label><input type='checkbox' checked='checked' name='comments'/> ".$lang['comments']."</label> ".helpLink($lang['help9'])."<br/>";
 		echo "</fieldset>";
 		
 		echo "<fieldset style='float:left; max-width:350px; display:none;' id='exportoptions_csv'><legend><b>".$lang['options']."</b></legend>";
@@ -4166,7 +4166,7 @@ if(!$target_table && !isset($_GET['confirm']) && (!isset($_GET['action']) || (is
 			if($oldpath==$newpath)
 				echo $lang['err'].": ".$lang['warn_dumbass'];
 			else{
-				echo $lang['err'].": "; 
+				echo $lang['err'].": ";
 				printf($lang['db_exists'], htmlencode($newpath));
 			}
 			echo "</div><br/>";
@@ -4244,7 +4244,7 @@ class Authorization
 			// no password
 			SYSTEMPASSWORD == ''
 			// correct password stored in session
-			|| isset($_SESSION[COOKIENAME.'password']) && $_SESSION[COOKIENAME.'password'] == $this->system_password_encrypted 
+			|| isset($_SESSION[COOKIENAME.'password']) && $_SESSION[COOKIENAME.'password'] == $this->system_password_encrypted
 			// correct password stored in cookie
 			|| isset($_COOKIE[COOKIENAME]) && isset($_COOKIE[COOKIENAME.'_salt']) && md5(SYSTEMPASSWORD."_".$_COOKIE[COOKIENAME.'_salt']) == $_COOKIE[COOKIENAME];
 	}
@@ -4288,7 +4288,7 @@ class Authorization
 
 	public function isAuthorized()
 	{
-		return $this->authorized;      
+		return $this->authorized;
 	}
 
 	public function isFailedLogin()
@@ -4649,7 +4649,7 @@ class Database
 	{
 		$result = $this->query($query);
 		//make sure the result is valid
-		if($result=== false || $result===NULL) 
+		if($result=== false || $result===NULL)
 			return NULL;		// error
 		if(!is_object($result)) // no rows returned
 			return array();
@@ -4742,7 +4742,7 @@ class Database
 			case PREG_BAD_UTF8_ERROR: return 'Bad UTF8 error!';
 			case PREG_BAD_UTF8_ERROR: return 'Bad UTF8 offset error!';
 			default: return 'Unknown Error';
-		} 
+		}
 	}
 	
 	// function that is called for an alter table statement in a query
@@ -4841,14 +4841,14 @@ class Database
 							."(?:"												// this is either
 								."(?:\s+\((.+)\)\s*$)"							// anything in brackets (for ADD PRIMARY KEY)
 																				// then $matches[2] is what there is in brackets
-							."|"												// OR: 
+							."|"												// OR:
 								."(?:\s+\"((?:[^\"]|\"\")+)\"|\s+'((?:[^']|'')+)')"// (first) column name, either in single or double quotes
 																				// in case of RENAME TO, it is the new a table name
 																				// $matches[3] will be the column/table name without the quotes if double quoted
 																				// $matches[4] will be the column/table name without the quotes if single quoted
 								."("											// $matches[5]: anything after the column name
 									."(?:\s+'((?:[^']|'')+)')?"					// $matches[6] (optional): a second column name surrounded with single quotes
-																				//		(the match does not contain the quotes) 
+																				//		(the match does not contain the quotes)
 									."\s+"
 									."((?:[A-Z]+\s*)+(?:\(\s*[+-]?\s*[0-9]+(?:\s*,\s*[+-]?\s*[0-9]+)?\s*\))?)\s*"	// $matches[7]: a type name
 									.".*".
@@ -4903,7 +4903,7 @@ class Database
 									"(?:".
 										"$preg_column_definiton,\s*+".		// column definition + comma
 									")*".								// there might be any number of such columns here
-									$preg_column_definiton.				// last column definition 
+									$preg_column_definiton.				// last column definition
 								")".			// end of group $2
 								",\s*+"			// the last comma of the last column before the column to change. Do not keep it!
 							.")?";    // there might be no columns before
@@ -5112,7 +5112,7 @@ class Database
 					{
 						if(!isset($newcols[$indexInfo['name']]))
 						{
-							if($debug) echo 'Not recreating the following index: <hr />'.htmlencode($recreate_query['sql']).'<hr />'; 
+							if($debug) echo 'Not recreating the following index: <hr />'.htmlencode($recreate_query['sql']).'<hr />';
 							// Index on a column that was dropped. Skip recreation.
 							continue 2;
 						}
@@ -5184,14 +5184,14 @@ class Database
 			{
 				return true;
 			}
-		 
+		
 		}
 		return false;
 	}
 	
 	// Returns an array of columns by which rows can be uniquely adressed.
 	// For tables with a rowid column, this is always array('rowid')
-	// for tables without rowid, this is an array of the primary key columns. 
+	// for tables without rowid, this is an array of the primary key columns.
 	public function getPrimaryKey($table)
 	{
 		$primary_key = array();
@@ -5300,14 +5300,14 @@ class Database
 		if($field_escaped=="") $field_escaped='\\';
 		while(!feof($csv_handle))
 		{
-			$csv_data = fgetcsv($csv_handle, 0, $field_terminate, $field_enclosed, $field_escaped); 
+			$csv_data = fgetcsv($csv_handle, 0, $field_terminate, $field_enclosed, $field_escaped);
 			if($csv_data[0] != NULL || count($csv_data)>1)
 			{
 				$csv_number_of_rows++;
 				if($fields_in_first_row && $csv_number_of_rows==1)
 				{
 					$fields_in_first_row = false;
-					continue; 
+					continue;
 				}
 				$csv_col_number = count($csv_data);
 				$csv_insert .= "INSERT INTO ".$this->quote_id($table)." VALUES (";
@@ -5322,7 +5322,7 @@ class Database
 					{
 						// the CSV row ends with the separator (like old phpliteadmin exported)
 						break;
-					} 
+					}
 					if($csv_col < $csv_col_number-1) $csv_insert .= ",";
 				}
 				$csv_insert .= ");\n";
@@ -5391,7 +5391,7 @@ class Database
 						$cell = str_replace($field_enclosed,$field_escaped.$field_enclosed,$cell);
 						// do not enclose NULLs
 						if($cell == NULL)
-							echo $null;  
+							echo $null;
 						else
 							echo $field_enclosed.$cell.$field_enclosed;
 						// do not terminate the last column!

@@ -21,8 +21,8 @@ function genHTpasswd($user, $pass1, $pass2, $minlen) {
   if (($HTPASSWD = getPASSWDlocation()) !== '') {
     if (strlen($pass1) > $minlen) {
       if ($pass1 === $pass2) {
-        $jumble = md5(time() . getmypid()); 
-        $salt = substr($jumble, 0, 2); 
+        $jumble = md5(time() . getmypid());
+        $salt = substr($jumble, 0, 2);
         $htpasswd_text = $user.':'.crypt($pass1, $salt);
 
         if (($fp = @fopen($HTPASSWD,"rb")) !== FALSE) {

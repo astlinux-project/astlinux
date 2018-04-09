@@ -12,7 +12,7 @@
 // -- extensions.conf snippet --
 // exten => s,100,GotoIf($[${DB_EXISTS(cidname/${CALLERID(num)})} = 0]?200)
 // exten => s,n,Set(CALLERID(name)=${DB_RESULT:0:15})
-// 
+//
 // exten => s,200,NoOp(${CALLERID(num)})
 // -- end snippet --
 
@@ -41,7 +41,7 @@ function getCommentURL($comment) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_staff) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_add'])) {
     $cidnum = tuqd($_POST['cidnum']);
     $cidname = tuqd($_POST['cidname']);
@@ -99,7 +99,7 @@ require_once '../common/header.php';
       $ldb['value'] = rawurldecode($_GET['name']);
     }
   }
-  
+
 require_once '../common/result.php';
 ?>
   <center>
@@ -115,7 +115,7 @@ require_once '../common/result.php';
   putHtml('<input type="submit" class="formbtn" value="Delete Checked" name="submit_delete" />');
   putHtml('</td></tr>');
   putHtml('</table><table class="stdtable">');
-  
+
   putHtml('<tr><td class="dialogText" style="text-align: right;">');
   putHtml('CID&nbsp;Number:<input type="text" size="18" maxlength="24" name="cidnum" value="'.$ldb['key'].'" />');
   putHtml('</td><td class="dialogText" style="text-align: right;">');

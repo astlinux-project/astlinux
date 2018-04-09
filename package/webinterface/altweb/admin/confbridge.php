@@ -54,7 +54,7 @@ function userRedirect($chan, $path) {
   fputs($socket, "Username: webinterface\r\n");
   fputs($socket, "Secret: webinterface\r\n");
   fputs($socket, "Events: off\r\n\r\n");
-  
+
   fputs($socket, "Action: redirect\r\n");
   fputs($socket, "Context: $cont\r\n");
   fputs($socket, "Channel: $chan\r\n");

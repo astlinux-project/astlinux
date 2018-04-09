@@ -170,14 +170,14 @@ function saveEDITfile($text, $file, $cleanup) {
   if ($cleanup) {
     @unlink($tmpfile);
   }
-  
+
   return(TRUE);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_open'])) {
     $result = 3;
     if (isset($_POST['file_list'])) {
@@ -311,7 +311,7 @@ require_once '../common/header.php';
   $openfile = isset($_GET['file']) ? $_GET['file'] : '';
   $pos = strrpos($openfile, '/');
   $dir = substr($openfile, 0, $pos);
-  
+
   if ($dir === '/mnt/kd' ||
       $dir === '/mnt/kd/dahdi' ||
       $dir === '/mnt/kd/openvpn' ||
@@ -346,7 +346,7 @@ require_once '../common/header.php';
   } else {
     $openfile = '';
   }
-  
+
   if (isset($_GET['reload_restart'])) {
     $reload_restart = $_GET['reload_restart'];
   } else {

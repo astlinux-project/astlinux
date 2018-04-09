@@ -15,7 +15,7 @@
 function sip_tls_SETUP($opts, $countryName, $stateName, $localityName, $orgName, $orgUnit, $commonName, $email) {
   // System location of OpenSSL default configuration file
   $OPENSSL_CNF = '/usr/lib/ssl/openssl.cnf';
-  
+
   if (! function_exists('openssl_pkey_new')) {
     return(FALSE);
   }
@@ -65,7 +65,7 @@ function sip_tls_SETUP($opts, $countryName, $stateName, $localityName, $orgName,
     'x509_extensions' => 'usr_cert',
     'encrypt_key' => FALSE
   );
-  
+
   $ssl['dn'] = array(
     'countryName' => $countryName,
     'stateOrProvinceName' => $stateName,
@@ -75,7 +75,7 @@ function sip_tls_SETUP($opts, $countryName, $stateName, $localityName, $orgName,
     'commonName' => ($opts['dnsname'] !== '' ? $opts['dnsname'] : $commonName),
     'emailAddress' => $email
   );
-  
+
   if (! is_file($ssl['config'])) {
     if (! is_dir($ssl['base_dir'])) {
       if (! @mkdir($ssl['base_dir'], 0755)) {

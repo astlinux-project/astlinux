@@ -29,12 +29,12 @@
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {
       putHtml('<p style="color: red;">Permission denied for user "'.$global_user.'".</p>');
-    } else {                                                                    
-      putHtml('<p>&nbsp;</p>');                                                     
-    }                                                                           
+    } else {
+      putHtml('<p>&nbsp;</p>');
+    }
   } elseif ($RESULT_NUMBER !== '') {
     putHtml('<p style="color: orange;">Number "'.$RESULT_NUMBER.'" is not defined, click "Save Changes" to add the number.</p>');
-  } else {                                                                      
+  } else {
     putHtml('<p>&nbsp;</p>');
   }
   putHtml('</center>');

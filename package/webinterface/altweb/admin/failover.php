@@ -96,10 +96,10 @@ function saveFAILOVERsettings($conf_dir, $conf_file) {
 
   $value = 'WAN_FAILOVER_ENABLE="'.$_POST['enable'].'"';
   fwrite($fp, "### WAN Failover Enable\n".$value."\n");
-  
+
   $value = 'WAN_FAILOVER_VERBOSITY="'.$_POST['verbosity'].'"';
   fwrite($fp, "### Log Level\n".$value."\n");
-  
+
   $value = 'WAN_FAILOVER_TARGETS="'.tuq($_POST['targets']).'"';
   fwrite($fp, "### Test Targets\n".$value."\n");
 
@@ -177,14 +177,14 @@ function saveFAILOVERsettings($conf_dir, $conf_file) {
 
   fwrite($fp, "### gui.failover.conf - end ###\n");
   fclose($fp);
-  
+
   return($result);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $result = saveFAILOVERsettings($FAILOVERCONFDIR, $FAILOVERCONFFILE);
   } elseif (isset($_POST['submit_restart'])) {
@@ -468,7 +468,7 @@ require_once '../common/header.php';
 
   putHtml('</table>');
   putHtml('</form>');
-  
+
   putHtml('</center></td></tr></table>');
   putHtml('</center>');
 } // End of HTTP GET

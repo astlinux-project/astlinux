@@ -46,7 +46,7 @@ function saveSLAPDsettings($conf_dir, $conf_file) {
 
   $value = 'LDAP_SERVER="'.$_POST['slapd_enabled'].'"';
   fwrite($fp, "### LDAP Server Enabled\n".$value."\n");
-  
+
   $value = 'LDAP_SERVER_ANONYMOUS="'.$_POST['slapd_anonymous'].'"';
   fwrite($fp, "### LDAP Server Anonymous\n".$value."\n");
 
@@ -58,7 +58,7 @@ function saveSLAPDsettings($conf_dir, $conf_file) {
 
   fwrite($fp, "### gui.slapd.conf - end ###\n");
   fclose($fp);
-  
+
   return($result);
 }
 
@@ -100,7 +100,7 @@ function set_LDAP_user_passwd($rootpw, $pass1, $pass2, $user, $minlen) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save']) || isset($_POST['submit_password'])) {
     $result = saveSLAPDsettings($SLAPDCONFDIR, $SLAPDCONFFILE);
     if (isset($_POST['rootpw'], $_POST['pass1'], $_POST['pass2'])) {
@@ -283,7 +283,7 @@ if (is_file('/var/run/slapd/slapd.pid')) {
 
   putHtml('</table>');
   putHtml('</form>');
-  
+
   putHtml('</center></td></tr></table>');
   putHtml('</center>');
 } // End of HTTP GET

@@ -18,7 +18,7 @@ require_once '../common/functions.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_staff) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_shutdown'])) {
     $result = 99;
     if (isset($_POST['confirm_shutdown'])) {

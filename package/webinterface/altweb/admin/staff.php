@@ -28,7 +28,7 @@ function isDownloadValid($fname) {
   if (! is_file($fname)) {
     return(FALSE);
   }
-  
+
   $len = filesize($fname);
   if ($len === FALSE || $len < 6 || $len > 512) {
     return(FALSE);
@@ -40,7 +40,7 @@ function isDownloadValid($fname) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_staff) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_backup'])) {
     $backup_type = $_POST['backup_type'];
     if (getPREFdef($global_prefs, 'system_backup_compress_gzip') === 'no') {
@@ -126,8 +126,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Content-Disposition: attachment; filename="'.$aesfile.'"');
         header('Content-Transfer-Encoding: binary');
         header('Content-Length: '.$aessize);
-        ob_clean();       
-        flush();                   
+        ob_clean();
+        flush();
         @readfile($prefix.$aesfile);
         @unlink($prefix.$aesfile);
         exit;
@@ -201,7 +201,7 @@ require_once '../common/header.php';
   } else {
     $reboot_delay = '0';
   }
-  
+
   putHtml("<center>");
   if (isset($_GET['result'])) {
     $result = $_GET['result'];
@@ -253,7 +253,7 @@ if (isDownloadValid($CONFFILE)) {
   putHtml('<input type="submit" value="Download Backup" name="submit_backup" />');
   putHtml('</td></tr>');
 }
-  
+
   putHtml('<tr><td style="text-align: center;">');
   putHtml('<h2>Restart Asterisk:</h2>');
   putHtml('</td></tr><tr><td class="dialogText" style="text-align: center;">');
@@ -295,7 +295,7 @@ if (is_addon_package('fop2')) {
 
   putHtml('</table>');
   putHtml('</form>');
-  
+
   putHtml("</center></td></tr></table>");
   putHtml("</center>");
 } // End of HTTP GET

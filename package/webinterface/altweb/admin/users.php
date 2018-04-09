@@ -55,7 +55,7 @@ function parseVMconf($context, $fname) {
     }
     array_multisort($mbox, SORT_ASC, SORT_NUMERIC, $db['data']);
   }
-  
+
   return($db);
 }
 
@@ -94,9 +94,9 @@ function isVMmailbox($context, $mbox, $fname) {
 // Function: addVMmailbox
 //
 function addVMmailbox($context, $mbox, $pass, $name, $email, $pager, $opts, $fname) {
-  
+
   $cmd = $mbox.' => '.$pass.','.$name.','.$email.','.$pager.','.$opts;
-  
+
   if (isVMmailbox($context, $mbox, $fname)) {
     shell('sed -i "/^\['.$context.'\]/,/^\[/ s/^'.$mbox.'[ ]*[=][> ]*[-*0-9]*,.*/'.$cmd.'/" '.$fname.' >/dev/null', $status);
   } elseif (is_deletedVMmailbox($context, $mbox, $fname)) {
@@ -117,9 +117,9 @@ function addVMmailbox($context, $mbox, $pass, $name, $email, $pager, $opts, $fna
 //
 function delVMmailbox($context, $mbox, $fname) {
   global $global_prefs;
-  
+
   shell('sed -i "/^\['.$context.'\]/,/^\[/ s/^'.$mbox.'[ ]*[=][> ]*[-*0-9]*,.*/;deleted;&/" '.$fname.' >/dev/null', $status);
-  
+
   if (isVMmailbox($context, $mbox, $fname)) {
     $status = 1;
   } else {
@@ -139,7 +139,7 @@ function delVMmailbox($context, $mbox, $fname) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_staff) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_add'])) {
     $mailbox = tuq($_POST['mailbox']);
     $password = tuq($_POST['password']);
@@ -250,7 +250,7 @@ require_once '../common/header.php';
   </table>
 <?php
   $db = parseVMconf($context, $VOICEMAILCONF);
-  
+
   if (isset($_GET['mbox'])) {
     $mbox = $_GET['mbox'];
     if (($n = count($db['data'])) > 0) {
@@ -282,7 +282,7 @@ require_once '../common/header.php';
   putHtml('</table>');
 
   $hidePASS = (getPREFdef($global_prefs, 'users_voicemail_hide_pass') === 'yes');
-  
+
   putHtml('<table width="100%" class="datatable">');
   putHtml("<tr>");
 

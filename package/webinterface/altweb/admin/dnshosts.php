@@ -32,7 +32,7 @@ function saveDNSHOSTSsettings($conf_dir, $conf_file, $db, $delete = NULL) {
     return(3);
   }
   fwrite($fp, "### gui.dnshosts.conf - start ###\n###\n");
-  
+
   $value = 'STATICHOSTS="';
   fwrite($fp, "### STATICHOSTS\n".$value."\n");
   if (($n = count($db['data'])) > 0) {
@@ -59,10 +59,10 @@ function saveDNSHOSTSsettings($conf_dir, $conf_file, $db, $delete = NULL) {
     }
   }
   fwrite($fp, '"'."\n");
-  
+
   fwrite($fp, "### gui.dnshosts.conf - end ###\n");
   fclose($fp);
-  
+
   return(11);
 }
 
@@ -70,7 +70,7 @@ function saveDNSHOSTSsettings($conf_dir, $conf_file, $db, $delete = NULL) {
 //
 function parseDNSHOSTSconf($vars) {
   $id = 0;
-  
+
   if (($line = getVARdef($vars, 'STATICHOSTS')) !== '') {
     $linetokens = explode("\n", $line);
     foreach ($linetokens as $data) {
@@ -113,7 +113,7 @@ function addDNSHOST(&$db, $id) {
 
   return(TRUE);
 }
-    
+
 if (is_file($DNSHOSTSCONFFILE)) {
   $vars = parseRCconf($DNSHOSTSCONFFILE);
 } else {
@@ -124,7 +124,7 @@ $db = parseDNSHOSTSconf($vars);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! ($global_admin || $global_staff_enable_dnshosts)) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $n = count($db['data']);
     $id = $n;
@@ -210,7 +210,7 @@ require_once '../common/header.php';
   <input type="submit" class="formbtn" value="Delete Checked" name="submit_delete" />
   </td></tr>
   </table>
-  
+
 <?php
   if (isset($_GET['id'])) {
     $id = $_GET['id'];
@@ -238,10 +238,10 @@ require_once '../common/header.php';
   putHtml('Comment <i>(optional)</i>:<input type="text" size="42" maxlength="42" name="comment" value="'.htmlspecialchars($ldb['comment']).'" />');
   putHtml('</td></tr>');
   putHtml('</table>');
-  
+
   putHtml('<table width="100%" class="datatable">');
   putHtml('<tr>');
-  
+
   if (($n = count($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "IP Address", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Host Name(s)", "</td>";
@@ -264,7 +264,7 @@ require_once '../common/header.php';
   } else {
     echo '<td style="text-align: center;">No DNS Forwarder Hosts are defined.', '</td>';
   }
-  
+
   putHtml('</tr>');
   putHtml('</table>');
   putHtml('</form>');

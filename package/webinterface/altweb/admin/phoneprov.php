@@ -152,7 +152,7 @@ function addSpecialInfo($label, $field) {
 function isMACreload($mac, $sql, $map) {
   global $ASTERISK_SIP_NOTIFY_CONF;
   global $ASTERISK_PJSIP_NOTIFY_CONF;
-  
+
   $model = $sql['model'].'-reload';
   $vendor = $sql['vendor'].'-reload';
   $name = ($sql['sip_driver'] === 'pjsip') ? $ASTERISK_PJSIP_NOTIFY_CONF : $ASTERISK_SIP_NOTIFY_CONF;
@@ -219,7 +219,7 @@ function asteriskCMDtext($cmd) {
 //
 function putACTIONresult($result_str, $status) {
   global $myself;
-  
+
   if ($status == 0) {
     $result = 100;
   } else {
@@ -237,7 +237,7 @@ function putACTIONresult($result_str, $status) {
 //
 function getACTIONresult($result) {
   $str = 'No Action.';
-  
+
   if (isset($_GET['result_str'])) {
     $str = rawurldecode($_GET['result_str']);
   }
@@ -293,7 +293,7 @@ function savePHONEPROVsettings($conf_dir, $conf_file) {
 
   fwrite($fp, "### gui.phoneprov.conf - end ###\n");
   fclose($fp);
-  
+
   return(11);
 }
 
@@ -446,7 +446,7 @@ function savePHONEPROVenabled($family, $data) {
 // Function: addPHONEPROVmac
 //
 function addPHONEPROVmac($family, $key, $enabled, $template, $ext_cid, $password, $account) {
-  
+
   $value = $enabled.' '.$template.' '.$ext_cid.' '.$password;
   if ($account !== '') {
     $value .= ' '.$account;
@@ -519,7 +519,7 @@ $data = phoneprovDBtoDATA($db);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_staff) {
-    $result = 999;                                 
+    $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $disabled = $_POST['disabled'];
     if (($n = count($data)) > 0) {
@@ -577,7 +577,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           exit;
         }
       } else {
-        $result = 5;                                 
+        $result = 5;
       }
     }
   } elseif (isset($_POST['submit_generate'])) {
@@ -748,7 +748,7 @@ if (($templates = getPHONEPROVtemplates("$phoneprov_base_dir/templates")) !== FA
   putHtml('</select>');
   putHtml('</td></tr>');
   putHtml('</table>');
-  
+
   putHtml('<table width="100%" class="stdtable">');
   putHtml('<tr class="dtrow0"><td width="350">&nbsp;</td><td>&nbsp;</td></tr>');
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
@@ -797,10 +797,10 @@ if (($templates = getPHONEPROVtemplates("$phoneprov_base_dir/templates")) !== FA
   putHtml('<strong>Phone Database:</strong>');
   putHtml('</td></tr>');
   putHtml('</table>');
-  
+
   putHtml('<table width="100%" class="datatable">');
   putHtml("<tr>");
-  
+
   if (($n = count($data)) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "MAC Address", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Template", "</td>";
@@ -844,18 +844,18 @@ if (($templates = getPHONEPROVtemplates("$phoneprov_base_dir/templates")) !== FA
       }
     }
   } else {
-    if ($db['status'] == 0) {                                                                    
+    if ($db['status'] == 0) {
       echo '<td style="text-align: center;">No Database Entries for: ', $db['family'], '</td>';
       if (($fname = get_importPHONEPROVfile()) !== '') {
         putHtml('</tr><tr><td style="text-align: center;">');
         putHtml('<input type="submit" class="formbtn" value="Import '.htmlspecialchars($fname).'" name="submit_import" /></td>');
       }
-    } else {                                                                                     
+    } else {
       echo '<td style="text-align: center; color: red;">', asteriskERROR($db['status']), '</td>';
-    }                                    
+    }
   }
 } else {
-  echo '<p style="color: red;">No Templates found in: ', "$phoneprov_base_dir/templates", '</p></td>';  
+  echo '<p style="color: red;">No Templates found in: ', "$phoneprov_base_dir/templates", '</p></td>';
 }
   putHtml("</tr>");
   putHtml("</table>");
