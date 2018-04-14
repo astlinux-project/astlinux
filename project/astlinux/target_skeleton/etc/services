@@ -190,6 +190,8 @@ kerberos-adm	749/tcp				# Kerberos `kadmin' (v5)
 #
 webster		765/tcp				# Network dictionary
 webster		765/udp
+domain-s	853/tcp				# DNS over TLS
+domain-s	853/udp				# DNS over DTLS
 rsync		873/tcp				# rsync
 rsync		873/udp				# rsync
 imaps	 	993/tcp				# IMAP over SSL

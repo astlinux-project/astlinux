@@ -55,7 +55,7 @@ directive_exists_with_file() {
   return 1
 }
 
-dnscrypt_proxy_servers()
+dnscrypt_tls_proxy_servers()
 {
   local servers=""
 
@@ -65,6 +65,13 @@ dnscrypt_proxy_servers()
       if [ -n "$DNSCRYPT_2SERVER_ADDRESS" ]; then
         servers="$servers 127.0.0.1#2054"
       fi
+    fi
+  fi
+
+  ## Stubby has precedence
+  if [ -f /etc/init.d/stubby ]; then
+    if [ "$DNS_TLS_PROXY" = "yes" ]; then
+      servers="127.0.0.1#2853"
     fi
   fi
 
@@ -243,7 +250,7 @@ addDNSMASQnet()
 
 createDNSMASQbasic()
 {
-  local local_domain dnscrypt_servers server IFS
+  local local_domain dnscrypt_tls_servers server IFS
 
   # DHCP options
   if [ "$1" = "dhcp" ]; then
@@ -282,12 +289,12 @@ domain=$DOMAIN"
     echo "dns-forward-max=512"
   fi
 
-  dnscrypt_servers="$(dnscrypt_proxy_servers)"
-  if [ -n "$dnscrypt_servers" ]; then
+  dnscrypt_tls_servers="$(dnscrypt_tls_proxy_servers)"
+  if [ -n "$dnscrypt_tls_servers" ]; then
     echo "no-resolv
 proxy-dnssec"
     unset IFS
-    for server in $dnscrypt_servers; do
+    for server in $dnscrypt_tls_servers; do
       echo "server=$server"
     done
   else
