@@ -16,10 +16,12 @@ define CA_CERTIFICATES_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -d $(TARGET_DIR)/usr/lib/ssl/certs
 	$(INSTALL) -m 0444 -D $(@D)/cacert.pem $(TARGET_DIR)/usr/share/ca-certificates/ca-bundle.crt
 	ln -sf /usr/share/ca-certificates/ca-bundle.crt $(TARGET_DIR)/usr/lib/ssl/certs/ca-bundle.crt
+	ln -sf /usr/share/ca-certificates/ca-bundle.crt $(TARGET_DIR)/usr/lib/ssl/cert.pem
 endef
 
 define CA_CERTIFICATES_UNINSTALL_TARGET_CMDS
 	rm -f  $(TARGET_DIR)/usr/lib/ssl/certs/ca-bundle.crt
+	rm -f  $(TARGET_DIR)/usr/lib/ssl/cert.pem
 	rm -rf $(TARGET_DIR)/usr/share/ca-certificates
 endef
 
