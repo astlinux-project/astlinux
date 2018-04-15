@@ -591,10 +591,10 @@ if (! is_null($ipv6_addr = getIPV6address())) {
   putHtml('</tr>');
 }
 // DNS
-if (isDNSCRYPT()) {
+if (isDNS_TLS() || isDNSCRYPT()) {
   echo '<tr ', ($i++ % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
   echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', 'DNS:', '</td>';
-  putHtml('<td style="text-align: left;" colspan="3">DNSCrypt Proxy Server Enabled</td></tr>');
+  putHtml('<td style="text-align: left;" colspan="3">'.(isDNS_TLS() ? 'DNS-TLS' : 'DNSCrypt').' Proxy Server Enabled</td></tr>');
 } else {
   $rconf = is_file('/etc/resolv-extern.conf') ? '/etc/resolv-extern.conf' : '/etc/resolv.conf';
   if (($fp = @fopen($rconf, 'r')) !== FALSE) {

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2014 Lonnie Abelbeck
+// Copyright (C) 2008-2018 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -881,6 +881,13 @@ function getPREFdef($db, $var)
     }
   }
   return($value);
+}
+
+// Function: isDNS_TLS
+//
+function isDNS_TLS()
+{
+  return(is_file('/var/run/stubby.pid'));
 }
 
 // Function: isDNSCRYPT

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2017 Lonnie Abelbeck
+// Copyright (C) 2008-2018 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -329,6 +329,7 @@ require_once '../common/header.php';
       $dir === '/mnt/kd/monit/monit.d' ||
       $dir === '/mnt/kd/ups' ||
       $dir === '/mnt/kd/prosody' ||
+      $dir === '/mnt/kd/stubby' ||
       $dir === '/mnt/kd/docs' ||
       $dir === '/mnt/kd/arno-iptables-firewall' ||
       $dir === '/mnt/kd/arno-iptables-firewall/plugins' ||
@@ -594,6 +595,10 @@ require_once '../common/header.php';
   if (is_writable($file = '/mnt/kd/snmp/snmp.conf')) {
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
     putHtml('<option value="'.$file.'"'.$sel.'>snmp/'.basename($file).' - SNMP Applications Config</option>');
+  }
+  if (is_writable($file = '/mnt/kd/stubby/stubby.yml')) {
+    $sel = ($file === $openfile) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$file.'"'.$sel.'>stubby/'.basename($file).' - DNS-TLS Stubby Config</option>');
   }
   if (is_writable($file = '/mnt/kd/dhcp6c.script')) {
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
