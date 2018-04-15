@@ -52,7 +52,7 @@ init () {
     if [ -f /tmp/etc/stubby/stubby.yml ]; then
       rm /tmp/etc/stubby/stubby.yml
     fi
-    exit
+    exit 0
   fi
 
   if [ ! -d /tmp/etc/stubby ]; then
@@ -62,6 +62,7 @@ init () {
   gen_stubby_conf > /tmp/etc/stubby/stubby.yml
   if [ $? -ne 0 ]; then
     rm -f /tmp/etc/stubby/stubby.yml
+    exit 1
   fi
 }
 

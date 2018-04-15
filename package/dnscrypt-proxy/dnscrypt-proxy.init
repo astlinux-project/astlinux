@@ -13,6 +13,10 @@ init () {
 start () {
 
   if [ "$DNSCRYPT_PROXY" = "yes" ]; then
+    if [ "$DNS_TLS_PROXY" = "yes" ]; then
+      logger -s -t dnscrypt -p kern.info "Failed starting DNSCrypt, DNS-TLS is also enabled."
+      exit 1
+    fi
     echo "Starting dnscrypt..."
 
     # Default to OpenDNS
