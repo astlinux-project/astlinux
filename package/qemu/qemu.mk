@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-QEMU_VERSION = 2.11.0
+QEMU_VERSION = 2.11.1
 QEMU_SOURCE = qemu-$(QEMU_VERSION).tar.bz2
 QEMU_SITE = http://wiki.qemu.org/download
 
