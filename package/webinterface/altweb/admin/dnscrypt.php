@@ -232,6 +232,14 @@ require_once '../common/header.php';
   <table class="stdtable">
   <tr class="dtrow0"><td width="60">&nbsp;</td><td width="100">&nbsp;</td><td width="100">&nbsp;</td><td>&nbsp;</td><td width="100">&nbsp;</td><td width="80">&nbsp;</td></tr>
 <?php
+if (isDNS_TLS()) {
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>The alternate DNS-TLS Proxy Server is running!</strong>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="color: red; text-align: center;" colspan="6">');
+  putHtml('Warning: Both DNSCrypt and DNS-TLS can\'t be active simultaneously.</td></tr>');
+}
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>DNSCrypt Proxy Server:</strong>');
   putHtml('</td></tr>');

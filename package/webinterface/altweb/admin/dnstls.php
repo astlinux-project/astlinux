@@ -118,6 +118,14 @@ require_once '../common/header.php';
   <table class="stdtable">
   <tr class="dtrow0"><td width="60">&nbsp;</td><td width="100">&nbsp;</td><td width="100">&nbsp;</td><td>&nbsp;</td><td width="100">&nbsp;</td><td width="80">&nbsp;</td></tr>
 <?php
+if (isDNSCRYPT()) {
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>The alternate DNSCrypt Proxy Server is running!</strong>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="color: red; text-align: center;" colspan="6">');
+  putHtml('Warning: Both DNS-TLS and DNSCrypt can\'t be active simultaneously.</td></tr>');
+}
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>DNS-TLS Proxy Server:</strong>');
   putHtml('</td></tr>');
@@ -137,12 +145,11 @@ require_once '../common/header.php';
   putHtml('<strong>Upstream Recursive Server(s):</strong>');
   putHtml('</td></tr>');
 
-  if (is_file('/mnt/kd/stubby/stubby.yml')) {
-    putHtml('<tr class="dtrow1"><td style="color: orange; text-align: center;" colspan="6">');
-    putHtml('Note: Configuration overridden by file: /mnt/kd/stubby/stubby.yml');
-    putHtml('</td></tr>');
-  }
-
+if (is_file('/mnt/kd/stubby/stubby.yml')) {
+  putHtml('<tr class="dtrow1"><td style="color: orange; text-align: center;" colspan="6">');
+  putHtml('Note: Configuration overridden by file: /mnt/kd/stubby/stubby.yml');
+  putHtml('</td></tr>');
+}
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Server(s):');
   putHtml('</td><td style="text-align: left;" colspan="4">');
