@@ -72,6 +72,11 @@ start () {
     echo "Starting DNS-TLS Proxy (stubby)..."
 
     stubby -g -C /etc/stubby/stubby.yml
+    if [ $? -eq 0 ]; then
+      logger -t stubby -p kern.info "Starting stubby $(stubby -V), DNS-TLS Proxy"
+    else
+      logger -t stubby -p kern.info "Failed starting stubby $(stubby -V), DNS-TLS Proxy"
+    fi
   fi
 }
 
@@ -82,6 +87,7 @@ stop () {
 
     kill $(cat $PIDFILE) >/dev/null 2>&1
     rm -f $PIDFILE
+    logger -t stubby -p kern.info "Stopping stubby, DNS-TLS Proxy"
   fi
 }
 

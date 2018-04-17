@@ -13,9 +13,6 @@ GETDNS_DEPENDENCIES = host-m4 openssl libidn libyaml
 
 GETDNS_CONF_OPT = \
 	--disable-rpath \
-	--with-resolvconf="" \
-	--with-hosts="" \
-	--without-getdns_query \
 	--without-libidn2 \
 	--with-piddir=/var/run \
 	--with-ssl="$(STAGING_DIR)/usr" \
