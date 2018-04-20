@@ -2,7 +2,7 @@
 
 . /etc/rc.conf
 
-PIDFILE="/var/run/stubby.pid"
+PIDFILE="/var/run/stubby/stubby.pid"
 
 gen_stubby_conf()
 {
@@ -64,6 +64,9 @@ init () {
     rm -f /tmp/etc/stubby/stubby.yml
     exit 1
   fi
+
+  mkdir -p /var/run/stubby
+  chown nobody:nobody /var/run/stubby
 }
 
 start () {
@@ -71,7 +74,9 @@ start () {
   if [ -f /etc/stubby/stubby.yml ]; then
     echo "Starting DNS-TLS Proxy (stubby)..."
 
-    stubby -g -C /etc/stubby/stubby.yml
+    ARGS="-g -C /etc/stubby/stubby.yml"
+
+    start-stop-daemon -S -x /usr/bin/stubby -p $PIDFILE -u nobody --chuid nobody:nobody -- $ARGS
     if [ $? -eq 0 ]; then
       logger -t stubby -p kern.info "Starting stubby $(stubby -V), DNS-TLS Proxy"
     else
@@ -85,7 +90,7 @@ stop () {
   if [ -f $PIDFILE ]; then
     echo "Stopping DNS-TLS Proxy (stubby)..."
 
-    kill $(cat $PIDFILE) >/dev/null 2>&1
+    start-stop-daemon -K -q -n stubby -p $PIDFILE -u nobody -s TERM
     rm -f $PIDFILE
     logger -t stubby -p kern.info "Stopping stubby, DNS-TLS Proxy"
   fi
