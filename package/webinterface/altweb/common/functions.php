@@ -106,7 +106,8 @@ function statusPROCESS($process) {
   $running = ' has Restarted and is Running';
   $stopped = ' is Stopped';
 
-  if ($process === 'asterisk' || $process === 'prosody' || $process === 'slapd' || $process === 'kamailio') {
+  if ($process === 'asterisk' || $process === 'prosody' || $process === 'slapd' ||
+      $process === 'kamailio' || $process === 'stubby') {
     $path .= $process.'/';
   } elseif ($process === 'dynamicdns') {
     if (is_file($path.'ddclient.pid')) {
@@ -887,7 +888,7 @@ function getPREFdef($db, $var)
 //
 function isDNS_TLS()
 {
-  return(is_file('/var/run/stubby.pid'));
+  return(is_file('/var/run/stubby/stubby.pid'));
 }
 
 // Function: isDNSCRYPT
