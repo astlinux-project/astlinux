@@ -4,6 +4,29 @@
 
 PIDFILE="/var/run/stubby/stubby.pid"
 
+stubby_log()
+{
+  local action="$1" result="$2" stubby_info addr addrs IFS
+
+  if [ "$action" = "start" ]; then
+    stubby_info="stubby $(stubby -V), DNS-TLS Proxy"
+    if [ $result -eq 0 ]; then
+      addrs=""
+      unset IFS
+      for addr in $(sed -n -r -e 's/^[ -]+address_data *: *([0-9a-fA-F:.]+) *$/\1/p' /etc/stubby/stubby.yml); do
+        addrs="$addrs $addr"
+      done
+      logger -t stubby -p kern.info "Starting $stubby_info"
+      logger -t stubby -p kern.info "Proxying upstream to:$addrs"
+    else
+      logger -t stubby -p kern.info "Failed starting $stubby_info"
+    fi
+  elif [ "$action" = "stop" ]; then
+    stubby_info="stubby, DNS-TLS Proxy"
+    logger -t stubby -p kern.info "Stopping $stubby_info"
+  fi
+}
+
 gen_stubby_conf()
 {
   local x addr port IFS
@@ -76,12 +99,8 @@ start () {
 
     ARGS="-g -C /etc/stubby/stubby.yml"
 
-    start-stop-daemon -S -x /usr/bin/stubby -p $PIDFILE -u nobody --chuid nobody:nobody -- $ARGS
-    if [ $? -eq 0 ]; then
-      logger -t stubby -p kern.info "Starting stubby $(stubby -V), DNS-TLS Proxy"
-    else
-      logger -t stubby -p kern.info "Failed starting stubby $(stubby -V), DNS-TLS Proxy"
-    fi
+    start-stop-daemon -S -x /usr/bin/stubby -p $PIDFILE -u nobody --chuid nobody:nobody -- $ARGS 2>/dev/null
+    stubby_log start $?
   fi
 }
 
@@ -91,8 +110,8 @@ stop () {
     echo "Stopping DNS-TLS Proxy (stubby)..."
 
     start-stop-daemon -K -q -n stubby -p $PIDFILE -u nobody -s TERM
+    stubby_log stop $?
     rm -f $PIDFILE
-    logger -t stubby -p kern.info "Stopping stubby, DNS-TLS Proxy"
   fi
 }
 
