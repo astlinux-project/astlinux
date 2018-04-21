@@ -36,6 +36,9 @@ function saveDNSTLSsettings($conf_dir, $conf_file) {
   $value = 'DNS_TLS_PROXY="'.$_POST['proxy'].'"';
   fwrite($fp, "### DNS-TLS Enable\n".$value."\n");
 
+  $value = 'DNS_TLS_QUERY_ALL="'.$_POST['dns_tls_query_all'].'"';
+  fwrite($fp, "### Query All Servers\n".$value."\n");
+
   $value = tuq(str_replace(chr(13), ' ', $_POST['dns_tls_servers']));
   $value = str_replace(chr(10), '', $value);
   if (strlen($value) > 512) {  // sanity check
@@ -138,6 +141,17 @@ if (isDNSCRYPT()) {
   putHtml('<option value="no">disabled</option>');
   $sel = ($value === 'yes') ? ' selected="selected"' : '';
   putHtml('<option value="yes"'.$sel.'>enabled</option>');
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Query Server(s):');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  putHtml('<select name="dns_tls_query_all">');
+  $value = getVARdef($db, 'DNS_TLS_QUERY_ALL', $cur_db);
+  putHtml('<option value="no">one until unavailable, then next</option>');
+  $sel = ($value === 'yes') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>across all available server(s)</option>');
   putHtml('</select>');
   putHtml('</td></tr>');
 
