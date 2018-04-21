@@ -99,6 +99,7 @@ Released @TBD@
 -- openldap, version bump to 2.4.46
 
 -- getdns/stubby, new package, version 1.4.1/0.2.2, encrypts local DNS queries forwarded to upstream recursive DNS-TLS servers
+   New rc.conf variables: DNS_TLS_PROXY, DNS_TLS_QUERY_ALL, DNS_TLS_SERVERS
 
 -- unbound (host), version bump to 1.7.0, security fix: CVE-2017-15105
 
