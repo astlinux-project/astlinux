@@ -147,8 +147,8 @@ plugin_start()
   dyndns_open_generate_rules "$DYNDNS_HOST_RULES"
 
   # Start helper script
-  "$PLUGIN_BIN_PATH/dyndns-host-open-helper" start "$IP4TABLES" \
-      "$DYNDNS_UPDATE_TIME" "$DYNDNS_HOST_RULES" >/dev/null 2>&1 &
+  start-stop-daemon -S -x "$PLUGIN_BIN_PATH/dyndns-host-open-helper" -b -- start "$IP4TABLES" \
+      "$DYNDNS_UPDATE_TIME" "$DYNDNS_HOST_RULES"
 
   return 0
 }
@@ -171,9 +171,9 @@ plugin_restart()
   fi
 
   # Start helper script
-  "$PLUGIN_BIN_PATH/dyndns-host-open-helper" start "$IP4TABLES" \
-      "$DYNDNS_UPDATE_TIME" "$DYNDNS_HOST_RULES" >/dev/null 2>&1 &
-      
+  start-stop-daemon -S -x "$PLUGIN_BIN_PATH/dyndns-host-open-helper" -b -- start "$IP4TABLES" \
+      "$DYNDNS_UPDATE_TIME" "$DYNDNS_HOST_RULES"
+
   return 0
 }
 

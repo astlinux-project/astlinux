@@ -127,8 +127,8 @@ plugin_start()
   dyndns_open_generate_rules "$DYNDNS_OPEN_RULES"
 
   # Start helper script
-  "$PLUGIN_BIN_PATH/dyndns-ipv6-open-helper" start "$IP6TABLES" \
-      "$DYNDNS_IPV6_UPDATE_TIME" "$DYNDNS_OPEN_RULES" >/dev/null 2>&1 &
+  start-stop-daemon -S -x "$PLUGIN_BIN_PATH/dyndns-ipv6-open-helper" -b -- start "$IP6TABLES" \
+      "$DYNDNS_IPV6_UPDATE_TIME" "$DYNDNS_OPEN_RULES"
 
   return 0
 }
@@ -151,9 +151,9 @@ plugin_restart()
   fi
 
   # Start helper script
-  "$PLUGIN_BIN_PATH/dyndns-ipv6-open-helper" start "$IP6TABLES" \
-      "$DYNDNS_IPV6_UPDATE_TIME" "$DYNDNS_OPEN_RULES" >/dev/null 2>&1 &
-      
+  start-stop-daemon -S -x "$PLUGIN_BIN_PATH/dyndns-ipv6-open-helper" -b -- start "$IP6TABLES" \
+      "$DYNDNS_IPV6_UPDATE_TIME" "$DYNDNS_OPEN_RULES"
+
   return 0
 }
 

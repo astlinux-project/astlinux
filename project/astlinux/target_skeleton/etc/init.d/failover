@@ -17,7 +17,7 @@ start()
     echo "Starting WAN Failover..."
 
     # Start the background process
-    wan-failover
+    start-stop-daemon -S -x /usr/sbin/wan-failover -b
   elif [ -f "$WAN_STARTFILE" ]; then
     rm "$WAN_STARTFILE"
   fi

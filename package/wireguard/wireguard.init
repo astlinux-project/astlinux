@@ -171,7 +171,7 @@ start () {
       echo "Starting wireguard-monitor..."
 
       ## Start the background process
-      wireguard-monitor
+      start-stop-daemon -S -x /usr/sbin/wireguard-monitor -b
     fi
   fi
 }

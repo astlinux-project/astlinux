@@ -80,8 +80,9 @@ plugin_start()
   iptables -I FORWARD -j ADAPTIVE_BAN_CHAIN
 
   echo "${INDENT}File=$ADAPTIVE_BAN_FILE Time=$ADAPTIVE_BAN_TIME Count=$ADAPTIVE_BAN_COUNT Types=$ADAPTIVE_BAN_TYPES"
-  "$PLUGIN_BIN_PATH/adaptive-ban-helper" start "$IP4TABLES" "$IP6TABLES" "$IPV6_SUPPORT" \
-      "$ADAPTIVE_BAN_FILE" "$ADAPTIVE_BAN_TIME" "$ADAPTIVE_BAN_COUNT" $ADAPTIVE_BAN_TYPES >/dev/null 2>&1 &
+
+  start-stop-daemon -S -x "$PLUGIN_BIN_PATH/adaptive-ban-helper" -b -- start "$IP4TABLES" "$IP6TABLES" "$IPV6_SUPPORT" \
+      "$ADAPTIVE_BAN_FILE" "$ADAPTIVE_BAN_TIME" "$ADAPTIVE_BAN_COUNT" $ADAPTIVE_BAN_TYPES
 
   return 0
 }

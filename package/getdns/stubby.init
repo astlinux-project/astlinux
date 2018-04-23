@@ -105,7 +105,7 @@ start () {
 
     ARGS="-g -C /etc/stubby/stubby.yml"
 
-    start-stop-daemon -S -x /usr/bin/stubby -p $PIDFILE -u nobody --chuid nobody:nobody -b -- $ARGS 2>/dev/null
+    start-stop-daemon -S -x /usr/bin/stubby -p $PIDFILE -u nobody --chuid nobody:nobody -b -- $ARGS
     stubby_log start $?
   fi
 }

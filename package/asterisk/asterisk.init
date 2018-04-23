@@ -155,7 +155,7 @@ WARNING WARNING WARNING
 
     ulimit -s unlimited
     if [ "$SAFE_ASTERISK" = "yes" ]; then
-      safe_asterisk -p
+      start-stop-daemon -S -x /usr/sbin/safe_asterisk -b -- -p
     else
       asterisk -p
     fi

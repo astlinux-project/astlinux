@@ -139,8 +139,8 @@ plugin_start()
   dyndns_forward_generate_rules "$DYNDNS_FORWARD_RULES"
 
   # Start helper script
-  "$PLUGIN_BIN_PATH/dyndns-ipv6-forward-helper" start "$IP6TABLES" \
-      "$DYNDNS_IPV6_UPDATE_TIME" "$DYNDNS_FORWARD_RULES" >/dev/null 2>&1 &
+  start-stop-daemon -S -x "$PLUGIN_BIN_PATH/dyndns-ipv6-forward-helper" -b -- start "$IP6TABLES" \
+      "$DYNDNS_IPV6_UPDATE_TIME" "$DYNDNS_FORWARD_RULES"
 
   return 0
 }
@@ -163,9 +163,9 @@ plugin_restart()
   fi
 
   # Start helper script
-  "$PLUGIN_BIN_PATH/dyndns-ipv6-forward-helper" start "$IP6TABLES" \
-      "$DYNDNS_IPV6_UPDATE_TIME" "$DYNDNS_FORWARD_RULES" >/dev/null 2>&1 &
-      
+  start-stop-daemon -S -x "$PLUGIN_BIN_PATH/dyndns-ipv6-forward-helper" -b -- start "$IP6TABLES" \
+      "$DYNDNS_IPV6_UPDATE_TIME" "$DYNDNS_FORWARD_RULES"
+
   return 0
 }
 

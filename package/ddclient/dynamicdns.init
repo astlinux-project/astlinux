@@ -2,6 +2,8 @@
 
 . /etc/rc.conf
 
+PIDFILE="/var/run/ddclient.pid"
+
 gen_ddclient_conf()
 {
   local use_web="#" use_if="#" web_str delay domain service
@@ -116,16 +118,21 @@ start () {
 
   if [ -f /etc/ddclient.conf ]; then
     echo "Starting dynamicdns (ddclient)..."
-    ddclient -syslog -file /etc/ddclient.conf -cache /var/db/ddclient.cache -pid /var/run/ddclient.pid
+
+    ARGS="-syslog -file /etc/ddclient.conf -cache /var/db/ddclient.cache -pid $PIDFILE"
+
+    start-stop-daemon -S -x /usr/sbin/ddclient -p $PIDFILE -m -b -- $ARGS
   fi
 }
 
 stop () {
 
   if [ -f /etc/ddclient.conf ]; then
-    if [ -f /var/run/ddclient.pid ]; then
+    if [ -f $PIDFILE ]; then
       echo "Stopping dynamicdns (ddclient)..."
-      kill $(cat /var/run/ddclient.pid) >/dev/null 2>&1
+
+      start-stop-daemon -K -q -p $PIDFILE -s TERM
+      rm -f $PIDFILE
     fi
   fi
 }
