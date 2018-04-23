@@ -72,6 +72,8 @@ Released @TBD@
 
 -- mac2vendor, oui.txt database snapshot 2018-02-22
 
+-- core system, start long running processes with start-stop-daemon to isolate from the lighttpd/php fastcgi subsystem.
+
 -- (Custom Build Only) flashrom, version bump to 1.0
 
 ** Networking
