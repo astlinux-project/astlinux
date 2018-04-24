@@ -86,7 +86,7 @@ Released @TBD@
 
 -- WireGuard VPN, version bump to 0.0.20180420
 
--- OpenVPN, version bump to 2.4.5
+-- OpenVPN, version bump to 2.4.6
 
 -- chrony, version bump to 3.3
 
