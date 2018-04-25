@@ -136,6 +136,8 @@ Released @TBD@
 -- Network -> "DNS-TLS Proxy Server Configuration" sub-tab, add support for DNS over TLS (stubby).
    More info: http://doc.astlinux-project.org/userdoc:tt_dns_tls_proxy
 
+-- Status tab, performance improvement using asynchronous system calls.
+
 
 Additions for AstLinux 1.3.2:
 =============================
