@@ -41,6 +41,7 @@
 // 07-16-2017, Added ACME Certificates
 // 11-06-2017, Added WireGuard VPN Status
 // 03-13-2018, Added Hardware system-vendor info
+// 04-25-2018, Performance improvement using asynchronous system calls
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -536,6 +537,64 @@ require_once $COMMON.'header.php';
 
 $daemon = getDaemons();
 
+if (getPREFdef($global_prefs, 'status_disk_usage') !== 'no') {
+    $cmd = 'df -h /tmp | grep "^ *[A-Z][a-z]"';
+    $cmd .= '; df -h | grep "^/dev/[sh]d[a-h][0-9]" | sort -k 1,1';
+    $status_disk_usage = @popen($cmd, 'r');
+}
+if (is_dir('/mnt/kd/acme')) {
+  if (getPREFdef($global_prefs, 'status_show_acme_certificates') === 'yes') {
+    $cmd = '/usr/sbin/acme-client --list';
+    $status_show_acme_certificates = @popen($cmd, 'r');
+  }
+}
+if ($daemon['chronyd'] > 0) {
+  if (getPREFdef($global_prefs, 'status_ntp_sessions') !== 'no') {
+    $cmd = '/usr/bin/chronyc sources';
+    $status_ntp_sessions = @popen($cmd, 'r');
+  }
+}
+if ($daemon['charon'] > 0) {
+  if (getPREFdef($global_prefs, 'status_ipsec_associations') !== 'no') {
+    $cmd = '/usr/sbin/ipsec status';
+    $status_ipsec_associations = @popen($cmd, 'r');
+  }
+}
+if (is_file('/var/lock/wireguard.lock')) {
+  if (getPREFdef($global_prefs, 'status_wireguard_vpn') !== 'no') {
+    $cmd = '/usr/bin/wg show | sed -n \'/^peer/,$ p\'';
+    $status_wireguard_vpn = @popen($cmd, 'r');
+  }
+}
+if (is_file('/var/run/prosody/prosody.pid')) {
+  if (getPREFdef($global_prefs, 'status_show_xmpp_server') !== 'no') {
+    $cmd = '. /etc/rc.conf; if [ "$XMPP_ENABLE_S2S" = "yes" ]';
+    $cmd .= "; then /usr/bin/prosodycmd 'server:version()' 'server:uptime()' 'c2s:show()' 's2s:show()'";
+    $cmd .= "; else /usr/bin/prosodycmd 'server:version()' 'server:uptime()' 'c2s:show()'";
+    $cmd .= '; fi';
+    $status_show_xmpp_server = @popen($cmd, 'r');
+  }
+}
+if (is_file('/var/lock/aif_adaptive_ban.lock')) {
+  if (getPREFdef($global_prefs, 'status_show_adaptive_ban') === 'yes') {
+    $cmd = '. /etc/rc.conf; if [ "$IPV6" = "yes" ]; then ipv6="1"; else ipv6="0"; fi';
+    $cmd .= '; /usr/share/arno-iptables-firewall/plugins/adaptive-ban-helper status /usr/sbin/iptables /usr/sbin/ip6tables $ipv6';
+    $status_show_adaptive_ban = @popen($cmd, 'r');
+  }
+}
+if (is_executable('/usr/bin/sensors')) {
+  if (getPREFdef($global_prefs, 'status_show_hardware_monitoring') === 'yes') {
+    $cmd = '/usr/bin/sensors';
+    $status_show_hardware_monitoring = @popen($cmd, 'r');
+  }
+}
+if (is_executable('/usr/sbin/smart-status')) {
+  if (getPREFdef($global_prefs, 'status_show_smart_monitoring') === 'yes') {
+    $cmd = '/usr/sbin/smart-status attributes';
+    $status_show_smart_monitoring = @popen($cmd, 'r');
+  }
+}
+
 putHtml("<center>");
 if (isset($_GET['result'])) {
   $result = $_GET['result'];
@@ -751,21 +810,20 @@ if (is_file('/etc/zabbix_agentd.conf')) {
   putHtml("</pre>");
 }
 
-if (($cmd = getPREFdef($global_prefs, 'status_disk_usage')) !== 'no') {
-  putHtml("<h2>Disk Usage:</h2>");
-  putHtml("<pre>");
-  $tmpfile = tempnam("/tmp", "PHP_");
-  @exec('df -h /tmp | grep "^ *[A-Z][a-z]" >'.$tmpfile);
-  @exec('df -h | grep "^/dev/[sh]d[a-h][0-9]" | sort -k 1,1 >>'.$tmpfile);
-  $ph = @fopen($tmpfile, "r");
-  while (! feof($ph)) {
-    if (($line = trim(fgets($ph, 1024))) !== '') {
-      putText($line);
+if (isset($status_disk_usage)) {
+  if ($status_disk_usage !== FALSE) {
+    putHtml("<h2>Disk Usage:</h2>");
+    putHtml("<pre>");
+
+    while (! feof($status_disk_usage)) {
+      if (($line = rtrim(fgets($status_disk_usage, 1024))) !== '') {
+        putText($line);
+      }
     }
+    pclose($status_disk_usage);
+
+    putHtml("</pre>");
   }
-  fclose($ph);
-  @unlink($tmpfile);
-  putHtml("</pre>");
 }
 
 if (is_file('/var/run/wan-failover.pid') && is_file('/var/log/wan-failover-status.log')) {
@@ -783,35 +841,39 @@ if (is_file('/var/run/wan-failover.pid') && is_file('/var/log/wan-failover-statu
   }
 }
 
-if (is_dir('/mnt/kd/acme')) {
-  if (getPREFdef($global_prefs, 'status_show_acme_certificates') === 'yes') {
+if (isset($status_show_acme_certificates)) {
+  if ($status_show_acme_certificates !== FALSE) {
     putHtml("<h2>ACME Certificates:</h2>");
     putHtml("<pre>");
 
-    $output = array();
-    @exec('/usr/sbin/acme-client --list', $output);
-    foreach ($output as $line) {
-      putText(rtrim($line));
+    while (! feof($status_show_acme_certificates)) {
+      if (($line = fgets($status_show_acme_certificates, 1024)) !== FALSE) {
+        putText(rtrim($line));
+      }
     }
-    unset($output);
+    pclose($status_show_acme_certificates);
+
     putHtml("</pre>");
   }
 }
 
-if ($daemon['chronyd'] > 0) {
-  if (getPREFdef($global_prefs, 'status_ntp_sessions') !== 'no') {
+if (isset($status_ntp_sessions)) {
+  if ($status_ntp_sessions !== FALSE) {
     putHtml("<h2>NTP Time Sources:</h2>");
     putHtml("<pre>");
 
-    $output = array();
-    @exec('/usr/bin/chronyc sources', $output);
-    if (strncmp(current($output), '210', 3) == 0) {
-      array_shift($output); // Skip first '210' line
+    if (($line = fgets($status_ntp_sessions, 1024)) !== FALSE) {
+      if (strncmp($line, '210', 3) != 0) {
+        putText(rtrim($line));
+      }
     }
-    foreach ($output as $line) {
-      putText(rtrim($line));
+    while (! feof($status_ntp_sessions)) {
+      if (($line = fgets($status_ntp_sessions, 1024)) !== FALSE) {
+        putText(rtrim($line));
+      }
     }
-    unset($output);
+    pclose($status_ntp_sessions);
+
     putHtml("</pre>");
   }
 }
@@ -976,17 +1038,18 @@ if ($daemon['racoon'] > 0) {
   }
 }
 
-if ($daemon['charon'] > 0) {
-  if (getPREFdef($global_prefs, 'status_ipsec_associations') !== 'no') {
+if (isset($status_ipsec_associations)) {
+  if ($status_ipsec_associations !== FALSE) {
     putHtml("<h2>IPsec Associations (strongSwan):</h2>");
     putHtml("<pre>");
 
-    $output = array();
-    @exec('/usr/sbin/ipsec status', $output);
-    foreach ($output as $line) {
-      putText(rtrim($line));
+    while (! feof($status_ipsec_associations)) {
+      if (($line = fgets($status_ipsec_associations, 1024)) !== FALSE) {
+        putText(rtrim($line));
+      }
     }
-    unset($output);
+    pclose($status_ipsec_associations);
+
     putHtml("</pre>");
   }
 }
@@ -1001,17 +1064,18 @@ if ($daemon['pptpd'] > 0) {
   }
 }
 
-if (is_file('/var/lock/wireguard.lock')) {
-  if (getPREFdef($global_prefs, 'status_wireguard_vpn') !== 'no') {
+if (isset($status_wireguard_vpn)) {
+  if ($status_wireguard_vpn !== FALSE) {
     putHtml("<h2>WireGuard VPN Status:</h2>");
     putHtml("<pre>");
 
-    $output = array();
-    @exec('/usr/bin/wg show | sed -n \'/^peer/,$ p\'', $output);
-    foreach ($output as $line) {
-      putText(rtrim($line));
+    while (! feof($status_wireguard_vpn)) {
+      if (($line = fgets($status_wireguard_vpn, 1024)) !== FALSE) {
+        putText(rtrim($line));
+      }
     }
-    unset($output);
+    pclose($status_wireguard_vpn);
+
     putHtml("</pre>");
   }
 }
@@ -1242,51 +1306,39 @@ if ($daemon['kamailio'] > 0) {
   }
 }
 
-if (is_file('/var/run/prosody/prosody.pid')) {
-  if (getPREFdef($global_prefs, 'status_show_xmpp_server') !== 'no') {
+if (isset($status_show_xmpp_server)) {
+  if ($status_show_xmpp_server !== FALSE) {
     putHtml("<h2>XMPP Server Status:</h2>");
     putHtml("<pre>");
-    $tmpfile = tempnam("/tmp", "PHP_");
-    $cmd = "/usr/bin/prosodycmd 'server:version()' 'server:uptime()' 'c2s:show()'";
-    if (trim(shell_exec('. /etc/rc.conf; echo "$XMPP_ENABLE_S2S"')) === 'yes') {
-      $cmd .= " 's2s:show()'";
-    }
-    shell($cmd.' >'.$tmpfile, $status);
 
-    $ph = @fopen($tmpfile, "r");
-    if (! feof($ph)) {
-      if (($line = rtrim(fgets($ph, 1024))) !== '') {
+    if (! feof($status_show_xmpp_server)) {
+      if (($line = rtrim(fgets($status_show_xmpp_server, 1024))) !== '') {
         putText('Prosody Version: '.$line);
       }
     }
-    while (! feof($ph)) {
-      if (($line = rtrim(fgets($ph, 1024))) !== '') {
+    while (! feof($status_show_xmpp_server)) {
+      if (($line = rtrim(fgets($status_show_xmpp_server, 1024))) !== '') {
         putText($line);
       }
     }
-    fclose($ph);
-    @unlink($tmpfile);
+    pclose($status_show_xmpp_server);
+
     putHtml("</pre>");
   }
 }
 
-if (is_file('/var/lock/aif_adaptive_ban.lock')) {
-  if (getPREFdef($global_prefs, 'status_show_adaptive_ban') === 'yes') {
+if (isset($status_show_adaptive_ban)) {
+  if ($status_show_adaptive_ban !== FALSE) {
     putHtml("<h2>Adaptive Ban Plugin Status:</h2>");
     putHtml("<pre>");
-    $tmpfile = tempnam("/tmp", "PHP_");
-    $ipv6 = trim(shell_exec('. /etc/rc.conf; if [ "$IPV6" = "yes" ]; then echo "1"; else echo "0"; fi'));
-    $cmd = '/usr/share/arno-iptables-firewall/plugins/adaptive-ban-helper status /usr/sbin/iptables /usr/sbin/ip6tables '.$ipv6;
-    shell($cmd.' >'.$tmpfile, $status);
 
-    $ph = @fopen($tmpfile, "r");
-    while (! feof($ph)) {
-      if (($line = trim(fgets($ph, 1024))) !== '') {
+    while (! feof($status_show_adaptive_ban)) {
+      if (($line = trim(fgets($status_show_adaptive_ban, 1024))) !== '') {
         putText($line);
       }
     }
-    fclose($ph);
-    @unlink($tmpfile);
+    pclose($status_show_adaptive_ban);
+
     putHtml("</pre>");
   }
 }
@@ -1388,35 +1440,34 @@ if ($daemon['upsmon'] > 0) {
   }
 }
 
-if (is_executable('/usr/bin/sensors')) {
-  if (getPREFdef($global_prefs, 'status_show_hardware_monitoring') === 'yes') {
+if (isset($status_show_hardware_monitoring)) {
+  if ($status_show_hardware_monitoring !== FALSE) {
     putHtml("<h2>Hardware Monitoring:</h2>");
     putHtml("<pre>");
 
-    $output = array();
-    @exec('/usr/bin/sensors', $output);
-    foreach ($output as $line) {
-      $line = rtrim($line);
-      if ($line !== '') {
+    while (! feof($status_show_hardware_monitoring)) {
+      if (($line = rtrim(fgets($status_show_hardware_monitoring, 1024))) !== '') {
         putText($line);
       }
     }
-    unset($output);
+    pclose($status_show_hardware_monitoring);
+
     putHtml("</pre>");
   }
 }
 
-if (is_executable('/usr/sbin/smart-status')) {
-  if (getPREFdef($global_prefs, 'status_show_smart_monitoring') === 'yes') {
+if (isset($status_show_smart_monitoring)) {
+  if ($status_show_smart_monitoring !== FALSE) {
     putHtml("<h2>S.M.A.R.T Monitoring:</h2>");
     putHtml("<pre>");
 
-    $output = array();
-    @exec('/usr/sbin/smart-status attributes', $output);
-    foreach ($output as $line) {
-      putText(rtrim($line));
+    while (! feof($status_show_smart_monitoring)) {
+      if (($line = fgets($status_show_smart_monitoring, 1024)) !== FALSE) {
+        putText(rtrim($line));
+      }
     }
-    unset($output);
+    pclose($status_show_smart_monitoring);
+
     putHtml("</pre>");
   }
 }
