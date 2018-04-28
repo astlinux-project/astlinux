@@ -594,6 +594,24 @@ if (is_executable('/usr/sbin/smart-status')) {
     $status_show_smart_monitoring = @popen($cmd, 'r');
   }
 }
+if ($daemon['syslogd'] > 0) {
+  if (getPREFdef($global_prefs, 'status_show_system_logs') !== 'no') {
+    if (($str = getPREFdef($global_prefs, 'status_exclude_logs_cmdstr')) !== '') {
+      $exclude_words = explode(' ', $str);
+      $exclude_logs = '';
+      foreach ($exclude_words as $exclude_word) {
+        if ($exclude_word !== '') {
+          $exclude_word = strtr($exclude_word, '$`[]\'\\', '......');   // map special chars to dot
+          $exclude_logs .= " -e '$exclude_word'";
+        }
+      }
+      $cmd = 'grep -v -i '.$exclude_logs.' /var/log/messages | tail -n 30';
+    } else {
+      $cmd = 'tail -n 30 /var/log/messages';
+    }
+    $status_show_system_logs = @popen($cmd, 'r');
+  }
+}
 
 putHtml("<center>");
 if (isset($_GET['result'])) {
@@ -1472,32 +1490,18 @@ if (isset($status_show_smart_monitoring)) {
   }
 }
 
-if ($daemon['syslogd'] > 0) {
-  if (getPREFdef($global_prefs, 'status_show_system_logs') !== 'no') {
+if (isset($status_show_system_logs)) {
+  if ($status_show_system_logs !== FALSE) {
     putHtml("<h2>Latest System Logs:</h2>");
     putHtml("<pre>");
-    $tmpfile = tempnam("/tmp", "PHP_");
-    if (($str = getPREFdef($global_prefs, 'status_exclude_logs_cmdstr')) !== '') {
-      $exclude_words = explode(' ', $str);
-      $exclude_logs = '';
-      foreach ($exclude_words as $exclude_word) {
-        if ($exclude_word !== '') {
-          $exclude_word = strtr($exclude_word, '$`[]\'\\', '......');   // map special chars to dot
-          $exclude_logs .= " -e '$exclude_word'";
-        }
-      }
-      shell('grep -v -i '.$exclude_logs.' /var/log/messages | tail -n 30 >'.$tmpfile, $status);
-    } else {
-      shell('tail -n 30 /var/log/messages >'.$tmpfile, $status);
-    }
-    $ph = @fopen($tmpfile, "r");
-    while (! feof($ph)) {
-      if (($line = trim(fgets($ph, 1024))) !== '') {
+
+    while (! feof($status_show_system_logs)) {
+      if (($line = rtrim(fgets($status_show_system_logs, 1024))) !== '') {
         putText($line);
       }
     }
-    fclose($ph);
-    @unlink($tmpfile);
+    pclose($status_show_system_logs);
+
     putHtml("</pre>");
   }
 }
