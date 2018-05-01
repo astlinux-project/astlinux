@@ -33,6 +33,8 @@ Released @TBD@
 
 -- sqliteodbc, version bump to 0.9996
 
+-- libidn, version bump to 1.34
+
 -- libjpeg, version bump to 9c
 
 -- libusb, version bump to 1.0.22
