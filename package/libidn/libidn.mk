@@ -4,14 +4,12 @@
 #
 #############################################################
 
-LIBIDN_VERSION = 1.33
+LIBIDN_VERSION = 1.34
 LIBIDN_SITE = http://ftp.gnu.org/gnu/libidn
 LIBIDN_INSTALL_STAGING = YES
 LIBIDN_CONF_ENV = EMACS="no"
 LIBIDN_CONF_OPT = --disable-java --enable-csharp=no
 LIBIDN_DEPENDENCIES = host-pkg-config $(if $(BR2_NEEDS_GETTEXT_IF_LOCALE),gettext) $(if $(BR2_PACKAGE_LIBICONV),libiconv)
-# lib/punycode.c patch triggers reconf in doc/
-LIBIDN_AUTORECONF = YES
 
 define LIBIDN_REMOVE_BINARY
 	rm -f $(TARGET_DIR)/usr/bin/idn
