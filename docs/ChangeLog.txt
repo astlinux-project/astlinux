@@ -72,7 +72,7 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2018-03-07
 
--- Time Zone Database update, tzdata2018d and php-timezonedb-2018.4
+-- Time Zone Database update, tzdata2018e and php-timezonedb-2018.5
 
 -- mac2vendor, oui.txt database snapshot 2018-02-22
 
@@ -104,7 +104,7 @@ Released @TBD@
 
 -- openldap, version bump to 2.4.46
 
--- getdns/stubby, new package, version 1.4.1/0.2.2, encrypts local DNS queries forwarded to upstream recursive DNS-TLS servers
+-- getdns/stubby, new package, version 1.4.2-rc1/0.2.3-rc1, encrypts local DNS queries forwarded to upstream recursive DNS-TLS servers
    New rc.conf variables: DNS_TLS_PROXY, DNS_TLS_QUERY_ALL, DNS_TLS_SERVERS
 
 -- unbound (host), version bump to 1.7.0, security fix: CVE-2017-15105
@@ -141,6 +141,8 @@ Released @TBD@
    More info: http://doc.astlinux-project.org/userdoc:tt_dns_tls_proxy
 
 -- Status tab, performance improvement using asynchronous system calls.
+
+-- All tabs, low-level performance improvements.
 
 
 Additions for AstLinux 1.3.2:
