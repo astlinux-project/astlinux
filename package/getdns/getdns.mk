@@ -4,7 +4,7 @@
 #
 #############################################################
 
-GETDNS_VERSION = 1.4.1
+GETDNS_VERSION = 1.4.2-rc1
 GETDNS_SITE = https://getdnsapi.net/dist
 GETDNS_SOURCE = getdns-$(GETDNS_VERSION).tar.gz
 GETDNS_INSTALL_STAGING = YES
