@@ -36,6 +36,9 @@ function saveDNSTLSsettings($conf_dir, $conf_file) {
   $value = 'DNS_TLS_PROXY="'.$_POST['proxy'].'"';
   fwrite($fp, "### DNS-TLS Enable\n".$value."\n");
 
+  $value = 'DNS_TLS_DNSSEC="'.$_POST['dns_tls_dnssec'].'"';
+  fwrite($fp, "### Local DNSSEC\n".$value."\n");
+
   $value = 'DNS_TLS_QUERY_ALL="'.$_POST['dns_tls_query_all'].'"';
   fwrite($fp, "### Query All Servers\n".$value."\n");
 
@@ -141,6 +144,17 @@ if (isDNSCRYPT()) {
   putHtml('<option value="no">disabled</option>');
   $sel = ($value === 'yes') ? ' selected="selected"' : '';
   putHtml('<option value="yes"'.$sel.'>enabled</option>');
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('DNSSEC Validation:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  putHtml('<select name="dns_tls_dnssec">');
+  $value = getVARdef($db, 'DNS_TLS_DNSSEC', $cur_db);
+  putHtml('<option value="no">use upstream validation</option>');
+  $sel = ($value === 'yes') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>perform local validation</option>');
   putHtml('</select>');
   putHtml('</td></tr>');
 
