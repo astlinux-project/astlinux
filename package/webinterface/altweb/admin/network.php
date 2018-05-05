@@ -50,14 +50,14 @@
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
-// System location of default system rc.conf file
-$SYSTEMCONFFILE = '/stat/etc/rc.conf';
 // System location of /mnt/kd/rc.conf.d directory
 $NETCONFDIR = '/mnt/kd/rc.conf.d';
 // System location of gui.network.conf file
 $NETCONFFILE = '/mnt/kd/rc.conf.d/gui.network.conf';
 // System location of gui.firewall.conf file
 $FIREWALLCONFFILE = '/mnt/kd/rc.conf.d/gui.firewall.conf';
+// System location of user.conf file
+$USERCONFFILE = '/mnt/kd/rc.conf.d/user.conf';
 
 $myself = $_SERVER['PHP_SELF'];
 
@@ -208,8 +208,7 @@ function checkNETWORKsettings() {
 //
 function saveNETWORKsettings($conf_dir, $conf_file) {
   global $global_prefs;
-  global $CONFFILE;
-  global $SYSTEMCONFFILE;
+  global $USERCONFFILE;
 
   $isFIRSTtime = FALSE;
   if (is_dir($conf_dir) === FALSE) {
@@ -788,97 +787,11 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   fwrite($fp, "### gui.network.conf - end ###\n");
   fclose($fp);
   if ($isFIRSTtime) {
-    if (createOTHERconfs($SYSTEMCONFFILE, $CONFFILE, $conf_file) === FALSE) {
+    if (createUSERconf($USERCONFFILE) === FALSE) {
       return(3);
     }
   }
   return(checkNETWORKsettings());
-}
-
-// Function: createOTHERconfs
-//
-function createOTHERconfs($sys_file, $cur_file, $net_file) {
-
-  if (! is_file($sys_file)) {
-    return(FALSE);
-  }
-  $sys_db = parseRCconf($sys_file);
-  $cur_db = parseRCconf($cur_file);
-  $net_db = parseRCconf($net_file);
-
-  $openvpn_id = 0;
-  $openvpnclient_id = 0;
-  $user_id = 0;
-
-  if (($n = count($cur_db['data'])) > 0) {
-    for ($i = 0; $i < $n; $i++) {
-      if ($cur_db['data'][$i]['value'] !== getVARdef($sys_db, $cur_db['data'][$i]['var'])) {
-        if (isVARdef($net_db, $cur_db['data'][$i]['var']) === FALSE) {
-          if (strncmp($cur_db['data'][$i]['var'], 'OVPN_', 5) == 0) {
-            $openvpn[$openvpn_id]['var'] = $cur_db['data'][$i]['var'];
-            $openvpn[$openvpn_id]['value'] = $cur_db['data'][$i]['value'];
-            $openvpn_id++;
-          } elseif (strncmp($cur_db['data'][$i]['var'], 'OVPNC_', 6) == 0) {
-            $openvpnclient[$openvpnclient_id]['var'] = $cur_db['data'][$i]['var'];
-            $openvpnclient[$openvpnclient_id]['value'] = $cur_db['data'][$i]['value'];
-            $openvpnclient_id++;
-          } else {
-            $user[$user_id]['var'] = $cur_db['data'][$i]['var'];
-            $user[$user_id]['value'] = $cur_db['data'][$i]['value'];
-            $user_id++;
-          }
-        }
-      }
-    }
-  }
-
-  if (($n = $openvpn_id) > 0) {
-    if (($fp = @fopen('/mnt/kd/rc.conf.d/gui.openvpn.conf', 'wb')) === FALSE) {
-      return(FALSE);
-    }
-    fwrite($fp, "### gui.openvpn.conf - start ###\n");
-    for ($i = 0; $i < $n; $i++) {
-      $value = $openvpn[$i]['var'].'="'.$openvpn[$i]['value'].'"';
-      fwrite($fp, "###\n".$value."\n");
-    }
-    fwrite($fp, "### gui.openvpn.conf - end ###\n");
-    fclose($fp);
-  }
-
-  if (($n = $openvpnclient_id) > 0) {
-    if (($fp = @fopen('/mnt/kd/rc.conf.d/gui.openvpnclient.conf', 'wb')) === FALSE) {
-      return(FALSE);
-    }
-    fwrite($fp, "### gui.openvpnclient.conf - start ###\n");
-    for ($i = 0; $i < $n; $i++) {
-      $value = $openvpnclient[$i]['var'].'="'.$openvpnclient[$i]['value'].'"';
-      fwrite($fp, "###\n".$value."\n");
-    }
-    fwrite($fp, "### gui.openvpnclient.conf - end ###\n");
-    fclose($fp);
-  }
-
-  $user_conf = '/mnt/kd/rc.conf.d/user.conf';
-  if (($n = $user_id) > 0) {
-    if (($fp = @fopen($user_conf, 'wb')) === FALSE) {
-      return(FALSE);
-    }
-    fwrite($fp, "### user.conf - start ###\n");
-    fwrite($fp, "###\n###  Advanced Configuration: User System Variables\n###\n");
-    fwrite($fp, "###  Define variables here that are not otherwise set in the Network tab.\n###\n");
-    fwrite($fp, "###  Variables defined here will override any value set elsewhere.\n###\n");
-    for ($i = 0; $i < $n; $i++) {
-      $value = $user[$i]['var'].'="'.$user[$i]['value'].'"';
-      fwrite($fp, "###\n".$value."\n");
-    }
-    fwrite($fp, "### user.conf - end ###\n");
-    fclose($fp);
-  } else {
-    if (createUSERconf($user_conf) === FALSE) {
-      return(FALSE);
-    }
-  }
-  return(TRUE);
 }
 
 // Function: createUSERconf
@@ -1150,7 +1063,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   } elseif (isset($_POST['submit_edit_user_conf'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
-    if (createUSERconf($file = '/mnt/kd/rc.conf.d/user.conf') === FALSE) {
+    if (createUSERconf($file = $USERCONFFILE) === FALSE) {
       $result = 3;
     }
     if (is_writable($file)) {

@@ -864,15 +864,15 @@ if (is_file('/usr/sbin/upgrade-RUNNIX-image')) {
   putHtml('<table width="100%" class="datatable">');
   putHtml('<tr>');
 
-  if (($n = count($db['data'])) > 0) {
+  if (count($db['data']) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Variable", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Configuration Value", "</td>";
-    for ($i = 0; $i < $n; $i++) {
+    $i = 0;
+    foreach ($db['data'] as $var => $value) {
       putHtml("</tr>");
-      echo '<tr ', ($i % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
-      $var = $db['data'][$i]['var'];
+      echo '<tr ', ($i++ % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
       echo '<td>', $var, '</td>';
-      if (($value = $db['data'][$i]['value']) === '') {
+      if ($value === '') {
         $value = '""';
       } elseif ($var === 'PPPOEPASS' ||
           $var === 'SMTP_PASS' ||
