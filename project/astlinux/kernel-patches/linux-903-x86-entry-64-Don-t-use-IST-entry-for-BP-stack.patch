@@ -1,0 +1,85 @@
+From: Andy Lutomirski <luto@kernel.org>
+Date: Thu, 23 Jul 2015 15:37:48 -0700
+Subject: x86/entry/64: Don't use IST entry for #BP stack
+Origin: https://git.kernel.org/linus/d8ba61ba58c88d5207c1ba2f7d9a2280e7d03be9
+Bug-Debian-Security: https://security-tracker.debian.org/tracker/CVE-2018-8897
+
+There's nothing IST-worthy about #BP/int3.  We don't allow kprobes
+in the small handful of places in the kernel that run at CPL0 with
+an invalid stack, and 32-bit kernels have used normal interrupt
+gates for #BP forever.
+
+Furthermore, we don't allow kprobes in places that have usergs while
+in kernel mode, so "paranoid" is also unnecessary.
+
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+[carnil: Backport to 3.16:
+ - Adjust finename change: arch/x86/kernel/entry_64.S
+ - Context changes
+]
+[bwh: Rebase on top of "x86/traps: Enable DEBUG_STACK after cpu_init() for
+ TRAP_DB/BP", and restore change in trap_init() instead of early_trap_init()]
+---
+--- a/arch/x86/kernel/entry_64.S
++++ b/arch/x86/kernel/entry_64.S
+@@ -1307,7 +1307,7 @@ apicinterrupt3 HYPERVISOR_CALLBACK_VECTO
+ #endif /* CONFIG_HYPERV */
+ 
+ idtentry debug do_debug has_error_code=0 paranoid=1 shift_ist=DEBUG_STACK
+-idtentry int3 do_int3 has_error_code=0 paranoid=1 shift_ist=DEBUG_STACK
++idtentry int3 do_int3 has_error_code=0
+ idtentry stack_segment do_stack_segment has_error_code=1
+ #ifdef CONFIG_XEN
+ idtentry xen_debug do_debug has_error_code=0
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -334,7 +334,6 @@ exit:
+ }
+ NOKPROBE_SYMBOL(do_general_protection);
+ 
+-/* May run on IST stack. */
+ dotraplinkage void notrace do_int3(struct pt_regs *regs, long error_code)
+ {
+ 	enum ctx_state prev_state;
+@@ -367,15 +366,9 @@ dotraplinkage void notrace do_int3(struc
+ 			SIGTRAP) == NOTIFY_STOP)
+ 		goto exit;
+ 
+-	/*
+-	 * Let others (NMI) know that the debug stack is in use
+-	 * as we may switch to the interrupt stack.
+-	 */
+-	debug_stack_usage_inc();
+ 	preempt_conditional_sti(regs);
+ 	do_trap(X86_TRAP_BP, SIGTRAP, "int3", regs, error_code, NULL);
+ 	preempt_conditional_cli(regs);
+-	debug_stack_usage_dec();
+ exit:
+ 	exception_exit(prev_state);
+ }
+@@ -862,19 +855,16 @@ void __init trap_init(void)
+ 	cpu_init();
+ 
+ 	/*
+-	 * X86_TRAP_DB and X86_TRAP_BP have been set
+-	 * in early_trap_init(). However, DEBUG_STACK works only after
+-	 * cpu_init() loads TSS. See comments in early_trap_init().
++	 * X86_TRAP_DB was installed in early_trap_init(). However,
++	 * DEBUG_STACK works only after cpu_init() loads TSS. See comments
++	 * in early_trap_init().
+ 	 */
+ 	set_intr_gate_ist(X86_TRAP_DB, &debug, DEBUG_STACK);
+-	/* int3 can be called from all */
+-	set_system_intr_gate_ist(X86_TRAP_BP, &int3, DEBUG_STACK);
+ 
+ 	x86_init.irqs.trap_init();
+ 
+ #ifdef CONFIG_X86_64
+ 	memcpy(&debug_idt_table, &idt_table, IDT_ENTRIES * 16);
+ 	set_nmi_gate(X86_TRAP_DB, &debug);
+-	set_nmi_gate(X86_TRAP_BP, &int3);
+ #endif
+ }
