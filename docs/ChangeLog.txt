@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 3.16.54, security and bug fixes.
+-- Linux Kernel 3.16.54, security and bug fixes, including CVE-2018-8897
 
 -- RUNNIX, version bump to runnix-0.5.4, with Linux Kernel 3.16.54, e2fsprogs 1.44.1, util-linux 2.28.2
 
