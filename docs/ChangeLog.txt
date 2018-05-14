@@ -90,7 +90,7 @@ Released @TBD@
 
 -- prosody, version bump to 0.9.13, security fixes.
 
--- WireGuard VPN, version bump to 0.0.20180420
+-- WireGuard VPN, version bump to 0.0.20180513
 
 -- OpenVPN, version bump to 2.4.6
 
