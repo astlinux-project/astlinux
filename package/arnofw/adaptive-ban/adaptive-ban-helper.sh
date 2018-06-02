@@ -215,7 +215,7 @@ filter_prosody()
 {
   local file="$1" PREFIX="$2" HOST="$3"
 
-  sed -n -r -e "s/^${PREFIX}.* Failed authentication attempt \(.*\) from IP: ${HOST}[[:space:]]*$/\1/p" \
+  sed -n -r -e "s/^${PREFIX}.* Failed authentication attempt \(.*\) for user .* from IP: ${HOST}[[:space:]]*$/\1/p" \
                "$file" >"$TEMPFILE"
 }
 
