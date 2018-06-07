@@ -40,7 +40,8 @@ Released @TBD@
 
 ** Web Interface
 
--- no change
+-- Prefs tab -> System & Staff Tab Options: add separate option for *-vm images
+   _x_ Disable faster "kernel-reboot" System Reboot (for *-vm)
 
 
 Additions for AstLinux 1.3.3:
