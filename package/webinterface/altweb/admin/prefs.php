@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2017 Lonnie Abelbeck
+// Copyright (C) 2008-2018 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -353,6 +353,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (isset($_POST['reboot_classic_full'])) {
       $value = 'system_reboot_classic_full = yes';
+      fwrite($fp, $value."\n");
+    }
+    if (! isset($_POST['reboot_vm_classic_full'])) {
+      $value = 'system_reboot_vm_classic_full = no';
       fwrite($fp, $value."\n");
     }
     $value = 'system_reboot_timer_adjust = "'.$_POST['reboot_timer'].'"';
@@ -1048,7 +1052,10 @@ require_once '../common/header.php';
   putHtml('<input type="checkbox" value="backup_temp" name="backup_temp"'.$sel.' /></td><td colspan="5">Backup temporary file uses /mnt/kd/ instead of /tmp/</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'system_reboot_classic_full') === 'yes') ? ' checked="checked"' : '';
-  putHtml('<input type="checkbox" value="reboot_classic_full" name="reboot_classic_full"'.$sel.' /></td><td colspan="5">Disable faster "kernel-reboot" System Reboot</td></tr>');
+  putHtml('<input type="checkbox" value="reboot_classic_full" name="reboot_classic_full"'.$sel.' /></td><td colspan="5">Disable faster "kernel-reboot" System Reboot (not *-vm)</td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'system_reboot_vm_classic_full') !== 'no') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="reboot_vm_classic_full" name="reboot_vm_classic_full"'.$sel.' /></td><td colspan="5">Disable faster "kernel-reboot" System Reboot (for *-vm)</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="3">System Reboot Timer:</td><td colspan="3">');
   if (($value = getPREFdef($global_prefs, 'system_reboot_timer_adjust')) === '') {

@@ -209,7 +209,9 @@ function systemREBOOT($myself, $result, $setup = FALSE) {
   }
 
   $cmd = '/sbin/kernel-reboot';
-  if (! is_executable($cmd) || (getPREFdef($global_prefs, 'system_reboot_classic_full') === 'yes') || $arch === 'genx86_64-vm') {
+  if (! is_executable($cmd)
+    || ((getPREFdef($global_prefs, 'system_reboot_classic_full') === 'yes') && $arch !== 'genx86_64-vm')
+    || ((getPREFdef($global_prefs, 'system_reboot_vm_classic_full') !== 'no') && $arch === 'genx86_64-vm')) {
     $cmd = '/sbin/reboot';
     $count_down_secs += 30;
   }
