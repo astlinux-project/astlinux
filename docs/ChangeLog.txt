@@ -40,8 +40,9 @@ Released @TBD@
 
 ** Web Interface
 
--- Prefs tab -> System & Staff Tab Options: add separate option for *-vm images
-   _x_ Disable faster "kernel-reboot" System Reboot (for *-vm)
+-- Prefs tab -> System & Staff Tab Options: add independent option for genx86_64-vm images
+   which defaults to "checked" for genx86_64-vm images, "unchecked" for all other image types.
+   _x_ Disable faster "kernel-reboot" System Reboot
 
 
 Additions for AstLinux 1.3.3:
