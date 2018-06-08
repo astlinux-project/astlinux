@@ -4,8 +4,8 @@
 #
 ################################################################################
 
-LIBEDIT_VERSION = 20160903-3.1
-LIBEDIT_SITE = http://thrysoee.dk/editline
+LIBEDIT_VERSION = 20180525-3.1
+LIBEDIT_SITE = https://thrysoee.dk/editline
 LIBEDIT_INSTALL_STAGING = YES
 
 LIBEDIT_DEPENDENCIES = ncurses
