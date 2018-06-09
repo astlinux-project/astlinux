@@ -34,10 +34,10 @@ if [ "$TERM" != "linux" ]; then
   stty erase ^?
 fi
 
-# Set LINES and COLUMNS for USB TTY serial devices
+# Set LINES and COLUMNS for TTY serial devices
 if [ -x /usr/bin/resize ]; then
   case $(tty) in
-    /dev/ttyUSB*) resize >/dev/null ;;
+    /dev/ttyUSB*|/dev/ttyS0) resize >/dev/null ;;
   esac
 fi
 
