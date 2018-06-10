@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PJSIP_VERSION = 2.7.1
+PJSIP_VERSION = 2.7.2
 PJSIP_SOURCE = pjproject-$(PJSIP_VERSION).tar.bz2
 PJSIP_SITE = https://raw.githubusercontent.com/asterisk/third-party/master/pjproject/$(PJSIP_VERSION)
 PJSIP_INSTALL_STAGING = YES
