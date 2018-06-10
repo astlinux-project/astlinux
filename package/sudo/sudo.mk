@@ -4,13 +4,14 @@
 #
 #############################################################
 
-SUDO_VERSION = 1.8.22
-SUDO_SITE = http://www.sudo.ws/sudo/dist
+SUDO_VERSION = 1.8.23
+SUDO_SITE = https://www.sudo.ws/sudo/dist
 
 # This is to avoid sudo's make install from chown()ing files which fails
 SUDO_INSTALL_TARGET_OPT = INSTALL_OWNER="" DESTDIR="$(TARGET_DIR)" install
 
 SUDO_CONF_OPT = \
+	--with-rundir=/var/run/sudo \
 	--without-lecture \
 	--without-sendmail \
 	--without-umask \
@@ -28,5 +29,11 @@ define SUDO_BUILD_MKSIGNAME_MKSIGLIST_HOST
 endef
 
 SUDO_POST_CONFIGURE_HOOKS += SUDO_BUILD_MKSIGNAME_MKSIGLIST_HOST
+
+define SUDO_INSTALL_CLEANUP
+	rm -f $(TARGET_DIR)/usr/bin/cvtsudoers
+endef
+
+SUDO_POST_INSTALL_TARGET_HOOKS += SUDO_INSTALL_CLEANUP
 
 $(eval $(call AUTOTARGETS,package,sudo))
