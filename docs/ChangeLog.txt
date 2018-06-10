@@ -16,9 +16,15 @@ Released @TBD@
 
 -- e2fsprogs, version bump to 1.44.2
 
+-- sqlite, version bump to 3.24.0
+
+-- libedit, version bump to 20180525-3.1
+
 -- luabitop, version 1.0.2, new Lua module for prosody
 
 -- Monit, version bump to 5.25.2
+
+-- sudo, version bump to 1.8.23
 
 ** Networking
 
@@ -28,15 +34,23 @@ Released @TBD@
 
 -- WireGuard VPN, version bump to 0.0.20180531
 
+-- strongSwan, version 5.5.3, security fixes: CVE-2018-10811, CVE-2018-5388
+
+-- stunnel, version bump to 5.46
+
+-- miniupnpd, version bump to 2.1
+
+-- unbound (host), version bump to 1.7.1
+
 -- whois, version bump to 5.3.1
 
 ** Asterisk
 
--- Asterisk 11.25.3 (no change) and 13.20.0 (no change)
+-- Asterisk 11.25.3 (no change) and 13.21.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
--- pjsip 2.7.1 (no change)
+-- pjsip 2.7.2 (version bump)
 
 ** Web Interface
 
