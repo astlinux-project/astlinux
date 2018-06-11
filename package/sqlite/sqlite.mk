@@ -19,6 +19,8 @@ SQLITE_CFLAGS += -DSQLITE_ENABLE_COLUMN_METADATA
 SQLITE_CONF_ENV = CFLAGS="$(TARGET_CFLAGS) $(SQLITE_CFLAGS)"
 
 SQLITE_CONF_OPT = \
+	--disable-fts5 \
+	--disable-json1 \
 	--disable-static-shell \
 	--enable-threadsafe \
 	--localstatedir=/var
