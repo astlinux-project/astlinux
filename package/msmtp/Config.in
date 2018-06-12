@@ -4,4 +4,4 @@ config BR2_PACKAGE_MSMTP
 	help
 	  msmtp is an MUA/MTa like ssmtp, only better
 
-	  http://sourceforge.net/projects/msmtp/
+	  https://marlam.de/msmtp/

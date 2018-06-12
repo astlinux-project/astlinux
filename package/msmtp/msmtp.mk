@@ -6,7 +6,7 @@
 
 MSMTP_VERSION = 1.6.6
 MSMTP_SOURCE = msmtp-$(MSMTP_VERSION).tar.xz
-MSMTP_SITE = http://downloads.sourceforge.net/project/msmtp/msmtp/$(MSMTP_VERSION)
+MSMTP_SITE = https://marlam.de/msmtp/releases
 MSMTP_DEPENDENCIES = openssl
 
 MSMTP_CONF_OPT += \
@@ -30,7 +30,7 @@ define MSMTP_INSTALL_TARGET_CMDS
 endef
 
 define MSMTP_UNINSTALL_TARGET_CMDS
-        rm $(TARGET_DIR)/usr/sbin/msmtp
+	rm $(TARGET_DIR)/usr/sbin/msmtp
 	rm $(TARGET_DIR)/etc/init.d/msmtp
 	rm $(TARGET_DIR)/usr/sbin/msmtpqueue
 	rm $(TARGET_DIR)/usr/sbin/sendmail
