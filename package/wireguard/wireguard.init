@@ -144,6 +144,9 @@ start () {
     if [ -n "$WIREGUARD_MTU" ]; then
       ip link set dev $wg_if mtu $WIREGUARD_MTU
     fi
+    if [ -x $SCRIPT_FILE ]; then
+      $SCRIPT_FILE PRE_UP $wg_if
+    fi
     ip link set dev $wg_if up
 
     echo "$wg_if" > $LOCK_FILE
@@ -207,6 +210,9 @@ stop () {
     ip link set dev $wg_if down
     ip link delete $wg_if type wireguard
 
+    if [ -x $SCRIPT_FILE ]; then
+      $SCRIPT_FILE POST_DOWN $wg_if
+    fi
     rm -f $LOCK_FILE
   fi
 }
