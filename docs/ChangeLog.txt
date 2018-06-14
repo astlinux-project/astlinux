@@ -40,13 +40,13 @@ Released @TBD@
 
 -- miniupnpd, version bump to 2.1
 
--- unbound (host), version bump to 1.7.1
+-- unbound (host), version bump to 1.7.2
 
 -- whois, version bump to 5.3.1
 
 ** Asterisk
 
--- Asterisk 11.25.3 (no change) and 13.21.0 (version bump)
+-- Asterisk 11.25.3 (no change) and 13.21.1 (version bump)
 
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
