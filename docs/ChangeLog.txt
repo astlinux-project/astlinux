@@ -26,6 +26,8 @@ Released @TBD@
 
 -- sudo, version bump to 1.8.23
 
+-- ca-certificates, update trusted root certificates 2018-06-20
+
 ** Networking
 
 -- libcurl (curl) version bump to 7.60.0, security fixes: CVE-2018-1000300, CVE-2018-1000301
@@ -39,6 +41,8 @@ Released @TBD@
 -- stunnel, version bump to 5.46
 
 -- miniupnpd, version bump to 2.1
+
+-- msmtp, version bump to 1.6.7
 
 -- unbound (host), version bump to 1.7.2
 
