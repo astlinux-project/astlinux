@@ -22,7 +22,11 @@ Released @TBD@
 
 -- luabitop, version 1.0.2, new Lua module for prosody
 
+-- ethtool, version bump to 4.17
+
 -- Monit, version bump to 5.25.2
+
+-- strace, version bump to 4.23
 
 -- sudo, version bump to 1.8.23
 
@@ -38,13 +42,13 @@ Released @TBD@
 
 -- strongSwan, version 5.5.3, security fixes: CVE-2018-10811, CVE-2018-5388
 
--- stunnel, version bump to 5.46
+-- stunnel, version bump to 5.47
 
 -- miniupnpd, version bump to 2.1
 
 -- msmtp, version bump to 1.6.7
 
--- unbound (host), version bump to 1.7.2
+-- unbound (host), version bump to 1.7.3
 
 -- whois, version bump to 5.3.1
 
