@@ -613,6 +613,7 @@ endif
 source "package/htop/Config.in"
 source "package/module-init-tools/Config.in"
 source "package/openvmtools/Config.in"
+source "package/qemu-guest-agent/Config.in"
 if BR2_PACKAGE_BUSYBOX_SHOW_OTHERS
 source "package/procps/Config.in"
 source "package/psmisc/Config.in"

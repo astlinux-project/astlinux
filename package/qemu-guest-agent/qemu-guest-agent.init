@@ -1,0 +1,75 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+PIDFILE="/var/run/qemu-ga.pid"
+
+METHOD="virtio-serial"
+
+DEVPATH="/dev/virtio-ports/org.qemu.guest_agent.0"
+
+test_if_qemu_guest_agent()
+{
+  if ! lscpu | grep -q -i '^hypervisor vendor: *kvm'; then
+    return 1
+  fi
+
+  if [ ! -e "$DEVPATH" ]; then
+    modprobe virtio_console
+    sleep 1
+    if [ ! -e "$DEVPATH" ]; then
+      return 1
+    fi
+  fi
+
+  return 0
+}
+
+init () {
+  :
+}
+
+start () {
+
+  if [ "$QEMU_GUEST_AGENT" = "yes" ] && test_if_qemu_guest_agent; then
+    echo "Starting QEMU Guest Agent (qemu-ga) daemon..."
+
+    qemu-ga -d -f $PIDFILE -m "$METHOD" -p "$DEVPATH"
+  fi
+}
+
+stop () {
+
+  if [ -f $PIDFILE ]; then
+    echo "Stopping QEMU Guest Agent (qemu-ga) daemon..."
+    kill $(cat $PIDFILE) >/dev/null 2>&1
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+

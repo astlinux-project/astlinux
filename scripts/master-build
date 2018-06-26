@@ -71,6 +71,12 @@ set_openvmtools_package()
   sed -i 's:^# BR2_PACKAGE_OPENVMTOOLS .*$:BR2_PACKAGE_OPENVMTOOLS=y:' .config
 }
 
+set_qemu_guest_agent_package()
+{
+  # enable BR2_PACKAGE_QEMU_GUEST_AGENT
+  sed -i 's:^# BR2_PACKAGE_QEMU_GUEST_AGENT .*$:BR2_PACKAGE_QEMU_GUEST_AGENT=y:' .config
+}
+
 set_asterisk_version()
 {
   case $1 in
@@ -190,6 +196,7 @@ for asterisk in ast11 ast13; do
   set_smp64vm_kernel
   unset_major_pci_packages
   set_openvmtools_package
+  set_qemu_guest_agent_package
 
   for board in $BOARDS_SMP64VM; do
     build_board "$FIRMWARE"
