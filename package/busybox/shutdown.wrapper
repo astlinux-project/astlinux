@@ -12,13 +12,21 @@ usage()
 case $1 in
   -r) CMD="/sbin/reboot"
     ;;
-  -h) CMD="/sbin/poweroff"
+  -h|-H|-P) CMD="/sbin/poweroff"
     ;;
   *) usage
     ;;
 esac
 
 shift
+
+# Optional additional argument
+case $1 in
+  -r) CMD="/sbin/reboot" ; shift
+    ;;
+  -h|-H|-P) CMD="/sbin/poweroff" ; shift
+    ;;
+esac
 
 case $1 in
   now|+0) DELAY=""
