@@ -44,6 +44,19 @@ exit_error()
   exit 1
 }
 
+gen_os_release()
+{
+  local version="$1" variant="$2"
+
+  echo "ID=\"astlinux\""
+  echo "NAME=\"AstLinux\""
+  echo "PRETTY_NAME=\"$version\""
+  echo "VERSION=\"$version\""
+  echo "VERSION_ID=\"$version\""
+  echo "VARIANT=\"$variant\""
+  echo "VARIANT_ID=\"$variant\""
+}
+
 target="$1"
 
 base="${target%/output/target}"
@@ -63,6 +76,8 @@ overlay_target
 . "$base/scripts/ver-label/astlinux_release_version.sh"
 astlinux_release_version
 echo ${ASTVER} > "$target/etc/astlinux-release"
+
+gen_os_release "$ASTVER" "$board" > "$target/etc/os-release"
 
 exit 0
 
