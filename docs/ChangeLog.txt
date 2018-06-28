@@ -12,7 +12,12 @@ Released @TBD@
 
 ** System
 
+-- Linux Kernel 3.16.57, security and bug fixes
+
 -- e1000e version bump to 3.4.1.1 Intel PCI-Express PRO/1000 Ethernet Linux driver
+
+-- genx86_64-vm board type, add support for QEMU Guest Agent (qemu-ga 2.12.0).
+   New rc.conf variable QEMU_GUEST_AGENT must be set to "yes" to enable.
 
 -- e2fsprogs, version bump to 1.44.2
 
@@ -32,17 +37,22 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2018-06-20
 
+-- core system, generate a /etc/os-release file.
+   More info: https://www.freedesktop.org/software/systemd/man/os-release.html
+
 ** Networking
 
 -- libcurl (curl) version bump to 7.60.0, security fixes: CVE-2018-1000300, CVE-2018-1000301
 
 -- prosody, major version bump to 0.10.2, security fixes. Uses added luabitop 'lua bit' module
 
--- WireGuard VPN, version bump to 0.0.20180531
+-- WireGuard VPN, version bump to 0.0.20180625
 
 -- strongSwan, version 5.5.3, security fixes: CVE-2018-10811, CVE-2018-5388
 
 -- stunnel, version bump to 5.47
+
+-- iperf3, major version bump to 3.6
 
 -- miniupnpd, version bump to 2.1
 
