@@ -14,8 +14,8 @@ XMLSTARLET_DEPENDENCIES += libxml2 libxslt \
 	$(if $(BR2_PACKAGE_LIBICONV),libiconv)
 
 XMLSTARLET_CONF_OPT += --disable-static-libs \
-	--with-libxml-prefix=${STAGING_DIR}/usr \
-	--with-libxslt-prefix=${STAGING_DIR}/usr \
-	--with-libiconv-prefix=${STAGING_DIR}/usr
+	--with-libxml-prefix=$(STAGING_DIR)/usr \
+	--with-libxslt-prefix=$(STAGING_DIR)/usr \
+	--with-libiconv-prefix=$(STAGING_DIR)/usr
 
 $(eval $(call AUTOTARGETS,package,xmlstarlet))
