@@ -44,7 +44,7 @@ Released @TBD@
 
 ** Networking
 
--- libcurl (curl) version bump to 7.60.0, security fixes: CVE-2018-1000300, CVE-2018-1000301
+-- libcurl (curl) version bump to 7.61.0, security fixes: CVE-2018-1000300, CVE-2018-1000301, CVE-2018-0500
 
 -- prosody, major version bump to 0.10.2, security fixes. Uses added luabitop 'lua bit' module
 
@@ -66,7 +66,7 @@ Released @TBD@
 
 ** Asterisk
 
--- Asterisk 11.25.3 (no change) and 13.21.1 (version bump)
+-- Asterisk 11.25.3 (no change) and 13.22.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
