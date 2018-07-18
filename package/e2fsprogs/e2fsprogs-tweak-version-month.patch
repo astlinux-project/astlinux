@@ -1,0 +1,8 @@
+--- e2fsprogs-1.44.3/version.h.orig	2018-07-18 15:22:55.139890916 -0500
++++ e2fsprogs-1.44.3/version.h	2018-07-18 15:23:12.732968915 -0500
+@@ -8,4 +8,4 @@
+  */
+ 
+ #define E2FSPROGS_VERSION "1.44.3"
+-#define E2FSPROGS_DATE "10-July-2018"
++#define E2FSPROGS_DATE "10-Jul-2018"
