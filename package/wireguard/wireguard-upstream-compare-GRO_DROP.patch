@@ -1,0 +1,25 @@
+From 3367dcecf19c0535f0fc4d20b10ca16a67c35ca8 Mon Sep 17 00:00:00 2001
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date: Thu, 19 Jul 2018 18:21:20 +0200
+Subject: receive: check against proper return value type
+
+---
+ src/receive.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/receive.c b/src/receive.c
+index 144064e..732ac2b 100644
+--- a/src/receive.c
++++ b/src/receive.c
+@@ -342,7 +342,7 @@ static void packet_consume_data_done(struct sk_buff *skb, struct endpoint *endpo
+ 	if (unlikely(routed_peer != peer))
+ 		goto dishonest_packet_peer;
+ 
+-	if (unlikely(napi_gro_receive(&peer->napi, skb) == NET_RX_DROP)) {
++	if (unlikely(napi_gro_receive(&peer->napi, skb) == GRO_DROP)) {
+ 		++dev->stats.rx_dropped;
+ 		net_dbg_ratelimited("%s: Failed to give packet to userspace from peer %llu (%pISpfsc)\n", dev->name, peer->internal_id, &peer->endpoint.addr);
+ 	} else
+-- 
+cgit v1.1-68-gd49f
+
