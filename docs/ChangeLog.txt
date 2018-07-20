@@ -19,6 +19,8 @@ Released @TBD@
 -- genx86_64-vm board type, add support for QEMU Guest Agent (qemu-ga 2.12.0).
    New rc.conf variable QEMU_GUEST_AGENT must be set to "yes" to enable.
 
+-- php, version bump to 5.6.37
+
 -- e2fsprogs, version bump to 1.44.3
 
 -- sqlite, version bump to 3.24.0
@@ -26,6 +28,8 @@ Released @TBD@
 -- libedit, version bump to 20180525-3.1
 
 -- luabitop, version 1.0.2, new Lua module for prosody
+
+-- acpid, version bump to 2.0.30
 
 -- ethtool, version bump to 4.17
 
@@ -62,7 +66,7 @@ Released @TBD@
 
 -- unbound (host), version bump to 1.7.3
 
--- whois, version bump to 5.3.1
+-- whois, version bump to 5.3.2
 
 -- (Custom Build Only) sipp, version bump to 3.5.2
 
