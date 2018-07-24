@@ -1,0 +1,65 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+PIDFILE="/var/run/keepalived.pid"
+
+init () {
+
+  if [ -f /mnt/kd/keepalived.conf ]; then
+    ln -sf /mnt/kd/keepalived.conf /tmp/etc/keepalived.conf
+  else
+    if [ -L /tmp/etc/keepalived.conf ]; then
+      rm -f /tmp/etc/keepalived.conf
+    fi
+  fi
+}
+
+start () {
+  local OPTIONS
+
+  if [ -f /etc/keepalived.conf ]; then
+
+    OPTIONS="$KEEPALIVED_OPTIONS"
+
+    echo "Starting keepalived..."
+    keepalived $OPTIONS -f /etc/keepalived.conf
+  fi
+}
+
+stop () {
+
+  if [ -f $PIDFILE ]; then
+
+    echo "Stopping keepalived..."
+    kill $(cat $PIDFILE) >/dev/null 2>&1
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+

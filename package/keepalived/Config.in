@@ -1,0 +1,16 @@
+config BR2_PACKAGE_KEEPALIVED
+	bool "keepalived"
+	depends on BR2_USE_MMU
+	depends on BR2_LINUX_KERNEL
+	select BR2_PACKAGE_OPENSSL
+	help
+	  The main goal of this project is to provide simple and robust
+	  facilities for loadbalancing and high-availability to Linux
+	  system and Linux based infrastructures. Loadbalancing framework
+	  relies on well-known and widely used Linux Virtual Server (IPVS)
+	  kernel module providing Layer4 loadbalancing. Keepalived
+	  implements a set of checkers to dynamically and adaptively
+	  maintain and manage loadbalanced server pool according their health.
+
+	  http://www.keepalived.org/
+
