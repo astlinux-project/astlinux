@@ -16,6 +16,7 @@
 // 11-14-2016, Added IPsec strongSwan support
 // 02-16-2017, Added Restart FTP Server support
 // 11-06-2017, Added WireGuard VPN Support
+// 07-25-2018, Added Keepalived Support
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -50,6 +51,9 @@ $select_reload = array (
   'zabbix' => 'Restart Zabbix Monitor',
   'asterisk' => 'Restart Asterisk'
 );
+if (is_file('/etc/init.d/keepalived')) {
+  $select_reload['keepalived'] = 'Restart Keepalived';
+}
 if (is_addon_package('fop2')) {
   $select_reload['fop2'] = 'Restart Asterisk FOP2';
   $select_reload['FOP2'] = 'Reload Asterisk FOP2';
@@ -277,6 +281,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 50, $result, 'init');
       } elseif ($process === 'wireguard') {
         $result = restartPROCESS($process, 51, $result, 'init');
+      } elseif ($process === 'keepalived') {
+        $result = restartPROCESS($process, 52, $result, 'init');
       } elseif ($process === 'IPTABLES') {
         $result = restartPROCESS('iptables', 66, $result, 'reload');
       } elseif ($process === 'cron') {
@@ -335,6 +341,7 @@ require_once '../common/header.php';
       $dir === '/mnt/kd/arno-iptables-firewall/plugins' ||
       $dir === '/mnt/kd/blocklists' ||
       $dir === '/mnt/kd/phoneprov/templates' ||
+      $dir === '/mnt/kd/keepalived' ||
       $dir === '/etc/asterisk' ||
       $dir === '/etc/asterisk/includes' ||
       $openfile === '/etc/rc.modules' ||
@@ -429,6 +436,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">FTP Server'.statusPROCESS('vsftpd').'.</p>');
     } elseif ($result == 51) {
       putHtml('<p style="color: green;">WireGuard VPN'.statusPROCESS('wireguard').'.</p>');
+    } elseif ($result == 52) {
+      putHtml('<p style="color: green;">Keepalived'.statusPROCESS('keepalived').'.</p>');
     } elseif ($result == 66) {
       putHtml('<p style="color: green;">Firewall Blocklist has been Reloaded.</p>');
     } elseif ($result == 99) {
@@ -595,6 +604,10 @@ require_once '../common/header.php';
   if (is_writable($file = '/mnt/kd/snmp/snmp.conf')) {
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
     putHtml('<option value="'.$file.'"'.$sel.'>snmp/'.basename($file).' - SNMP Applications Config</option>');
+  }
+  if (is_writable($file = '/mnt/kd/keepalived/keepalived.conf')) {
+    $sel = ($file === $openfile) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$file.'"'.$sel.'>keepalived/'.basename($file).' - Keepalived Config</option>');
   }
   if (is_writable($file = '/mnt/kd/stubby/stubby.yml')) {
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
