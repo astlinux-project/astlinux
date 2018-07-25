@@ -6,24 +6,26 @@ PIDFILE="/var/run/keepalived.pid"
 
 init () {
 
-  if [ -f /mnt/kd/keepalived.conf ]; then
-    ln -sf /mnt/kd/keepalived.conf /tmp/etc/keepalived.conf
-  else
-    if [ -L /tmp/etc/keepalived.conf ]; then
-      rm -f /tmp/etc/keepalived.conf
-    fi
+  if [ ! -f /mnt/kd/keepalived/keepalived.conf ]; then
+    exit
   fi
+
+  ln -snf /mnt/kd/keepalived /tmp/etc/keepalived
+
+  mkdir -p /var/state/keepalived
 }
 
 start () {
   local OPTIONS
 
-  if [ -f /etc/keepalived.conf ]; then
+  if [ -f /etc/keepalived/keepalived.conf ]; then
+
+    sysctl -w net.ipv4.ip_nonlocal_bind=1 >/dev/null
 
     OPTIONS="$KEEPALIVED_OPTIONS"
 
     echo "Starting keepalived..."
-    keepalived $OPTIONS -f /etc/keepalived.conf
+    keepalived $OPTIONS -f /etc/keepalived/keepalived.conf
   fi
 }
 

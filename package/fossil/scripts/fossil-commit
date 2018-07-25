@@ -35,7 +35,7 @@ fossil status
 if [ -n "$FOSSIL_DEFAULT_DIRS" ]; then
   dirs="$FOSSIL_DEFAULT_DIRS"
 else
-  dirs="rc.conf.d crontabs avahi arno-iptables-firewall/plugins monit/monit.d openvpn/ccd wireguard/peer"
+  dirs="rc.conf.d crontabs avahi keepalived arno-iptables-firewall/plugins monit/monit.d openvpn/ccd wireguard/peer"
   if [ "$ASTERISK_DAHDI_DISABLE" != "yes" ]; then
     dirs="$dirs asterisk dahdi fop2 phoneprov/templates"
   fi

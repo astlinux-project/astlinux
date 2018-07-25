@@ -71,7 +71,7 @@ fi
 # Restore basic configuration directories, clearing target directory
 #
 if ! restore_dirs rc.conf.d ssh_keys asterisk dahdi openvpn ipsec wireguard \
-                  crontabs avahi ups snmp fop2 kamailio monit; then
+                  crontabs avahi ups snmp fop2 kamailio monit keepalived; then
   exit 2
 fi
 
