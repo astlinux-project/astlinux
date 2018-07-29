@@ -4,8 +4,8 @@
 #
 #############################################################
 
-LIBPCAP_VERSION = 1.8.1
-LIBPCAP_SITE = http://www.tcpdump.org/release
+LIBPCAP_VERSION = 1.9.0
+LIBPCAP_SITE = https://www.tcpdump.org/release
 LIBPCAP_SOURCE = libpcap-$(LIBPCAP_VERSION).tar.gz
 LIBPCAP_INSTALL_STAGING = YES
 LIBPCAP_DEPENDENCIES = zlib host-flex host-bison
