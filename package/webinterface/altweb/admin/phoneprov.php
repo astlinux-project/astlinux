@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2015 Lonnie Abelbeck
+// Copyright (C) 2015-2018 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -10,11 +10,14 @@
 // 03-14-2014
 // 08-02-2015, Add Status, Reload and Reboot links
 // 08-04-2015, Add pjsip support
+// 07-30-2018, Display PHONEPROV_GW_IP from user.conf
 //
 // System location of /mnt/kd/rc.conf.d directory
 $PHONEPROVCONFDIR = '/mnt/kd/rc.conf.d';
 // System location of gui.phoneprov.conf file
 $PHONEPROVCONFFILE = '/mnt/kd/rc.conf.d/gui.phoneprov.conf';
+// System location of user.conf file
+$USERCONFFILE = '/mnt/kd/rc.conf.d/user.conf';
 // Asterisk sip_notify config file
 $ASTERISK_SIP_NOTIFY_CONF = '/etc/asterisk/sip_notify.conf';
 // Asterisk pjsip_notify config file
@@ -697,6 +700,11 @@ require_once '../common/header.php';
   } else {
     $vars = NULL;
   }
+  if (is_file($USERCONFFILE)) {
+    $user_vars = parseRCconf($USERCONFFILE);
+  } else {
+    $user_vars = NULL;
+  }
 
   $ldata['template'] = '';
   for ($i = 0; $i < $MAXNUM; $i++) {
@@ -747,6 +755,12 @@ if (($templates = getPHONEPROVtemplates("$phoneprov_base_dir/templates")) !== FA
   }
   putHtml('</select>');
   putHtml('</td></tr>');
+
+  if (($gw_ip = getVARdef($user_vars, 'PHONEPROV_GW_IP')) !== '') {
+    putHtml('<tr><td style="text-align: center;" colspan="3">');
+    putHtml('Gateway IPv4:&nbsp;'.$gw_ip);
+    putHtml('</td></tr>');
+  }
   putHtml('</table>');
 
   putHtml('<table width="100%" class="stdtable">');
