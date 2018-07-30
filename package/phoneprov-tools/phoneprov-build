@@ -283,6 +283,11 @@ case $if_name in
     ;;
 esac
 
+# Explicitly define the gateway IPv4 address
+if [ -n "$PHONEPROV_GW_IP" ]; then
+  sip_server_ipv4="$PHONEPROV_GW_IP"
+fi
+
 if [ -z "$sip_server_ipv4" ]; then
   echo "phoneprov-build: Invalid Interface: $sip_server_if" >&2
   exit 1
