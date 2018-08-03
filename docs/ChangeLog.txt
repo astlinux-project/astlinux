@@ -54,7 +54,7 @@ Released @TBD@
 
 -- prosody, major version bump to 0.10.2, security fixes. Uses added luabitop 'lua bit' module
 
--- WireGuard VPN, version bump to 0.0.20180731
+-- WireGuard VPN, version bump to 0.0.20180802
 
 -- strongSwan, version 5.5.3, security fixes: CVE-2018-10811, CVE-2018-5388
 
