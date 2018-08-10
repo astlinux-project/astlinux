@@ -54,7 +54,7 @@ Released @TBD@
 
 -- prosody, major version bump to 0.10.2, security fixes. Uses added luabitop 'lua bit' module
 
--- WireGuard VPN, version bump to 0.0.20180802
+-- WireGuard VPN, version bump to 0.0.20180809
 
 -- strongSwan, version 5.5.3, security fixes: CVE-2018-10811, CVE-2018-5388
 
@@ -86,6 +86,8 @@ Released @TBD@
 -- pjsip 2.7.2 (version bump)
 
 -- phoneprov-tools, new rc.conf variable PHONEPROV_GW_IP, explicitly define the gateway IPv4 address.
+
+-- asterisk, add patch, chan_sip: suppress comfort noise frame warnings
 
 ** Web Interface
 
