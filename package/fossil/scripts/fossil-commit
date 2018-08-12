@@ -41,7 +41,12 @@ else
   fi
 fi
 
-files="${FOSSIL_DEFAULT_FILES:-rc.elocal rc.local rc.local.stop dnsmasq.static arno-iptables-firewall/custom-rules}"
+if [ -n "$FOSSIL_DEFAULT_FILES" ]; then
+  files="$FOSSIL_DEFAULT_FILES"
+else
+  files="rc.elocal rc.local rc.local.stop dnsmasq.static arno-iptables-firewall/custom-rules"
+  files="$files blocklists/whitelist.netset blocklists/whitelistv6.netset blocklists/blocked-hosts*.netset"
+fi
 
 unset IFS
 for dir in $dirs $FOSSIL_INCLUDE_DIRS; do
