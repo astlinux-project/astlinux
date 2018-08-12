@@ -37,9 +37,13 @@ Released @TBD@
 
 -- Monit, version bump to 5.25.2
 
+-- pciutils, version bump to 3.6.1
+
 -- strace, version bump to 4.23
 
 -- sudo, version bump to 1.8.23
+
+-- unixodbc, version bump to 2.3.7
 
 -- system-vendor, update system-vendor.ids
 
