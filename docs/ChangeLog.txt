@@ -60,6 +60,8 @@ Released @TBD@
 
 -- WireGuard VPN, version bump to 0.0.20180809
 
+-- lighttpd, version bump to 1.4.50, many bug and security fixes
+
 -- strongSwan, version 5.5.3, security fixes: CVE-2018-10811, CVE-2018-5388
 
 -- libpcap, version bump to 1.9.0
