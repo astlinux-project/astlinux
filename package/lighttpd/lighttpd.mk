@@ -4,8 +4,8 @@
 #
 #############################################################
 
-LIGHTTPD_VERSION = 1.4.49
-LIGHTTPD_SITE = http://download.lighttpd.net/lighttpd/releases-1.4.x
+LIGHTTPD_VERSION = 1.4.50
+LIGHTTPD_SITE = https://download.lighttpd.net/lighttpd/releases-1.4.x
 LIGHTTPD_DEPENDENCIES = host-pkg-config
 LIGHTTPD_CONF_OPT = \
 	--libdir=/usr/lib/lighttpd \
