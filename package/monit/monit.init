@@ -13,12 +13,12 @@ gen_monitrc()
   echo "set daemon ${MONIT_CHECK_INTERVAL:-60}
 set idfile /mnt/kd/monit/monit.id
 set logfile syslog facility log_daemon
-set mailserver localhost
+set mailserver 127.0.0.1 port 25
 
 set httpd
   port 2812
-  address localhost
-  allow localhost
+  address 127.0.0.1
+  allow 127.0.0.1
 "
 
   unset IFS
