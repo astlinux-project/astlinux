@@ -10,6 +10,7 @@ MSMTP_SITE = https://marlam.de/msmtp/releases
 MSMTP_DEPENDENCIES = openssl
 
 MSMTP_CONF_OPT += \
+	--with-msmtpd \
 	--with-tls=openssl \
 	--without-libgsasl \
 	--without-libidn \
@@ -19,6 +20,7 @@ MSMTP_CONF_OPT += \
 
 define MSMTP_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/src/msmtp $(TARGET_DIR)/usr/sbin/msmtp
+	$(INSTALL) -m 0755 -D $(@D)/src/msmtpd $(TARGET_DIR)/usr/sbin/msmtpd
 	$(INSTALL) -m 0755 -D package/msmtp/msmtp.init $(TARGET_DIR)/etc/init.d/msmtp
 	$(INSTALL) -m 0755 -D package/msmtp/msmtpqueue.sh $(TARGET_DIR)/usr/sbin/msmtpqueue
 	$(INSTALL) -m 0755 -D package/msmtp/sendmail.sh $(TARGET_DIR)/usr/sbin/sendmail
@@ -30,16 +32,16 @@ define MSMTP_INSTALL_TARGET_CMDS
 endef
 
 define MSMTP_UNINSTALL_TARGET_CMDS
-	rm $(TARGET_DIR)/usr/sbin/msmtp
-	rm $(TARGET_DIR)/etc/init.d/msmtp
-	rm $(TARGET_DIR)/usr/sbin/msmtpqueue
-	rm $(TARGET_DIR)/usr/sbin/sendmail
-	rm $(TARGET_DIR)/usr/sbin/testmail
-	rm $(TARGET_DIR)/usr/sbin/mime-pack
-	rm $(TARGET_DIR)/bin/mail
-	rm $(TARGET_DIR)/usr/bin/mail
-	rm $(TARGET_DIR)/etc/msmtprc
+	rm -f $(TARGET_DIR)/usr/sbin/msmtp
+	rm -f $(TARGET_DIR)/usr/sbin/msmtpd
+	rm -f $(TARGET_DIR)/etc/init.d/msmtp
+	rm -f $(TARGET_DIR)/usr/sbin/msmtpqueue
+	rm -f $(TARGET_DIR)/usr/sbin/sendmail
+	rm -f $(TARGET_DIR)/usr/sbin/testmail
+	rm -f $(TARGET_DIR)/usr/sbin/mime-pack
+	rm -f $(TARGET_DIR)/bin/mail
+	rm -f $(TARGET_DIR)/usr/bin/mail
+	rm -f $(TARGET_DIR)/etc/msmtprc
 endef
 
 $(eval $(call AUTOTARGETS,package,msmtp))
-
