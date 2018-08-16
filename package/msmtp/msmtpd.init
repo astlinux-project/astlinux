@@ -1,0 +1,70 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+PIDFILE="/var/run/msmtpd.pid"
+
+init () {
+
+  ## Setup spool directory for sendmail
+
+  # Automatically create "/mnt/kd/mail" directory if it doesn't exist
+  if [ ! -d /mnt/kd/mail ]; then
+    mkdir /mnt/kd/mail 2>/dev/null     # will fail on virgin RO filesystem, ignore stderr
+  fi
+
+  if [ -d /mnt/kd/mail ]; then  # Persistent mail queue
+    ln -snf /mnt/kd/mail /var/spool/mail
+  elif [ ! -d /var/spool/mail ]; then  # Temporary mail queue
+    mkdir /var/spool/mail
+  fi
+}
+
+start () {
+
+  if [ "$SMTP_LOCALHOST_SERVER" != "no" ]; then
+    echo "Starting msmtpd..."
+
+    # Start SMTP localhost server daemon
+    start-stop-daemon -S -x /usr/sbin/msmtpd -p $PIDFILE -m -b -- --command '/usr/sbin/sendmail -f %F'
+  fi
+}
+
+stop () {
+
+  if [ -f $PIDFILE ]; then
+    echo "Stopping msmtpd..."
+
+    # Stop SMTP localhost server daemon
+    start-stop-daemon -K -q -n msmtpd -p $PIDFILE -s TERM
+    rm -f $PIDFILE
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+
