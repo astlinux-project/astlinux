@@ -29,17 +29,19 @@ Released @TBD@
 
 -- libedit, version bump to 20180525-3.1
 
+-- expat, version bump to 2.2.6
+
 -- luabitop, version 1.0.2, new Lua module for prosody
 
 -- acpid, version bump to 2.0.30
 
 -- ethtool, version bump to 4.17
 
--- Monit, version bump to 5.25.2
+-- Monit, version bump to 5.25.2, now uses SMTP client to 127.0.0.1:25 for email notifications
 
 -- pciutils, version bump to 3.6.1
 
--- strace, version bump to 4.23
+-- strace, version bump to 4.24
 
 -- sudo, version bump to 1.8.23
 
@@ -53,6 +55,8 @@ Released @TBD@
    More info: https://www.freedesktop.org/software/systemd/man/os-release.html
 
 ** Networking
+
+-- OpenSSL, version bump to 1.0.2p, security fixes: CVE-2018-0732, CVE-2018-0737
 
 -- libcurl (curl) version bump to 7.61.0, security fixes: CVE-2018-1000300, CVE-2018-1000301, CVE-2018-0500
 
@@ -76,6 +80,8 @@ Released @TBD@
 -- miniupnpd, version bump to 2.1
 
 -- msmtp, version bump to 1.6.8
+   Added msmtpd SMTP localhost daemon to forward 127.0.0.1:25 to "sendmail", enabled by default,
+   disable with new rc.conf variable SMTP_LOCALHOST_SERVER="no"
 
 -- unbound (host), version bump to 1.7.3
 
