@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-QEMU_VERSION = 2.12.0
+QEMU_VERSION = 3.0.0
 QEMU_SOURCE = qemu-$(QEMU_VERSION).tar.bz2
 QEMU_SITE = http://wiki.qemu.org/download
 
@@ -130,6 +130,7 @@ endef
 
 define QEMU_UNINSTALL_TARGET_CMDS
 	rm -rf $(TARGET_DIR)/stat/etc/qemu
+	rm -f $(TARGET_DIR)/etc/qemu
 	rm -f $(TARGET_DIR)/usr/bin/qemu
 	rm -f $(TARGET_DIR)/usr/bin/qemu-*
 	rm -f $(TARGET_DIR)/etc/init.d/qemu
