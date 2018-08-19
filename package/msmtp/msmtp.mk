@@ -10,7 +10,6 @@ MSMTP_SITE = https://marlam.de/msmtp/releases
 MSMTP_DEPENDENCIES = openssl
 
 MSMTP_CONF_OPT += \
-	--with-msmtpd \
 	--with-tls=openssl \
 	--without-libgsasl \
 	--without-libidn \
