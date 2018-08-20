@@ -25,13 +25,15 @@ Released @TBD@
 
 -- busybox, enable "timeout" command
 
--- e2fsprogs, version bump to 1.44.3
+-- e2fsprogs, version bump to 1.44.4
 
 -- sqlite, version bump to 3.24.0
 
 -- libedit, version bump to 20180525-3.1
 
 -- expat, version bump to 2.2.6
+
+-- liburiparser, version bump to 0.8.6
 
 -- luabitop, version 1.0.2, new Lua module for prosody
 
@@ -45,7 +47,7 @@ Released @TBD@
 
 -- strace, version bump to 4.24
 
--- sudo, version bump to 1.8.23
+-- sudo, version bump to 1.8.24
 
 -- unixodbc, version bump to 2.3.7
 
