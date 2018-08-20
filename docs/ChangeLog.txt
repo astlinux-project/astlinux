@@ -85,7 +85,7 @@ Released @TBD@
 
 -- miniupnpd, version bump to 2.1
 
--- msmtp, version bump to 1.6.8
+-- msmtp, version bump to 1.8.0rc1
    Added msmtpd SMTP localhost daemon to forward 127.0.0.1:25 to "sendmail", enabled by default.
          Required for Monit and Keepalived email alerts.
          Disable with new rc.conf variable SMTP_LOCALHOST_SERVER="no"
