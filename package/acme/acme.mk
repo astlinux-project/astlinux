@@ -18,6 +18,7 @@ ACME_REMOVE_TARGET_DNSAPI = dns_myapi.sh dns_lexicon.sh dns_cyon.sh dns_inwx.sh 
 define ACME_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0644 package/acme/deploy/astlinux.sh $(TARGET_DIR)/stat/etc/acme/deploy/astlinux.sh
 	$(INSTALL) -D -m 0644 package/acme/deploy/custom.sh $(TARGET_DIR)/stat/etc/acme/deploy/custom.sh
+	$(INSTALL) -D -m 0644 $(@D)/deploy/ssh.sh $(TARGET_DIR)/stat/etc/acme/deploy/ssh.sh
 	$(INSTALL) -D -m 0755 package/acme/acme-client.sh $(TARGET_DIR)/usr/sbin/acme-client
 	$(INSTALL) -D -m 0755 $(@D)/acme.sh $(TARGET_DIR)/stat/etc/acme/acme.sh
 	cp -a $(@D)/dnsapi $(TARGET_DIR)/stat/etc/acme/
