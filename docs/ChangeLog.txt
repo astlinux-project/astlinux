@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 3.16.57, security and bug fixes
 
+-- RUNNIX, version bump to runnix-0.5.5, with Linux Kernel 3.16.57, e2fsprogs 1.44.4
+
 -- e1000e version bump to 3.4.1.1 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
 -- genx86_64-vm board type, add support for QEMU Guest Agent (qemu-ga 2.12.0).
