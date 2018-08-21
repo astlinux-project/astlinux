@@ -4,7 +4,7 @@
 #
 #############################################################
 
-RUNNIX_VERSION = 0.5.4
+RUNNIX_VERSION = 0.5.5
 RUNNIX_SOURCE = runnix-$(RUNNIX_VERSION).tar.gz
 RUNNIX_SITE = https://s3.amazonaws.com/mirror.astlinux-project/runnix5
 RUNNIX_DEPENDENCIES = host-fdisk
