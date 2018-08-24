@@ -9,7 +9,7 @@ ROOT="/mnt/root"
 
 RUNVER="$(cat /etc/runnix-release)"
 
-DRIVES="sda sdb sdc sdd sde sdf sdg sdh"
+DRIVES="sda sdb sdc sdd sde sdf sdg sdh vda vdb vdc vdd"
 
 setup_network () {
 
@@ -137,26 +137,31 @@ mkdir /tmp/etc
 
 CMDLINE="$(cat /proc/cmdline)"
 
-for x in $DRIVES; do
-  if mount -t iso9660 -o ro /dev/${x} $BASE 2>/dev/null; then
-    if [ -f $BASE/os/astflag ]; then
-      DEVICE=${x}
-      RODEV=yes
-    else
-      umount /dev/${x}
-    fi
-  fi
-done
+DEVICE=""
 
 for x in $DRIVES; do
   if mount -t vfat /dev/${x}1 $BASE 2>/dev/null; then
     if [ -f $BASE/os/astflag ]; then
-      DEVICE=${x}
+      DEVICE="${x}"
+      break
     else
       umount /dev/${x}1
     fi
   fi
 done
+
+if [ -z "$DEVICE" ]; then
+  for x in $DRIVES; do
+    if mount -t iso9660 -o ro /dev/${x} $BASE 2>/dev/null; then
+      if [ -f $BASE/os/astflag ]; then
+        DEVICE="${x}"
+        break
+      else
+        umount /dev/${x}
+      fi
+    fi
+  done
+fi
 
 # Control kernel console messages
 sysctl -w kernel.printk="3 4 1 3" >/dev/null

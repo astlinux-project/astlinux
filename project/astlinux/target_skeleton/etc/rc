@@ -47,6 +47,34 @@ ast_checkfs () {
   esac
 }
 
+set_kddev () {
+
+  case $KDDEV in
+
+  # valid device name -- should we test for the device being present?
+  /dev/[sv]d[a-h][0-9])
+    ;;
+
+  # not set
+  '')
+    ;;
+
+  auto)
+    if [ -x /sbin/findfs ]; then
+      KDDEV=`/sbin/findfs LABEL=ASTKD 2>/dev/null`
+    else
+      echo "Keydisk set to 'auto' but no matching disk label found." >&2
+    fi
+    ;;
+
+  # gibberish...
+  *)
+    echo "Invalid keydisk name: $KDDEV" >&2
+    exec /bin/sh
+    ;;
+  esac
+}
+
 init() {
 
   mount -t proc none /proc
@@ -94,31 +122,6 @@ init() {
     esac
 
   done
-
-  case $KDDEV in
-
-  # valid device name -- should we test for the device being present?
-  /dev/[sh]d[a-h][0-9])
-    ;;
-
-  # not set
-  '')
-    ;;
-
-  auto)
-    if [ -x /sbin/findfs ]; then
-      KDDEV=`/sbin/findfs LABEL=ASTKD 2>/dev/null`
-    else
-      echo "Keydisk set to 'auto' but no matching disk label found." >&2
-    fi
-    ;;
-
-  # gibberish...
-  *)
-    echo "Invalid keydisk name: $KDDEV" >&2
-    exec /bin/sh
-    ;;
-  esac
 
   devtmpfs="$(awk '/^devtmpfs/ { print $2; nextfile; }' /proc/mounts)"
   if [ -n "$devtmpfs" ]; then
@@ -168,6 +171,8 @@ $fstab_tmp
 $fstab_var
 $fstab_shm
 " > /tmp/etc/fstab
+
+  set_kddev
 
   mkdir /var/spool /var/lib
   mkdir /var/empty /var/lock /var/db /var/run /var/racoon
@@ -255,7 +260,7 @@ $fstab_shm
         echo "Error: $IOS is not available on $IODEV"
       fi
     done
-  fi 
+  fi
 
   #Check and mount filesystems
   if [ -z "$ASTIMG" ]; then
@@ -292,19 +297,19 @@ $fstab_shm
     fi
   fi
 
-  # Re-mount Runnix partition                                    
-  if ! mount | grep -q "/oldroot/cdrom"; then                   
-    if [ -x /sbin/findfs ]; then                         
-      LABEL=`/sbin/findfs LABEL=RUNNIX`                                 
-      if [ -n "$LABEL" ]; then                                
+  # Re-mount Runnix partition
+  if ! mount | grep -q "/oldroot/cdrom"; then
+    if [ -x /sbin/findfs ]; then
+      LABEL=`/sbin/findfs LABEL=RUNNIX`
+      if [ -n "$LABEL" ]; then
         if mount -t vfat -o ro "$LABEL" /oldroot/cdrom; then
-          echo "Runnix vfat partition re-mounted read-only" 
-        fi                                                  
-      else                                                  
+          echo "Runnix vfat partition re-mounted read-only"
+        fi
+      else
         echo "Runnix vfat partition label not found, use: dosfslabel /dev/sda1 RUNNIX" 1>&2
-      fi                                                                                   
-    fi                                                                                     
-  fi                                                                                       
+      fi
+    fi
+  fi
 
   # Check for video (non-serial) console, and load os/console.kmap if it exists
   if ! echo "$CMDLINE" | grep -q "console="; then

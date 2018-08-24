@@ -8,7 +8,7 @@ RUNVER="$(cat /etc/runnix-release)"
 
 CDROM_DRIVES="sr0 sr1 sr2 sr3"
 
-DRIVES="sda sdb sdc sdd sde sdf sdg sdh"
+DRIVES="sda sdb sdc sdd sde sdf sdg sdh vda vdb vdc vdd"
 
 setup_network () {
 

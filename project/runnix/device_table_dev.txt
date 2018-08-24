@@ -128,6 +128,16 @@
 #/dev/st	c	640	0	0	9	64	1	1	4
 #/dev/st	c	640	0	0	9	96	1	1	4
 
+# VIRTIO Devices
+/dev/vda	b	640	0	0	254	0	0	0	-
+/dev/vda	b	640	0	0	254	1	1	1	15
+/dev/vdb	b	640	0	0	254	16	0	0	-
+/dev/vdb	b	640	0	0	254	17	1	1	15
+/dev/vdc	b	640	0	0	254	32	0	0	-
+/dev/vdc	b	640	0	0	254	33	1	1	15
+/dev/vdd	b	640	0	0	254	48	0	0	-
+/dev/vdd	b	640	0	0	254	49	1	1	15
+
 # Floppy disk devices
 #/dev/fd	b	640	0	0	2	0	0	1	2
 #/dev/fd0d360	b	640	0	0	2	4	0	0	-

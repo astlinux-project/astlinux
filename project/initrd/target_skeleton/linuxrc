@@ -1,9 +1,7 @@
 #!/bin/sh
 export PATH=/usr/bin:/usr/sbin:/bin:/sbin
 
-# Must still look for /dev/hd[a-d] to be backward compatible
-# when reverted to an older version that still uses IDE
-DRIVES="hda hdb hdc hdd sda sdb sdc sdd sde sdf sdg sdh"
+DRIVES="sda sdb sdc sdd sde sdf sdg sdh vda vdb vdc vdd"
 
 # Max image size in 1024 (k) bytes
 MAX_IMAGEFS_SIZE=196608   # 192m
@@ -151,7 +149,7 @@ of RAM. You should consider getting more."
       echo "unmounting /cdrom"
       umount /cdrom
 
-    else 
+    else
       echo "Moving mount point to /new"
       mount --move /image /new
     fi
@@ -184,26 +182,32 @@ if [ -n "$LSMOD" ]; then
   done
 fi
 
+CDROM=""
+
 # Mount Root Device
 for x in $DRIVES; do
-  if mount -t iso9660 -r /dev/${x} /cdrom >/dev/null 2>&1; then
+  if mount -t vfat -o ro /dev/${x}1 /cdrom >/dev/null 2>&1; then
     if [ -f /cdrom/os/astflag ]; then
-      CDROM=${x}
-    else
-      umount /dev/${x}
-    fi
-  fi
-done
-
-for x in $DRIVES; do
-  if mount -t vfat -r /dev/${x}1 /cdrom >/dev/null 2>&1; then
-    if [ -f /cdrom/os/astflag ]; then
-      CDROM=${x}
+      CDROM="${x}"
+      break
     else
       umount /dev/${x}1
     fi
   fi
 done
+
+if [ -z "$CDROM" ]; then
+  for x in $DRIVES; do
+    if mount -t iso9660 -o ro /dev/${x} /cdrom >/dev/null 2>&1; then
+      if [ -f /cdrom/os/astflag ]; then
+        CDROM="${x}"
+        break
+      else
+        umount /dev/${x}
+      fi
+    fi
+  done
+fi
 
 # CD not found
 if [ -z "$CDROM" ]; then
