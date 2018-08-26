@@ -1,0 +1,59 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+PIDFILE="/var/run/rngd.pid"
+
+HWRNG="/dev/hwrng"
+
+init () {
+
+  modprobe -q virtio-rng
+}
+
+start () {
+
+  if [ -e $HWRNG ]; then
+    echo "Starting rngd..."
+
+    start-stop-daemon -S -x /usr/sbin/rngd -- -q -r $HWRNG
+  fi
+}
+
+stop () {
+
+  if [ -f $PIDFILE ]; then
+    echo "Stopping rngd..."
+
+    start-stop-daemon -K -q -n rngd -p $PIDFILE -s TERM
+    rm -f $PIDFILE
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+
