@@ -4,19 +4,31 @@
 
 PIDFILE="/var/run/rngd.pid"
 
-HWRNG="/dev/hwrng"
+HWRNG_DEVICE="/dev/hwrng"
 
 init () {
 
-  modprobe -q virtio-rng
+  if [ "$HWRNG_MODULE" = "no" ]; then
+    exit
+  fi
+
+  if grep -q "astlinux=genx86_64-vm" /proc/cmdline; then
+    if [ -z "$HWRNG_MODULE" ]; then
+      HWRNG_MODULE="virtio-rng"
+    fi
+  fi
+
+  if [ -n "$HWRNG_MODULE" ]; then
+    modprobe "$HWRNG_MODULE"
+  fi
 }
 
 start () {
 
-  if [ -e $HWRNG ]; then
+  if [ -e $HWRNG_DEVICE ]; then
     echo "Starting rngd..."
 
-    start-stop-daemon -S -x /usr/sbin/rngd -- -q -r $HWRNG
+    start-stop-daemon -S -x /usr/sbin/rngd -- -r $HWRNG_DEVICE >/dev/null 2>&1
   fi
 }
 
@@ -26,7 +38,6 @@ stop () {
     echo "Stopping rngd..."
 
     start-stop-daemon -K -q -n rngd -p $PIDFILE -s TERM
-    rm -f $PIDFILE
   fi
 }
 
