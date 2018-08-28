@@ -57,7 +57,7 @@ define OPENLDAP_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D package/openldap/ldap.init $(TARGET_DIR)/etc/init.d/ldap
 	mkdir -p $(TARGET_DIR)/etc/openldap
 	ln -sf /tmp/etc/openldap/ldap.conf $(TARGET_DIR)/etc/openldap/ldap.conf
-	ln -sf ../../init.d/ldap $(TARGET_DIR)/etc/runlevels/default/S00ldap
+	ln -sf ../../init.d/ldap $(TARGET_DIR)/etc/runlevels/default/S01ldap
 	$(OPENLDAP_INSTALL_TARGET_SERVER)
 endef
 
@@ -68,7 +68,7 @@ define OPENLDAP_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/etc/init.d/ldap
 	rm -f $(TARGET_DIR)/etc/init.d/slapd
 	rm -rf $(TARGET_DIR)/etc/openldap
-	rm -f $(TARGET_DIR)/etc/runlevels/default/S00ldap
+	rm -f $(TARGET_DIR)/etc/runlevels/default/S01ldap
 	rm -f $(TARGET_DIR)/etc/runlevels/default/S45slapd
 	rm -f $(TARGET_DIR)/etc/runlevels/default/K16slapd
 	rm -f $(TARGET_DIR)/usr/sbin/slapd

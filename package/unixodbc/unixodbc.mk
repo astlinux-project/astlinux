@@ -25,7 +25,7 @@ define UNIXODBC_INSTALL_TARGET_CMDS
 	ln -sf /tmp/etc/odbc.ini $(TARGET_DIR)/etc/odbc.ini
 	ln -sf /tmp/etc/odbcinst.ini $(TARGET_DIR)/etc/odbcinst.ini
 	ln -sf /tmp/etc/ODBCDataSources $(TARGET_DIR)/etc/ODBCDataSources
-	ln -sf ../../init.d/unixodbc $(TARGET_DIR)/etc/runlevels/default/S00unixodbc
+	ln -sf ../../init.d/unixodbc $(TARGET_DIR)/etc/runlevels/default/S01unixodbc
 endef
 
 define UNIXODBC_UNINSTALL_TARGET_CMDS
@@ -36,7 +36,7 @@ define UNIXODBC_UNINSTALL_TARGET_CMDS
         rm -f $(TARGET_DIR)/etc/odbc.ini
         rm -f $(TARGET_DIR)/etc/odbcinst.ini
         rm -f $(TARGET_DIR)/etc/ODBCDataSources
-        rm -f $(TARGET_DIR)/etc/runlevels/default/S00unixodbc
+        rm -f $(TARGET_DIR)/etc/runlevels/default/S01unixodbc
 endef
 
 $(eval $(call AUTOTARGETS,package,unixodbc))

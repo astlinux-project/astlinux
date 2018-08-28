@@ -6,20 +6,34 @@ PIDFILE="/var/run/rngd.pid"
 
 HWRNG_DEVICE="/dev/hwrng"
 
+try_load_rdrand_rng()
+{
+  if grep -q '^flags.*:.* rdrand ' /proc/cpuinfo; then
+    modprobe rdrand-rng
+  fi
+}
+
 init () {
 
   if [ "$HWRNG_MODULE" = "no" ]; then
     exit
   fi
 
-  if grep -q "astlinux=genx86_64-vm" /proc/cmdline; then
-    if [ -z "$HWRNG_MODULE" ]; then
-      HWRNG_MODULE="virtio-rng"
-    fi
+  ## No need to load a module if HWRNG_DEVICE exists
+  if [ -e $HWRNG_DEVICE ]; then
+    return
   fi
 
+  ## Load a module to create HWRNG_DEVICE
   if [ -n "$HWRNG_MODULE" ]; then
     modprobe "$HWRNG_MODULE"
+  elif grep -q "astlinux=genx86_64-vm" /proc/cmdline; then
+    modprobe virtio-rng
+    if [ ! -e $HWRNG_DEVICE ]; then
+      try_load_rdrand_rng
+    fi
+  else
+    try_load_rdrand_rng
   fi
 }
 
