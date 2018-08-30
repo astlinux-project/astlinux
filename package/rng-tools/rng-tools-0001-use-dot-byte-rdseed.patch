@@ -1,0 +1,20 @@
+--- rng-tools-6.3.1/rdrand_asm.S.orig	2018-08-29 09:52:46.773547700 -0500
++++ rng-tools-6.3.1/rdrand_asm.S	2018-08-29 09:55:17.549915865 -0500
+@@ -58,7 +58,7 @@
+ 1:
+ 	mov	$RDRAND_RETRY_LIMIT, %r10d
+ 2:
+-	rdseed	%rax
++	.byte	0x48,0x0f,0xc7,0xf8	/* rdseed %rax */
+ 	jnc	3f
+ 	mov	%rax, (%rdi)
+ 	add	$8, %rdi
+@@ -140,7 +140,7 @@
+ 1:
+ 	mov	$RDRAND_RETRY_LIMIT, %ecx
+ 2:
+-	rdseed	%eax
++	.byte	0x0f,0xc7,0xf8		/* rdseed %eax */
+ 	jnc	3f
+ 	mov	%eax, (%edi)
+ 	add	$4, %edi
