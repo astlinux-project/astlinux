@@ -1,0 +1,35 @@
+--- rng-tools-6.4/configure.ac.orig	2018-08-31 08:17:44.776831614 -0500
++++ rng-tools-6.4/configure.ac	2018-08-31 08:18:56.329353120 -0500
+@@ -49,6 +49,8 @@
+ AC_PROG_RANLIB
+ AC_PROG_GCC_TRADITIONAL
+ 
++AC_CHECK_TOOLS([AR], [ar gar], :)
++
+ AX_PTHREAD
+ 
+ AM_CONDITIONAL([RDRAND], [test $target_cpu = x86_64 -o $target_cpu = i686])
+--- rng-tools-6.4/Makefile.am.orig	2018-08-31 03:59:22.194083147 -0500
++++ rng-tools-6.4/Makefile.am	2018-08-31 04:03:38.430448774 -0500
+@@ -5,6 +5,7 @@
+  JSUBDIR = jitterentropy-library
+  JSUBLIB = ./jitterentropy-library/libjitterentropy.a
+  AM_CPPFLAGS = -I./jitterentropy-library
++ export CC AR CFLAGS LDFLAGS
+ endif
+ 
+ SUBDIRS		= contrib tests $(JSUBDIR) 
+--- rng-tools-6.4/jitterentropy-library/Makefile.orig	2018-08-31 04:00:22.085845162 -0500
++++ rng-tools-6.4/jitterentropy-library/Makefile	2018-08-31 04:02:20.103797007 -0500
+@@ -1,9 +1,9 @@
+ # Compile Noise Source as user space application
+ 
+-CC=gcc
++CC ?= gcc
+ CFLAGS +=-Wextra -Wall -pedantic -fPIC -O0
+ #Hardening
+-CFLAGS +=-fstack-protector-strong -fwrapv --param ssp-buffer-size=4
++CFLAGS +=-fstack-protector-all -fwrapv --param ssp-buffer-size=4
+ LDFLAGS +=-Wl,-z,relro,-z,now
+ 
+ # Change as necessary
