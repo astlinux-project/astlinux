@@ -74,4 +74,4 @@ getdns~Copyright (c) 2013-2018 NLnet Labs, Verisign, Inc. All rights reserved.
 stubby~Copyright (c) 2013-2018 NLnet Labs, Verisign, Inc. All rights reserved.
 keepalived~Copyright (c) 2001-2018 Alexandre Cassen.
 rng-tools~Copyright (c) 2001-2018 Philipp Rumpf, Neil Horman, et al.
-jitterentropy~Copyright (c) 2014-2018 Stephan Mueller
+jitterentropy~Copyright (c) 2014-2018 Stephan Mueller.
