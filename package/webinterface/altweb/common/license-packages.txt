@@ -22,7 +22,7 @@ OpenVPN~Copyright (c) 2002-2018 OpenVPN Technologies, Inc.
 PHP~Copyright (c) 1999-2018 The PHP Group. All rights reserved.
 vsftpd~Copyright (c) 2001-2015 Daniel Jacobowitz.
 lighttpd~Copyright (c) 2004-2018 Jan Kneschke.
-msmtp~Copyright (c) 2000-2017 Martin Lambers.
+msmtp~Copyright (c) 2000-2018 Martin Lambers.
 libxml2~Copyright (c) 1998-2018 Daniel Veillard. All Rights Reserved.
 libtiff~Copyright (c) 1988-2018 Sam Leffler, Copyright (c) 1991-1997 Silicon Graphics, Inc.
 libjpeg~Copyright (c) 1991-2018 Thomas G. Lane, Guido Vollbeding.
@@ -73,3 +73,5 @@ unbound~Copyright (c) 2007-2018 NLnet Labs. All rights reserved.
 getdns~Copyright (c) 2013-2018 NLnet Labs, Verisign, Inc. All rights reserved.
 stubby~Copyright (c) 2013-2018 NLnet Labs, Verisign, Inc. All rights reserved.
 keepalived~Copyright (c) 2001-2018 Alexandre Cassen.
+rng-tools~Copyright (c) 2001-2018 Philipp Rumpf, Neil Horman, et al.
+jitterentropy~Copyright (c) 2014-2018 Stephan Mueller
