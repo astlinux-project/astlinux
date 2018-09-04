@@ -14,7 +14,7 @@ start () {
   if [ "$TINYPROXY_START" = "yes" ] && [ -f /mnt/kd/tinyproxy.conf ]; then
     echo "Starting tinyproxy..."
 
-    /usr/sbin/tinyproxy
+    /usr/bin/tinyproxy
   fi
 }
 
@@ -27,7 +27,7 @@ stop () {
   fi
 }
 
-if [ ! -x /usr/sbin/tinyproxy ]; then
+if [ ! -x /usr/bin/tinyproxy ]; then
   exit
 fi
 
