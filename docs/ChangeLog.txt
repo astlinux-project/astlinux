@@ -15,11 +15,21 @@ Released @TBD@
 -- Linux Kernel 3.16.57, security and bug fixes
 
 -- RUNNIX, version bump to runnix-0.5.5, with Linux Kernel 3.16.57, e2fsprogs 1.44.4
+   Added kernel drivers: virtio-blk
 
--- e1000e version bump to 3.4.1.1 Intel PCI-Express PRO/1000 Ethernet Linux driver
+-- igb, version bump to 5.3.5.20, Intel Gigabit Ethernet Network Driver
+
+-- e1000e version bump to 3.4.2.1 Intel PCI-Express PRO/1000 Ethernet Linux driver
+
+-- genx86_64-vm board type, add support for virtio-blk as a bootable disk driver, also added to RUNNIX.
+   Tested via Proxmox and Vultr (hosted).
 
 -- genx86_64-vm board type, add support for QEMU Guest Agent (qemu-ga 2.12.0).
    New rc.conf variable QEMU_GUEST_AGENT must be set to "yes" to enable.
+
+-- rng-tools, new package, version 6.4, Random Number Generator (RNG) daemon
+   Enabled by default to increase the available entropy for the kernel's "random" sources.
+   New rc.conf variable HWRNG_MODULE can be set to "no" to disable.
 
 -- acme-client, version bump to 2.7.9
 
@@ -35,13 +45,15 @@ Released @TBD@
 
 -- expat, version bump to 2.2.6
 
+-- jansson, version bump to 2.11 (Asterisk 13)
+
 -- liburiparser, version bump to 0.8.6
 
 -- luabitop, version 1.0.2, new Lua module for prosody
 
 -- acpid, version bump to 2.0.30
 
--- ethtool, version bump to 4.17
+-- ethtool, version bump to 4.18
 
 -- Monit, version bump to 5.25.2, now uses SMTP client to 127.0.0.1:25 for email notifications
 
@@ -49,7 +61,7 @@ Released @TBD@
 
 -- strace, version bump to 4.24
 
--- sudo, version bump to 1.8.24
+-- sudo, version bump to 1.8.25
 
 -- unixodbc, version bump to 2.3.7
 
@@ -64,11 +76,11 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.0.2p, security fixes: CVE-2018-0732, CVE-2018-0737
 
--- libcurl (curl) version bump to 7.61.0, security fixes: CVE-2018-1000300, CVE-2018-1000301, CVE-2018-0500
+-- libcurl (curl) version bump to 7.61.1, security fixes: CVE-2018-1000300, CVE-2018-1000301, CVE-2018-0500, CVE-2018-14618
 
 -- prosody, major version bump to 0.10.2, security fixes. Uses added luabitop 'lua bit' module
 
--- WireGuard VPN, version bump to 0.0.20180809
+-- WireGuard VPN, version bump to 0.0.20180904
 
 -- lighttpd, version bump to 1.4.50, many bug and security fixes
 
@@ -78,16 +90,16 @@ Released @TBD@
 
 -- libpcap, version bump to 1.9.0
 
--- keepalived, new package, version 2.0.6, VRRP High Availability daemon
+-- keepalived, new package, version 2.0.7, VRRP High Availability daemon
    More info: http://doc.astlinux-project.org/userdoc:tt_high_availability
 
--- stunnel, version bump to 5.48
+-- stunnel, version bump to 5.49
 
 -- iperf3, major version bump to 3.6
 
 -- miniupnpd, version bump to 2.1
 
--- msmtp, version bump to 1.8.0rc1
+-- msmtp, version bump to 1.8.0
    Added msmtpd SMTP localhost daemon to forward 127.0.0.1:25 to "sendmail", enabled by default.
          Required for Monit and Keepalived email alerts.
          Disable with new rc.conf variable SMTP_LOCALHOST_SERVER="no"
@@ -100,7 +112,7 @@ Released @TBD@
 
 ** Asterisk
 
--- Asterisk 11.25.3 (no change) and 13.22.0 (version bump)
+-- Asterisk 11.25.3 (no change) and 13.23.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
