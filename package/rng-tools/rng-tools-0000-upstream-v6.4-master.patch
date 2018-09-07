@@ -1,7 +1,7 @@
 From 4306b4df42e0ce928189046f9bea65f85241dd63 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Thu, 30 Aug 2018 07:33:37 -0400
-Subject: [PATCH 1/8] Adding COPYING file
+Subject: [PATCH 01/12] Adding COPYING file
 
 Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
 ---
@@ -358,7 +358,7 @@ index 0000000..d159169
 From 73d8449dd355055a7cdfe9cb646f7f59ea7b1a5c Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Thu, 30 Aug 2018 13:50:16 -0400
-Subject: [PATCH 2/8] Add support for detecting installed libjitterentropy.so
+Subject: [PATCH 02/12] Add support for detecting installed libjitterentropy.so
 
 Currently, rng-tools uses libjitterentropy built locally in this source
 tree as a static library.  That is sub-optimal however, as jitterentropy
@@ -441,7 +441,8 @@ index 029d59f..9edf0e3 100644
 From 5579d26767cbfdf505a3dd4bdbf07d6d0ae95ae3 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Thu, 30 Aug 2018 16:04:06 -0400
-Subject: [PATCH 3/8] rngd: Fix missing null terminator for rngd_jitter options
+Subject: [PATCH 03/12] rngd: Fix missing null terminator for rngd_jitter
+ options
 
 Didn't terminate the array with a NULL entry, which means we could run
 off the end of the array
@@ -469,8 +470,8 @@ index 8dc1417..94783ba 100644
 From 9b9f285d8538cd241bb7524454912705d8916081 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Fri, 31 Aug 2018 13:40:53 -0400
-Subject: [PATCH 4/8] rngd_jitter: fix process termination on SIGINT and clean
- mutex locking
+Subject: [PATCH 04/12] rngd_jitter: fix process termination on SIGINT and
+ clean mutex locking
 
 It was reported recently that rngd would not terminate properly when
 running the jitter entropy source in daemon mode.  It apeared that the
@@ -667,7 +668,8 @@ index 239a4b0..065fcf9 100644
 From 8fbbed0b748dbd7e19f01b92a4f9f3afd43e120b Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Fri, 31 Aug 2018 15:41:22 -0400
-Subject: [PATCH 5/8] Add retry count and retry delay options to jitter entropy
+Subject: [PATCH 05/12] Add retry count and retry delay options to jitter
+ entropy
 
 jitterentropy can take several seconds to generate entropy (1-2 by my
 measurements on my systems, but it could be much longer).  Rngd typicaly
@@ -799,7 +801,7 @@ index 065fcf9..36e4fa2 100644
 From 0858d7a680bab82242139dbb4c1c8046939243ec Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Fri, 31 Aug 2018 15:49:56 -0400
-Subject: [PATCH 6/8] Fix segfault with bad options
+Subject: [PATCH 06/12] Fix segfault with bad options
 
 stupid use of the wrong variable led to a null ptr deref when printing
 out an error message during option parsing
@@ -823,10 +825,207 @@ index 83eea86..aaa2251 100644
  		break;
  
 
+From 2f7c27c311411901a8eb7f85f7e89d723e2a4504 Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Sat, 1 Sep 2018 08:16:02 -0400
+Subject: [PATCH 07/12] Add adaptive retry backoff to jitter entropy source
+
+because the jitter source can take alot of time to generate entropy in
+some cases, before rngd decides its just a non-functioning source,
+instead provide a mechanism by which we can retry at an appropriate
+time.  When rngd goes to read this source, if all entropy buffers are
+empty, we can retry <retry_count> times before failing, sleeping between
+each attempt <retry_delay> seconds.  both <retry_count> and
+<retry_delay> are configurable via -O flag, with <retry_count> also
+accepting the special value -1, meaning adaptive sleep, where jitter
+will sleep for 1/2 the time it took for the most recent entropy
+gathering round.
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd.8.in     |  2 +-
+ rngd.c        |  2 +-
+ rngd_jitter.c | 65 +++++++++++++++++++++++++++++++++++++++++++++------
+ 3 files changed, 60 insertions(+), 9 deletions(-)
+
+diff --git a/rngd.8.in b/rngd.8.in
+index dd77e84..4df8e6c 100644
+--- a/rngd.8.in
++++ b/rngd.8.in
+@@ -168,7 +168,7 @@ Options
+ 
+ \fBretry_count - \fR If all entropy buffers are empty, retry this many times before giving up.  Note that jitterentropy can take several seconds to refill a buffer, and so retries after a delay may be preferable to repeatedly spining on an empty buffer (default 1)
+ 
+-\fBretry_delay - \fR between each retry for retry_count above, sleep for this many seconds (default 1)
++\fBretry_delay - \fR between each retry for retry_count above, sleep for this many seconds. May also be the special value -1, representing adaptive sleep, where each retry delay will be half the recorded execution time of the last entropy gathering round (default -1)
+ 
+ .SH AUTHORS
+ Philipp Rumpf
+diff --git a/rngd.c b/rngd.c
+index aaa2251..6ed6484 100644
+--- a/rngd.c
++++ b/rngd.c
+@@ -183,7 +183,7 @@ static struct rng_option jitter_options[] = {
+ 	},
+ 	[JITTER_OPT_RETRY_DELAY] = {
+ 		.key = "retry_delay",
+-		.int_val = 1,
++		.int_val = -1,
+ 	},
+ 	{
+ 		.key = NULL,
+diff --git a/rngd_jitter.c b/rngd_jitter.c
+index 36e4fa2..1ea6aea 100644
+--- a/rngd_jitter.c
++++ b/rngd_jitter.c
+@@ -44,6 +44,8 @@ struct thread_data {
+ 	size_t avail;
+ 	size_t idx;
+ 	int refill;
++	int slpmode;
++	struct timespec slptm;
+ 	pthread_mutex_t mtx;
+ 	pthread_cond_t cond;
+ };
+@@ -65,6 +67,8 @@ int xread_jitter(void *buf, size_t size, struct rng *ent_src)
+ 	size_t need = size;
+ 	char *bptr = buf;
+ 	int rc = 1;
++	int retry_count = 0;
++	struct timespec sleep;
+ try_again:
+ 	while (need) {
+ 		/* if the current thread is refilling its buffer
+@@ -74,6 +78,8 @@ int xread_jitter(void *buf, size_t size, struct rng *ent_src)
+ 
+ 		if (current->refill) {
+ 			message(LOG_DAEMON|LOG_DEBUG, "JITTER skips empty thread on cpu %d\n", current->core_id);
++			/* Grab the sleep timer while we hold the lock */
++			memcpy(&sleep, &current->slptm, sizeof(struct timespec));
+ 			goto next_unlock;
+ 		}
+ 			
+@@ -97,9 +103,9 @@ int xread_jitter(void *buf, size_t size, struct rng *ent_src)
+ 		data = ((data+1) % num_threads);	
+ 		current = &tdata[data];
+ 		if (start == current) {
+-			if (ent_src->rng_options[JITTER_OPT_RETRY_COUNT].int_val) {
+-				if (ent_src->rng_options[JITTER_OPT_RETRY_DELAY].int_val)
+-					sleep(ent_src->rng_options[JITTER_OPT_RETRY_DELAY].int_val);
++			if (retry_count < ent_src->rng_options[JITTER_OPT_RETRY_COUNT].int_val) {
++				retry_count++;
++				nanosleep(&sleep, NULL);
+ 				goto try_again;
+ 			}
+ 			goto out;
+@@ -128,6 +134,29 @@ static inline double elapsed_time(struct timespec *start, struct timespec *end)
+ 	return delta;
+ }
+ 
++static inline void update_sleep_time(struct thread_data *me,
++				     struct timespec *start,
++				     struct timespec *end)
++{
++
++	/*
++	 * if slpmode is anything other than -1
++	 * it will be a positive integer representing
++	 * the fixed time to sleep on retry
++	 * so if its not negative one, we just stick
++	 * with whatever the init routine set up
++	 */
++	if (me->slpmode != -1)
++		return;
++
++	me->slptm.tv_sec = (end->tv_sec - start->tv_sec)/2;
++	if (start->tv_nsec >= end->tv_nsec)
++		me->slptm.tv_nsec = start->tv_nsec - end->tv_nsec;
++	else
++		me->slptm.tv_nsec = end->tv_nsec - start->tv_nsec;
++	me->slptm.tv_nsec /= 2;
++}
++
+ static void *thread_entropy_task(void *data)
+ {
+ 	cpu_set_t cpuset;
+@@ -139,6 +168,18 @@ static void *thread_entropy_task(void *data)
+ 	struct timespec start, end;
+ 
+ 	/* STARTUP */
++
++	/*
++	 * Set our timeout value
++	 * -1 means adaptive, i.e. sleep for the last 
++	 * recorded execution time of a jitter read
++	 * otherwise sleep for slpmode seconds
++	 */
++	if (me->slpmode != -1) {
++		me->slptm.tv_sec = me->slpmode;
++		me->slptm.tv_nsec = 0;
++	}
++
+ 	/* fill initial entropy */
+ 	CPU_ZERO(&cpuset);
+ 	CPU_SET(me->core_id, &cpuset);
+@@ -154,6 +195,8 @@ static void *thread_entropy_task(void *data)
+ 	clock_gettime(CLOCK_REALTIME, &start);
+ 	ret = jent_read_entropy(me->ec, tmpbuf, me->buf_sz);
+ 	clock_gettime(CLOCK_REALTIME, &end);
++	update_sleep_time(me, &start, &end);
++
+ 	message(LOG_DEBUG|LOG_ERR, "jent_read_entropy time on cpu %d is %.12e sec\n",
+ 		me->core_id, elapsed_time(&start, &end));
+ 
+@@ -187,6 +230,8 @@ static void *thread_entropy_task(void *data)
+ 		if (ret == 0)
+ 			message(LOG_DAEMON|LOG_DEBUG, "JITTER THREAD_FAILS TO GATHER ENTROPY\n");
+ 		pthread_mutex_lock(&me->mtx);
++		/* Need to hold the mutex to update the sleep time */
++		update_sleep_time(me, &start, &end);
+ 		if (!me->buf_ptr) /* buf_ptr may have been removed while gathering entropy */
+ 			break;
+ 		memcpy(me->buf_ptr, tmpbuf, me->buf_sz);
+@@ -212,18 +257,23 @@ int validate_jitter_options(struct rng *ent_src)
+ 
+ 	/* Need at least one thread to do this work */
+ 	if (!threads) {
+-		message(LOG_DAEMON|LOG_DEBUG, "JITTER Requires a minimum of 1 thread, setting threads to 1\n");
++		message(LOG_DAEMON|LOG_ERR, "JITTER Requires a minimum of 1 thread, setting threads to 1\n");
+ 		ent_src->rng_options[JITTER_OPT_THREADS].int_val = 1;
+ 	}
+ 
+ 	/* buf_sz should be the same size or larger than the refill threshold */
+ 	if (buf_sz < refill) {
+-		message(LOG_DAEMON|LOG_DEBUG, "JITTER buffer size must be larger than refill threshold\n");
++		message(LOG_DAEMON|LOG_ERR, "JITTER buffer size must be larger than refill threshold\n");
++		return 1;
++	}
++
++	if (rcount < 0) {
++		message(LOG_DAEMON|LOG_ERR, "JITTER retry delay and count must be equal to or greater than 0\n");
+ 		return 1;
+ 	}
+ 
+-	if ((rcount < 0) || (delay < 0)) {
+-		message(LOG_DAEMON|LOG_DEBUG, "JITTER retry delay and count must be equal to or greater than 0\n");
++	if ((delay < -1) || (delay == 0)) {
++		message(LOG_DAEMON|LOG_ERR, "JITTER retry delay must be -1 or larger than 0\n");
+ 		return 1;
+ 	}
+ 
+@@ -282,6 +332,7 @@ int init_jitter_entropy_source(struct rng *ent_src)
+ 		tdata[i].buf_ptr = calloc(1, tdata[i].buf_sz);
+ 		tdata[i].ec = jent_entropy_collector_alloc(1, 0);
+ 		tdata[i].refill = 1;
++		tdata[i].slpmode = ent_src->rng_options[JITTER_OPT_RETRY_DELAY].int_val;
+ 		pthread_mutex_init(&tdata[i].mtx, NULL);
+ 		pthread_cond_init(&tdata[i].cond, NULL);
+ 		pthread_create(&threads[i], NULL, thread_entropy_task, &tdata[i]);
+
 From b772ac9d368eeed2bac1e3611098ffbe1a4a30e7 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Sat, 1 Sep 2018 11:41:55 -0400
-Subject: [PATCH 8/8] initalize pid_fd
+Subject: [PATCH 08/12] initalize pid_fd
 
 pid_fd wasn't initalized properly, so we might unlink a non-existant
 file when running in daemon mode
@@ -849,3 +1048,307 @@ index 6ed6484..038dfd2 100644
  
  	openlog("rngd", 0, LOG_DAEMON);
  
+
+From 5fca1d806b18be473f04de92b5313432afe608f7 Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Sun, 2 Sep 2018 07:47:28 -0400
+Subject: [PATCH 09/12] remove old uses of arguments->quiet
+
+Not needed anymore, since quiet squashing was moved into message macro
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd.c       | 32 ++++++++++++--------------------
+ rngd.h       |  1 -
+ rngd_linux.c |  7 +++----
+ 3 files changed, 15 insertions(+), 25 deletions(-)
+
+diff --git a/rngd.c b/rngd.c
+index 038dfd2..2d3bacc 100644
+--- a/rngd.c
++++ b/rngd.c
+@@ -128,7 +128,6 @@ static struct arguments default_arguments = {
+ 	.daemon		= true,
+ 	.list		= false,
+ 	.ignorefail	= false,
+-	.quiet		= false,
+ 	.entropy_count	= 8,
+ };
+ struct arguments *arguments = &default_arguments;
+@@ -374,7 +373,6 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
+ 		break;
+ 	}
+ 	case 'q':
+-		arguments->quiet = true;
+ 		quiet = true;
+ 		break;
+ 	case 'v':
+@@ -469,9 +467,8 @@ static void do_loop(int random_step)
+ 			}
+ 
+ 			if (iter->failures >= MAX_RNG_FAILURES && !ignorefail) {
+-				if (!arguments->quiet)
+-					message(LOG_DAEMON|LOG_ERR,
+-					"too many FIPS failures, disabling entropy source\n");
++				message(LOG_DAEMON|LOG_ERR,
++				"too many FIPS failures, disabling entropy source\n");
+ 				if (iter->close)
+ 					iter->close(iter);
+ 				iter->disabled = true;
+@@ -479,9 +476,8 @@ static void do_loop(int random_step)
+ 		}
+ 	}
+ 
+-	if (!arguments->quiet)
+-		message(LOG_DAEMON|LOG_ERR,
+-		"No entropy sources working, exiting rngd\n");
++	message(LOG_DAEMON|LOG_ERR,
++	"No entropy sources working, exiting rngd\n");
+ }
+ 
+ static void term_signal(int signo)
+@@ -555,9 +551,8 @@ int main(int argc, char **argv)
+ 				entropy_sources[i].fipsctx = malloc(sizeof(fips_ctx_t));
+ 				fips_init(entropy_sources[i].fipsctx, discard_initial_data(&entropy_sources[i]));
+ 			} else {
+-				if (!arguments->quiet)
+-					message(LOG_ERR | LOG_DAEMON, "Failed to init entropy source %d: %s\n",
+-						i, entropy_sources[i].rng_name);
++				message(LOG_ERR | LOG_DAEMON, "Failed to init entropy source %d: %s\n",
++					i, entropy_sources[i].rng_name);
+ 				entropy_sources[i].disabled = true;
+ 			}
+ 		}
+@@ -578,12 +573,10 @@ int main(int argc, char **argv)
+ 	}
+ 
+ 	if (!ent_sources) {
+-		if (!arguments->quiet) {
+-			message(LOG_DAEMON|LOG_ERR,
+-				"can't open any entropy source");
+-			message(LOG_DAEMON|LOG_ERR,
+-				"Maybe RNG device modules are not loaded\n");
+-		}
++		message(LOG_DAEMON|LOG_ERR,
++			"can't open any entropy source");
++		message(LOG_DAEMON|LOG_ERR,
++			"Maybe RNG device modules are not loaded\n");
+ 		return 1;
+ 	}
+ 	/* Init entropy sink and open random device */
+@@ -593,9 +586,8 @@ int main(int argc, char **argv)
+ 		am_daemon = true;
+ 
+ 		if (daemon(0, 0) < 0) {
+-			if(!arguments->quiet)
+-				message(LOG_CONS|LOG_INFO, "can't daemonize: %s\n",
+-				strerror(errno));
++			message(LOG_CONS|LOG_INFO, "can't daemonize: %s\n",
++			strerror(errno));
+ 			return 1;
+ 		}
+ 
+diff --git a/rngd.h b/rngd.h
+index 1e70719..7490c6b 100644
+--- a/rngd.h
++++ b/rngd.h
+@@ -47,7 +47,6 @@ struct arguments {
+ 	int fill_watermark;
+ 
+ 	bool debug;
+-	bool quiet;
+ 	bool daemon;
+ 	bool list;
+ 	bool ignorefail;
+diff --git a/rngd_linux.c b/rngd_linux.c
+index 1861f3c..f938a38 100644
+--- a/rngd_linux.c
++++ b/rngd_linux.c
+@@ -110,10 +110,9 @@ void init_kernel_rng(const char* randomdev)
+ 		err = ferror(f) | fclose(f);
+ 	}
+ 	if (err) {
+-		if (!arguments->quiet)
+-			message(LOG_DAEMON|LOG_WARNING,
+-				"unable to adjust write_wakeup_threshold: %s",
+-				strerror(errno));
++		message(LOG_DAEMON|LOG_WARNING,
++			"unable to adjust write_wakeup_threshold: %s",
++			strerror(errno));
+ 	}
+ }
+ 
+
+From efcf79dbc4213bc7b3522796ad92f4e36c907dfe Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Mon, 3 Sep 2018 10:49:13 -0400
+Subject: [PATCH 11/12] Add flags field to mark entropy sources as slow
+
+Some entropy sources (jitter and nistbeacon) product entropy
+consistently, but can have wide range in their rates, and speed.  As
+such, rngd may falsely accuse these entropy sources of being broken and
+disable them.  Mark these sources a slow, so that rngd ignores them and
+keeps trying at whatever rate they are able to produce entropy.
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd.c | 40 ++++++++++++++++++++++++++++++++++++++--
+ rngd.h |  5 ++++-
+ 2 files changed, 42 insertions(+), 3 deletions(-)
+
+diff --git a/rngd.c b/rngd.c
+index 2d3bacc..b12b497 100644
+--- a/rngd.c
++++ b/rngd.c
+@@ -195,6 +195,7 @@ static struct rng entropy_sources[ENT_MAX] = {
+ 		.rng_name	= "Hardware RNG Device",
+ 		.rng_fname      = "/dev/hwrng",
+ 		.rng_fd         = -1,
++		.flags		= { 0 }, 
+ 		.xread          = xread,
+ 		.init           = init_entropy_source,
+ 		.rng_options	= NULL,
+@@ -204,6 +205,7 @@ static struct rng entropy_sources[ENT_MAX] = {
+ 		.rng_name	= "TPM RNG Device",
+ 		.rng_fname      = "/dev/tpm0",
+ 		.rng_fd         = -1,
++		.flags		= { 0 }, 
+ 		.xread          = xread_tpm,
+ 		.init           = init_tpm_entropy_source,
+ 		.rng_options	= NULL,
+@@ -211,6 +213,7 @@ static struct rng entropy_sources[ENT_MAX] = {
+ 	{
+ 		.rng_name       = "Intel RDRAND Instruction RNG",
+ 		.rng_fd         = -1,
++		.flags		= { 0 }, 
+ #ifdef HAVE_RDRAND
+ 		.xread          = xread_drng,
+ 		.init           = init_drng_entropy_source,
+@@ -222,6 +225,7 @@ static struct rng entropy_sources[ENT_MAX] = {
+ 	{
+ 		.rng_name       = "Power9 DARN Instruction RNG",
+ 		.rng_fd         = -1,
++		.flags		= { 0 },
+ #ifdef HAVE_DARN
+ 		.xread          = xread_darn,
+ 		.init           = init_darn_entropy_source,
+@@ -233,6 +237,9 @@ static struct rng entropy_sources[ENT_MAX] = {
+ 	{
+ 		.rng_name	= "NIST Network Entropy Beacon",
+ 		.rng_fd		= -1,
++		.flags		= {
++			.slow_source = 1,
++		}, 
+ #ifdef HAVE_NISTBEACON
+ 		.xread		= xread_nist,
+ 		.init		= init_nist_entropy_source,
+@@ -243,6 +250,9 @@ static struct rng entropy_sources[ENT_MAX] = {
+ 	{
+ 		.rng_name	= "JITTER Entropy generator",
+ 		.rng_fd		= -1,
++		.flags		= {
++			.slow_source = 1,
++		},
+ #ifdef HAVE_JITTER
+ 		.xread		= xread_jitter,
+ 		.init		= init_jitter_entropy_source,
+@@ -421,10 +431,13 @@ static void do_loop(int random_step)
+ 	unsigned char buf[FIPS_RNG_BUFFER_SIZE];
+ 	int no_work;
+ 	bool work_done;
++	int sources_left;
++	int i;
++	int retval;
++	struct rng *iter;
+ 
++continue_trying:
+ 	for (no_work = 0; no_work < 100; no_work = (work_done ? 0 : no_work+1)) {
+-		struct rng *iter;
+-		int i, retval;
+ 
+ 		work_done = false;
+ 		for (i = 0; i < ENT_MAX; ++i)
+@@ -476,6 +489,29 @@ static void do_loop(int random_step)
+ 		}
+ 	}
+ 
++	/*
++	 * No entropy source produced entropy in 
++	 * 100 rounds, disable anything that isn't
++	 * flagged as a slow source
++	 */
++	sources_left = 0;
++	for (i = 0; i < ENT_MAX; ++i) {
++		iter = &entropy_sources[i];
++		if (!iter->flags.slow_source && !iter->disabled) {
++			message(LOG_DAEMON|LOG_WARNING, "Too Slow: Disabling %s\n",
++				iter->rng_name);
++			iter->disabled = 1;
++		}
++		if (!iter->disabled)
++			sources_left++;
++	}
++
++	if (sources_left) {
++		message(LOG_DAEMON|LOG_WARNING,
++			"Entropy Generation is slow, consider tuning/adding sources\n");
++		goto continue_trying;
++	}
++
+ 	message(LOG_DAEMON|LOG_ERR,
+ 	"No entropy sources working, exiting rngd\n");
+ }
+diff --git a/rngd.h b/rngd.h
+index 7490c6b..eeea9f9 100644
+--- a/rngd.h
++++ b/rngd.h
+@@ -97,7 +97,10 @@ struct rng {
+ 	bool disabled;
+ 	int failures;
+ 	int success;
+-
++	struct flags {
++		/* Slow sources - takes a long time to produce entropy */
++		unsigned int slow_source : 1;
++	} flags;
+ 	int (*xread) (void *buf, size_t size, struct rng *ent_src);
+ 	int (*init) (struct rng *ent_src);
+ 	void (*close) (struct rng *end_src);
+
+From e4d347e299d4589ee82d7cde52d47af734969ec1 Mon Sep 17 00:00:00 2001
+From: Lonnie Abelbeck <lonnie@abelbeck.com>
+Date: Thu, 6 Sep 2018 08:59:57 -0500
+Subject: [PATCH 12/12] Add cross-compile fixes Check for 'ar' as it is used
+ for standard builds as well as jitterentropy Export select variables when
+ building the jitterentropy library
+
+---
+ Makefile.am  | 1 +
+ configure.ac | 2 ++
+ 2 files changed, 3 insertions(+)
+
+diff --git a/Makefile.am b/Makefile.am
+index a7abd30..67801bf 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -5,6 +5,7 @@ if JITTER
+  JSUBDIR = jitterentropy-library
+  JSUBLIB = ./jitterentropy-library/libjitterentropy.a
+  AM_CPPFLAGS = -I./jitterentropy-library
++ export CC AR CFLAGS LDFLAGS
+ endif
+ 
+ if JITTER_DSO
+diff --git a/configure.ac b/configure.ac
+index 9edf0e3..faba7cc 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -49,6 +49,8 @@ AC_PROG_CC
+ AC_PROG_RANLIB
+ AC_PROG_GCC_TRADITIONAL
+ 
++AC_CHECK_TOOLS([AR], [ar gar], :)
++
+ AX_PTHREAD
+ 
+ AM_CONDITIONAL([RDRAND], [test $target_cpu = x86_64 -o $target_cpu = i686])
