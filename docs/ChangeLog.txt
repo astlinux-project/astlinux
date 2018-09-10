@@ -14,7 +14,7 @@ Released @TBD@
 
 -- Linux Kernel 3.16.57, security and bug fixes
 
--- RUNNIX, version bump to runnix-0.5.5, with Linux Kernel 3.16.57, e2fsprogs 1.44.4
+-- RUNNIX, version bump to runnix-0.5.6, with Linux Kernel 3.16.57, e2fsprogs 1.44.4
    Added kernel drivers: virtio-blk
 
 -- igb, version bump to 5.3.5.20, Intel Gigabit Ethernet Network Driver
@@ -29,6 +29,10 @@ Released @TBD@
 
 -- rng-tools, new package, version 6.4, Random Number Generator (RNG) daemon
    Enabled by default to increase the available entropy for the kernel's "random" sources.
+   Uses one of 3 sources, in order:
+     1) /dev/hwrng (typically via virtio-rng for the genx86_64-vm board type)
+     2) Intel RDRAND instruction on supported CPU's
+     3) jitterentropy, Hardware RNG based on CPU timing jitter
    New rc.conf variable HWRNG_MODULE can be set to "no" to disable.
 
 -- acme-client, version bump to 2.7.9
