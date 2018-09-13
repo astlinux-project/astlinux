@@ -65,7 +65,7 @@ Released @TBD@
 
 -- strace, version bump to 4.24
 
--- sudo, version bump to 1.8.25
+-- sudo, version bump to 1.8.25p1
 
 -- unixodbc, version bump to 2.3.7
 
@@ -108,7 +108,7 @@ Released @TBD@
          Required for Monit and Keepalived email alerts.
          Disable with new rc.conf variable SMTP_LOCALHOST_SERVER="no"
 
--- unbound (host), version bump to 1.7.3
+-- unbound (host), version bump to 1.8.0
 
 -- whois, version bump to 5.3.2
 
