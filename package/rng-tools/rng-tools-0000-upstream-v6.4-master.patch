@@ -1,7 +1,7 @@
 From 4306b4df42e0ce928189046f9bea65f85241dd63 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Thu, 30 Aug 2018 07:33:37 -0400
-Subject: [PATCH 01/12] Adding COPYING file
+Subject: [PATCH 01/16] Adding COPYING file
 
 Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
 ---
@@ -358,7 +358,7 @@ index 0000000..d159169
 From 73d8449dd355055a7cdfe9cb646f7f59ea7b1a5c Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Thu, 30 Aug 2018 13:50:16 -0400
-Subject: [PATCH 02/12] Add support for detecting installed libjitterentropy.so
+Subject: [PATCH 02/16] Add support for detecting installed libjitterentropy.so
 
 Currently, rng-tools uses libjitterentropy built locally in this source
 tree as a static library.  That is sub-optimal however, as jitterentropy
@@ -441,7 +441,7 @@ index 029d59f..9edf0e3 100644
 From 5579d26767cbfdf505a3dd4bdbf07d6d0ae95ae3 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Thu, 30 Aug 2018 16:04:06 -0400
-Subject: [PATCH 03/12] rngd: Fix missing null terminator for rngd_jitter
+Subject: [PATCH 03/16] rngd: Fix missing null terminator for rngd_jitter
  options
 
 Didn't terminate the array with a NULL entry, which means we could run
@@ -470,7 +470,7 @@ index 8dc1417..94783ba 100644
 From 9b9f285d8538cd241bb7524454912705d8916081 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Fri, 31 Aug 2018 13:40:53 -0400
-Subject: [PATCH 04/12] rngd_jitter: fix process termination on SIGINT and
+Subject: [PATCH 04/16] rngd_jitter: fix process termination on SIGINT and
  clean mutex locking
 
 It was reported recently that rngd would not terminate properly when
@@ -668,7 +668,7 @@ index 239a4b0..065fcf9 100644
 From 8fbbed0b748dbd7e19f01b92a4f9f3afd43e120b Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Fri, 31 Aug 2018 15:41:22 -0400
-Subject: [PATCH 05/12] Add retry count and retry delay options to jitter
+Subject: [PATCH 05/16] Add retry count and retry delay options to jitter
  entropy
 
 jitterentropy can take several seconds to generate entropy (1-2 by my
@@ -801,7 +801,7 @@ index 065fcf9..36e4fa2 100644
 From 0858d7a680bab82242139dbb4c1c8046939243ec Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Fri, 31 Aug 2018 15:49:56 -0400
-Subject: [PATCH 06/12] Fix segfault with bad options
+Subject: [PATCH 06/16] Fix segfault with bad options
 
 stupid use of the wrong variable led to a null ptr deref when printing
 out an error message during option parsing
@@ -828,7 +828,7 @@ index 83eea86..aaa2251 100644
 From 2f7c27c311411901a8eb7f85f7e89d723e2a4504 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Sat, 1 Sep 2018 08:16:02 -0400
-Subject: [PATCH 07/12] Add adaptive retry backoff to jitter entropy source
+Subject: [PATCH 07/16] Add adaptive retry backoff to jitter entropy source
 
 because the jitter source can take alot of time to generate entropy in
 some cases, before rngd decides its just a non-functioning source,
@@ -1025,7 +1025,7 @@ index 36e4fa2..1ea6aea 100644
 From b772ac9d368eeed2bac1e3611098ffbe1a4a30e7 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Sat, 1 Sep 2018 11:41:55 -0400
-Subject: [PATCH 08/12] initalize pid_fd
+Subject: [PATCH 08/16] initalize pid_fd
 
 pid_fd wasn't initalized properly, so we might unlink a non-existant
 file when running in daemon mode
@@ -1052,7 +1052,7 @@ index 6ed6484..038dfd2 100644
 From 5fca1d806b18be473f04de92b5313432afe608f7 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Sun, 2 Sep 2018 07:47:28 -0400
-Subject: [PATCH 09/12] remove old uses of arguments->quiet
+Subject: [PATCH 09/16] remove old uses of arguments->quiet
 
 Not needed anymore, since quiet squashing was moved into message macro
 
@@ -1182,7 +1182,7 @@ index 1861f3c..f938a38 100644
 From efcf79dbc4213bc7b3522796ad92f4e36c907dfe Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Mon, 3 Sep 2018 10:49:13 -0400
-Subject: [PATCH 11/12] Add flags field to mark entropy sources as slow
+Subject: [PATCH 11/16] Add flags field to mark entropy sources as slow
 
 Some entropy sources (jitter and nistbeacon) product entropy
 consistently, but can have wide range in their rates, and speed.  As
@@ -1318,7 +1318,7 @@ index 7490c6b..eeea9f9 100644
 From e4d347e299d4589ee82d7cde52d47af734969ec1 Mon Sep 17 00:00:00 2001
 From: Lonnie Abelbeck <lonnie@abelbeck.com>
 Date: Thu, 6 Sep 2018 08:59:57 -0500
-Subject: [PATCH 12/12] Add cross-compile fixes Check for 'ar' as it is used
+Subject: [PATCH 12/16] Add cross-compile fixes Check for 'ar' as it is used
  for standard builds as well as jitterentropy Export select variables when
  building the jitterentropy library
 
@@ -1352,3 +1352,393 @@ index 9edf0e3..faba7cc 100644
  AX_PTHREAD
  
  AM_CONDITIONAL([RDRAND], [test $target_cpu = x86_64 -o $target_cpu = i686])
+
+From d781c59a209e37c3371cd5fd4ab12a2ff6e5f0b2 Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Wed, 12 Sep 2018 11:12:46 -0400
+Subject: [PATCH 13/16] rngd: Add a short name to each entropy source
+
+In an effort to get away from referring to entropy sources by fixed
+index, instead, create a short name for each that we can do easy lookups
+on
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd.c | 6 ++++++
+ rngd.h | 1 +
+ 2 files changed, 7 insertions(+)
+
+diff --git a/rngd.c b/rngd.c
+index b12b497..be4c60a 100644
+--- a/rngd.c
++++ b/rngd.c
+@@ -193,6 +193,7 @@ static struct rng entropy_sources[ENT_MAX] = {
+ 	/* Note, the special char dev must be the first entry */
+ 	{
+ 		.rng_name	= "Hardware RNG Device",
++		.rng_sname	= "hwrng",
+ 		.rng_fname      = "/dev/hwrng",
+ 		.rng_fd         = -1,
+ 		.flags		= { 0 }, 
+@@ -203,6 +204,7 @@ static struct rng entropy_sources[ENT_MAX] = {
+ 	/* must be at index 1 */
+ 	{
+ 		.rng_name	= "TPM RNG Device",
++		.rng_sname	= "tpm",
+ 		.rng_fname      = "/dev/tpm0",
+ 		.rng_fd         = -1,
+ 		.flags		= { 0 }, 
+@@ -212,6 +214,7 @@ static struct rng entropy_sources[ENT_MAX] = {
+ 	},
+ 	{
+ 		.rng_name       = "Intel RDRAND Instruction RNG",
++		.rng_sname	= "rdrand",
+ 		.rng_fd         = -1,
+ 		.flags		= { 0 }, 
+ #ifdef HAVE_RDRAND
+@@ -224,6 +227,7 @@ static struct rng entropy_sources[ENT_MAX] = {
+ 	},
+ 	{
+ 		.rng_name       = "Power9 DARN Instruction RNG",
++		.rng_sname	= "darn",
+ 		.rng_fd         = -1,
+ 		.flags		= { 0 },
+ #ifdef HAVE_DARN
+@@ -236,6 +240,7 @@ static struct rng entropy_sources[ENT_MAX] = {
+ 	},
+ 	{
+ 		.rng_name	= "NIST Network Entropy Beacon",
++		.rng_sname	= "nist",
+ 		.rng_fd		= -1,
+ 		.flags		= {
+ 			.slow_source = 1,
+@@ -249,6 +254,7 @@ static struct rng entropy_sources[ENT_MAX] = {
+ 	},
+ 	{
+ 		.rng_name	= "JITTER Entropy generator",
++		.rng_sname	= "jitter",
+ 		.rng_fd		= -1,
+ 		.flags		= {
+ 			.slow_source = 1,
+diff --git a/rngd.h b/rngd.h
+index eeea9f9..e37d760 100644
+--- a/rngd.h
++++ b/rngd.h
+@@ -92,6 +92,7 @@ struct rng_option {
+ /* structures to store rng information */
+ struct rng {
+ 	char *rng_name;
++	char *rng_sname;
+ 	char *rng_fname;
+ 	int rng_fd;
+ 	bool disabled;
+
+From eadd52d92d0d42fd4e244764567279106ee7ad4c Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Wed, 12 Sep 2018 11:55:22 -0400
+Subject: [PATCH 14/16] rngd: Add support for detecting short names
+
+allow the -x, -n and -O options to reference entropy sources by short
+name rather than index.  Eventually we will deprecate the index
+entirely, which will allow us to remove entropy sources as needed
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd.c | 100 +++++++++++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 83 insertions(+), 17 deletions(-)
+
+diff --git a/rngd.c b/rngd.c
+index be4c60a..1fbd94e 100644
+--- a/rngd.c
++++ b/rngd.c
+@@ -47,6 +47,7 @@
+ #include <syslog.h>
+ #include <signal.h>
+ #include <limits.h>
++#include <ctype.h>
+ 
+ #include "rngd.h"
+ #include "fips.h"
+@@ -270,6 +271,18 @@ static struct rng entropy_sources[ENT_MAX] = {
+ 	},
+ };
+ 
++static int find_ent_src_idx_by_sname(const char *sname)
++{
++	int i;
++
++	for (i = 0; i < ENT_MAX; i++) {
++		if (!strncmp(sname, entropy_sources[i].rng_sname,
++			strlen(entropy_sources[i].rng_sname)))
++			return i;
++	}
++
++	return -1;
++}
+ 
+ /*
+  * command line processing
+@@ -279,6 +292,7 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
+ 	char *optkey;
+ 	long int idx;
+ 	long int val;
++	bool restore = false;
+ 	char *search, *last_search;
+ 	struct rng_option *options;
+ 
+@@ -293,14 +307,35 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
+ 
+ 		search = strchrnul(arg, ':');
+ 
+-		idx = strtoul(arg, &search, 10);
+-		if ((idx == LONG_MAX) || (idx >= ENT_MAX)) {
+-			message(LOG_CONS|LOG_INFO, "option index out of range: %lu\n", idx);
+-			return -ERANGE;
++		if (isalpha(arg[0])) {
++			/*
++			 * first argument might be a string, lookup by short
++			 * name
++			 */
++			if (*search != '\0') {
++				*search = '\0';
++				restore = true;
++			}
++			idx = find_ent_src_idx_by_sname(arg);
++			if (idx == -1) {
++				message(LOG_CONS|LOG_WARNING, "Unknown entropy source %s\n", arg);
++				return -EINVAL;
++			}
++			if (restore == true)
++				*search = ':';
++		} else {
++			idx = strtoul(arg, &search, 10);
++			if ((idx == LONG_MAX) || (idx >= ENT_MAX)) {
++				message(LOG_CONS|LOG_INFO, "option index out of range: %lu\n", idx);
++				return -ERANGE;
++			}
++			message(LOG_CONS|LOG_INFO, "Note, reference of entropy sources by index "
++				"is deprecated, use entropy source short name instead\n");
+ 		}
+ 
+ 		if (*search == '\0') {
+-			message(LOG_CONS|LOG_INFO, "Available options for %s\n", entropy_sources[idx].rng_name);
++			message(LOG_CONS|LOG_INFO, "Available options for %s (%s)\n",
++				entropy_sources[idx].rng_name, entropy_sources[idx].rng_sname);
+ 			options = entropy_sources[idx].rng_options;
+ 			while (options && options->key) {
+ 				message(LOG_CONS|LOG_INFO, "key: [%s]\tdefault value: [%d]\n", options->key, options->int_val);
+@@ -341,22 +376,51 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
+ 		break;
+ 
+ 	case 'x':
+-		idx = strtol(arg, NULL, 10);
+-		if ((idx == LONG_MAX) || (idx >= ENT_MAX)) {
+-			message(LOG_CONS|LOG_INFO, "exclude index is out of range: %lu\n", idx);
+-			return -ERANGE;
++		if (isalpha(arg[0])) {
++			/*
++			 * first argument might be a string, lookup by short
++			 * name
++			 */
++			idx = find_ent_src_idx_by_sname(arg);
++			if (idx == -1) {
++				message(LOG_CONS|LOG_WARNING, "Unknown entropy source %s\n", arg);
++				return -EINVAL;
++			}
++		} else {
++			idx = strtol(arg, NULL, 10);
++			if ((idx == LONG_MAX) || (idx >= ENT_MAX)) {
++				message(LOG_CONS|LOG_INFO, "option index out of range: %lu\n", idx);
++				return -ERANGE;
++			}
++			message(LOG_CONS|LOG_INFO, "Note, reference of entropy sources by index "
++				"is deprecated, use entropy source short name instead\n");
+ 		}
++
+ 		entropy_sources[idx].disabled = true;
+-		message(LOG_CONS|LOG_INFO, "Disabling %lu: %s\n", idx, entropy_sources[idx].rng_name);
++		message(LOG_CONS|LOG_INFO, "Disabling %lu: %s (%s)\n", idx,
++			entropy_sources[idx].rng_name, entropy_sources[idx].rng_sname);
+ 		break;
+ 	case 'n':
+-		idx = strtol(arg, NULL, 10);
+-		if ((idx == LONG_MAX) || (idx >= ENT_MAX)) {
+-			message(LOG_CONS|LOG_INFO, "enable index is out of range: %lu\n", idx);
+-			return -ERANGE;
++		if (isalpha(arg[0])) {
++			idx = find_ent_src_idx_by_sname(arg);
++			if (idx == -1) {
++				message(LOG_CONS|LOG_WARNING, "Unknown entropy source %s\n", arg);
++				return -EINVAL;
++			}
++		} else {
++			idx = strtol(arg, NULL, 10);
++			if ((idx == LONG_MAX) || (idx >= ENT_MAX)) {
++				message(LOG_CONS|LOG_INFO, "option index out of range: %lu\n", idx);
++				return -ERANGE;
++			}
++
++			message(LOG_CONS|LOG_INFO, "Note, reference of entropy sources by index "
++                                "is deprecated, use entropy source short name instead\n");
+ 		}
++
+ 		entropy_sources[idx].disabled = false;
+-		message(LOG_CONS|LOG_INFO, "Enabling %lu: %s\n", idx, entropy_sources[idx].rng_name);
++		message(LOG_CONS|LOG_INFO, "Enabling %lu: %s (%s)\n", idx,
++			entropy_sources[idx].rng_name, entropy_sources[idx].rng_sname);
+ 		break;
+ 	case 'l':
+ 		arguments->list = true;
+@@ -576,7 +640,8 @@ int main(int argc, char **argv)
+ 		for (i=0; i < ENT_MAX; i++) 
+ 			if (entropy_sources[i].init && entropy_sources[i].disabled == true) {
+ 				found = 1;
+-				message(LOG_CONS|LOG_INFO, "%d: %s\n", i, entropy_sources[i].rng_name);
++				message(LOG_CONS|LOG_INFO, "%d: %s (%s)\n", i,
++					entropy_sources[i].rng_name, entropy_sources[i].rng_sname);
+ 			}
+ 		if (!found)
+ 			message(LOG_CONS|LOG_INFO, "None");
+@@ -607,7 +672,8 @@ int main(int argc, char **argv)
+ 		for (i=0; i < ENT_MAX; i++) 
+ 			if (entropy_sources[i].init && entropy_sources[i].disabled == false) {
+ 				rc = 1;
+-				message(LOG_CONS|LOG_INFO, "%d: %s\n", i, entropy_sources[i].rng_name);
++				message(LOG_CONS|LOG_INFO, "%d: %s (%s)\n", i,
++					entropy_sources[i].rng_name, entropy_sources[i].rng_sname);
+ 			}
+ 
+ 		close_all_entropy_sources();
+
+From caef8cce97396adc8c60749a0ce6ac039b57859a Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Wed, 12 Sep 2018 12:09:50 -0400
+Subject: [PATCH 15/16] tpm: deprecate tpm entropy source
+
+The tpm entropy source only support tpm 1.2 hardware, and while we could
+update it to support the tpm 2.0 spec, theres no need, as the kernel
+exports tpm entropy vi /dev/hwrng, which is already an available rngd
+entropy source.  Depreceate this source now and remove it two releases
+from now
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd.c           | 1 +
+ rngd_entsource.c | 3 +++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/rngd.c b/rngd.c
+index 1fbd94e..7b85d76 100644
+--- a/rngd.c
++++ b/rngd.c
+@@ -212,6 +212,7 @@ static struct rng entropy_sources[ENT_MAX] = {
+ 		.xread          = xread_tpm,
+ 		.init           = init_tpm_entropy_source,
+ 		.rng_options	= NULL,
++		.disabled	= true,
+ 	},
+ 	{
+ 		.rng_name       = "Intel RDRAND Instruction RNG",
+diff --git a/rngd_entsource.c b/rngd_entsource.c
+index e96cb0e..63139ec 100644
+--- a/rngd_entsource.c
++++ b/rngd_entsource.c
+@@ -207,6 +207,9 @@ int init_entropy_source(struct rng *ent_src)
+  */
+ int init_tpm_entropy_source(struct rng *ent_src)
+ {
++	message(LOG_CONS|LOG_INFO, "The TPM entropy source only supports TPM1.2 hardware and is "
++		"deprecated.  TPM2.0 and later hardware exports entropy via /dev/hwrng, which "
++		"can be collected via the hwrng entropy source in rngd\n"); 
+ 	ent_src->rng_fd = open(ent_src->rng_fname, O_RDWR);
+ 	if (ent_src->rng_fd == -1) {
+ 		message(LOG_DAEMON|LOG_DEBUG,"Unable to open file: %s",ent_src->rng_fname);
+
+From 4405fbaeb8a9c5827ee699b2e12b9ffb7212cc94 Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Wed, 12 Sep 2018 12:15:12 -0400
+Subject: [PATCH 16/16] man: document the short name feature in the man page
+
+No one will use it if its not documented
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd.8.in | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
+
+diff --git a/rngd.8.in b/rngd.8.in
+index 4df8e6c..3bc5584 100644
+--- a/rngd.8.in
++++ b/rngd.8.in
+@@ -60,15 +60,15 @@ sources is 0 if at least 1 entropy source was found and initialized, 1
+ otherwise.
+ .TP
+ \fB\-x\fR, \fB\-\-exclude\fR
+-Disable entropy sources based on index reported from --list option
++Disable entropy sources based on index or (shortname) reported from --list option
+ .TP
+ \fB\-n\fR, \fB\-\-include\fR
+-Enable entropy sources based on index reported from --list option
++Enable entropy sources based on index or (shortname) reported from --list option
+ .TP
+ \fB\-O\fR, \fB\-\-option\fR
+ Provide specific config options to individual entropy sources, in the format
+---option index:key:value.  See Entropy Sources section below for indicies and
+-source specific options.  Note that specifying \fB-O <index>\fR will print the
++--option [index|shortname]:key:value.  See Entropy Sources section below for indicies and
++source specific options.  Note that specifying \fB-O [<index>|<shortname>]\fR will print the
+ available options for that index to the console
+ .TP
+ \fB\-p\fI file\fR, \fB\-\-pid-file=\fIfile\fR
+@@ -116,18 +116,20 @@ Print program version
+ ENTROPY SOURCES
+ .TP
+ .B
+-Hardware RNG [Index 0]
++Hardware RNG (hwrng) [Index 0]
+ The Hardware RNG is a generic entropy source that draws entropy from a hardware
+ rng attached by default to /dev/hwrng
+ 
+ .TP
+ .B
+-TPM [Index 1]
+-Entropy drawn from on board TPM device
++TPM (tpm) [Index 1]
++Entropy drawn from on board TPM device.  Note this entropy source is deprecated
++and will be removed soon, as newer tpm devices export entropy via /dev/hwrng,
++which is collected by the hwrng source above
+ 
+ .TP
+ .B
+-RDRAND/RDSEED [Index 2]
++RDRAND/RDSEED (rdrand) [Index 2]
+ Entropy drawn from the RDRAND and RDSEED instructions (x86 only)
+ .TP
+ Options
+@@ -137,7 +139,7 @@ if all entropy is drawn directly from rdrand instruction (default 1)
+ 
+ .TP
+ .B
+-DARN [Index 3]
++DARN (darn) [Index 3]
+ Entropy drawn from the DARN instruction (ppc64 only)
+ .TP
+ Options
+@@ -148,7 +150,7 @@ the entropy poll, or if it is used as a periodic seed to an aes based cprng
+ 
+ .TP
+ .B
+-NIST Entropy Beacon [Index 4]
++NIST Entropy Beacon (nist) [Index 4]
+ Entropy gathered from the NIST network entropy beacon.  Note that this entropy
+ source is disabled by default as it should never be used for cryptographic
+ purposes, or any use case in which random data should be known only by a single
+@@ -156,7 +158,7 @@ entity.
+ 
+ .TP
+ .B
+-JITTER [Index 5]
++JITTER (jitter) [Index 5]
+ Entropy gathered by measuring timing variance of operations on the local cpu
+ .TP
+ Options

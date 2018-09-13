@@ -31,19 +31,19 @@ start () {
     echo "Starting rngd..."
 
     if [ -e $HWRNG_DEVICE ]; then
-      ## Exclude TPM RNG Device (1), Intel RDRAND (2) and jitterentropy (5)
-      ARGS="-r $HWRNG_DEVICE -x1 -x2 -x5"
+      ## Exclude Intel RDRAND (rdrand) and jitterentropy (jitter)
+      ARGS="-r $HWRNG_DEVICE -x rdrand -x jitter"
     else
-      ## Exclude Hardware RNG Device (0) and TPM RNG Device (1)
-      ARGS="-x0 -x1"
-      ## Exclude jitterentropy (5) if we have Intel RDRAND (2) support
+      ## Exclude Hardware RNG Device (hwrng)
+      ARGS="-x hwrng"
       if grep -q '^flags.*:.* rdrand ' /proc/cpuinfo; then
-        ARGS="$ARGS -x5"
+        ## Exclude jitterentropy (jitter) if we have Intel RDRAND (rdrand) support
+        ARGS="$ARGS -x jitter"
         ## Disable applying additional AES to RDRAND data
-        ARGS="$ARGS -O 2:use_aes:0"
+        ARGS="$ARGS -O rdrand:use_aes:0"
       else
-        ## Disable Intel RDRAND (2)
-        ARGS="$ARGS -x2"
+        ## Disable Intel RDRAND (rdrand)
+        ARGS="$ARGS -x rdrand"
       fi
     fi
 
