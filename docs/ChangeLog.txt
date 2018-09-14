@@ -37,7 +37,7 @@ Released @TBD@
 
 -- acme-client, version bump to 2.7.9
 
--- php, version bump to 5.6.37
+-- php, version bump to 5.6.38
 
 -- busybox, enable "timeout" command
 
