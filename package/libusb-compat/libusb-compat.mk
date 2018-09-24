@@ -3,12 +3,12 @@
 # libusb-compat
 #
 #############################################################
-LIBUSB_COMPAT_VERSION = 0.1.5
+
+LIBUSB_COMPAT_VERSION = 0.1.7
 LIBUSB_COMPAT_SOURCE = libusb-compat-$(LIBUSB_COMPAT_VERSION).tar.bz2
-LIBUSB_COMPAT_SITE = http://downloads.sourceforge.net/project/libusb/libusb-compat-0.1/libusb-compat-$(LIBUSB_COMPAT_VERSION)
+LIBUSB_COMPAT_SITE = https://github.com/libusb/libusb-compat-0.1/releases/download/v$(LIBUSB_COMPAT_VERSION)
 LIBUSB_COMPAT_DEPENDENCIES = host-pkg-config libusb
 LIBUSB_COMPAT_INSTALL_STAGING = YES
-LIBUSB_COMPAT_INSTALL_TARGET = YES
 
 define LIBUSB_COMPAT_FIXUP_CONFIG
 	$(SED) 's%prefix=/usr%prefix=$(STAGING_DIR)/usr%' \
