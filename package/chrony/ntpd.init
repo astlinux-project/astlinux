@@ -2,7 +2,7 @@
 
 . /etc/rc.conf
 
-PIDFILE="/var/run/chronyd.pid"
+PIDFILE="/var/run/chrony/chronyd.pid"
 
 DATA_DIR="/var/lib/ntp"
 
@@ -81,7 +81,6 @@ start () {
       else
         logger -s -t chronyd -p kern.info "Failed to set time using NTP server '$first', continuing in the background."
       fi
-      rm -f $PIDFILE
       sleep 1
     fi
 
@@ -97,7 +96,6 @@ stop () {
 
     echo "Stopping NTP Daemon (chronyd)..."
     kill $(cat $PIDFILE) >/dev/null 2>&1
-    rm -f $PIDFILE
   fi
 }
 

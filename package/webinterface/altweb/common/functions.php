@@ -128,7 +128,7 @@ function statusPROCESS($process) {
       $str = $stopped;
     }
   } elseif ($process === 'ntpd') {
-    if (is_file($path.'chronyd.pid')) {
+    if (is_file($path.'chrony/chronyd.pid')) {
       $str = $running;
     } else {
       $str = $stopped;
