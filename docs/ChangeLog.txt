@@ -43,7 +43,7 @@ Released @TBD@
 
 -- e2fsprogs, version bump to 1.44.4
 
--- sqlite, version bump to 3.24.0
+-- sqlite, version bump to 3.25.1
 
 -- libedit, version bump to 20180525-3.1
 
@@ -55,11 +55,15 @@ Released @TBD@
 
 -- luabitop, version 1.0.2, new Lua module for prosody
 
+-- libusb-compat, version bump 0.1.7
+
 -- acpid, version bump to 2.0.30
 
 -- ethtool, version bump to 4.18
 
 -- Monit, version bump to 5.25.2, now uses SMTP client to 127.0.0.1:25 for email notifications
+
+-- netcalc, version bump to 2.1.4
 
 -- pciutils, version bump to 3.6.1
 
@@ -84,7 +88,7 @@ Released @TBD@
 
 -- prosody, major version bump to 0.10.2, security fixes. Uses added luabitop 'lua bit' module
 
--- WireGuard VPN, version bump to 0.0.20180910
+-- WireGuard VPN, version bump to 0.0.20180918
 
 -- lighttpd, version bump to 1.4.50, many bug and security fixes
 
@@ -98,6 +102,8 @@ Released @TBD@
    More info: http://doc.astlinux-project.org/userdoc:tt_high_availability
 
 -- stunnel, version bump to 5.49
+
+-- chrony, version bump to 3.4
 
 -- iperf3, major version bump to 3.6
 
@@ -116,7 +122,7 @@ Released @TBD@
 
 ** Asterisk
 
--- Asterisk 11.25.3 (no change) and 13.23.0 (version bump)
+-- Asterisk 11.25.3 (no change) and 13.23.1 (version bump)
 
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
