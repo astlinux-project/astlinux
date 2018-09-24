@@ -4,8 +4,9 @@
 #
 #############################################################
 
-DMIDECODE_VERSION = 3.1
-DMIDECODE_SITE = http://download.savannah.gnu.org/releases/dmidecode
+DMIDECODE_VERSION = 3.2
+DMIDECODE_SITE = https://download.savannah.gnu.org/releases/dmidecode
+DMIDECODE_SOURCE = dmidecode-$(DMIDECODE_VERSION).tar.xz
 
 define DMIDECODE_BUILD_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) $(TARGET_CONFIGURE_OPTS)
