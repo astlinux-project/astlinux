@@ -1,7 +1,7 @@
 From 4306b4df42e0ce928189046f9bea65f85241dd63 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Thu, 30 Aug 2018 07:33:37 -0400
-Subject: [PATCH 01/16] Adding COPYING file
+Subject: [PATCH 01/39] Adding COPYING file
 
 Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
 ---
@@ -358,7 +358,7 @@ index 0000000..d159169
 From 73d8449dd355055a7cdfe9cb646f7f59ea7b1a5c Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Thu, 30 Aug 2018 13:50:16 -0400
-Subject: [PATCH 02/16] Add support for detecting installed libjitterentropy.so
+Subject: [PATCH 02/39] Add support for detecting installed libjitterentropy.so
 
 Currently, rng-tools uses libjitterentropy built locally in this source
 tree as a static library.  That is sub-optimal however, as jitterentropy
@@ -441,7 +441,7 @@ index 029d59f..9edf0e3 100644
 From 5579d26767cbfdf505a3dd4bdbf07d6d0ae95ae3 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Thu, 30 Aug 2018 16:04:06 -0400
-Subject: [PATCH 03/16] rngd: Fix missing null terminator for rngd_jitter
+Subject: [PATCH 03/39] rngd: Fix missing null terminator for rngd_jitter
  options
 
 Didn't terminate the array with a NULL entry, which means we could run
@@ -470,7 +470,7 @@ index 8dc1417..94783ba 100644
 From 9b9f285d8538cd241bb7524454912705d8916081 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Fri, 31 Aug 2018 13:40:53 -0400
-Subject: [PATCH 04/16] rngd_jitter: fix process termination on SIGINT and
+Subject: [PATCH 04/39] rngd_jitter: fix process termination on SIGINT and
  clean mutex locking
 
 It was reported recently that rngd would not terminate properly when
@@ -668,7 +668,7 @@ index 239a4b0..065fcf9 100644
 From 8fbbed0b748dbd7e19f01b92a4f9f3afd43e120b Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Fri, 31 Aug 2018 15:41:22 -0400
-Subject: [PATCH 05/16] Add retry count and retry delay options to jitter
+Subject: [PATCH 05/39] Add retry count and retry delay options to jitter
  entropy
 
 jitterentropy can take several seconds to generate entropy (1-2 by my
@@ -801,7 +801,7 @@ index 065fcf9..36e4fa2 100644
 From 0858d7a680bab82242139dbb4c1c8046939243ec Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Fri, 31 Aug 2018 15:49:56 -0400
-Subject: [PATCH 06/16] Fix segfault with bad options
+Subject: [PATCH 06/39] Fix segfault with bad options
 
 stupid use of the wrong variable led to a null ptr deref when printing
 out an error message during option parsing
@@ -828,7 +828,7 @@ index 83eea86..aaa2251 100644
 From 2f7c27c311411901a8eb7f85f7e89d723e2a4504 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Sat, 1 Sep 2018 08:16:02 -0400
-Subject: [PATCH 07/16] Add adaptive retry backoff to jitter entropy source
+Subject: [PATCH 07/39] Add adaptive retry backoff to jitter entropy source
 
 because the jitter source can take alot of time to generate entropy in
 some cases, before rngd decides its just a non-functioning source,
@@ -1025,7 +1025,7 @@ index 36e4fa2..1ea6aea 100644
 From b772ac9d368eeed2bac1e3611098ffbe1a4a30e7 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Sat, 1 Sep 2018 11:41:55 -0400
-Subject: [PATCH 08/16] initalize pid_fd
+Subject: [PATCH 08/39] initalize pid_fd
 
 pid_fd wasn't initalized properly, so we might unlink a non-existant
 file when running in daemon mode
@@ -1052,7 +1052,7 @@ index 6ed6484..038dfd2 100644
 From 5fca1d806b18be473f04de92b5313432afe608f7 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Sun, 2 Sep 2018 07:47:28 -0400
-Subject: [PATCH 09/16] remove old uses of arguments->quiet
+Subject: [PATCH 09/39] remove old uses of arguments->quiet
 
 Not needed anymore, since quiet squashing was moved into message macro
 
@@ -1182,7 +1182,7 @@ index 1861f3c..f938a38 100644
 From efcf79dbc4213bc7b3522796ad92f4e36c907dfe Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Mon, 3 Sep 2018 10:49:13 -0400
-Subject: [PATCH 11/16] Add flags field to mark entropy sources as slow
+Subject: [PATCH 11/39] Add flags field to mark entropy sources as slow
 
 Some entropy sources (jitter and nistbeacon) product entropy
 consistently, but can have wide range in their rates, and speed.  As
@@ -1318,7 +1318,7 @@ index 7490c6b..eeea9f9 100644
 From e4d347e299d4589ee82d7cde52d47af734969ec1 Mon Sep 17 00:00:00 2001
 From: Lonnie Abelbeck <lonnie@abelbeck.com>
 Date: Thu, 6 Sep 2018 08:59:57 -0500
-Subject: [PATCH 12/16] Add cross-compile fixes Check for 'ar' as it is used
+Subject: [PATCH 12/39] Add cross-compile fixes Check for 'ar' as it is used
  for standard builds as well as jitterentropy Export select variables when
  building the jitterentropy library
 
@@ -1356,7 +1356,7 @@ index 9edf0e3..faba7cc 100644
 From d781c59a209e37c3371cd5fd4ab12a2ff6e5f0b2 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Wed, 12 Sep 2018 11:12:46 -0400
-Subject: [PATCH 13/16] rngd: Add a short name to each entropy source
+Subject: [PATCH 13/39] rngd: Add a short name to each entropy source
 
 In an effort to get away from referring to entropy sources by fixed
 index, instead, create a short name for each that we can do easy lookups
@@ -1436,7 +1436,7 @@ index eeea9f9..e37d760 100644
 From eadd52d92d0d42fd4e244764567279106ee7ad4c Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Wed, 12 Sep 2018 11:55:22 -0400
-Subject: [PATCH 14/16] rngd: Add support for detecting short names
+Subject: [PATCH 14/39] rngd: Add support for detecting short names
 
 allow the -x, -n and -O options to reference entropy sources by short
 name rather than index.  Eventually we will deprecate the index
@@ -1613,7 +1613,7 @@ index be4c60a..1fbd94e 100644
 From caef8cce97396adc8c60749a0ce6ac039b57859a Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Wed, 12 Sep 2018 12:09:50 -0400
-Subject: [PATCH 15/16] tpm: deprecate tpm entropy source
+Subject: [PATCH 15/39] tpm: deprecate tpm entropy source
 
 The tpm entropy source only support tpm 1.2 hardware, and while we could
 update it to support the tpm 2.0 spec, theres no need, as the kernel
@@ -1657,7 +1657,7 @@ index e96cb0e..63139ec 100644
 From 4405fbaeb8a9c5827ee699b2e12b9ffb7212cc94 Mon Sep 17 00:00:00 2001
 From: Neil Horman <nhorman@tuxdriver.com>
 Date: Wed, 12 Sep 2018 12:15:12 -0400
-Subject: [PATCH 16/16] man: document the short name feature in the man page
+Subject: [PATCH 16/39] man: document the short name feature in the man page
 
 No one will use it if its not documented
 
@@ -1742,3 +1742,1657 @@ index 4df8e6c..3bc5584 100644
  Entropy gathered by measuring timing variance of operations on the local cpu
  .TP
  Options
+
+From edecf8633ac835c8f5e9da74afcd5d9934d2927b Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Wed, 12 Sep 2018 15:33:54 -0400
+Subject: [PATCH 17/39] Jitter: always completely refill the entropy buffer for
+ a thread
+
+because we unlock the buffer before we generate new entropy we might
+user more of it while generating.  Instead of figuring out if we need to
+generate more, just re-generate the whole buffer
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd_jitter.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/rngd_jitter.c b/rngd_jitter.c
+index 1ea6aea..f0a764f 100644
+--- a/rngd_jitter.c
++++ b/rngd_jitter.c
+@@ -162,7 +162,6 @@ static void *thread_entropy_task(void *data)
+ 	cpu_set_t cpuset;
+ 
+ 	ssize_t ret;
+-	size_t need;
+ 	struct thread_data *me = data;
+ 	char *tmpbuf;
+ 	struct timespec start, end;
+@@ -220,10 +219,9 @@ static void *thread_entropy_task(void *data)
+ 			break;
+ 
+ 		/* We are awake because we need to refil the buffer */
+-		need = me->buf_sz - me->avail;
+ 		pthread_mutex_unlock(&me->mtx);
+ 		clock_gettime(CLOCK_REALTIME, &start);
+-		ret = jent_read_entropy(me->ec, tmpbuf, need);	
++		ret = jent_read_entropy(me->ec, tmpbuf, me->buf_sz);	
+ 		clock_gettime(CLOCK_REALTIME, &end);
+ 		message(LOG_DEBUG|LOG_ERR, "jent_read_entropy time on cpu %d is %.12e sec\n",
+ 			me->core_id, elapsed_time(&start, &end));
+
+From d2766a48a6fdae0af9ed10a9817e7541f453581c Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Wed, 12 Sep 2018 16:30:14 -0400
+Subject: [PATCH 18/39] JITTER: Support the use of AES to backfill missing
+ entropy
+
+Like with other sources, if JITTER is producing entropy too slowly, we
+can add the option to produce pseudo random data using AES encryption.
+If a buffer is empty, and this option is enabled, on the first retry
+pass, a still-empty buffer can be refilled by encrypting the data with a
+random AES key.  Once the JITTER generator has new entropy built, it
+will replace the data block with that new true random source data
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd.c        |   4 ++
+ rngd.h        |   1 +
+ rngd_jitter.c | 138 ++++++++++++++++++++++++++++++++++++++++++++++----
+ 3 files changed, 134 insertions(+), 9 deletions(-)
+
+diff --git a/rngd.c b/rngd.c
+index 7b85d76..6683b9f 100644
+--- a/rngd.c
++++ b/rngd.c
+@@ -185,6 +185,10 @@ static struct rng_option jitter_options[] = {
+ 		.key = "retry_delay",
+ 		.int_val = -1,
+ 	},
++	[JITTER_OPT_USE_AES] = {
++		.key = "use_aes",
++		.int_val = 0,
++	},
+ 	{
+ 		.key = NULL,
+ 	}
+diff --git a/rngd.h b/rngd.h
+index e37d760..bc2d309 100644
+--- a/rngd.h
++++ b/rngd.h
+@@ -81,6 +81,7 @@ enum {
+ 	JITTER_OPT_REFILL = 2,
+ 	JITTER_OPT_RETRY_COUNT = 3,
+ 	JITTER_OPT_RETRY_DELAY = 4,
++	JITTER_OPT_USE_AES = 5,
+ 	JITTER_OPT_MAX,
+ };
+ 
+diff --git a/rngd_jitter.c b/rngd_jitter.c
+index f0a764f..3ff9a93 100644
+--- a/rngd_jitter.c
++++ b/rngd_jitter.c
+@@ -27,6 +27,9 @@
+ #include "rng-tools-config.h"
+ 
+ #include <jitterentropy.h>
++#ifdef HAVE_LIBGCRYPT
++#include <gcrypt.h>
++#endif
+ 
+ #include "rngd.h"
+ #include "fips.h"
+@@ -52,10 +55,87 @@ struct thread_data {
+ 
+ static struct thread_data *tdata;
+ static pthread_t *threads;
++#ifdef HAVE_LIBGCRYPT
+ 
+-/*
+- * These must be powers of 2
+- */
++#define MIN_GCRYPT_VERSION "1.0.0"
++
++static gcry_cipher_hd_t gcry_cipher_hd;
++
++/* Read data from the drng in chunks of 128 bytes for AES scrambling */
++#define AES_BLOCK               16
++#define CHUNK_SIZE              (AES_BLOCK*8)   /* 8 parallel streams */
++#define RDRAND_ROUNDS           512             /* 512:1 data reduction */
++
++static unsigned char iv_buf[CHUNK_SIZE] __attribute__((aligned(128)));
++#endif
++
++static int init_gcrypt(const void *key)
++{
++#ifdef HAVE_LIBGCRYPT
++	gcry_error_t gcry_error;
++
++	if (!gcry_check_version(MIN_GCRYPT_VERSION)) {
++		message(LOG_DAEMON|LOG_ERR,
++			"libgcrypt version mismatch: have %s, require >= %s\n",
++			gcry_check_version(NULL), MIN_GCRYPT_VERSION);
++		return 1;
++	}
++
++	gcry_error = gcry_cipher_open(&gcry_cipher_hd, GCRY_CIPHER_AES128,
++				      GCRY_CIPHER_MODE_CBC, 0);
++
++	if (!gcry_error)
++		gcry_error = gcry_cipher_setkey(gcry_cipher_hd, key, AES_BLOCK);
++
++	if (!gcry_error) {
++		/*
++		 * Only need the first 16 bytes of iv_buf. AES-NI can
++		 * encrypt multiple blocks in parallel but we can't.
++		 */
++		gcry_error = gcry_cipher_setiv(gcry_cipher_hd, iv_buf, AES_BLOCK);
++	}
++
++	if (gcry_error) {
++		message(LOG_DAEMON|LOG_ERR,
++			"could not set key or IV: %s\n",
++			gcry_strerror(gcry_error));
++		gcry_cipher_close(gcry_cipher_hd);
++		return 1;
++	}
++	return 0;
++#else
++	(void)key;
++	return 1;
++#endif
++}
++
++static inline int gcrypt_mangle(unsigned char *tmp, size_t size)
++{
++#ifdef HAVE_LIBGCRYPT
++	int i;
++	int stride = AES_BLOCK * RDRAND_ROUNDS;
++	gcry_error_t gcry_error = 0;
++
++	/* Encrypt tmp in-place. */
++
++	for (i = 0; i < (size - stride) && !gcry_error; i += stride) {
++		gcry_error = gcry_cipher_encrypt(gcry_cipher_hd, &tmp[i],
++					 AES_BLOCK * RDRAND_ROUNDS,
++					 NULL, 0);
++	}
++
++	if (gcry_error) {
++		message(LOG_DAEMON|LOG_ERR,
++			"gcry_cipher_encrypt error: %s\n",
++			gcry_strerror(gcry_error));
++		return -1;
++	}
++	return 0;
++#else
++	(void)tmp;
++	return -1;
++#endif
++}
+ 
+ int xread_jitter(void *buf, size_t size, struct rng *ent_src)
+ {
+@@ -77,10 +157,22 @@ int xread_jitter(void *buf, size_t size, struct rng *ent_src)
+ 		pthread_mutex_lock(&current->mtx);
+ 
+ 		if (current->refill) {
+-			message(LOG_DAEMON|LOG_DEBUG, "JITTER skips empty thread on cpu %d\n", current->core_id);
+-			/* Grab the sleep timer while we hold the lock */
+-			memcpy(&sleep, &current->slptm, sizeof(struct timespec));
+-			goto next_unlock;
++			/*
++			 * If we're set to use AES, trigger a crypt of the
++			 * existing data her, and use that as the next random
++			 * block
++			 */
++			if (ent_src->rng_options[JITTER_OPT_USE_AES].int_val && retry_count) {
++				if (gcrypt_mangle(current->buf_ptr, current->buf_sz))
++					goto next_unlock;
++				message(LOG_CONS|LOG_DEBUG, "Using GCRYPT!!!\n");
++				/* Fall through to read the new data */
++			} else {
++				message(LOG_DAEMON|LOG_DEBUG, "JITTER skips empty thread on cpu %d\n", current->core_id);
++				/* Grab the sleep timer while we hold the lock */
++				memcpy(&sleep, &current->slptm, sizeof(struct timespec));
++				goto next_unlock;
++			}
+ 		}
+ 			
+ 		request = (need > current->avail) ? current->avail : need;
+@@ -105,7 +197,11 @@ int xread_jitter(void *buf, size_t size, struct rng *ent_src)
+ 		if (start == current) {
+ 			if (retry_count < ent_src->rng_options[JITTER_OPT_RETRY_COUNT].int_val) {
+ 				retry_count++;
+-				nanosleep(&sleep, NULL);
++				/*
++				 * skip the sleep if we're using AES
++				 */
++				if(!ent_src->rng_options[JITTER_OPT_USE_AES].int_val)
++					nanosleep(&sleep, NULL);
+ 				goto try_again;
+ 			}
+ 			goto out;
+@@ -287,6 +383,9 @@ int init_jitter_entropy_source(struct rng *ent_src)
+ 	size_t cpusize;
+ 	int i;
+ 	int core_id = 0;
++#ifdef HAVE_LIBGCRYPT
++	char key[AES_BLOCK];
++#endif
+ 	int ret = jent_entropy_init();
+ 	if(ret) {
+ 		message(LOG_DAEMON|LOG_WARNING, "JITTER rng fails with code %d\n", ret);
+@@ -350,7 +449,28 @@ int init_jitter_entropy_source(struct rng *ent_src)
+ 		message(LOG_DAEMON|LOG_DEBUG, "CPU Thread %d is ready\n", i);
+ 		pthread_mutex_unlock(&tdata[i].mtx);
+ 	}
+-		
++
++	if (ent_src->rng_options[JITTER_OPT_USE_AES].int_val) {
++#ifdef HAVE_LIBGCRYPT
++		/*
++		 * Temporarily disable aes so we don't try to use it during init
++		 */
++		ent_src->rng_options[JITTER_OPT_USE_AES].int_val = 0;
++		if (xread_jitter(key, AES_BLOCK, ent_src)) {
++			message(LOG_CONS|LOG_INFO, "Unable to obtain AES key, disabling AES in JITTER source\n");
++		} else if (xread_jitter(iv_buf, CHUNK_SIZE, ent_src)) {
++			message(LOG_CONS|LOG_INFO, "Unable to obtain iv_buffer, disabling AES in JITTER source\n");
++		} else if (init_gcrypt(key)) {
++			message(LOG_CONS|LOG_INFO, "Unable to inity gcrypt lib, disabling AES in JITTER source\n");
++		} else {
++			/* re-enable AES */
++			ent_src->rng_options[JITTER_OPT_USE_AES].int_val = 1;
++		}
++#else
++		message(LOG_CONS|LOG_INFO, "libgcrypt not available disabling AES in JITTER source\n");
++		ent_src->rng_options[JITTER_OPT_USE_AES].int_val = 0;
++#endif
++	}
+ 	message(LOG_DAEMON|LOG_INFO, "Enabling JITTER rng support\n");
+ 	return 0;
+ }
+
+From 511739d809d7a25efb40244e272a52f9a6724956 Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Thu, 13 Sep 2018 10:21:51 -0400
+Subject: [PATCH 19/39] Consolidate entropy source lookup code to its own
+ function
+
+This code gets repeated for 3 options, lets consolidate and save some
+labor
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd.c | 100 +++++++++++++++++++++++----------------------------------
+ 1 file changed, 40 insertions(+), 60 deletions(-)
+
+diff --git a/rngd.c b/rngd.c
+index 6683b9f..b8e147b 100644
+--- a/rngd.c
++++ b/rngd.c
+@@ -289,6 +289,29 @@ static int find_ent_src_idx_by_sname(const char *sname)
+ 	return -1;
+ }
+ 
++static int find_ent_src_idx(const char *name_idx)
++{
++	int idx;
++
++	if (isalpha(name_idx[0])) {
++		idx = find_ent_src_idx_by_sname(name_idx);
++		if (idx == -1) {
++			message(LOG_CONS|LOG_WARNING, "Unknown entropy source %s\n", name_idx);
++			return -EINVAL;
++		}
++	} else {
++		idx = strtoul(name_idx, NULL, 10);
++		if ((idx == LONG_MAX) || (idx >= ENT_MAX)) {
++			message(LOG_CONS|LOG_INFO, "option index out of range: %lu\n", idx);
++			return -ERANGE;
++		}
++		message(LOG_CONS|LOG_INFO, "Note, reference of entropy sources by index "
++			"is deprecated, use entropy source short name instead\n");
++	}
++
++	return idx;
++}
++
+ /*
+  * command line processing
+  */
+@@ -312,32 +335,18 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
+ 
+ 		search = strchrnul(arg, ':');
+ 
+-		if (isalpha(arg[0])) {
+-			/*
+-			 * first argument might be a string, lookup by short
+-			 * name
+-			 */
+-			if (*search != '\0') {
+-				*search = '\0';
+-				restore = true;
+-			}
+-			idx = find_ent_src_idx_by_sname(arg);
+-			if (idx == -1) {
+-				message(LOG_CONS|LOG_WARNING, "Unknown entropy source %s\n", arg);
+-				return -EINVAL;
+-			}
+-			if (restore == true)
+-				*search = ':';
+-		} else {
+-			idx = strtoul(arg, &search, 10);
+-			if ((idx == LONG_MAX) || (idx >= ENT_MAX)) {
+-				message(LOG_CONS|LOG_INFO, "option index out of range: %lu\n", idx);
+-				return -ERANGE;
+-			}
+-			message(LOG_CONS|LOG_INFO, "Note, reference of entropy sources by index "
+-				"is deprecated, use entropy source short name instead\n");
++		if (*search != '\0') {
++			*search = '\0';
++			restore = true;
+ 		}
+-
++	
++		idx = find_ent_src_idx(arg);
++		if (idx < 0)
++			return idx;
++	
++		if (restore == true)
++			*search = ':';
++	
+ 		if (*search == '\0') {
+ 			message(LOG_CONS|LOG_INFO, "Available options for %s (%s)\n",
+ 				entropy_sources[idx].rng_name, entropy_sources[idx].rng_sname);
+@@ -381,47 +390,18 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
+ 		break;
+ 
+ 	case 'x':
+-		if (isalpha(arg[0])) {
+-			/*
+-			 * first argument might be a string, lookup by short
+-			 * name
+-			 */
+-			idx = find_ent_src_idx_by_sname(arg);
+-			if (idx == -1) {
+-				message(LOG_CONS|LOG_WARNING, "Unknown entropy source %s\n", arg);
+-				return -EINVAL;
+-			}
+-		} else {
+-			idx = strtol(arg, NULL, 10);
+-			if ((idx == LONG_MAX) || (idx >= ENT_MAX)) {
+-				message(LOG_CONS|LOG_INFO, "option index out of range: %lu\n", idx);
+-				return -ERANGE;
+-			}
+-			message(LOG_CONS|LOG_INFO, "Note, reference of entropy sources by index "
+-				"is deprecated, use entropy source short name instead\n");
+-		}
++		idx = find_ent_src_idx(arg);
++		if (idx < 0)
++			return idx;
+ 
+ 		entropy_sources[idx].disabled = true;
+ 		message(LOG_CONS|LOG_INFO, "Disabling %lu: %s (%s)\n", idx,
+ 			entropy_sources[idx].rng_name, entropy_sources[idx].rng_sname);
+ 		break;
+ 	case 'n':
+-		if (isalpha(arg[0])) {
+-			idx = find_ent_src_idx_by_sname(arg);
+-			if (idx == -1) {
+-				message(LOG_CONS|LOG_WARNING, "Unknown entropy source %s\n", arg);
+-				return -EINVAL;
+-			}
+-		} else {
+-			idx = strtol(arg, NULL, 10);
+-			if ((idx == LONG_MAX) || (idx >= ENT_MAX)) {
+-				message(LOG_CONS|LOG_INFO, "option index out of range: %lu\n", idx);
+-				return -ERANGE;
+-			}
+-
+-			message(LOG_CONS|LOG_INFO, "Note, reference of entropy sources by index "
+-                                "is deprecated, use entropy source short name instead\n");
+-		}
++		idx = find_ent_src_idx(arg);
++		if (idx < 0)
++			return idx;
+ 
+ 		entropy_sources[idx].disabled = false;
+ 		message(LOG_CONS|LOG_INFO, "Enabling %lu: %s (%s)\n", idx,
+
+From 14da2b783bdfede69878938d33dcf7c4ccf9aa7b Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Thu, 13 Sep 2018 10:25:26 -0400
+Subject: [PATCH 20/39] JITTER: Clean up a debug message
+
+had a malformatted debug message that triggered on gcrypt backfill
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd_jitter.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/rngd_jitter.c b/rngd_jitter.c
+index 3ff9a93..a770a92 100644
+--- a/rngd_jitter.c
++++ b/rngd_jitter.c
+@@ -159,13 +159,14 @@ int xread_jitter(void *buf, size_t size, struct rng *ent_src)
+ 		if (current->refill) {
+ 			/*
+ 			 * If we're set to use AES, trigger a crypt of the
+-			 * existing data her, and use that as the next random
++			 * existing data here, and use that as the next random
+ 			 * block
+ 			 */
+ 			if (ent_src->rng_options[JITTER_OPT_USE_AES].int_val && retry_count) {
+ 				if (gcrypt_mangle(current->buf_ptr, current->buf_sz))
+ 					goto next_unlock;
+-				message(LOG_CONS|LOG_DEBUG, "Using GCRYPT!!!\n");
++				message(LOG_CONS|LOG_DEBUG, "JITTER backfills with gcrypt on cpu %d\n",
++					current->core_id);
+ 				/* Fall through to read the new data */
+ 			} else {
+ 				message(LOG_DAEMON|LOG_DEBUG, "JITTER skips empty thread on cpu %d\n", current->core_id);
+@@ -467,7 +468,7 @@ int init_jitter_entropy_source(struct rng *ent_src)
+ 			ent_src->rng_options[JITTER_OPT_USE_AES].int_val = 1;
+ 		}
+ #else
+-		message(LOG_CONS|LOG_INFO, "libgcrypt not available disabling AES in JITTER source\n");
++		message(LOG_CONS|LOG_INFO, "libgcrypt not available. Disabling AES in JITTER source\n");
+ 		ent_src->rng_options[JITTER_OPT_USE_AES].int_val = 0;
+ #endif
+ 	}
+
+From 989d5ba320b07303ccb555d95057ab2ab95c1241 Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Thu, 13 Sep 2018 10:34:24 -0400
+Subject: [PATCH 21/39] tests: Add tests for jitter entropy source
+
+Since the JITTER source is cpu and hardware agnostic, run some tests
+using it
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ tests/Makefile.am      |  4 ++--
+ tests/rngtestjitter.sh | 11 +++++++++++
+ 2 files changed, 13 insertions(+), 2 deletions(-)
+ create mode 100755 tests/rngtestjitter.sh
+
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index 8a2edbb..a77fd10 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -1,2 +1,2 @@
+-check_SCRIPTS = rngtesturandom.sh rngtestzero.sh
+-TESTS = rngtesturandom.sh rngtestzero.sh
++check_SCRIPTS = rngtesturandom.sh rngtestzero.sh rngtestjitter.sh
++TESTS = rngtesturandom.sh rngtestzero.sh rngtestjitter.sh
+diff --git a/tests/rngtestjitter.sh b/tests/rngtestjitter.sh
+new file mode 100755
+index 0000000..9aa3ece
+--- /dev/null
++++ b/tests/rngtestjitter.sh
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++# Test that we catch a repeating zero failure in rngtest
++./rngd -f -x hwrng -x rdrand -x tpm -O jitter:use_aes:1 | ../rngtest -c 100 --pipe > /dev/null
++if [ $? -eq 0 ]
++then
++	exit 1
++fi
++
++exit 0
++
+
+From cee9cec59b86517083ed28eafc452abc901ba23b Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Thu, 13 Sep 2018 10:46:18 -0400
+Subject: [PATCH 22/39] JITTER: default aes backfill support to on
+
+No reason to not use AES, since we use it for so many other entropy
+sources
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rngd.c b/rngd.c
+index b8e147b..d29e2ac 100644
+--- a/rngd.c
++++ b/rngd.c
+@@ -187,7 +187,7 @@ static struct rng_option jitter_options[] = {
+ 	},
+ 	[JITTER_OPT_USE_AES] = {
+ 		.key = "use_aes",
+-		.int_val = 0,
++		.int_val = 1,
+ 	},
+ 	{
+ 		.key = NULL,
+
+From e6d22819d29673a52a6728b4a6eefa1cec4a462d Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Thu, 13 Sep 2018 14:29:46 -0400
+Subject: [PATCH 23/39] fix jitter test
+
+We need to be able to dump entropy to stdout, but the current setup for
+entropy output uses an ioctl.
+
+Fix it by just writing the entropy to the output file if and only if we
+are in foreground mode and the ioctl method fails
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd.c                 |  3 ++-
+ rngd_linux.c           | 29 +++++++++++++++++++++++------
+ rngd_linux.h           |  2 +-
+ tests/rngtestjitter.sh |  2 +-
+ 4 files changed, 27 insertions(+), 9 deletions(-)
+
+diff --git a/rngd.c b/rngd.c
+index d29e2ac..04e46d3 100644
+--- a/rngd.c
++++ b/rngd.c
+@@ -475,7 +475,8 @@ static int update_kernel_random(struct rng *rng, int random_step,
+ 		 p += random_step) {
+ 		if (!server_running)
+ 			return 0;
+-		random_add_entropy(p, random_step);
++		if (random_add_entropy(p, random_step))
++			return 1;
+ 		random_sleep();
+ 	}
+ 	return 0;
+diff --git a/rngd_linux.c b/rngd_linux.c
+index f938a38..16f3c68 100644
+--- a/rngd_linux.c
++++ b/rngd_linux.c
+@@ -121,19 +121,36 @@ struct entropy {
+ 	int size;
+ };
+ 
+-void random_add_entropy(void *buf, size_t size)
++int random_add_entropy(void *buf, size_t size)
+ {
++	static bool write_to_output = false;
++
+ 	struct entropy *ent = alloca(sizeof(struct entropy) + size);
+ 
+ 	ent->ent_count = size * arguments->entropy_count;
+ 	ent->size = size;
+ 	memcpy(ent + 1, buf, size);
+ 
+-	if (ioctl(random_fd, RNDADDENTROPY, ent) != 0) {
+-		message(LOG_DAEMON|LOG_ERR, "RNDADDENTROPY failed: %s\n",
+-			strerror(errno));
+-		exit(1);
+-	}
++	if (write_to_output == false) {
++		if (ioctl(random_fd, RNDADDENTROPY, ent) != 0) {
++			if (errno == ENOTTY && !arguments->daemon) {
++				/*
++				 * This isn't a real random device.
++				 * Switch to plain output if we are in
++				 * foreground
++				 */
++				write_to_output = true;
++			} else {
++				message(LOG_DAEMON|LOG_ERR, "RNDADDENTROPY failed: %s\n",
++					strerror(errno));
++				return 1;
++			}
++		}
++	} else
++		write(random_fd, buf, size);
++
++	return 0;
++
+ }
+ 
+ void random_sleep(void)
+diff --git a/rngd_linux.h b/rngd_linux.h
+index 6e62934..4cb2a4a 100644
+--- a/rngd_linux.h
++++ b/rngd_linux.h
+@@ -38,7 +38,7 @@ extern int default_watermark(void);
+ extern void init_kernel_rng(const char* randomdev);
+ 
+ /* Send entropy to the kernel */
+-extern void random_add_entropy(void *buf, size_t size);
++extern int random_add_entropy(void *buf, size_t size);
+ 
+ /* Sleep until the kernel is hungry for entropy */
+ extern void random_sleep(void);
+diff --git a/tests/rngtestjitter.sh b/tests/rngtestjitter.sh
+index 9aa3ece..b6ebb6f 100755
+--- a/tests/rngtestjitter.sh
++++ b/tests/rngtestjitter.sh
+@@ -1,7 +1,7 @@
+ #!/bin/sh
+ 
+ # Test that we catch a repeating zero failure in rngtest
+-./rngd -f -x hwrng -x rdrand -x tpm -O jitter:use_aes:1 | ../rngtest -c 100 --pipe > /dev/null
++./rngd -f -o /dev/stdout -x hwrng -x rdrand -x tpm -O jitter:use_aes:1 | ../rngtest -c 100 --pipe > /dev/null
+ if [ $? -eq 0 ]
+ then
+ 	exit 1
+
+From d4e6a8b06358aafdb7c77de4dd22376462841c29 Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Fri, 14 Sep 2018 09:22:36 -0400
+Subject: [PATCH 24/39] rngd: flush the right stream on error message output
+
+were flushing stdout on message calls, when we should be flushing
+stderr, since thats where all messages go in the foreground
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rngd.h b/rngd.h
+index bc2d309..8aa8133 100644
+--- a/rngd.h
++++ b/rngd.h
+@@ -128,7 +128,7 @@ extern bool quiet;
+ 		if ((LOG_PRI(priority) != LOG_DEBUG) || (arguments->debug == true)) {\
+ 			fprintf(stderr, fmt, ##args); \
+ 			fprintf(stderr, "\n"); \
+-			fflush(stdout); \
++			fflush(stderr); \
+ 		} \
+ 	} \
+ } while (0)
+
+From 0eba9f7b0cd4ca415fa887ee25382c6172d57826 Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Fri, 14 Sep 2018 09:41:53 -0400
+Subject: [PATCH 25/39] jitter: mark the buffer as full after using gcrypt
+
+If we don't mark the buffer as full, it will still be seen as empty by
+xread_jitter later on
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd_jitter.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/rngd_jitter.c b/rngd_jitter.c
+index a770a92..21e813d 100644
+--- a/rngd_jitter.c
++++ b/rngd_jitter.c
+@@ -165,6 +165,11 @@ int xread_jitter(void *buf, size_t size, struct rng *ent_src)
+ 			if (ent_src->rng_options[JITTER_OPT_USE_AES].int_val && retry_count) {
+ 				if (gcrypt_mangle(current->buf_ptr, current->buf_sz))
+ 					goto next_unlock;
++				/* mark the buffer as refilled */
++				current->idx = 0;
++				current->avail = current->buf_sz;
++				current->refill = 0;
++
+ 				message(LOG_CONS|LOG_DEBUG, "JITTER backfills with gcrypt on cpu %d\n",
+ 					current->core_id);
+ 				/* Fall through to read the new data */
+
+From 1bf3c2bc7d1aabd8c2edc276f11e0846cfe6e5f3 Mon Sep 17 00:00:00 2001
+From: Lonnie Abelbeck <lonnie@abelbeck.com>
+Date: Mon, 17 Sep 2018 18:39:59 -0500
+Subject: [PATCH 26/39] Jitter: adjust buffer refill for use while gathering
+ entropy Revert edecf86 since it causes a 5x performance penalty built
+ --without-libgcrypt As such, only generate jent_read_entropy for what is
+ needed (buf_sz - avail) If 'avail' changes while jent_read_entropy() is
+ called, account for it by idx = pre-gather-avail - post-gather-avail As such,
+ only overwrite used entropy and maintain unused entropy Note: while testing
+ (pre-gather-avail - post-gather-avail) was always 0, not without trying to
+ make them different so this may not be a common problem, but this should
+ account for it should it every occur.
+
+---
+ rngd_jitter.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/rngd_jitter.c b/rngd_jitter.c
+index 21e813d..604f43c 100644
+--- a/rngd_jitter.c
++++ b/rngd_jitter.c
+@@ -264,6 +264,7 @@ static void *thread_entropy_task(void *data)
+ 	cpu_set_t cpuset;
+ 
+ 	ssize_t ret;
++	size_t need;
+ 	struct thread_data *me = data;
+ 	char *tmpbuf;
+ 	struct timespec start, end;
+@@ -321,9 +322,10 @@ static void *thread_entropy_task(void *data)
+ 			break;
+ 
+ 		/* We are awake because we need to refil the buffer */
++		need = me->buf_sz - me->avail;
+ 		pthread_mutex_unlock(&me->mtx);
+ 		clock_gettime(CLOCK_REALTIME, &start);
+-		ret = jent_read_entropy(me->ec, tmpbuf, me->buf_sz);	
++		ret = jent_read_entropy(me->ec, tmpbuf, need);
+ 		clock_gettime(CLOCK_REALTIME, &end);
+ 		message(LOG_DEBUG|LOG_ERR, "jent_read_entropy time on cpu %d is %.12e sec\n",
+ 			me->core_id, elapsed_time(&start, &end));
+@@ -334,9 +336,10 @@ static void *thread_entropy_task(void *data)
+ 		update_sleep_time(me, &start, &end);
+ 		if (!me->buf_ptr) /* buf_ptr may have been removed while gathering entropy */
+ 			break;
+-		memcpy(me->buf_ptr, tmpbuf, me->buf_sz);
+-		me->idx = 0;
+-		me->avail = me->buf_sz;
++		/*  idx = pre-gather-avail - post-gather-avail */
++		me->idx = ((me->buf_sz - me->avail - need) > 0) ? (me->buf_sz - me->avail - need) : 0;
++		memcpy(me->buf_ptr + me->idx, tmpbuf, need);
++		me->avail = me->buf_sz - me->idx;
+ 		me->refill = 0;
+ 
+ 	} while (me->buf_ptr);
+
+From aa300c8e5b4d62dcbbadaf91b58b4baaad74c3be Mon Sep 17 00:00:00 2001
+From: Lonnie Abelbeck <lonnie@abelbeck.com>
+Date: Tue, 18 Sep 2018 14:43:44 -0500
+Subject: [PATCH 27/39] Jitter: Fill in missing entropy for non-zero idx Also
+ fix jent_read_entropy() 'ret' test for error as a negative num
+
+---
+ rngd_jitter.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/rngd_jitter.c b/rngd_jitter.c
+index 604f43c..21f651a 100644
+--- a/rngd_jitter.c
++++ b/rngd_jitter.c
+@@ -329,7 +329,7 @@ static void *thread_entropy_task(void *data)
+ 		clock_gettime(CLOCK_REALTIME, &end);
+ 		message(LOG_DEBUG|LOG_ERR, "jent_read_entropy time on cpu %d is %.12e sec\n",
+ 			me->core_id, elapsed_time(&start, &end));
+-		if (ret == 0)
++		if (ret < 0)
+ 			message(LOG_DAEMON|LOG_DEBUG, "JITTER THREAD_FAILS TO GATHER ENTROPY\n");
+ 		pthread_mutex_lock(&me->mtx);
+ 		/* Need to hold the mutex to update the sleep time */
+@@ -340,6 +340,19 @@ static void *thread_entropy_task(void *data)
+ 		me->idx = ((me->buf_sz - me->avail - need) > 0) ? (me->buf_sz - me->avail - need) : 0;
+ 		memcpy(me->buf_ptr + me->idx, tmpbuf, need);
+ 		me->avail = me->buf_sz - me->idx;
++		/* Fill in missing entropy for non-zero idx */
++		if (me->idx > 0) {
++			need = me->idx;
++			if (jent_read_entropy(me->ec, tmpbuf, need) > 0) {
++				message(LOG_DEBUG|LOG_ERR, "jent_read_entropy on cpu %d filled in missing %d bytes\n",
++					me->core_id, need);
++				memcpy(me->buf_ptr, tmpbuf, need);
++				me->idx = 0;
++				me->avail = me->buf_sz;
++			} else {
++				message(LOG_DAEMON|LOG_DEBUG, "JITTER THREAD_FAILS TO GATHER ENTROPY\n");
++			}
++		}
+ 		me->refill = 0;
+ 
+ 	} while (me->buf_ptr);
+
+From b88bbec1c56b09a76681da65915a7fe6170d5aa3 Mon Sep 17 00:00:00 2001
+From: Lonnie Abelbeck <lonnie@abelbeck.com>
+Date: Tue, 18 Sep 2018 19:09:26 -0500
+Subject: [PATCH 28/39] Jitter: remove thread_data 'refill', use 'avail'
+ instead
+
+---
+ rngd_jitter.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
+
+diff --git a/rngd_jitter.c b/rngd_jitter.c
+index 21f651a..ed2d163 100644
+--- a/rngd_jitter.c
++++ b/rngd_jitter.c
+@@ -46,7 +46,6 @@ struct thread_data {
+ 	size_t buf_sz;
+ 	size_t avail;
+ 	size_t idx;
+-	int refill;
+ 	int slpmode;
+ 	struct timespec slptm;
+ 	pthread_mutex_t mtx;
+@@ -156,7 +155,7 @@ int xread_jitter(void *buf, size_t size, struct rng *ent_src)
+  		 */
+ 		pthread_mutex_lock(&current->mtx);
+ 
+-		if (current->refill) {
++		if (current->avail == 0) {
+ 			/*
+ 			 * If we're set to use AES, trigger a crypt of the
+ 			 * existing data here, and use that as the next random
+@@ -168,7 +167,6 @@ int xread_jitter(void *buf, size_t size, struct rng *ent_src)
+ 				/* mark the buffer as refilled */
+ 				current->idx = 0;
+ 				current->avail = current->buf_sz;
+-				current->refill = 0;
+ 
+ 				message(LOG_CONS|LOG_DEBUG, "JITTER backfills with gcrypt on cpu %d\n",
+ 					current->core_id);
+@@ -190,7 +188,6 @@ int xread_jitter(void *buf, size_t size, struct rng *ent_src)
+ 
+ 		/* Trigger a refill if this thread is low */
+ 		if (current->avail < ent_src->rng_options[JITTER_OPT_REFILL].int_val) {
+-			current->refill = 1;
+ 			pthread_cond_signal(&current->cond);
+ 		}
+ 
+@@ -308,7 +305,6 @@ static void *thread_entropy_task(void *data)
+ 	else {
+ 		memcpy(me->buf_ptr, tmpbuf, me->buf_sz);
+ 		me->avail = me->buf_sz;
+-		me->refill = 0;
+ 	}
+ 
+ 	/* Now go to sleep until there is more work to do */
+@@ -353,7 +349,6 @@ static void *thread_entropy_task(void *data)
+ 				message(LOG_DAEMON|LOG_DEBUG, "JITTER THREAD_FAILS TO GATHER ENTROPY\n");
+ 			}
+ 		}
+-		me->refill = 0;
+ 
+ 	} while (me->buf_ptr);
+ 
+@@ -450,7 +445,7 @@ int init_jitter_entropy_source(struct rng *ent_src)
+ 		tdata[i].buf_sz = ent_src->rng_options[JITTER_OPT_BUF_SZ].int_val;
+ 		tdata[i].buf_ptr = calloc(1, tdata[i].buf_sz);
+ 		tdata[i].ec = jent_entropy_collector_alloc(1, 0);
+-		tdata[i].refill = 1;
++		tdata[i].avail = 0;
+ 		tdata[i].slpmode = ent_src->rng_options[JITTER_OPT_RETRY_DELAY].int_val;
+ 		pthread_mutex_init(&tdata[i].mtx, NULL);
+ 		pthread_cond_init(&tdata[i].cond, NULL);
+@@ -463,7 +458,7 @@ int init_jitter_entropy_source(struct rng *ent_src)
+ 	/* Make sure all our threads are doing their jobs */
+ 	for (i=0; i < num_threads; i++) {
+ 		pthread_mutex_lock(&tdata[i].mtx);
+-		while (tdata[i].refill) {
++		while (tdata[i].avail == 0) {
+ 			pthread_mutex_unlock(&tdata[i].mtx);
+ 			sched_yield();
+ 			pthread_mutex_lock(&tdata[i].mtx);
+
+From 9cc82de5f40f6f529bcc05bab1cbef859e8a9eb4 Mon Sep 17 00:00:00 2001
+From: Lonnie Abelbeck <lonnie@abelbeck.com>
+Date: Wed, 19 Sep 2018 16:18:58 -0500
+Subject: [PATCH 29/39] Jitter: persist in thread_entropy_task() as long as
+ needed Using variable 'max_fill' create a dynamic balance between filling
+ entropy and draining entropy Since removing the 'refill' variable, in
+ xread_jitter() we must now use pthread_mutex_trylock() to protect active
+ threads
+
+---
+ rngd_jitter.c | 31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
+
+diff --git a/rngd_jitter.c b/rngd_jitter.c
+index ed2d163..c80bc73 100644
+--- a/rngd_jitter.c
++++ b/rngd_jitter.c
+@@ -150,10 +150,13 @@ int xread_jitter(void *buf, size_t size, struct rng *ent_src)
+ 	struct timespec sleep;
+ try_again:
+ 	while (need) {
+-		/* if the current thread is refilling its buffer
++		/* if the current thread is locked or an empty buffer
+  		 * just move on to the next one
+  		 */
+-		pthread_mutex_lock(&current->mtx);
++		if (pthread_mutex_trylock(&current->mtx)) {
++			message(LOG_DAEMON|LOG_DEBUG, "JITTER skips locked thread\n");
++			goto next;
++		}
+ 
+ 		if (current->avail == 0) {
+ 			/*
+@@ -262,6 +265,7 @@ static void *thread_entropy_task(void *data)
+ 
+ 	ssize_t ret;
+ 	size_t need;
++	size_t max_fill;
+ 	struct thread_data *me = data;
+ 	char *tmpbuf;
+ 	struct timespec start, end;
+@@ -311,6 +315,7 @@ static void *thread_entropy_task(void *data)
+ 	do {
+ 		pthread_cond_wait(&me->cond, &me->mtx);
+ 		message(LOG_DAEMON|LOG_DEBUG, "JITTER thread on cpu %d wakes up for refill\n", me->core_id);
++refill:
+ 		/* When we wake up, check to ensure we still have a buffer
+  		 * Having a NULL buf_ptr is a signal to exit
+  		 */
+@@ -336,15 +341,23 @@ static void *thread_entropy_task(void *data)
+ 		me->idx = ((me->buf_sz - me->avail - need) > 0) ? (me->buf_sz - me->avail - need) : 0;
+ 		memcpy(me->buf_ptr + me->idx, tmpbuf, need);
+ 		me->avail = me->buf_sz - me->idx;
+-		/* Fill in missing entropy for non-zero idx */
++		/* Fill in entropy for non-zero idx */
+ 		if (me->idx > 0) {
+-			need = me->idx;
++			/*  max_fill:
++			 *    larger value gives more priority for filling entropy
++			 *    smaller value gives more priority for draining entropy
++			 */
++			max_fill = ((me->buf_sz / 8) > (me->idx / 2)) ? (me->buf_sz / 8) : (me->idx / 2);
++			need = (me->idx > max_fill) ? max_fill : me->idx;
+ 			if (jent_read_entropy(me->ec, tmpbuf, need) > 0) {
+-				message(LOG_DEBUG|LOG_ERR, "jent_read_entropy on cpu %d filled in missing %d bytes\n",
+-					me->core_id, need);
+-				memcpy(me->buf_ptr, tmpbuf, need);
+-				me->idx = 0;
+-				me->avail = me->buf_sz;
++				me->idx -= need;
++				memcpy(me->buf_ptr + me->idx, tmpbuf, need);
++				me->avail = me->buf_sz - me->idx;
++				message(LOG_DEBUG|LOG_ERR, "jent_read_entropy on cpu %d filled in %d bytes resulting in idx=%d\n",
++					me->core_id, need, me->idx);
++				if (me->idx > 0) {
++					goto refill;
++				}
+ 			} else {
+ 				message(LOG_DAEMON|LOG_DEBUG, "JITTER THREAD_FAILS TO GATHER ENTROPY\n");
+ 			}
+
+From 8aa26b02c621ca8de21de9e782c8388e4fc3fa3f Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Thu, 20 Sep 2018 14:44:59 -0400
+Subject: [PATCH 30/39] jitter: fix use of aes
+
+commit aa300c8e5b4d62dcbbadaf91b58b4baaad74c3be elegantly implemented a
+ring buffer for our entropy threads, but failed to take into account
+the possibility that another task (like the read task when executing
+gcrypt operations), might fill the buffer, reducing the needed amount to
+refill during the generation cycle.  As a result, the refill tasks were
+computing a very large index into the per thread buffer array (->idx is
+a size_t / unsinged long), and so we were corrupting memory.  Lets fix
+that
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd_jitter.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/rngd_jitter.c b/rngd_jitter.c
+index c80bc73..cd819f7 100644
+--- a/rngd_jitter.c
++++ b/rngd_jitter.c
+@@ -337,6 +337,15 @@ static void *thread_entropy_task(void *data)
+ 		update_sleep_time(me, &start, &end);
+ 		if (!me->buf_ptr) /* buf_ptr may have been removed while gathering entropy */
+ 			break;
++		/*
++		 * we need to re-check need here, as we may be using aes to
++		 * backfill entropy.  If we are, its possible that there will be
++		 * less need than what we computed initially
++		 */
++		need = (need > me->buf_sz - me->avail) ? me->buf_sz - me->avail : need;
++		if (!need)
++			continue;
++
+ 		/*  idx = pre-gather-avail - post-gather-avail */
+ 		me->idx = ((me->buf_sz - me->avail - need) > 0) ? (me->buf_sz - me->avail - need) : 0;
+ 		memcpy(me->buf_ptr + me->idx, tmpbuf, need);
+
+From c76cdbcfc333c3b9ff767a5988357628676c2ccb Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Thu, 20 Sep 2018 14:56:14 -0400
+Subject: [PATCH 31/39] Simpify refill code
+
+Theres no need to make the refill path overly complex.  Determining
+weather or not to bias for filling or draining not a worthwhile
+endeavour.  Once jitter drops the per-thread lock the read side will
+have ample time to do all the draining it needs, and if the fill side
+can't keep up, our only recourse is to use something like AES to pseudo
+randomize anyway.  So if we have more to fill, just go back and fill it.
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd_jitter.c | 28 ++++++----------------------
+ 1 file changed, 6 insertions(+), 22 deletions(-)
+
+diff --git a/rngd_jitter.c b/rngd_jitter.c
+index cd819f7..a7727dc 100644
+--- a/rngd_jitter.c
++++ b/rngd_jitter.c
+@@ -265,7 +265,6 @@ static void *thread_entropy_task(void *data)
+ 
+ 	ssize_t ret;
+ 	size_t need;
+-	size_t max_fill;
+ 	struct thread_data *me = data;
+ 	char *tmpbuf;
+ 	struct timespec start, end;
+@@ -315,13 +314,13 @@ static void *thread_entropy_task(void *data)
+ 	do {
+ 		pthread_cond_wait(&me->cond, &me->mtx);
+ 		message(LOG_DAEMON|LOG_DEBUG, "JITTER thread on cpu %d wakes up for refill\n", me->core_id);
+-refill:
+ 		/* When we wake up, check to ensure we still have a buffer
+  		 * Having a NULL buf_ptr is a signal to exit
+  		 */
+ 		if (!me->buf_ptr)
+ 			break;
+ 
++refill_more:
+ 		/* We are awake because we need to refil the buffer */
+ 		need = me->buf_sz - me->avail;
+ 		pthread_mutex_unlock(&me->mtx);
+@@ -350,26 +349,11 @@ static void *thread_entropy_task(void *data)
+ 		me->idx = ((me->buf_sz - me->avail - need) > 0) ? (me->buf_sz - me->avail - need) : 0;
+ 		memcpy(me->buf_ptr + me->idx, tmpbuf, need);
+ 		me->avail = me->buf_sz - me->idx;
+-		/* Fill in entropy for non-zero idx */
+-		if (me->idx > 0) {
+-			/*  max_fill:
+-			 *    larger value gives more priority for filling entropy
+-			 *    smaller value gives more priority for draining entropy
+-			 */
+-			max_fill = ((me->buf_sz / 8) > (me->idx / 2)) ? (me->buf_sz / 8) : (me->idx / 2);
+-			need = (me->idx > max_fill) ? max_fill : me->idx;
+-			if (jent_read_entropy(me->ec, tmpbuf, need) > 0) {
+-				me->idx -= need;
+-				memcpy(me->buf_ptr + me->idx, tmpbuf, need);
+-				me->avail = me->buf_sz - me->idx;
+-				message(LOG_DEBUG|LOG_ERR, "jent_read_entropy on cpu %d filled in %d bytes resulting in idx=%d\n",
+-					me->core_id, need, me->idx);
+-				if (me->idx > 0) {
+-					goto refill;
+-				}
+-			} else {
+-				message(LOG_DAEMON|LOG_DEBUG, "JITTER THREAD_FAILS TO GATHER ENTROPY\n");
+-			}
++		/* if me->idx isn't at the start of the buffer, we can fill more */
++		if (me->idx) {
++			message(LOG_CONS|LOG_DEBUG, "CPU %d has %d more bytes to fill\n",
++				me->core_id, me->buf_sz - me->avail);
++			goto refill_more;
+ 		}
+ 
+ 	} while (me->buf_ptr);
+
+From ff97dcb5bf0abf17d2da75d76b50fd80711a141f Mon Sep 17 00:00:00 2001
+From: Lonnie Abelbeck <lonnie@abelbeck.com>
+Date: Thu, 20 Sep 2018 20:18:13 -0500
+Subject: [PATCH 32/39] Jitter: remove superfluous pthread_mutex_unlock
+
+---
+ rngd_jitter.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/rngd_jitter.c b/rngd_jitter.c
+index a7727dc..5177954 100644
+--- a/rngd_jitter.c
++++ b/rngd_jitter.c
+@@ -214,12 +214,8 @@ int xread_jitter(void *buf, size_t size, struct rng *ent_src)
+ 		}
+ 	}
+ 	rc = 0;
+-
+-	pthread_mutex_unlock(&current->mtx);
+-	rc = 0;
+ out:
+ 	return rc;
+-
+ }
+ 
+ static inline double elapsed_time(struct timespec *start, struct timespec *end)
+
+From 71aa1d56d42cace48a569f1c807f9fa8163a5b91 Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Fri, 21 Sep 2018 07:52:25 -0400
+Subject: [PATCH 33/39] rngd: add test mode
+
+It would be nice if we could test the entropy generation capabilities of
+rngd.  So add a test mode where all entropy just gets discarded and we
+measure the rate of entropy generation.
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd.8.in |  5 +++++
+ rngd.c    | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ rngd.h    |  2 ++
+ 3 files changed, 59 insertions(+), 2 deletions(-)
+
+diff --git a/rngd.8.in b/rngd.8.in
+index 3bc5584..3da7934 100644
+--- a/rngd.8.in
++++ b/rngd.8.in
+@@ -19,6 +19,7 @@ rngd \- Check and feed random data from hardware device to kernel random device
+ [\fB\-p\fR, \fB\-\-pid-file=\fIfile\fR]
+ [\fB\-r\fR, \fB\-\-rng-device=\fIfile\fR]
+ [\fB\-s\fR, \fB\-\-random-step=\fInnn\fR]
++[\fB\-t\fR, \fB\-\-test\fR]
+ [\fB\-W\fR, \fB\-\-fill-watermark=\fInnn\fR]
+ [\fB\-q\fR, \fB\-\-quiet\fR]
+ [\fB\-?\fR, \fB\-\-help\fR]
+@@ -89,6 +90,10 @@ Kernel device used for random number input
+ \fB\-s\fI nnn\fR, \fB\-\-random-step=\fInnn\fR
+ Number of bytes written to random-device at a time (default: 64)
+ .TP
++\fB\-t, \fB\-\-test\fR
++Enter test mode.  In this mode (which implies -f), all generated entropy is
++discarded and rngd reports the amount of entropy generated every second
++.TP
+ \fB\-e\fI nnn\fR, \fB\-\-entropy-count=\fInnn\fR
+ Number of bits to consider random when adding entropy. 1<=e<=8
+ (default: 8)
+diff --git a/rngd.c b/rngd.c
+index 04e46d3..163e94e 100644
+--- a/rngd.c
++++ b/rngd.c
+@@ -104,6 +104,8 @@ static struct argp_option options[] = {
+ 	{ "rng-device", 'r', "file", 0,
+ 	  "Kernel device used for random number input (default: /dev/hwrng)" },
+ 
++	{ "test", 't', 0, 0, "Enter test mode and report entropy production rates" },
++
+ 	{ "pid-file", 'p', "file", 0,
+ 	  "File used for recording daemon PID, and multiple exclusion (default: /var/run/rngd.pid)" },
+ 
+@@ -127,12 +129,17 @@ static struct arguments default_arguments = {
+ 	.pid_file	= "/var/run/rngd.pid",
+ 	.random_step	= 64,
+ 	.daemon		= true,
++	.test		= false,
+ 	.list		= false,
+ 	.ignorefail	= false,
+ 	.entropy_count	= 8,
+ };
+ struct arguments *arguments = &default_arguments;
+ 
++static unsigned long ent_gathered = 0;
++static unsigned long test_iterations = 0;
++static double avg_entropy = 0;
++
+ static enum {
+ 	ENT_HWRNG = 0,
+ 	ENT_TPM = 1,
+@@ -419,6 +426,10 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
+ 	case 'f':
+ 		arguments->daemon = false;
+ 		break;
++	case 't':
++		arguments->daemon = false;
++		arguments->test = true;
++		break;
+ 	case 'b':
+ 		arguments->daemon = true;
+ 		break;
+@@ -482,6 +493,16 @@ static int update_kernel_random(struct rng *rng, int random_step,
+ 	return 0;
+ }
+ 
++static int random_test_sink(struct rng *rng, int random_step,
++	unsigned char *buf, fips_ctx_t *fipsctx_in)
++{
++	if (!ent_gathered)
++		alarm(1);
++	ent_gathered += FIPS_RNG_BUFFER_SIZE;
++	return 0;
++}
++
++
+ static void do_loop(int random_step)
+ {
+ 	unsigned char buf[FIPS_RNG_BUFFER_SIZE];
+@@ -492,6 +513,11 @@ static void do_loop(int random_step)
+ 	int retval;
+ 	struct rng *iter;
+ 
++	int (*random_add_fn)(struct rng *rng, int random_step,
++		unsigned char *buf, fips_ctx_t *fipsctx_in);
++
++	random_add_fn = arguments->test ? random_test_sink : update_kernel_random;
++
+ continue_trying:
+ 	for (no_work = 0; no_work < 100; no_work = (work_done ? 0 : no_work+1)) {
+ 
+@@ -516,8 +542,8 @@ static void do_loop(int random_step)
+ 
+ 			work_done = true;
+ 
+-			rc = update_kernel_random(iter, random_step,
+-					     buf, iter->fipsctx);
++			rc = random_add_fn(iter, random_step, buf, iter->fipsctx);
++
+ 			if (rc == 0) {
+ 				iter->success++;
+ 				if (iter->success >= RNG_OK_CREDIT) {
+@@ -577,6 +603,21 @@ static void term_signal(int signo)
+ 	server_running = false;
+ }
+ 
++static void alarm_signal(int signo)
++{
++
++	if (ent_gathered >= 1024)
++		message(LOG_CONS|LOG_INFO, "%d kbytes of entropy gathered per second\n",
++			ent_gathered/1024);
++	else
++		message(LOG_CONS|LOG_INFO, "%d bytes of entropy gathered per second\n",
++			ent_gathered);
++	avg_entropy = test_iterations ? ent_gathered : 
++		((avg_entropy * test_iterations) + ent_gathered) / (test_iterations + 1);
++	ent_gathered = 0;
++	test_iterations++;
++}
++
+ static int discard_initial_data(struct rng *ent_src)
+ {
+ 	/* Trash 32 bits of what is probably stale (non-random)
+@@ -698,6 +739,11 @@ int main(int argc, char **argv)
+ 	 */
+ 	signal(SIGINT, term_signal);
+ 	signal(SIGTERM, term_signal);
++	if (arguments->test) {
++		message(LOG_CONS|LOG_INFO, "Entering test mode...no entropy will "
++			"be delivered to the kernel\n");
++		signal(SIGALRM, alarm_signal);
++	}
+ 
+ 	if (arguments->ignorefail)
+ 		ignorefail = true;
+@@ -706,6 +752,10 @@ int main(int argc, char **argv)
+ 
+ 	close_all_entropy_sources();
+ 
++	if (arguments->test)
++		message(LOG_CONS|LOG_INFO, "Average entropy %.12e kbytes entropy over %d iterations\n",
++			avg_entropy/1024, test_iterations);
++
+ 	if (pid_fd >= 0)
+ 		unlink(arguments->pid_file);
+ 
+diff --git a/rngd.h b/rngd.h
+index 8aa8133..21aefae 100644
+--- a/rngd.h
++++ b/rngd.h
+@@ -48,6 +48,7 @@ struct arguments {
+ 
+ 	bool debug;
+ 	bool daemon;
++	bool test;
+ 	bool list;
+ 	bool ignorefail;
+ 	bool enable_drng;
+@@ -99,6 +100,7 @@ struct rng {
+ 	bool disabled;
+ 	int failures;
+ 	int success;
++	size_t ent_gathered;
+ 	struct flags {
+ 		/* Slow sources - takes a long time to produce entropy */
+ 		unsigned int slow_source : 1;
+
+From 5788bb5b2d272f27211ed15405e5aacecf1f7a4e Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Fri, 21 Sep 2018 10:02:56 -0400
+Subject: [PATCH 34/39] Replace trylock with lock in xread_jitter
+
+using trylock made sense when we held the mutex on the read side during
+entropy generation, but now, since we drop it to generate entropy,
+using lock makes more sense, as we're likely to have the lock released
+quickly, and just because the mutex is held by the writer, that doesn't
+imply that we don't have entropy in the buffer, only that the writer is
+filling a used space, which may not be the whole of a given buffer.
+
+Testing with the new test option shows that replacing the trylock with
+lock here increases our entropy output significantly:
+
+Hardware:
+4 core x86_64 system
+Command:
+./rngd -t -x tpm -x hwrng -x rdrand -O jitter:use_aes:0
+
+with pthread_mutex_trylock:
+Average entropy 4.882812500000e+01 kbytes entropy over 170 iterations
+
+with pthread_mutex_lock:
+Average entropy 7.080078125000e+01 kbytes entropy over 170 iterations
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd_jitter.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/rngd_jitter.c b/rngd_jitter.c
+index 5177954..336e191 100644
+--- a/rngd_jitter.c
++++ b/rngd_jitter.c
+@@ -150,13 +150,7 @@ int xread_jitter(void *buf, size_t size, struct rng *ent_src)
+ 	struct timespec sleep;
+ try_again:
+ 	while (need) {
+-		/* if the current thread is locked or an empty buffer
+- 		 * just move on to the next one
+- 		 */
+-		if (pthread_mutex_trylock(&current->mtx)) {
+-			message(LOG_DAEMON|LOG_DEBUG, "JITTER skips locked thread\n");
+-			goto next;
+-		}
++		pthread_mutex_lock(&current->mtx);
+ 
+ 		if (current->avail == 0) {
+ 			/*
+
+From 18bab88a244d7b80926601e145755dfc4a950a39 Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Fri, 21 Sep 2018 10:14:16 -0400
+Subject: [PATCH 35/39] Grab the sleep timer unilaterally
+
+The sleep timer for use in retrying entropy collection when we aren't
+using AES wasn't always getting picked up on the first iteration through
+(right when we increment retry_count to one), and so we were sleeping on
+a garbage value.  Fix it by always grabbing the sleep timer at the start
+of a loop iteration after we grab the lock.
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd_jitter.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/rngd_jitter.c b/rngd_jitter.c
+index 336e191..4e4b348 100644
+--- a/rngd_jitter.c
++++ b/rngd_jitter.c
+@@ -152,6 +152,12 @@ int xread_jitter(void *buf, size_t size, struct rng *ent_src)
+ 	while (need) {
+ 		pthread_mutex_lock(&current->mtx);
+ 
++		/*
++		 * Grab the sleep timer while we hold the lock, in case
++		 * we need to sleep below
++		 */
++		memcpy(&sleep, &current->slptm, sizeof(struct timespec));
++
+ 		if (current->avail == 0) {
+ 			/*
+ 			 * If we're set to use AES, trigger a crypt of the
+@@ -170,8 +176,6 @@ int xread_jitter(void *buf, size_t size, struct rng *ent_src)
+ 				/* Fall through to read the new data */
+ 			} else {
+ 				message(LOG_DAEMON|LOG_DEBUG, "JITTER skips empty thread on cpu %d\n", current->core_id);
+-				/* Grab the sleep timer while we hold the lock */
+-				memcpy(&sleep, &current->slptm, sizeof(struct timespec));
+ 				goto next_unlock;
+ 			}
+ 		}
+
+From aa23b4dbc6d9ebd25561ded25e48bd0dc500824f Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Fri, 21 Sep 2018 21:08:34 -0400
+Subject: [PATCH 36/39] rngd: fix typo in test mode
+
+On exit the test mode code reports the average entropy in kbytes/sec,
+but the output only says kbytes.
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rngd.c b/rngd.c
+index 163e94e..1be55dc 100644
+--- a/rngd.c
++++ b/rngd.c
+@@ -753,7 +753,7 @@ int main(int argc, char **argv)
+ 	close_all_entropy_sources();
+ 
+ 	if (arguments->test)
+-		message(LOG_CONS|LOG_INFO, "Average entropy %.12e kbytes entropy over %d iterations\n",
++		message(LOG_CONS|LOG_INFO, "Average entropy %.12e kbytes/sec over %d iterations\n",
+ 			avg_entropy/1024, test_iterations);
+ 
+ 	if (pid_fd >= 0)
+
+From d24d720380d2a1d8f1e886633e2a3d2f81aaea60 Mon Sep 17 00:00:00 2001
+From: Lonnie Abelbeck <lonnie@abelbeck.com>
+Date: Sat, 22 Sep 2018 15:08:06 -0500
+Subject: [PATCH 37/39] Test Mode: various enhancements and tweaks Keep track
+ of elapsed time, don't count on alarm(1) for timing Use first alarm(1) as t=0
+ Use bits instead of bytes Various output text tweaks
+
+Sample results:
+Entropy rate:  5.408 Kbits/sec averaged over 18 iterations for  65.01 seconds
+
+Entropy rate:  52.34 Kbits/sec averaged over 190 iterations for    275 seconds
+
+Entropy rate:  2.678 Mbits/sec averaged over 15 iterations for  15.06 seconds
+
+Entropy rate:  104.2 Mbits/sec averaged over 26 iterations for     26 seconds
+
+Entropy rate:    126 Mbits/sec averaged over 26 iterations for     26 seconds
+---
+ rngd.c | 37 +++++++++++++++++++++++++------------
+ 1 file changed, 25 insertions(+), 12 deletions(-)
+
+diff --git a/rngd.c b/rngd.c
+index 1be55dc..4c4a038 100644
+--- a/rngd.c
++++ b/rngd.c
+@@ -48,6 +48,7 @@
+ #include <signal.h>
+ #include <limits.h>
+ #include <ctype.h>
++#include <time.h>
+ 
+ #include "rngd.h"
+ #include "fips.h"
+@@ -138,7 +139,8 @@ struct arguments *arguments = &default_arguments;
+ 
+ static unsigned long ent_gathered = 0;
+ static unsigned long test_iterations = 0;
+-static double avg_entropy = 0;
++static double sum_entropy;
++static struct timespec start_test, end_test;
+ 
+ static enum {
+ 	ENT_HWRNG = 0,
+@@ -498,7 +500,7 @@ static int random_test_sink(struct rng *rng, int random_step,
+ {
+ 	if (!ent_gathered)
+ 		alarm(1);
+-	ent_gathered += FIPS_RNG_BUFFER_SIZE;
++	ent_gathered += (FIPS_RNG_BUFFER_SIZE * 8);
+ 	return 0;
+ }
+ 
+@@ -606,15 +608,16 @@ static void term_signal(int signo)
+ static void alarm_signal(int signo)
+ {
+ 
+-	if (ent_gathered >= 1024)
+-		message(LOG_CONS|LOG_INFO, "%d kbytes of entropy gathered per second\n",
+-			ent_gathered/1024);
+-	else
+-		message(LOG_CONS|LOG_INFO, "%d bytes of entropy gathered per second\n",
++	if (!test_iterations) {
++		clock_gettime(CLOCK_REALTIME, &start_test);
++		sum_entropy = 0;
++	} else {
++		message(LOG_CONS|LOG_INFO, "Entropy gathered: %d bits\n",
+ 			ent_gathered);
+-	avg_entropy = test_iterations ? ent_gathered : 
+-		((avg_entropy * test_iterations) + ent_gathered) / (test_iterations + 1);
++		sum_entropy += ent_gathered;
++	}
+ 	ent_gathered = 0;
++	clock_gettime(CLOCK_REALTIME, &end_test);
+ 	test_iterations++;
+ }
+ 
+@@ -651,6 +654,7 @@ int main(int argc, char **argv)
+ 	int i;
+ 	int ent_sources = 0;
+ 	pid_t pid_fd = -1;
++	double test_time;
+ 
+ 	openlog("rngd", 0, LOG_DAEMON);
+ 
+@@ -752,9 +756,18 @@ int main(int argc, char **argv)
+ 
+ 	close_all_entropy_sources();
+ 
+-	if (arguments->test)
+-		message(LOG_CONS|LOG_INFO, "Average entropy %.12e kbytes/sec over %d iterations\n",
+-			avg_entropy/1024, test_iterations);
++	if (arguments->test && test_iterations > 1) {
++		test_time = (end_test.tv_sec - start_test.tv_sec);
++		test_time = ((test_time * 1.0e9) + (end_test.tv_nsec - start_test.tv_nsec)) / 1.0e9;
++
++		if ((sum_entropy/test_time) >= 1048576) {
++			message(LOG_CONS|LOG_INFO, "\nEntropy rate: %6.4g Mbits/sec averaged over %d iterations for %6.4g seconds\n",
++				(sum_entropy/test_time/1048576), (test_iterations-1), test_time);
++		} else {
++			message(LOG_CONS|LOG_INFO, "\nEntropy rate: %6.4g Kbits/sec averaged over %d iterations for %6.4g seconds\n",
++				(sum_entropy/test_time/1024), (test_iterations-1), test_time);
++		}
++	}
+ 
+ 	if (pid_fd >= 0)
+ 		unlink(arguments->pid_file);
+
+From a4f144191d0d98ebf6922a9eb42b82136d813b02 Mon Sep 17 00:00:00 2001
+From: Lonnie Abelbeck <lonnie@abelbeck.com>
+Date: Sun, 23 Sep 2018 10:34:42 -0500
+Subject: [PATCH 38/39] Implement Neil's notes: 1, 3, 4, 5 and use
+ CLOCK_MONOTONIC for clock_gettime()
+
+---
+ rngd.c | 33 ++++++++++++++++++---------------
+ rngd.h |  4 ++++
+ 2 files changed, 22 insertions(+), 15 deletions(-)
+
+diff --git a/rngd.c b/rngd.c
+index 4c4a038..80ca6af 100644
+--- a/rngd.c
++++ b/rngd.c
+@@ -139,8 +139,9 @@ struct arguments *arguments = &default_arguments;
+ 
+ static unsigned long ent_gathered = 0;
+ static unsigned long test_iterations = 0;
+-static double sum_entropy;
++static double sum_entropy = 0;
+ static struct timespec start_test, end_test;
++static bool test_running = false;
+ 
+ static enum {
+ 	ENT_HWRNG = 0,
+@@ -500,7 +501,7 @@ static int random_test_sink(struct rng *rng, int random_step,
+ {
+ 	if (!ent_gathered)
+ 		alarm(1);
+-	ent_gathered += (FIPS_RNG_BUFFER_SIZE * 8);
++	ent_gathered += FIPS_RNG_BUFFER_SIZE;
+ 	return 0;
+ }
+ 
+@@ -607,18 +608,20 @@ static void term_signal(int signo)
+ 
+ static void alarm_signal(int signo)
+ {
++	double bits_gathered;
+ 
+-	if (!test_iterations) {
+-		clock_gettime(CLOCK_REALTIME, &start_test);
+-		sum_entropy = 0;
++	if (!test_running) {
++		clock_gettime(CLOCK_MONOTONIC, &start_test);
++		test_running = true;
+ 	} else {
+-		message(LOG_CONS|LOG_INFO, "Entropy gathered: %d bits\n",
+-			ent_gathered);
+-		sum_entropy += ent_gathered;
++		bits_gathered = ent_gathered * 8.0;
++		message(LOG_CONS|LOG_INFO, "Entropy gathered: %.6e bits\n",
++			bits_gathered);
++		sum_entropy += bits_gathered;
++		test_iterations++;
+ 	}
+ 	ent_gathered = 0;
+-	clock_gettime(CLOCK_REALTIME, &end_test);
+-	test_iterations++;
++	clock_gettime(CLOCK_MONOTONIC, &end_test);
+ }
+ 
+ static int discard_initial_data(struct rng *ent_src)
+@@ -756,16 +759,16 @@ int main(int argc, char **argv)
+ 
+ 	close_all_entropy_sources();
+ 
+-	if (arguments->test && test_iterations > 1) {
++	if (arguments->test && test_iterations) {
+ 		test_time = (end_test.tv_sec - start_test.tv_sec);
+-		test_time = ((test_time * 1.0e9) + (end_test.tv_nsec - start_test.tv_nsec)) / 1.0e9;
++		test_time = ((test_time * NSECS_IN_SECOND) + (end_test.tv_nsec - start_test.tv_nsec)) / NSECS_IN_SECOND;
+ 
+-		if ((sum_entropy/test_time) >= 1048576) {
++		if ((sum_entropy/test_time) >= MEGABITS) {
+ 			message(LOG_CONS|LOG_INFO, "\nEntropy rate: %6.4g Mbits/sec averaged over %d iterations for %6.4g seconds\n",
+-				(sum_entropy/test_time/1048576), (test_iterations-1), test_time);
++				(sum_entropy/test_time/MEGABITS), test_iterations, test_time);
+ 		} else {
+ 			message(LOG_CONS|LOG_INFO, "\nEntropy rate: %6.4g Kbits/sec averaged over %d iterations for %6.4g seconds\n",
+-				(sum_entropy/test_time/1024), (test_iterations-1), test_time);
++				(sum_entropy/test_time/KILOBITS), test_iterations, test_time);
+ 		}
+ 	}
+ 
+diff --git a/rngd.h b/rngd.h
+index 21aefae..50b1ddc 100644
+--- a/rngd.h
++++ b/rngd.h
+@@ -33,6 +33,10 @@
+ 
+ #include "fips.h"
+ 
++#define NSECS_IN_SECOND	1.0e9
++#define MEGABITS		1048576
++#define KILOBITS		1024
++
+ enum {
+ 	MAX_RNG_FAILURES		= 25,
+ 	RNG_OK_CREDIT			= 1000, /* ~1:1250 false positives */
+
+From 989730d2a5e6f27d2e63afbe086022c06af5dea9 Mon Sep 17 00:00:00 2001
+From: Neil Horman <nhorman@tuxdriver.com>
+Date: Mon, 24 Sep 2018 07:38:13 -0400
+Subject: [PATCH 39/39] Mark server_running as volatile
+
+it was pointed out to me that its common practice to mark variables
+shared between signal handlers and other code as volatile to prevent the
+compiler from optimizing code paths to ignore changes to said variable
+that occur in the signal handler.  While I find it hard to believe that
+a compiler could not recognize the ability to modify a variable in an
+alternate context like a signal handler, they were correct, and all the
+C99 and C11 rationale documents support doing this.  As such, mark
+server_running as volatile to prevent erroneous optimiation of the
+server_running variable
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+---
+ rngd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rngd.c b/rngd.c
+index 80ca6af..671c0dd 100644
+--- a/rngd.c
++++ b/rngd.c
+@@ -64,7 +64,7 @@
+ bool am_daemon;				/* True if we went daemon */
+ bool msg_squash = false;		/* True if we want no messages on the console */
+ bool quiet = false;			/* True if we want no console output at all */
+-bool server_running = true;		/* set to false, to stop daemon */
++volatile bool server_running = true;	/* set to false, to stop daemon */
+ 
+ bool ignorefail = false; /* true if we ignore MAX_RNG_FAILURES */
+ 

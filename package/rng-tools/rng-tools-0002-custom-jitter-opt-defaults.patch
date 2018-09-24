@@ -1,6 +1,6 @@
---- rng-tools-6.4/rngd.c.orig	2018-09-07 14:18:11.776962285 -0500
-+++ rng-tools-6.4/rngd.c	2018-09-07 14:20:07.139906506 -0500
-@@ -179,11 +179,11 @@
+--- rng-tools-6.4/rngd.c.orig	2018-09-15 09:23:48.947475444 -0500
++++ rng-tools-6.4/rngd.c	2018-09-15 09:25:02.530832598 -0500
+@@ -189,15 +189,15 @@
  	},
  	[JITTER_OPT_RETRY_COUNT] = {
  		.key = "retry_count",
@@ -11,6 +11,11 @@
  		.key = "retry_delay",
 -		.int_val = -1,
 +		.int_val = 1,
+ 	},
+ 	[JITTER_OPT_USE_AES] = {
+ 		.key = "use_aes",
+-		.int_val = 1,
++		.int_val = 0,
  	},
  	{
  		.key = NULL,
