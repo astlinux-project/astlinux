@@ -27,7 +27,7 @@ Released @TBD@
 -- genx86_64-vm board type, add support for QEMU Guest Agent (qemu-ga 2.12.0).
    New rc.conf variable QEMU_GUEST_AGENT must be set to "yes" to enable.
 
--- rng-tools, new package, version 6.4, Random Number Generator (RNG) daemon
+-- rng-tools, new package, version 6.5, Random Number Generator (RNG) daemon
    Enabled by default to increase the available entropy for the kernel's "random" sources.
    Uses one of 3 sources, in order:
      1) /dev/hwrng (typically via virtio-rng for the genx86_64-vm board type)
@@ -43,7 +43,7 @@ Released @TBD@
 
 -- e2fsprogs, version bump to 1.44.4
 
--- sqlite, version bump to 3.25.1
+-- sqlite, version bump to 3.25.2
 
 -- libedit, version bump to 20180525-3.1
 
@@ -88,7 +88,7 @@ Released @TBD@
 
 -- prosody, major version bump to 0.10.2, security fixes. Uses added luabitop 'lua bit' module
 
--- WireGuard VPN, version bump to 0.0.20180918
+-- WireGuard VPN, version bump to 0.0.20180925
 
 -- lighttpd, version bump to 1.4.50, many bug and security fixes
 
