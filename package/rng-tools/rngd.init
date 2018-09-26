@@ -39,8 +39,6 @@ start () {
       if grep -q '^flags.*:.* rdrand ' /proc/cpuinfo; then
         ## Exclude jitterentropy (jitter) if we have Intel RDRAND (rdrand) support
         ARGS="$ARGS -x jitter"
-        ## Disable applying additional AES to RDRAND data
-        ARGS="$ARGS -O rdrand:use_aes:0"
       else
         ## Disable Intel RDRAND (rdrand)
         ARGS="$ARGS -x rdrand"

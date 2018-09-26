@@ -4,7 +4,7 @@
 #
 #############################################################
 
-RNG_TOOLS_VERSION = 6.4
+RNG_TOOLS_VERSION = 6.5
 RNG_TOOLS_SOURCE = rng-tools-$(RNG_TOOLS_VERSION).tar.gz
 RNG_TOOLS_SITE = https://s3.amazonaws.com/files.astlinux-project
 RNG_TOOLS_DEPENDENCIES = host-pkg-config libsysfs
@@ -14,8 +14,8 @@ RNG_TOOLS_JITTERENTROPY_SOURCE = rng-tools-jitterentropy-$(RNG_TOOLS_JITTERENTRO
 RNG_TOOLS_JITTERENTROPY_SITE = https://s3.amazonaws.com/files.astlinux-project
 
 ##
-## curl -L -o dl/rng-tools-6.4.tar.gz https://github.com/nhorman/rng-tools/archive/v6.4.tar.gz
-## ./scripts/upload-dl-pair dl/rng-tools-6.4.tar.gz
+## curl -L -o dl/rng-tools-6.5.tar.gz https://github.com/nhorman/rng-tools/archive/v6.5.tar.gz
+## ./scripts/upload-dl-pair dl/rng-tools-6.5.tar.gz
 ## curl -L -o dl/rng-tools-jitterentropy-2.1.2.tar.gz https://github.com/smuellerDD/jitterentropy-library/archive/v2.1.2.tar.gz
 ## ./scripts/upload-dl-pair dl/rng-tools-jitterentropy-2.1.2.tar.gz
 ##
