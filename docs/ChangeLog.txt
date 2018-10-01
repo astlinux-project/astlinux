@@ -92,7 +92,7 @@ Released @TBD@
 
 -- lighttpd, version bump to 1.4.50, many bug and security fixes
 
--- strongSwan, version 5.5.3, security fixes: CVE-2018-10811, CVE-2018-5388
+-- strongSwan, version 5.5.3, security fixes: CVE-2018-10811, CVE-2018-5388, CVE-2018-16151, CVE-2018-16152, CVE-2018-17540
 
 -- ipsec-tools, version 0.8.2, security fix: CVE-2016-10396
 
