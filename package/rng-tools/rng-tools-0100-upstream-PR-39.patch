@@ -1,0 +1,29 @@
+From 5244d384e706a546fd1a72cc004a9d6551f0d84b Mon Sep 17 00:00:00 2001
+From: Lon Willett <xgit@lonw.net>
+Date: Sun, 30 Sep 2018 21:25:07 +0200
+Subject: [PATCH] Obey restrictions on x86_rdrand_bytes usage
+
+---
+ rngd_rdrand.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/rngd_rdrand.c b/rngd_rdrand.c
+index ffb9e74..4529587 100644
+--- a/rngd_rdrand.c
++++ b/rngd_rdrand.c
+@@ -246,7 +246,14 @@ int xread_drng(void *buf, size_t size, struct rng *ent_src)
+ 	if (ent_src->rng_options[DRNG_OPT_AES].int_val)
+ 		return xread_drng_with_aes(buf, size, ent_src);
+ 
+-	x86_rdrand_bytes(buf, size);
++	/* NB: x86_rdrand_bytes might overrun end of buffer, if not a multiple of 8 */
++	if (size > 7)
++		x86_rdrand_bytes(buf, (size&~7));
++	if ((size&7) != 0) {
++		unsigned char tempbuf[8];
++		x86_rdrand_bytes(tempbuf, (size&7));
++		memcpy((unsigned char *)buf+(size&~7), tempbuf, (size&7));
++	}
+ 	return 0;
+ }
+ 
