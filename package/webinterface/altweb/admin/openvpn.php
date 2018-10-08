@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2017 Lonnie Abelbeck
+// Copyright (C) 2008-2018 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -14,6 +14,7 @@
 // 01-03-2013, Added private keysize support
 // 02-13-2013, Added OpenVPN 2.3 IPv6 support
 // 12-14-2015, Added Signature Algorithm support
+// 10-08-2018, Replace .ovpn ns-cert-type with remote-cert-tls
 //
 // System location of /mnt/kd/rc.conf.d directory
 $OVPNCONFDIR = '/mnt/kd/rc.conf.d';
@@ -307,7 +308,7 @@ function ovpnProfile($db, $ssl, $client, &$ta_file) {
 
   $default = array (
     'client',
-    'ns-cert-type server',
+    'remote-cert-tls server',
     'nobind',
     'persist-key',
     'persist-tun',
