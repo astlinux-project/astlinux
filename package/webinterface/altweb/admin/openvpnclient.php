@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2017 Lonnie Abelbeck
+// Copyright (C) 2008-2018 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -12,6 +12,7 @@
 // 02-13-2013, Added OpenVPN 2.3 IPv6 support
 // 02-23-2013, Added User/Pass support
 // 03-24-2017, Change from OVPNC_NSCERTTYPE to OVPNC_REMOTE_CERT_TLS
+// 10-09-2018, Disable Compression by default
 //
 // System location of /mnt/kd/rc.conf.d directory
 $OVPNCONFDIR = '/mnt/kd/rc.conf.d';
@@ -131,7 +132,7 @@ function saveOVPNCsettings($conf_dir, $conf_file) {
   fwrite($fp, "### Auth User/Pass\n".$value."\n");
 
   $value = 'OVPNC_REMOTE_CERT_TLS="'.$_POST['nscerttype'].'"';
-  fwrite($fp, "### nsCertType\n".$value."\n");
+  fwrite($fp, "### Remote CertType\n".$value."\n");
 
   $value = 'OVPNC_REMOTE="'.tuq($_POST['remote']).'"';
   fwrite($fp, "### Server Network\n".$value."\n");
@@ -362,10 +363,10 @@ require_once '../common/header.php';
   putHtml('Compression:');
   putHtml('</td><td style="text-align: left;" colspan="2">');
   putHtml('<select name="compression">');
-  $sel = (getVARdef($db, 'OVPNC_LZO') === 'yes') ? ' selected="selected"' : '';
-  putHtml('<option value="yes"'.$sel.'>Yes</option>');
   $sel = (getVARdef($db, 'OVPNC_LZO') === 'no') ? ' selected="selected"' : '';
-  putHtml('<option value="no"'.$sel.'>No</option>');
+  putHtml('<option value="no"'.$sel.'>Off</option>');
+  $sel = (getVARdef($db, 'OVPNC_LZO') === 'yes') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>LZO</option>');
   putHtml('</select>');
   putHtml('</td></tr>');
 
@@ -467,7 +468,6 @@ require_once '../common/header.php';
     putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
   }
   putHtml('</select>');
-  putHtml('<i>(nsCertType)</i>');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');

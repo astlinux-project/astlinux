@@ -15,6 +15,7 @@
 // 02-13-2013, Added OpenVPN 2.3 IPv6 support
 // 12-14-2015, Added Signature Algorithm support
 // 10-08-2018, Replace .ovpn ns-cert-type with remote-cert-tls
+// 10-09-2018, Disable Compression by default
 //
 // System location of /mnt/kd/rc.conf.d directory
 $OVPNCONFDIR = '/mnt/kd/rc.conf.d';
@@ -340,8 +341,9 @@ function ovpnProfile($db, $ssl, $client, &$ta_file) {
     }
   }
 
-  $str .= "comp-lzo ".getVARdef($db, 'OVPN_LZO')."\n";
-
+  if (getVARdef($db, 'OVPN_LZO') === 'yes') {
+    $str .= "comp-lzo yes\n";
+  }
   if (getVARdef($db, 'OVPN_USER_PASS_VERIFY') === 'yes') {
     $str .= "auth-user-pass\n";
     $str .= "auth-retry interact\n";
@@ -628,10 +630,10 @@ require_once '../common/header.php';
   putHtml('Compression:');
   putHtml('</td><td style="text-align: left;" colspan="2">');
   putHtml('<select name="compression">');
-  $sel = (getVARdef($db, 'OVPN_LZO') === 'yes') ? ' selected="selected"' : '';
-  putHtml('<option value="yes"'.$sel.'>Yes</option>');
   $sel = (getVARdef($db, 'OVPN_LZO') === 'no') ? ' selected="selected"' : '';
-  putHtml('<option value="no"'.$sel.'>No</option>');
+  putHtml('<option value="no"'.$sel.'>Off</option>');
+  $sel = (getVARdef($db, 'OVPN_LZO') === 'yes') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>LZO</option>');
   putHtml('</select>');
   putHtml('</td></tr>');
 
