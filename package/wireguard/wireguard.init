@@ -92,18 +92,6 @@ init () {
     mkdir -p "${PEER_FILE%/*}"
   fi
 
-  #### Remove before 1.3.2 Release #####
-  OLD_CONFIG="$CONFIG_DIR/${WIREGUARD_IF:-wg0}.conf"
-  if [ -f "$OLD_CONFIG" ]; then
-    sed -n -r -e 's/^PrivateKey *= *(.+)$/\1/p' "$OLD_CONFIG" > $KEY_FILE
-    chmod 600 $KEY_FILE
-    echo "## WireGuard VPN Peers
-##" > $PEER_FILE
-    sed -n -r -e '/^\[[Pp]eer/,$ p' "$OLD_CONFIG" >> $PEER_FILE
-    rm "$OLD_CONFIG"
-  fi
-  ######################################
-
   if [ ! -f "$KEY_FILE" ]; then
     echo "$(wg genkey)" > $KEY_FILE
     chmod 600 $KEY_FILE
