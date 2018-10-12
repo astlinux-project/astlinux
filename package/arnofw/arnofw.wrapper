@@ -154,6 +154,7 @@ get_network_cidr()
 astlinux_wrapper()
 {
   local intf lan lans extCIDR ovpnIF ovpnIP ovpnNM allowif allowifs denyif count IFS
+  local ovpn_if ovpnc_if
 
   IPTABLES_IPSET=1
 
@@ -252,6 +253,7 @@ astlinux_wrapper()
     setIPSECnet "$IPSECM_XAUTH_POOLBASE" "$IPSECM_XAUTH_POOLMASK"
   fi
 
+  ovpn_if=""
   if isVPNtype openvpn; then
     if [ -n "$OVPN_SERVER" ]; then
       ovpnIP="$(echo $OVPN_SERVER | awk '{ print $1; }')"
@@ -277,6 +279,7 @@ astlinux_wrapper()
           fi
         done
       fi
+      ovpn_if="$ovpnIF"
     else
       # Failsafe if /mnt/kd/openvpn/openvpn.conf is used
       # and OVPN_SERVER is not defined.
@@ -284,6 +287,7 @@ astlinux_wrapper()
     fi
   fi
 
+  ovpnc_if=""
   if isVPNtype openvpnclient; then
     if [ -n "$OVPNC_SERVER" ]; then
       ovpnIP="$(echo $OVPNC_SERVER | awk '{ print $1; }')"
@@ -309,6 +313,7 @@ astlinux_wrapper()
           fi
         done
       fi
+      ovpnc_if="$ovpnIF"
     else
       # Failsafe if /mnt/kd/openvpn/openvpnconf.conf is used
       # and OVPNC_SERVER is not defined.
@@ -333,6 +338,14 @@ astlinux_wrapper()
             done
           fi
         done
+      fi
+      if [ "$WIREGUARD_ALLOW_OPENVPN" = "yes" ]; then
+        if [ -n "$ovpn_if" ]; then
+          IF_TRUSTS="$IF_TRUSTS${IF_TRUSTS:+|}$ovpn_if ${WIREGUARD_IF:-wg0}"
+        fi
+        if [ -n "$ovpnc_if" ]; then
+          IF_TRUSTS="$IF_TRUSTS${IF_TRUSTS:+|}$ovpnc_if ${WIREGUARD_IF:-wg0}"
+        fi
       fi
     fi
   fi

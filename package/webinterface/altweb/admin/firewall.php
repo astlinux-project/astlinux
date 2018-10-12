@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2017 Lonnie Abelbeck
+// Copyright (C) 2008-2018 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -25,6 +25,7 @@
 // 09-14-2016, Added BLOCK_NETSET_DIR support
 // 01-05-2017, Added BLOCKED_HOST_LOG direction support
 // 11-06-2017, Added WIREGUARD_ALLOWLAN support
+// 10-12-2018, Added WIREGUARD_ALLOW_OPENVPN support
 //
 // System location of /mnt/kd/rc.conf.d directory
 $FIREWALLCONFDIR = '/mnt/kd/rc.conf.d';
@@ -341,6 +342,8 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
   $value = 'OVPN_ALLOWLAN="'.(isset($_POST['is_ovpn_allowlan']) ? $_POST['ovpn_allowlan'] : '').'"';
   fwrite($fp, $value."\n");
   $value = 'WIREGUARD_ALLOWLAN="'.(isset($_POST['is_wireguard_allowlan']) ? $_POST['wireguard_allowlan'] : '').'"';
+  fwrite($fp, $value."\n");
+  $value = 'WIREGUARD_ALLOW_OPENVPN="'.(isset($_POST['wireguard_allow_openvpn']) ? 'yes' : 'no').'"';
   fwrite($fp, $value."\n");
   $value = 'OPEN_ICMP='.(isset($_POST['allow_icmp']) ? '1' : '0');
   fwrite($fp, $value."\n");
@@ -1099,6 +1102,10 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
   }
   putHtml('</select>');
   putHtml('LAN Interface(s)</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td width="75" style="text-align: right;">');
+  $sel = (getVARdef($vars, 'WIREGUARD_ALLOW_OPENVPN') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="wireguard_allow_openvpn" name="wireguard_allow_openvpn"'.$sel.' /></td><td>Allow WireGuard VPN tunnel to the OpenVPN tunnel(s)</td></tr>');
 
   putHtml('<tr class="dtrow1"><td width="75" style="text-align: right;">');
   $sel = (getVARdef($vars, 'OPEN_ICMP') == 1) ? ' checked="checked"' : '';
