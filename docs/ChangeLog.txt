@@ -12,13 +12,19 @@ Released @TBD@
 
 ** System
 
--- no change
+-- pciutils, version bump to 3.6.2
 
 ** Networking
 
 -- WireGuard VPN, version bump to 0.0.20181018
 
+-- dnsmasq, version bump to 2.80
+
+-- lighttpd, version bump to 1.4.51, bug and security fixes
+
 -- arnofw (AIF), add WIREGUARD_ALLOW_OPENVPN rc.conf variable, Allow WireGuard tunnel to OpenVPN tunnel(s), disabled by default.
+
+-- unbound (host), version bump to 1.8.1
 
 ** Asterisk
 
