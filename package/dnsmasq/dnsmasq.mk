@@ -4,37 +4,45 @@
 #
 #############################################################
 
-DNSMASQ_VERSION = 2.78
+DNSMASQ_VERSION = 2.80
 DNSMASQ_SITE = http://thekelleys.org.uk/dnsmasq
 DNSMASQ_MAKE_ENV = $(TARGET_MAKE_ENV) CC="$(TARGET_CC)"
 DNSMASQ_MAKE_OPT = COPTS="$(DNSMASQ_COPTS)" PREFIX=/usr CFLAGS="$(TARGET_CFLAGS)"
 DNSMASQ_MAKE_OPT += DESTDIR=$(TARGET_DIR) LDFLAGS="$(TARGET_LDFLAGS)"
 DNSMASQ_DEPENDENCIES = host-pkg-config
 
+DNSMASQ_COPTS = \
+	-DNO_DUMPFILE
+
 ifneq ($(BR2_INET_IPV6),y)
-	DNSMASQ_COPTS += -DNO_IPV6
+DNSMASQ_COPTS += -DNO_IPV6
 endif
 
 ifneq ($(BR2_PACKAGE_DNSMASQ_DHCP),y)
-	DNSMASQ_COPTS += -DNO_DHCP
+DNSMASQ_COPTS += -DNO_DHCP
 endif
 
 ifneq ($(BR2_PACKAGE_DNSMASQ_TFTP),y)
-	DNSMASQ_COPTS += -DNO_TFTP
+DNSMASQ_COPTS += -DNO_TFTP
 endif
 
 ifeq ($(BR2_PACKAGE_DNSMASQ_IDN),y)
-	DNSMASQ_MAKE_OPT += all-i18n
-	DNSMASQ_DEPENDENCIES += libidn libintl
-	DNSMASQ_MAKE_ENV += LDFLAGS+="-lintl -lidn"
+DNSMASQ_COPTS += -DHAVE_IDN
+DNSMASQ_DEPENDENCIES += libidn libintl
+DNSMASQ_MAKE_ENV += LDFLAGS+="-lintl -lidn"
 endif
 
 ifneq ($(BR2_LARGEFILE),y)
-	DNSMASQ_COPTS += -DNO_LARGEFILE
+DNSMASQ_COPTS += -DNO_LARGEFILE
 endif
 
 ifeq ($(BR2_PACKAGE_DBUS),y)
-	DNSMASQ_DEPENDENCIES += dbus
+DNSMASQ_DEPENDENCIES += dbus
+DNSMASQ_COPTS += -DHAVE_DBUS
+endif
+
+ifneq ($(BR2_PACKAGE_IPSET),y)
+DNSMASQ_COPTS += -DNO_IPSET
 endif
 
 define DNSMASQ_FIX_PKGCONFIG
@@ -42,34 +50,8 @@ define DNSMASQ_FIX_PKGCONFIG
 		$(DNSMASQ_DIR)/Makefile
 endef
 
-ifeq ($(BR2_PACKAGE_DBUS),y)
-define DNSMASQ_ENABLE_DBUS
-	$(SED) 's^.*#define HAVE_DBUS.*^#define HAVE_DBUS^' \
-		$(DNSMASQ_DIR)/src/config.h
-endef
-else
-define DNSMASQ_ENABLE_DBUS
-	$(SED) 's^.*#define HAVE_DBUS.*^/* #define HAVE_DBUS */^' \
-		$(DNSMASQ_DIR)/src/config.h
-endef
-endif
-
-ifeq ($(BR2_PACKAGE_IPSET),y)
-define DNSMASQ_ENABLE_IPSET
-	$(SED) 's^.*#define HAVE_IPSET.*^#define HAVE_IPSET^' \
-		$(DNSMASQ_DIR)/src/config.h
-endef
-else
-define DNSMASQ_ENABLE_IPSET
-	$(SED) 's^.*#define HAVE_IPSET.*^/* #define HAVE_IPSET */^' \
-		$(DNSMASQ_DIR)/src/config.h
-endef
-endif
-
 define DNSMASQ_BUILD_CMDS
 	$(DNSMASQ_FIX_PKGCONFIG)
-	$(DNSMASQ_ENABLE_DBUS)
-	$(DNSMASQ_ENABLE_IPSET)
 	$(DNSMASQ_MAKE_ENV) $(MAKE1) -C $(@D) $(DNSMASQ_MAKE_OPT)
 endef
 
