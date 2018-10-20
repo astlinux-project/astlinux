@@ -177,7 +177,7 @@ targets_ok() {
     add_target_static_routes
   fi
 
-  cnt="$(fping -a -t $MAX_LATENCY $TARGETS 2>/dev/null | wc -l)"
+  cnt="$(fping -4 -a -t $MAX_LATENCY $TARGETS 2>/dev/null | wc -l)"
 
   return $cnt
 }
