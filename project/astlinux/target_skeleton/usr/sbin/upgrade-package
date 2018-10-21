@@ -248,7 +248,7 @@ fop2)
   if ! RAM_needed_MB 475; then
     finish $RED "Not enough RAM installed. Minimum: 512 MB, Recommended: 1024+ MB"
   fi
-  SRC_URL="https://files.astlinux-project.org/fop2-2.31.17-debian-$(uname -m | sed -e 's/i.86/i386/').tgz"
+  SRC_URL="https://files.astlinux-project.org/fop2-2.31.20-debian-$(uname -m | sed -e 's/i.86/i386/').tgz"
   ;;
 
 show)
