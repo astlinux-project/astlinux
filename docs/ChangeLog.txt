@@ -14,11 +14,20 @@ Released @TBD@
 
 -- pciutils, version bump to 3.6.2
 
+-- ca-certificates, update trusted root certificates 2018-10-17
+
+-- Time Zone Database update, tzdata2018f and php-timezonedb-2018.6
+
+-- mac2vendor, oui.txt database snapshot 2018-10-21
+
 ** Networking
 
 -- WireGuard VPN, version bump to 0.0.20181018
 
 -- dnsmasq, version bump to 2.80
+
+-- fping, major version bump to 4.1
+   Note: Now handles both IPv4 and IPv6 via a single binary, fping6 is a sym-link for backward compatibility.
 
 -- lighttpd, version bump to 1.4.51, bug and security fixes
 
@@ -33,6 +42,10 @@ Released @TBD@
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
 -- pjsip 2.7.2 (no change)
+
+-- FOP2, available version bump to 2.31.20.
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
