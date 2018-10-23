@@ -11,7 +11,7 @@ ALSA_UTILS_DEPENDENCIES = alsa-lib \
 	$(if $(BR2_PACKAGE_NCURSES),ncurses)
 
 ALSA_UTILS_CONF_ENV = \
-	ac_cv_prog_ncurses5_config=$(STAGING_DIR)/bin/ncurses5-config
+	ac_cv_prog_ncurses5_config=$(STAGING_DIR)/usr/bin/$(NCURSES_CONFIG_SCRIPTS)
 
 ALSA_UTILS_CONF_OPT = \
 	--disable-xmlto \

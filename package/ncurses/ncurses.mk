@@ -4,14 +4,17 @@
 #
 #############################################################
 
-NCURSES_VERSION = 5.9
+NCURSES_VERSION = 6.1
+NCURSES_SOURCE = ncurses-$(NCURSES_VERSION).tar.gz
 NCURSES_SITE = $(BR2_GNU_MIRROR)/ncurses
 NCURSES_INSTALL_STAGING = YES
 NCURSES_DEPENDENCIES = host-ncurses
 HOST_NCURSES_DEPENDENCIES =
 NCURSES_LIB_SUFFIX = 
+NCURSES_CONFIG_SCRIPTS = ncurses$(NCURSES_LIB_SUFFIX)5-config
 
 NCURSES_CONF_OPT = \
+	--with-abi-version=5 \
 	--with-shared \
 	--without-normal \
 	--without-cxx \
@@ -26,9 +29,12 @@ NCURSES_CONF_OPT = \
 	--enable-const \
 	--enable-overwrite \
 	--enable-pc-files \
+	--disable-stripping \
 	--without-progs \
 	--without-manpages \
 	--without-gpm \
+	--disable-widec \
+	--disable-ext-colors \
 	--disable-static
 
 # Install after busybox for the full-blown versions
@@ -40,10 +46,30 @@ ifneq ($(BR2_ENABLE_DEBUG),y)
 NCURSES_CONF_OPT += --without-debug
 endif
 
+NCURSES_TERMINFO_FILES = \
+	a/ansi \
+	d/dumb \
+	l/linux \
+	p/putty \
+	p/putty-256color \
+	p/putty-vt100 \
+	s/screen \
+	s/screen-256color \
+	v/vt100 \
+	v/vt100-putty \
+	v/vt102 \
+	v/vt200 \
+	v/vt220 \
+	x/xterm \
+	x/xterm-256color \
+	x/xterm-16color \
+	x/xterm-color \
+	x/xterm-xfree86
+
 define NCURSES_STAGING_NCURSES_CONFIG_FIXUP
 	$(SED) "s,^prefix=.*,prefix=\'$(STAGING_DIR)/usr\',g" \
 		-e "s,^exec_prefix=.*,exec_prefix=\'$(STAGING_DIR)/usr\',g" \
-		$(STAGING_DIR)/usr/bin/ncurses5-config
+		$(STAGING_DIR)/usr/bin/$(NCURSES_CONFIG_SCRIPTS)
 endef
 NCURSES_POST_INSTALL_STAGING_HOOKS += NCURSES_STAGING_NCURSES_CONFIG_FIXUP
 
@@ -58,7 +84,7 @@ endef
 
 define NCURSES_INSTALL_TARGET_LIBS
 	for lib in $(NCURSES_LIBS-y:%=lib%); do \
-		cp -dpf $(NCURSES_DIR)/lib/$${lib}$(NCURSES_LIB_SUFFIX).so* \
+		cp -dpf $(STAGING_DIR)/usr/lib/$${lib}$(NCURSES_LIB_SUFFIX).so* \
 			$(TARGET_DIR)/usr/lib/; \
 	done
 endef
@@ -67,23 +93,12 @@ define NCURSES_INSTALL_TARGET_CMDS
 	mkdir -p $(TARGET_DIR)/usr/lib
 	$(NCURSES_INSTALL_TARGET_LIBS)
 	ln -snf /usr/share/terminfo $(TARGET_DIR)/usr/lib/terminfo
-	mkdir -p $(TARGET_DIR)/usr/share/terminfo/x
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/x/xterm $(TARGET_DIR)/usr/share/terminfo/x
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/x/xterm-color $(TARGET_DIR)/usr/share/terminfo/x
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/x/xterm-256color $(TARGET_DIR)/usr/share/terminfo/x
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/x/xterm-xfree86 $(TARGET_DIR)/usr/share/terminfo/x
-	mkdir -p $(TARGET_DIR)/usr/share/terminfo/v
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/v/vt100 $(TARGET_DIR)/usr/share/terminfo/v
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/v/vt102 $(TARGET_DIR)/usr/share/terminfo/v
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/v/vt200 $(TARGET_DIR)/usr/share/terminfo/v
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/v/vt220 $(TARGET_DIR)/usr/share/terminfo/v
-	mkdir -p $(TARGET_DIR)/usr/share/terminfo/a
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/a/ansi $(TARGET_DIR)/usr/share/terminfo/a
-	mkdir -p $(TARGET_DIR)/usr/share/terminfo/l
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/l/linux $(TARGET_DIR)/usr/share/terminfo/l
-	mkdir -p $(TARGET_DIR)/usr/share/terminfo/s
-	cp -dpf $(STAGING_DIR)/usr/share/terminfo/s/screen $(TARGET_DIR)/usr/share/terminfo/s
-endef # NCURSES_INSTALL_TARGET_CMDS
+	rm -rf $(TARGET_DIR)/usr/share/terminfo $(TARGET_DIR)/usr/share/tabset
+	$(foreach t,$(NCURSES_TERMINFO_FILES), \
+		$(INSTALL) -D -m 0644 $(STAGING_DIR)/usr/share/terminfo/$(t) \
+			$(TARGET_DIR)/usr/share/terminfo/$(t)
+	)
+endef
 
 #
 # On systems with an older version of tic, the installation of ncurses hangs
@@ -91,8 +106,8 @@ endef # NCURSES_INSTALL_TARGET_CMDS
 # ourselves, and use that during installation.
 #
 define HOST_NCURSES_BUILD_CMDS
-	$(MAKE1) -C $(@D) sources
-	$(MAKE) -C $(@D)/progs tic
+	$(HOST_MAKE_ENV) $(MAKE1) -C $(@D) sources
+	$(HOST_MAKE_ENV) $(MAKE) -C $(@D)/progs tic
 endef
 
 HOST_NCURSES_CONF_OPT = \
@@ -102,6 +117,8 @@ HOST_NCURSES_CONF_OPT = \
 	--without-cxx \
 	--without-cxx-binding \
 	--without-ada \
+	--with-default-terminfo-dir=/usr/share/terminfo \
+	--disable-db-install \
 	--without-normal
 
 $(eval $(call AUTOTARGETS,package,ncurses))

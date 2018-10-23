@@ -12,7 +12,7 @@ DIALOG_CONF_OPT = \
 	--with-ncurses \
 	--with-curses-dir=$(STAGING_DIR)/usr \
 	--disable-rpath-hack \
-	NCURSES_CONFIG=$(STAGING_DIR)/usr/bin/ncurses5-config
+	NCURSES_CONFIG=$(STAGING_DIR)/usr/bin/$(NCURSES_CONFIG_SCRIPTS)
 
 ifneq ($(BR2_ENABLE_LOCALE),y)
 DIALOG_DEPENDENCIES += libiconv

@@ -1,0 +1,11 @@
+--- ncurses-6.1/misc/terminfo.src.orig	2018-10-23 03:39:35.901100718 -0500
++++ ncurses-6.1/misc/terminfo.src	2018-10-23 03:42:45.253923875 -0500
+@@ -4328,7 +4328,7 @@
+ xterm-new|modern xterm terminal emulator,
+ 	npc,
+ 	indn=\E[%p1%dS, kb2=\EOE, kcbt=\E[Z, kent=\EOM,
+-	rin=\E[%p1%dT, use=ansi+rep, use=ecma+strikeout,
++	rin=\E[%p1%dT, use=ecma+strikeout,
+ 	use=xterm+sm+1006, use=xterm+pcfkeys, use=xterm+tmux,
+ 	use=xterm-basic,
+ 
