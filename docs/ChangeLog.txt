@@ -12,6 +12,8 @@ Released @TBD@
 
 ** System
 
+-- ncurses, major version bump to 6.1
+
 -- pciutils, version bump to 3.6.2
 
 -- ca-certificates, update trusted root certificates 2018-10-17
@@ -30,6 +32,8 @@ Released @TBD@
    Note: Now handles both IPv4 and IPv6 via a single binary, fping6 is a sym-link for backward compatibility.
 
 -- lighttpd, version bump to 1.4.51, bug and security fixes
+
+-- keepalived, version bump to 2.0.8
 
 -- arnofw (AIF), add WIREGUARD_ALLOW_OPENVPN rc.conf variable, Allow WireGuard tunnel to OpenVPN tunnel(s), disabled by default.
 
