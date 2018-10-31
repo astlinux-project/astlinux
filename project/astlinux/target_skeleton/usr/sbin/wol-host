@@ -1,0 +1,206 @@
+#!/bin/bash
+##
+## wol-host
+##
+## Send Wake-on-LAN packet to specified host, by IP or DNS name.
+##
+## The required MAC address is derived from the STATICHOSTS rc.conf variable,
+## the Dnsmasq lease file, the /etc/ethers file or manually specified.
+##
+## Copyright (C) 2018 Lonnie Abelbeck
+##
+## This is free software, licensed under the GNU General Public License
+## version 3 as published by the Free Software Foundation; you can
+## redistribute it and/or modify it under the terms of the GNU
+## General Public License; and comes with ABSOLUTELY NO WARRANTY.
+
+WEB_INTERFACE_GUI_DNSHOSTS="/mnt/kd/rc.conf.d/gui.dnshosts.conf"
+
+if [ "$WEB_INTERFACE_GUI_DNSHOSTS" -nt /etc/rc.conf ]; then
+  . $WEB_INTERFACE_GUI_DNSHOSTS
+else
+  . /etc/rc.conf
+fi
+
+DNSMASQ_LEASES="/var/db/dnsmasq.leases"
+
+ETHERS="/etc/ethers"
+
+usage()
+{
+  echo '
+Usage: wol-host [options...] ipv4_addr|name
+
+Options:
+  --mac MAC    Manually define the MAC address, aa:bb:cc:dd:ee:ff, default none/auto-lookup
+  -p pass      Append aa:bb:cc:dd[:ee:ff] password to the WoL packet, default none
+  -P, --ping   Follow WoL packet with a series of ICMP (ping) packets to host.
+  -t secs      Max time (in secs) to send ping packets, default 180
+  -v           Verbose mode
+  -h, --help   Show this help text
+'
+  exit 1
+}
+
+find_mac_from_ip()
+{
+  local ip="$1" mac="" leases ethers x IFS
+
+  if [ -n "$STATICHOSTS" ]; then
+    IFS=$'\n'
+    for x in $STATICHOSTS; do
+      if [ "$ip" = "$(echo "$x" | awk -F~ '{ print $2; }')" ]; then
+        mac="$(echo "$x" | awk -F~ '{ print $3; }')"
+        break
+      fi
+    done
+  fi
+
+  unset IFS
+  if [ -z "$mac" -a -f "$DNSMASQ_LEASES" ]; then
+    leases="$(cat "$DNSMASQ_LEASES")"
+    IFS=$'\n'
+    for x in $leases; do
+      if [ "$ip" = "$(echo "$x" | awk -F' ' '{ print $3; }')" ]; then
+        mac="$(echo "$x" | awk -F' ' '{ print $2; }')"
+        break
+      fi
+    done
+  fi
+
+  unset IFS
+  if [ -z "$mac" -a -f "$ETHERS" ]; then
+    ethers="$(grep -v '^#' "$ETHERS")"
+    IFS=$'\n'
+    for x in $ethers; do
+      if [ "$ip" = "$(echo "$x" | awk '{ print $2; }')" ]; then
+        mac="$(echo "$x" | awk '{ print $1; }')"
+        break
+      fi
+    done
+  fi
+
+  echo "$mac"
+}
+
+ARGS="$(getopt --name wol-host \
+               --long mac:,ping,help \
+               --options p:Pt:vh \
+               -- "$@")"
+if [ $? -ne 0 ]; then
+  usage
+fi
+eval set -- $ARGS
+
+MAC=""
+password=""
+ping=0
+ping_time=180
+verbose=0
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --mac)  MAC="$2"; shift ;;
+    -p)  password="$2"; shift ;;
+    -P|--ping)  ping=1 ;;
+    -t)  ping_time="$2"; shift ;;
+    -v)  verbose=1 ;;
+    -h|--help)  usage ;;
+    --)  shift; break ;;
+  esac
+  shift
+done
+ipv4_addr="$1"
+
+if [ -z "$ipv4_addr" -o "$ipv4_addr" = "--" ]; then
+  usage
+fi
+
+case "$ipv4_addr" in
+  *:*) echo "wol-host: Use manual IPv4 address or DNS name, not IPv6." >&2
+       exit 2
+       ;;
+esac
+
+case "$MAC" in
+  ''|??:??:??:??:??:??) ;;
+  *) echo "wol-host: MAC address format must be of the form: aa:bb:cc:dd:ee:ff" >&2
+     exit 2
+     ;;
+esac
+
+case "$password" in
+  ''|??:??:??:??|??:??:??:??:??:??) ;;
+  *) echo "wol-host: password format must be of the form: aa:bb:cc:dd or aa:bb:cc:dd:ee:ff" >&2
+     exit 2
+     ;;
+esac
+
+# Check for non-manual IPv4 addresses, a DNS name
+if [ -n "$(echo "$ipv4_addr" | tr -d '0-9.')" ]; then
+  name="$ipv4_addr"
+  ipv4_addr="$(unbound-host -t A "$name" | sed -n -r -e 's/^.* address ([^ ]+)$/\1/p' | head -n1)"
+  if [ -z "$ipv4_addr" ]; then
+    echo "wol-host: DNS lookup for '$name' failed." >&2
+    exit 2
+  fi
+fi
+
+if fping -q -t 100 -r 3 -B 1 $ipv4_addr; then
+  echo "IP address $ipv4_addr is alive, no wakeup needed."
+  exit 0
+fi
+
+if [ -z "$MAC" ]; then
+  MAC="$(find_mac_from_ip $ipv4_addr)"
+  if [ -z "$MAC" ]; then
+    echo "wol-host: MAC lookup for '$ipv4_addr' failed." >&2
+    exit 2
+  fi
+fi
+
+interface="$(ip -o route get $ipv4_addr 2>/dev/null | sed -n -r -e 's/^.* dev +([^ ]+).*$/\1/p')"
+if [ -z "$interface" ]; then
+  echo "wol-host: Matching interface for '$ipv4_addr' failed." >&2
+  exit 2
+fi
+
+ether-wake -i $interface ${password:+-p "$password"} $MAC
+
+vendor="$(mac2vendor $MAC)"
+
+if [ $verbose -eq 1 ]; then
+  echo "
+IPv4 Address: $ipv4_addr
+   Interface: $interface
+ MAC Address: $MAC
+  MAC Vendor: $vendor
+" >&2
+fi
+
+echo "Wake-on-LAN packet sent to $MAC${vendor:+, $vendor}"
+
+if [ $ping -eq 1 ]; then
+  ping_ok=0
+  trap 't=$ping_time; printf "\n"; exit 9' INT TERM EXIT
+  printf "Attempting to reach $ipv4_addr for up to $ping_time seconds.\n"
+  printf "Pinging=> "
+  t=0
+  while [ $t -lt $ping_time ]; do
+    printf "."
+    if fping -q -t 1000 -r 4 -B 1 $ipv4_addr; then
+      ping_ok=1
+      break
+    fi
+    t=$((t+5))
+  done
+  printf "\n"
+  trap - INT TERM EXIT
+
+  if [ $ping_ok -eq 1 ]; then
+    echo "IP address $ipv4_addr is alive."
+  else
+    echo "IP address $ipv4_addr does not respond to ICMP (ping) packets."
+  fi
+fi
+
+exit 0
