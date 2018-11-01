@@ -14,7 +14,7 @@ EX_USAGE=64
 flush()
 {
   local file count wait msmtp_num msmtp_str IFS
-  
+
   if [ ! -d "$MAILQ" ]; then
     log_msg "Mail queue directory \"$MAILQ\" not found"
     return 1
@@ -32,20 +32,20 @@ flush()
   fi
 
   trap 'rm -f "$LOCKFILE"; exit $?' INT TERM EXIT
-  
+
   while true; do
-  
+
     wait=1
     if msmtp_status stopped; then
       log_msg "Mail system is stopped. Use 'msmtpqueue' to display the mail queue."
       break
     fi
-    
+
     count=$(ls -1 "$MAILQ"/*.msmtp 2>/dev/null | wc -l)
     if [ $count -eq 0 ]; then
       break
     fi
-  
+
     if msmtp_status reachable; then
       unset IFS
       for file in $(ls -1 "$MAILQ"/*.msmtp 2>/dev/null); do
@@ -75,20 +75,20 @@ flush()
       wait=$ERROR_WAIT
       log_msg "Failure: Mail server not reachable"
     fi
-    
+
     sleep $wait
   done
-  
+
   rm -f "$LOCKFILE"
   trap - INT TERM EXIT
-  
+
   return 0
 }
 
 print()
 {
   local file count IFS
-  
+
   if [ ! -d "$MAILQ" ]; then
     echo "Mail queue directory \"$MAILQ\" not found"
     return 1
@@ -100,9 +100,9 @@ print()
     echo "=============================="
     echo ""
   fi
-  
+
   count=$(ls -1 "$MAILQ"/*.msmtp 2>/dev/null | wc -l)
-    
+
   if [ $count -eq 0 ]; then
     echo "Mail queue is empty"
   else
@@ -120,14 +120,14 @@ print()
       echo ""
     done
   fi
-  
+
   return 0
 }
 
 delete()
 {
   local file
-  
+
   if [ ! -d "$MAILQ" ]; then
     echo "Mail queue directory \"$MAILQ\" not found"
     return 1
@@ -135,14 +135,14 @@ delete()
 
   file="${1#$MAILQ/}"
   file="${file%.msmtp}"
-  
+
   if [ ! -f "$MAILQ/$file.msmtp" ]; then
     echo "msmtpqueue: no file $MAILQ/$file.msmtp"
     return 1
   fi
-  
+
   rm -f "$MAILQ/$file.msmtp" "$MAILQ/$file.mail"
-  
+
   echo "Deleted mail queue $MAILQ/$file msmtp/mail pair."
   return 0
 }
@@ -150,13 +150,13 @@ delete()
 msmtp_status()
 {
   local host=""
-  
+
   if [ -f /etc/msmtprc ]; then
     host="$(awk '/^host / { print $2; nextfile; }' /etc/msmtprc)"
   elif [ "$1" = "stopped" ]; then
     return 0
   fi
-  
+
   if [ -n "$host" ]; then
     if [ "$1" = "reachable" ]; then
       if nslookup "$host" >/dev/null; then
@@ -164,7 +164,7 @@ msmtp_status()
       fi
     fi
   fi
-  
+
   return 1
 }
 
@@ -187,11 +187,11 @@ case $1 in
 -f)
   flush
   ;;
-  
+
 -p|'')
   print
   ;;
-  
+
 delete)
   if [ -z "$2" ]; then
     echo "Usage: msmtpqueue delete filename.msmtp"
@@ -199,11 +199,11 @@ delete)
   fi
   delete "$2"
   ;;
-  
+
 *)
   echo "Usage: msmtpqueue [ -f -p ] [ delete filename.msmtp ]"
   exit 1
   ;;
-  
+
 esac
 

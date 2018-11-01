@@ -104,7 +104,7 @@ plugin_stop()
 
   iptables -F ADAPTIVE_BAN_CHAIN
   iptables -X ADAPTIVE_BAN_CHAIN 2>/dev/null
-  
+
   iptables -F ADAPTIVE_BAN_DROP_CHAIN
   iptables -X ADAPTIVE_BAN_DROP_CHAIN 2>/dev/null
 
@@ -140,7 +140,7 @@ plugin_sanity_check()
     printf "\033[40m\033[1;31m${INDENT}ERROR: Input log file $ADAPTIVE_BAN_FILE does not exist!\033[0m\n" >&2
     return 1
   fi
-  
+
   if ! check_command sort; then
     printf "\033[40m\033[1;31m${INDENT}ERROR: Required command sort is not available!\033[0m\n" >&2
     return 1

@@ -3,7 +3,7 @@
 ## mail
 ##
 ## Simple wrapper to emulate 'mail' or 'mailx'
-## 
+##
 ## Only sending mail is supported
 ##
 ## Copyright (C) 2016 Lonnie Abelbeck

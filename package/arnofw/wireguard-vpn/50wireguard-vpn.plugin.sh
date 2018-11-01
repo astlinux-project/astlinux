@@ -117,7 +117,7 @@ else
 
     # Increment indention
     INDENT="$INDENT "
-    
+
     # Only proceed if environment ok
     if ! plugin_sanity_check; then
       PLUGIN_RET_VAL=1

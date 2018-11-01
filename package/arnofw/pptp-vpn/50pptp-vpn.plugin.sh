@@ -56,7 +56,7 @@ plugin_start()
         ;;
     esac
   done
-  
+
   # Setup PPTP VPN rules
   if [ -n "$ppp_ifs" ]; then
     echo "${INDENT}Excluding external interfaces '$ppp_ifs' from PPTP VPN"
@@ -105,10 +105,10 @@ plugin_start()
     for net in $PPTP_VPN_NETS; do
       # Adjust spoof check
       iptables -I SPOOF_CHK -i ppp+ -s $net -j RETURN
-      
+
       # Insert rule in the INPUT chain
       iptables -A INPUT -i ppp+ -s $net -j PPTP_VPN_INPUT
-      
+
       # Insert rules in the FORWARD chain
       iptables -A FORWARD -i ppp+ -s $net -j PPTP_VPN_FORWARD_IN
       iptables -A FORWARD -o ppp+ -d $net -j PPTP_VPN_FORWARD_OUT
@@ -121,7 +121,7 @@ plugin_start()
     iptables -A EXT_INPUT_CHAIN -p gre -s $host -j ACCEPT
     iptables -A EXT_INPUT_CHAIN -p tcp --dport 1723 -s $host -j ACCEPT
   done
-  
+
   return 0
 }
 

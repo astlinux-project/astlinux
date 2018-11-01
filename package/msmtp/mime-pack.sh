@@ -49,7 +49,7 @@ while [ -n "$2" -a -n "$3" ]; do
     ATTACHMENT="$2"
     FILENAME="$(basename "$ATTACHMENT")"
     MIMETYPE="$3"
-    
+
     echo "--$BOUNDARY"
     echo "Content-Type: $MIMETYPE; name=\"$FILENAME\""
     echo "Content-Transfer-Encoding: base64"

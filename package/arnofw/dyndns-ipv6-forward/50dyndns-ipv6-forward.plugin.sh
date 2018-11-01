@@ -175,12 +175,12 @@ plugin_stop()
 {
 
   printf "${INDENT}DynDNS IPv6 Forward - Stopping... "
-  
+
   # Stop helper script on next iteration
   "$PLUGIN_BIN_PATH/dyndns-ipv6-forward-helper" stop "$IP6TABLES"
-  
+
   echo "Stopped."
-  
+
   # Remove the rules file
   rm -f "$DYNDNS_FORWARD_RULES"
 

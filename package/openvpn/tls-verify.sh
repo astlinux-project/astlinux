@@ -20,8 +20,8 @@ if [ "$1" -eq 0 ]; then
     exit 1
   fi
 
-  IFS=$'\n'                                         
-  for line in $OVPN_VALIDCLIENTS; do                         
+  IFS=$'\n'
+  for line in $OVPN_VALIDCLIENTS; do
     validclient="`echo $line | cut -d~ -f1`"
     if [ "$validclient" = "$cn" ]; then
       exit 0

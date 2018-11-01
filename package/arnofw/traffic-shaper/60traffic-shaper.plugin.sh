@@ -216,7 +216,7 @@ incoming_traffic_limit()
     tc filter add dev $1 parent ffff: protocol ipv6 prio 101 estimator 500ms 2sec \
        u32 match ip6 src ::/0 police avrate ${DOWNLINK}kbit drop flowid :1
   fi
-} 
+}
 
 disable_ethernet_offloading()
 {

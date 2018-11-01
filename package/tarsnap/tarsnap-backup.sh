@@ -3,7 +3,7 @@
 ## tarsnap-backup
 ##
 ## Helper script to manage Tarsnap backups for the AstLinux Project
-## 
+##
 ## Copyright (C) 2017 Lonnie Abelbeck
 ##
 ## This is free software, licensed under the GNU General Public License

@@ -163,12 +163,12 @@ plugin_stop()
 {
 
   printf "${INDENT}DynDNS IPv6 Open - Stopping... "
-  
+
   # Stop helper script on next iteration
   "$PLUGIN_BIN_PATH/dyndns-ipv6-open-helper" stop "$IP6TABLES"
-  
+
   echo "Stopped."
-  
+
   # Remove the rules file
   rm -f "$DYNDNS_OPEN_RULES"
 

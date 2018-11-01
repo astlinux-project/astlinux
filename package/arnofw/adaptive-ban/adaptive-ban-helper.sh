@@ -9,9 +9,9 @@ TEMPFILE="/var/tmp/aif_adaptive_ban.temp"
 start_run()
 {
   local num file time count arg args argstime=0 filetime=0 ARGS IFS
-  
+
   ARGS="$@"
-  
+
   # Robust 'bash' method of creating/testing for a lockfile
   if ! ( set -o noclobber; echo "$$" > "$LOCKFILE" ) 2>/dev/null; then
     echo "$ARGS" > "$ARGSFILE"
@@ -25,14 +25,14 @@ start_run()
   fi
 
   trap 'rm -f "$LOCKFILE" "$ARGSFILE" "$TEMPFILE"; exit $?' INT TERM EXIT
-  
+
   echo "$ARGS" > "$ARGSFILE"
-  
+
   # Delay to allow firewall script to complete
   idle_wait 45
-  
+
   while [ -f "$ARGSFILE" ]; do
-  
+
     # Check whether chains exists
     if ! check_for_chain ADAPTIVE_BAN_CHAIN; then
       log_msg "ADAPTIVE_BAN_CHAIN does not exist"
@@ -42,9 +42,9 @@ start_run()
       log_msg "ADAPTIVE_BAN_DROP_CHAIN does not exist"
       break
     fi
-    
+
     ARGS="$(cat "$ARGSFILE")"
-    
+
     file=""
     args=""
     num=0
@@ -58,7 +58,7 @@ start_run()
         *) args="${args}${args:+ }$arg" ;;
       esac
     done
-    
+
     if [ ! -f "$file" ]; then
       log_msg "Input log file $file does not exist"
       sleep 1
@@ -70,21 +70,21 @@ start_run()
         break
       fi
     fi
-    
+
     if [ "$filetime" != "$(date -r "$file" "+%s")" -o "$argstime" != "$(date -r "$ARGSFILE" "+%s")" ]; then
       filter "$file" "$count" $args
-      
+
       filetime="$(date -r "$file" "+%s")"
       argstime="$(date -r "$ARGSFILE" "+%s")"
     fi
-    
+
     # Idle - interrupted if ARGSFILE is deleted
     idle_wait $time
   done
-  
+
   rm -f "$LOCKFILE" "$ARGSFILE" "$TEMPFILE"
   trap - INT TERM EXIT
-  
+
   return 0
 }
 
@@ -110,7 +110,7 @@ status()
   fi
   echo "  ------------------------------"
   echo ""
-  
+
   echo "  Whitelisted Hosts:"
   echo "  =============================="
   ip4tables -n -L ADAPTIVE_BAN_CHAIN | awk '$1 == "RETURN" { print "  "$4 }'
@@ -124,10 +124,10 @@ status()
 filter()
 {
   local file="$1" count="$2" type types PREFIX HOST IFS
- 
+
   shift 2
   types="$@"
-  
+
   # regex to pull out offending IPv4/IPv6 address
   #
   HOST="([0-9a-fA-F:.]{7,})"
@@ -297,12 +297,12 @@ check_for_chain()
 
   ip4tables -n -L "$1" >/dev/null 2>&1
   err=$?
-  
+
   if [ "$IPV6_SUPPORT" = "1" -a $err -eq 0 ]; then
     ip6tables -n -L "$1" >/dev/null 2>&1
     err=$?
   fi
-  
+
   return $err
 }
 
@@ -312,7 +312,7 @@ ip4tables()
 
   result="$($IP4TABLES -w "$@" 2>&1)"
   retval=$?
-  
+
   if [ $retval -ne 0 ]; then
     log_msg "$IP4TABLES: ($retval) $result"
   elif [ -n "$result" ]; then
@@ -328,7 +328,7 @@ ip6tables()
 
   result="$($IP6TABLES -w "$@" 2>&1)"
   retval=$?
-  
+
   if [ $retval -ne 0 ]; then
     log_msg "$IP6TABLES: ($retval) $result"
   elif [ -n "$result" ]; then
@@ -404,6 +404,6 @@ status)
   echo "                           [ logfile time count args... ]"
   exit 1
   ;;
-  
+
 esac
 

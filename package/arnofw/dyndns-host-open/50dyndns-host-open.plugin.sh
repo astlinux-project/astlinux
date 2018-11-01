@@ -183,12 +183,12 @@ plugin_stop()
 {
 
   printf "${INDENT}DynDNS Host Open - Stopping... "
-  
+
   # Stop helper script on next iteration
   "$PLUGIN_BIN_PATH/dyndns-host-open-helper" stop "$IP4TABLES"
-  
+
   echo "Stopped."
-  
+
   # Remove the rules file
   rm -f "$DYNDNS_HOST_RULES"
 

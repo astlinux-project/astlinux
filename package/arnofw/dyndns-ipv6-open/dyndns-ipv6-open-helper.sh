@@ -7,9 +7,9 @@ ARGSFILE="/var/tmp/aif_dyndns_ipv6_open.args"
 start_run()
 {
   local num file time arg args ARGS IFS
-  
+
   ARGS="$@"
-  
+
   # Robust 'bash' method of creating/testing for a lockfile
   if ! ( set -o noclobber; echo "$$" > "$LOCKFILE" ) 2>/dev/null; then
     echo "$ARGS" > "$ARGSFILE"
@@ -23,22 +23,22 @@ start_run()
   fi
 
   trap 'rm -f "$LOCKFILE" "$ARGSFILE"; exit $?' INT TERM EXIT
-  
+
   echo "$ARGS" > "$ARGSFILE"
-  
+
   # Delay to allow firewall script to complete
   idle_wait 45
-  
+
   while [ -f "$ARGSFILE" ]; do
-  
+
     # Check whether chains exists
     if ! check_for_chain DYNDNS_CHAIN; then
       log_msg "DYNDNS_CHAIN does not exist"
       break
     fi
-    
+
     ARGS="$(cat "$ARGSFILE")"
-    
+
     file=""
     args=""
     num=0
@@ -51,21 +51,21 @@ start_run()
         *) args="${args}${args:+ }$arg" ;;
       esac
     done
-    
+
     if [ ! -f "$file" ]; then
       log_msg "Input rules file $file does not exist"
       break
     fi
-    
+
     apply_rules "$file"
-    
+
     # Idle - interrupted if ARGSFILE is deleted
     idle_wait $time
   done
-  
+
   rm -f "$LOCKFILE" "$ARGSFILE"
   trap - INT TERM EXIT
-  
+
   return 0
 }
 
@@ -88,13 +88,13 @@ status()
   ip6tables -n -L DYNDNS_CHAIN | sed -n -e 's/^ACCEPT.*$/  &/p'
   echo "  ------------------------------"
   echo ""
-  
+
 }
 
 apply_rules()
 {
   local cnt rule end_cnt IFS
-  
+
   # Count existing rules, to be deleted later
   cnt=$(ip6tables -n -L DYNDNS_CHAIN | grep -c '^ACCEPT')
 
@@ -111,9 +111,9 @@ apply_rules()
       break
     fi
   done
-  
+
   end_cnt=$(ip6tables -n -L DYNDNS_CHAIN | grep -c '^ACCEPT')
-  
+
   if [ $end_cnt -gt $cnt ]; then
     # Delete pre-existing rules
     while [ $cnt -gt 0 ]; do
@@ -149,7 +149,7 @@ ip6tables()
 
   result="$($IP6TABLES -w "$@" 2>&1)"
   retval=$?
-  
+
   if [ $retval -ne 0 ]; then
     log_msg "$IP6TABLES: ($retval) $result"
   elif [ -n "$result" ]; then
@@ -199,6 +199,6 @@ status)
   echo "                           [ time rules_file ]"
   exit 1
   ;;
-  
+
 esac
 
