@@ -337,7 +337,7 @@ gen_ipsecmobile_routes()
     if [ -n "$lnet" -a -n "$rnet" ]; then
       intf="$(findintf $lnet)"
       lip="$(findip $lnet)"
-    
+
       if [ -n "$intf" ]; then
         echo ""
         echo "ip route add $rnet src $lip dev $intf"
@@ -650,7 +650,7 @@ path certificate \"/tmp/etc/certificate\";" > /tmp/etc/racoon.conf
   if SYS_is_vpn_type racoon; then
     gen_racoon_routes >> /tmp/etc/tunnel.sh
   fi
-  
+
   if SYS_is_vpn_type ipsecmobile; then
     gen_ipsecmobile_routes >> /tmp/etc/tunnel.sh
   fi

@@ -26,7 +26,7 @@ stop()
     # because the background process monitors its PID file.
     #
     rm -f /var/run/asterisk-sip-monitor.pid
-    
+
     # Wait for the background process to exit
     cnt=10
     while [ $cnt -gt 0 -a -f /var/lock/asterisk-sip-monitor.lock ]; do
@@ -39,7 +39,7 @@ stop()
 status()
 {
   echo ""
-  
+
   if [ -f /var/lock/asterisk-sip-monitor.lock ]; then
     echo "Status: asterisk-sip-monitor is active"
   else
@@ -51,7 +51,7 @@ status()
   else
     echo "- No active Alerts"
   fi
-  
+
   echo ""
 }
 
@@ -63,7 +63,7 @@ case $1 in
   stop)
     stop
     ;;
-  
+
   restart)
     stop
     start

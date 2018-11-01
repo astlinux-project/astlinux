@@ -159,7 +159,7 @@ if (isset($opt['o'])) {
 }
 
 if (($ldapconn = LDAP_Client($tls, $uri, $dn)) !== FALSE) {
-  
+
   $filter = '(|';
   foreach ($match_num as $mn) {
     $filter .= "($mn=$num)";

@@ -56,7 +56,7 @@ COUNT_DELAY="${MONITOR_ASTERISK_SIP_COUNT_DELAY:-90}"
 
 start_run()
 {
-  
+
   # Robust 'bash' method of creating/testing for a lockfile
   if ! ( set -o noclobber; echo "$$" > "$LOCKFILE" ) 2>/dev/null; then
     echo "asterisk-sip-monitor: already running, lockfile \"$LOCKFILE\" exists, process id: $(cat "$LOCKFILE")."
@@ -69,23 +69,23 @@ start_run()
   fi
 
   trap 'rm -f "$LOCKFILE" "$PIDFILE"; exit $?' INT TERM EXIT
-  
+
   echo "$BASHPID" > "$PIDFILE"
-  
+
   # Delay to allow asterisk to start
   idle_wait 60
-  
+
   while [ -f "$PIDFILE" ]; do
 
     monitor_sip $COUNT
-  
+
     # Idle - interrupted if PIDFILE is deleted
     idle_wait 300
   done
-  
+
   rm -f "$LOCKFILE" "$PIDFILE"
   trap - INT TERM EXIT
-  
+
   return 0
 }
 
@@ -164,7 +164,7 @@ monitor_sip() {
     count=$((count-1))
     ALERTS=""
     NOTES=""
-    
+
     if [ -n "$TRUNK_LIST" ]; then
       SIP_SHOW_REGISTRY="$(/usr/sbin/asterisk -rnx "sip show registry")"
 

@@ -21,7 +21,7 @@ BASE="/stat/var/lib/asterisk"
 
 get_url_filename() {
   local type="$1" lang="$2" codec="$3" file
-  
+
   if [ "$type" = "moh" ]; then
     file="asterisk-moh-opsound-${codec}-current.tar.gz"
   else
@@ -56,7 +56,7 @@ unmount_tmpfs_snd() {
 
 cleanup_moh() {
   local type="$1" codec="$2"
-  
+
   if [ "$type" = "moh" ]; then
     rm -f $BASE/moh/macroform-robot_dity.$codec
     rm -f $BASE/moh/macroform-cold_day.$codec
@@ -65,7 +65,7 @@ cleanup_moh() {
 
 get_sha1_filename() {
   local type="$1" lang="$2" codec="$3" file
-  
+
   if [ "$type" = "moh" ]; then
     file="${type}-${codec}"
   else
@@ -76,7 +76,7 @@ get_sha1_filename() {
 
 get_sha1_dir() {
   local type="$1" dir
-  
+
   if [ "$type" = "moh" ]; then
     dir="moh/sha1"
   else
@@ -90,7 +90,7 @@ get_sha1_dir() {
 
 get_dir() {
   local type="$1" lang="$2" dir
-  
+
   if [ "$type" = "moh" ]; then
     dir="moh"
   else
@@ -129,10 +129,10 @@ upgrade() {
     echo "SHA1 download failed for sound package \"$(get_sha1_filename "$type" "$lang" "$codec")\"."
     exit $RED
   fi
-  
+
   SHA1DIR="$(get_sha1_dir $type)"
   SHA1FILE="$(get_sha1_filename $type $lang $codec)"
-  
+
   if [ -f $BASE/$SHA1DIR/$SHA1FILE.sha1 ] && cmp -s /tmp/snd/$FILE.sha1 $BASE/$SHA1DIR/$SHA1FILE.sha1; then
     unmount_tmpfs_snd
     echo "The sound package \"$SHA1FILE\" is already installed on ASTURW."
@@ -152,7 +152,7 @@ upgrade() {
     echo "Directory \"$BASE/$DIR\" does not exist."
     exit $RED
   fi
-  
+
   cd /tmp/snd
 
   SFILE="$(cat /tmp/snd/$FILE.sha1 | awk '{ print $2; exit; }')"
@@ -188,21 +188,21 @@ upgrade() {
     echo "Not enough free space for sound package \"$SHA1FILE\" on the ASTURW partition."
     exit $RED
   fi
-  
+
   # save sha1 file to record an added sound package
   cp /tmp/snd/$FILE.sha1 $BASE/$SHA1DIR/$SHA1FILE.sha1
   # save the sound package files for remove
   tar -tzf /tmp/snd/$FILE | grep -v '^.*/$' | sed 's:^[.]/::' >/$BASE/$SHA1DIR/$SHA1FILE.txt
   sync
-  
+
   unmount_tmpfs_snd
-  
+
   reload_asterisk_moh $type
 }
 
 remove() {
   local type="$1" lang="$2" codec="$3"
-  
+
   SHA1DIR="$(get_sha1_dir $type)"
   SHA1FILE="$(get_sha1_filename $type $lang $codec)"
 
@@ -214,10 +214,10 @@ remove() {
   DIR="$(get_dir $type $lang)"
 
   delete_sound_files $BASE/$DIR $BASE/$SHA1DIR/$SHA1FILE.txt
-  
+
   rm -f $BASE/$SHA1DIR/$SHA1FILE.sha1
   rm -f $BASE/$SHA1DIR/$SHA1FILE.txt
-  
+
   reload_asterisk_moh $type
 }
 
@@ -227,19 +227,19 @@ show() {
   CORE_SHA1DIR="$(get_sha1_dir core)"
   MOH_SHA1DIR="$(get_sha1_dir moh)"
   list="$(ls -1 $BASE/$CORE_SHA1DIR/*.sha1 $BASE/$MOH_SHA1DIR/*.sha1 2>/dev/null)"
-  
+
   for i in $list; do
     filename="$(cat $i | awk '{ print $2; exit; }')"
     filename="$(basename $filename .tar.gz)"
     str="$str${str:+, }$filename"
   done
-  
+
   if [ -z "$str" ]; then
     str="No installed sound package on ASTURW."
   else
     str="Installed: $str"
   fi
-  
+
   echo "$str"
   exit $GREEN
 }
@@ -272,7 +272,7 @@ upgrade)
   echo "Successful upgrade of sound package \"$(get_sha1_filename "$2" "$3" "$4")\"."
   exit $GREEN
   ;;
-  
+
 remove)
   if [ "$2" != "core" -a "$2" != "extra" -a "$2" != "moh" ] || [ -z "$3" ] || [ -z "$4" ]; then
     echo "Usage: upgrade-asterisk-sounds remove core|extra|moh $LANGUAGES $CODECS"
@@ -295,6 +295,6 @@ show)
   echo "                                       [sounds_repository_url]"
   exit 1
   ;;
-  
+
 esac
 
