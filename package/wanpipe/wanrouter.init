@@ -32,7 +32,7 @@ start () {
 stop () {
 
   if ls /etc/wanpipe/*.conf >/dev/null 2>/dev/null; then
-  
+
     echo "Stopping WanRouter"
     wanrouter stop
   fi

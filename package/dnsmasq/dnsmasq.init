@@ -25,7 +25,7 @@ is_prefix_delegation()
 addr_to_prefix64()
 {
   local cnt=1 prefix="" next
-  
+
   if [ -n "$1" ]; then
     while [ $cnt -le 4 ]; do
       next="$(echo "$1" | cut -s -d':' -f$cnt)"
@@ -266,7 +266,7 @@ dhcp-leasefile=/var/db/dnsmasq.leases"
       echo "dhcp-boot=$BOOTPFILE,$HOSTNAME.$DOMAIN,$INTIP"
     fi
   fi
-  
+
   if [ "$LOCALDNS_LOCAL_DOMAIN" = "no" ]; then
     local_domain="#"
   else
@@ -325,9 +325,9 @@ dhcp-option=vendor:APC,2,1b"
   if [ -n "$STATICHOSTS" ]; then
     echo "
 # generated from STATICHOSTS in rc.conf"
-  
+
     IFS=$'\n'
-    for i in $STATICHOSTS; do              
+    for i in $STATICHOSTS; do
       # might have fqdn<space>hostname, etc.
       name="$(echo "$i" | awk -F~ '{ print $1; }' | awk -F' ' '{ print $1; }')"
       ip="$(echo "$i" | awk -F~ '{ print $2; }')"
@@ -337,7 +337,7 @@ dhcp-option=vendor:APC,2,1b"
       if [ $? -eq 4 -a -n "$name" -a -n "$ip" -a -n "$mac" ]; then
         echo "dhcp-host=$mac,$ip,$name"
       fi
-    done                                                             
+    done
   fi
 }
 

@@ -51,7 +51,7 @@ start () {
         /usr/bin/logger -s -p user.warning -id -t qemu "WARNING: $QemuMemory MB exceeds system available memory of $FreeMem"
       fi
     fi
-    
+
     CpuCores=$(lscpu -p | /bin/egrep -v '^#' | wc -l)
     if [ -z "$QEMU_VCPU" ]; then
       # Set vCPU cores to half available system cores
@@ -63,7 +63,7 @@ start () {
         /usr/bin/logger -s -p user.warning -id -t qemu "WARNING: $QemuVCpu cores exceeds system available cores of $CpuCores"
       fi
     fi
-    if [ $QemuVCpu == 1 ]; then 
+    if [ $QemuVCpu == 1 ]; then
       QemuVCpuStr=""
     else
       QemuVCpuStr="-smp cpus=$QemuVCpu"
@@ -174,7 +174,7 @@ start () {
       else
         /bin/grep "flags" /proc/cpuinfo | /bin/grep " svm" > /dev/null
         # Presence of 'svm' indicates AMD virtualization extensions
-        if [ $? == 0 ]; then          
+        if [ $? == 0 ]; then
           /sbin/modprobe kvm-amd
           if [ $? == 1 ]; then
             /usr/bin/logger -s -p user.err -id -t qemu "ERROR: Failed to load kernel module kvm-amd.  Exiting"

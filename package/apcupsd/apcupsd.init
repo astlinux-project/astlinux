@@ -119,7 +119,7 @@ stop ()
     killall apcupsd >/dev/null 2>&1
     sleep 1
     kill -KILL $PID >/dev/null 2>&1
-    
+
     # Wait for all processes to finish
     cnt=10
     while [ $cnt -gt 0 ] && ps | grep -q -e '[/]usr/sbin/apcupsd'; do
@@ -127,7 +127,7 @@ stop ()
       sleep 1
     done
     rm -f /var/run/apcupsd.pid
-    
+
     if [ "$UPS_KILL_POWER" = "yes" -a -f /etc/apcupsd/powerfail ]; then
       cnt=5
       while [ $cnt -gt 0 ]; do

@@ -76,7 +76,7 @@ gen_ddclient_conf()
 gen_inadyn_conf()
 {
   local get_ip_type get_ip_interface update_period_sec ddcustom
-  
+
   update_period_sec="360"
   ddcustom=""
 

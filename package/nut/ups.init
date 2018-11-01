@@ -278,7 +278,7 @@ stop ()
 
     upsd -c stop >> $LOGFILE 2>&1
     upsdrvctl stop >> $LOGFILE 2>&1
-    
+
     if [ "$UPS_KILL_POWER" = "yes" -a -f /etc/ups/killpower ]; then
       cnt=5
       while [ $cnt -gt 0 ]; do

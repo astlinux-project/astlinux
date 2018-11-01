@@ -24,7 +24,7 @@ remove_pptpd_secret()
 init () {
   local user pass dns1 dns2 wins1 wins2 connections localip remoteip IFS
   local bad_config=0
-  
+
   if ! SYS_is_vpn_type pptp; then
     if [ -f /etc/pptpd.conf ]; then
       rm -f "$config_file"
