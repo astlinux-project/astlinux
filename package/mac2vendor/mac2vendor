@@ -6,20 +6,20 @@ MAC_VENDOR_DB="/usr/share/oui-db"
 ipv6_expand()
 {
   local in="$1" expand="" i colons part IFS
-  
+
   i="$(echo "$in" | tr -d ':')"
   colons=$((${#in} - ${#i}))
-  
+
   while [ $colons -lt 7 ]; do
     in="${in/::/:::}"
     colons=$(($colons + 1))
   done
-  
+
   for i in 1 2 3 4 5 6 7 8; do
     part="0000$(echo "$in" | cut -d':' -f$i)"
     expand="${expand}${expand:+:}${part:(-4)}"
   done
-  
+
   echo "$expand"
 }
 
@@ -27,7 +27,7 @@ ipv6_expand()
 ipv6_mac()
 {
   local inet6
-  
+
   inet6="$(echo "$1" | tr 'a-f' 'A-F')"
   inet6="$(ipv6_expand "$inet6")"
 
@@ -61,12 +61,12 @@ fi
 
 if [ "$1" = "-6" ]; then
   INET6_CHECK="$(echo "$2" | tr -d '0-9a-fA-F:')"
-  
+
   if [ -n "$INET6_CHECK" ]; then
     echo "mac2vendor: Invalid IPv6-address \"$2\"." >&2
     exit 1
   fi
-  
+
   MAC="$(ipv6_mac "$2")"
   if [ -z "$MAC" ]; then
     echo "mac2vendor: No Modified EUI-64 Interface Identifier in IPv6-address \"$2\"." >&2
