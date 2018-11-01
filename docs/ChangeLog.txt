@@ -14,9 +14,13 @@ Released @TBD@
 
 -- liburiparser, version bump to 0.9.0, security fixes
 
+-- kexec, version bump to 2.0.18
+
 -- ncurses, major version bump to 6.1
 
 -- pciutils, version bump to 3.6.2
+
+-- strace, version bump to 4.25
 
 -- ca-certificates, update trusted root certificates 2018-10-17
 
@@ -28,10 +32,16 @@ Released @TBD@
 
 -- WireGuard VPN, version bump to 0.0.20181018
 
+-- libcurl (curl) version bump to 7.62.0, security fixes: CVE-2018-16839, CVE-2018-16840, CVE-2018-16842
+
 -- dnsmasq, version bump to 2.80
 
 -- fping, major version bump to 4.1
    Note: Now handles both IPv4 and IPv6 via a single binary, fping6 is a sym-link for backward compatibility.
+
+-- wol-host, new command to send Wake-on-LAN packet to specified host, by IP or DNS name.
+   Example: wol-host --ping 192.168.101.13
+   More info: wol-host --help
 
 -- lighttpd, version bump to 1.4.51, bug and security fixes
 
