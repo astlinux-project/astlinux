@@ -43,7 +43,7 @@ gen_kd_files()
   if [ -d /stat/etc/wanpipe ]; then
     cp -a /stat/etc/wanpipe ${1}/
   fi
-  
+
   cp -a /var/spool/cron/crontabs ${1}/
 
   if [ -f /var/db/astdb ]; then
@@ -77,6 +77,6 @@ gen_kd_files)
   echo "Usage: /usr/sbin/functions function_selector [args]"
   exit 1
   ;;
-  
+
 esac
 

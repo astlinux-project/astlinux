@@ -204,7 +204,7 @@ test_targets() {
     log $err "($cnt of $NO_OF_TARGETS) Host Targets OK"
   else
     if [ $TARGETS_FAILED -lt $THRESHOLD ]; then
-      TARGETS_FAILED=$((TARGETS_FAILED+1)) 
+      TARGETS_FAILED=$((TARGETS_FAILED+1))
     fi
     if [ "$ACTIVE_CONNECTION" = "$PRIMARY_STR" ]; then
       TEST_INTERVAL=2

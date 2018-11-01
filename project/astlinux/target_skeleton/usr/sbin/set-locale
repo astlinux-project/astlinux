@@ -106,7 +106,7 @@ show()
   else
     str="Locale: $str"
   fi
-  
+
   echo "$str"
   exit $GREEN
 }
@@ -171,6 +171,6 @@ show)
   echo "Usage: set-locale remove|show"
   exit 1
   ;;
-  
+
 esac
 

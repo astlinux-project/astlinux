@@ -40,7 +40,7 @@ fi
 
 echo "This script will help to create a KeyDrive to store
 your AstLinux configuration.  MAKE SURE THAT YOUR DRIVE IS
-CONNECTED.  
+CONNECTED.
 
 I will use $KDDEV"
 

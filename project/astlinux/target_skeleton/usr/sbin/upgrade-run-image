@@ -194,7 +194,7 @@ check() {
   else
     XVER=""
   fi
-  
+
   after_reboot
 
   if [ "$VER" = "$OVER" ]; then
@@ -267,7 +267,7 @@ upgrade() {
     fi
     exit $RED
   fi
-  
+
   after_reboot
 
   unmount_tmpfs_up
@@ -333,7 +333,7 @@ revert() {
     echo "Revert failed, unable to change version files."
     exit $RED
   fi
-  
+
   after_reboot
 }
 
@@ -361,7 +361,7 @@ check)
   echo "Current version is: ${OVER}${AFTER_REBOOT},  Newest available version is: ${VER}"
   exit $GREEN
   ;;
-  
+
 upgrade)
   if [ -n "$2" ]; then
     SRC_URL=$2
@@ -375,23 +375,23 @@ upgrade)
   echo "Successful upgrade to: ${VER}${AFTER_REBOOT}"
   exit $GREEN
   ;;
-  
+
 show)
   show
   echo "Current version is: ${VER}${AFTER_REBOOT}, Previous saved version is: ${XVER}"
   exit $GREEN
   ;;
-  
+
 revert)
   revert
   echo "Current version is now: ${XVER}${AFTER_REBOOT}"
   exit $GREEN
   ;;
-  
+
 *)
   echo "Usage: upgrade-run-image check|upgrade|show|revert firmware_repository_url [32|64|vm]"
   exit 1
   ;;
-  
+
 esac
 

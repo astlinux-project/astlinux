@@ -28,13 +28,13 @@ is_configured() {
   if mount | grep -q "/oldroot/mnt/asturw"; then
     return 0
   fi
-  
+
   return 1
 }
 
 genunion() {
   # Args: partition, make_kd
-  
+
   if mount | grep -q "$1"; then
     echo "Partition $1 is currently in use."
     exit $RED
@@ -44,11 +44,11 @@ genunion() {
     echo "Creating ASTURW filesystem on $1 failed."
     exit $RED
   fi
-  
+
   if [ "$2" != 'yes' ]; then
     return 0
   fi
-  
+
   mkdir /tmp/asturw
   if ! mount $1 /tmp/asturw; then
     rmdir /tmp/asturw
@@ -79,7 +79,7 @@ genkd() {
     echo "Mounting ASTKD on $1 failed."
     exit $RED
   fi
-  
+
   /usr/sbin/functions gen_kd_files /mnt/kd
 
   return 0
@@ -89,10 +89,10 @@ format_separate() {
   # Args: drive, unionfs_size
   local part_union
   local part_kd
- 
+
   # Find Runix Drive
   find_runnix_drive
-  
+
   # Number of partitions
   PNUM="`/sbin/fdisk -l | grep "^$1" | wc -l`"
 
@@ -140,7 +140,7 @@ format_combined() {
 
   # Find Runix Drive
   find_runnix_drive
-  
+
   # Number of partitions
   PNUM="`/sbin/fdisk -l | grep "^$1" | wc -l`"
 
@@ -150,12 +150,12 @@ format_combined() {
   else
     part_union=1
   fi
-  
+
   if [ "$PNUM" -ne 0 ]; then
     echo "Drive $1 currently has partitions."
     exit $RED
   fi
-  
+
   /sbin/fdisk "$1" <<EOF >/dev/null
 n
 p
@@ -179,13 +179,13 @@ configure() {
   # Args: drive
   local part_union
   local part_kd
-  
+
   # Find Runix Drive
   find_runnix_drive
-  
+
   # Number of partitions
   PNUM="`/sbin/fdisk -l | grep "^$1" | wc -l`"
-  
+
   if [ "$DRIVE" = "$1" ]; then
     PNUM=$((PNUM-1))
     part_union=2
@@ -204,7 +204,7 @@ configure() {
     fi
     genunion "${1}${part_union}" yes
     ;;
-    
+
   2)
     if is_configured; then
       echo "Drive $1 does not require configuration."
@@ -213,7 +213,7 @@ configure() {
     genunion "${1}${part_union}" no
     genkd "${1}${part_kd}"
     ;;
-    
+
   *)
     echo "Partition status on $1 is unknown."
     exit $RED
@@ -226,16 +226,16 @@ status() {
 
   # Find Runix Drive
   find_runnix_drive
-  
+
   # Number of partitions
   PNUM="`/sbin/fdisk -l | grep "^$DRIVE" | wc -l`"
 
   case $PNUM in
-  
+
   1)
     echo "ok-format $DRIVE"
     ;;
-    
+
   [2-3])
     if is_configured; then
       echo "ok-unionfs $DRIVE"
@@ -243,11 +243,11 @@ status() {
       echo "ok-configure $DRIVE"
     fi
     ;;
-    
+
   *)
     echo "Format unknown, use fdisk manually."
     ;;
-    
+
   esac
 }
 
@@ -257,7 +257,7 @@ case $1 in
 
 format)
   case $2 in
-  
+
   separate)
     if [ -z "$3" ]; then
       echo "Usage: initial-setup format separate /dev/hdd [unionfs_size_MB]"
@@ -269,7 +269,7 @@ format)
     fi
     format_separate "$3" "$SIZE"
     ;;
-    
+
   combined)
     if [ -z "$3" ]; then
       echo "Usage: initial-setup format combined /dev/hdd"
@@ -277,17 +277,17 @@ format)
     fi
     format_combined "$3"
     ;;
-  
+
   *)
     echo "Usage: initial-setup format separate|combined /dev/hdd [unionfs_size_MB]"
     exit 1
     ;;
-    
+
   esac
   echo "Format successful."
   exit $GREEN
   ;;
-  
+
 configure)
   if [ -z "$2" ]; then
     echo "Usage: initial-setup configure /dev/hdd"
@@ -297,15 +297,15 @@ configure)
   echo "Configure successful."
   exit $GREEN
   ;;
-  
+
 status)
   status
   ;;
-  
+
 *)
   echo "Usage: initial-setup format|configure|status"
   exit 1
   ;;
-  
+
 esac
 

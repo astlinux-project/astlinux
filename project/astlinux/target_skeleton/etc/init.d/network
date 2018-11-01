@@ -362,7 +362,7 @@ start () {
     case "$EXTIF" in
     br[0-2])
       ;;
-    *) 
+    *)
       ip link set dev "$EXTIF" address $EXTIFMAC
       ;;
     esac

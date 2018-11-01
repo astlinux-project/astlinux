@@ -5,11 +5,11 @@ upgrade_arno_version()
 {
   # Args: MajorOnly
   local new old new_serial old_serial
-  
+
   if [ ! -f /mnt/kd/arno-iptables-firewall/serial ]; then
     return 0
   fi
-  
+
   new_serial="$(cat /stat/etc/arno-iptables-firewall/serial)"
   old_serial="$(cat /mnt/kd/arno-iptables-firewall/serial)"
 
@@ -19,7 +19,7 @@ upgrade_arno_version()
   if [ "$new" -ne "$old" ]; then
     return 0
   fi
-  
+
   if [ "$1" = "MajorOnly" ]; then
     return 1
   fi
@@ -37,7 +37,7 @@ upgrade_arno_version()
 merge_old_plugin_configs()
 {
   local plugin plugins editname var search IFS
-  
+
   plugins="$(grep -m1 '^ENABLED=1' /mnt/kd/arno-iptables-OLD/plugins/*.conf | sed 's/:ENABLED.*//')"
 
   IFS=$'\n'
@@ -111,10 +111,10 @@ upgrade()
 {
 
   rm -rf /mnt/kd/arno-iptables-OLD
-  mv /mnt/kd/arno-iptables-firewall /mnt/kd/arno-iptables-OLD      
+  mv /mnt/kd/arno-iptables-firewall /mnt/kd/arno-iptables-OLD
   cp -a /stat/etc/arno-iptables-firewall /mnt/kd
   merge_old_plugin_configs
-  
+
   # Restore previous "custom-rules"
   if [ -f /mnt/kd/arno-iptables-OLD/custom-rules ]; then
     cp -a /mnt/kd/arno-iptables-OLD/custom-rules /mnt/kd/arno-iptables-firewall/custom-rules
@@ -131,23 +131,23 @@ check)
   echo "New Arno Firewall support files are available."
   exit 0
   ;;
-  
+
 checkMajor)
   checkMajor
   exit 0
   ;;
-  
+
 upgrade)
   check
   upgrade
   echo "Successful upgrade to the Arno Firewall. [after firewall restart] Previous files are in /mnt/kd/arno-iptables-OLD."
   exit 0
   ;;
-  
+
 *)
   echo "Usage: upgrade-arno-firewall check|checkMajor|upgrade"
   exit 1
   ;;
-  
+
 esac
 

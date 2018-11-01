@@ -102,6 +102,6 @@ all)
   echo "Usage: show-union [ system|kd|asterisk_sounds|packages|locale|all ]"
   exit 1
   ;;
-  
+
 esac
 

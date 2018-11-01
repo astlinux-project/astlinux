@@ -15,7 +15,7 @@ case $DEV in
   *) PART=yes ;;
 esac
 
-echo "This script will automatically create a read/write 
+echo "This script will automatically create a read/write
 filesystem to store your AstLinux configuration."
 
 if [ "$PART" = "yes" ]; then
@@ -60,7 +60,7 @@ if [ "$PART" = "yes" ]; then
   if echo ";" | sfdisk $DEV >/dev/null; then
 DEV="${DEV}1"
     echo "Partition table created"
-  else                        
+  else
     echo "Partitioning failed. You are on your own." 1>&2
   fi
 fi
@@ -77,7 +77,7 @@ To create the appropriate file structure, type yes.
 
 If you have an existing key disk and want to migrate your key disk
 settings to this new unionfs partition, execute movekd $DEV after
-this script exits. 
+this script exits.
 
 To create a new key disk structure on your new unionfs partition,
 type yes followed by the Enter key.  Press any other key to exit.

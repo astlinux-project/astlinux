@@ -126,7 +126,7 @@ install_disk()
       --backtitle "$BACKTITLE" \
       --title "[ Error Erasing ]" \
       --yesno "Error zero'ing first 1 GB.\nContinue anyway ?" 6 60
-  
+
     if [ $? -ne 0 ]; then
       display_msg "Error zero'ing first 1 GB.\nInstall failed !"
       return 1

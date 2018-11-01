@@ -16,6 +16,6 @@ elif [ -f /stat/etc/rc.conf ]; then
   sed -e 's/^#.*//' -e '/^$/ d' /stat/etc/rc.conf >>/tmp/etc/rc.conf.new
 elif [ -d /stat/etc/rc.conf.d ]; then
   sed -e 's/^#.*//' -e '/^$/ d' /stat/etc/rc.conf.d/*.conf >>/tmp/etc/rc.conf.new
-fi 
+fi
 
 mv /tmp/etc/rc.conf.new /tmp/etc/rc.conf

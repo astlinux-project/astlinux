@@ -38,15 +38,15 @@ update_system_default_users()
 
 init () {
   local new old=""
-  
+
   new="$(cat /etc/astlinux-release)"
-  
+
   if [ -f /mnt/kd/astlinux-release ]; then
     old="$(cat /mnt/kd/astlinux-release)"
   fi
 
   echo -n "FIRSTRUN..."
-  
+
   if [ "$old" != "$new" ]; then
     echo "  version change detected."
 

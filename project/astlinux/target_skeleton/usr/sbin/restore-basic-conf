@@ -31,7 +31,7 @@ restore_dirs()
       fi
     fi
   done
-  
+
   return 0
 }
 
@@ -48,7 +48,7 @@ restore_files()
       fi
     fi
   done
-  
+
   return 0
 }
 

@@ -55,7 +55,7 @@ unmount_tmpfs_runup() {
 
 check() {
   IS_SERIAL=""
-  
+
   for i in $(cat /proc/cmdline); do
     if echo $i | grep -q "astlinux="; then
       ARCH="$(echo $i | sed -e 's/astlinux=//')"
@@ -111,7 +111,7 @@ check() {
   else
     XVER=""
   fi
-  
+
   if [ "$VER" = "$OVER" ]; then
     echo "You are running the newest available version: ${VER}"
     exit $ORANGE
@@ -213,7 +213,7 @@ upgrade() {
       rm -f "$BASE/syslinux.cfg"
       mv "$syslinux" "$BASE/syslinux.cfg"
     fi
-    
+
     echo "$VER" > $BASE/ver
     rm -r $BASE/rtmp/
   else
@@ -223,7 +223,7 @@ upgrade() {
     echo "Not enough free space for new firmware on the RUNNIX partition."
     exit $RED
   fi
-  
+
   unmount_tmpfs_runup
   unmount_oldroot_cdrom
 }
@@ -319,7 +319,7 @@ check)
   echo "Current version is: ${OVER},  Newest available version is: ${VER}"
   exit $GREEN
   ;;
-  
+
 upgrade)
   if [ -n "$2" ]; then
     SRC_URL=$2
@@ -329,23 +329,23 @@ upgrade)
   echo "Successful upgrade to: ${VER}"
   exit $GREEN
   ;;
-  
+
 show)
   show
   echo "Current version is: ${VER}, Previous saved version is: ${XVER}"
   exit $GREEN
   ;;
-  
+
 revert)
   revert
   echo "Current version is now: ${XVER}"
   exit $GREEN
   ;;
-  
+
 *)
   echo "Usage: upgrade-RUNNIX-image check|upgrade|show|revert [ firmware_repository_url ]"
   exit 1
   ;;
-  
+
 esac
 

@@ -123,7 +123,7 @@ start () {
 
   welcome_msg
 
-  # Turn OFF the errorled (after finshed booting) 
+  # Turn OFF the errorled (after finshed booting)
   if grep -q "astlinux=net5501" /proc/cmdline; then
 
     echo 0 >/sys/class/leds/net5501:1/brightness
