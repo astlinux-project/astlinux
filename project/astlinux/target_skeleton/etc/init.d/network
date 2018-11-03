@@ -70,7 +70,7 @@ id-assoc na 1 { };"
 
 gen_dhcp6c_conf()
 {
-  local interface="$1" len id iname int IFS
+  local interface="$1" dummy=0 len id iname int IFS
 
   len="${DHCPV6_CLIENT_PREFIX_LEN:-60}"
 
@@ -149,8 +149,21 @@ id-assoc pd 1 {"
       fi
     done
 
+    # When no suitable internal interfaces are defined to receive
+    # a prefix delegation, use a dummy interface named "ip6pd"
+    if [ $id -eq 0 ]; then
+      echo "  prefix-interface ip6pd {
+    sla-id 0;
+    sla-len $((64-len));
+    ifid 1;
+  };"
+      dummy=1
+    fi
+
     echo "};"
   fi
+
+  return $dummy
 }
 
 init_dhcp6c()
@@ -166,6 +179,10 @@ init_dhcp6c()
     gen_nopd_dhcp6c_conf $interface > /etc/wide-dhcpv6/dhcp6c-${interface}.conf
   else
     gen_dhcp6c_conf $interface > /etc/wide-dhcpv6/dhcp6c-${interface}.conf
+    if [ $? -eq 1 ]; then
+      modprobe dummy numdummies=0
+      ip link add name ip6pd type dummy
+    fi
   fi
 }
 

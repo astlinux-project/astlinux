@@ -2,16 +2,16 @@
 #      -= Arno's iptables firewall - Network Prefix Translation plugin =-
 #
 PLUGIN_NAME="Network Prefix Translation plugin"
-PLUGIN_VERSION="1.00"
+PLUGIN_VERSION="1.01"
 PLUGIN_CONF_FILE="net-prefix-translation.conf"
 #
-# Last changed          : June 7, 2017
+# Last changed          : November 3, 2018
 # Requirements          : AIF 2.0.1g+, ip6tables NETMAP support
 # Comments              : NPTv6 (Network Prefix Translation) for IPv6
 #                         Perform a 1:1 mapping of ULA <-> GUA prefixes
 #                         via the external interface.
 #
-# Author                : (C) Copyright 2017 by Lonnie Abelbeck & Arno van Amersfoort
+# Author                : (C) Copyright 2017-2018 by Lonnie Abelbeck & Arno van Amersfoort
 # Homepage              : http://rocky.eld.leidenuniv.nl/
 # Email                 : a r n o v a AT r o c k y DOT e l d DOT l e i d e n u n i v DOT n l
 #                         (note: you must remove all spaces and substitute the @ and the .
@@ -35,10 +35,16 @@ NET_PREFIX_TRANSLATION_GLOBAL_IPV6="/var/tmp/aif-net-prefix-translation-global-i
 
 net_prefix_translation_global_ipv6()
 {
-  local lan IFS
+  local lan interfaces IFS
+
+  if ip link show dev ip6pd >/dev/null 2>&1; then
+    interfaces="ip6pd"
+  else
+    interfaces="$NET_PREFIX_TRANSLATION_IF"
+  fi
 
   IFS=' ,'
-  for lan in $NET_PREFIX_TRANSLATION_IF; do
+  for lan in $interfaces; do
     ip -6 -o addr show dev $lan scope global 2>/dev/null \
       | awk '$3 == "inet6" { print $4; }' \
       | grep -i -v '^fd'
