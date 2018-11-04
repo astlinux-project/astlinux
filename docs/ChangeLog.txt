@@ -14,6 +14,8 @@ Released @TBD@
 
 -- liburiparser, version bump to 0.9.0, security fixes
 
+-- ethtool, version bump to 4.19
+
 -- kexec, version bump to 2.0.18
 
 -- ncurses, major version bump to 6.1
@@ -49,9 +51,14 @@ Released @TBD@
 
 -- arnofw (AIF), add WIREGUARD_ALLOW_OPENVPN rc.conf variable, Allow WireGuard tunnel to OpenVPN tunnel(s), disabled by default.
 
+-- sngrep, version bump to 1.4.6
+
 -- unbound (host), version bump to 1.8.1
 
 -- whois, version bump to 5.4.0
+
+-- wide-dhcpv6, when no suitable internal interfaces are defined to receive a prefix delegation,
+   use a dummy interface named 'ip6pd'.
 
 ** Asterisk
 
