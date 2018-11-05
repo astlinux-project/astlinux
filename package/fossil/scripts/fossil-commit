@@ -71,7 +71,32 @@ fi
 fossil commit --no-warnings -m "$message"
 rtn=$?
 
-fossil timeline -n 1 | grep -v 'entry limit'
+fossil timeline -n 1 | grep -v '^--- entry limit'
+
+if [ $rtn -eq 0 -a -n "$FOSSIL_NOTIFY" ]; then
+  NOTIFY_FROM="$FOSSIL_NOTIFY_FROM"
+  # Extract from possible <a@b.tld> format
+  NOTIFY_FROM="${NOTIFY_FROM##*<}"
+  NOTIFY_FROM="${NOTIFY_FROM%%>*}"
+
+  if [ -z "$NOTIFY_FROM" -a -n "$SMTP_DOMAIN" ]; then
+    NOTIFY_FROM="noreply@$SMTP_DOMAIN"
+  fi
+
+  unset IFS
+  for TO in $FOSSIL_NOTIFY; do
+    (
+    echo "To: ${TO}${NOTIFY_FROM:+
+From: \"Fossil Commit-$HOSTNAME\" <$NOTIFY_FROM>}
+Subject: Fossil Commit on '$HOSTNAME': ${message:0:50}
+
+Fossil Commit on '$HOSTNAME':
+"
+    fossil timeline -v -n 1 -W 120 | grep -v '^--- entry limit'
+    echo "==="
+    ) | sendmail -t
+  done
+fi
 
 fossil close --force
 
