@@ -24,6 +24,10 @@ Released @TBD@
 
 -- strace, version bump to 4.25
 
+-- fossil, new feature to optionally send commit notifications via email while using 'fossil-commit'.
+   New rc.conf variable FOSSIL_NOTIFY must be defined (via user.conf) as To: email address to enable.
+   Additional new, optional rc.conf variables: FOSSIL_NOTIFY_FROM, FOSSIL_HOSTNAME
+
 -- ca-certificates, update trusted root certificates 2018-10-17
 
 -- Time Zone Database update, tzdata2018g and php-timezonedb-2018.7
