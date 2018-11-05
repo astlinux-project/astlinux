@@ -83,6 +83,16 @@ if [ $rtn -eq 0 -a -n "$FOSSIL_NOTIFY" ]; then
     NOTIFY_FROM="noreply@$SMTP_DOMAIN"
   fi
 
+  info="$(fossil info -v)"
+  commit="$(echo "$info" | sed -n -r -e 's#^checkout: *([^ ]+).*$#\1#p')"
+  url_host="$FOSSIL_HOSTNAME"
+  if [ -z "$url_host" ]; then
+    url_host="$(echo "$info" | sed -n -r -e 's#^access-url: *https://([^/]+)/admin/fossil.*$#\1#p')"
+    if [ -z "$url_host" ]; then
+      url_host="$HOSTNAME.$DOMAIN"
+    fi
+  fi
+
   unset IFS
   for TO in $FOSSIL_NOTIFY; do
     (
@@ -92,8 +102,13 @@ Subject: Fossil Commit on '$HOSTNAME': ${message:0:50}
 
 Fossil Commit on '$HOSTNAME':
 "
-    fossil timeline -v -n 1 -W 120 | grep -v '^--- entry limit'
-    echo "==="
+    fossil timeline $commit -v -n 1 -W 120 | grep -v '^--- entry limit'
+    echo "---
+
+Commit: $commit"
+    for x in $url_host; do
+      echo "https://$x/admin/fossil/info/$commit"
+    done
     ) | sendmail -t
   done
 fi
