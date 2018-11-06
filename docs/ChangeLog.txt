@@ -22,6 +22,8 @@ Released @TBD@
 
 -- pciutils, version bump to 3.6.2
 
+-- sqlite, version bump to 3.25.3
+
 -- strace, version bump to 4.25
 
 -- fossil, new feature to optionally send commit notifications via email while using 'fossil-commit'.
@@ -54,6 +56,8 @@ Released @TBD@
 -- keepalived, version bump to 2.0.8
 
 -- arnofw (AIF), add WIREGUARD_ALLOW_OPENVPN rc.conf variable, Allow WireGuard tunnel to OpenVPN tunnel(s), disabled by default.
+
+-- ngrep, version bump to 1.47
 
 -- sngrep, version bump to 1.4.6
 
