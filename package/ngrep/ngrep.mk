@@ -4,17 +4,24 @@
 #
 #############################################################
 
-NGREP_VERSION = 1.45
-NGREP_SOURCE = ngrep-$(NGREP_VERSION).tar.bz2
-NGREP_SITE = http://$(BR2_SOURCEFORGE_MIRROR).dl.sourceforge.net/sourceforge/ngrep
+NGREP_VERSION = 1.47
+NGREP_SOURCE = ngrep-$(NGREP_VERSION).tar.gz
+NGREP_SITE = https://s3.amazonaws.com/files.astlinux-project
 NGREP_DEPENDENCIES = libpcap pcre
+NGREP_AUTORECONF = YES
+
+##
+## curl -L -o dl/ngrep-1.47.tar.gz https://github.com/jpr5/ngrep/archive/V1_47.tar.gz
+## ./scripts/upload-dl-pair dl/ngrep-1.47.tar.gz
+##
 
 NGREP_UNINSTALL_STAGING_OPT = --version
 
-NGREP_CONF_OPT += \
+NGREP_CONF_OPT = \
 	--disable-pcap-restart \
+	--disable-tcpkill \
+	--with-dropprivs-user=nobody \
 	--with-pcap-includes=$(STAGING_DIR)/usr/include/pcap \
-	--with-pcre=$(STAGING_DIR)/usr \
 	--enable-pcre \
 	--enable-ipv6
 
