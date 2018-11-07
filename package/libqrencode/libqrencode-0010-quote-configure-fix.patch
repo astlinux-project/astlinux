@@ -1,0 +1,11 @@
+--- libqrencode-4.0.2/configure.orig	2018-11-07 09:26:45.568257123 -0600
++++ libqrencode-4.0.2/configure	2018-11-07 09:27:29.531849414 -0600
+@@ -13167,7 +13167,7 @@
+ $as_echo "#define HAVE_PNG 1" >>confdefs.h
+ 
+ fi
+-	if test x$png_CFLAGS = x && test x$with_png = xyes ; then
++	if test "x$png_CFLAGS" = "x" && test x$with_png = xyes ; then
+ 		echo "
+ !!!!!!!!!!
+ LIBPNG is required to build the utility tools. Temporarily disabled.
