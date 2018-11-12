@@ -10,6 +10,8 @@ KEY_FILE="$CONFIG_DIR/keys/${WIREGUARD_IF:-wg0}.privatekey"
 
 PEER_FILE="$CONFIG_DIR/peer/${WIREGUARD_IF:-wg0}.peer"
 
+CLIENTS_PEER_DIR="$CONFIG_DIR/peer/${WIREGUARD_IF:-wg0}.clients"
+
 CONFIG_FILE="/tmp/etc/wireguard/${WIREGUARD_IF:-wg0}.conf"
 
 LOCK_FILE="/var/lock/wireguard.lock"
@@ -18,6 +20,22 @@ SCRIPT_FILE="/mnt/kd/wireguard.script"
 
 WIREGUARD_MONITOR_LOCKFILE="/var/lock/wireguard-monitor.lock"
 WIREGUARD_MONITOR_PIDFILE="/var/run/wireguard-monitor.pid"
+
+extract_client_peer()
+{
+  local client="$1"
+
+  echo "
+[Peer]
+## $client"
+
+  sed -n '/^\[Peer/,/^\[/ p' "$CLIENTS_PEER_DIR/$client.peer" | \
+  sed -e 's/^\[.*//' \
+      -e 's/^#.*//' \
+      -e '/^$/ d'
+
+  echo ""
+}
 
 get_wg_routes()
 {
@@ -60,6 +78,24 @@ gen_wireguard_initial_peer()
 "
 }
 
+gen_clients_peer()
+{
+  local list x client IFS
+
+  if [ ! -d "$CLIENTS_PEER_DIR" ]; then
+    return
+  fi
+
+  list="$(ls -1 $CLIENTS_PEER_DIR/*.peer 2>/dev/null)"
+
+  unset IFS
+  for x in $list; do
+    client="${x##*/}"
+    client="${client%.peer}"
+    extract_client_peer "$client"
+  done
+}
+
 gen_wireguard_conf()
 {
 
@@ -69,6 +105,8 @@ PrivateKey = $(cat $KEY_FILE)
 ListenPort = ${WIREGUARD_LISTEN_PORT:-51820}
 "
   cat $PEER_FILE
+
+  gen_clients_peer
 }
 
 init () {

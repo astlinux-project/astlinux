@@ -24,6 +24,7 @@ define WIREGUARD_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/src/tools/wg $(TARGET_DIR)/usr/bin/wg
 	$(INSTALL) -m 0644 -D $(@D)/src/wireguard.ko $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/kernel/drivers/net/wireguard/wireguard.ko
 	$(INSTALL) -m 0755 -D package/wireguard/wireguard-monitor $(TARGET_DIR)/usr/sbin/wireguard-monitor
+	$(INSTALL) -m 0755 -D package/wireguard/wireguard-mobile-client $(TARGET_DIR)/usr/sbin/wireguard-mobile-client
 	$(INSTALL) -m 0755 -D package/wireguard/wireguard.init $(TARGET_DIR)/etc/init.d/wireguard
 	ln -sf /tmp/etc/wireguard $(TARGET_DIR)/etc/wireguard
 	ln -sf ../../init.d/wireguard $(TARGET_DIR)/etc/runlevels/default/S31wireguard
@@ -35,6 +36,7 @@ define WIREGUARD_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/bin/wg
 	rm -f $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/kernel/drivers/net/wireguard/wireguard.ko
 	rm -f $(TARGET_DIR)/usr/sbin/wireguard-monitor
+	rm -f $(TARGET_DIR)/usr/sbin/wireguard-mobile-client
 	rm -f $(TARGET_DIR)/etc/init.d/wireguard
 	rm -f $(TARGET_DIR)/etc/wireguard
 	rm -f $(TARGET_DIR)/etc/runlevels/default/S31wireguard

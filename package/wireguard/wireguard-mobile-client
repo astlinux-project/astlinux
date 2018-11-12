@@ -1,0 +1,312 @@
+#!/bin/bash
+##
+## Manage WireGuard Mobile Client Credentials
+##
+## Usage: wireguard-mobile-client add|remove|show [client_name]
+##                                show peer client_name
+##                                show remote client_name
+##
+
+if [ $EUID -ne 0 ]; then
+  echo "wireguard-mobile-client: must be run as root, exiting." >&2
+  exit 1
+fi
+
+. /etc/rc.conf
+
+CONFIG_DIR="/mnt/kd/wireguard"
+
+PRIVKEY_FILE="$CONFIG_DIR/keys/${WIREGUARD_IF:-wg0}.privatekey"
+
+CLIENTS_KEYS_DIR="$CONFIG_DIR/keys/${WIREGUARD_IF:-wg0}.clients"
+
+CLIENTS_PEER_DIR="$CONFIG_DIR/peer/${WIREGUARD_IF:-wg0}.clients"
+
+extract_client_peer() {
+  local client="$1"
+
+  echo "
+[Peer]
+## $client"
+
+  sed -n '/^\[Peer/,/^\[/ p' "$CLIENTS_PEER_DIR/$client.peer" | \
+  sed -e 's/^\[.*//' \
+      -e 's/^#.*//' \
+      -e '/^$/ d'
+
+  echo ""
+}
+
+extract_client_remote() {
+  local client="$1"
+
+  echo "[Interface]
+PrivateKey = $(cat "$CLIENTS_KEYS_DIR/$client.privatekey")"
+
+  sed -n '/^\[Remote_Config/,/^\[/ p' "$CLIENTS_PEER_DIR/$client.peer" | \
+  sed -e 's/^\[.*//' \
+      -e 's/^#.*//' \
+      -e '/^$/ d'
+
+  echo "
+[Peer]"
+
+  sed -n '/^\[Remote_Peer/,/^\[/ p' "$CLIENTS_PEER_DIR/$client.peer" | \
+  sed -e 's/^\[.*//' \
+      -e 's/^#.*//' \
+      -e '/^$/ d'
+
+  echo ""
+}
+
+IP_NM_to_CIDR() {
+  local IP="$1" NM="$2" NETWORK PREFIX
+
+  eval $(ipcalc -np $IP $NM)
+
+  if [ -n "$NETWORK" -a -n "$PREFIX" ]; then
+    echo "$NETWORK/$PREFIX"
+  fi
+}
+
+gen_unique_addr() {
+  local str="$1" unique_hex unique_dec address unique cnt
+
+  unique=0
+  cnt=0
+  while [ $cnt -lt 5 ]; do
+    # Use printf to suppress a trailing newline before sha1sum
+    unique_hex="$(printf "$str" | sha1sum | cut -c 37-40)"
+    unique_dec="$(printf '%02d' $((16#$unique_hex % 100)))"
+
+    # address range .100 to .199
+    address="${WIREGUARD_IP%.*}.1$unique_dec"
+    if ! grep -q "^[Aa]ddress *=.*${address//./[.]}" $CLIENTS_PEER_DIR/*.peer 2>/dev/null; then
+      unique=1
+      break
+    fi
+    str="${str}-"
+    cnt=$((cnt+1))
+  done
+
+  if [ $unique -eq 0 ]; then
+    cnt=199
+    while [ $cnt -gt 100 ]; do
+      address="${WIREGUARD_IP%.*}.$cnt"
+      if ! grep -q "^[Aa]ddress *=.*${address//./[.]}" $CLIENTS_PEER_DIR/*.peer 2>/dev/null; then
+        unique=1
+        break
+      fi
+      cnt=$((cnt-1))
+    done
+  fi
+
+  if [ $unique -eq 0 ]; then
+    address=""
+  fi
+  echo "$address"
+}
+
+add_client() {
+  local client="$1" addr addr6 address pub_peer pub_remote allow allow_peer allow_remote ipv6_ex ipv6_net
+
+  if ! echo "$client" | grep -q '^[a-zA-Z0-9][a-zA-Z0-9._-]*$'; then
+    echo "wireguard-mobile-client: Client names must be alphanumeric, underbar (_), dash (-), dot (.)." >&2
+    exit 1
+  fi
+
+  if [ -f "$CLIENTS_PEER_DIR/$client.peer" ]; then
+    echo "wireguard-mobile-client: Client '$client' currently exists, specify a unique client name." >&2
+    exit 1
+  fi
+
+  addr="$(gen_unique_addr "$client")"
+  if [ -z "$addr" ]; then
+    echo "wireguard-mobile-client: can not assign a unique IPv4 address." >&2
+    exit 1
+  fi
+
+  echo "$(wg genkey)" > "$CLIENTS_KEYS_DIR/$client.privatekey"
+  chmod 600 "$CLIENTS_KEYS_DIR/$client.privatekey"
+
+  pub_peer="$(cat "$CLIENTS_KEYS_DIR/$client.privatekey" | wg pubkey)"
+
+  pub_remote="$(cat "$PRIVKEY_FILE" | wg pubkey)"
+
+  address="$(IP_NM_to_CIDR "$addr" "${WIREGUARD_NM:-255.255.255.0}")"
+  if [ -n "$address" ]; then
+    address="$addr/${address##*/}"
+  else
+    address="$addr/24"
+  fi
+
+  allow_peer="$addr/32"
+
+  allow_remote="$WIREGUARD_IP/32"
+  if [ -n "$INTIF" -a -n "$INTIP" -a -n "$INTNM" -a "$INTIF" != "none" ]; then
+    allow="$(IP_NM_to_CIDR "$INTIP" "$INTNM")"
+    if [ -n "$allow" ]; then
+      allow_remote="$allow_remote, $allow"
+    fi
+  fi
+
+  if [ "$IPV6" = "yes" -a -n "$WIREGUARD_IPV6" ]; then
+    # Calculate an IPv6 address using the same last octet of 'addr' as hex
+    ipv6_ex="$(netcalc "$WIREGUARD_IPV6" | sed -n -r -e 's/^Expanded IPv6 *: *([0-9a-fA-F:]+).*$/\1/p')"
+    addr6="${ipv6_ex%:*}:${addr##*.}"
+    addr6="$(netcalc "$addr6" | sed -n -r -e 's/^Compressed IPv6 *: *([0-9a-fA-F:]+).*$/\1/p')"
+    if [ -n "$addr6" ]; then
+      addr6="$addr6/${WIREGUARD_IPV6##*/}"
+      address="$address, $addr6"
+      allow_peer="$allow_peer, ${addr6%/*}/128"
+      allow_remote="$allow_remote, ${WIREGUARD_IPV6%/*}/128"
+      if [ -n "$INTIPV6" ]; then
+        ipv6_net="$(netcalc "$INTIPV6" | sed -n -r -e 's#^Network *: *([0-9a-fA-F:/]+).*$#\1#p')"
+        ipv6_net="$(netcalc "$ipv6_net" | sed -n -r -e 's/^Compressed IPv6 *: *([0-9a-fA-F:]+).*$/\1/p')"
+        if [ -n "$ipv6_net" ]; then
+          allow_remote="$allow_remote, $ipv6_net/${INTIPV6##*/}"
+        fi
+      fi
+    fi
+  fi
+
+  echo "## WireGuard VPN Peer
+## Client: $client
+##
+[Peer]
+PublicKey = $pub_peer
+AllowedIPs = $allow_peer
+PersistentKeepalive = 0
+
+[Remote_Peer]
+Endpoint = ${WIREGUARD_HOSTNAME:-$HOSTNAME.$DOMAIN}:${WIREGUARD_LISTEN_PORT:-51820}
+PublicKey = $pub_remote
+AllowedIPs = $allow_remote
+PersistentKeepalive = 0
+
+[Remote_Config]
+Address = $address
+" > "$CLIENTS_PEER_DIR/$client.peer"
+}
+
+remove_client() {
+  local client="$1"
+
+  rm -f "$CLIENTS_KEYS_DIR/$client.privatekey"
+
+  if [ ! -f "$CLIENTS_PEER_DIR/$client.peer" ]; then
+    echo "wireguard-mobile-client: '$client' does not exist." >&2
+    exit 1
+  fi
+  rm -f "$CLIENTS_PEER_DIR/$client.peer"
+}
+
+show_clients() {
+  local list x client IFS
+
+  list="$(ls -1 $CLIENTS_PEER_DIR/*.peer 2>/dev/null)"
+
+  unset IFS
+  for x in $list; do
+    client="${x##*/}"
+    client="${client%.peer}"
+    echo "$client"
+  done
+}
+
+show_peer() {
+  local client="$1"
+
+  if [ ! -f "$CLIENTS_PEER_DIR/$client.peer" ]; then
+    echo "wireguard-mobile-client: '$client' does not exist." >&2
+    exit 1
+  fi
+
+  extract_client_peer "$client"
+}
+
+show_remote() {
+  local client="$1"
+
+  if [ ! -f "$CLIENTS_PEER_DIR/$client.peer" ] || [ ! -f "$CLIENTS_KEYS_DIR/$client.privatekey" ]; then
+    echo "wireguard-mobile-client: '$client' does not exist." >&2
+    exit 1
+  fi
+
+  extract_client_remote "$client"
+}
+
+## main
+
+if [ -z "$WIREGUARD_IP" ] || [ ! -f "$PRIVKEY_FILE" ]; then
+  echo "wireguard-mobile-client: WireGuard is not configured, exiting." >&2
+  exit 1
+fi
+
+if [ "$IPV6" = "yes" -a -n "$WIREGUARD_IPV6" ]; then
+  case "$WIREGUARD_IPV6" in
+    */*) ;;
+      *) echo "wireguard-mobile-client: WIREGUARD_IPV6 variable is missing a /prefix, exiting." >&2
+         echo "See WireGuard VPN Configuration: in the Web Interface, 'IPv6/nn Address'." >&2
+         exit 1
+         ;;
+  esac
+fi
+
+if [ ! -d "$CLIENTS_KEYS_DIR" ]; then
+  mkdir -m 0700 -p "$CLIENTS_KEYS_DIR"
+fi
+
+if [ ! -d "$CLIENTS_PEER_DIR" ]; then
+  mkdir -p "$CLIENTS_PEER_DIR"
+fi
+
+case $1 in
+
+add)
+  if [ -z "$2" ]; then
+    echo "Usage: wireguard-mobile-client add client_name"
+    exit 1
+  fi
+  add_client "$2"
+  echo "Successfully added '$2'."
+  exit 0
+  ;;
+
+remove)
+  if [ -z "$2" ]; then
+    echo "Usage: wireguard-mobile-client remove client_name"
+    exit 1
+  fi
+  remove_client "$2"
+  echo "Successfully removed '$2'."
+  exit 0
+  ;;
+
+show)
+  case "$2" in
+      peer) if [ -z "$3" ]; then
+              echo "Usage: wireguard-mobile-client show peer client_name"
+              exit 1
+            fi
+            show_peer "$3"
+            ;;
+    remote) if [ -z "$3" ]; then
+              echo "Usage: wireguard-mobile-client show remote client_name"
+              exit 1
+            fi
+            show_remote "$3"
+            ;;
+         *) show_clients
+            ;;
+  esac
+  ;;
+
+*)
+  echo "Usage: wireguard-mobile-client add|remove|show [client_name]"
+  echo "                               show peer client_name"
+  echo "                               show remote client_name"
+  exit 1
+  ;;
+
+esac
