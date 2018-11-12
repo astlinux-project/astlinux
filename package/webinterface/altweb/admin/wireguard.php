@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2017 Lonnie Abelbeck
+// Copyright (C) 2017-2018 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -8,6 +8,7 @@
 
 // wireguard.php for AstLinux
 // 11-07-2017
+// 11-12-2018, Add Mobile Client defaults
 //
 // System location of /mnt/kd/rc.conf.d directory
 $WIREGUARDCONFDIR = '/mnt/kd/rc.conf.d';
@@ -78,6 +79,9 @@ function saveWIREGUARDsettings($conf_dir, $conf_file) {
 
   $value = 'WIREGUARD_TUNNEL_HOSTS="'.tuq($_POST['wireguard_tunnel_hosts']).'"';
   fwrite($fp, "### Allowed External Hosts\n".$value."\n");
+
+  $value = 'WIREGUARD_HOSTNAME="'.tuq($_POST['wireguard_hostname']).'"';
+  fwrite($fp, "### Mobile Client Server\n".$value."\n");
 
   fwrite($fp, "### gui.wireguard.conf - end ###\n");
   fclose($fp);
@@ -246,6 +250,18 @@ require_once '../common/header.php';
     $value = '0/0';
   }
   putHtml('<input type="text" size="48" maxlength="256" value="'.$value.'" name="wireguard_tunnel_hosts" />');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>Mobile Client Defaults:</strong>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Server Hostname:</td><td style="text-align: left;" colspan="4">');
+  if (($value = getVARdef($db, 'WIREGUARD_HOSTNAME')) === '') {
+    $value = get_HOSTNAME_DOMAIN();
+  }
+  putHtml('<input type="text" size="48" maxlength="256" value="'.$value.'" name="wireguard_hostname" />');
   putHtml('</td></tr>');
 
   if (is_file('/var/lock/wireguard.lock')) {

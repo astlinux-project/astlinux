@@ -17,6 +17,7 @@
 // 02-16-2017, Added Restart FTP Server support
 // 11-06-2017, Added WireGuard VPN Support
 // 07-25-2018, Added Keepalived Support
+// 11-12-2018, Added WireGuard VPN Mobile Client support
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -324,6 +325,7 @@ require_once '../common/header.php';
       $dir === '/mnt/kd/openvpn/ccd' ||
       $dir === '/mnt/kd/ipsec/strongswan' ||
       $dir === '/mnt/kd/wireguard/peer' ||
+      $dir === '/mnt/kd/wireguard/peer/wg0.clients' ||
       $dir === '/mnt/kd/rc.conf.d' ||
       $dir === '/mnt/kd/crontabs' ||
       $dir === '/mnt/kd/snmp' ||
@@ -652,6 +654,14 @@ require_once '../common/header.php';
       if (is_file($globfile) && is_writable($globfile)) {
         $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
         putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - WireGuard VPN Peer Config</option>');
+      }
+    }
+    if (is_dir('/mnt/kd/wireguard/peer/wg0.clients') && count($globfiles = glob('/mnt/kd/wireguard/peer/wg0.clients/*.peer')) > 0) {
+      foreach ($globfiles as $globfile) {
+        if (is_file($globfile) && is_writable($globfile)) {
+          $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
+          putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - WireGuard VPN Mobile Client Config</option>');
+        }
       }
     }
     if (is_writable($file = '/mnt/kd/wireguard.script')) {
