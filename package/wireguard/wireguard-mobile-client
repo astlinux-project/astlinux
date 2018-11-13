@@ -115,7 +115,8 @@ gen_unique_addr() {
 }
 
 add_client() {
-  local client="$1" addr addr6 address pub_peer pub_remote allow allow_peer allow_remote ipv6_ex ipv6_net
+  local client="$1" addr addr6 pub_peer pub_remote allow allow_peer allow_remote ipv6_ex ipv6_net
+  local address dns mtu
 
   if ! echo "$client" | grep -q '^[a-zA-Z0-9][a-zA-Z0-9._-]*$'; then
     echo "wireguard-mobile-client: Client names must be alphanumeric, underbar (_), dash (-), dot (.)." >&2
@@ -149,13 +150,17 @@ add_client() {
 
   allow_peer="$addr/32"
 
+  dns=""
   allow_remote="$WIREGUARD_IP/32"
   if [ -n "$INTIF" -a -n "$INTIP" -a -n "$INTNM" -a "$INTIF" != "none" ]; then
     allow="$(IP_NM_to_CIDR "$INTIP" "$INTNM")"
     if [ -n "$allow" ]; then
+      dns="$INTIP"
       allow_remote="$allow_remote, $allow"
     fi
   fi
+
+  mtu="$WIREGUARD_MTU"
 
   if [ "$IPV6" = "yes" -a -n "$WIREGUARD_IPV6" ]; then
     # Calculate an IPv6 address using the same last octet of 'addr' as hex
@@ -192,7 +197,9 @@ AllowedIPs = $allow_remote
 PersistentKeepalive = 0
 
 [Remote_Config]
-Address = $address
+Address = $address${dns:+
+DNS = $dns}${mtu:+
+MTU = $mtu}
 " > "$CLIENTS_PEER_DIR/$client.peer"
 }
 
