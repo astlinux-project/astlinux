@@ -25,6 +25,13 @@ CLIENTS_PEER_DIR="$CONFIG_DIR/peer/${WIREGUARD_IF:-wg0}.clients"
 extract_client_peer() {
   local client="$1"
 
+  if ! grep -q '^\[Peer' "$CLIENTS_PEER_DIR/$client.peer"; then
+    echo "
+## Disabled Client: $client
+"
+    return
+  fi
+
   echo "
 [Peer]
 ## $client"
