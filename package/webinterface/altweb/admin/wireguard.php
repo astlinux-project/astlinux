@@ -23,6 +23,11 @@ $wg_if_menu = array (
   'wg0' => 'wg0'
 );
 
+$wg_client_routing_menu = array (
+  'split' => 'Split: Route only to 1st LAN over VPN',
+  'full' => 'Full: Route all client traffic over VPN'
+);
+
 if (is_file($WIREGUARDCONFFILE)) {
   $db = parseRCconf($WIREGUARDCONFFILE);
 } else {
@@ -82,6 +87,9 @@ function saveWIREGUARDsettings($conf_dir, $conf_file) {
 
   $value = 'WIREGUARD_HOSTNAME="'.tuq($_POST['wireguard_hostname']).'"';
   fwrite($fp, "### Mobile Client Server\n".$value."\n");
+
+  $value = 'WIREGUARD_CLIENT_ROUTING="'.$_POST['wireguard_client_routing'].'"';
+  fwrite($fp, "### Mobile Client Routing\n".$value."\n");
 
   fwrite($fp, "### gui.wireguard.conf - end ###\n");
   fclose($fp);
@@ -262,6 +270,19 @@ require_once '../common/header.php';
     $value = get_HOSTNAME_DOMAIN();
   }
   putHtml('<input type="text" size="48" maxlength="256" value="'.$value.'" name="wireguard_hostname" />');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Client Routing:</td><td style="text-align: left;" colspan="4">');
+  if (($wg_client_routing = getVARdef($db, 'WIREGUARD_CLIENT_ROUTING')) === '') {
+    $wg_client_routing = 'split';
+  }
+  putHtml('<select name="wireguard_client_routing">');
+  foreach ($wg_client_routing_menu as $key => $value) {
+    $sel = ($wg_client_routing === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
   putHtml('</td></tr>');
 
   if (is_file('/var/lock/wireguard.lock')) {

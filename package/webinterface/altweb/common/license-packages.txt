@@ -75,3 +75,5 @@ stubby~Copyright (c) 2013-2018 NLnet Labs, Verisign, Inc. All rights reserved.
 keepalived~Copyright (c) 2001-2018 Alexandre Cassen.
 rng-tools~Copyright (c) 2001-2018 Philipp Rumpf, Neil Horman, et al.
 jitterentropy~Copyright (c) 2014-2018 Stephan Mueller.
+libpng~Copyright (c) Copyright (c) 1998-2018 Glenn Randers-Pehrson, et al.
+libqrencode~Copyright (c) Copyright (c) 2006-2018 Kentaro Fukuchi.
