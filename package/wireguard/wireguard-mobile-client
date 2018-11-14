@@ -14,6 +14,12 @@ fi
 
 . /etc/rc.conf
 
+WEB_INTERFACE_GUI_WIREGUARD="/mnt/kd/rc.conf.d/gui.wireguard.conf"
+
+if [ "$WEB_INTERFACE_GUI_WIREGUARD" -nt /etc/rc.conf ]; then
+  . $WEB_INTERFACE_GUI_WIREGUARD
+fi
+
 CONFIG_DIR="/mnt/kd/wireguard"
 
 PRIVKEY_FILE="$CONFIG_DIR/keys/${WIREGUARD_IF:-wg0}.privatekey"
@@ -162,6 +168,7 @@ add_client() {
 
   mtu="$WIREGUARD_MTU"
 
+  addr6=""
   if [ "$IPV6" = "yes" -a -n "$WIREGUARD_IPV6" ]; then
     # Calculate an IPv6 address using the same last octet of 'addr' as hex
     ipv6_ex="$(netcalc "$WIREGUARD_IPV6" | sed -n -r -e 's/^Expanded IPv6 *: *([0-9a-fA-F:]+).*$/\1/p')"
@@ -179,6 +186,13 @@ add_client() {
           allow_remote="$allow_remote, $ipv6_net/${INTIPV6##*/}"
         fi
       fi
+    fi
+  fi
+
+  if [ "$WIREGUARD_CLIENT_ROUTING" = "full" ]; then
+    allow_remote="0.0.0.0/0"
+    if [ -n "$addr6" ]; then
+      allow_remote="$allow_remote, ::/0"
     fi
   fi
 
