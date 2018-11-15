@@ -20,6 +20,8 @@ if [ "$WEB_INTERFACE_GUI_WIREGUARD" -nt /etc/rc.conf ]; then
   . $WEB_INTERFACE_GUI_WIREGUARD
 fi
 
+WG_LOCK_FILE="/var/lock/wireguard.lock"
+
 CONFIG_DIR="/mnt/kd/wireguard"
 
 PRIVKEY_FILE="$CONFIG_DIR/keys/${WIREGUARD_IF:-wg0}.privatekey"
@@ -121,7 +123,7 @@ gen_unique_addr() {
 }
 
 add_client() {
-  local client="$1" addr addr6 pub_peer pub_remote allow allow_peer allow_remote ipv6_ex ipv6_net
+  local client="$1" addr addr6 pub_peer pub_remote allow allow_peer allow_remote ipv6_ex ipv6_net wg_if
   local address dns mtu
 
   if ! echo "$client" | grep -q '^[a-zA-Z0-9][a-zA-Z0-9._-]*$'; then
@@ -215,10 +217,16 @@ Address = $address${dns:+
 DNS = $dns}${mtu:+
 MTU = $mtu}
 " > "$CLIENTS_PEER_DIR/$client.peer"
+
+  # When WireGuard is running, add the peer
+  wg_if="${WIREGUARD_IF:-wg0}"
+  if [ -f "$WG_LOCK_FILE" ] && [ "$(cat $WG_LOCK_FILE)" = "$wg_if" ]; then
+    wg set $wg_if peer "$pub_peer" allowed-ips "$allow_peer" persistent-keepalive 0
+  fi
 }
 
 remove_client() {
-  local client="$1"
+  local client="$1" wg_if pub_peer
 
   rm -f "$CLIENTS_KEYS_DIR/$client.privatekey"
 
@@ -226,6 +234,16 @@ remove_client() {
     echo "wireguard-mobile-client: '$client' does not exist." >&2
     exit 1
   fi
+
+  # When WireGuard is running, remove the peer
+  wg_if="${WIREGUARD_IF:-wg0}"
+  if [ -f "$WG_LOCK_FILE" ] && [ "$(cat $WG_LOCK_FILE)" = "$wg_if" ]; then
+    pub_peer="$(extract_client_peer "$client" | sed -n -r -e 's/^[Pp]ublic[Kk]ey *= *([^ ]+).*$/\1/p')"
+    if [ -n "$pub_peer" ]; then
+      wg set $wg_if peer "$pub_peer" remove
+    fi
+  fi
+
   rm -f "$CLIENTS_PEER_DIR/$client.peer"
 }
 
