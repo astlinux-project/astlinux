@@ -9,11 +9,14 @@
 // wireguard.php for AstLinux
 // 11-07-2017
 // 11-12-2018, Add Mobile Client defaults
+// 11-15-2018, Add Mobile Client credentials
 //
 // System location of /mnt/kd/rc.conf.d directory
 $WIREGUARDCONFDIR = '/mnt/kd/rc.conf.d';
 // System location of gui.wireguard.conf file
 $WIREGUARDCONFFILE = '/mnt/kd/rc.conf.d/gui.wireguard.conf';
+// WireGuard runtime lock file
+$WG_LOCK_FILE = '/var/lock/wireguard.lock';
 
 $myself = $_SERVER['PHP_SELF'];
 
@@ -32,6 +35,105 @@ if (is_file($WIREGUARDCONFFILE)) {
   $db = parseRCconf($WIREGUARDCONFFILE);
 } else {
   $db = NULL;
+}
+
+// Function: wireguardREADMEstr()
+//
+function wireguardREADMEstr($clientName) {
+
+  $readme = "Mobile Client \"$clientName\" Credentials for WireGuard\n\n";
+  $readme .= "$clientName.conf - The Mobile Client's WireGuard configuration in plain text.\n\n";
+  $readme .= "$clientName.png - A PNG graphics file containing a QR code of the $clientName.conf text.\n";
+  $readme .= "Scanning the QR code with your mobile device is a secure method to import the credentials.\n\n";
+  $readme .= "Note: Files '$clientName.conf' and '$clientName.png' and not encrypted and must be kept secure.\n\n";
+  $readme .= "Note: While the QR code PNG file looks obfuscated to the human eye, keep it secure.\n\n";
+
+  return($readme);
+}
+
+// Function: wireguardGENfiles
+//
+function wireguardGENfiles($client, $conf, $png) {
+
+  $cmd = '/usr/sbin/wireguard-mobile-client show remote '.$client;
+  shell($cmd.' >'.$conf.' 2>/dev/null', $status);
+  if ($status != 0) {
+    return(FALSE);
+  }
+
+  if (is_file('/usr/bin/qrencode')) {
+    $cmd = '/usr/bin/qrencode -o '.$png.' < '.$conf;
+    shell($cmd.' >/dev/null 2>/dev/null', $status);
+    if ($status != 0) {
+      return(FALSE);
+    }
+  }
+  return(TRUE);
+}
+
+// Function: add_client
+//
+function add_client($client) {
+
+  $result = 7;
+
+  $cmd = '/usr/sbin/wireguard-mobile-client add '.$client;
+  shell($cmd.' >/dev/null 2>/dev/null', $status);
+  if ($status == 0) {
+    $result = 21;
+  }
+  return($result);
+}
+
+// Function: remove_client
+//
+function remove_client($delete) {
+
+  $result = 0;
+
+  foreach ($delete as $client) {
+    $cmd = '/usr/sbin/wireguard-mobile-client remove '.$client;
+    shell($cmd.' >/dev/null 2>/dev/null', $status);
+    if ($status == 0) {
+      $result = 20;
+    } else {
+      $result = 6;
+      break;
+    }
+  }
+  return($result);
+}
+
+// Function: wireguard_SETUP
+//
+function wireguard_SETUP($if) {
+
+  $wg['config_dir'] = '/mnt/kd/wireguard';
+  $wg['clients_peer_dir'] = $wg['config_dir'].'/peer/'.$if.'.clients';
+  $wg['clients_keys_dir'] = $wg['config_dir'].'/keys/'.$if.'.clients';
+
+  $wg['client_cmd'] = '/usr/sbin/wireguard-mobile-client';
+
+  return($wg);
+}
+
+// Function: wireguardGETclients
+//
+function wireguardGETclients($wg) {
+
+  $client_list = array();
+
+  if (is_dir($wg['clients_peer_dir'])) {
+    foreach (glob($wg['clients_peer_dir'].'/*.peer') as $peer) {
+      if (is_file($peer)) {
+        $client = basename($peer, '.peer');
+        if (is_file($wg['clients_keys_dir'].'/'.$client.'.privatekey')) {
+          $client_list[] = $client;
+        }
+      }
+    }
+  }
+  return($client_list);
 }
 
 // Function: saveWIREGUARDsettings
@@ -97,6 +199,11 @@ function saveWIREGUARDsettings($conf_dir, $conf_file) {
   return($result);
 }
 
+if (($wg_if = getVARdef($db, 'WIREGUARD_IF')) === '') {
+  $wg_if = 'wg0';
+}
+$wg = wireguard_SETUP($wg_if);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (! $global_admin) {
@@ -118,6 +225,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
       $result = 5;
     }
+  } elseif (isset($_POST['submit_delete_client'])) {
+    saveWIREGUARDsettings($WIREGUARDCONFDIR, $WIREGUARDCONFFILE);
+    $delete = $_POST['delete'];
+    if (count($delete) > 0) {
+      $result = remove_client($delete);
+    } else {
+      $result = 0;
+    }
+  } elseif (isset($_POST['submit_new_client'])) {
+    saveWIREGUARDsettings($WIREGUARDCONFDIR, $WIREGUARDCONFFILE);
+    if (($value = tuq($_POST['new_client'])) !== '') {
+      if (preg_match('/^[a-zA-Z0-9][a-zA-Z0-9._-]*$/', $value)) {
+        if (! is_file($wg['clients_peer_dir'].'/'.$value.'.peer')) {
+          $result = add_client($value);
+        } else {
+          $result = 38;
+        }
+      } else {
+        $result = 39;
+      }
+    }
+  }
+  header('Location: '.$myself.'?result='.$result);
+  exit;
+} elseif (isset($_GET['client'])) {
+  $result = 4;
+  $client_list = wireguardGETclients($wg);
+  foreach ($client_list as $value) {
+    if ($value === (string)$_GET['client']) {
+      $result = 1;
+      break;
+    }
+  }
+  if (! class_exists('ZipArchive')) {
+    $result = 99;
+  } elseif ($result == 1) {
+    $tmpfile = tempnam("/tmp", "ZIP_");
+    $zip = new ZipArchive();
+    if ($zip->open($tmpfile, ZIPARCHIVE::OVERWRITE) !== TRUE) {
+      @unlink($tmpfile);
+      $result = 99;
+    } else {
+      $tmp_conf = tempnam("/tmp", "CONF_");
+      $tmp_png = tempnam("/tmp", "PNG_");
+      if (wireguardGENfiles($value, $tmp_conf, $tmp_png)) {
+        $zip->addFile($tmp_conf, $value.'/'.$value.'.conf');
+        $zip->addFile($tmp_png, $value.'/'.$value.'.png');
+      }
+      $zip->addFromString($value.'/README.txt', wireguardREADMEstr($value));
+      $zip->close();
+      @unlink($tmp_conf);
+      @unlink($tmp_png);
+
+      header('Content-Type: application/zip');
+      header('Content-Disposition: attachment; filename="wg-credentials-'.$value.'.zip"');
+      header('Content-Transfer-Encoding: binary');
+      header('Content-Length: '.filesize($tmpfile));
+      ob_clean();
+      flush();
+      @readfile($tmpfile);
+      @unlink($tmpfile);
+      exit;
+    }
   }
   header('Location: '.$myself.'?result='.$result);
   exit;
@@ -132,12 +302,26 @@ require_once '../common/header.php';
       putHtml('<p style="color: red;">No Action, check "Confirm" for this action.</p>');
     } elseif ($result == 3) {
       putHtml('<p style="color: red;">Error creating file.</p>');
+    } elseif ($result == 4) {
+      putHtml('<p style="color: red;">File Not Found.</p>');
     } elseif ($result == 5) {
       putHtml('<p style="color: red;">Peer config file not found.</p>');
+    } elseif ($result == 6) {
+      putHtml('<p style="color: red;">Mobile Client could not be deleted.</p>');
+    } elseif ($result == 7) {
+      putHtml('<p style="color: red;">Mobile Client could not be added.</p>');
     } elseif ($result == 10) {
       putHtml('<p style="color: green;">WireGuard VPN'.statusPROCESS('wireguard').'.</p>');
     } elseif ($result == 11) {
       putHtml('<p style="color: green;">Settings saved, click "Restart VPN" to apply any changed settings.</p>');
+    } elseif ($result == 20) {
+      putHtml('<p style="color: green;">Mobile Client(s) successfully deleted, WireGuard config has been updated in realtime.</p>');
+    } elseif ($result == 21) {
+      putHtml('<p style="color: green;">Mobile Client successfully added, WireGuard config has been updated in realtime.</p>');
+    } elseif ($result == 38) {
+      putHtml('<p style="color: red;">Client name currently exists, specify a unique client name.</p>');
+    } elseif ($result == 39) {
+      putHtml('<p style="color: red;">Client names must be alphanumeric, underbar (_), dash (-), dot (.)</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {
@@ -156,7 +340,7 @@ require_once '../common/header.php';
   <table width="100%" class="stdtable">
   <tr><td style="text-align: center;" colspan="3">
   <h2>WireGuard VPN Configuration:</h2>
-  </td></tr><tr><td width="160" style="text-align: center;">
+  </td></tr><tr><td width="175" style="text-align: center;">
   <input type="submit" class="formbtn" value="Save Settings" name="submit_save" />
   </td><td class="dialogText" style="text-align: center;">
   <input type="submit" class="formbtn" value="Restart VPN" name="submit_restart" />
@@ -166,7 +350,7 @@ require_once '../common/header.php';
   <input type="submit" value="Edit Peer Config" name="submit_edit_wireguard" class="button" />
   </td></tr></table>
   <table class="stdtable">
-  <tr class="dtrow0"><td width="120">&nbsp;</td><td width="50">&nbsp;</td><td width="100">&nbsp;</td><td>&nbsp;</td><td width="100">&nbsp;</td><td width="80">&nbsp;</td></tr>
+  <tr class="dtrow0"><td width="110">&nbsp;</td><td width="50">&nbsp;</td><td width="150">&nbsp;</td><td>&nbsp;</td><td width="100">&nbsp;</td><td width="120">&nbsp;</td></tr>
 <?php
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Tunnel Options:</strong>');
@@ -221,9 +405,6 @@ require_once '../common/header.php';
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Interface Device:</td><td style="text-align: left;" colspan="4">');
-  if (($wg_if = getVARdef($db, 'WIREGUARD_IF')) === '') {
-    $wg_if = 'wg0';
-  }
   putHtml('<select name="wireguard_if">');
   foreach ($wg_if_menu as $key => $value) {
     $sel = ($wg_if === $key) ? ' selected="selected"' : '';
@@ -285,17 +466,60 @@ require_once '../common/header.php';
   putHtml('</select>');
   putHtml('</td></tr>');
 
-  if (is_file('/var/lock/wireguard.lock')) {
-    if (($public_key = trim(shell_exec("/usr/bin/wg show '$wg_if' public-key 2>/dev/null"))) !== '') {
-      putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
-      putHtml('<strong>This Peer\'s Public Key:</strong>');
-      putHtml('</td></tr>');
 
-      putHtml('<tr class="dtrow1"><td class="dialogText" style="text-align: center; padding-top: 0px; padding-bottom: 0px;" colspan="6">');
-      putHtml("<pre>$public_key</pre>");
-      putHtml('</td></tr>');
+if (is_file($WG_LOCK_FILE) && trim(@file_get_contents($WG_LOCK_FILE)) === $wg_if) {
+  if (is_file($wg['client_cmd'])) {
+    putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+    putHtml('<strong>Mobile Client Credentials:</strong>');
+    putHtml('</td></tr>');
+    putHtml('<tr><td style="text-align: right;" colspan="2">');
+    putHtml('Create New Client:</td><td style="text-align: left;" colspan="3">');
+    putHtml('<input type="text" size="24" maxlength="32" value="" name="new_client" />');
+    putHtml('<input type="submit" value="New Client" name="submit_new_client" />');
+    putHtml('</td><td style="text-align: center;">');
+    putHtml('<input type="submit" value="Delete Checked" name="submit_delete_client" />');
+    putHtml('</td></tr>');
+
+    putHtml('<tr><td colspan="6"><center>');
+    $data = wireguardGETclients($wg);
+    putHtml('<table width="85%" class="datatable">');
+    putHtml("<tr>");
+
+    if (($n = count($data)) > 0) {
+      echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Client Name", "</td>";
+      echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Configuration", "</td>";
+      echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Credentials", "</td>";
+      echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Delete", "</td>";
+      for ($i = 0; $i < $n; $i++) {
+        putHtml("</tr>");
+        echo '<tr ', ($i % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
+        echo '<td style="text-align: left;">', $data[$i], '</td>';
+        echo '<td style="text-align: center;">', '<a href="/admin/edit.php?file='.$wg['clients_peer_dir'].'/'.$data[$i].'.peer" class="actionText">Edit Peer</a></td>';
+        echo '<td style="text-align: center;">', '<a href="'.$myself.'?client='.$data[$i].'" class="actionText">Download</a></td>';
+        echo '<td style="text-align: center;">', '<input type="checkbox" name="delete[]" value="'.$data[$i].'" />', '</td>';
+      }
+    } else {
+      echo '<td style="color: orange; text-align: center;">No Mobile Client Credentials.', '</td>';
     }
+
+    putHtml("</tr>");
+    putHtml("</table>");
+    putHtml('</center></td></tr>');
+
+    putHtml('<tr><td style="padding-top: 0px; padding-bottom: 0px;" colspan="6">');
+    putHtml('&nbsp;');
+    putHtml('</td></tr>');
   }
+  if (($public_key = trim(shell_exec("/usr/bin/wg show '$wg_if' public-key 2>/dev/null"))) !== '') {
+    putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+    putHtml('<strong>This Peer\'s Public Key:</strong>');
+    putHtml('</td></tr>');
+
+    putHtml('<tr class="dtrow1"><td class="dialogText" style="text-align: center; padding-top: 0px; padding-bottom: 0px;" colspan="6">');
+    putHtml("<pre>$public_key</pre>");
+    putHtml('</td></tr>');
+  }
+}
 
   putHtml('</table>');
   putHtml('</form>');
