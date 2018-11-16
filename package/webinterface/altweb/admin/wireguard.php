@@ -51,24 +51,30 @@ function wireguardREADMEstr($clientName) {
   return($readme);
 }
 
-// Function: wireguardGENfiles
+// Function: wireguardGENconf
 //
-function wireguardGENfiles($client, $conf, $png) {
+function wireguardGENconf($client, $conf) {
 
   $cmd = '/usr/sbin/wireguard-mobile-client show remote '.$client;
   shell($cmd.' >'.$conf.' 2>/dev/null', $status);
-  if ($status != 0) {
-    return(FALSE);
+  if ($status == 0) {
+    return(TRUE);
   }
+  return(FALSE);
+}
+
+// Function: wireguardGENpng
+//
+function wireguardGENpng($conf, $png) {
 
   if (is_file('/usr/bin/qrencode')) {
     $cmd = '/usr/bin/qrencode -o '.$png.' < '.$conf;
     shell($cmd.' >/dev/null 2>/dev/null', $status);
-    if ($status != 0) {
-      return(FALSE);
+    if ($status == 0) {
+      return(TRUE);
     }
   }
-  return(TRUE);
+  return(FALSE);
 }
 
 // Function: add_client
@@ -269,9 +275,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
       $tmp_conf = tempnam("/tmp", "CONF_");
       $tmp_png = tempnam("/tmp", "PNG_");
-      if (wireguardGENfiles($value, $tmp_conf, $tmp_png)) {
+      if (wireguardGENconf($value, $tmp_conf)) {
         $zip->addFile($tmp_conf, $value.'/'.$value.'.conf');
-        $zip->addFile($tmp_png, $value.'/'.$value.'.png');
+        if (wireguardGENpng($tmp_conf, $tmp_png)) {
+          $zip->addFile($tmp_png, $value.'/'.$value.'.png');
+        }
       }
       $zip->addFromString($value.'/README.txt', wireguardREADMEstr($value));
       $zip->close();
