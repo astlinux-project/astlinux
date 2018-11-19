@@ -181,7 +181,17 @@ add_client() {
       address="$address, $addr6"
       allow_peer="$allow_peer, ${addr6%/*}/128"
       allow_remote="$allow_remote, ${WIREGUARD_IPV6%/*}/128"
-      if [ -n "$INTIPV6" ]; then
+
+      # Prefer a ULA/48 network prefix if used, else use the 1st LAN prefix
+      ipv6_net=""
+      case "$WIREGUARD_IPV6" in
+        [Ff][Dd]*) ipv6_net="$(netcalc "${WIREGUARD_IPV6%/*}/48" | sed -n -r -e 's#^Network *: *([0-9a-fA-F:/]+).*$#\1#p')"
+                   ipv6_net="$(netcalc "$ipv6_net" | sed -n -r -e 's/^Compressed IPv6 *: *([0-9a-fA-F:]+).*$/\1/p')"
+                   ;;
+      esac
+      if [ -n "$ipv6_net" ]; then
+        allow_remote="$allow_remote, $ipv6_net/48"
+      elif [ -n "$INTIPV6" ]; then
         ipv6_net="$(netcalc "$INTIPV6" | sed -n -r -e 's#^Network *: *([0-9a-fA-F:/]+).*$#\1#p')"
         ipv6_net="$(netcalc "$ipv6_net" | sed -n -r -e 's/^Compressed IPv6 *: *([0-9a-fA-F:]+).*$/\1/p')"
         if [ -n "$ipv6_net" ]; then
