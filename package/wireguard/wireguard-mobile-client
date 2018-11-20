@@ -87,14 +87,15 @@ IP_NM_to_CIDR() {
 gen_unique_addr() {
   local str="$1" unique_hex unique_dec address unique cnt
 
+  # address range .101 to .199
   unique=0
   cnt=0
   while [ $cnt -lt 5 ]; do
     # Use printf to suppress a trailing newline before sha1sum
     unique_hex="$(printf "$str" | sha1sum | cut -c 37-40)"
-    unique_dec="$(printf '%02d' $((16#$unique_hex % 100)))"
+    # Use a prime modulo (97) for uniform binning, resulting range of 02-98
+    unique_dec="$(printf '%02d' $((16#$unique_hex % 97 + 2)))"
 
-    # address range .100 to .199
     address="${WIREGUARD_IP%.*}.1$unique_dec"
     if ! grep -q "^[Aa]ddress *=.*${address//./[.]}" $CLIENTS_PEER_DIR/*.peer 2>/dev/null; then
       unique=1
