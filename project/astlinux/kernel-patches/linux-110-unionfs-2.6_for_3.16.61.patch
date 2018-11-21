@@ -1,0 +1,45 @@
+--- a/fs/unionfs/Makefile	2018-11-21 13:24:53.930162375 -0600
++++ b/fs/unionfs/Makefile	2018-11-21 13:25:22.840147258 -0600
+@@ -1,4 +1,4 @@
+-UNIONFS_VERSION="2.6 (for 3.16.43)"
++UNIONFS_VERSION="2.6 (for 3.16.61)"
+ 
+ EXTRA_CFLAGS += -DUNIONFS_VERSION=\"$(UNIONFS_VERSION)\"
+ 
+--- a/fs/unionfs/main.c	2018-11-21 13:02:45.512402537 -0600
++++ b/fs/unionfs/main.c	2018-11-21 13:22:58.568051539 -0600
+@@ -20,6 +20,23 @@
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+ 
++/*
++ * Make sure other CPUs see the inode attached before the type is set.
++ * From Kernel 3.16.61, fs/dcache.c
++ */
++static inline void __d_set_inode_and_type(struct dentry *dentry,
++					  struct inode *inode,
++					  unsigned type_flags)
++{
++	unsigned flags;
++
++	dentry->d_inode = inode;
++	flags = ACCESS_ONCE(dentry->d_flags);
++	flags &= ~DCACHE_ENTRY_TYPE;
++	flags |= type_flags;
++	ACCESS_ONCE(dentry->d_flags) = flags;
++}
++
+ static void unionfs_fill_inode(struct dentry *dentry,
+ 			       struct inode *inode)
+ {
+@@ -610,7 +610,9 @@
+ 	 */
+ 	inode->i_mode = S_IFDIR | 0755;
+ 	sb->s_root = d_make_root(inode);
+-	d_set_type(sb->s_root, DCACHE_DIRECTORY_TYPE);
++	spin_lock(&sb->s_root->d_lock);
++	__d_set_inode_and_type(sb->s_root, inode, DCACHE_DIRECTORY_TYPE);
++	spin_unlock(&sb->s_root->d_lock);
+ 	if (unlikely(!sb->s_root)) {
+ 		err = -ENOMEM;
+ 		goto out_iput;
