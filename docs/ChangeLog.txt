@@ -12,6 +12,8 @@ Released @TBD@
 
 ** System
 
+-- Linux Kernel 3.16.61, security and bug fixes
+
 -- liburiparser, version bump to 0.9.0, security fixes
 
 -- libqrencode, version 4.0.2, new package used to generate QR codes.  Securely transfer credentials to mobile devices.
@@ -30,6 +32,10 @@ Released @TBD@
 
 -- strace, version bump to 4.25
 
+-- sudo, version bump to 1.8.26
+
+-- tiff, version bump to 4.0.10
+
 -- fossil, new feature to optionally send commit notifications via email while using 'fossil-commit'.
    New rc.conf variable FOSSIL_NOTIFY must be defined (via user.conf) as To: email address to enable.
    Additional new, optional rc.conf variables: FOSSIL_NOTIFY_FROM, FOSSIL_HOSTNAME
@@ -42,7 +48,7 @@ Released @TBD@
 
 ** Networking
 
--- WireGuard VPN, version bump to 0.0.20181018
+-- WireGuard VPN, version bump to 0.0.20181119
 
 -- WireGuard VPN, add wireguard-mobile-client script to manage mobile clients.  Also used by the web interface.
    New rc.conf variables WIREGUARD_HOSTNAME and WIREGUARD_CLIENT_ROUTING
@@ -60,7 +66,7 @@ Released @TBD@
 
 -- lighttpd, version bump to 1.4.51, bug and security fixes
 
--- keepalived, version bump to 2.0.8
+-- keepalived, version bump to 2.0.10
 
 -- arnofw (AIF), add WIREGUARD_ALLOW_OPENVPN rc.conf variable, Allow WireGuard tunnel to OpenVPN tunnel(s), disabled by default.
 
