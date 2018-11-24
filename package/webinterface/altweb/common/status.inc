@@ -42,6 +42,7 @@
 // 11-06-2017, Added WireGuard VPN Status
 // 03-13-2018, Added Hardware system-vendor info
 // 04-25-2018, Performance improvement using asynchronous system calls
+// 11-23-2018, Improved WireGuard VPN Status
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -521,6 +522,73 @@ function parseOpenVPNlog($log) {
   return(isset($status) ? $status : NULL);
 }
 
+// Function: parseWireGuard
+//
+function parseWireGuard($data) {
+
+  $cur_time = time();
+  if (isset($data['handshake'])) {
+    foreach($data['handshake'] as $line) {
+      if (preg_match('/^([^ \t]+)[ \t]*([0-9]+).*$/', $line, $ips)) {
+        // Stale if current Unix Epoch is greater than 3600 seconds of lastest-handshake
+        // Inactive if current Unix Epoch is greater than 135 seconds of lastest-handshake
+        $delta_time = $cur_time - (int)$ips[2];
+        if ($delta_time > 3600) {
+          $status['activity']["$ips[1]"] = 'stale';
+        } elseif ($delta_time > 135) {
+          $status['activity']["$ips[1]"] = 'inactive';
+        } else {
+          $status['activity']["$ips[1]"] = 'active';
+        }
+      }
+    }
+  }
+  if (isset($data['clients'])) {
+    foreach($data['clients'] as $line) {
+      $linetokens = explode(':', $line, 2);
+      if ($linetokens[0] !== '' && $linetokens[1] !== '') {
+        if (preg_match('/^PublicKey *= *([^ ]+).*$/i', $linetokens[1], $ips)) {
+          $client = basename($linetokens[0], '.peer');
+          $pub_key = $ips[1];
+          // Use only the first unique PublicKey encountered
+          if (! isset($status['client']["$pub_key"])) {
+            $status['client']["$pub_key"] = $client;
+          }
+        }
+      }
+    }
+  }
+  $peer = '';
+  if (isset($data['wg_show'])) {
+    foreach($data['wg_show'] as $line) {
+      if ($line[0] !== ' ' && preg_match('/^peer:[ \t]*([^ \t]+).*$/', $line, $ips)) {
+        $id = ($peer !== '') ? $id + 1 : 0;
+        $peer = $ips[1];
+        $status['peers'][$id]['peer'] = isset($status['client']["$peer"]) ? $status['client']["$peer"] : substr($peer, 0, 6);
+        $status['peers'][$id]['activity'] = isset($status['activity']["$peer"]) ? $status['activity']["$peer"] : 'unknown';
+        continue;
+      }
+      if ($line[0] === ' ' && $peer !== '') {
+        if (preg_match('/^ +([^:]+): *(.+)$/', $line, $ips)) {
+          if ($ips[1] === 'endpoint') {
+            $status['peers'][$id]['endpoint'] = $ips[2];
+            if ($status['peers'][$id]['activity'] !== 'stale') {
+              $status['info']['endpoint'] = TRUE;
+            }
+          } elseif ($ips[1] === 'transfer') {
+            $status['peers'][$id]['transfer'] = $ips[2];
+          } elseif ($ips[1] === 'latest handshake') {
+            $status['peers'][$id]['handshake'] = $ips[2];
+          } elseif ($ips[1] === 'allowed ips') {
+            $status['peers'][$id]['allowedips'] = $ips[2];
+          }
+        }
+      }
+    }
+  }
+  return($status);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if (isset($_POST['submit_pppoe'])) {
@@ -562,7 +630,12 @@ if ($daemon['charon'] > 0) {
 }
 if (is_file('/var/lock/wireguard.lock')) {
   if (getPREFdef($global_prefs, 'status_wireguard_vpn') !== 'no') {
-    $cmd = '/usr/bin/wg show | sed -n \'/^peer/,$ p\'';
+    $cmd = '. /etc/rc.conf; wg_if="${WIREGUARD_IF:-wg0}"';
+    $cmd .= '; /usr/bin/wg show $wg_if latest-handshakes';
+    $cmd .= '; echo "#next#"';
+    $cmd .= '; grep -H \'^[Pp]ublic[Kk]ey *= *[^ ][^ ].*$\' /mnt/kd/wireguard/peer/$wg_if.clients/*.peer';
+    $cmd .= '; echo "#next#"';
+    $cmd .= '; /usr/bin/wg show $wg_if | sed -n \'/^peer/,$ p\'';
     $status_wireguard_vpn = @popen($cmd, 'r');
   }
 }
@@ -1085,16 +1158,63 @@ if ($daemon['pptpd'] > 0) {
 if (isset($status_wireguard_vpn)) {
   if ($status_wireguard_vpn !== FALSE) {
     putHtml("<h2>WireGuard VPN Status:</h2>");
-    putHtml("<pre>");
 
+    $wireguard_data = array();
+    $wg_state = 0;
     while (! feof($status_wireguard_vpn)) {
       if (($line = fgets($status_wireguard_vpn, 1024)) !== FALSE) {
-        putText(rtrim($line));
+        if (strncmp($line, '#next#', 6) == 0) {
+          $wg_state++;
+          continue;
+        }
+        if ($wg_state == 0) {          // peer<TAB>latest-handshake
+          $wireguard_data['handshake'][] = rtrim($line);
+        } elseif ($wg_state == 1) {    // filename<COLON>PublicKey, for client names
+          $wireguard_data['clients'][] = rtrim($line);
+        } elseif ($wg_state == 2) {    // wg show
+          $wireguard_data['wg_show'][] = rtrim($line);
+        }
       }
     }
     pclose($status_wireguard_vpn);
+    $wireguard = parseWireGuard($wireguard_data);
+    unset($wireguard_data);
 
-    putHtml("</pre>");
+    if (isset($wireguard['peers'], $wireguard['info']['endpoint']) && ($n = count($wireguard['peers'])) > 0) {
+      putHtml('<pre><table class="statusdatatable">');
+      putHtml("<tr>");
+      echo "<td>", "Peer", "</td>";
+      echo "<td>", "Endpoint", "</td>";
+      echo "<td>", "Activity", "</td>";
+      echo "<td>", "Transfer", "</td>";
+      echo "<td>", "Handshake", "</td>";
+      for ($i = 0; $i < $n; $i++) {
+        if (! isset($wireguard['peers'][$i]['endpoint']) || $wireguard['peers'][$i]['activity'] === 'stale') {
+          continue;
+        }
+        putHtml("</tr><tr>");
+        echo "<td>", $wireguard['peers'][$i]['peer'], "</td>";
+        echo "<td>", $wireguard['peers'][$i]['endpoint'], "</td>";
+        echo "<td>", $wireguard['peers'][$i]['activity'], "</td>";
+        echo "<td>", $wireguard['peers'][$i]['transfer'], "</td>";
+        echo "<td>", $wireguard['peers'][$i]['handshake'], "</td>";
+        if (isset($wireguard['peers'][$i]['allowedips'])) {
+          putHtml("</tr><tr>");
+          echo "<td>&nbsp;</td>";
+          echo '<td colspan="4">', "Allowed-IPs:&nbsp;", $wireguard['peers'][$i]['allowedips'], "</td>";
+        }
+      }
+      putHtml("</tr>");
+      putHtml("</table></pre>");
+    } elseif (isset($wireguard['peers'])) {
+      putHtml("<pre>");
+      putText('No Tunnels established within the hour using the WireGuard VPN');
+      putHtml("</pre>");
+    } else {
+      putHtml("<pre>");
+      putText('No Peers configured for WireGuard');
+      putHtml("</pre>");
+    }
   }
 }
 
