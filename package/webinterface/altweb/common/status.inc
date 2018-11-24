@@ -561,14 +561,17 @@ function parseWireGuard($data) {
   $peer = '';
   if (isset($data['wg_show'])) {
     foreach($data['wg_show'] as $line) {
-      if ($line[0] !== ' ' && preg_match('/^peer:[ \t]*([^ \t]+).*$/', $line, $ips)) {
-        $id = ($peer !== '') ? $id + 1 : 0;
-        $peer = $ips[1];
-        $status['peers'][$id]['peer'] = isset($status['client']["$peer"]) ? $status['client']["$peer"] : substr($peer, 0, 6);
-        $status['peers'][$id]['activity'] = isset($status['activity']["$peer"]) ? $status['activity']["$peer"] : 'unknown';
+      if ($line === '') {
         continue;
       }
-      if ($line[0] === ' ' && $peer !== '') {
+      if ($line[0] !== ' ') {
+        if (preg_match('/^peer:[ \t]*([^ \t]+).*$/', $line, $ips)) {
+          $id = ($peer !== '') ? $id + 1 : 0;
+          $peer = $ips[1];
+          $status['peers'][$id]['peer'] = isset($status['client']["$peer"]) ? $status['client']["$peer"] : substr($peer, 0, 6);
+          $status['peers'][$id]['activity'] = isset($status['activity']["$peer"]) ? $status['activity']["$peer"] : 'unknown';
+        }
+      } elseif ($peer !== '') {
         if (preg_match('/^ +([^:]+): *(.+)$/', $line, $ips)) {
           if ($ips[1] === 'endpoint') {
             $status['peers'][$id]['endpoint'] = $ips[2];
@@ -1163,16 +1166,16 @@ if (isset($status_wireguard_vpn)) {
     $wg_state = 0;
     while (! feof($status_wireguard_vpn)) {
       if (($line = fgets($status_wireguard_vpn, 1024)) !== FALSE) {
-        if (strncmp($line, '#next#', 6) == 0) {
+        if (($line = rtrim($line)) === '#next#') {
           $wg_state++;
           continue;
         }
         if ($wg_state == 0) {          // peer<TAB>latest-handshake
-          $wireguard_data['handshake'][] = rtrim($line);
+          $wireguard_data['handshake'][] = $line;
         } elseif ($wg_state == 1) {    // filename<COLON>PublicKey, for client names
-          $wireguard_data['clients'][] = rtrim($line);
+          $wireguard_data['clients'][] = $line;
         } elseif ($wg_state == 2) {    // wg show
-          $wireguard_data['wg_show'][] = rtrim($line);
+          $wireguard_data['wg_show'][] = $line;
         }
       }
     }
@@ -1208,7 +1211,7 @@ if (isset($status_wireguard_vpn)) {
       putHtml("</table></pre>");
     } elseif (isset($wireguard['peers'])) {
       putHtml("<pre>");
-      putText('No Tunnels established within the hour using the WireGuard VPN');
+      putText('No Tunnels established within the last hour using the WireGuard VPN');
       putHtml("</pre>");
     } else {
       putHtml("<pre>");
