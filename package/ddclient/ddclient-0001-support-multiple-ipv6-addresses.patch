@@ -1,0 +1,92 @@
+From 3301d99ad53750adcf96699aaed8bc57ecfc66e2 Mon Sep 17 00:00:00 2001
+From: David Kerr <david@kerr.net>
+Date: Fri, 23 Nov 2018 14:44:44 -0500
+Subject: [PATCH] Fix Cloudflare, duckdns and he services to permit multiple
+ different IPv6 addresses in the same conf file.
+
+---
+ ddclient | 30 ++++++++++++------------------
+ 1 file changed, 12 insertions(+), 18 deletions(-)
+
+diff --git a/ddclient b/ddclient
+index 0b6383e..08dbdfd 100755
+--- a/ddclient
++++ b/ddclient
+@@ -4377,8 +4377,6 @@ sub nic_cloudflare_update {
+         my @hosts = @{$groups{$sig}};
+         my $hosts = join(',', @hosts);
+         my $key   = $hosts[0];
+-        my $ip    = $config{$key}{'wantip'};
+-        my $ipv6  = $config{$key}{'wantipv6'};
+ 
+         my $headers = "X-Auth-Email: $config{$key}{'login'}\n";
+         $headers .= "X-Auth-Key: $config{$key}{'password'}\n";
+@@ -4387,8 +4385,8 @@ sub nic_cloudflare_update {
+         # FQDNs
+         for my $domain (@hosts) {
+             (my $hostname = $domain) =~ s/\.$config{$key}{zone}$//;
+-            delete $config{$domain}{'wantip'};
+-            delete $config{$domain}{'wantipv6'};
++            my $ip    = delete $config{$domain}{'wantip'};
++            my $ipv6  = delete $config{$domain}{'wantipv6'};
+ 
+             info("getting Cloudflare Zone ID for %s", $domain);
+ 
+@@ -4458,9 +4456,9 @@ sub nic_cloudflare_update {
+                 }
+ 
+                 # Cache
+-                $config{$key}{'ip'}     = $ip;
+-                $config{$key}{'mtime'}  = $now;
+-                $config{$key}{'status'} = 'good';
++                $config{$domain}{'ip'}     = $ip;
++                $config{$domain}{'mtime'}  = $now;
++                $config{$domain}{'status'} = 'good';
+             }
+ 
+             if (defined($ipv6)) {
+@@ -4506,9 +4504,9 @@ sub nic_cloudflare_update {
+                 }
+ 
+                 # Cache
+-                $config{$key}{'ipv6'}        = $ipv6;
+-                $config{$key}{'mtime'}       = $now;
+-                $config{$key}{'status-ipv6'} = 'good';
++                $config{$domain}{'ipv6'}        = $ipv6;
++                $config{$domain}{'mtime'}       = $now;
++                $config{$domain}{'status-ipv6'} = 'good';
+             }
+         }
+     }
+@@ -4558,13 +4556,11 @@ sub nic_duckdns_update {
+     foreach my $sig (keys %groups) {
+         my @hosts = @{$groups{$sig}};
+         my $key   = $hosts[0];
+-        my $ip    = $config{$key}{'wantip'};
+-        my $ipv6  = $config{$key}{'wantipv6'};
+ 
+         # FQDNs
+         for my $host (@hosts) {
+-            delete $config{$host}{'wantip'};
+-            delete $config{$host}{'wantipv6'};
++            my $ip    = delete $config{$host}{'wantip'};
++            my $ipv6  = delete $config{$host}{'wantipv6'};
+ 
+             my $nq_host = $host;
+             $nq_host =~ s/\.duckdns\.org$//;
+@@ -4684,13 +4680,11 @@ sub nic_he_update {
+     foreach my $sig (keys %groups) {
+         my @hosts = @{$groups{$sig}};
+         my $key   = $hosts[0];
+-        my $ip    = $config{$key}{'wantip'};
+-        my $ipv6  = $config{$key}{'wantipv6'};
+ 
+         # FQDNs
+         for my $host (@hosts) {
+-            delete $config{$host}{'wantip'};
+-            delete $config{$host}{'wantipv6'};
++            my $ip    = delete $config{$host}{'wantip'};
++            my $ipv6  = delete $config{$host}{'wantipv6'};
+ 
+             if (defined($ip)) {
+                 info("setting IPv4 address to %s for %s", $ip, $host);
