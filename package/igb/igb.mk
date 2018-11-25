@@ -4,7 +4,7 @@
 #
 #############################################################
 
-IGB_VERSION = 5.3.5.20
+IGB_VERSION = 5.3.5.22
 IGB_SOURCE:=igb-$(IGB_VERSION).tar.gz
 IGB_SITE = http://downloads.sourceforge.net/project/e1000/igb%20stable/$(IGB_VERSION)
 IGB_DEPENDENCIES = linux
