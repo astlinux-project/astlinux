@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 3.16.61, security and bug fixes
 
+-- igb, version bump to 5.3.5.22, Intel Gigabit Ethernet Network Driver
+
 -- liburiparser, version bump to 0.9.0, security fixes
 
 -- libqrencode, version 4.0.2, new package used to generate QR codes.  Securely transfer credentials to mobile devices.
@@ -40,6 +42,8 @@ Released @TBD@
    New rc.conf variable FOSSIL_NOTIFY must be defined (via user.conf) as To: email address to enable.
    Additional new, optional rc.conf variables: FOSSIL_NOTIFY_FROM, FOSSIL_HOSTNAME
 
+-- system-vendor, update system-vendor.ids
+
 -- ca-certificates, update trusted root certificates 2018-10-17
 
 -- Time Zone Database update, tzdata2018g and php-timezonedb-2018.7
@@ -47,6 +51,8 @@ Released @TBD@
 -- mac2vendor, oui.txt database snapshot 2018-10-21
 
 ** Networking
+
+-- OpenSSL, version bump to 1.0.2q, security fixes: CVE-2018-0734, CVE-2018-5407
 
 -- WireGuard VPN, version bump to 0.0.20181119
 
@@ -99,8 +105,10 @@ Released @TBD@
 
 -- Firewall sub-tab, add WIREGUARD_ALLOW_OPENVPN rc.conf variable support
 
--- WireGuard VPN sub-tab, add "Mobile Client Defaults" and "Mobile Client Credentials" sections. 
+-- WireGuard VPN sub-tab, add "Mobile Client Defaults" and "Mobile Client Credentials" sections.
    Mobile clients can be added and deleted, configurations edited and credentials (including a QR code) downloaded.
+
+-- Status tab, improve layout of "WireGuard VPN Status" section.
 
 
 Additions for AstLinux 1.3.4:
