@@ -235,7 +235,7 @@ require_once '../common/header.php';
   putHtml('MAC Address matched via DHCP for IPv4 address <i>(optional)</i>:<input type="text" size="20" maxlength="17" name="mac" value="'.$ldb['mac'].'" />');
   putHtml('</td></tr>');
   putHtml('<tr><td class="dialogText" style="text-align: right;" colspan="2">');
-  putHtml('Comment <i>(optional)</i>:<input type="text" size="42" maxlength="42" name="comment" value="'.htmlspecialchars($ldb['comment']).'" />');
+  putHtml('Comment <i>(optional)</i>:<input type="text" size="60" maxlength="60" name="comment" value="'.htmlspecialchars($ldb['comment']).'" />');
   putHtml('</td></tr>');
   putHtml('</table>');
 
