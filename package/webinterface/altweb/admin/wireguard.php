@@ -193,7 +193,11 @@ function saveWIREGUARDsettings($conf_dir, $conf_file) {
   $value = 'WIREGUARD_TUNNEL_HOSTS="'.tuq($_POST['wireguard_tunnel_hosts']).'"';
   fwrite($fp, "### Allowed External Hosts\n".$value."\n");
 
-  $value = 'WIREGUARD_HOSTNAME="'.tuq($_POST['wireguard_hostname']).'"';
+  $value = tuq($_POST['wireguard_hostname']);
+  if ($value !== '' && strpos($value, ':') !== FALSE) {
+    $value = '['.trim($value, '[]').']';  // [ipv6]
+  }
+  $value = 'WIREGUARD_HOSTNAME="'.$value.'"';
   fwrite($fp, "### Mobile Client Server\n".$value."\n");
 
   $value = 'WIREGUARD_CLIENT_ROUTING="'.$_POST['wireguard_client_routing'].'"';
