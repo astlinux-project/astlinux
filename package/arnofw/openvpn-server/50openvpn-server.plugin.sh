@@ -2,14 +2,14 @@
 #             -= Arno's iptables firewall - OpenVPN Server plugin =-
 #
 PLUGIN_NAME="OpenVPN Server plugin"
-PLUGIN_VERSION="1.01"
+PLUGIN_VERSION="1.02"
 PLUGIN_CONF_FILE="openvpn-server.conf"
 #
-# Last changed          : February 11, 2013
+# Last changed          : November 28, 2018
 # Requirements          : AIF 2.0.0+
 # Comments              : This plugin allows access to an OpenVPN Server.
 #
-# Author                : (C) Copyright 2012-2013 by Lonnie Abelbeck & Arno van Amersfoort
+# Author                : (C) Copyright 2012-2018 by Lonnie Abelbeck & Arno van Amersfoort
 # Homepage              : http://rocky.eld.leidenuniv.nl/
 # Email                 : a r n o v a AT r o c k y DOT e l d DOT l e i d e n u n i v DOT n l
 #                         (note: you must remove all spaces and substitute the @ and the .
@@ -48,6 +48,13 @@ plugin_start()
   for host in $(ip_range "$OPENVPN_SERVER_TUNNEL_HOSTS"); do
     iptables -A EXT_INPUT_CHAIN -p $proto --dport $port -s $host -j ACCEPT
   done
+
+  if [ "$OPENVPN_SERVER_CLIENT_ISOLATION" = "yes" -a -n "$OPENVPN_SERVER_IF" ]; then
+    echo "${INDENT}Denying OpenVPN Server Client->CLient traffic"
+    iptables -A FORWARD_CHAIN -i $OPENVPN_SERVER_IF -o $OPENVPN_SERVER_IF -j DROP
+  else
+    echo "${INDENT}Allowing OpenVPN Server Client->CLient traffic"
+  fi
 
   return 0
 }

@@ -2,14 +2,14 @@
 #             -= Arno's iptables firewall - WireGuard VPN plugin =-
 #
 PLUGIN_NAME="WireGuard VPN plugin"
-PLUGIN_VERSION="1.00"
+PLUGIN_VERSION="1.01"
 PLUGIN_CONF_FILE="wireguard-vpn.conf"
 #
-# Last changed          : November 8, 2017
+# Last changed          : November 28, 2018
 # Requirements          : AIF 2.0.0+
 # Comments              : This plugin allows access to a WireGuard VPN.
 #
-# Author                : (C) Copyright 2017 by Lonnie Abelbeck & Arno van Amersfoort
+# Author                : (C) Copyright 2018 by Lonnie Abelbeck & Arno van Amersfoort
 # Homepage              : http://rocky.eld.leidenuniv.nl/
 # Email                 : a r n o v a AT r o c k y DOT e l d DOT l e i d e n u n i v DOT n l
 #                         (note: you must remove all spaces and substitute the @ and the .
@@ -44,6 +44,13 @@ plugin_start()
   for host in $(ip_range "$WIREGUARD_VPN_TUNNEL_HOSTS"); do
     iptables -A EXT_INPUT_CHAIN -p udp --dport $port -s $host -j ACCEPT
   done
+
+  if [ "$WIREGUARD_VPN_PEER_ISOLATION" = "yes" -a -n "$WIREGUARD_VPN_IF" ]; then
+    echo "${INDENT}Denying WireGuard VPN Peer->Peer traffic"
+    iptables -A FORWARD_CHAIN -i $WIREGUARD_VPN_IF -o $WIREGUARD_VPN_IF -j DROP
+  else
+    echo "${INDENT}Allowing WireGuard VPN Peer->Peer traffic"
+  fi
 
   return 0
 }

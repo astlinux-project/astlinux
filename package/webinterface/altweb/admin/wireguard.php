@@ -26,6 +26,11 @@ $wg_if_menu = array (
   'wg0' => 'wg0'
 );
 
+$wg_peer_isolation_menu = array (
+  'no'  => 'Pass Peer->Peer traffic',
+  'yes' => 'Deny Peer->Peer traffic'
+);
+
 $wg_client_routing_menu = array (
   'split' => 'Split: Route only to 1st LAN over VPN',
   'full' => 'Full: Route all client traffic over VPN'
@@ -192,6 +197,9 @@ function saveWIREGUARDsettings($conf_dir, $conf_file) {
 
   $value = 'WIREGUARD_TUNNEL_HOSTS="'.tuq($_POST['wireguard_tunnel_hosts']).'"';
   fwrite($fp, "### Allowed External Hosts\n".$value."\n");
+
+  $value = 'WIREGUARD_PEER_ISOLATION="'.$_POST['isolation'].'"';
+  fwrite($fp, "### Peer Isolation\n".$value."\n");
 
   $value = tuq($_POST['wireguard_hostname']);
   if ($value !== '' && strpos($value, ':') !== FALSE) {
@@ -451,6 +459,17 @@ require_once '../common/header.php';
     $value = '0/0';
   }
   putHtml('<input type="text" size="48" maxlength="256" value="'.$value.'" name="wireguard_tunnel_hosts" />');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Peer Isolation:</td><td style="text-align: left;" colspan="4">');
+  $isolation = getVARdef($db, 'WIREGUARD_PEER_ISOLATION');
+  putHtml('<select name="isolation">');
+  foreach ($wg_peer_isolation_menu as $key => $value) {
+    $sel = ($isolation === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');

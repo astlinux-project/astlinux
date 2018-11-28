@@ -140,6 +140,11 @@ $topology_menu = array (
   'subnet' => '[subnet] latest, requires OpenVPN 2.1+ clients'
 );
 
+$client_isolation_menu = array (
+  'no'  => 'Pass Client->Client traffic',
+  'yes' => 'Deny Client->Client traffic'
+);
+
 // Function: saveOVPNsettings
 //
 function saveOVPNsettings($conf_dir, $conf_file, $disabled = NULL) {
@@ -184,6 +189,9 @@ function saveOVPNsettings($conf_dir, $conf_file, $disabled = NULL) {
 
   $value = 'OVPN_TUNNEL_HOSTS="'.tuq($_POST['tunnel_external_hosts']).'"';
   fwrite($fp, "### Allowed External Hosts\n".$value."\n");
+
+  $value = 'OVPN_CLIENT_ISOLATION="'.$_POST['isolation'].'"';
+  fwrite($fp, "### Client Isolation\n".$value."\n");
 
   $value = 'OVPN_HOSTNAME="'.tuq($_POST['server_hostname']).'"';
   fwrite($fp, "### Server Hostname\n".$value."\n");
@@ -737,6 +745,18 @@ require_once '../common/header.php';
     $value = '0/0';
   }
   putHtml('<input type="text" size="48" maxlength="200" name="tunnel_external_hosts" value="'.$value.'" />');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Client Isolation:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  $isolation = getVARdef($db, 'OVPN_CLIENT_ISOLATION');
+  putHtml('<select name="isolation">');
+  foreach ($client_isolation_menu as $key => $value) {
+    $sel = ($isolation === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
