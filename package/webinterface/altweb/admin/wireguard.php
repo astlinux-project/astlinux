@@ -26,6 +26,19 @@ $wg_if_menu = array (
   'wg0' => 'wg0'
 );
 
+$wg_redirect_ports_menu = array (
+  ''  => 'none',
+  '443' => 'UDP/443',
+  '443,4500' => 'UDP/443,4500',
+  '80,443' => 'UDP/80,443',
+  '53,80,443' => 'UDP/53,80,443',
+  '53,443,4500' => 'UDP/53,443,4500',
+  '53,4500,5223' => 'UDP/53,4500,5223',
+  '53,80,443,4500' => 'UDP/53,80,443,4500',
+  '53,80,443,5223' => 'UDP/53,80,443,5223',
+  '53,80,443,4500,5223' => 'UDP/53,80,443,4500,5223'
+);
+
 $wg_peer_isolation_menu = array (
   'no'  => 'Pass Peer->Peer traffic',
   'yes' => 'Deny Peer->Peer traffic'
@@ -197,6 +210,9 @@ function saveWIREGUARDsettings($conf_dir, $conf_file) {
 
   $value = 'WIREGUARD_TUNNEL_HOSTS="'.tuq($_POST['wireguard_tunnel_hosts']).'"';
   fwrite($fp, "### Allowed External Hosts\n".$value."\n");
+
+  $value = 'WIREGUARD_REDIRECT_PORTS="'.$_POST['redirect_ports'].'"';
+  fwrite($fp, "### Redirect Ports\n".$value."\n");
 
   $value = 'WIREGUARD_PEER_ISOLATION="'.$_POST['isolation'].'"';
   fwrite($fp, "### Peer Isolation\n".$value."\n");
@@ -459,6 +475,18 @@ require_once '../common/header.php';
     $value = '0/0';
   }
   putHtml('<input type="text" size="48" maxlength="256" value="'.$value.'" name="wireguard_tunnel_hosts" />');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Redirect Ports:</td><td style="text-align: left;" colspan="4">');
+  $redirect_ports = getVARdef($db, 'WIREGUARD_REDIRECT_PORTS');
+  putHtml('<select name="redirect_ports">');
+  foreach ($wg_redirect_ports_menu as $key => $value) {
+    $sel = ($redirect_ports === (string)$key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('to UDP Listen Port');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');

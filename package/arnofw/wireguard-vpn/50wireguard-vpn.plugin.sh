@@ -32,7 +32,7 @@ PLUGIN_CONF_FILE="wireguard-vpn.conf"
 # Plugin start function
 plugin_start()
 {
-  local host port IFS
+  local host port redirect_ports eif IFS
 
   if [ -z "$WIREGUARD_VPN_TUNNEL_HOSTS" ]; then
     WIREGUARD_VPN_TUNNEL_HOSTS="0/0"
@@ -50,6 +50,22 @@ plugin_start()
     iptables -A FORWARD_CHAIN -i $WIREGUARD_VPN_IF -o $WIREGUARD_VPN_IF -j DROP
   else
     echo "${INDENT}Allowing WireGuard VPN Peer->Peer traffic"
+  fi
+
+  if [ -n "$WIREGUARD_VPN_REDIRECT_PORTS" ]; then
+    redirect_ports=""
+    IFS=' ,'
+    for port in $WIREGUARD_VPN_REDIRECT_PORTS; do
+      redirect_ports="$redirect_ports${redirect_ports:+,}$port"
+    done
+    if [ -n "$redirect_ports" ]; then
+      port="$WIREGUARD_VPN_PORT"
+      echo "${INDENT}Redirecting internet IPv4 UDP ports: $redirect_ports to WireGuard VPN listen port: $port"
+      IFS=' ,'
+      for eif in ${NAT_IF:-$EXT_IF}; do
+        ip4tables -t nat -A POST_NAT_PREROUTING_CHAIN -i $eif -p udp -m multiport --dports "$redirect_ports" -j REDIRECT --to-ports $port
+      done
+    fi
   fi
 
   return 0
