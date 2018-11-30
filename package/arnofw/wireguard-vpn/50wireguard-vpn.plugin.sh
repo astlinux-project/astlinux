@@ -56,7 +56,9 @@ plugin_start()
     redirect_ports=""
     IFS=' ,'
     for port in $WIREGUARD_VPN_REDIRECT_PORTS; do
-      redirect_ports="$redirect_ports${redirect_ports:+,}$port"
+      if [ "$port" != "$WIREGUARD_VPN_PORT" ]; then
+        redirect_ports="$redirect_ports${redirect_ports:+,}$port"
+      fi
     done
     if [ -n "$redirect_ports" ]; then
       port="$WIREGUARD_VPN_PORT"
