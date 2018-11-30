@@ -78,6 +78,7 @@ Released @TBD@
 
 -- arnofw (AIF), add WIREGUARD_ALLOW_OPENVPN rc.conf variable, Allow WireGuard tunnel to OpenVPN tunnel(s), disabled by default.
    Add OVPN_CLIENT_ISOLATION and WIREGUARD_PEER_ISOLATION rc.conf variables, OpenVPN and WireGuard plugins, disabled by default.
+   Add WIREGUARD_REDIRECT_PORTS rc.conf variable, WireGuard plugin, disabled by default.
 
 -- ngrep, version bump to 1.47
 
@@ -114,6 +115,8 @@ Released @TBD@
 -- Status tab, improve layout of "WireGuard VPN Status" section.
 
 -- OpenVPN Server and WireGuard VPN sub-tabs, add "Client Isolation" and "Peer Isolation" firewall options.
+
+-- WireGuard VPN sub-tab, add "Redirect Ports" firewall option.
 
 
 Additions for AstLinux 1.3.4:
