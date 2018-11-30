@@ -159,12 +159,11 @@ add_client() {
 
   allow_peer="$addr/32"
 
-  dns=""
+  dns="$WIREGUARD_IP"
   allow_remote="$WIREGUARD_IP/32"
   if [ -n "$INTIF" -a -n "$INTIP" -a -n "$INTNM" -a "$INTIF" != "none" ]; then
     allow="$(IP_NM_to_CIDR "$INTIP" "$INTNM")"
     if [ -n "$allow" ]; then
-      dns="$INTIP"
       allow_remote="$allow_remote, $allow"
     fi
   fi
