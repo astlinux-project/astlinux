@@ -1,0 +1,374 @@
+From f13db69012304f4d8145f14730ea0d1425006c31 Mon Sep 17 00:00:00 2001
+From: Glenn Strauss <gstrauss@gluelogic.com>
+Date: Thu, 15 Nov 2018 03:35:55 -0500
+Subject: [PATCH] [core] fix setting of headers previously reset (fixes #2919)
+
+bug may result in long delays when using mod_deflate on connections
+with keep-alive, as the result is sent without Content-Length or
+Transfer-Encoding
+
+(regression in lighttpd 1.4.51)
+
+(thx GilGalaad)
+
+x-ref:
+  "high latency on 1.4.51 + proxy + deflate"
+  https://redmine.lighttpd.net/boards/2/topics/8365
+  https://redmine.lighttpd.net/issues/2919
+---
+ src/connections-glue.c |  2 +-
+ src/connections.c      |  3 +--
+ src/http-header-glue.c | 10 ++++---
+ src/http_header.c      | 61 +++++++++++++++++++++++++++++-------------
+ src/http_header.h      |  2 ++
+ src/mod_cgi.c          |  5 ++--
+ src/mod_deflate.c      |  5 ++--
+ src/mod_magnet.c       |  4 ++-
+ src/mod_proxy.c        |  5 ++--
+ src/mod_setenv.c       |  8 ++++--
+ src/request.c          |  5 ++--
+ src/response.c         |  3 +--
+ 12 files changed, 70 insertions(+), 43 deletions(-)
+
+diff --git a/src/connections-glue.c b/src/connections-glue.c
+index a7df5b6d..b1db56de 100644
+--- a/src/connections-glue.c
++++ b/src/connections-glue.c
+@@ -439,7 +439,7 @@ handler_t connection_handle_read_post_state(server *srv, connection *con) {
+ 	    && chunkqueue_is_empty(con->write_queue) && con->is_writable) {
+ 		buffer *vb = http_header_request_get(con, HTTP_HEADER_EXPECT, CONST_STR_LEN("Expect"));
+ 		if (NULL != vb && 0 == buffer_caseless_compare(CONST_BUF_LEN(vb), CONST_STR_LEN("100-continue"))) {
+-			buffer_reset(vb); /* unset value in request headers */
++			http_header_request_unset(con, HTTP_HEADER_EXPECT, CONST_STR_LEN("Expect"));
+ 			if (!connection_write_100_continue(srv, con)) {
+ 				return HANDLER_ERROR;
+ 			}
+diff --git a/src/connections.c b/src/connections.c
+index 3119ee46..0c5ea2af 100644
+--- a/src/connections.c
++++ b/src/connections.c
+@@ -391,8 +391,7 @@ static int connection_handle_write_prepare(server *srv, connection *con) {
+ 			    con->http_status == 204 ||
+ 			    con->http_status == 304) {
+ 				/* no Content-Body, no Content-Length */
+-				buffer *vb = http_header_response_get(con, HTTP_HEADER_CONTENT_LENGTH, CONST_STR_LEN("Content-Length"));
+-				if (NULL != vb) buffer_reset(vb); /* Headers with empty values are ignored for output */
++				http_header_response_unset(con, HTTP_HEADER_CONTENT_LENGTH, CONST_STR_LEN("Content-Length"));
+ 			} else if (qlen > 0 || con->request.http_method != HTTP_METHOD_HEAD) {
+ 				/* qlen = 0 is important for Redirects (301, ...) as they MAY have
+ 				 * a content. Browsers are waiting for a Content otherwise
+diff --git a/src/http-header-glue.c b/src/http-header-glue.c
+index bc379370..be8df872 100644
+--- a/src/http-header-glue.c
++++ b/src/http-header-glue.c
+@@ -189,12 +189,12 @@ int http_response_handle_cachable(server *srv, connection *con, buffer *mtime) {
+ void http_response_body_clear (connection *con, int preserve_length) {
+     con->response.send_chunked = 0;
+     if (con->response.htags & HTTP_HEADER_TRANSFER_ENCODING) {
+-        http_header_response_set(con, HTTP_HEADER_TRANSFER_ENCODING, CONST_STR_LEN("Transfer-Encoding"), CONST_STR_LEN(""));
++        http_header_response_unset(con, HTTP_HEADER_TRANSFER_ENCODING, CONST_STR_LEN("Transfer-Encoding"));
+     }
+     if (!preserve_length) { /* preserve for HEAD responses and no-content responses (204, 205, 304) */
+         con->response.content_length = -1;
+         if (con->response.htags & HTTP_HEADER_CONTENT_LENGTH) {
+-            http_header_response_set(con, HTTP_HEADER_CONTENT_LENGTH, CONST_STR_LEN("Content-Length"), CONST_STR_LEN(""));
++            http_header_response_unset(con, HTTP_HEADER_CONTENT_LENGTH, CONST_STR_LEN("Content-Length"));
+         }
+     }
+     chunkqueue_reset(con->write_queue);
+@@ -553,7 +553,7 @@ static void http_response_xsendfile (server *srv, connection *con, buffer *path,
+ 	 * determined by open(), fstat() to reduces race conditions if the file
+ 	 * is modified between stat() (stat_cache_get_entry()) and open(). */
+ 	if (con->response.htags & HTTP_HEADER_CONTENT_LENGTH) {
+-		http_header_response_set(con, HTTP_HEADER_CONTENT_LENGTH, CONST_STR_LEN("Content-Length"), CONST_STR_LEN(""));
++		http_header_response_unset(con, HTTP_HEADER_CONTENT_LENGTH, CONST_STR_LEN("Content-Length"));
+ 		con->response.content_length = -1;
+ 	}
+ 
+@@ -605,7 +605,7 @@ static void http_response_xsendfile2(server *srv, connection *con, const buffer
+ 
+     /* reset Content-Length, if set by backend */
+     if (con->response.htags & HTTP_HEADER_CONTENT_LENGTH) {
+-        http_header_response_set(con, HTTP_HEADER_CONTENT_LENGTH, CONST_STR_LEN("Content-Length"), CONST_STR_LEN(""));
++        http_header_response_unset(con, HTTP_HEADER_CONTENT_LENGTH, CONST_STR_LEN("Content-Length"));
+         con->response.content_length = -1;
+     }
+ 
+@@ -1106,6 +1106,7 @@ handler_t http_response_parse_headers(server *srv, connection *con, http_respons
+         if (opts->backend == BACKEND_FASTCGI
+             && NULL != (vb = http_header_response_get(con, HTTP_HEADER_OTHER, CONST_STR_LEN("X-Sendfile2")))) {
+             http_response_xsendfile2(srv, con, vb, opts->xsendfile_docroot);
++            /* http_header_response_unset() shortcut for HTTP_HEADER_OTHER */
+             buffer_reset(vb); /*(do not send to client)*/
+             if (con->mode == DIRECT) con->file_started = 0;
+             return HANDLER_FINISHED;
+@@ -1113,6 +1114,7 @@ handler_t http_response_parse_headers(server *srv, connection *con, http_respons
+                    || (opts->backend == BACKEND_FASTCGI /* X-LIGHTTPD-send-file is deprecated; historical for fastcgi */
+                        && NULL != (vb = http_header_response_get(con, HTTP_HEADER_OTHER, CONST_STR_LEN("X-LIGHTTPD-send-file"))))) {
+             http_response_xsendfile(srv, con, vb, opts->xsendfile_docroot);
++            /* http_header_response_unset() shortcut for HTTP_HEADER_OTHER */
+             buffer_reset(vb); /*(do not send to client)*/
+             if (con->mode == DIRECT) con->file_started = 0;
+             return HANDLER_FINISHED;
+diff --git a/src/http_header.c b/src/http_header.c
+index 3dfd77ef..22e0d70c 100644
+--- a/src/http_header.c
++++ b/src/http_header.c
+@@ -64,26 +64,36 @@ buffer * http_header_response_get(connection *con, enum http_header_e id, const
+     return ds && !buffer_string_is_empty(ds->value) ? ds->value : NULL;
+ }
+ 
++void http_header_response_unset(connection *con, enum http_header_e id, const char *k, size_t klen) {
++    if (id <= HTTP_HEADER_OTHER || (con->response.htags & id)) {
++        if (id > HTTP_HEADER_OTHER) con->response.htags &= ~id;
++        array_set_key_value(con->response.headers, k, klen, CONST_STR_LEN(""));
++    }
++}
++
+ void http_header_response_set(connection *con, enum http_header_e id, const char *k, size_t klen, const char *v, size_t vlen) {
+     /* set value, including setting blank value if 0 == vlen
+      * (note: if 0 == vlen, header is still inserted with blank value,
+      *  which is used to indicate a "removed" header)
+      */
+-    con->response.htags |= id;
++    if (id > HTTP_HEADER_OTHER)
++        (vlen) ? (con->response.htags |= id) : (con->response.htags &= ~id);
+     array_set_key_value(con->response.headers, k, klen, v, vlen);
+ }
+ 
+ void http_header_response_append(connection *con, enum http_header_e id, const char *k, size_t klen, const char *v, size_t vlen) {
+     if (vlen) {
+-        buffer *vb = (id <= HTTP_HEADER_OTHER || (con->response.htags & id))
+-          ? http_header_response_get(con, id, k, klen)
++        data_string *ds= (id <= HTTP_HEADER_OTHER || (con->response.htags & id))
++          ? (data_string *)array_get_element_klen(con->response.headers,k,klen)
+           : NULL;
+-        if (NULL == vb) {
++        if (id > HTTP_HEADER_OTHER) con->response.htags |= id;
++        if (NULL == ds) {
+             array_insert_key_value(con->response.headers, k, klen, v, vlen);
+-            con->response.htags |= id;
+         }
+         else { /* append value */
+-            buffer_append_string_len(vb, CONST_STR_LEN(", "));
++            buffer *vb = ds->value;
++            if (!buffer_string_is_empty(vb))
++                buffer_append_string_len(vb, CONST_STR_LEN(", "));
+             buffer_append_string_len(vb, v, vlen);
+         }
+     }
+@@ -91,17 +101,20 @@ void http_header_response_append(connection *con, enum http_header_e id, const c
+ 
+ void http_header_response_insert(connection *con, enum http_header_e id, const char *k, size_t klen, const char *v, size_t vlen) {
+     if (vlen) {
+-        buffer *vb = (id <= HTTP_HEADER_OTHER || (con->response.htags & id))
+-          ? http_header_response_get(con, id, k, klen)
++        data_string *ds= (id <= HTTP_HEADER_OTHER || (con->response.htags & id))
++          ? (data_string *)array_get_element_klen(con->response.headers,k,klen)
+           : NULL;
+-        if (NULL == vb) {
++        if (id > HTTP_HEADER_OTHER) con->response.htags |= id;
++        if (NULL == ds) {
+             array_insert_key_value(con->response.headers, k, klen, v, vlen);
+-            con->response.htags |= id;
+         }
+         else { /* append value */
+-            buffer_append_string_len(vb, CONST_STR_LEN("\r\n"));
+-            buffer_append_string_len(vb, k, klen);
+-            buffer_append_string_len(vb, CONST_STR_LEN(": "));
++            buffer *vb = ds->value;
++            if (!buffer_string_is_empty(vb)) {
++                buffer_append_string_len(vb, CONST_STR_LEN("\r\n"));
++                buffer_append_string_len(vb, k, klen);
++                buffer_append_string_len(vb, CONST_STR_LEN(": "));
++            }
+             buffer_append_string_len(vb, v, vlen);
+         }
+     }
+@@ -116,26 +129,36 @@ buffer * http_header_request_get(connection *con, enum http_header_e id, const c
+     return ds && !buffer_string_is_empty(ds->value) ? ds->value : NULL;
+ }
+ 
++void http_header_request_unset(connection *con, enum http_header_e id, const char *k, size_t klen) {
++    if (id <= HTTP_HEADER_OTHER || (con->request.htags & id)) {
++        if (id > HTTP_HEADER_OTHER) con->request.htags &= ~id;
++        array_set_key_value(con->request.headers, k, klen, CONST_STR_LEN(""));
++    }
++}
++
+ void http_header_request_set(connection *con, enum http_header_e id, const char *k, size_t klen, const char *v, size_t vlen) {
+     /* set value, including setting blank value if 0 == vlen
+      * (note: if 0 == vlen, header is still inserted with blank value,
+      *  which is used to indicate a "removed" header)
+      */
+-    con->request.htags |= id;
++    if (id > HTTP_HEADER_OTHER)
++        (vlen) ? (con->request.htags |= id) : (con->request.htags &= ~id);
+     array_set_key_value(con->request.headers, k, klen, v, vlen);
+ }
+ 
+ void http_header_request_append(connection *con, enum http_header_e id, const char *k, size_t klen, const char *v, size_t vlen) {
+     if (vlen) {
+-        buffer *vb = (id <= HTTP_HEADER_OTHER || (con->request.htags & id))
+-          ? http_header_request_get(con, id, k, klen)
++        data_string *ds = (id <= HTTP_HEADER_OTHER || (con->request.htags & id))
++          ? (data_string *)array_get_element_klen(con->request.headers, k, klen)
+           : NULL;
+-        if (NULL == vb) {
++        if (id > HTTP_HEADER_OTHER) con->request.htags |= id;
++        if (NULL == ds) {
+             array_insert_key_value(con->request.headers, k, klen, v, vlen);
+-            con->request.htags |= id;
+         }
+         else { /* append value */
+-            buffer_append_string_len(vb, CONST_STR_LEN(", "));
++            buffer *vb = ds->value;
++            if (!buffer_string_is_empty(vb))
++                buffer_append_string_len(vb, CONST_STR_LEN(", "));
+             buffer_append_string_len(vb, v, vlen);
+         }
+     }
+diff --git a/src/http_header.h b/src/http_header.h
+index 34183337..f19d1d96 100644
+--- a/src/http_header.h
++++ b/src/http_header.h
+@@ -42,11 +42,13 @@ enum http_header_e {
+ enum http_header_e http_header_hkey_get(const char *s, size_t slen);
+ 
+ buffer * http_header_response_get(connection *con, enum http_header_e id, const char *k, size_t klen);
++void http_header_response_unset(connection *con, enum http_header_e id, const char *k, size_t klen);
+ void http_header_response_set(connection *con, enum http_header_e id, const char *k, size_t klen, const char *v, size_t vlen);
+ void http_header_response_append(connection *con, enum http_header_e id, const char *k, size_t klen, const char *v, size_t vlen);
+ void http_header_response_insert(connection *con, enum http_header_e id, const char *k, size_t klen, const char *v, size_t vlen);
+ 
+ buffer * http_header_request_get(connection *con, enum http_header_e id, const char *k, size_t klen);
++void http_header_request_unset(connection *con, enum http_header_e id, const char *k, size_t klen);
+ void http_header_request_set(connection *con, enum http_header_e id, const char *k, size_t klen, const char *v, size_t vlen);
+ void http_header_request_append(connection *con, enum http_header_e id, const char *k, size_t klen, const char *v, size_t vlen);
+ 
+diff --git a/src/mod_cgi.c b/src/mod_cgi.c
+index 9752e7c1..9f0be509 100644
+--- a/src/mod_cgi.c
++++ b/src/mod_cgi.c
+@@ -367,9 +367,8 @@ static handler_t cgi_response_headers(server *srv, connection *con, struct http_
+             /* preserve prior questionable behavior; likely broken behavior
+              * anyway if backend thinks connection is being upgraded but client
+              * does not receive Connection: upgrade */
+-            http_header_response_set(con, HTTP_HEADER_UPGRADE,
+-                                     CONST_STR_LEN("Upgrade"),
+-                                     CONST_STR_LEN(""));
++            http_header_response_unset(con, HTTP_HEADER_UPGRADE,
++                                       CONST_STR_LEN("Upgrade"));
+           #endif
+         }
+     }
+diff --git a/src/mod_deflate.c b/src/mod_deflate.c
+index 3cb57e43..0a4a70b4 100644
+--- a/src/mod_deflate.c
++++ b/src/mod_deflate.c
+@@ -1196,13 +1196,12 @@ CONNECTION_FUNC(mod_deflate_handle_response_start) {
+ 			vb->ptr[etaglen-1] = '"'; /*(overwrite '-')*/
+ 			buffer_string_set_length(vb, etaglen);
+ 		}
+-		vb = http_header_response_get(con, HTTP_HEADER_CONTENT_ENCODING, CONST_STR_LEN("Content-Encoding"));
+-		if (vb) buffer_reset(vb); /* headers with empty values are ignored for output */
++		http_header_response_unset(con, HTTP_HEADER_CONTENT_ENCODING, CONST_STR_LEN("Content-Encoding"));
+ 		return HANDLER_GO_ON;
+ 	}
+ 
+ 	if (con->response.htags & HTTP_HEADER_CONTENT_LENGTH) {
+-		http_header_response_set(con, HTTP_HEADER_CONTENT_LENGTH, CONST_STR_LEN("Content-Length"), CONST_STR_LEN(""));
++		http_header_response_unset(con, HTTP_HEADER_CONTENT_LENGTH, CONST_STR_LEN("Content-Length"));
+ 	}
+ 	con->plugin_ctx[p->id] = hctx;
+ 
+diff --git a/src/mod_magnet.c b/src/mod_magnet.c
+index 4d46d7e0..1f9223a0 100644
+--- a/src/mod_magnet.c
++++ b/src/mod_magnet.c
+@@ -672,7 +672,9 @@ static int magnet_copy_response_header(connection *con, lua_State *L, int lighty
+ 				const_buffer val = magnet_checkconstbuffer(L, -1);
+ 				enum http_header_e id = http_header_hkey_get(key.ptr, key.len);
+ 
+-				http_header_response_set(con, id, key.ptr, key.len, val.ptr, val.len);
++				val.len
++				  ? http_header_response_set(con, id, key.ptr, key.len, val.ptr, val.len)
++				  : http_header_response_unset(con, id, key.ptr, key.len);
+ 			}
+ 
+ 			lua_pop(L, 1);
+diff --git a/src/mod_proxy.c b/src/mod_proxy.c
+index f43c0d8e..ee9b4328 100644
+--- a/src/mod_proxy.c
++++ b/src/mod_proxy.c
+@@ -932,9 +932,8 @@ static handler_t proxy_response_headers(server *srv, connection *con, struct htt
+             /* preserve prior questionable behavior; likely broken behavior
+              * anyway if backend thinks connection is being upgraded but client
+              * does not receive Connection: upgrade */
+-            http_header_response_set(con, HTTP_HEADER_UPGRADE,
+-                                     CONST_STR_LEN("Upgrade"),
+-                                     CONST_STR_LEN(""));
++            http_header_response_unset(con, HTTP_HEADER_UPGRADE,
++                                       CONST_STR_LEN("Upgrade"))
+           #endif
+         }
+     }
+diff --git a/src/mod_setenv.c b/src/mod_setenv.c
+index ba8627b9..43eb7abe 100644
+--- a/src/mod_setenv.c
++++ b/src/mod_setenv.c
+@@ -227,7 +227,9 @@ URIHANDLER_FUNC(mod_setenv_uri_handler) {
+ 	for (k = 0; k < hctx->conf.set_request_header->used; ++k) {
+ 		data_string *ds = (data_string *)hctx->conf.set_request_header->data[k];
+ 		enum http_header_e id = http_header_hkey_get(CONST_BUF_LEN(ds->key));
+-		http_header_request_set(con, id, CONST_BUF_LEN(ds->key), CONST_BUF_LEN(ds->value));
++		!buffer_string_is_empty(ds->value)
++		  ? http_header_request_set(con, id, CONST_BUF_LEN(ds->key), CONST_BUF_LEN(ds->value))
++		  : http_header_request_unset(con, id, CONST_BUF_LEN(ds->key));
+ 	}
+ 
+ 	return HANDLER_GO_ON;
+@@ -269,7 +271,9 @@ CONNECTION_FUNC(mod_setenv_handle_response_start) {
+ 	for (size_t k = 0; k < hctx->conf.set_response_header->used; ++k) {
+ 		data_string *ds = (data_string *)hctx->conf.set_response_header->data[k];
+ 		enum http_header_e id = http_header_hkey_get(CONST_BUF_LEN(ds->key));
+-		http_header_response_set(con, id, CONST_BUF_LEN(ds->key), CONST_BUF_LEN(ds->value));
++		!buffer_string_is_empty(ds->value)
++		  ? http_header_response_set(con, id, CONST_BUF_LEN(ds->key), CONST_BUF_LEN(ds->value))
++		  : http_header_response_unset(con, id, CONST_BUF_LEN(ds->key));
+ 	}
+ 
+ 	return HANDLER_GO_ON;
+diff --git a/src/request.c b/src/request.c
+index 4f1d616f..a540f733 100644
+--- a/src/request.c
++++ b/src/request.c
+@@ -1111,12 +1111,11 @@ int http_request_parse(server *srv, connection *con) {
+ 
+ 			/* reset value for Transfer-Encoding, a hop-by-hop header,
+ 			 * which must not be blindly forwarded to backends */
+-			buffer_reset(vb); /* headers with empty values are ignored */
++			http_header_request_unset(con, HTTP_HEADER_TRANSFER_ENCODING, CONST_STR_LEN("Transfer-Encoding"));
+ 
+ 			/*(note: ignore whether or not Content-Length was provided)*/
+ 		        if (con->request.htags & HTTP_HEADER_CONTENT_LENGTH) {
+-				vb = http_header_request_get(con, HTTP_HEADER_CONTENT_LENGTH, CONST_STR_LEN("Content-Length"));
+-				if (NULL != vb) buffer_reset(vb); /* headers with empty values are ignored */
++				http_header_request_unset(con, HTTP_HEADER_CONTENT_LENGTH, CONST_STR_LEN("Content-Length"));
+ 			}
+ 
+ 			state.con_length_set = 1;
+diff --git a/src/response.c b/src/response.c
+index b22c9ec6..71b255d8 100644
+--- a/src/response.c
++++ b/src/response.c
+@@ -49,8 +49,7 @@ int http_response_write_header(server *srv, connection *con) {
+ 	}
+ 
+ 	if (304 == con->http_status && (con->response.htags & HTTP_HEADER_CONTENT_ENCODING)) {
+-		buffer *vb = http_header_response_get(con, HTTP_HEADER_CONTENT_ENCODING, CONST_STR_LEN("Content-Encoding"));
+-		if (NULL != vb) buffer_reset(vb);
++		http_header_response_unset(con, HTTP_HEADER_CONTENT_ENCODING, CONST_STR_LEN("Content-Encoding"));
+ 	}
+ 
+ 	/* add all headers */

@@ -1,0 +1,31 @@
+From 41b50cfa713dbb037e29cbc1dc27680e9df017b1 Mon Sep 17 00:00:00 2001
+From: Glenn Strauss <gstrauss@gluelogic.com>
+Date: Thu, 15 Nov 2018 03:31:12 -0500
+Subject: [PATCH] [core] fix 301 -> 302 overwrite with Location (fixes #2918)
+
+fix bug resulting in status code being overwritten from 301 to 302 if
+Location response header is returned by a backend which is not mod_proxy
+
+(regression in lighttpd 1.4.51)
+
+(thx shochodev)
+
+x-ref:
+  "lighttpd is not obeying the http status code sent by our application (302 sent by lighttpd when 301 is sent by application)"
+  https://redmine.lighttpd.net/issues/2918
+---
+ src/http-header-glue.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/http-header-glue.c b/src/http-header-glue.c
+index 36c7f883..bc379370 100644
+--- a/src/http-header-glue.c
++++ b/src/http-header-glue.c
+@@ -929,6 +929,7 @@ static int http_response_process_headers(server *srv, connection *con, http_resp
+                 status = strtol(value, NULL, 10);
+                 if (status >= 100 && status < 1000) {
+                     con->http_status = status;
++                    status_is_set = 1;
+                 } else {
+                     con->http_status = 502;
+                     con->mode = DIRECT;
