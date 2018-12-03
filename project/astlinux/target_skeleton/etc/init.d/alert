@@ -18,11 +18,23 @@ dev_to_ipv4_networks()
 
 welcome_msg()
 {
-  local asterisk="" memtotal memavail board release
+  local asterisk="" cpu cpu_cores cpu_speed memtotal memavail board release
 
   if [ -x /usr/sbin/asterisk ]; then
     asterisk="$(/usr/sbin/asterisk -V)"
   fi
+
+  cpu="$(sed -n -r 's/^model name[[:space:]]*:[[:space:]]*([^@]+).*$/\1/p' /proc/cpuinfo | head -n1)"
+  cpu="$(echo $cpu | sed -e 's/([^)]*)//g' -e 's/ CPU//g')"
+  cpu_cores="$(grep -c "^processor" /proc/cpuinfo)"
+  cpu_speed="$(sed -n -r 's/^cpu MHz[[:space:]]*:[[:space:]]*([0-9]+).*$/\1/p' /proc/cpuinfo | head -n1)"
+  case $((cpu_speed % 10)) in
+    9) cpu_speed=$((cpu_speed+1)) ;;
+    8) cpu_speed=$((cpu_speed+2)) ;;
+    2) cpu_speed=$((cpu_speed-2)) ;;
+    1) cpu_speed=$((cpu_speed-1)) ;;
+  esac
+  cpu="${cpu} (${cpu_cores}x) @ ${cpu_speed} MHz"
 
   memtotal="$(awk '/^MemTotal:/ { print int(($2 + 512) / 1024) }' /proc/meminfo)"
   memavail="$(awk '/^MemAvailable:/ { print int(($2 + 512) / 1024) }' /proc/meminfo)"
@@ -49,7 +61,8 @@ welcome_msg()
        Hostname: $HOSTNAME
          Domain: $DOMAIN
           Linux: $(uname -r -m)
-     RAM Memory: $memtotal MB, Available $memavail MB
+            CPU: $cpu
+            RAM: $memtotal MB, Available $memavail MB
      Board Type: $board${vendor:+
        Hardware: $vendor}
 
@@ -60,6 +73,22 @@ welcome_msg()
       Interface: $INT4IF (4th LAN)    IPv4 Network: $(dev_to_ipv4_networks $INT4IF)}${DMZIF:+
       Interface: $DMZIF (The DMZ)    IPv4 Network: $(dev_to_ipv4_networks $DMZIF)}
 "
+  if [ "$ENABLE_MOTD" != "no" ] && [ ! -f /tmp/etc/motd ]; then
+    local H='\033[40m\033[1;32m'
+    local L='\033[1;31m'
+    local N='\033[0m'
+    echo -e "${H}|||||${N}
+${H}| A |${N}     ${L}Release:${N} ${release}${asterisk:+ - $asterisk}
+${H}| s |${N}    ${L}Hostname:${N} $HOSTNAME
+${H}| t |${N}      ${L}Domain:${N} $DOMAIN
+${H}| L |${N}       ${L}Linux:${N} $(uname -r -m)
+${H}| i |${N}         ${L}CPU:${N} $cpu
+${H}| n |${N}         ${L}RAM:${N} $memtotal MB
+${H}| u |${N}  ${L}Board Type:${N} $board
+${H}| x |${N}    ${L}Hardware:${N} ${vendor:-Generic $(uname -m)}
+${H}|||||${N}" >/tmp/etc/motd
+  fi
+
   # Add a one second delay to allow the message to transmit since getty immediately
   # follows this service and flushes any unsent serial data for a serial console.
   sleep 1
