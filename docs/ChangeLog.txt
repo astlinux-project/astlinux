@@ -42,6 +42,9 @@ Released @TBD@
    New rc.conf variable FOSSIL_NOTIFY must be defined (via user.conf) as To: email address to enable.
    Additional new, optional rc.conf variables: FOSSIL_NOTIFY_FROM, FOSSIL_HOSTNAME
 
+-- alert, on boot build a default /etc/motd MOTD file, displayed at post-login by ssh, console and CLI Tab login
+   New rc.conf variable ENABLE_MOTD, display MOTD at post-login, "yes" or "no", defaults to "yes"
+
 -- system-vendor, update system-vendor.ids
 
 -- ca-certificates, update trusted root certificates 2018-10-17
