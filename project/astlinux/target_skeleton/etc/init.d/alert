@@ -58,8 +58,7 @@ welcome_msg()
   echo "
   System information (as of $(date))
 
-       Hostname: $HOSTNAME
-         Domain: $DOMAIN
+      Host Name: $HOSTNAME.$DOMAIN
           Linux: $(uname -r -m)
             CPU: $cpu
             RAM: $memtotal MB, Available $memavail MB
@@ -79,8 +78,8 @@ welcome_msg()
     local N='\033[0m'
     echo -e "${H}|||||${N}
 ${H}| A |${N}     ${L}Release:${N} ${release}${asterisk:+ - $asterisk}
-${H}| s |${N}    ${L}Hostname:${N} $HOSTNAME
-${H}| t |${N}      ${L}Domain:${N} $DOMAIN
+${H}| s |${N}   ${L}Host Name:${N} $HOSTNAME.$DOMAIN
+${H}| t |${N}   ${L}Last Boot:${N} $(date '+%Y-%m-%d %H:%M')
 ${H}| L |${N}       ${L}Linux:${N} $(uname -r -m)
 ${H}| i |${N}         ${L}CPU:${N} $cpu
 ${H}| n |${N}         ${L}RAM:${N} $memtotal MB
