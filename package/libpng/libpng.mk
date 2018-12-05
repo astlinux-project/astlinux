@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LIBPNG_VERSION = 1.6.35
+LIBPNG_VERSION = 1.6.36
 LIBPNG_SERIES = 16
 LIBPNG_SOURCE = libpng-$(LIBPNG_VERSION).tar.xz
 LIBPNG_SITE = http://downloads.sourceforge.net/project/libpng/libpng$(LIBPNG_SERIES)/$(LIBPNG_VERSION)
@@ -26,7 +26,7 @@ endef
 LIBPNG_POST_INSTALL_STAGING_HOOKS += LIBPNG_STAGING_LIBPNG_SERIES_CONFIG_FIXUP
 
 define LIBPNG_REMOVE_CONFIG_SCRIPTS
-	$(RM) -f $(TARGET_DIR)/usr/bin/libpng$(LIBPNG_SERIES)-config \
+	$(RM) $(TARGET_DIR)/usr/bin/libpng$(LIBPNG_SERIES)-config \
 		 $(TARGET_DIR)/usr/bin/libpng-config
 endef
 LIBPNG_POST_INSTALL_TARGET_HOOKS += LIBPNG_REMOVE_CONFIG_SCRIPTS
