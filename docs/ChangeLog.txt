@@ -20,7 +20,7 @@ Released @TBD@
 
 -- libqrencode, version 4.0.2, new package used to generate QR codes.  Securely transfer credentials to mobile devices.
 
--- libpng, version 1.6.35, new package used by qrencode.
+-- libpng, version 1.6.36, new package used by qrencode.
 
 -- ethtool, version bump to 4.19
 
@@ -88,7 +88,7 @@ Released @TBD@
 
 -- sngrep, version bump to 1.4.6
 
--- unbound (host), version bump to 1.8.1
+-- unbound (host), version bump to 1.8.2
 
 -- whois, version bump to 5.4.0
 
