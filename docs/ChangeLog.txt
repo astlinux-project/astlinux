@@ -26,9 +26,13 @@ Released @TBD@
 
 -- kexec, version bump to 2.0.18
 
+-- logrotate, version bump to 3.15.0
+
 -- ncurses, major version bump to 6.1
 
 -- pciutils, version bump to 3.6.2
+
+-- php, version bump to 5.6.39
 
 -- sqlite, version bump to 3.25.3
 
@@ -48,7 +52,7 @@ Released @TBD@
 
 -- system-vendor, update system-vendor.ids
 
--- ca-certificates, update trusted root certificates 2018-10-17
+-- ca-certificates, update trusted root certificates 2018-12-05
 
 -- Time Zone Database update, tzdata2018g and php-timezonedb-2018.7
 
@@ -83,6 +87,8 @@ Released @TBD@
 -- arnofw (AIF), add WIREGUARD_ALLOW_OPENVPN rc.conf variable, Allow WireGuard tunnel to OpenVPN tunnel(s), disabled by default.
    Add OVPN_CLIENT_ISOLATION and WIREGUARD_PEER_ISOLATION rc.conf variables, OpenVPN and WireGuard plugins, disabled by default.
    Add WIREGUARD_REDIRECT_PORTS rc.conf variable, WireGuard plugin, disabled by default.
+
+-- msmtp, version bump to 1.8.1
 
 -- ngrep, version bump to 1.47
 
