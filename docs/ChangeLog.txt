@@ -22,11 +22,15 @@ Released @TBD@
 
 -- libpng, version 1.6.36, new package used by qrencode.
 
+-- libedit, version bump to 20181209-3.1
+
 -- ethtool, version bump to 4.19
 
 -- kexec, version bump to 2.0.18
 
 -- logrotate, version bump to 3.15.0
+
+-- jansson, version bump to 2.12 (Asterisk 13)
 
 -- ncurses, major version bump to 6.1
 
@@ -67,7 +71,7 @@ Released @TBD@
 -- WireGuard VPN, add wireguard-mobile-client script to manage mobile clients.  Also used by the web interface.
    New rc.conf variables WIREGUARD_HOSTNAME and WIREGUARD_CLIENT_ROUTING
 
--- libcurl (curl) version bump to 7.62.0, security fixes: CVE-2018-16839, CVE-2018-16840, CVE-2018-16842
+-- libcurl (curl) version bump to 7.63.0, security fixes: CVE-2018-16839, CVE-2018-16840, CVE-2018-16842
 
 -- prosody, version bump to 0.10.3
 
@@ -94,7 +98,7 @@ Released @TBD@
 
 -- sngrep, version bump to 1.4.6
 
--- unbound (host), version bump to 1.8.2
+-- unbound (host), version bump to 1.8.3
 
 -- whois, version bump to 5.4.0
 
@@ -103,11 +107,11 @@ Released @TBD@
 
 ** Asterisk
 
--- Asterisk 11.25.3 (no change) and 13.23.1 (no change)
+-- Asterisk 11.25.3 (no change) and 13.24.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
--- pjsip 2.7.2 (no change)
+-- pjsip 2.8 (version bump)
 
 -- FOP2, available version bump to 2.31.20.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
