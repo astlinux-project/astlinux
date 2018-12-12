@@ -7,7 +7,7 @@ ifeq ($(BR2_PACKAGE_ASTERISK_v11),y)
 ASTERISK_VERSION := 11.25.3
 else
  ifeq ($(BR2_PACKAGE_ASTERISK_v13),y)
-ASTERISK_VERSION := 13.23.1
+ASTERISK_VERSION := 13.24.0
  endif
 endif
 ASTERISK_SOURCE := asterisk-$(ASTERISK_VERSION).tar.gz
@@ -200,6 +200,11 @@ ASTERISK_CONFIGURE_ARGS+= \
                         --without-libxslt
 endif
 
+else
+## Asterisk 11.x
+ASTERISK_CONFIGURE_ARGS+= \
+		--without-pwlib \
+		--with-ltdl=$(STAGING_DIR)/usr
 endif
 
 $(DL_DIR)/$(ASTERISK_SOURCE):
@@ -228,8 +233,6 @@ $(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | host-automake host-pkg-c
 		--exec-prefix=/usr \
 		--datadir=/usr/share \
 		--sysconfdir=/etc \
-		--without-pwlib \
-		--with-ltdl=$(STAGING_DIR)/usr \
 		$(ASTERISK_CONFIGURE_ARGS) \
 		$(ASTERISK_CONFIGURE_ENV) \
 		CFLAGS='$(TARGET_CFLAGS)' \

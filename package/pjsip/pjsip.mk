@@ -4,9 +4,10 @@
 #
 ################################################################################
 
-PJSIP_VERSION = 2.7.2
+PJSIP_VERSION = 2.8
 PJSIP_SOURCE = pjproject-$(PJSIP_VERSION).tar.bz2
 PJSIP_SITE = https://raw.githubusercontent.com/asterisk/third-party/master/pjproject/$(PJSIP_VERSION)
+
 PJSIP_INSTALL_STAGING = YES
 
 define PJSIP_CUSTOM_CONFIG
@@ -36,7 +37,6 @@ PJSIP_CONF_OPT = \
 	--disable-v4l2 \
 	--disable-sound \
 	--disable-ext-sound \
-	--disable-oss \
 	--disable-sdl \
 	--disable-libyuv \
 	--disable-libwebrtc \
