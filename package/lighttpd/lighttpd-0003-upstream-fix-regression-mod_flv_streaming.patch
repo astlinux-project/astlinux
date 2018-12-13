@@ -1,0 +1,50 @@
+From 685f4ed62c45aac8196166cf8b5f32f5a8416cb5 Mon Sep 17 00:00:00 2001
+From: Glenn Strauss <gstrauss@gluelogic.com>
+Date: Sun, 2 Dec 2018 00:50:33 -0500
+Subject: [PATCH] [mod_cml,mod_flv_streaming] fix NULL ptr deref
+
+fix possible NULL pointer dereference when query string not present
+and no previous query strings processed by that specific connection
+instance
+
+regression in lighttpd 1.4.51 (mod_flv_streaming)
+regression in lighttpd 1.4.52 (mod_cml)
+
+workaround for mod_flv_streaming:
+  url.rewrite-once = ( "\.flv$" => "${url.path}?" )
+(similar workaround for mod_cml)
+
+(thx fab)
+
+x-ref:
+  "segfault with mod_flv_streaming"
+  https://redmine.lighttpd.net/boards/2/topics/8404
+---
+ src/mod_cml_lua.c       | 1 +
+ src/mod_flv_streaming.c | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/src/mod_cml_lua.c b/src/mod_cml_lua.c
+index daf15917..41b55436 100644
+--- a/src/mod_cml_lua.c
++++ b/src/mod_cml_lua.c
+@@ -67,6 +67,7 @@ static int cache_export_get_params(lua_State *L, int tbl, buffer *qrystr) {
+ 	size_t i, len;
+ 	char *key = NULL, *val = NULL;
+ 
++	if (buffer_string_is_empty(qrystr)) return 0;
+ 	key = qrystr->ptr;
+ 
+ 	/* we need the \0 */
+diff --git a/src/mod_flv_streaming.c b/src/mod_flv_streaming.c
+index 90d980a4..cb6186f6 100644
+--- a/src/mod_flv_streaming.c
++++ b/src/mod_flv_streaming.c
+@@ -121,6 +121,7 @@ static int split_get_params(array *get_params, buffer *qrystr) {
+ 	size_t is_key = 1, klen = 0;
+ 	char *key = qrystr->ptr, *val = NULL;
+ 
++	if (buffer_string_is_empty(qrystr)) return 0;
+ 	for (size_t i = 0, len = buffer_string_length(qrystr); i <= len; ++i) {
+ 		switch(qrystr->ptr[i]) {
+ 		case '=':
