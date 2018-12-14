@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 3.16.61, security and bug fixes
 
+-- RUNNIX, version bump to runnix-0.5.7, with Linux Kernel 3.16.61, kexec 2.0.18
+
 -- igb, version bump to 5.3.5.22, Intel Gigabit Ethernet Network Driver
 
 -- liburiparser, version bump to 0.9.0, security fixes
