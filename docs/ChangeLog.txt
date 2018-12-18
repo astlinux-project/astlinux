@@ -68,7 +68,7 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.0.2q, security fixes: CVE-2018-0734, CVE-2018-5407
 
--- WireGuard VPN, version bump to 0.0.20181119
+-- WireGuard VPN, version bump to 0.0.20181218
 
 -- WireGuard VPN, add wireguard-mobile-client script to manage mobile clients.  Also used by the web interface.
    New rc.conf variables WIREGUARD_HOSTNAME and WIREGUARD_CLIENT_ROUTING
