@@ -8,7 +8,7 @@ MONIT_VERSION = 5.25.2
 MONIT_SITE = https://mmonit.com/monit/dist
 MONIT_DEPENDENCIES = host-bison host-flex
 #
-# Touching Makefile.am:
+# Touching Makefile.am and configure.ac:
 MONIT_AUTORECONF = YES
 
 MONIT_CONF_ENV = \
