@@ -60,7 +60,7 @@ idle_timeout: 5000
 listen_addresses:
   - 127.0.0.1@2853
 appdata_dir: \"/var/run/stubby\"
-${dnssec}dnssec_return_status: GETDNS_EXTENSION_TRUE
+${dnssec}dnssec: GETDNS_EXTENSION_TRUE
 round_robin_upstreams: ${query_all}
 upstream_recursive_servers:"
 
