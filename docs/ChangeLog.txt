@@ -79,6 +79,8 @@ Released @TBD@
 
 -- dnsmasq, version bump to 2.80
 
+-- getdns/stubby, version bump to 1.5.0/0.2.4
+
 -- fping, major version bump to 4.1
    Note: Now handles both IPv4 and IPv6 via a single binary, fping6 is a sym-link for backward compatibility.
 
@@ -98,6 +100,8 @@ Released @TBD@
 
 -- ngrep, version bump to 1.47
 
+-- openldap, version bump to 2.4.47
+
 -- sngrep, version bump to 1.4.6
 
 -- unbound (host), version bump to 1.8.3
@@ -109,13 +113,13 @@ Released @TBD@
 
 ** Asterisk
 
--- Asterisk 11.25.3 (no change) and 13.24.0 (version bump)
+-- Asterisk 11.25.3 (no change) and 13.24.1 (version bump)
 
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
 -- pjsip 2.8 (version bump)
 
--- FOP2, available version bump to 2.31.20.
+-- FOP2, available version bump to 2.31.21.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
    More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
