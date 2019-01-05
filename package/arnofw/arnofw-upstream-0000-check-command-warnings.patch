@@ -1,0 +1,13 @@
+diff --git a/bin/arno-iptables-firewall b/bin/arno-iptables-firewall
+index 12290d7..f1a8f25 100755
+--- a/bin/arno-iptables-firewall
++++ b/bin/arno-iptables-firewall
+@@ -102,6 +102,8 @@ sanity_check()
+   check_command_error wc
+   check_command_error logger
+ 
++  check_command_warning pgrep
++  check_command_warning pkill
+   check_command_warning dig nslookup
+ 
+   if [ "$IPV6_SUPPORT" = "1" ]; then
