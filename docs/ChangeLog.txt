@@ -18,13 +18,15 @@ Released @TBD@
 
 -- igb, version bump to 5.3.5.22, Intel Gigabit Ethernet Network Driver
 
--- liburiparser, version bump to 0.9.0, security fixes
+-- liburiparser, version bump to 0.9.1, security fixes
 
 -- libqrencode, version 4.0.2, new package used to generate QR codes.  Securely transfer credentials to mobile devices.
 
 -- libpng, version 1.6.36, new package used by qrencode.
 
 -- libedit, version bump to 20181209-3.1
+
+-- libxml2, version bump to 2.9.9
 
 -- e2fsprogs, version bump to 1.44.5
 
@@ -64,7 +66,7 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2018-12-05
 
--- Time Zone Database update, tzdata2018g and php-timezonedb-2018.7
+-- Time Zone Database update, tzdata2018i and php-timezonedb-2018.9
 
 -- mac2vendor, oui.txt database snapshot 2018-10-21
 
@@ -94,7 +96,7 @@ Released @TBD@
 
 -- lighttpd, version bump to 1.4.51, bug and security fixes
 
--- keepalived, version bump to 2.0.10
+-- keepalived, version bump to 2.0.11
 
 -- arnofw (AIF), add WIREGUARD_ALLOW_OPENVPN rc.conf variable, Allow WireGuard tunnel to OpenVPN tunnel(s), disabled by default.
    Add OVPN_CLIENT_ISOLATION and WIREGUARD_PEER_ISOLATION rc.conf variables, OpenVPN and WireGuard plugins, disabled by default.
