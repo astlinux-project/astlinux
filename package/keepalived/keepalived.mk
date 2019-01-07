@@ -4,10 +4,13 @@
 #
 ################################################################################
 
-KEEPALIVED_VERSION = 2.0.10
+KEEPALIVED_VERSION = 2.0.11
 KEEPALIVED_SOURCE = keepalived-$(KEEPALIVED_VERSION).tar.gz
 KEEPALIVED_SITE = http://www.keepalived.org/software
 KEEPALIVED_DEPENDENCIES = host-pkg-config linux openssl
+
+# patch configure.ac
+KEEPALIVED_AUTORECONF = YES
 
 KEEPALIVED_CONF_OPT = \
 	--disable-log-file \
@@ -15,6 +18,7 @@ KEEPALIVED_CONF_OPT = \
 	--disable-libnl \
 	--disable-libipset \
 	--disable-libiptc \
+	--disable-track-process \
 	--with-init=SYSV
 
 define KEEPALIVED_INSTALL_TARGET_CMDS
