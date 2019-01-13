@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PHP_VERSION = 5.6.39
+PHP_VERSION = 5.6.40
 PHP_SITE = https://secure.php.net/distributions
 PHP_SOURCE = php-$(PHP_VERSION).tar.xz
 PHP_INSTALL_STAGING = YES
