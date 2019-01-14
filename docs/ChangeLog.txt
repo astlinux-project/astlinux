@@ -87,7 +87,7 @@ Released @TBD@
 
 -- dnsmasq, version bump to 2.80
 
--- getdns/stubby, version bump to 1.5.0/0.2.4
+-- getdns/stubby, version bump to 1.5.1/0.2.5
 
 -- fping, major version bump to 4.1
    Note: Now handles both IPv4 and IPv6 via a single binary, fping6 is a sym-link for backward compatibility.
