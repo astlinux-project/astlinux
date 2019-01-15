@@ -52,7 +52,7 @@ Released @TBD@
 
 -- strace, version bump to 4.26
 
--- sudo, version bump to 1.8.26
+-- sudo, version bump to 1.8.27
 
 -- tiff, version bump to 4.0.10
 
@@ -80,6 +80,8 @@ Released @TBD@
 
 -- WireGuard VPN, add wireguard-mobile-client script to manage mobile clients.  Also used by the web interface.
    New rc.conf variables WIREGUARD_HOSTNAME and WIREGUARD_CLIENT_ROUTING
+
+-- OpenSSH, version 7.5p1, security fix: CVE-2018-20685
 
 -- libcurl (curl) version bump to 7.63.0, security fixes: CVE-2018-16839, CVE-2018-16840, CVE-2018-16842
 
