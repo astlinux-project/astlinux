@@ -148,6 +148,8 @@ Released @TBD@
 
 -- WireGuard VPN sub-tab, add "Redirect Ports" firewall option.
 
+-- CSS style sheet, add 'Menlo' to included monospace font-family.
+
 
 Additions for AstLinux 1.3.4:
 =============================
