@@ -17,7 +17,7 @@ pre {
   border: 2px solid #54545C;
   background: #E7E5E2;
   padding: 10px;
-  font-family: "Bitstream Vera Sans Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
+  font-family: "Bitstream Vera Sans Mono", Menlo, "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
   font-size: 12px;
   line-height: 125%;
   width: inherit;
@@ -141,7 +141,7 @@ p {
 }
 
 .status {
-  font-family: "Bitstream Vera Sans Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
+  font-family: "Bitstream Vera Sans Mono", Menlo, "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
   font-size: 12px;
   line-height: 110%;
   border: 2px solid #54545C;
@@ -153,7 +153,7 @@ p {
 }
 
 .stdtable {
-  font-family: "Bitstream Vera Sans Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
+  font-family: "Bitstream Vera Sans Mono", Menlo, "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
   font-size: 12px;
   line-height: 100%;
   border: 0;
@@ -167,7 +167,7 @@ p {
 }
 
 .datatable {
-  font-family: "Bitstream Vera Sans Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
+  font-family: "Bitstream Vera Sans Mono", Menlo, "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
   font-size: 12px;
   line-height: 110%;
   border: 0;
@@ -196,7 +196,7 @@ p {
 }
 
 .statusdatatable {
-  font-family: "Bitstream Vera Sans Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
+  font-family: "Bitstream Vera Sans Mono", Menlo, "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
   font-size: 12px;
   line-height: 110%;
   border: 0;
@@ -297,7 +297,7 @@ p {
 }
 
 .editText {
-  font-family: "Bitstream Vera Sans Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
+  font-family: "Bitstream Vera Sans Mono", Menlo, "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
   font-size: 12px;
   line-height: 125%;
   border: 1px solid #54545C;
