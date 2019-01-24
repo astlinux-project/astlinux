@@ -3,7 +3,8 @@
 # iperf
 #
 #############################################################
-IPERF_VERSION = 2.0.10
+
+IPERF_VERSION = 2.0.13
 IPERF_SOURCE = iperf-$(IPERF_VERSION).tar.gz
 IPERF_SITE = http://downloads.sourceforge.net/project/iperf2
 
