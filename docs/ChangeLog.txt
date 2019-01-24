@@ -66,7 +66,7 @@ Released @TBD@
 
 -- system-vendor, update system-vendor.ids
 
--- ca-certificates, update trusted root certificates 2018-12-05
+-- ca-certificates, update trusted root certificates 2019-01-23
 
 -- Time Zone Database update, tzdata2018i and php-timezonedb-2018.9
 
@@ -76,7 +76,7 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.0.2q, security fixes: CVE-2018-0734, CVE-2018-5407
 
--- WireGuard VPN, version bump to 0.0.20181218
+-- WireGuard VPN, version bump to 0.0.20190123
 
 -- WireGuard VPN, add wireguard-mobile-client script to manage mobile clients.  Also used by the web interface.
    New rc.conf variables WIREGUARD_HOSTNAME and WIREGUARD_CLIENT_ROUTING
@@ -94,6 +94,8 @@ Released @TBD@
 -- fping, major version bump to 4.1
    Note: Now handles both IPv4 and IPv6 via a single binary, fping6 is a sym-link for backward compatibility.
 
+-- iperf, version bump to 2.0.13
+
 -- wol-host, new command to send Wake-on-LAN packet to specified host, by IP or DNS name.
    Example: wol-host --ping 192.168.101.13
    More info: wol-host --help
@@ -101,6 +103,8 @@ Released @TBD@
 -- lighttpd, version bump to 1.4.51, bug and security fixes
 
 -- keepalived, version bump to 2.0.11
+
+-- arnofw (AIF), various upstream fixes and tweaks
 
 -- arnofw (AIF), add WIREGUARD_ALLOW_OPENVPN rc.conf variable, Allow WireGuard tunnel to OpenVPN tunnel(s), disabled by default.
    Add OVPN_CLIENT_ISOLATION and WIREGUARD_PEER_ISOLATION rc.conf variables, OpenVPN and WireGuard plugins, disabled by default.
