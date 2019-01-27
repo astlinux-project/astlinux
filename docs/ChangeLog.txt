@@ -18,6 +18,8 @@ Released @TBD@
 
 -- igb, version bump to 5.3.5.22, Intel Gigabit Ethernet Network Driver
 
+-- genx86_64-vm board type, version bump QEMU Guest Agent to qemu-ga 3.1.0
+
 -- liburiparser, version bump to 0.9.1, security fixes
 
 -- libqrencode, version 4.0.2, new package used to generate QR codes.  Securely transfer credentials to mobile devices.
@@ -102,7 +104,7 @@ Released @TBD@
 
 -- lighttpd, version bump to 1.4.51, bug and security fixes
 
--- keepalived, version bump to 2.0.11
+-- keepalived, version bump to 2.0.12
 
 -- arnofw (AIF), various upstream fixes and tweaks
 
