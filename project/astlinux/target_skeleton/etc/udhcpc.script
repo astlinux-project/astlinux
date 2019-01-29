@@ -78,6 +78,36 @@ restart_failover_service()
 
 case "$ACTION" in
 
+  leasefail)
+    # If no DHCP lease is established, generate a temporary 169.254/16 (RFC 3927) IPv4 Link-Local address
+    if [ "$EXTIF" = "${interface}" ]; then
+      ip link set dev ${interface} up
+
+      if [ ! -f /tmp/auto_mydhcpip ]; then
+        echo "169.254.$((RANDOM % 251 + 2)).$((RANDOM % 251 + 2))" > /tmp/auto_mydhcpip
+        chmod 600 /tmp/auto_mydhcpip
+      fi
+      if [ ! -f /tmp/mydhcpip ] || ! cmp -s /tmp/mydhcpip /tmp/auto_mydhcpip; then
+        auto_ip="$(cat /tmp/auto_mydhcpip)"
+        auto_gw="169.254.0.${auto_ip##*.}"
+        logger -s -t udhcpc.script -p daemon.warning "Assigning auto-configured IPv4 $auto_ip to interface ${interface}"
+        echo "IP=$auto_ip
+BCAST=169.254.255.255
+NETMASK=255.255.0.0
+GW=$auto_gw" > "$udhcpc_conf"
+
+        echo "$auto_ip" > /tmp/mydhcpip
+        : > "$resolv_conf"
+
+        ip -4 addr flush dev ${interface} scope global
+        ip -4 addr add $auto_ip/255.255.0.0 brd 169.254.255.255 dev ${interface}
+
+        ip route add default via $auto_gw dev ${interface} metric 0
+        restart_failover_service
+      fi
+    fi
+    ;;
+
   deconfig)
     ip link set dev ${interface} up
     ip -4 addr flush dev ${interface} scope global
