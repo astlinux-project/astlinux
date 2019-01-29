@@ -127,6 +127,9 @@ Released @TBD@
 -- wide-dhcpv6, when no suitable internal interfaces are defined to receive a prefix delegation,
    use a dummy interface named 'ip6pd'.
 
+-- network, udhcpc.script, add support for 'leasefail' condition
+   If no DHCP lease is established, generate a temporary 169.254/16 (RFC 3927) IPv4 Link-Local address
+
 ** Asterisk
 
 -- Asterisk 11.25.3 (no change) and 13.24.1 (version bump)
