@@ -1,0 +1,41 @@
+From b0e6e5104dfd3b1b1718deb35110f62ed85eced1 Mon Sep 17 00:00:00 2001
+From: Lonnie Abelbeck <lonnie@abelbeck.com>
+Date: Thu, 31 Jan 2019 09:42:59 -0600
+Subject: [PATCH 1/1] ignore endpoint dns failure
+
+Make WireGuard configuration more robust, minimizing the effect of an Endpoint= DNS failure.
+
+Change WireGuard's default handling of an Endpoint= DNS failure with 'wg setconf ...'
+
+Previously)
+'Configuration parsing error',  the configuration is aborted, keeping WireGuard from starting.
+
+Change)
+Ignore the DNS error, do not change the 'endpoint', and continue parsing the configuration so WireGuard can be started.
+Essentially ignoring the (optional) Endpoint= entry, which can be updated/added later via an external script.
+The previous stderr DNS error message will continue to be generated.
+
+This change effects:
+wg setconf ... (Containing: Endpoint = <dns-hostname>:<port>)
+wg addconf ... (Containing: Endpoint = <dns-hostname>:<port>)
+wg set ... endpoint <dns-hostname>:<port> ...
+---
+ src/tools/config.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/tools/config.c b/src/tools/config.c
+index 5d15356..97c34ab 100644
+--- a/src/tools/config.c
++++ b/src/tools/config.c
+@@ -241,7 +241,7 @@ static inline bool parse_endpoint(struct sockaddr *endpoint, const char *value)
+ 				timeout >= 90000000) {
+ 			free(mutable);
+ 			fprintf(stderr, "%s: `%s'\n", ret == EAI_SYSTEM ? strerror(errno) : gai_strerror(ret), value);
+-			return false;
++			return true;
+ 		}
+ 		fprintf(stderr, "%s: `%s'. Trying again in %.2f seconds...\n", ret == EAI_SYSTEM ? strerror(errno) : gai_strerror(ret), value, timeout / 1000000.0);
+ 		usleep(timeout);
+-- 
+1.8.3.1
+
