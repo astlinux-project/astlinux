@@ -8,7 +8,7 @@
 Additions for AstLinux 1.3.5:
 =============================
 
-Released @TBD@
+Released 2019-02-07
 
 ** System
 
