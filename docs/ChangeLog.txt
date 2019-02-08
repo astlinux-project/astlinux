@@ -5,16 +5,10 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.3.6:
-=============================
+Additions for AstLinux 1.3.5.1:
+===============================
 
 Released @TBD@
-
-
-Additions for AstLinux 1.3.5:
-=============================
-
-Released 2019-02-07
 
 ** System
 
@@ -119,8 +113,6 @@ Released 2019-02-07
 -- arnofw (AIF), add WIREGUARD_ALLOW_OPENVPN rc.conf variable, Allow WireGuard tunnel to OpenVPN tunnel(s), disabled by default.
    Add OVPN_CLIENT_ISOLATION and WIREGUARD_PEER_ISOLATION rc.conf variables, OpenVPN and WireGuard plugins, disabled by default.
    Add WIREGUARD_REDIRECT_PORTS rc.conf variable, WireGuard plugin, disabled by default.
-
--- msmtp, version bump to 1.8.2
 
 -- ngrep, version bump to 1.47
 
