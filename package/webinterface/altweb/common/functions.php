@@ -799,6 +799,16 @@ function compressIPV6addr($addr) {
   return($addr);
 }
 
+// Function: expandIPV6addr
+//
+function expandIPV6addr($addr) {
+  if (strpos($addr, ':') !== FALSE) {
+    $hex = unpack('H*hex', inet_pton($addr));
+    $addr = substr(preg_replace('/([A-Fa-f0-9]{4})/', '$1:', $hex['hex']), 0, -1);
+  }
+  return($addr);
+}
+
 // Function: is_addon_package
 //
 function is_addon_package($pkg) {

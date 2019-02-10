@@ -43,6 +43,7 @@
 // 03-13-2018, Added Hardware system-vendor info
 // 04-25-2018, Performance improvement using asynchronous system calls
 // 11-23-2018, Improved WireGuard VPN Status
+// 02-10-2019, Added DNSMASQ lease DB support
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -52,6 +53,9 @@ $OVPNLOGFILE = '/var/log/openvpn-status.log';
 $MINIUPNPDLEASES = '/var/db/upnp.leases';
 // System location of DNSMASQ leases
 $DNSMASQLEASES = '/var/db/dnsmasq.leases';
+// System location of DNSMASQ lease DB's
+$DNSMASQLEASEDB = '/var/db/dnsmasq-lease.db';
+$DNSMASQLEASE6DB = '/var/db/dnsmasq-lease6.db';
 // System location of nf_conntrack file
 $CONNTRACK = '/proc/net/nf_conntrack';
 //
@@ -415,6 +419,44 @@ function parseMINIUPNPDleases($log) {
       $p_port[$key] = $row['p_port'];
     }
     array_multisort($p_port, SORT_ASC, SORT_STRING, $status['clients']);
+  }
+  return(isset($status) ? $status : NULL);
+}
+
+// Function: parseDNSMASQleaseDB
+//
+function parseDNSMASQleaseDB($log, $ip6) {
+
+  if (! is_file($log)) {
+    return(NULL);
+  }
+
+  $cid = 0;
+  $cur_time = time();
+  if (($ph = @fopen($log, "r")) !== FALSE) {
+    while (! feof($ph)) {
+      if (($line = trim(fgets($ph, 1024))) !== '') {
+        $linetokens = explode('~', $line, 8);
+        if (isset($linetokens[4]) && ($linetokens[4] > $cur_time)) {
+          $status['clients'][$cid]['mac'] = $ip6 ? $linetokens[1] : $linetokens[0];
+          $status['clients'][$cid]['ip'] = $linetokens[2];
+          // Interface is [3]
+          $status['clients'][$cid]['expire'] = $linetokens[4];
+          $status['clients'][$cid]['hostname'] = $linetokens[5];
+          $status['clients'][$cid]['vendor'] = $linetokens[6];
+          $status['clients'][$cid]['clientname'] = $linetokens[7];
+          $cid++;
+        }
+      }
+    }
+    fclose($ph);
+  }
+  // Sort by IP Address
+  if ($cid > 1) {
+    foreach ($status['clients'] as $key => $row) {
+      $ip[$key] = $ip6 ? expandIPV6addr($row['ip']) : pad_ipv4_str($row['ip']);
+    }
+    array_multisort($ip, SORT_ASC, SORT_STRING, $status['clients']);
   }
   return(isset($status) ? $status : NULL);
 }
@@ -1015,11 +1057,36 @@ if ($daemon['dnsmasq'] > 0) {
   if (getPREFdef($global_prefs, 'status_show_dhcp_leases') !== 'no' && isDHCPactive()) {
     putHtml("<h2>DHCP Leases:</h2>");
 
-    if (is_null($dhcp = parseDNSMASQleases($DNSMASQLEASES))) {
-      putHtml("<pre>");
-      putText('No Active DHCP Leases');
-      putHtml("</pre>");
-    } else {
+    if (! is_null($dhcp = parseDNSMASQleaseDB($DNSMASQLEASEDB, FALSE))) {
+      foreach (array(FALSE, TRUE) as $dhcpv6) {
+        if ($dhcpv6 && is_null($dhcp = parseDNSMASQleaseDB($DNSMASQLEASE6DB, TRUE))) {
+          break;
+        }
+        putHtml('<pre><table class="statusdatatable">');
+        putHtml("<tr>");
+        if (($n = count($dhcp['clients'])) > 0) {
+          echo "<td>", ($dhcpv6 ? "IPv6" : "IPv4")." Address", "</td>";
+          echo "<td>", "MAC Address", "</td>";
+          echo "<td>", "Host Name", "</td>";
+          echo "<td>", "Client Name", "</td>";
+          echo "<td>", "Expire Time", "</td>";
+          echo "<td>", "Vendor Name", "</td>";
+          for ($i = 0; $i < $n; $i++) {
+            putHtml("</tr><tr>");
+            echo "<td>", $dhcp['clients'][$i]['ip'], "</td>";
+            echo "<td>", $dhcp['clients'][$i]['mac'], "</td>";
+            echo "<td>", $dhcp['clients'][$i]['hostname'], "</td>";
+            echo "<td>", $dhcp['clients'][$i]['clientname'], "</td>";
+            echo "<td>", date('Y-m-d H:i:s', $dhcp['clients'][$i]['expire']), "</td>";
+            echo "<td>", htmlspecialchars($dhcp['clients'][$i]['vendor']), "</td>";
+          }
+          putHtml("</tr><tr>");
+          echo '<td colspan="5">'.$n.' Active '.($dhcpv6 ? "DHCPv6" : "DHCP").' Leases</td>';
+        }
+        putHtml("</tr>");
+        putHtml("</table></pre>");
+      }
+    } elseif (! is_null($dhcp = parseDNSMASQleases($DNSMASQLEASES))) {
       $is_mac2vendor = is_mac2vendor();
       putHtml('<pre><table class="statusdatatable">');
       putHtml("<tr>");
@@ -1046,6 +1113,10 @@ if ($daemon['dnsmasq'] > 0) {
       }
       putHtml("</tr>");
       putHtml("</table></pre>");
+    } else {
+      putHtml("<pre>");
+      putText('No Active DHCP Leases');
+      putHtml("</pre>");
     }
   }
 }
