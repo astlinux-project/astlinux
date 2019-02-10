@@ -16,7 +16,7 @@ MAC2VENDOR_SITE = https://s3.amazonaws.com/files.astlinux-project
 define MAC2VENDOR_EXTRACT_CMDS
 	mkdir -p $(@D)/oui-db
 	for i in 0 1 2 3 4 5 6 7 8 9 A B C D E F; do \
-	  sed 's/^ *//' $(DL_DIR)/$(MAC2VENDOR_SOURCE) | \
+	  sed -e 's/^ *//' -e 's/\r$$//' $(DL_DIR)/$(MAC2VENDOR_SOURCE) | \
 	  grep "^[0-9A-F]\{5\}$$i " | \
 	  sed 's/ [^(]*.base 16.[^0-9a-zA-Z]*/~/' > $(@D)/oui-db/xxxxx$$i ; \
 	done
