@@ -34,3 +34,17 @@
 ## Tell thin client where to look for the boot files using external TFTP server
 #dhcp-boot=thinstation/pxelinux.0,pbx3,192.168.100.3
 
+## If a DHCP client claims that its name is "wpad", ignore that.
+## This fixes a security hole. see CERT Vulnerability VU#598349
+#dhcp-name-match=set:wpad-ignore,wpad
+#dhcp-ignore-names=tag:wpad-ignore
+
+## Set to always ignore DHCP-client supplied hostnames. DHCP hosts are added to the DNS using
+## only 'dhcp-host' configuration in dnsmasq and the contents of /etc/hosts and /etc/ethers.
+#dhcp-ignore-names
+
+## Enable a script to run whenever a lease is added, updated or deleted.
+## The files /var/db/dnsmasq-lease.db (and optionally /var/db/dnsmasq-lease6.db) are maintained
+## with more detailed lease info than the standard leasefile.
+#dhcp-script=/etc/dnsmasq-lease.script
+
