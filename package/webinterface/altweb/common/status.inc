@@ -438,8 +438,8 @@ function parseDNSMASQleaseDB($log, $ip6) {
       if (($line = trim(fgets($ph, 1024))) !== '') {
         $linetokens = explode('~', $line, 8);
         if (isset($linetokens[4]) && ($linetokens[4] > $cur_time)) {
-          $status['clients'][$cid]['mac'] = $ip6 ? $linetokens[1] : $linetokens[0];
-          $status['clients'][$cid]['ip'] = $linetokens[2];
+          $status['clients'][$cid]['mac'] = $ip6 ? $linetokens[2] : $linetokens[0];
+          $status['clients'][$cid]['ip'] = $linetokens[1];
           // Interface is [3]
           $status['clients'][$cid]['expire'] = $linetokens[4];
           $status['clients'][$cid]['hostname'] = $linetokens[5];
@@ -1076,7 +1076,7 @@ if ($daemon['dnsmasq'] > 0) {
             echo "<td>", $dhcp['clients'][$i]['ip'], "</td>";
             echo "<td>", $dhcp['clients'][$i]['mac'], "</td>";
             echo "<td>", $dhcp['clients'][$i]['hostname'], "</td>";
-            echo "<td>", $dhcp['clients'][$i]['clientname'], "</td>";
+            echo "<td>", htmlspecialchars($dhcp['clients'][$i]['clientname']), "</td>";
             echo "<td>", date('Y-m-d H:i:s', $dhcp['clients'][$i]['expire']), "</td>";
             echo "<td>", htmlspecialchars($dhcp['clients'][$i]['vendor']), "</td>";
           }
