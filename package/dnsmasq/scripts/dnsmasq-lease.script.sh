@@ -23,7 +23,7 @@ mac2vendor()
   MAC="${MAC%??????}"
 
   if [ ${#MAC} -eq 6 ]; then
-    grep -m1 "^${MAC}~" "$MAC_VENDOR_DB/xxxxx${MAC#?????}" | cut -d'~' -f2 | tr -d '\r'
+    grep -m1 "^${MAC}~" "$MAC_VENDOR_DB/xxxxx${MAC#?????}" | cut -d'~' -f2
   fi
 }
 
