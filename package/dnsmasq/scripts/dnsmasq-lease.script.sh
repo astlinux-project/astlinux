@@ -30,7 +30,7 @@ mac2vendor()
 
 get_old_del_db()
 {
-  local entry
+  local entry x
 
   if [ ! -f "$DB" ]; then
     return
@@ -38,12 +38,17 @@ get_old_del_db()
 
   entry="$(grep -m1 "${match}" "$DB")"
   if [ -n "$entry" ]; then
-    if [ $ip6 -eq 1 ]; then
-      old_ipv6_mac="$(echo "$entry" | cut -d'~' -f3)"
-    fi
-    old_time_secs="$(echo "$entry" | cut -d'~' -f5)"
-    old_vendor="$(echo "$entry" | cut -d'~' -f7)"
-    old_hostname="$(echo "$entry" | cut -d'~' -f8-)"
+    # Optimize using POSIX builtins instead of 'echo | cut'
+    # Requires minimum number of ~'s (7) to work properly
+    x="$entry"
+    x="${x#*~}" # -f1
+    x="${x#*~}" # -f2
+    old_ipv6_mac="${x%%~*}";  x="${x#*~}" # -f3
+    x="${x#*~}" # -f4
+    old_time_secs="${x%%~*}"; x="${x#*~}" # -f5
+    x="${x#*~}" # -f6
+    old_vendor="${x%%~*}";    x="${x#*~}" # -f7
+    old_hostname="$x"                     # -f8-
 
     sed -i "/${match}/ d" "$DB"
   fi
@@ -82,6 +87,14 @@ add_db()
 
 save_db_file()
 {
+  # Optimize "old" actions that don't change the byte count
+  # When dnsmasq starts, this saves a lot of writes to persistent storage
+  if [ "$action" = "old" -a -f "/mnt/kd/${DB##*/}" ]; then
+    if [ "$(stat -c '%s' "$DB")" = "$(stat -c '%s' "/mnt/kd/${DB##*/}")" ]; then
+      return
+    fi
+  fi
+
   if [ -f /mnt/kd/dnsmasq.leases ]; then
     cp "$DB" "/mnt/kd/${DB##*/}"
   fi
