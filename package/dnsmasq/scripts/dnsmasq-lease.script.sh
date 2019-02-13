@@ -52,6 +52,7 @@ get_old_del_db()
 del_db()
 {
   if [ ! -f "$DB" ]; then
+    : > "$DB"
     return
   fi
 
@@ -79,6 +80,13 @@ add_db()
   echo "${mac_duid}~${address}~${mac}~${DNSMASQ_INTERFACE}~${time_secs}~${dns_name}~${vendor}~${hostname}" >> "$DB"
 }
 
+save_db_file()
+{
+  if [ -f /mnt/kd/dnsmasq.leases ]; then
+    cp "$DB" "/mnt/kd/${DB##*/}"
+  fi
+}
+
 ## main
 
 case "$mac_duid" in
@@ -100,11 +108,14 @@ esac
 if [ "$action" = "add" ]; then
   del_db
   add_db
+  save_db_file
 elif [ "$action" = "old" ]; then
   get_old_del_db
   add_db
+  save_db_file
 elif [ "$action" = "del" ]; then
   del_db
+  save_db_file
 fi
 
 exit 0
