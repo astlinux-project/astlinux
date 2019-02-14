@@ -44,7 +44,8 @@
 #dhcp-ignore-names
 
 ## Enable a script to run whenever a lease is added, updated or deleted.
-## The files /var/db/dnsmasq-lease.db (and optionally /var/db/dnsmasq-lease6.db) are maintained
-## with more detailed lease info than the standard leasefile.
+## The file /var/db/dnsmasq-lease.db (and optionally /var/db/dnsmasq-lease6.db) is maintained with
+## more detailed lease info than the standard leasefile.
+## A persistent backup is saved to /mnt/kd/dnsmasq-lease.db (and optionally /mnt/kd/dnsmasq-lease6.db).
 #dhcp-script=/etc/dnsmasq-lease.script
 
