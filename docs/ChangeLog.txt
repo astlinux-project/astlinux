@@ -5,16 +5,10 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.3.6:
-=============================
-
-Released @TBD@
-
-
-Additions for AstLinux 1.3.5.1:
+Additions for AstLinux 1.3.5.2:
 ===============================
 
-Released 2019-02-08
+Released @TBD@
 
 ** System
 
