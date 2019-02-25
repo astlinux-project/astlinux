@@ -10,6 +10,38 @@ Additions for AstLinux 1.3.6:
 
 Released @TBD@
 
+** System
+
+-- sqlite, version bump to 3.27.2
+
+** Networking
+
+-- OpenVPN, version bump to 2.4.7
+
+-- libcurl (curl) version bump to 7.64.0, security fixes: CVE-2018-16890, CVE-2019-3822, CVE-2019-3823
+
+-- fping, version bump to 4.2
+
+-- keepalived, version bump to 2.0.13
+
+-- msmtp, version bump to 1.8.3
+
+-- unbound (host), version bump to 1.9.0
+
+-- whois, version bump to 5.4.1
+
+** Asterisk
+
+-- Asterisk 11.25.3 (no change) and 13.24.1 (no change)
+
+-- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
+
+-- pjsip 2.8 (no change)
+
+** Web Interface
+
+-- no change
+
 
 Additions for AstLinux 1.3.5.2:
 ===============================
