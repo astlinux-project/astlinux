@@ -39,12 +39,13 @@ from $SMTP_FROM"
       echo "tls_certcheck off"
     else
       echo "tls_certcheck on"
+    fi
 
-      if [ -n "$SMTP_CA" ] && [ -f "$SMTP_CA" ]; then
-        echo "tls_trust_file $SMTP_CA"
-      else
-        echo "tls_trust_file $CA_BUNDLE"
-      fi
+    # Always define tls_trust_file to prevent "system" default condition
+    if [ -n "$SMTP_CA" ] && [ -f "$SMTP_CA" ]; then
+      echo "tls_trust_file $SMTP_CA"
+    else
+      echo "tls_trust_file $CA_BUNDLE"
     fi
   fi
 
