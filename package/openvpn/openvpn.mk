@@ -4,13 +4,14 @@
 #
 #############################################################
 
-OPENVPN_VERSION = 2.4.6
+OPENVPN_VERSION = 2.4.7
 OPENVPN_SITE = http://swupdate.openvpn.net/community/releases
 OPENVPN_DEPENDENCIES = host-pkg-config openssl
 
 OPENVPN_CONF_OPT = \
 	--disable-debug \
 	--disable-plugins \
+	--disable-lz4 \
 	--enable-iproute2 \
 	--with-crypto-library=openssl
 
