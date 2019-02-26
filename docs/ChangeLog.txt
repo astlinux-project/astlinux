@@ -16,6 +16,8 @@ Released @TBD@
 
 ** Networking
 
+-- OpenSSL, version bump to 1.0.2r, security fixes: CVE-2019-1559
+
 -- OpenVPN, version bump to 2.4.7
 
 -- libcurl (curl) version bump to 7.64.0, security fixes: CVE-2018-16890, CVE-2019-3822, CVE-2019-3823
