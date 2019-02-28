@@ -20,6 +20,8 @@ Released @TBD@
 
 -- OpenVPN, version bump to 2.4.7
 
+-- WireGuard VPN, version bump to 0.0.20190227
+
 -- libcurl (curl) version bump to 7.64.0, security fixes: CVE-2018-16890, CVE-2019-3822, CVE-2019-3823
 
 -- fping, version bump to 4.2
