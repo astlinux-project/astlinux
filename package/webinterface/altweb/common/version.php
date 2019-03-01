@@ -1,6 +1,6 @@
 <?php
 // version.php for AstLinux Alternate Web Interface
 
-$GUI_VERSION = '1.8.47';
+$GUI_VERSION = '1.8.48';
 
 ?>

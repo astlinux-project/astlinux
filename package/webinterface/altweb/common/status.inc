@@ -425,7 +425,7 @@ function parseMINIUPNPDleases($log) {
 
 // Function: parseDNSMASQleaseDB
 //
-function parseDNSMASQleaseDB($log, $ip6) {
+function parseDNSMASQleaseDB($log, $ip6, $dhcp = NULL) {
 
   if (! is_file($log)) {
     return(NULL);
@@ -443,7 +443,16 @@ function parseDNSMASQleaseDB($log, $ip6) {
           $status['clients'][$cid]['time'] = $linetokens[4];
           $status['clients'][$cid]['hostname'] = $linetokens[5];
           $status['clients'][$cid]['vendor'] = $linetokens[6];
-          $status['clients'][$cid]['clientname'] = $linetokens[7];
+          $clientname = $linetokens[7];
+          if (! is_null($dhcp) && $clientname == '' && (($mac = $status['clients'][$cid]['mac']) != '')) {
+            foreach ($dhcp['clients'] as $key => $row) {
+              if ($mac === $row['mac']) {
+                $clientname = $row['clientname'];
+                break;
+              }
+            }
+          }
+          $status['clients'][$cid]['clientname'] = $clientname;
           $cid++;
         }
       }
@@ -1058,7 +1067,7 @@ if ($daemon['dnsmasq'] > 0) {
 
     if (! is_null($dhcp = parseDNSMASQleaseDB($DNSMASQLEASEDB, FALSE))) {
       foreach (array(FALSE, TRUE) as $dhcpv6) {
-        if ($dhcpv6 && is_null($dhcp = parseDNSMASQleaseDB($DNSMASQLEASE6DB, TRUE))) {
+        if ($dhcpv6 && is_null($dhcp = parseDNSMASQleaseDB($DNSMASQLEASE6DB, TRUE, $dhcp))) {
           break;
         }
         putHtml('<pre><table class="statusdatatable">');
