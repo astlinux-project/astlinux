@@ -14,6 +14,8 @@ Released @TBD@
 
 -- sqlite, version bump to 3.27.2
 
+-- Monit, version bump to 5.25.3, security and bug fixes.
+
 ** Networking
 
 -- OpenSSL, version bump to 1.0.2r, security fixes: CVE-2019-1559
