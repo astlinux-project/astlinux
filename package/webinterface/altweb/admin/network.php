@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2018 Lonnie Abelbeck
+// Copyright (C) 2008-2019 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -48,6 +48,7 @@
 // 09-10-2017, Added Data Backup / Tarsnap Backup
 // 04-14-2018, Added DNS-TLS support
 // 07-30-2018, Added Keepalived support
+// 03-05-2019, Added NETSTAT_EXTIF support
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -2005,8 +2006,11 @@ require_once '../common/header.php';
 
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('NetStat&nbsp;Interfaces:');
+  if (($value = getVARdef($db, 'NETSTAT_EXTIF', $cur_db)) === '') {    // set in user.conf
+    $value = 'External';
+  }
   $sel = isVARtype('NETSTAT_CAPTURE', $db, $cur_db, 'EXTIF') ? ' checked="checked"' : '';
-  putHtml('<input type="checkbox" value="netstat_EXTIF" name="netstat_EXTIF"'.$sel.' />&nbsp;External');
+  putHtml('<input type="checkbox" value="netstat_EXTIF" name="netstat_EXTIF"'.$sel.' />&nbsp;'.$value);
   $sel = isVARtype('NETSTAT_CAPTURE', $db, $cur_db, 'INTIF') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="netstat_INTIF" name="netstat_INTIF"'.$sel.' />&nbsp;1st LAN');
   $sel = isVARtype('NETSTAT_CAPTURE', $db, $cur_db, 'INT2IF') ? ' checked="checked"' : '';

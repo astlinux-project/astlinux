@@ -55,7 +55,7 @@ start () {
     fi
 
     if is_darkstat_enabled EXTIF; then
-      interfaces="$interfaces${interfaces:+ }-i $EXTIF"
+      interfaces="$interfaces${interfaces:+ }-i ${NETSTAT_EXTIF:-$EXTIF}"
       f_ext="$NETSTAT_FILTER"
     fi
     if is_darkstat_enabled INTIF && is_interface_enabled "$INTIF" "$INTIP" "$INTNM"; then
