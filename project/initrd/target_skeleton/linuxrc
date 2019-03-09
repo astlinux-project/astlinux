@@ -101,7 +101,7 @@ of RAM. You should consider getting more."
 
     *)
       echo "Fsck detected errors on $ASTURW ($status)"
-      echo "execute fsck -t ext2 $ASTURW to attempt to repair errors manually."
+      echo "execute e2fsck $ASTURW to attempt to repair errors manually."
       exec /bin/sh
       ;;
     esac

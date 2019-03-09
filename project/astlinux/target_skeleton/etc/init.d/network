@@ -726,7 +726,7 @@ PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
       init_dhcp6c extif $EXTIF
       dhcp6c -c /etc/wide-dhcpv6/dhcp6c-$EXTIF.conf -p /var/run/dhcp6c-$EXTIF.pid $EXTIF
     fi
-    udhcpc -b -T2 -t6 -S -s /etc/udhcpc.script -H $HOSTNAME -p /var/run/udhcpc-$EXTIF.pid -i $EXTIF
+    udhcpc -b -T2 -t6 -S -s /etc/udhcpc.script -x "hostname:$HOSTNAME" -p /var/run/udhcpc-$EXTIF.pid -i $EXTIF
     ifplugd -apq -t2 -u3 -d3 -i $EXTIF -r /etc/ifplugd/udhcpc.action
     while [ $up_delay -gt 0 ] && [ ! -f /var/db/dhcp6c_cache ]; do
       up_delay=$((up_delay - 1))

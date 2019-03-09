@@ -2,64 +2,24 @@ config BR2_PACKAGE_BUSYBOX
 	bool "BusyBox"
 	default y
 	help
-	  The Swiss Army Knife of embedded Linux.  It slices, it dices, it
-	  makes Julian Fries.
+	  The Swiss Army Knife of embedded Linux. It slices, it dices,
+	  it makes Julian Fries.
 
-	  http://busybox.net/
+	  https://busybox.net/
 
 	  Most people will answer Y.
 
 if BR2_PACKAGE_BUSYBOX
 
-choice
-	prompt "BusyBox Version"
-	default BR2_BUSYBOX_VERSION_1_18_X
-	help
-	  Select the version of BusyBox you wish to use.
-
-	config BR2_BUSYBOX_VERSION_1_15_X
-		bool "BusyBox 1.15.x"
-		depends on BR2_DEPRECATED
-
-	config BR2_BUSYBOX_VERSION_1_16_X
-		bool "BusyBox 1.16.x"
-
-	config BR2_BUSYBOX_VERSION_1_17_X
-		bool "BusyBox 1.17.x"
-
-	config BR2_BUSYBOX_VERSION_1_18_X
-		bool "BusyBox 1.18.x"
-
-	config BR2_BUSYBOX_VERSION_1_19_X
-		bool "BusyBox 1.19.x"
-
-	config BR2_PACKAGE_BUSYBOX_SNAPSHOT
-		bool "daily snapshot"
-
-endchoice
-
-config BR2_BUSYBOX_VERSION
-	string
-	default "1.15.3"	if BR2_BUSYBOX_VERSION_1_15_X
-	default "1.16.2"	if BR2_BUSYBOX_VERSION_1_16_X
-	default "1.17.4"	if BR2_BUSYBOX_VERSION_1_17_X
-	default "1.18.5"	if BR2_BUSYBOX_VERSION_1_18_X
-	default "1.19.4"	if BR2_BUSYBOX_VERSION_1_19_X
-
 config BR2_PACKAGE_BUSYBOX_CONFIG
 	string "BusyBox configuration file to use?"
-	default "package/busybox/busybox-1.18.x.config" if BR2_PACKAGE_BUSYBOX_SNAPSHOT
-	default "package/busybox/busybox-1.13.x.config" if BR2_BUSYBOX_VERSION_1_15_X
-	default "package/busybox/busybox-1.16.x.config" if BR2_BUSYBOX_VERSION_1_16_X
-	default "package/busybox/busybox-1.17.x.config" if BR2_BUSYBOX_VERSION_1_17_X
-	default "package/busybox/busybox-1.18.x.config" if BR2_BUSYBOX_VERSION_1_18_X
-	default "package/busybox/busybox-1.19.x.config" if BR2_BUSYBOX_VERSION_1_19_X
+	default "package/busybox/busybox.config"
 	help
 	  Some people may wish to use their own modified BusyBox configuration
 	  file, and will specify their config file location with this option.
 
-	  Most people will just use the default BusyBox configuration file.
-
+# This option is not an option of Busybox, it can be selected even
+# if Busybox is not enabled.
 config BR2_PACKAGE_BUSYBOX_SHOW_OTHERS
 	bool "Show packages that are also provided by busybox"
 	help
@@ -70,8 +30,13 @@ endif
 
 if !BR2_PACKAGE_BUSYBOX # kconfig doesn't support else
 
-# add dummy config so the stuff with busybox alternatives are shown
-# when busybox is disabled
+comment "You may need to enable other packages to get a working system"
+comment "You better know what you're doing!"
+
+# This option is not an option of Busybox, it can be selected even if
+# Busybox is not enabled. This dummy option ensures that packages that
+# depend on BR2_PACKAGE_BUSYBOX_SHOW_OTHERS are visible when Busybox
+# is disabled.
 config BR2_PACKAGE_BUSYBOX_SHOW_OTHERS
        default y
 endif
