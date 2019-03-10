@@ -1,0 +1,20 @@
+--- busybox-1.29.3/libbb/utmp.c.orig	2019-03-09 22:23:24.865304299 -0600
++++ busybox-1.29.3/libbb/utmp.c	2019-03-09 22:26:08.217461003 -0600
+@@ -20,6 +20,8 @@
+ 	char *id;
+ 	unsigned width;
+ 
++	if (access(_PATH_UTMPX, R_OK | W_OK) == -1)
++		return;
+ 	memset(&utent, 0, sizeof(utent));
+ 	utent.ut_pid = pid;
+ 	utent.ut_type = new_type;
+@@ -67,6 +69,8 @@
+ 	struct utmpx utent;
+ 	struct utmpx *utp;
+ 
++	if (access(_PATH_UTMPX, R_OK | W_OK) == -1)
++		return;
+ 	touch(_PATH_UTMPX);
+ 	//utmpxname(_PATH_UTMPX);
+ 	setutxent();
