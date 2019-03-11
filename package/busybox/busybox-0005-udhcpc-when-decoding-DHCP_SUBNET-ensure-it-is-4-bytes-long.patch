@@ -7,7 +7,6 @@ function                                             old     new   delta
 udhcp_run_script                                     795     801      +6
 
 Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
-Signed-off-by: Jared Bents <jared.bents@rockwellcollins.com>
 ---
  networking/udhcp/common.c | 2 +-
  networking/udhcp/common.h | 2 +-
@@ -18,7 +17,7 @@ diff --git a/networking/udhcp/common.c b/networking/udhcp/common.c
 index 4c2221b77..fc4de5716 100644
 --- a/networking/udhcp/common.c
 +++ b/networking/udhcp/common.c
-@@ -300,7 +300,7 @@ uint8_t* FAST_FUNC udhcp_get_option32(struct dhcp_packet *packet, int code)
+@@ -302,7 +302,7 @@ uint8_t* FAST_FUNC udhcp_get_option32(struct dhcp_packet *packet, int code)
  {
  	uint8_t *r = udhcp_get_option(packet, code);
  	if (r) {
@@ -39,12 +38,12 @@ index 9511152ff..62f9a2a4a 100644
 +//#define DHCP_LOG_SERVER       0x07 /* port 704 UDP log (not syslog) */
  //#define DHCP_COOKIE_SERVER    0x08 /* "quote of the day" server */
  //#define DHCP_LPR_SERVER       0x09
- #define DHCP_HOST_NAME          0x0c /* either client informs server or server gives name to client */
+ #define DHCP_HOST_NAME          0x0c /* 12: either client informs server or server gives name to client */
 diff --git a/networking/udhcp/dhcpc.c b/networking/udhcp/dhcpc.c
 index 5b3fd531c..dcec8cdfd 100644
 --- a/networking/udhcp/dhcpc.c
 +++ b/networking/udhcp/dhcpc.c
-@@ -523,7 +523,7 @@ static char **fill_envp(struct dhcp_packet *packet)
+@@ -531,7 +531,7 @@ static char **fill_envp(struct dhcp_packet *packet)
  		temp = udhcp_get_option(packet, code);
  		*curr = xmalloc_optname_optval(temp, &dhcp_optflags[i], opt_name);
  		putenv(*curr++);

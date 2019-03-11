@@ -4,7 +4,7 @@
 #
 #############################################################
 
-BUSYBOX_VERSION = 1.29.3
+BUSYBOX_VERSION = 1.30.1
 BUSYBOX_SITE = https://busybox.net/downloads
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VERSION).tar.bz2
 
@@ -99,9 +99,7 @@ define BUSYBOX_BUILD_CMDS
 endef
 
 define BUSYBOX_INSTALL_TARGET_CMDS
-	# Use the 'noclobber' install rule, to prevent BusyBox from overwriting
-	# any full-blown versions of apps installed by other packages.
-	$(BUSYBOX_MAKE_ENV) $(MAKE) $(BUSYBOX_MAKE_OPTS) -C $(@D) install-noclobber
+	$(BUSYBOX_MAKE_ENV) $(MAKE) $(BUSYBOX_MAKE_OPTS) -C $(@D) install
 	$(BUSYBOX_INSTALL_UDHCPC_SCRIPT)
 	$(BUSYBOX_INSTALL_MDEV_CONF)
 	$(INSTALL) -m 0755 -D package/busybox/passwd.wrapper $(TARGET_DIR)/usr/bin/passwd
