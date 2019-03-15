@@ -12,6 +12,8 @@ Released @TBD@
 
 ** System
 
+-- busybox, major version bump to 1.30.1, security and bug fixes.
+
 -- sqlite, version bump to 3.27.2
 
 -- Monit, version bump to 5.25.3, security and bug fixes.
@@ -26,6 +28,8 @@ Released @TBD@
 
 -- libcurl (curl) version bump to 7.64.0, security fixes: CVE-2018-16890, CVE-2019-3822, CVE-2019-3823
 
+-- avahi, version 0.6.32, security fix: CVE-2017-6519 (CVE-2018-1000845)
+
 -- darkstat, add NETSTAT_EXTIF rc.conf variable to specify the External Interface, defaults to the $EXTIF interface.
 
 -- fping, version bump to 4.2
@@ -34,7 +38,7 @@ Released @TBD@
 
 -- msmtp, version bump to 1.8.3
 
--- unbound (host), version bump to 1.9.0
+-- unbound (host), version bump to 1.9.1
 
 -- whois, version bump to 5.4.1
 
@@ -45,6 +49,10 @@ Released @TBD@
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
 -- pjsip 2.8 (no change)
+
+-- FOP2, available version bump to 2.31.22.
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
