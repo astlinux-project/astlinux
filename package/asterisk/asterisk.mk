@@ -8,6 +8,8 @@ ASTERISK_VERSION := 11.25.3
 else
  ifeq ($(BR2_PACKAGE_ASTERISK_v13),y)
 ASTERISK_VERSION := 13.25.0
+ else
+ASTERISK_VERSION := 16.2.1
  endif
 endif
 ASTERISK_SOURCE := asterisk-$(ASTERISK_VERSION).tar.gz
@@ -53,7 +55,7 @@ ASTERISK_CONFIGURE_ARGS+= \
 ifeq ($(strip $(BR2_PACKAGE_LIBEDIT)),y)
 ASTERISK_EXTRAS+=libedit
 ASTERISK_CONFIGURE_ARGS+= \
-			--with-libedit="$(STAGING_DIR)/usr" 
+			--with-libedit="$(STAGING_DIR)/usr"
 else
 ASTERISK_CONFIGURE_ARGS+= \
 			--without-libedit
@@ -77,25 +79,25 @@ ASTERISK_CONFIGURE_ARGS+= \
 ifeq ($(strip $(BR2_PACKAGE_IKSEMEL)),y)
 ASTERISK_EXTRAS+=iksemel
 ASTERISK_CONFIGURE_ARGS+= \
-			--with-iksemel="$(STAGING_DIR)/usr" 
+			--with-iksemel="$(STAGING_DIR)/usr"
 endif
 
 ifeq ($(strip $(BR2_PACKAGE_LIBPRI)),y)
 ASTERISK_EXTRAS+=libpri
 ASTERISK_CONFIGURE_ARGS+= \
-			--with-pri="$(STAGING_DIR)/usr" 
+			--with-pri="$(STAGING_DIR)/usr"
 endif
 
 ifeq ($(strip $(BR2_PACKAGE_LIBSRTP)),y)
 ASTERISK_EXTRAS+=libsrtp
 ASTERISK_CONFIGURE_ARGS+= \
-			--with-srtp="$(STAGING_DIR)/usr" 
+			--with-srtp="$(STAGING_DIR)/usr"
 endif
 
 ifeq ($(strip $(BR2_PACKAGE_UW_IMAP)),y)
 ASTERISK_EXTRAS+=uw-imap
 ASTERISK_CONFIGURE_ARGS+= \
-			--with-imap="$(BUILD_DIR)/uw-imap-2007f" 
+			--with-imap="$(BUILD_DIR)/uw-imap-2007f"
 endif
 
 ifeq ($(strip $(BR2_PACKAGE_NETSNMP)),y)
@@ -169,10 +171,19 @@ ASTERISK_CONFIGURE_ENV+= \
 endif
 
 ifneq ($(ASTERISK_VERSION_SINGLE),11)
+ifneq ($(ASTERISK_VERSION_SINGLE),13)
+## Asterisk 16.x
+ifeq ($(strip $(BR2_PACKAGE_UNBOUND)),y)
+ASTERISK_EXTRAS+=unbound
+ASTERISK_CONFIGURE_ARGS+= \
+                        --with-unbound="$(STAGING_DIR)/usr"
+endif
+endif
 
 ifeq ($(strip $(BR2_PACKAGE_PJSIP)),y)
 ASTERISK_EXTRAS+=pjsip
 ASTERISK_CONFIGURE_ARGS+= \
+                        --without-pjproject-bundled \
                         --with-pjproject="$(STAGING_DIR)/usr"
 else
 ASTERISK_CONFIGURE_ARGS+= \
@@ -268,12 +279,14 @@ else
 	)
  endif
 	(cd $(ASTERISK_DIR); \
-		menuselect/menuselect --enable app_meetme --enable app_page menuselect.makeopts; \
+		menuselect/menuselect --enable app_meetme --enable app_page --enable app_macro menuselect.makeopts; \
 		menuselect/menuselect --enable res_pktccops menuselect.makeopts; \
 		menuselect/menuselect --disable CORE-SOUNDS-EN-GSM --disable MOH-OPSOUND-WAV menuselect.makeopts; \
 		menuselect/menuselect --disable BUILD_NATIVE menuselect.makeopts; \
 	)
 endif
+	# Don't force a "clean", create .lastclean
+	cp -f $(ASTERISK_DIR)/.cleancount $(ASTERISK_DIR)/.lastclean
 	touch $@
 
 $(ASTERISK_DIR)/$(ASTERISK_BINARY): $(ASTERISK_DIR)/.configured
@@ -372,7 +385,7 @@ asterisk-sounds-clean:
 
 asterisk-moh-clean:
 	rm -rf $(TARGET_DIR)/stat/var/lib/asterisk/mohmp3
-	rm -rf $(TARGET_DIR)/stat/etc/asterisk/musiconhold.conf 
+	rm -rf $(TARGET_DIR)/stat/etc/asterisk/musiconhold.conf
 
 asterisk-dirclean:
 	rm -rf $(ASTERISK_DIR)
