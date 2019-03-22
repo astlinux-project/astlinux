@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2018 Lonnie Abelbeck
+// Copyright (C) 2008-2019 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -659,18 +659,28 @@ function asteriskMGR($cmd, $fname) {
 
   stream_set_timeout($socket, 5);
   $info = stream_get_meta_data($socket);
+  $login_success = FALSE;
+  $output_header = FALSE;
   while (! feof($socket) && ! $info['timed_out']) {
     $line = fgets($socket, 256);
     $info = stream_get_meta_data($socket);
-    if (strncasecmp($line, 'Response: Error', 15) == 0) {
-      while (! feof($socket) && ! $info['timed_out']) {
-        fgets($socket, 256);
-        $info = stream_get_meta_data($socket);
+    if (! $login_success) {
+      if (strncasecmp($line, 'Response: Success', 17) == 0) {
+        $login_success = TRUE;
+      } elseif (strncasecmp($line, 'Response: Error', 15) == 0) {
+        while (! feof($socket) && ! $info['timed_out']) {
+          fgets($socket, 256);
+          $info = stream_get_meta_data($socket);
+        }
+        fclose($socket);
+        return(1102);
       }
-      fclose($socket);
-      return(1102);
     }
     if (strncasecmp($line, 'Privilege: Command', 18) == 0) {
+      break;
+    }
+    if (strncasecmp($line, 'Message: Command output follows', 31) == 0) {
+      $output_header = TRUE;
       break;
     }
   }
@@ -683,7 +693,10 @@ function asteriskMGR($cmd, $fname) {
         if (strncasecmp($line, '--END COMMAND--', 15) == 0) {
           break;
         }
-        fwrite($fp, $line);
+        if ($output_header && strncasecmp($line, 'Output: ', 8) != 0) {
+          break;
+        }
+        fwrite($fp, $output_header ? substr($line, 8) : $line);
       }
       fclose($fp);
     }
