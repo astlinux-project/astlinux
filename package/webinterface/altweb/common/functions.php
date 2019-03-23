@@ -653,7 +653,7 @@ function asteriskMGR($cmd, $fname) {
   fputs($socket, "Events: off\r\n\r\n");
 
   fputs($socket, "Action: command\r\n");
-  fputs($socket, "Command: ".$cmd."\r\n\r\n");
+  fputs($socket, "Command: $cmd\r\n\r\n");
 
   fputs($socket, "Action: logoff\r\n\r\n");
 

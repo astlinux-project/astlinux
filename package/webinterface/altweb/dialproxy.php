@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2013 Lonnie Abelbeck
+// Copyright (C) 2008-2019 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -10,6 +10,7 @@
 // 09-03-2009
 // 10-31-2013, Add POST method
 // 12-11-2015, Add GET/POST variables 'phone' and 'exten' synonymous for 'num' and 'ext'
+// 03-22-2019, Add Asterisk 16 support to AMIcommand()
 //
 // GET Method:
 // Usage: http://pbx/dialproxy.php?num=2223334444&ext=default
@@ -87,18 +88,28 @@ function AMIcommand($cmd, &$result) {
 
   stream_set_timeout($socket, 5);
   $info = stream_get_meta_data($socket);
+  $login_success = FALSE;
+  $output_header = FALSE;
   while (! feof($socket) && ! $info['timed_out']) {
     $line = fgets($socket, 256);
     $info = stream_get_meta_data($socket);
-    if (strncasecmp($line, 'Response: Error', 15) == 0) {
-      while (! feof($socket) && ! $info['timed_out']) {
-        fgets($socket, 256);
-        $info = stream_get_meta_data($socket);
+    if (! $login_success) {
+      if (strncasecmp($line, 'Response: Success', 17) == 0) {
+        $login_success = TRUE;
+      } elseif (strncasecmp($line, 'Response: Error', 15) == 0) {
+        while (! feof($socket) && ! $info['timed_out']) {
+          fgets($socket, 256);
+          $info = stream_get_meta_data($socket);
+        }
+        fclose($socket);
+        return(2);
       }
-      fclose($socket);
-      return(2);
     }
     if (strncasecmp($line, 'Privilege: Command', 18) == 0) {
+      break;
+    }
+    if (strncasecmp($line, 'Message: Command output follows', 31) == 0) {
+      $output_header = TRUE;
       break;
     }
   }
@@ -109,7 +120,10 @@ function AMIcommand($cmd, &$result) {
     if (strncasecmp($line, '--END COMMAND--', 15) == 0) {
       break;
     }
-    $result .= $line;
+    if ($output_header && strncasecmp($line, 'Output: ', 8) != 0) {
+      break;
+    }
+    $result .= $output_header ? substr($line, 8) : $line;
   }
   // end command data
   while (! feof($socket) && ! $info['timed_out']) {
