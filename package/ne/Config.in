@@ -1,0 +1,8 @@
+config BR2_PACKAGE_NE
+	bool "ne"
+	select BR2_PACKAGE_NCURSES
+	help
+	  ne, the nice editor
+
+	  http://ne.di.unimi.it/
+
