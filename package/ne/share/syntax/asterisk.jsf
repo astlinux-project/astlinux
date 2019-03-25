@@ -22,8 +22,12 @@
 
 :dash_start_comment Comment
 	*		line_comment
-	"-"		block_comment
+	"-"		dash_exception_comment
 	"\n"		line_start
+
+:dash_exception_comment Comment
+	*		block_comment
+	"-"		line_comment  # Except ;--- is not a block comment
 
 :block_comment Comment
 	*		block_comment
