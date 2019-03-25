@@ -15,9 +15,33 @@
 	*		key		noeat
 	"\n"		line_start
 	" \t\r"		line_start # leading spaces
-	";#"		line_comment	recolor=-1
+	";"		semi_comment	recolor=-1
+	"#"		line_comment	recolor=-1
 	"["		section		recolor=-1
 	"="		missing_key	recolor=-1
+
+:dash_start_comment Comment
+	*		line_comment
+	"-"		block_comment
+	"\n"		line_start
+
+:block_comment Comment
+	*		block_comment
+	"-"		dash_end_comment
+
+:dash_end_comment Comment
+	*		block_comment
+	"-"		maybe_end_comment
+
+:maybe_end_comment Comment
+	*		block_comment
+	";"		line_start
+	"-"		maybe_end_comment
+
+:semi_comment Comment
+	*		line_comment
+	"-"		dash_start_comment
+	"\n"		line_start
 
 :line_comment Comment
 	*		line_comment
