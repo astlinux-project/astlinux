@@ -11,5 +11,5 @@ perl        1    ^#!\s*/.*perl\b\s*
 asterisk    4    ^;|^\[\w+\]
 
 # By default ne does not override a file's given extension. However,
-# you can specify extensions that you would like to overwride.
+# you can specify extensions that you would like to override.
 .conf
