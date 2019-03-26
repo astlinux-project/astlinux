@@ -8,8 +8,10 @@
 # These patterns match some common command interpreters in the first line:
 sh          1    ^#!\s*/.*sh\b\s*
 perl        1    ^#!\s*/.*perl\b\s*
-asterisk    4    ^;|^\[\w+\]
+ini         1i   ^(#!version:|#\s*astlinux\s+provisioning\s+template)
+asterisk    4    ^(;|\[\w+\])
 
 # By default ne does not override a file's given extension. However,
 # you can specify extensions that you would like to override.
 .conf
+.cfg

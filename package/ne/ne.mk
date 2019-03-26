@@ -25,6 +25,7 @@ define NE_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0444 -D package/ne/share/syntax/asterisk.jsf $(TARGET_DIR)/usr/share/ne/syntax/
 	$(INSTALL) -m 0444 -D $(@D)/syntax/conf.jsf $(TARGET_DIR)/usr/share/ne/syntax/
 	$(INSTALL) -m 0444 -D $(@D)/syntax/sh.jsf $(TARGET_DIR)/usr/share/ne/syntax/
+	$(INSTALL) -m 0444 -D $(@D)/syntax/ini.jsf $(TARGET_DIR)/usr/share/ne/syntax/
 	$(INSTALL) -m 0444 -D $(@D)/syntax/perl.jsf $(TARGET_DIR)/usr/share/ne/syntax/
 	$(INSTALL) -m 0755 -D $(@D)/src/ne $(TARGET_DIR)/usr/bin/ne
 endef
