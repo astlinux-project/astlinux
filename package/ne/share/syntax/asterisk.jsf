@@ -1,9 +1,11 @@
 # JOE syntax highlight file for Asterisk (INI alike) files
+# Original Credit (2015): Christian Nicolai, https://github.com/cmur2/joe-syntax
+# AstLinux Project (2019): Support block-comments, support nested ${}'s (up to 4)
 
 =Idle
 =Comment	green
 =Constant	cyan
-=Escape		bold cyan
+=Escape		magenta
 =Bad		bold red
 
 =Key
@@ -117,3 +119,35 @@
 :subst Escape
 	*		subst
 	"}"		value
+	"\n"		line_start
+	"$"		maybe_subst_1
+
+:maybe_subst_1 Escape
+	*		subst		noeat
+	"{"		subst_1
+
+:subst_1 Escape
+	*		subst_1
+	"}"		subst
+	"\n"		line_start
+	"$"		maybe_subst_2
+
+:maybe_subst_2 Escape
+	*		subst_1		noeat
+	"{"		subst_2
+
+:subst_2 Escape
+	*		subst_2
+	"}"		subst_1
+	"\n"		line_start
+	"$"		maybe_subst_3
+
+:maybe_subst_3 Escape
+	*		subst_2		noeat
+	"{"		subst_3
+
+:subst_3 Escape
+	*		subst_3
+	"}"		subst_2
+	"\n"		line_start
+
