@@ -4,12 +4,16 @@
 #
 ################################################################################
 
-KEEPALIVED_VERSION = 2.0.13
+KEEPALIVED_VERSION = 2.0.14
 KEEPALIVED_SOURCE = keepalived-$(KEEPALIVED_VERSION).tar.gz
 KEEPALIVED_SITE = http://www.keepalived.org/software
 KEEPALIVED_DEPENDENCIES = host-pkg-config linux openssl
 
+# upstream patch
+KEEPALIVED_AUTORECONF = YES
+
 KEEPALIVED_CONF_OPT = \
+	--disable-warnings \
 	--disable-log-file \
 	--disable-dbus \
 	--disable-libnl \
