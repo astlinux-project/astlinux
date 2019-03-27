@@ -64,11 +64,13 @@ fi
 if [ -d /mnt/kd/home ]; then
   export HTOPRC="/mnt/kd/home/.htoprc"
   export SNGREPRC="/mnt/kd/home/.sngreprc"
+  export NE_HOME="/mnt/kd/home"
 fi
 
-# Set UTF-8 character type for vi
+# Set UTF-8 character type for vi and ne
 if [ -f /usr/lib/locale/.locale ]; then
   alias vi="LC_CTYPE=$(cat /usr/lib/locale/.locale) vi"
+  alias ne="LC_CTYPE=$(cat /usr/lib/locale/.locale) ne"
 fi
 
 if [ "$SHELL" = "/bin/rbash" ]; then
