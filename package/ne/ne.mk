@@ -10,6 +10,8 @@ NE_SITE = http://ne.di.unimi.it
 
 NE_DEPENDENCIES = ncurses
 
+NE_SYNTAX_TYPES = conf ini perl sh
+
 define NE_BUILD_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) CC="$(TARGET_CC)" \
 	NE_GLOBAL_DIR="/usr/share/ne" \
@@ -18,21 +20,22 @@ define NE_BUILD_CMDS
 endef
 
 define NE_INSTALL_TARGET_CMDS
-	$(INSTALL) -d -m 0755 $(TARGET_DIR)/usr/share/ne
+	$(INSTALL) -m 0755 -D $(@D)/src/ne $(TARGET_DIR)/usr/bin/ne
 	$(INSTALL) -d -m 0755 $(TARGET_DIR)/usr/share/ne/syntax
+	## Install local syntax files
+	$(INSTALL) -m 0444 -D package/ne/share/syntax/asterisk.jsf $(TARGET_DIR)/usr/share/ne/syntax/
+	## Install select syntax files
+	for i in $(NE_SYNTAX_TYPES); do \
+	  $(INSTALL) -m 0444 -D $(@D)/syntax/$$i.jsf $(TARGET_DIR)/usr/share/ne/syntax/ ; \
+	done
+	## Install supporting files
 	$(INSTALL) -m 0444 -D package/ne/share/dot-keys $(TARGET_DIR)/usr/share/ne/.keys
 	$(INSTALL) -m 0444 -D package/ne/share/extensions $(TARGET_DIR)/usr/share/ne/extensions
-	$(INSTALL) -m 0444 -D package/ne/share/syntax/asterisk.jsf $(TARGET_DIR)/usr/share/ne/syntax/
-	$(INSTALL) -m 0444 -D $(@D)/syntax/conf.jsf $(TARGET_DIR)/usr/share/ne/syntax/
-	$(INSTALL) -m 0444 -D $(@D)/syntax/sh.jsf $(TARGET_DIR)/usr/share/ne/syntax/
-	$(INSTALL) -m 0444 -D $(@D)/syntax/ini.jsf $(TARGET_DIR)/usr/share/ne/syntax/
-	$(INSTALL) -m 0444 -D $(@D)/syntax/perl.jsf $(TARGET_DIR)/usr/share/ne/syntax/
-	$(INSTALL) -m 0755 -D $(@D)/src/ne $(TARGET_DIR)/usr/bin/ne
 endef
 
 define NE_UNINSTALL_TARGET_CMDS
-	rm -rf $(TARGET_DIR)/usr/share/ne
 	rm -f $(TARGET_DIR)/usr/bin/ne
+	rm -rf $(TARGET_DIR)/usr/share/ne
 endef
 
 $(eval $(call GENTARGETS,package,ne))
