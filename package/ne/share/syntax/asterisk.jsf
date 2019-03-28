@@ -1,11 +1,12 @@
 # JOE syntax highlight file for Asterisk (INI alike) files
 # Original Credit (2015): Christian Nicolai, https://github.com/cmur2/joe-syntax
-# AstLinux Project (2019): Support block-comments, support nested ${}'s (up to 4)
+# AstLinux Project (2019): Support block-comments, nested ${}'s (up to 4), #include's (#inc)
 
 =Idle
 =Comment	green
 =Constant	cyan
 =Escape		magenta
+=Include	bold blue
 =Bad		bold red
 
 =Key
@@ -18,7 +19,7 @@
 	"\n"		line_start
 	" \t\r"		line_start # leading spaces
 	";"		semi_comment	recolor=-1
-	"#"		line_comment	recolor=-1
+	"#"		maybe_include	recolor=-1
 	"["		section		recolor=-1
 	"="		missing_key	recolor=-1
 
@@ -47,6 +48,26 @@
 :semi_comment Comment
 	*		line_comment
 	"-"		dash_start_comment
+	"\n"		line_start
+
+:maybe_include Comment
+	*		line_comment
+	"Ii"		maybe_include1
+	"\n"		line_start
+
+:maybe_include1 Comment
+	*		line_comment
+	"Nn"		maybe_include2
+	"\n"		line_start
+
+:maybe_include2 Comment
+	*		line_comment
+	"Cc"		include			recolor=-4
+	"\n"		line_start
+
+:include Include
+	*		include
+	";#"		line_comment		recolor=-1
 	"\n"		line_start
 
 :line_comment Comment
