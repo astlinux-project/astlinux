@@ -33,7 +33,7 @@ setup_network () {
 
     if [ -z "$IP" -o "$IP" = "dhcp" ]; then
       echo "Configuring $NDEV with DHCP..."
-      udhcpc -nq -s /etc/udhcpc.script -i "$NDEV"
+      udhcpc -nq -T2 -t6 -s /etc/udhcpc.script -i "$NDEV"
     elif [ -n "$IP" -a -n "$NM" ]; then
       ifconfig "$NDEV" "$IP" netmask "$NM"
 
