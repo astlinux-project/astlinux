@@ -102,8 +102,12 @@ define BUSYBOX_INSTALL_TARGET_CMDS
 	$(BUSYBOX_MAKE_ENV) $(MAKE) $(BUSYBOX_MAKE_OPTS) -C $(@D) install
 	$(BUSYBOX_INSTALL_UDHCPC_SCRIPT)
 	$(BUSYBOX_INSTALL_MDEV_CONF)
-	$(INSTALL) -m 0755 -D package/busybox/passwd.wrapper $(TARGET_DIR)/usr/bin/passwd
-	$(INSTALL) -m 0755 -D package/busybox/shutdown.wrapper $(TARGET_DIR)/sbin/shutdown
+	if [ -e $(TARGET_DIR)/usr/bin/passwd ]; then \
+	  $(INSTALL) -m 0755 -D package/busybox/passwd.wrapper $(TARGET_DIR)/usr/bin/passwd ; \
+	fi
+	if [ -e $(TARGET_DIR)/sbin/poweroff ]; then \
+	  $(INSTALL) -m 0755 -D package/busybox/shutdown.wrapper $(TARGET_DIR)/sbin/shutdown ; \
+	fi
 endef
 
 define BUSYBOX_UNINSTALL_TARGET_CMDS
