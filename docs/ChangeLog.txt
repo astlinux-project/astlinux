@@ -12,6 +12,10 @@ Released @TBD@
 
 ** System
 
+-- Linux Kernel 3.16.64, security and bug fixes
+
+-- RUNNIX, version bump to runnix-0.5.8, with Linux Kernel 3.16.64, busybox 1.30.1
+
 -- e1000e version bump to 3.4.2.4 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
 -- busybox, major version bump to 1.30.1, security and bug fixes.
