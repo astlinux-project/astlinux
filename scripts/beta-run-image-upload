@@ -13,6 +13,10 @@ CHANGELOG="docs/ChangeLog.txt"
 
 CHANGELOG_DIR="astlinux-changelog"
 
+ISO_VM="astlinux-beta-genx86_64-vm.iso"
+
+ISO_DIR="iso"
+
 success_count=0
 
 delete_dir()
@@ -69,6 +73,25 @@ upload_run_images()
   done
 }
 
+upload_iso_vm_image()
+{
+  local local_dir="$1" file
+
+  for file in $(ls -1 "$local_dir/"*.iso); do
+    case $file in
+      *genx86_64-vm.iso)
+        echo "ISO Image: ${file##*/}"
+        s3cmd put --acl-public "$file" "s3://$S3_BUCKET/$ISO_DIR/$ISO_VM"
+        if [ $? -ne 0 ]; then
+          echo "beta-run-image-upload: failed."
+          exit 1
+        fi
+        echo ""
+        ;;
+    esac
+  done
+}
+
 upload_version()
 {
   local remote_dir="$1" ver="/tmp/version.txt"
@@ -92,6 +115,10 @@ set_asterisk_version()
       FIRMWARE="ast13-firmware-1.x"
       MIRROR_FIRMWARE="$FIRMWARE"
       ;;
+    ast16)
+      FIRMWARE="ast16-firmware-1.x"
+      MIRROR_FIRMWARE="$FIRMWARE"
+      ;;
     *)
       echo "beta-run-image-upload: Unknown Asterisk Version."
       exit 1
@@ -108,14 +135,16 @@ if [ ! -d "$input_path" ]; then
   echo "beta-run-image-upload: directory \"$input_path\" not found."
   exit 1
 else
+  check_iso=0
   check_firmware=0
   for dir in $(ls -1 "$input_path"); do
     case $dir in
+      iso) check_iso=1 ;;
       *firmware-1.x) check_firmware=1 ;;
     esac
   done
-  if [ $check_firmware -eq 0 ]; then
-    echo "beta-run-image-upload: missing firmware-1.x directories."
+  if [ $check_iso -eq 0 -o $check_firmware -eq 0 ]; then
+    echo "beta-run-image-upload: missing iso/firmware-1.x directories."
     exit 1
   fi
 fi
@@ -133,7 +162,10 @@ fi
 # Remove pre-existing ChangeLog.txt and version.txt
 delete_dir "$CHANGELOG_DIR"
 
-for asterisk in ast11 ast13; do
+# Remove pre-existing iso(s)
+delete_dir "$ISO_DIR"
+
+for asterisk in ast11 ast13 ast16; do
 
   set_asterisk_version $asterisk
 
@@ -144,6 +176,9 @@ for asterisk in ast11 ast13; do
   upload_run_images "$input_path/$FIRMWARE" "$MIRROR_FIRMWARE"
 
 done
+
+# Upload current genx86_64-vm.iso
+upload_iso_vm_image "$input_path/iso"
 
 # Upload current ChangeLog.txt
 upload_file "$CHANGELOG_DIR" "$CHANGELOG"

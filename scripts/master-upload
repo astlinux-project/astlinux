@@ -86,6 +86,10 @@ set_asterisk_version()
       FIRMWARE="ast13-firmware-1.x"
       MIRROR_FIRMWARE="$FIRMWARE"
       ;;
+    ast16)
+      FIRMWARE="ast16-firmware-1.x"
+      MIRROR_FIRMWARE="$FIRMWARE"
+      ;;
     *)
       echo "master-upload: Unknown Asterisk Version."
       exit 1
@@ -124,7 +128,7 @@ if [ ! -f "$auth_file" ]; then
 fi
 
 
-for asterisk in ast11 ast13; do
+for asterisk in ast11 ast13 ast16; do
 
   set_asterisk_version $asterisk
 

@@ -92,6 +92,12 @@ set_asterisk_version()
       ASTERISK_VERSION="asterisk-${ASTERISK_VERSION// /}"
       FIRMWARE="ast13-firmware-1.x"
       ;;
+    ast16)
+      CONFIG="astlinux-ast16.config"
+      ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *16./) {print $2; exit} }' package/asterisk/asterisk.mk)"
+      ASTERISK_VERSION="asterisk-${ASTERISK_VERSION// /}"
+      FIRMWARE="ast16-firmware-1.x"
+      ;;
     *)
       echo "master-build: Unknown Asterisk Version."
       exit 1
@@ -157,10 +163,10 @@ echo "Regenerate the initrd"
 rm -f initrd.img
 
 #
-# Build Asterisk 11 and 13 versions of AstLinux
+# Build Asterisk 11, 13 and 16 versions of AstLinux
 #
 
-for asterisk in ast11 ast13; do
+for asterisk in ast11 ast13 ast16; do
 
   set_asterisk_version $asterisk
 
