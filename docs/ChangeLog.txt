@@ -13,6 +13,7 @@ Released @TBD@
 ** System
 
 -- Linux Kernel 3.16.64, security and bug fixes
+   Add patch, Driver: Vmxnet3: Fix regression in 3.16.60
 
 -- RUNNIX, version bump to runnix-0.5.8, with Linux Kernel 3.16.64, busybox 1.30.1
 
