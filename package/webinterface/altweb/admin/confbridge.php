@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2012-2015 Lonnie Abelbeck
+// Copyright (C) 2012-2019 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -9,6 +9,7 @@
 // confbridge.php for AstLinux
 // 04-09-2013
 // 01-06-2015, Added Asterisk 13 support
+// 04-04-2019, Added Asterisk 16 support
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -164,7 +165,7 @@ function getCONFBRIDGErooms() {
 function parseCONFBRIDGEdata($room_list) {
   global $ASTERISKversion;
 
-  $ast13 = (getDOTtuple($ASTERISKversion, 1) == 13);
+  $ast13_plus = (getDOTtuple($ASTERISKversion, 1) >= 13);
 
   $id = 0;
 
@@ -182,7 +183,7 @@ function parseCONFBRIDGEdata($room_list) {
       }
       while (! feof($ph)) {
         if (($line = trim(fgets($ph, 1024))) !== '') {
-          if ($ast13) {
+          if ($ast13_plus) {
             if (preg_match('/^([^ ]+) .* ([^ ]+) *$/', $line, $ips)) {
               $db['data'][$id]['room'] = $room_list[$i]['room'];
               $db['data'][$id]['channel'] = $ips[1];
