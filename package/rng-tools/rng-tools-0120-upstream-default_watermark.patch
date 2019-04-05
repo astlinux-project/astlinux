@@ -1,0 +1,32 @@
+--- rng-tools-6.5/rngd_linux.c.orig	2019-04-05 16:17:17.069406768 -0500
++++ rng-tools-6.5/rngd_linux.c	2019-04-05 16:21:52.030155327 -0500
+@@ -56,27 +56,14 @@
+  */
+ int default_watermark(void)
+ {
+-	char psbuf[64], *p;
+-	unsigned long ps;
+ 	FILE *f;
+-	size_t l;
+ 	unsigned int wm = 2048;	/* Default guess */
+ 
+ 	f = fopen("/proc/sys/kernel/random/poolsize", "r");
+ 	if (!f)
+ 		goto err;
+-	l = fread(psbuf, 1, sizeof psbuf, f);
+-	if (ferror(f) || !feof(f) || l == 0)
+-		goto err;
+-	if (psbuf[l-1] != '\n')
+-		goto err;
+-	psbuf[l-1] = '\0';
+-	ps = strtoul(psbuf, &p, 0);
+-	if (*p)
+-		goto err;
+-
+-	wm = ps*3/4;
+-
++	fscanf(f,"%d", &wm);
++	wm = wm*3/4;
+ err:
+ 	if (f)
+ 		fclose(f);
