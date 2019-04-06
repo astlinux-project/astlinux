@@ -42,9 +42,11 @@ Released @TBD@
 
 -- OpenVPN, version bump to 2.4.7
 
--- WireGuard VPN, version bump to 0.0.20190227
+-- WireGuard VPN, version bump to 0.0.20190406
 
 -- libcurl (curl) version bump to 7.64.1, security fixes: CVE-2018-16890, CVE-2019-3822, CVE-2019-3823
+
+-- shellinabox, version 2.20, add DoS security fix.
 
 -- avahi, version 0.6.32, security fix: CVE-2017-6519 (CVE-2018-1000845)
 
