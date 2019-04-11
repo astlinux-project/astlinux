@@ -49,6 +49,7 @@
 // 04-14-2018, Added DNS-TLS support
 // 07-30-2018, Added Keepalived support
 // 03-05-2019, Added NETSTAT_EXTIF support
+// 04-11-2019, Changed Outbound SMTP defaults
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -449,20 +450,20 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   fwrite($fp, "### SMTP TCP Port\n".$value."\n");
 
   fwrite($fp, "### SMTP TLS\n");
-  if ($_POST['smtp_tls'] === 'tls') {
+  if ($_POST['smtp_tls'] === 'no') {
+    $value = 'SMTP_TLS="no"';
+    fwrite($fp, $value."\n");
+    $value = 'SMTP_STARTTLS=""';
+    fwrite($fp, $value."\n");
+  } elseif ($_POST['smtp_tls'] === 'starttls') {
     $value = 'SMTP_TLS="yes"';
     fwrite($fp, $value."\n");
     $value = 'SMTP_STARTTLS="on"';
     fwrite($fp, $value."\n");
-  } elseif ($_POST['smtp_tls'] === 'ssl') {
+  } else {
     $value = 'SMTP_TLS="yes"';
     fwrite($fp, $value."\n");
     $value = 'SMTP_STARTTLS="off"';
-    fwrite($fp, $value."\n");
-  } else {
-    $value = 'SMTP_TLS="no"';
-    fwrite($fp, $value."\n");
-    $value = 'SMTP_STARTTLS=""';
     fwrite($fp, $value."\n");
   }
   $value = 'SMTP_CERTCHECK="'.$_POST['smtp_certcheck'].'"';
@@ -1824,31 +1825,31 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
   putHtml('SMTP Authentication:');
   putHtml('<select name="smtp_auth">');
-  putHtml('<option value="">none</option>');
-  $sel = (getVARdef($db, 'SMTP_AUTH', $cur_db) === 'plain') ? ' selected="selected"' : '';
-  putHtml('<option value="plain"'.$sel.'>plain</option>');
+  putHtml('<option value="plain">plain</option>');
   $sel = (getVARdef($db, 'SMTP_AUTH', $cur_db) === 'login') ? ' selected="selected"' : '';
   putHtml('<option value="login"'.$sel.'>login</option>');
+  $sel = (getVARdef($db, 'SMTP_AUTH', $cur_db) === 'off') ? ' selected="selected"' : '';
+  putHtml('<option value="off"'.$sel.'>none</option>');
   putHtml('</select>');
   putHtml('</td><td style="text-align: left;" colspan="3">');
   if (($value = getVARdef($db, 'SMTP_PORT', $cur_db)) === '') {
-    $value = '25';
+    $value = '465';
   }
   putHtml('SMTP Port:<input type="text" size="8" maxlength="6" value="'.$value.'" name="smtp_port" /></td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="3">');
   putHtml('SMTP Encryption:');
   putHtml('<select name="smtp_tls">');
-  putHtml('<option value="">none</option>');
-  $sel = (getVARdef($db, 'SMTP_TLS', $cur_db) === 'yes' && getVARdef($db, 'SMTP_STARTTLS', $cur_db) !== 'off') ? ' selected="selected"' : '';
-  putHtml('<option value="tls"'.$sel.'>TLS/STARTTLS</option>');
-  $sel = (getVARdef($db, 'SMTP_TLS', $cur_db) === 'yes' && getVARdef($db, 'SMTP_STARTTLS', $cur_db) === 'off') ? ' selected="selected"' : '';
-  putHtml('<option value="ssl"'.$sel.'>SSL/SMTP</option>');
+  putHtml('<option value="tls_ssl">TLS/SSL</option>');
+  $sel = (getVARdef($db, 'SMTP_TLS', $cur_db) === 'yes' && getVARdef($db, 'SMTP_STARTTLS', $cur_db) === 'on') ? ' selected="selected"' : '';
+  putHtml('<option value="starttls"'.$sel.'>STARTTLS</option>');
+  $sel = (getVARdef($db, 'SMTP_TLS', $cur_db) === 'no') ? ' selected="selected"' : '';
+  putHtml('<option value="no"'.$sel.'>none</option>');
   putHtml('</select>');
   putHtml('&ndash;');
   putHtml('<select name="smtp_certcheck">');
-  putHtml('<option value="off">Ignore Cert</option>');
-  $sel = (getVARdef($db, 'SMTP_CERTCHECK', $cur_db) === 'on' || getVARdef($db, 'SMTP_CA', $cur_db) !== '') ? ' selected="selected"' : '';
-  putHtml('<option value="on"'.$sel.'>Check Cert</option>');
+  putHtml('<option value="on">Check Cert</option>');
+  $sel = (getVARdef($db, 'SMTP_CERTCHECK', $cur_db) === 'off') ? ' selected="selected"' : '';
+  putHtml('<option value="off"'.$sel.'>Ignore Cert</option>');
   putHtml('</select>');
   putHtml('</td><td style="text-align: left;" colspan="3">');
   $value = getVARdef($db, 'SMTP_CA', $cur_db);
