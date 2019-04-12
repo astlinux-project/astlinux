@@ -3,8 +3,9 @@
 # flashrom
 #
 #############################################################
-FLASHROM_VERSION = 1.0
-FLASHROM_SOURCE = flashrom-$(FLASHROM_VERSION).tar.bz2
+
+FLASHROM_VERSION = 1.0.1
+FLASHROM_SOURCE = flashrom-v$(FLASHROM_VERSION).tar.bz2
 FLASHROM_SITE = https://download.flashrom.org/releases
 
 FLASHROM_DEPENDENCIES = pciutils libusb libusb-compat host-pkg-config

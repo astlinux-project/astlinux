@@ -11,5 +11,5 @@ config BR2_PACKAGE_FLASHROM
 	  network/graphics/storage controller cards, and various other
 	  programmer devices.
 
-	  http://flashrom.org/
+	  https://flashrom.org/
 
