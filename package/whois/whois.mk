@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-WHOIS_VERSION = 5.4.1
+WHOIS_VERSION = 5.4.2
 WHOIS_SITE = http://ftp.debian.org/debian/pool/main/w/whois
 WHOIS_SOURCE = whois_$(WHOIS_VERSION).tar.xz
 
