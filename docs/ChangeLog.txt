@@ -28,6 +28,8 @@ Released @TBD@
    Includes syntax checking for: asterisk, conf, ini, perl, sh
    More Info: http://ne.di.unimi.it/
 
+-- pcre, version bump to 8.43
+
 -- sqlite, version bump to 3.27.2
 
 -- strace, version bump to 5.0
@@ -35,6 +37,8 @@ Released @TBD@
 -- Monit, version bump to 5.25.3, security and bug fixes.
 
 -- Time Zone Database update, tzdata2019a and php-timezonedb-2019.1
+
+-- (Custom Build Only) flashrom, version bump to 1.0.1
 
 ** Networking
 
@@ -54,17 +58,20 @@ Released @TBD@
 
 -- fping, version bump to 4.2
 
--- keepalived, version bump to 2.0.14
+-- getdns/stubby, version bump to 1.5.2/0.2.6
+
+-- keepalived, version bump to 2.0.15
 
 -- msmtp, version bump to 1.8.3
 
 -- unbound (host), version bump to 1.9.1
 
--- whois, version bump to 5.4.1
+-- whois, version bump to 5.4.2
 
 ** Asterisk
 
--- Asterisk 11.25.3 (no change), 13.25.0 (version bump) and 16.2.1 (new version)
+-- Asterisk 11.25.3 (no change), 13.26.0 (version bump) and 16.3.0 (new version)
+                                 Adds: res_mwi_devstate.so, MWI Device State Subscriptions
 
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
