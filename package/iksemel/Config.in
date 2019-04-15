@@ -6,5 +6,5 @@ config BR2_PACKAGE_IKSEMEL
 	  iksemel is an XML (eXtensible Markup Language) parser library
 	  designed for Jabber applications.
 
-	  http://code.google.com/p/iksemel/
+	  https://github.com/meduketto/iksemel
 
