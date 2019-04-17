@@ -226,8 +226,8 @@ $(ASTERISK_DIR)/.source: $(DL_DIR)/$(ASTERISK_SOURCE)
 	touch $@
 
 $(ASTERISK_DIR)/.patched: $(ASTERISK_DIR)/.source
-	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/ asterisk-$(ASTERISK_VERSION_SINGLE)-\*.patch
-	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/ asterisk-$(ASTERISK_VERSION_TUPLE)-\*.patch
+	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/patches/ asterisk-$(ASTERISK_VERSION_SINGLE)-\*.patch
+	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/patches/ asterisk-$(ASTERISK_VERSION_TUPLE)-\*.patch
 	touch $@
 
 $(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | host-automake host-pkg-config host-ncurses host-bison host-flex host-libxml2 \
