@@ -18,20 +18,20 @@ choice
 	help
 		Select which version of Asterisk to compile and install.
 
-	config BR2_PACKAGE_ASTERISK_v11
-		bool "Asterisk v11.x"
+	config BR2_PACKAGE_ASTERISK_v13se
+		bool "Asterisk v13.x SE"
 		help
-			Asterisk LTS Series
+			Asterisk LTS Series, Stable Edition
 
 	config BR2_PACKAGE_ASTERISK_v13
 		bool "Asterisk v13.x"
 		help
-			Asterisk LTS Series
+			Asterisk LTS Series, Latest Version
 
 	config BR2_PACKAGE_ASTERISK_v16
 		bool "Asterisk v16.x"
 		help
-			Asterisk LTS Series
+			Asterisk LTS Series, Latest Version
 endchoice
 
 comment "cdr_mysql, app_mysql and res_config_mysql - disabled (requires MYSQL_CLIENT)"

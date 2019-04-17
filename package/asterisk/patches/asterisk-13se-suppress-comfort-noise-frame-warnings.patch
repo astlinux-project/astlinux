@@ -1,6 +1,6 @@
---- asterisk-11.25.3/channels/chan_sip.c.orig	2018-08-03 13:02:45.762992513 -0500
-+++ asterisk-11.25.3/channels/chan_sip.c	2018-08-03 13:06:54.811965946 -0500
-@@ -7257,6 +7257,8 @@
+--- asterisk-13.22.0/channels/chan_sip.c.orig	2018-08-03 13:02:45.762992513 -0500
++++ asterisk-13.22.0/channels/chan_sip.c	2018-08-03 13:06:54.811965946 -0500
+@@ -7528,6 +7528,8 @@
  			sip_pvt_unlock(p);
  		}
  		break;

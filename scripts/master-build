@@ -80,11 +80,11 @@ set_qemu_guest_agent_package()
 set_asterisk_version()
 {
   case $1 in
-    ast11)
-      CONFIG="astlinux-ast11.config"
-      ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *11./) {print $2; exit} }' package/asterisk/asterisk.mk)"
-      ASTERISK_VERSION="asterisk-${ASTERISK_VERSION// /}"
-      FIRMWARE="ast11-firmware-1.x"
+    ast13se)
+      CONFIG="astlinux-ast13se.config"
+      ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *13./) {print $2} }' package/asterisk/asterisk.mk | tail -n1)"
+      ASTERISK_VERSION="asterisk-${ASTERISK_VERSION// /}se"
+      FIRMWARE="ast13se-firmware-1.x"
       ;;
     ast13)
       CONFIG="astlinux-ast13.config"
@@ -163,10 +163,10 @@ echo "Regenerate the initrd"
 rm -f initrd.img
 
 #
-# Build Asterisk 11, 13 and 16 versions of AstLinux
+# Build Asterisk 13se, 13 and 16 versions of AstLinux
 #
 
-for asterisk in ast11 ast13 ast16; do
+for asterisk in ast13se ast13 ast16; do
 
   set_asterisk_version $asterisk
 

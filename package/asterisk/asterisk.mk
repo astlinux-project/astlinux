@@ -3,13 +3,17 @@
 # asterisk
 #
 ##############################################################
-ifeq ($(BR2_PACKAGE_ASTERISK_v11),y)
-ASTERISK_VERSION := 11.25.3
-else
- ifeq ($(BR2_PACKAGE_ASTERISK_v13),y)
+
+ifeq ($(BR2_PACKAGE_ASTERISK_v13),y)
 ASTERISK_VERSION := 13.26.0
- else
+ASTERISK_LABEL :=
+else
+ ifeq ($(BR2_PACKAGE_ASTERISK_v16),y)
 ASTERISK_VERSION := 16.3.0
+ASTERISK_LABEL :=
+ else
+ASTERISK_VERSION := 13.23.1
+ASTERISK_LABEL := se
  endif
 endif
 ASTERISK_SOURCE := asterisk-$(ASTERISK_VERSION).tar.gz
@@ -170,7 +174,6 @@ ASTERISK_CONFIGURE_ENV+= \
  endif
 endif
 
-ifneq ($(ASTERISK_VERSION_SINGLE),11)
 ifneq ($(ASTERISK_VERSION_SINGLE),13)
 ## Asterisk 16.x
 ifeq ($(strip $(BR2_PACKAGE_UNBOUND)),y)
@@ -211,13 +214,6 @@ ASTERISK_CONFIGURE_ARGS+= \
                         --without-libxslt
 endif
 
-else
-## Asterisk 11.x
-ASTERISK_CONFIGURE_ARGS+= \
-		--without-pwlib \
-		--with-ltdl=$(STAGING_DIR)/usr
-endif
-
 $(DL_DIR)/$(ASTERISK_SOURCE):
 	$(WGET) -P $(DL_DIR) $(ASTERISK_SITE)/$(ASTERISK_SOURCE)
 
@@ -226,7 +222,7 @@ $(ASTERISK_DIR)/.source: $(DL_DIR)/$(ASTERISK_SOURCE)
 	touch $@
 
 $(ASTERISK_DIR)/.patched: $(ASTERISK_DIR)/.source
-	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/patches/ asterisk-$(ASTERISK_VERSION_SINGLE)-\*.patch
+	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/patches/ asterisk-$(ASTERISK_VERSION_SINGLE)$(ASTERISK_LABEL)-\*.patch
 	toolchain/patch-kernel.sh $(ASTERISK_DIR) package/asterisk/patches/ asterisk-$(ASTERISK_VERSION_TUPLE)-\*.patch
 	touch $@
 

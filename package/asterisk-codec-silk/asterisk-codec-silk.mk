@@ -3,13 +3,13 @@
 # asterisk-codec-silk
 #
 ##############################################################
-ifeq ($(BR2_PACKAGE_ASTERISK_v11),y)
+ifeq ($(BR2_PACKAGE_ASTERISK_v13se),y)
   ifeq ($(ARCH),x86_64)
-ASTERISK_CODEC_SILK_VERSION := 11.0_1.0.3-x86_64
-ASTERISK_CODEC_SILK_SITE := https://downloads.digium.com/pub/telephony/codec_silk/asterisk-11.0/x86-64
+ASTERISK_CODEC_SILK_VERSION := 13.0_1.0.3-x86_64
+ASTERISK_CODEC_SILK_SITE := https://downloads.digium.com/pub/telephony/codec_silk/asterisk-13.0/x86-64
   else
-ASTERISK_CODEC_SILK_VERSION := 11.0_1.0.3-x86_32
-ASTERISK_CODEC_SILK_SITE := https://downloads.digium.com/pub/telephony/codec_silk/asterisk-11.0/x86-32
+ASTERISK_CODEC_SILK_VERSION := 13.0_1.0.3-x86_32
+ASTERISK_CODEC_SILK_SITE := https://downloads.digium.com/pub/telephony/codec_silk/asterisk-13.0/x86-32
   endif
 endif
 ifeq ($(BR2_PACKAGE_ASTERISK_v13),y)
