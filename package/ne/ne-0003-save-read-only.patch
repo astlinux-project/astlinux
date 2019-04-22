@@ -1,0 +1,10 @@
+--- ne-3.1.2/src/actions.c.orig	2019-04-22 08:34:44.565108528 -0500
++++ ne-3.1.2/src/actions.c	2019-04-22 08:36:04.335939926 -0500
+@@ -893,6 +893,7 @@
+ 		return OK;
+ 
+ 	case SAVE_A:
++		if (b->opt.read_only) return DOCUMENT_IS_READ_ONLY;
+ 		p = str_dup(b->filename);
+ 
+ 	case SAVEAS_A:
