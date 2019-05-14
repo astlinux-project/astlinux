@@ -91,7 +91,7 @@ Released @TBD@
 
 -- pjsip 2.8 (no change)
 
--- FOP2, available version bump to 2.31.22.
+-- FOP2, available version bump to 2.31.23.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
    More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
