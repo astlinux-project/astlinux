@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-CHRONY_VERSION = 3.4
+CHRONY_VERSION = 3.5
 CHRONY_SITE = https://download.tuxfamily.org/chrony
 CHRONY_DEPENDENCIES = libcap
 
