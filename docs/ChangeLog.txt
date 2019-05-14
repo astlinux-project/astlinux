@@ -59,13 +59,15 @@ Released @TBD@
 
 -- avahi, version 0.6.32, security fix: CVE-2017-6519 (CVE-2018-1000845)
 
+-- chrony, version bump to 3.5
+
 -- darkstat, add NETSTAT_EXTIF rc.conf variable to specify the External Interface, defaults to the $EXTIF interface.
 
 -- fping, version bump to 4.2
 
 -- getdns/stubby, version bump to 1.5.2/0.2.6
 
--- keepalived, version bump to 2.0.15
+-- keepalived, version bump to 2.0.16
 
 -- msmtp, version bump to 1.8.4
 
