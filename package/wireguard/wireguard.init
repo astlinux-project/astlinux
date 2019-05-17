@@ -59,6 +59,22 @@ get_wg_routes()
   done
 }
 
+missing_wg_route()
+{
+  local route="$1" dev="$2" proto
+
+  case $route in
+    *:*) proto="-6" ;;
+      *) proto="-4" ;;
+  esac
+
+  if [ -n "$(ip $proto route show dev $dev match $route 2>/dev/null)" ]; then
+    return 1
+  fi
+
+  return 0
+}
+
 add_route()
 {
   local route="$1" dev="$2"
@@ -188,7 +204,7 @@ start () {
       ## Auto-Add routes
       unset IFS
       for x in $(get_wg_routes $wg_if | sort -nr -k2 -t'/'); do
-        if ! ip route get $x 2>/dev/null | grep -q " dev $wg_if "; then
+        if missing_wg_route $x $wg_if; then
           add_route $x $wg_if
         fi
       done
