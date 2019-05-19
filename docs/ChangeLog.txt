@@ -39,6 +39,8 @@ Released @TBD@
 
 -- Monit, version bump to 5.25.3, security and bug fixes.
 
+-- ca-certificates, update trusted root certificates 2019-05-15
+
 -- Time Zone Database update, tzdata2019a and php-timezonedb-2019.1
 
 -- mac2vendor, oui.txt database snapshot 2019-04-23
