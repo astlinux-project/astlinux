@@ -35,7 +35,7 @@ Released @TBD@
 
 -- sqlite, version bump to 3.28.0
 
--- strace, version bump to 5.0
+-- strace, version bump to 5.1
 
 -- Monit, version bump to 5.25.3, security and bug fixes.
 
@@ -55,7 +55,8 @@ Released @TBD@
 
 -- WireGuard VPN, version bump to 0.0.20190406
 
--- libcurl (curl) version bump to 7.64.1, security fixes: CVE-2018-16890, CVE-2019-3822, CVE-2019-3823
+-- libcurl (curl) version bump to 7.65.0, security fixes: CVE-2018-16890, CVE-2019-3822, CVE-2019-3823
+                                                          CVE-2019-5435, CVE-2019-5436
 
 -- shellinabox, version 2.20, add DoS security fix.
 
