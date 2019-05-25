@@ -227,7 +227,7 @@ $(ASTERISK_DIR)/.patched: $(ASTERISK_DIR)/.source
 	touch $@
 
 $(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | host-automake host-pkg-config host-ncurses host-bison host-flex host-libxml2 \
-			libelf ncurses zlib openssl libtool util-linux $(ASTERISK_EXTRAS)
+			ncurses zlib openssl libtool util-linux $(ASTERISK_EXTRAS)
 	(cd $(ASTERISK_DIR); rm -rf config.cache configure; \
 		$(HOST_CONFIGURE_OPTS) \
 		./bootstrap.sh; \
