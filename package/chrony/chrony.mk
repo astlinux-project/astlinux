@@ -21,7 +21,7 @@ CHRONY_CONF_OPT = \
 	--without-tomcrypt
 
 ifeq ($(BR2_PACKAGE_LIBNSS),y)
-CHRONY_DEPENDENCIES += host-pkgconf libnss
+CHRONY_DEPENDENCIES += host-pkg-config libnss
 else
 CHRONY_CONF_OPT += --without-nss
 endif
