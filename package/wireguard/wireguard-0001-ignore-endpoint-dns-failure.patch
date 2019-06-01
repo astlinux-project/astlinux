@@ -27,8 +27,8 @@ diff --git a/src/tools/config.c b/src/tools/config.c
 index 5d15356..97c34ab 100644
 --- a/src/tools/config.c
 +++ b/src/tools/config.c
-@@ -241,7 +241,7 @@ static inline bool parse_endpoint(struct sockaddr *endpoint, const char *value)
- 				timeout >= 90000000) {
+@@ -259,7 +259,7 @@ static inline bool parse_endpoint(struct sockaddr *endpoint, const char *value)
+ 				(retries >= 0 && !retries--)) {
  			free(mutable);
  			fprintf(stderr, "%s: `%s'\n", ret == EAI_SYSTEM ? strerror(errno) : gai_strerror(ret), value);
 -			return false;
