@@ -1,6 +1,6 @@
 --- e2fsprogs-1.43.4/MCONFIG.in.orig	2009-10-07 20:25:07.000000000 +0800
 +++ e2fsprogs-1.43.4/MCONFIG.in	2009-10-07 20:21:41.000000000 +0800
-@@ -117,7 +117,7 @@
+@@ -128,7 +128,7 @@
  #
  LIB = $(top_builddir)/lib
  LIBSS = $(LIB)/libss@LIB_EXT@ @PRIVATE_LIBS_CMT@ @DLOPEN_LIB@
