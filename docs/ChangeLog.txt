@@ -28,6 +28,10 @@ Released @TBD@
 
 -- libpng, version bump to 1.6.37
 
+-- libsodium, version bump to 1.0.18
+
+-- e2fsprogs, version bump to 1.45.2
+
 -- ethtool, version bump to 5.1
 
 -- ne, new package, version 3.1.2, the nice editor, an excellent alternative to nano
@@ -55,11 +59,11 @@ Released @TBD@
 
 ** Networking
 
--- OpenSSL, version bump to 1.0.2r, security fixes: CVE-2019-1559
+-- OpenSSL, version bump to 1.0.2s, security fixes: CVE-2019-1559
 
 -- OpenVPN, version bump to 2.4.7
 
--- WireGuard VPN, version bump to 0.0.20190406
+-- WireGuard VPN, version bump to 0.0.20190601
 
 -- libcurl (curl) version bump to 7.65.0, security fixes: CVE-2018-16890, CVE-2019-3822, CVE-2019-3823
                                                           CVE-2019-5435, CVE-2019-5436
@@ -80,6 +84,8 @@ Released @TBD@
 
 -- msmtp, version bump to 1.8.4
 
+-- stunnel, version bump to 5.54
+
 -- unbound (host), version bump to 1.9.1
 
 -- whois, version bump to 5.4.2
@@ -92,7 +98,7 @@ Released @TBD@
    Older than latest Asterisk 13.x version but more tested, built --without-pjproject
    Adds: When a Dial() has a B() option 'Return(IgnoreNoAnswerCDR)' ignore unanswered events
 
--- Asterisk 13.26.0 (version bump) and 16.3.0 (new version)
+-- Asterisk 13.27.0 (version bump) and 16.4.0 (new version)
    Adds: res_mwi_devstate.so, MWI Device State Subscriptions
    Adds: When a Dial() has a B() option 'Return(IgnoreNoAnswerCDR)' ignore unanswered events
 
