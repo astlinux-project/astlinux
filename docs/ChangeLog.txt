@@ -30,6 +30,8 @@ Released @TBD@
 
 -- libsodium, version bump to 1.0.18
 
+-- acme-client, version bump to 2.8.1
+
 -- e2fsprogs, version bump to 1.45.2
 
 -- ethtool, version bump to 5.1
@@ -65,7 +67,7 @@ Released @TBD@
 
 -- WireGuard VPN, version bump to 0.0.20190601
 
--- libcurl (curl) version bump to 7.65.0, security fixes: CVE-2018-16890, CVE-2019-3822, CVE-2019-3823
+-- libcurl (curl) version bump to 7.65.1, security fixes: CVE-2018-16890, CVE-2019-3822, CVE-2019-3823
                                                           CVE-2019-5435, CVE-2019-5436
 
 -- shellinabox, version 2.20, add DoS security fix.
