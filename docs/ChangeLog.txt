@@ -12,9 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 3.16.64, security and bug fixes
-   Add patch, Driver: Vmxnet3: Fix regression in 3.16.60
-   Add patch, ipc/shm fix pid freeing: Fix regression in 3.16.60
+-- Linux Kernel 3.16.68, security and bug fixes, including MDS (ZombieLoad) mitigation support.
 
 -- linux, add kernel patch to the 'k10temp' kernel module adding support for the HPE ProLiant MicroServer Gen10
 
