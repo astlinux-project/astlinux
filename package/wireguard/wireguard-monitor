@@ -17,6 +17,7 @@ VERBOSITY="${WIREGUARD_MONITOR_VERBOSITY:-6}"
 CONFIG_FILE="/etc/wireguard/$INTERFACE.conf"
 INACTIVE_PEER_SECS=135
 PEER_CONFIG_DATA=""
+RELOAD_CONFIG=0
 
 log()
 {
@@ -60,6 +61,13 @@ idle_wait()
     cnt=$((cnt+1))
     sleep 1
   done
+}
+
+gen_peer_config_data()
+{
+  if [ -f "$CONFIG_FILE" ]; then
+    PEER_CONFIG_DATA="$(sed -n '/^\[[Pp]eer/,$ s/^[^#].*$/&/p' "$CONFIG_FILE" | sed 's/[[:space:]]//g')"
+  fi
 }
 
 update_dns_endpoint()
@@ -111,6 +119,11 @@ monitor_wg_status()
 {
   local line pubkey time IFS
 
+  if [ $RELOAD_CONFIG -eq 1 ]; then
+    RELOAD_CONFIG=0
+    gen_peer_config_data
+  fi
+
   IFS=$'\n'
   for line in $(wg show $INTERFACE latest-handshakes); do
     time="$(echo "$line" | awk '{ print $2; }')"
@@ -125,6 +138,14 @@ monitor_wg_status()
   idle_wait $INTERVAL
 }
 
+reload_config()
+{
+  if [ $RELOAD_CONFIG -eq 0 ]; then
+    log INFO "Reloading peer config data."
+    RELOAD_CONFIG=1
+  fi
+}
+
 start_monitor()
 {
   # Robust 'bash' method of creating/testing for a lockfile
@@ -137,6 +158,8 @@ start_monitor()
   if [ -f /usr/lib/bash/sleep ]; then
     enable -f /usr/lib/bash/sleep sleep
   fi
+
+  trap 'reload_config' HUP
 
   trap 'rm -f "$LOCKFILE" "$PIDFILE"; exit $?' INT TERM EXIT
 
@@ -153,7 +176,7 @@ start_monitor()
   log INFO "Stopping monitoring of '$INTERFACE' interface."
 
   rm -f "$LOCKFILE" "$PIDFILE"
-  trap - INT TERM EXIT
+  trap - HUP INT TERM EXIT
 
   return 0
 }
@@ -163,9 +186,8 @@ if [ ! -f /var/lock/wireguard.lock ]; then
   exit 1
 fi
 
-if [ -f "$CONFIG_FILE" ]; then
-  PEER_CONFIG_DATA="$(sed -n '/^\[[Pp]eer/,$ s/^[^#].*$/&/p' "$CONFIG_FILE" | sed 's/[[:space:]]//g')"
-fi
+gen_peer_config_data
+
 if [ -z "$PEER_CONFIG_DATA" ]; then
   echo "wireguard-monitor: WireGuard VPN config not found." >&2
   exit 1

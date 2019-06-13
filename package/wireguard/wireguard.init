@@ -14,6 +14,8 @@ CLIENTS_PEER_DIR="$CONFIG_DIR/peer/${WIREGUARD_IF:-wg0}.clients"
 
 CONFIG_FILE="/tmp/etc/wireguard/${WIREGUARD_IF:-wg0}.conf"
 
+ROUTE_FILE="/tmp/etc/wireguard/${WIREGUARD_IF:-wg0}.route"
+
 LOCK_FILE="/var/lock/wireguard.lock"
 
 SCRIPT_FILE="/mnt/kd/wireguard.script"
@@ -80,10 +82,21 @@ add_route()
   local route="$1" dev="$2"
 
   case $route in
-    */0) return ;;
+    */0) return 1 ;;
   esac
 
   ip route add $route dev $dev
+}
+
+del_route()
+{
+  local route="$1" dev="$2"
+
+  case $route in
+    */0) return 1 ;;
+  esac
+
+  ip route del $route dev $dev
 }
 
 gen_wireguard_initial_peer()
@@ -200,12 +213,15 @@ start () {
 
     echo "$wg_if" > $LOCK_FILE
 
+    rm -f "$ROUTE_FILE"
     if [ -z "$WIREGUARD_ROUTES" -a "$WIREGUARD_AUTO_ROUTES" != "no" ]; then
       ## Auto-Add routes
       unset IFS
       for x in $(get_wg_routes $wg_if | sort -nr -k2 -t'/'); do
         if missing_wg_route $x $wg_if; then
-          add_route $x $wg_if
+          if add_route $x $wg_if; then
+            echo "$x" >> "$ROUTE_FILE"
+          fi
         fi
       done
     else
@@ -266,6 +282,73 @@ stop () {
   fi
 }
 
+reload () {
+  local wg_if x deleted old new old_aips new_aips match IFS
+
+  if [ ! -f $LOCK_FILE ]; then
+    echo "WireGuard VPN not running, Reload failed."
+    exit 1
+  fi
+
+  gen_wireguard_conf > $CONFIG_FILE
+  chmod 600 $CONFIG_FILE
+
+  wg_if="$(cat $LOCK_FILE)"
+
+  if [ -n "$wg_if" -a -f "$CONFIG_FILE" ]; then
+    echo "Reloading WireGuard VPN..."
+
+    old_aips="$(get_wg_routes $wg_if | sort -nr -k2 -t'/')"
+
+    if ! wg syncconf $wg_if $CONFIG_FILE; then
+      exit 1
+    fi
+
+    new_aips="$(get_wg_routes $wg_if | sort -nr -k2 -t'/')"
+
+    if [ -z "$WIREGUARD_ROUTES" -a "$WIREGUARD_AUTO_ROUTES" != "no" ]; then
+      ## Determine deleted routes
+      if [ -f "$ROUTE_FILE" ]; then
+        deleted=""
+        unset IFS
+        for old in $old_aips; do
+          match=0
+          for new in $new_aips; do
+            if [ "$old" = "$new" ]; then
+              match=1
+              break
+            fi
+          done
+          if [ $match -eq 0 ]; then
+            deleted="$deleted $old"
+          fi
+        done
+        for x in $deleted; do
+          if grep -q "^${x//./[.]}$" "$ROUTE_FILE"; then
+            if del_route $x $wg_if; then
+              sed -i -e "s|^${x//./[.]}$||" -e '/^$/ d' "$ROUTE_FILE"
+            fi
+          fi
+        done
+      fi
+      ## Auto-Add routes
+      unset IFS
+      for x in $new_aips; do
+        if missing_wg_route $x $wg_if; then
+          if add_route $x $wg_if; then
+            echo "$x" >> "$ROUTE_FILE"
+          fi
+        fi
+      done
+    fi
+
+    if [ -f "$WIREGUARD_MONITOR_PIDFILE" ]; then
+      echo "Reloading wireguard-monitor..."
+      kill -HUP $(cat "$WIREGUARD_MONITOR_PIDFILE")
+    fi
+  fi
+}
+
 case $1 in
 
 start)
@@ -287,8 +370,12 @@ restart)
   start
   ;;
 
+reload)
+  reload
+  ;;
+
 *)
-  echo "Usage: start|stop|restart"
+  echo "Usage: start|stop|restart|reload"
   ;;
 
 esac
