@@ -50,6 +50,7 @@
 // 07-30-2018, Added Keepalived support
 // 03-05-2019, Added NETSTAT_EXTIF support
 // 04-11-2019, Changed Outbound SMTP defaults
+// 06-13-2019, Added Reload WireGuard VPN
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -1143,8 +1144,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 50, $result, 'init');
       } elseif ($process === 'wireguard') {
         $result = restartPROCESS($process, 51, $result, 'init');
+      } elseif ($process === 'WIREGUARD') {
+        $result = restartPROCESS('wireguard', 52, $result, 'reload');
       } elseif ($process === 'keepalived') {
-        $result = restartPROCESS($process, 52, $result, 'init');
+        $result = restartPROCESS($process, 53, $result, 'init');
       }
     } else {
       $result = 2;
@@ -1246,6 +1249,8 @@ require_once '../common/header.php';
     } elseif ($result == 51) {
       putHtml('<p style="color: green;">WireGuard VPN'.statusPROCESS('wireguard').'.</p>');
     } elseif ($result == 52) {
+      putHtml('<p style="color: green;">WireGuard VPN has been Reloaded.</p>');
+    } elseif ($result == 53) {
       putHtml('<p style="color: green;">Keepalived'.statusPROCESS('keepalived').'.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
@@ -1326,6 +1331,8 @@ require_once '../common/header.php';
   putHtml('<option value="pptpd"'.$sel.'>Restart PPTP VPN Server</option>');
   $sel = ($reboot_restart === 'wireguard') ? ' selected="selected"' : '';
   putHtml('<option value="wireguard"'.$sel.'>Restart WireGuard VPN</option>');
+  $sel = ($reboot_restart === 'WIREGUARD') ? ' selected="selected"' : '';
+  putHtml('<option value="WIREGUARD"'.$sel.'>Reload WireGuard VPN</option>');
   $sel = ($reboot_restart === 'fossil') ? ' selected="selected"' : '';
   putHtml('<option value="fossil"'.$sel.'>Restart Fossil Server</option>');
   $sel = ($reboot_restart === 'vsftpd') ? ' selected="selected"' : '';

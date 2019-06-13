@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2018 Lonnie Abelbeck
+// Copyright (C) 2008-2019 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -18,6 +18,7 @@
 // 11-06-2017, Added WireGuard VPN Support
 // 07-25-2018, Added Keepalived Support
 // 11-12-2018, Added WireGuard VPN Mobile Client support
+// 06-13-2019, Added Reload WireGuard VPN
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -37,6 +38,7 @@ $select_reload = array (
   'ipsec' => 'Restart IPsec strongSwan',
   'pptpd' => 'Restart PPTP VPN Server',
   'wireguard' => 'Restart WireGuard VPN',
+  'WIREGUARD' => 'Reload WireGuard VPN',
   'fossil' => 'Restart Fossil Server',
   'vsftpd' => 'Restart FTP Server',
   'ldap' => 'Reload LDAP Client',
@@ -282,8 +284,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 50, $result, 'init');
       } elseif ($process === 'wireguard') {
         $result = restartPROCESS($process, 51, $result, 'init');
+      } elseif ($process === 'WIREGUARD') {
+        $result = restartPROCESS('wireguard', 52, $result, 'reload');
       } elseif ($process === 'keepalived') {
-        $result = restartPROCESS($process, 52, $result, 'init');
+        $result = restartPROCESS($process, 53, $result, 'init');
       } elseif ($process === 'IPTABLES') {
         $result = restartPROCESS('iptables', 66, $result, 'reload');
       } elseif ($process === 'cron') {
@@ -439,6 +443,8 @@ require_once '../common/header.php';
     } elseif ($result == 51) {
       putHtml('<p style="color: green;">WireGuard VPN'.statusPROCESS('wireguard').'.</p>');
     } elseif ($result == 52) {
+      putHtml('<p style="color: green;">WireGuard VPN has been Reloaded.</p>');
+    } elseif ($result == 53) {
       putHtml('<p style="color: green;">Keepalived'.statusPROCESS('keepalived').'.</p>');
     } elseif ($result == 66) {
       putHtml('<p style="color: green;">Firewall Blocklist has been Reloaded.</p>');
