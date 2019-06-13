@@ -64,6 +64,8 @@ Released @TBD@
 -- OpenVPN, version bump to 2.4.7
 
 -- WireGuard VPN, version bump to 0.0.20190601
+   Add "service wireguard reload" support. This allows WireGuard peers to be edited, added, and/or removed
+   with minimal impact to active tunnels.
 
 -- libcurl (curl) version bump to 7.65.1, security fixes: CVE-2018-16890, CVE-2019-3822, CVE-2019-3823
                                                           CVE-2019-5435, CVE-2019-5436
@@ -115,6 +117,8 @@ Released @TBD@
 -- Network tab, add NETSTAT_EXTIF support
 
 -- Network tab, change Outbound SMTP defaults to Port 465, Auth "plain", TLS/SSL and Check Cert.
+
+-- Network, Edit tabs, add "Reload WireGuard VPN" support to apply peer changes/additions/deletions.
 
 
 Additions for AstLinux 1.3.5.2:
