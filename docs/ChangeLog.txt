@@ -90,7 +90,7 @@ Released @TBD@
 
 -- stunnel, version bump to 5.54
 
--- unbound (host), version bump to 1.9.1
+-- unbound (host), version bump to 1.9.2
 
 -- whois, version bump to 5.4.3
 
