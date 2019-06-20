@@ -24,6 +24,8 @@ Released @TBD@
 
 -- libedit, version bump to 20190324-3.1
 
+-- expat, version bump to 2.2.7, security fixes
+
 -- libpng, version bump to 1.6.37
 
 -- libsodium, version bump to 1.0.18
@@ -93,6 +95,8 @@ Released @TBD@
 -- unbound (host), version bump to 1.9.2
 
 -- whois, version bump to 5.4.3
+
+-- (Custom Build Only) sipp, version bump to 3.6.0
 
 ** Asterisk
 
