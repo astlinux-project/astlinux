@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-SIPP_VERSION = 3.5.2
+SIPP_VERSION = 3.6.0
 SIPP_SOURCE = sipp-$(SIPP_VERSION).tar.gz
 SIPP_SITE = https://github.com/SIPp/sipp/releases/download/v$(SIPP_VERSION)
 SIPP_DEPENDENCIES = libpcap ncurses openssl
