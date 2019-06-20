@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 3.16.68, security and bug fixes, including MDS (ZombieLoad) mitigation support.
+-- Linux Kernel 3.16.69, security and bug fixes, including MDS (ZombieLoad) and SACK Panic mitigation support.
 
 -- linux, add kernel patch to the 'k10temp' kernel module adding support for the HPE ProLiant MicroServer Gen10
 
