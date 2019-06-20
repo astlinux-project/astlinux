@@ -1,0 +1,13 @@
+--- asterisk-13.27.0/channels/chan_dahdi.c.orig	2019-06-19 17:21:48.824388535 -0500
++++ asterisk-13.27.0/channels/chan_dahdi.c	2019-06-19 17:24:04.295942619 -0500
+@@ -1849,8 +1849,8 @@
+ 
+ 	ast_assert(dahdi_channel != NULL);
+ 
+-	blob = ast_json_pack("{s: i, s: i, s: s}",
+-		"group", group,
++	blob = ast_json_pack("{s: I, s: i, s: s}",
++		"group", (ast_json_int_t)group,
+ 		"span", span,
+ 		"channel", dahdi_channel);
+ 	if (!blob) {
