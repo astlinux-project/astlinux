@@ -84,6 +84,7 @@ fi
 # Restore basic configuration files
 #
 if ! restore_files astdb astdb.sqlite3 asterisk-odbc.sqlite3 webgui-prefs.txt blocked-hosts dnsmasq.static \
+                   arno-iptables-firewall/custom-rules \
                    rc.local rc.local.stop rc.elocal rc.ledcontrol \
                    ast-crash hosts ethers; then
   exit 2

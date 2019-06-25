@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2017 Lonnie Abelbeck
+// Copyright (C) 2008-2019 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -19,6 +19,7 @@
 // 01-16-2011, Added runnix check, upgrade, show, revert
 // 07-21-2013, Added Add-On Packages
 // 12-16-2017, Updated backup files
+// 06-25-2019, Updated backup files
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -188,6 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tmpfile = $backup_name.'-'.$backup_type.'-'.date('Y-m-d').$suffix;
     if ($backup_type === 'basic') {
       $firewall = is_dir('/mnt/kd/arno-iptables-firewall/plugins') ? ' "arno-iptables-firewall/plugins"' : '';
+      $firewall .= is_file('/mnt/kd/arno-iptables-firewall/custom-rules') ? ' "arno-iptables-firewall/custom-rules"' : '';
       $phoneprov_base_dir = rtrim(trim(shell_exec('. /etc/rc.conf; echo "${PHONEPROV_BASE_DIR:-/mnt/kd/phoneprov}"')), '/');
       if (is_dir("$phoneprov_base_dir/templates") && (strncmp($phoneprov_base_dir, '/mnt/kd', strlen('/mnt/kd')) == 0)) {
         $templates = ' "'.substr("$phoneprov_base_dir/templates", strlen('/mnt/kd/')).'"';
