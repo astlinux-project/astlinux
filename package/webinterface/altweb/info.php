@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2016 Lonnie Abelbeck
+// Copyright (C) 2008-2019 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -9,6 +9,7 @@
 // info.php for AstLinux
 // 12-09-2008
 // 09-30-2016, Added topic sanity check
+// 06-26-2019, Added ChangeLog topic
 //
 
 // Function: getSYSlocation
@@ -26,7 +27,13 @@ function getSYSlocation($base = '')
 }
 
 $topic = isset($_GET['topic']) ? $_GET['topic'] : '';
-$ifile = getSYSlocation('/common/topics.info');
+if ($topic === "ChangeLog") {
+  $ifile = '/stat/etc/docs/'.$topic.'.txt';
+  $tmpfile = '';
+} else {
+  $ifile = getSYSlocation('/common/topics.info');
+  $tmpfile = 'Y';  // Replace with tempnam() later
+}
 if ($topic === '' || $ifile === '') {
   exit;
 }
@@ -34,16 +41,23 @@ if (! preg_match('/^[a-zA-Z0-9_-]*$/', $topic)) {
   exit;
 }
 
-$tmpfile = tempnam("/tmp", "PHP_");
-@exec('sed -n "/^\[\['.$topic.'\]\]/,/^\[\[/ p" '.$ifile.' | sed "/^\[\[/ d" >'.$tmpfile);
+if ($tmpfile !== '') {
+  $tmpfile = tempnam("/tmp", "PHP_");
+  @exec('sed -n "/^\[\['.$topic.'\]\]/,/^\[\[/ p" '.$ifile.' | sed "/^\[\[/ d" >'.$tmpfile);
+  $ofile = $tmpfile;
+} else {
+  $ofile = $ifile;
+}
 
 header('Content-Type: text/plain; charset=utf-8');
 header('Content-Disposition: inline; filename="'.$topic.'.txt"');
 header('Content-Transfer-Encoding: binary');
-header('Content-Length: '.filesize($tmpfile));
+header('Content-Length: '.filesize($ofile));
 ob_clean();
 flush();
-@readfile($tmpfile);
-@unlink($tmpfile);
+@readfile($ofile);
+if ($tmpfile !== '') {
+  @unlink($tmpfile);
+}
 exit;
 ?>

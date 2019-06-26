@@ -44,6 +44,7 @@
 // 04-25-2018, Performance improvement using asynchronous system calls
 // 11-23-2018, Improved WireGuard VPN Status
 // 02-10-2019, Added DNSMASQ lease DB support
+// 06-26-2019, Added ChangeLog display
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -867,7 +868,12 @@ if (is_file('/oldroot/cdrom/runnix')) {
   } else {
     $line = 'runnix-0.2.1';
   }
-  echo $line, '</td>';
+  if (is_file('/stat/etc/docs/ChangeLog.txt')) {
+    echo $line, '&nbsp;&nbsp;&ndash;&nbsp;&nbsp;';
+    echo '<a href="/info.php?topic=ChangeLog" target="_blank" class="headerText">ChangeLog</a>', '</td>';
+  } else {
+    echo $line, '</td>';
+  }
 } else {
   echo '<td>&nbsp;</td><td>&nbsp;</td>';
 }

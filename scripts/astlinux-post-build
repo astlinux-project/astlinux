@@ -57,6 +57,21 @@ gen_os_release()
   echo "VARIANT_ID=\"$variant\""
 }
 
+gen_changelog()
+{
+  local version="$1" changelog_file="$2" end_match
+
+  echo "================================================="
+  echo "=== Release: $version"
+  echo "=== ChangeLog Information back to AstLinux 1.2.0"
+  echo "================================================="
+  echo ""
+
+  end_match="Additions for AstLinux 1.1.7:"
+
+  sed -n "8,/^${end_match}/ p" "$changelog_file" | sed "/^${end_match}/ d"
+}
+
 target="$1"
 
 base="${target%/output/target}"
@@ -78,6 +93,9 @@ astlinux_release_version
 echo ${ASTVER} > "$target/etc/astlinux-release"
 
 gen_os_release "$ASTVER" "$board" > "$target/etc/os-release"
+
+mkdir -p "$target/stat/etc/docs"
+gen_changelog "$ASTVER" "$base/docs/ChangeLog.txt" > "$target/stat/etc/docs/ChangeLog.txt"
 
 exit 0
 
