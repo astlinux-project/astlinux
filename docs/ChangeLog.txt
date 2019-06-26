@@ -126,6 +126,8 @@ Released @TBD@
 
 -- Network, Edit tabs, add "Reload WireGuard VPN" support to apply peer changes/additions/deletions.
 
+-- Status tab, add "ChangeLog" link to display changes since AstLinux 1.2.0 using local file storage.
+
 
 Additions for AstLinux 1.3.5.2:
 ===============================
