@@ -10,6 +10,29 @@ Additions for AstLinux 1.3.7:
 
 Released @TBD@
 
+** System
+
+-- Time Zone Database update, tzdata2019b and php-timezonedb-2019.2
+
+** Networking
+
+-- WireGuard VPN, version bump to 0.0.20190702
+
+** Asterisk
+
+-- Asterisk 13.23.1 ('13se' version)
+   Older than latest Asterisk 13.x version but more tested, built --without-pjproject
+
+-- Asterisk 13.27.0 (no change) and 16.4.0 (no change)
+
+-- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
+
+-- pjsip 2.8 (no change)
+
+** Web Interface
+
+-- (no change)
+
 
 Additions for AstLinux 1.3.6:
 =============================
