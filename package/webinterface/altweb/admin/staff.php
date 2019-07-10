@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Content-Disposition: attachment; filename="'.$aesfile.'"');
         header('Content-Transfer-Encoding: binary');
         header('Content-Length: '.$aessize);
-        ob_clean();
+        ob_end_clean();
         flush();
         @readfile($prefix.$aesfile);
         @unlink($prefix.$aesfile);

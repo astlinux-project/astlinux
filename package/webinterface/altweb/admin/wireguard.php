@@ -317,7 +317,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       header('Content-Disposition: attachment; filename="wg-credentials-'.$value.'.zip"');
       header('Content-Transfer-Encoding: binary');
       header('Content-Length: '.filesize($tmpfile));
-      ob_clean();
+      ob_end_clean();
       flush();
       @readfile($tmpfile);
       @unlink($tmpfile);

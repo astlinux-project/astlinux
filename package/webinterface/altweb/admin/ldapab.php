@@ -59,7 +59,7 @@ function exportLDIF($rootpw, $ou) {
     header('Content-Type: text/plain');
     header('Content-Disposition: attachment; filename="'.$tmpfile.'"');
     header('Content-Length: '.filesize($prefix.$tmpfile));
-    ob_clean();
+    ob_end_clean();
     flush();
     @readfile($prefix.$tmpfile);
     @unlink($prefix.$tmpfile);

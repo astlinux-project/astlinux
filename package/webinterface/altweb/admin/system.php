@@ -253,7 +253,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       header('Content-Disposition: attachment; filename="'.$tmpfile.'"');
       header('Content-Transfer-Encoding: binary');
       header('Content-Length: '.filesize($prefix.$tmpfile));
-      ob_clean();
+      ob_end_clean();
       flush();
       @readfile($prefix.$tmpfile);
       @unlink($prefix.$tmpfile);

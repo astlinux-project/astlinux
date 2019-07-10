@@ -53,7 +53,7 @@ header('Content-Type: text/plain; charset=utf-8');
 header('Content-Disposition: inline; filename="'.$topic.'.txt"');
 header('Content-Transfer-Encoding: binary');
 header('Content-Length: '.filesize($ofile));
-ob_clean();
+ob_end_clean();
 flush();
 @readfile($ofile);
 if ($tmpfile !== '') {
