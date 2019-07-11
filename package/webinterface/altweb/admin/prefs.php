@@ -352,8 +352,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'system_backup_temp_disk = yes';
       fwrite($fp, $value."\n");
     }
-    $value = 'system_backup_exclude_suffix_cmdstr = "'.tuqp($_POST['backup_exclude_suffix']).'"';
-    fwrite($fp, $value."\n");
+    if (($value = tuqp($_POST['backup_exclude_suffix'])) !== '') {
+      $value = 'system_backup_exclude_suffix_cmdstr = "'.$value.'"';
+      fwrite($fp, $value."\n");
+    }
     if (system_image_arch() === 'genx86_64-vm') {
       if (! isset($_POST['reboot_vm_classic_full'])) {
         $value = 'system_reboot_vm_classic_full = no';
