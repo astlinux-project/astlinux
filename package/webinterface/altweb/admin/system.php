@@ -20,6 +20,7 @@
 // 07-21-2013, Added Add-On Packages
 // 12-16-2017, Updated backup files
 // 06-25-2019, Updated backup files
+// 07-11-2019, Added Backup Exclude Suffixes support
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -187,6 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $asturw = (getPREFdef($global_prefs, 'system_backup_asturw') === 'yes') ? '/mnt/kd/asturw'.$suffix : '';
     $prefix = (getPREFdef($global_prefs, 'system_backup_temp_disk') === 'yes') ? '/mnt/kd/.' : '/tmp/';
     $tmpfile = $backup_name.'-'.$backup_type.'-'.date('Y-m-d').$suffix;
+    $xsuffix = gen_BackupExcludeSuffix_args(getPREFdef($global_prefs, 'system_backup_exclude_suffix_cmdstr'));
     if ($backup_type === 'basic') {
       $firewall = is_dir('/mnt/kd/arno-iptables-firewall/plugins') ? ' "arno-iptables-firewall/plugins"' : '';
       $firewall .= is_file('/mnt/kd/arno-iptables-firewall/custom-rules') ? ' "arno-iptables-firewall/custom-rules"' : '';
@@ -241,7 +243,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
       }
     }
-    shell($tarcmd.$prefix.$tmpfile.' '.$srcfile.' -C /mnt/kd >/dev/null 2>/dev/null', $status);
+    shell($tarcmd.$prefix.$tmpfile.$xsuffix.' '.$srcfile.' -C /mnt/kd >/dev/null 2>/dev/null', $status);
     if ($asturw !== '') {
       @unlink($asturw);
     }
@@ -691,6 +693,9 @@ require_once '../common/header.php';
 
   putHtml('</td><td style="text-align: center;">');
   putHtml('<select name="backup_type">');
+  if (($sel = getPREFdef($global_prefs, 'system_backup_exclude_suffix_cmdstr')) !== '') {
+    putHtml('<option value="xsuffix" disabled="disabled">Excluding: '.$sel.'</option>');
+  }
   $sel = (getPREFdef($global_prefs, 'system_backup_asturw') === 'yes') ? '&amp; unionfs ' : '';
   putHtml('<option value="full">All /mnt/kd/ '.$sel.'files</option>');
 ?>

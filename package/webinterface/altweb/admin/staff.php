@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2016 Lonnie Abelbeck
+// Copyright (C) 2008-2019 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -11,6 +11,7 @@
 // 01-21-2013, Add Restart Asterisk
 // 01-15-2016, Add Restart FOP2
 // 01-18-2016, Add Primary /mnt/kd/ files Backup
+// 07-11-2019, Added Backup Exclude Suffixes support
 //
 // System location of webgui-staff-backup.conf
 $CONFFILE = '/mnt/kd/webgui-staff-backup.conf';
@@ -61,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $asturw = (getPREFdef($global_prefs, 'system_backup_asturw') === 'yes') ? '/mnt/kd/asturw'.$suffix : '';
     $prefix = '/mnt/kd/.';
     $tmpfile = $backup_name.'-'.$backup_type.'-'.date('Y-m-d').$suffix;
+    $xsuffix = gen_BackupExcludeSuffix_args(getPREFdef($global_prefs, 'system_backup_exclude_suffix_cmdstr'));
     if ($backup_type === 'primary') {
       $wanpipe = '';
       foreach (glob('/mnt/kd/wanpipe/*.conf') as $globfile) {
@@ -93,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
       }
     }
-    shell($tarcmd.$prefix.$tmpfile.' '.$srcfile.' -C /mnt/kd >/dev/null 2>/dev/null', $status);
+    shell($tarcmd.$prefix.$tmpfile.$xsuffix.' '.$srcfile.' -C /mnt/kd >/dev/null 2>/dev/null', $status);
     if ($asturw !== '') {
       @unlink($asturw);
     }

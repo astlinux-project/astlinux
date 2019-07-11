@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2018 Lonnie Abelbeck
+// Copyright (C) 2008-2019 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -23,6 +23,7 @@
 // 02-16-2017, Added Disable CLI Tab for "staff" user
 // 07-16-2017, Added Show ACME Certificates
 // 11-06-2017, Added Show WireGuard VPN Status
+// 07-11-2019, Added Backup Exclude Suffixes
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -351,6 +352,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'system_backup_temp_disk = yes';
       fwrite($fp, $value."\n");
     }
+    $value = 'system_backup_exclude_suffix_cmdstr = "'.tuqp($_POST['backup_exclude_suffix']).'"';
+    fwrite($fp, $value."\n");
     if (system_image_arch() === 'genx86_64-vm') {
       if (! isset($_POST['reboot_vm_classic_full'])) {
         $value = 'system_reboot_vm_classic_full = no';
@@ -1053,6 +1056,10 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'system_backup_temp_disk') === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="backup_temp" name="backup_temp"'.$sel.' /></td><td colspan="5">Backup temporary file uses /mnt/kd/ instead of /tmp/</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="3">Backup Exclude Suffixes:</td><td colspan="3">');
+  $value = getPREFdef($global_prefs, 'system_backup_exclude_suffix_cmdstr');
+  putHtml('<input type="text" size="28" maxlength="128" value="'.$value.'" name="backup_exclude_suffix" /></td></tr>');
 
   if (system_image_arch() === 'genx86_64-vm') {
     putHtml('<tr class="dtrow1"><td style="text-align: right;">');

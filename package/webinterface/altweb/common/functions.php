@@ -17,6 +17,7 @@
 // 12-12-2009, Added systemSHUTDOWN()
 // 01-12-2012, Added asteriskURLrepo()
 // 01-04-2014, Added statusPROCESS()
+// 07-11-2019, Added gen_BackupExcludeSuffix_args()
 //
 // System location of prefs file
 $KD_PREFS_LOCATION = '/mnt/kd/webgui-prefs.txt';
@@ -857,6 +858,24 @@ function mac2vendor($mac) {
     }
   }
   return($vendor);
+}
+
+// Function: gen_BackupExcludeSuffix_args
+//
+function gen_BackupExcludeSuffix_args($suffix_str) {
+
+  $str = '';
+
+  if ($suffix_str !== '') {
+    $suffixes = preg_split('/[ ,]+/', $suffix_str);
+    foreach ($suffixes as $suffix) {
+      if ($suffix !== '') {
+        $suffix = strtr($suffix, '$`[]\'\\', '......');   // map special chars to dot
+        $str .= " --exclude '*.$suffix'";
+      }
+    }
+  }
+  return($str);
 }
 
 // Function: getPREFdef
