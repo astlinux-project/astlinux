@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Time Zone Database update, tzdata2019b and php-timezonedb-2019.2
 
+-- mac2vendor, oui.txt database snapshot 2019-07-12
+
 ** Networking
 
 -- WireGuard VPN, version bump to 0.0.20190702
@@ -22,8 +24,9 @@ Released @TBD@
 
 -- Asterisk 13.23.1 ('13se' version)
    Older than latest Asterisk 13.x version but more tested, built --without-pjproject
+   Add security patches for: AST-2019-002, AST-2019-003
 
--- Asterisk 13.27.0 (no change) and 16.4.0 (no change)
+-- Asterisk 13.27.1 (version bump) and 16.4.1 (version bump)
 
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
@@ -31,7 +34,12 @@ Released @TBD@
 
 ** Web Interface
 
--- (no change)
+-- Core, disable PHP output buffering for file downloads using readfile(). Fixes issue with very large files.
+
+-- Prefs, System and Staff tabs, add support for Backup Exclude Suffixes
+   Example, in Prefs tab -> System & Staff Tab Options:
+     Backup Exclude Suffixes: | rom,bin,fwu |
+   This will exclude all *.rom, *.bin and *.fwu files in all backup types in the System/Staff tabs.
 
 
 Additions for AstLinux 1.3.6:
