@@ -227,13 +227,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if ($asturw !== '') {
       $excludefile = tempnam("/tmp", "PHP_");
-      $excludecmd = 'find /oldroot/mnt/asturw/ -type f | sed -e "s:^/oldroot/mnt/asturw/::" | sed -n';
-      $excludecmd .= ' -e "s:^stat/var/lib/asterisk/sounds/.*$:&:p"';
-      $excludecmd .= ' -e "s:^stat/var/lib/asterisk/moh/.*$:&:p"';
-      $excludecmd .= ' -e "s:^stat/var/www/cache/.*$:&:p"';
-      $excludecmd .= ' -e "s:^stat/var/packages/.*$:&:p"';
-      $excludecmd .= ' -e "s:^usr/lib/locale/.*$:&:p"';
-      shell($excludecmd.' >'.$excludefile.' 2>/dev/null', $status);
+      $excludepath  = 'stat/var/lib/asterisk/sounds/*'."\n";
+      $excludepath .= 'stat/var/lib/asterisk/moh/*'."\n";
+      $excludepath .= 'stat/var/www/cache/*'."\n";
+      $excludepath .= 'stat/var/packages/*'."\n";
+      $excludepath .= 'usr/lib/locale/*'."\n";
+      @file_put_contents($excludefile, $excludepath);
       shell($tarcmd.$asturw.' -X '.$excludefile.' $(ls -1 /oldroot/mnt/asturw/ | sed -e "s/^mnt$//") -C /oldroot/mnt/asturw >/dev/null 2>/dev/null', $status);
       @unlink($excludefile);
       if ($status != 0) {
