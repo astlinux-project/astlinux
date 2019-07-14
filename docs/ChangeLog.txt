@@ -12,9 +12,15 @@ Released @TBD@
 
 ** System
 
+-- Linux Kernel 3.16.69 (no change)
+
+-- linux, add kernel patch to fix TCP regression, taken from 3.16.70
+
 -- Time Zone Database update, tzdata2019b and php-timezonedb-2019.2
 
 -- mac2vendor, oui.txt database snapshot 2019-07-12
+
+-- (Custom Build Only) flashrom, version bump to 1.1
 
 ** Networking
 
