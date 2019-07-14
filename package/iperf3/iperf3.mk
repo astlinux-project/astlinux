@@ -4,9 +4,12 @@
 #
 ################################################################################
 
-IPERF3_VERSION = 3.6
+IPERF3_VERSION = 3.7
 IPERF3_SOURCE = iperf-$(IPERF3_VERSION).tar.gz
 IPERF3_SITE = https://downloads.es.net/pub/iperf
+
+IPERF3_CONF_OPT = \
+	--disable-profiling
 
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
 IPERF3_CONF_OPT += --with-openssl=$(STAGING_DIR)/usr
