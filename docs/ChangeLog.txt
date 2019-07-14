@@ -16,6 +16,10 @@ Released @TBD@
 
 -- linux, add kernel patch to fix TCP regression, taken from 3.16.70
 
+-- igb, version bump to 5.3.5.36, Intel Gigabit Ethernet Network Driver
+
+-- Monit, version bump to 5.26.0, security and bug fixes.
+
 -- Time Zone Database update, tzdata2019b and php-timezonedb-2019.2
 
 -- mac2vendor, oui.txt database snapshot 2019-07-12
@@ -25,6 +29,10 @@ Released @TBD@
 ** Networking
 
 -- WireGuard VPN, version bump to 0.0.20190702
+
+-- iperf3, version bump to 3.7
+
+-- msmtp, version bump to 1.8.5
 
 ** Asterisk
 
