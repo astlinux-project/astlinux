@@ -1,0 +1,36 @@
+From: Eric Dumazet <edumazet@google.com>
+Date: Fri, 21 Jun 2019 06:09:55 -0700
+Subject: tcp: refine memory limit test in tcp_fragment()
+
+commit b6653b3629e5b88202be3c9abc44713973f5c4b4 upstream.
+
+tcp_fragment() might be called for skbs in the write queue.
+
+Memory limits might have been exceeded because tcp_sendmsg() only
+checks limits at full skb (64KB) boundaries.
+
+Therefore, we need to make sure tcp_fragment() wont punish applications
+that might have setup very low SO_SNDBUF values.
+
+Fixes: f070ef2ac667 ("tcp: tcp_fragment() should apply sane memory limits")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Christoph Paasch <cpaasch@apple.com>
+Tested-by: Christoph Paasch <cpaasch@apple.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ net/ipv4/tcp_output.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -1091,7 +1091,7 @@ int tcp_fragment(struct sock *sk, struct
+ 	if (nsize < 0)
+ 		nsize = 0;
+ 
+-	if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf)) {
++	if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf + 0x20000)) {
+ 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPWQUEUETOOBIG);
+ 		return -ENOMEM;
+ 	}
