@@ -4,7 +4,7 @@
 #
 #############################################################
 
-NETSNMP_VERSION = 5.7.3
+NETSNMP_VERSION = 5.8
 NETSNMP_SITE = http://downloads.sourceforge.net/project/net-snmp/net-snmp/$(NETSNMP_VERSION)
 NETSNMP_SOURCE = net-snmp-$(NETSNMP_VERSION).tar.gz
 NETSNMP_INSTALL_STAGING = YES
@@ -33,6 +33,7 @@ NETSNMP_CONF_OPT = \
 	--disable-manuals
 NETSNMP_MAKE = $(MAKE1)
 NETSNMP_BLOAT_MIBS = BRIDGE DISMAN-EVENT DISMAN-SCHEDULE DISMAN-SCRIPT EtherLike RFC-1215 RFC1155-SMI RFC1213 SCTP SMUX
+NETSNMP_AUTORECONF = YES
 
 ifeq ($(BR2_ENDIAN),"BIG")
 	NETSNMP_CONF_OPT += --with-endianness=big
@@ -45,7 +46,7 @@ NETSNMP_CONF_OPT += --without-nl
 
 # OpenSSL
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
-	NETSNMP_DEPENDENCIES += openssl
+	NETSNMP_DEPENDENCIES += host-pkg-config openssl
 	NETSNMP_CONF_OPT += \
 		--with-openssl=$(STAGING_DIR)/usr/include/openssl \
 		--with-security-modules="tsm,usm" \

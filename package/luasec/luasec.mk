@@ -4,9 +4,9 @@
 #
 #############################################################
 
-LUASEC_VERSION = 0.5.1
-LUASEC_SOURCE = luasec-prosody-$(LUASEC_VERSION).tar.gz
-LUASEC_SITE = https://s3.amazonaws.com/files.astlinux-project
+LUASEC_VERSION = 0.8
+LUASEC_SOURCE = luasec-$(LUASEC_VERSION).tar.gz
+LUASEC_SITE = https://github.com/brunoos/luasec/archive
 LUASEC_DEPENDENCIES = lua openssl luasocket
 
 define LUASEC_BUILD_CMDS
@@ -14,7 +14,7 @@ define LUASEC_BUILD_CMDS
 		INC_PATH="" \
 		LIB_PATH="" \
 		LIBDIR="-L$(STAGING_DIR)/usr/lib/ -L$(@D)/src/luasocket" \
-		CC="$(TARGET_CC)" \
+		CC="$(TARGET_CC) -std=gnu99" \
 		LD="$(TARGET_LD) -shared"
 endef
 

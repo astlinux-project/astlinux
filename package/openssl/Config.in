@@ -7,7 +7,7 @@ config BR2_PACKAGE_OPENSSL
 	  Layer (SSL v2/v3) and Transport Security (TLS v1) as well as a
 	  full-strength general-purpose cryptography library.
 
-	  http://www.openssl.org/
+	  https://www.openssl.org/
 
 if BR2_PACKAGE_OPENSSL
 

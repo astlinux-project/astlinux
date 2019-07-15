@@ -4,7 +4,7 @@
 #
 #############################################################
 
-OPENSSH_VERSION = 7.5p1
+OPENSSH_VERSION = 8.0p1
 OPENSSH_SITE = http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable
 OPENSSH_CONF_ENV = LD="$(TARGET_CC)" LDFLAGS="$(TARGET_CFLAGS)"
 
