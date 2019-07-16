@@ -18,7 +18,11 @@ Released @TBD@
 
 -- igb, version bump to 5.3.5.36, Intel Gigabit Ethernet Network Driver
 
+-- libsrtp, version bump to 2.2.0, adds OpenSSL 1.1 compatibility
+
 -- Monit, version bump to 5.26.0, security and bug fixes.
+
+-- zabbix, version bump to 3.0.28
 
 -- Time Zone Database update, tzdata2019b and php-timezonedb-2019.2
 
@@ -28,11 +32,21 @@ Released @TBD@
 
 ** Networking
 
+-- OpenSSL, major version bump to 1.1.1c
+
+-- OpenSSH, version 8.0p1, adds OpenSSL 1.1 compatibility
+
 -- WireGuard VPN, version bump to 0.0.20190702
+
+-- iksemel, revert to version 1.4, (Debian orig source) without OpenSSL support
 
 -- iperf3, version bump to 3.7
 
+-- luasec, version bump to 0.8, adds OpenSSL 1.1 compatibility
+
 -- msmtp, version bump to 1.8.5
+
+-- netsnmp, version bump to 5.8, adds OpenSSL 1.1 compatibility
 
 ** Asterisk
 
