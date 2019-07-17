@@ -6,9 +6,17 @@
 
 IKSEMEL_VERSION = 1.4
 IKSEMEL_SOURCE = iksemel-$(IKSEMEL_VERSION).tar.gz
+#Ref: http://deb.debian.org/debian/pool/main/libi/libiksemel/libiksemel_1.4.orig.tar.gz
 IKSEMEL_SITE = https://s3.amazonaws.com/files.astlinux-project
+IKSEMEL_DEPENDENCIES = host-pkg-config
+# patch configure.ac
+IKSEMEL_AUTORECONF = YES
 
 IKSEMEL_INSTALL_STAGING = YES
+
+ifeq ($(BR2_PACKAGE_GNUTLS),y)
+IKSEMEL_DEPENDENCIES += gnutls
+endif
 
 define IKSEMEL_INSTALL_TARGET_CMDS
         cp -a $(STAGING_DIR)/usr/lib/libiksemel.so* $(TARGET_DIR)/usr/lib/

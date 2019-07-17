@@ -1,7 +1,6 @@
 config BR2_PACKAGE_IKSEMEL
 	bool "iksemel"
 	default n
-	depends on BR2_PACKAGE_OPENSSL
 	help
 	  iksemel is an XML (eXtensible Markup Language) parser library
 	  designed for Jabber applications.
