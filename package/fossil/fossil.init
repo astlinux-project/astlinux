@@ -50,7 +50,7 @@ start()
   if [ "$FOSSIL_SERVER" = "yes" ]; then
     echo "Starting fossil..."
 
-    ARGS="server --nojail --localhost --port 8055 $REPO"
+    ARGS="server --nojail --https --localhost --port 8055 $REPO"
 
     start-stop-daemon -S -x /usr/bin/fossil -p $PIDFILE -m -b -- $ARGS
   fi
