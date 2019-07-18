@@ -4,7 +4,7 @@
 #
 #############################################################
 
-ASTERISK_FOP2_VERSION = 2.31.23
+ASTERISK_FOP2_VERSION = 2.31.24
 ASTERISK_FOP2_SOURCE = fop2-$(ASTERISK_FOP2_VERSION)-debian-i386.tgz
 ASTERISK_FOP2_SITE = http://download2.fop2.com
 # Note: be sure to edit "project/astlinux/target_skeleton/usr/sbin/upgrade-package" on version change
