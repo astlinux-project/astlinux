@@ -20,6 +20,19 @@ Released @TBD@
 
 -- libsrtp, version bump to 2.2.0, adds OpenSSL 1.1 compatibility
 
+-- php, version 5.6.40, using "@zsalab" patch for OpenSSL 1.1 compatibility
+   More info: https://github.com/oerdnj/deb.sury.org/issues/566
+
+-- sqlite, version bump to 3.29.0
+
+-- strace, version bump to 5.2
+
+-- e2fsprogs, version bump to 1.45.3
+
+-- nut, version 2.7.4, using "Buildroot" patch for OpenSSL 1.1 compatibility
+
+-- Fossil, major version bump to 2.9, adds numerous enhancements to the look and feel of the web interface
+
 -- Monit, version bump to 5.26.0, security and bug fixes.
 
 -- zabbix, version bump to 3.0.28
@@ -38,9 +51,15 @@ Released @TBD@
 
 -- WireGuard VPN, version bump to 0.0.20190702
 
--- iksemel, revert to version 1.4, (Debian orig source) without OpenSSL support
+-- libcurl (curl) version bump to 7.65.2
+
+-- ipsec-tools, version 0.8.2, using "Buildroot" patch for OpenSSL 1.1 compatibility
+
+-- iksemel, revert to version 1.4, (using Debian patches) without OpenSSL support
 
 -- iperf3, version bump to 3.7
+
+-- keepalived, version bump to 2.0.17
 
 -- luasec, version bump to 0.8, adds OpenSSL 1.1 compatibility
 
@@ -59,6 +78,10 @@ Released @TBD@
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
 -- pjsip 2.8 (no change)
+
+-- FOP2, available version bump to 2.31.24.
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
