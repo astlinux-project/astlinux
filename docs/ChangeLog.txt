@@ -18,6 +18,8 @@ Released @TBD@
 
 -- igb, version bump to 5.3.5.36, Intel Gigabit Ethernet Network Driver
 
+-- e1000e version bump to 3.5.1 Intel PCI-Express PRO/1000 Ethernet Linux driver
+
 -- libsrtp, version bump to 2.2.0, adds OpenSSL 1.1 compatibility
 
 -- php, version 5.6.40, using "@zsalab" patch for OpenSSL 1.1 compatibility
@@ -51,7 +53,7 @@ Released @TBD@
 
 -- WireGuard VPN, version bump to 0.0.20190702
 
--- libcurl (curl) version bump to 7.65.2
+-- libcurl (curl) version bump to 7.65.3
 
 -- ipsec-tools, version 0.8.2, using "Buildroot" patch for OpenSSL 1.1 compatibility
 
@@ -66,6 +68,8 @@ Released @TBD@
 -- msmtp, version bump to 1.8.5
 
 -- netsnmp, version bump to 5.8, adds OpenSSL 1.1 compatibility
+
+-- whois, version bump to 5.5.0
 
 ** Asterisk
 
