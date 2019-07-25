@@ -1,0 +1,12 @@
+--- monit-5.26.0/src/validate.c.orig	2019-07-25 14:34:01.725453914 -0500
++++ monit-5.26.0/src/validate.c	2019-07-25 14:34:54.548704707 -0500
+@@ -1762,9 +1762,6 @@
+         END_TRY;
+         if (! havedata)
+                 return State_Failed; // Terminate test if no data are available
+-        for (LinkStatus_T link = s->linkstatuslist; link; link = link->next) {
+-                Event_post(s, Event_Link, State_Succeeded, link->action, "link data collection succeeded");
+-        }
+         // State
+         if (! Link_getState(s->inf.net->stats)) {
+                 for (LinkStatus_T link = s->linkstatuslist; link; link = link->next)
