@@ -69,6 +69,8 @@ Released @TBD@
 
 -- netsnmp, version bump to 5.8, adds OpenSSL 1.1 compatibility
 
+-- openldap, version bump to 2.4.48
+
 -- whois, version bump to 5.5.0
 
 ** Asterisk
