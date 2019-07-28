@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 3.16.69 (no change)
 
+-- linux, add kernel patch to fix PTRACE_TRACEME security, taken from 3.16.71
+
 -- linux, add kernel patch to fix TCP regression, taken from 3.16.70
 
 -- igb, version bump to 5.3.5.36, Intel Gigabit Ethernet Network Driver
