@@ -73,6 +73,8 @@ Released @TBD@
 
 -- openldap, version bump to 2.4.48
 
+-- tarsnap, add /mnt/kd/acme to the default included directories
+
 -- whois, version bump to 5.5.0
 
 ** Asterisk
