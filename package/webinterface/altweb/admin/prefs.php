@@ -24,6 +24,7 @@
 // 07-16-2017, Added Show ACME Certificates
 // 11-06-2017, Added Show WireGuard VPN Status
 // 07-11-2019, Added Backup Exclude Suffixes
+// 07-31-2019, Added Disable CodeMirror Editor
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -313,6 +314,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     fwrite($fp, $value."\n");
     $value = 'users_voicemail_reload_cmdstr = "'.tuqp($_POST['voicemail_reload']).'"';
     fwrite($fp, $value."\n");
+
+    if (! isset($_POST['codemirror_editor'])) {
+      $value = 'disable_codemirror_editor = yes';
+      fwrite($fp, $value."\n");
+    }
+    if (($value = $_POST['codemirror_theme']) !== '') {
+      $value = 'edit_text_codemirror_theme = "'.$value.'"';
+      fwrite($fp, $value."\n");
+    }
 
     if (isset($_POST['bak_files'])) {
       $value = 'edit_keep_bak_files = yes';
@@ -1015,6 +1025,24 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Edit Tab Options:</strong>');
   putHtml('</td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'disable_codemirror_editor') !== 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="codemirror_editor" name="codemirror_editor"'.$sel.' /></td><td colspan="2">CodeMirror Editor</td>');
+  putHtml('<td style="text-align: right;">Theme:</td><td colspan="2">');
+  $value = getPREFdef($global_prefs, 'edit_text_codemirror_theme');
+  putHtml('<select name="codemirror_theme">');
+  putHtml('<option value="">default</option>');
+  $cm_theme_dir = getSYSlocation('/common/codemirror/theme');
+  if (is_dir($cm_theme_dir)) {
+    foreach (glob($cm_theme_dir.'/*.css') as $globfile) {
+      $cm_theme = basename($globfile, '.css');
+      $sel = ($value === $cm_theme) ? ' selected="selected"' : '';
+      putHtml('<option value="'.$cm_theme.'"'.$sel.'>'.$cm_theme.'</option>');
+    }
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'edit_keep_bak_files') === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="bak_files" name="bak_files"'.$sel.' /></td><td colspan="5">Save original file as backup with a &quot;.bak&quot; suffix</td></tr>');

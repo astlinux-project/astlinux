@@ -78,3 +78,4 @@ jitterentropy~Copyright (c) 2014-2018 Stephan Mueller.
 libpng~Copyright (c) 1998-2019 Glenn Randers-Pehrson, et al.
 libqrencode~Copyright (c) 2006-2018 Kentaro Fukuchi.
 ne~Copyright (c) 1993-2018 Sebastiano Vigna, Todd M. Lewis.
+CodeMirror~Copyright (c) 2017-2019 Marijn Haverbeke <marijnh@gmail.com>, et al.

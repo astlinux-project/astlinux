@@ -19,7 +19,7 @@ pre {
   padding: 10px;
   font-family: "Bitstream Vera Sans Mono", Menlo, "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
   font-size: 12px;
-  line-height: 125%;
+  line-height: 1.2em;
   width: inherit;
   overflow: auto; /*--If the Code exceeds the width, a scrolling is available--*/
 }
@@ -46,7 +46,7 @@ h2 {
   font-weight: bold;
   font-family: "Lucida Grande", "Bitstream Vera Sans", "Trebuchet MS", Verdana, Helvetica, sans-serif;
   font-size: 14px;
-  line-height: 100%;
+  line-height: 1.0em;
   text-decoration: none;
 }
 
@@ -107,7 +107,7 @@ p {
   margin: 0;
   color: #FFA500;
   font-size: 13px;
-  line-height: 100%;
+  line-height: 1.0em;
   text-decoration: none;
   font-family: "Lucida Grande", "Bitstream Vera Sans", "Trebuchet MS", Verdana, Helvetica, sans-serif;
   font-weight: bold;
@@ -143,7 +143,7 @@ p {
 .status {
   font-family: "Bitstream Vera Sans Mono", Menlo, "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
   font-size: 12px;
-  line-height: 110%;
+  line-height: 1.1em;
   border: 2px solid #54545C;
   background: #E7E5E2;
   text-align: left;
@@ -155,7 +155,7 @@ p {
 .stdtable {
   font-family: "Bitstream Vera Sans Mono", Menlo, "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
   font-size: 12px;
-  line-height: 100%;
+  line-height: 1.0em;
   border: 0;
   text-align: left;
 }
@@ -169,7 +169,7 @@ p {
 .datatable {
   font-family: "Bitstream Vera Sans Mono", Menlo, "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
   font-size: 12px;
-  line-height: 110%;
+  line-height: 1.1em;
   border: 0;
   text-align: left;
 }
@@ -198,7 +198,7 @@ p {
 .statusdatatable {
   font-family: "Bitstream Vera Sans Mono", Menlo, "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
   font-size: 12px;
-  line-height: 110%;
+  line-height: 1.1em;
   border: 0;
   text-align: left;
 }
@@ -231,7 +231,7 @@ p {
   font-weight: bold;
   font-family: "Lucida Grande", "Bitstream Vera Sans", "Trebuchet MS", Verdana, Helvetica, sans-serif;
   font-size: 13px;
-  line-height: 100%;
+  line-height: 1.0em;
   text-decoration: none;
   background-color: #6E6E77;
   border: 2px #6E6E77 outset;
@@ -299,7 +299,7 @@ p {
 .editText {
   font-family: "Bitstream Vera Sans Mono", Menlo, "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
   font-size: 12px;
-  line-height: 125%;
+  line-height: 1.2em;
   border: 1px solid #54545C;
   margin-top: 4px;
   margin-bottom: 0px;
@@ -309,6 +309,12 @@ p {
   padding-bottom: 1px;
   padding-left: 4px;
   padding-right: 1px;
+}
+
+.CodeMirror {
+  font-family: "Bitstream Vera Sans Mono", Menlo, "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.2em;
 }
 
 .edititemText {

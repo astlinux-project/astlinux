@@ -19,6 +19,7 @@
 // 07-25-2018, Added Keepalived Support
 // 11-12-2018, Added WireGuard VPN Mobile Client support
 // 06-13-2019, Added Reload WireGuard VPN
+// 07-30-2019, Added CodeMirror text editing
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -470,9 +471,38 @@ require_once '../common/header.php';
     putHtml('<p>&nbsp;</p>');
   }
   putHtml("</center>");
+
+  $codemirror_files = array (
+    'lib/codemirror.js',
+    'lib/codemirror.css',
+    'addon/search/search.js',
+    'addon/search/searchcursor.js',
+    'addon/dialog/dialog.js',
+    'addon/dialog/dialog.css',
+    'addon/display/fullscreen.js',
+    'addon/display/fullscreen.css',
+    'mode/asterisk/asterisk.js',
+    'mode/properties/properties.js',
+    'mode/shell/shell.js'
+  );
+  if (($cm_theme = getPREFdef($global_prefs, 'edit_text_codemirror_theme')) !== '') {
+    $codemirror_files[] = "theme/$cm_theme.css";
+  }
+  foreach ($codemirror_files as $cm_file) {
+    $cm_ext = pathinfo($cm_file, PATHINFO_EXTENSION);
+    if ($cm_ext === 'css') {
+      putHtml('<link rel="stylesheet" href="/common/codemirror/'.$cm_file.'" type="text/css" />');
+    }
+  }
+  foreach ($codemirror_files as $cm_file) {
+    $cm_ext = pathinfo($cm_file, PATHINFO_EXTENSION);
+    if ($cm_ext === 'js') {
+      putHtml('<script language="JavaScript" type="text/javascript" src="/common/codemirror/'.$cm_file.'"></script>');
+    }
+  }
 ?>
-  <script language="JavaScript" type="text/javascript" src="/common/murmurhash3_gc.js"></script>
-  <script language="JavaScript" type="text/javascript">
+<script language="JavaScript" type="text/javascript" src="/common/murmurhash3_gc.js"></script>
+<script language="JavaScript" type="text/javascript">
   //<![CDATA[
   var old_textSize;
   var old_textHash;
@@ -491,6 +521,39 @@ require_once '../common/header.php';
     old_textSize = value.length;
     old_textHash = murmurhash3_32_gc(value, 6802145);
     window.onbeforeunload = setOKexit;
+  }
+
+  function useCodeMirror(name, theme) {
+    var ta = document.getElementById("ed");
+    var cm = CodeMirror.fromTextArea(ta, {
+      lineNumbers: true
+    });
+    cm.setSize((ta.cols * 1.1) * cm.defaultCharWidth(), ta.rows * cm.defaultTextHeight() + 6);
+    if (theme != '') {
+      cm.setOption("theme", theme);
+    }
+    if (name.search('/asterisk/.*[.]conf$') >= 0) {
+      cm.setOption("mode", "text/x-asterisk");
+    } else if (name.search('/rc.conf.d/.*[.]conf$') >= 0 ||
+               name.search('[.]script$') >= 0 ||
+               name.search('/arno-iptables-firewall/(.*[.]conf$|custom-rules)') >= 0) {
+      cm.setOption("mode", "text/x-sh");
+    } else {
+      cm.setOption("mode", "text/x-ini");
+    }
+    // Ignore TAB key
+    cm.setOption("extraKeys", {
+      Tab: function(cm) {
+        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+      },
+      Esc: function(cm) {
+        if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+      }
+    });
+    // Update TextArea value with every CM change
+    cm.on("change", function(cm, change) {
+      ta.value = cm.getValue();
+    });
   }
   //]]>
   </script>
@@ -887,6 +950,9 @@ require_once '../common/header.php';
   putHtml('<script language="JavaScript" type="text/javascript">');
   putHtml('//<![CDATA[');
   putHtml('setOKhandler();');
+  if ((getPREFdef($global_prefs, 'disable_codemirror_editor')) !== 'yes') {
+    putHtml('useCodeMirror("'.$openfile.'", "'.$cm_theme.'");');
+  }
   putHtml('//]]>');
   putHtml('</script>');
 } // End of HTTP GET
