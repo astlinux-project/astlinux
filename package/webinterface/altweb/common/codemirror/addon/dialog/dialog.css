@@ -24,7 +24,7 @@
   background: transparent;
   width: 20em;
   color: inherit;
-  font-family: monospace;
+  font-family: inherit;
 }
 
 .CodeMirror-dialog button {

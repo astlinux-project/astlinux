@@ -528,8 +528,10 @@ require_once '../common/header.php';
     var cm = CodeMirror.fromTextArea(ta, {
       lineNumbers: true
     });
-    cm.setSize((ta.cols * 1.1) * cm.defaultCharWidth(), ta.rows * cm.defaultTextHeight() + 6);
-    if (theme != '') {
+    if (theme != "") {
+      if (theme == "solarized") {
+        theme += " light";
+      }
       cm.setOption("theme", theme);
     }
     if (name.search('/asterisk/.*[.]conf$') >= 0) {
@@ -541,7 +543,8 @@ require_once '../common/header.php';
     } else {
       cm.setOption("mode", "text/x-ini");
     }
-    // Ignore TAB key
+    cm.setSize((ta.cols * 1.1) * cm.defaultCharWidth(), ta.rows * cm.defaultTextHeight() + 6);
+    // Tab key toggles fullscreen, Esc returns
     cm.setOption("extraKeys", {
       Tab: function(cm) {
         cm.setOption("fullScreen", !cm.getOption("fullScreen"));

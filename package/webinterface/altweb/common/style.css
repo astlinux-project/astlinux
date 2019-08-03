@@ -298,7 +298,7 @@ p {
 
 .editText {
   font-family: "Bitstream Vera Sans Mono", Menlo, "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.2em;
   border: 1px solid #54545C;
   margin-top: 4px;
@@ -313,7 +313,7 @@ p {
 
 .CodeMirror {
   font-family: "Bitstream Vera Sans Mono", Menlo, "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.2em;
 }
 
