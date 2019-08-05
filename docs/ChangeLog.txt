@@ -102,6 +102,20 @@ Released @TBD@
      Backup Exclude Suffixes: | rom,bin,fwu |
    This will exclude all *.rom, *.bin and *.fwu files in all backup types in the System/Staff tabs.
 
+-- Edit tab, add support for CodeMirror text editing.
+   Keyboard Actions: (after clicking text edit area)
+   Cmd-f -> Find
+   Cmd-g -> Find Next
+   Tab   -> Toggle between "fullscreen" (full-window) mode and normal
+   Esc   -> Return to normal, "fullscreen" (full-window) mode off
+
+-- Prefs tab -> Edit Tab Options:
+   _x_ CodeMirror Editor
+       uncheck to use the standard HTML text editor.
+   Theme: [ default ]
+          select the desired theme for CodeMirror.
+          Tip: [solarized], [seti] and [zenburn] are worth a look.
+
 
 Additions for AstLinux 1.3.6:
 =============================
