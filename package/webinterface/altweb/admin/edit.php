@@ -517,6 +517,9 @@ require_once '../common/header.php';
   }
 
   function setOKhandler() {
+    window.onload = function() {
+      document.getElementById("list").focus();
+    };
     var value = document.getElementById("ed").value;
     old_textSize = value.length;
     old_textHash = murmurhash3_32_gc(value, 6802145);
@@ -557,6 +560,13 @@ require_once '../common/header.php';
     cm.on("change", function(cm, change) {
       ta.value = cm.getValue();
     });
+    // Desktop Safari wants a relatedTarget, else fullscreen exits incorrectly
+    cm.on("focus", function(cm, change) {
+      if (change.relatedTarget == null && window.safari !== undefined) {
+        document.getElementById("list").focus();
+        document.getElementById("list").blur();
+      }
+    });
   }
   //]]>
   </script>
@@ -567,7 +577,7 @@ require_once '../common/header.php';
   <tr><td style="text-align: center;" colspan="3">
   <h2>Edit Configuration Files:</h2>
   </td></tr><tr><td style="text-align: left;">
-  <select name="file_list" size="8">
+  <select id="list" name="file_list" size="8">
 <?php
   putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; System Configuration &mdash;&mdash;&mdash;&mdash;">');
   if (is_writable($file = '/mnt/kd/rc.conf.d/user.conf')) {
