@@ -477,6 +477,7 @@ require_once '../common/header.php';
     'lib/codemirror.css',
     'addon/search/search.js',
     'addon/search/searchcursor.js',
+    'addon/comment/comment.js',
     'addon/dialog/dialog.js',
     'addon/dialog/dialog.css',
     'addon/display/fullscreen.js',
@@ -549,10 +550,14 @@ require_once '../common/header.php';
     cm.setSize((ta.cols * 1.1) * cm.defaultCharWidth(), ta.rows * cm.defaultTextHeight() + 6);
     // Tab key toggles fullscreen, Esc returns
     cm.setOption("extraKeys", {
-      Tab: function(cm) {
+      'Cmd-/'  : 'toggleComment',
+      'Ctrl-/' : 'toggleComment',
+      'Cmd-.'  : 'toggleComment',
+      'Ctrl-.' : 'toggleComment',
+      'Tab'    : function(cm) {
         cm.setOption("fullScreen", !cm.getOption("fullScreen"));
       },
-      Esc: function(cm) {
+      'Esc'    : function(cm) {
         if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
       }
     });

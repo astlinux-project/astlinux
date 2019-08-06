@@ -207,7 +207,11 @@ CodeMirror.defineMode("asterisk", function() {
       }
 
       return null;
-    }
+    },
+
+    blockCommentStart: ";--",
+    blockCommentEnd: "--;",
+    lineComment: ";"
   };
 });
 
