@@ -1,0 +1,45 @@
+/*
+
+    Name:       seti-mks
+    Author:     Michael Kaminsky (http://github.com/mkaminsky11)
+    Revision:   2019-08-07 Tweaks by Michael Keuter, mk solutions
+
+    Original seti color scheme by Jesse Weed (https://github.com/jesseweed/mks-syntax)
+
+*/
+
+
+.cm-s-seti-mks.CodeMirror {
+  background-color: #151718 !important;
+  color: #CFD2D1 !important;
+  border: none;
+}
+.cm-s-seti-mks .CodeMirror-gutters {
+  color: #404b53;
+  background-color: #0E1112;
+  border: none;
+}
+.cm-s-seti-mks .CodeMirror-cursor { border-left: solid thin #f8f8f0; }
+.cm-s-seti-mks .CodeMirror-linenumber { color: #6D8A88; }
+
+.cm-s-seti-mks div.CodeMirror-selected { background: #214283; }
+
+.cm-s-seti-mks span.cm-comment { color: #256670; }
+.cm-s-seti-mks span.cm-string, .cm-s-seti-mks span.cm-string-2 { color: #55b5db; }
+.cm-s-seti-mks span.cm-number { color: #cd3f45; }
+.cm-s-seti-mks span.cm-variable { color: #55b5db; }
+.cm-s-seti-mks span.cm-variable-2 { color: #a074c4; }
+.cm-s-seti-mks span.cm-def { color: #55b5db; }
+.cm-s-seti-mks span.cm-keyword { color: #7779c6; }
+.cm-s-seti-mks span.cm-operator { color: #9fca56; }
+.cm-s-seti-mks span.cm-keyword { color: #e6cd69; }
+.cm-s-seti-mks span.cm-atom { color: #cd3f45; }
+.cm-s-seti-mks span.cm-meta { color: #55b5db; }
+.cm-s-seti-mks span.cm-tag { color: #55b5db; }
+.cm-s-seti-mks span.cm-attribute { color: #9fca56; }
+.cm-s-seti-mks span.cm-qualifier { color: #9fca56; }
+.cm-s-seti-mks span.cm-property { color: #a074c4; }
+.cm-s-seti-mks span.cm-variable-3, .cm-s-seti-mks span.cm-type { color: #9fca56; }
+.cm-s-seti-mks span.cm-builtin { color: #9fca56; }
+.cm-s-seti-mks .CodeMirror-activeline-background { background: #501213; }
+.cm-s-seti-mks .CodeMirror-matchingbracket { text-decoration: underline; color: white !important; }
