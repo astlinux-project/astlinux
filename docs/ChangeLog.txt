@@ -117,7 +117,7 @@ Released @TBD@
        uncheck to use the standard HTML text editor.
    Theme: [ default ]
           select the desired theme for CodeMirror.
-          Tip: [solarized], [seti] and [zenburn] are worth a look.
+          Tip: [solarized], [seti-mks] and [zenburn] are worth a look.
 
 
 Additions for AstLinux 1.3.6:
