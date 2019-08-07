@@ -540,7 +540,7 @@ require_once '../common/header.php';
     }
     if (name.search('/asterisk/.*[.]conf$') >= 0) {
       cm.setOption("mode", "text/x-asterisk");
-    } else if (name.search('/rc.conf.d/.*[.]conf$') >= 0 ||
+    } else if (name.search('^/mnt/kd/rc[.]') >= 0 ||
                name.search('[.]script$') >= 0 ||
                name.search('/arno-iptables-firewall/(.*[.]conf$|custom-rules)') >= 0) {
       cm.setOption("mode", "text/x-sh");

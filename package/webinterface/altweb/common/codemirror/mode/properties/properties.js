@@ -67,8 +67,9 @@ CodeMirror.defineMode("properties", function() {
         inMultiline : false,    // Is the current line a multiline value
         afterSection : false    // Did we just open a section
       };
-    }
+    },
 
+    lineComment: "#"
   };
 });
 
