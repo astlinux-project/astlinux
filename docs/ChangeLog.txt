@@ -104,8 +104,11 @@ Released @TBD@
 
 -- Edit tab, add support for CodeMirror text editing.
    Keyboard Actions: (after clicking text edit area)
+   Note: Windows users, use Ctrl instead of Cmd
    Cmd-f -> Find
    Cmd-g -> Find Next
+   Cmd-/ -> Toggle Comment
+   Cmd-. -> Toggle Comment
    Tab   -> Toggle between "fullscreen" (full-window) mode and normal
    Esc   -> Return to normal, "fullscreen" (full-window) mode off
 
