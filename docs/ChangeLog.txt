@@ -111,6 +111,7 @@ Released @TBD@
    Cmd-. -> Toggle Comment
    Tab   -> Toggle between "fullscreen" (full-window) mode and normal
    Esc   -> Return to normal, "fullscreen" (full-window) mode off
+   More info: http://doc.astlinux-project.org/userdoc:tt_web_interface_edit_codemirror_key_map
 
 -- Prefs tab -> Edit Tab Options:
    _x_ CodeMirror Editor
