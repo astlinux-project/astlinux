@@ -484,7 +484,8 @@ require_once '../common/header.php';
     'addon/display/fullscreen.css',
     'mode/asterisk/asterisk.js',
     'mode/properties/properties.js',
-    'mode/shell/shell.js'
+    'mode/shell/shell.js',
+    'mode/xml/xml.js'
   );
   if (($cm_theme = getPREFdef($global_prefs, 'edit_text_codemirror_theme')) !== '') {
     $codemirror_files[] = "theme/$cm_theme.css";
@@ -540,6 +541,8 @@ require_once '../common/header.php';
     }
     if (name.search('/asterisk/.*[.]conf$') >= 0) {
       cm.setOption("mode", "text/x-asterisk");
+    } else if (name.search('[.]xml$') >= 0) {
+      cm.setOption("mode", "text/xml");
     } else if (name.search('^/mnt/kd/rc[.]') >= 0 ||
                name.search('[.]script$') >= 0 ||
                name.search('/arno-iptables-firewall/(.*[.]conf$|custom-rules)') >= 0) {
