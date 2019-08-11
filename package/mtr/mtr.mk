@@ -3,7 +3,8 @@
 # mtr
 #
 #############################################################
-MTR_VERSION = 0.92
+
+MTR_VERSION = 0.93
 MTR_SITE = ftp://ftp.bitwizard.nl/mtr
 MTR_SOURCE = mtr-$(MTR_VERSION).tar.gz
 
