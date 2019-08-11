@@ -1,0 +1,130 @@
+From 286cf80becb9b069a76c4c3b7bcfac2efaaa4edd Mon Sep 17 00:00:00 2001
+From: Kevin Harwell <kharwell@digium.com>
+Date: Mon, 17 Sep 2018 15:35:05 -0500
+Subject: [PATCH] rtp_engine: rtcp_report_to_json can overflow the ssrc integer
+ value
+
+When writing an RTCP report to json the code attempts to pack the "ssrc" and
+"source_ssrc" unsigned integer values as a signed int value type. This of course
+means if the ssrc's unsigned value is greater than that which can fit into a
+signed integer value it gets converted to a negative number. Subsequently, the
+negative value goes out in the json report.
+
+This patch now packs the value as a json_int_t, which is the widest integer type
+available on a given system. This should make it so the value no longer
+overflows.
+
+Note, this was caught by two failing tests hep/rtcp-receiver/ and
+hep/rtcp-sender.
+
+Change-Id: I2af275286ee5e795b79f0c3d450d9e4b28e958b0
+---
+ configure.ac                     |  1 +
+ include/asterisk/autoconfig.h.in |  3 ++
+ include/asterisk/json.h          |  5 ++
+ main/rtp_engine.c                |  8 +--
+ third-party/jansson/configure.m4 | 19 +++++++
+ 7 files changed, 101 insertions(+), 37 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 94be88b8243..d1ea560a1f7 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -685,6 +685,7 @@ if test "$JANSSON_BUNDLED" = "no" ; then
+ 		AC_MSG_NOTICE(*** use './configure --with-jansson-bundled')
+ 		exit 1
+ 	fi
++	JANSSON_DEFINE_JSON_INT()
+ else
+ 	PBX_JANSSON=1
+ fi
+diff --git a/include/asterisk/autoconfig.h.in b/include/asterisk/autoconfig.h.in
+index 874c205a43f..f0d79037810 100644
+--- a/include/asterisk/autoconfig.h.in
++++ b/include/asterisk/autoconfig.h.in
+@@ -7,6 +7,9 @@
+ 
+ 
+ 
++/* Define to 'long' or 'long long' */
++#undef AST_JSON_INT_T
++
+ /* Define to 1 if internal poll should be used. */
+ #undef AST_POLL_COMPAT
+ 
+diff --git a/include/asterisk/json.h b/include/asterisk/json.h
+index cfd9a29976d..011359b92e8 100644
+--- a/include/asterisk/json.h
++++ b/include/asterisk/json.h
+@@ -110,6 +110,11 @@
+ 
+ /*!@{*/
+ 
++/*!
++ * \brief Primarily used to cast when packing to an "I" type.
++ */
++typedef AST_JSON_INT_T ast_json_int_t;
++
+ /*!
+  * \brief Initialize the JSON library.
+  */
+diff --git a/main/rtp_engine.c b/main/rtp_engine.c
+index f5f32ebb717..db016fc1adc 100644
+--- a/main/rtp_engine.c
++++ b/main/rtp_engine.c
+@@ -2521,8 +2521,8 @@ static struct ast_json *rtcp_report_to_json(struct stasis_message *msg,
+ 		char str_lsr[32];
+ 
+ 		snprintf(str_lsr, sizeof(str_lsr), "%u", payload->report->report_block[i]->lsr);
+-		json_report_block = ast_json_pack("{s: i, s: i, s: i, s: i, s: i, s: s, s: i}",
+-			"source_ssrc", payload->report->report_block[i]->source_ssrc,
++		json_report_block = ast_json_pack("{s: I, s: i, s: i, s: i, s: i, s: s, s: i}",
++			"source_ssrc", (ast_json_int_t)payload->report->report_block[i]->source_ssrc,
+ 			"fraction_lost", payload->report->report_block[i]->lost_count.fraction,
+ 			"packets_lost", payload->report->report_block[i]->lost_count.packets,
+ 			"highest_seq_no", payload->report->report_block[i]->highest_seq_no,
+@@ -2554,8 +2554,8 @@ static struct ast_json *rtcp_report_to_json(struct stasis_message *msg,
+ 		}
+ 	}
+ 
+-	json_rtcp_report = ast_json_pack("{s: i, s: i, s: i, s: o, s: o}",
+-		"ssrc", payload->report->ssrc,
++	json_rtcp_report = ast_json_pack("{s: I, s: i, s: i, s: o, s: o}",
++		"ssrc", (ast_json_int_t)payload->report->ssrc,
+ 		"type", payload->report->type,
+ 		"report_count", payload->report->reception_report_count,
+ 		"sender_information", json_rtcp_sender_info ?: ast_json_null(),
+diff --git a/third-party/jansson/configure.m4 b/third-party/jansson/configure.m4
+index d59d8612578..ec340762533 100644
+--- a/third-party/jansson/configure.m4
++++ b/third-party/jansson/configure.m4
+@@ -74,6 +74,9 @@ AC_DEFUN([_JANSSON_CONFIGURE],
+ 	JANSSON_LIB="-L${JANSSON_DIR}/dest/lib -ljansson"
+ 	PBX_JANSSON=1
+ 
++	# We haven't run install yet
++	JANSSON_DEFINE_JSON_INT([$JANSSON_DIR]/source/src/)
++
+ 	AC_SUBST([JANSSON_BUNDLED])
+ 	AC_SUBST([PBX_JANSSON])
+ 	AC_SUBST([JANSSON_LIB])
+@@ -87,3 +90,19 @@ AC_DEFUN([JANSSON_CONFIGURE],
+ 		_JANSSON_CONFIGURE()
+ 	fi
+ ])
++
++AC_DEFUN([JANSSON_DEFINE_JSON_INT],
++[
++	# Define the ast_json_int_t (large integer type) to match jansson's
++	saved_cppflags="${CPPFLAGS}"
++	CPPFLAGS="${CPPFLAGS} ${JANSSON_INCLUDE}"
++	AC_COMPILE_IFELSE(
++		[AC_LANG_PROGRAM([#include <$1jansson.h>],
++		[#if !JSON_INTEGER_IS_LONG_LONG
++		#error "not long long"
++		#endif
++		])],
++		[AC_DEFINE([AST_JSON_INT_T], [long long], [Define to 'long' or 'long long'])],
++		[AC_DEFINE([AST_JSON_INT_T], [long], [Define to 'long' or 'long long'])])
++	CPPFLAGS="${saved_cppflags}"
++])
