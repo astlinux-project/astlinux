@@ -90,11 +90,12 @@ Released @TBD@
    Add json-integer-overflow patches.
    Add security patches for: AST-2019-002, AST-2019-003
 
--- Asterisk 13.27.1 (version bump) and 16.4.1 (version bump)
+-- Asterisk 13.28.0 (version bump) and 16.5.0 (version bump)
+   New modules: app_attended_transfer.so, app_blind_transfer.so
 
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
--- pjsip 2.8 (no change)
+-- pjsip 2.9 (version bump)
 
 -- FOP2, available version bump to 2.31.25
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
