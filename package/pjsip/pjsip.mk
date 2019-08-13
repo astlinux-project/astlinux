@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PJSIP_VERSION = 2.8
+PJSIP_VERSION = 2.9
 PJSIP_SOURCE = pjproject-$(PJSIP_VERSION).tar.bz2
 PJSIP_SITE = https://raw.githubusercontent.com/asterisk/third-party/master/pjproject/$(PJSIP_VERSION)
 
