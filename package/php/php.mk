@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PHP_VERSION = 5.6.40
+PHP_VERSION = 7.2.21
 PHP_SITE = https://secure.php.net/distributions
 PHP_SOURCE = php-$(PHP_VERSION).tar.xz
 PHP_INSTALL_STAGING = YES
@@ -39,6 +39,7 @@ PHP_CONF_OPT = \
 	--without-iconv \
 	--with-config-file-path=/etc \
 	--localstatedir=/var \
+	--disable-phpdbg \
 	--disable-rpath
 
 PHP_CONF_ENV = \
@@ -59,6 +60,7 @@ PHP_CONF_ENV += ac_cv_c_bigendian_php=no
 endif
 
 PHP_CFLAGS = $(TARGET_CFLAGS)
+PHP_CXXFLAGS = $(TARGET_CXXFLAGS)
 
 # We need to force dl "detection"
 PHP_CONF_ENV += ac_cv_func_dlopen=yes ac_cv_lib_dl_dlopen=yes
@@ -189,6 +191,6 @@ define PHP_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/bin/php*
 endef
 
-PHP_CONF_ENV += CFLAGS="$(PHP_CFLAGS)"
+PHP_CONF_ENV += CFLAGS="$(PHP_CFLAGS)" CXXFLAGS="$(PHP_CXXFLAGS)"
 
 $(eval $(call AUTOTARGETS,package,php))
