@@ -24,8 +24,7 @@ Released @TBD@
 
 -- libsrtp, version bump to 2.2.0, adds OpenSSL 1.1 compatibility
 
--- php, version 5.6.40, using "@zsalab" patch for OpenSSL 1.1 compatibility
-   More info: https://github.com/oerdnj/deb.sury.org/issues/566
+-- php, major version bump to 7.2.21, adds OpenSSL 1.1 compatibility
 
 -- sqlite, version bump to 3.29.0
 
