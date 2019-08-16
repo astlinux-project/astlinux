@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } elseif (isset($_POST['submit_delete'])) {
     $delete = $_POST['delete'];
-    for ($i = 0; $i < count($delete); $i++) {
+    for ($i = 0; $i < arrayCount($delete); $i++) {
       if (delAstDB($family, $delete[$i]) == 0) {
         $result = 0;
         delAstDB($familycomment, $delete[$i]);
@@ -107,11 +107,11 @@ require_once '../common/header.php';
   $db = parseAstDB($family);
   $dbcomment = parseAstDB($familycomment);
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     for ($i = 0; $i < $n; $i++) {
       $key = $db['data'][$i]['key'];
       $comment = '';
-      if (($m = count($dbcomment['data'])) > 0) {
+      if (($m = arrayCount($dbcomment['data'])) > 0) {
         for ($j = 0; $j < $m; $j++) {
           if ($dbcomment['data'][$j]['key'] === $key) {
             $comment = $dbcomment['data'][$j]['value'];
@@ -130,7 +130,7 @@ require_once '../common/header.php';
     $key = $_GET['num'];
     $ldb['key'] = $key;
     $RESULT_NUMBER = $key;
-    if (($n = count($db['data'])) > 0) {
+    if (($n = arrayCount($db['data'])) > 0) {
       for ($i = 0; $i < $n; $i++) {
         if ($key === $db['data'][$i]['key']) {
           $ldb = $db['data'][$i];
@@ -185,7 +185,7 @@ require_once '../common/result.php';
   putHtml('<table width="100%" class="datatable">');
   putHtml("<tr>");
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Whitelist", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Action", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Comment", "</td>";

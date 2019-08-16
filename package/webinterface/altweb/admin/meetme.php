@@ -203,7 +203,7 @@ function parseMEETMEdata($room_list) {
   global $isASTERISKv1_4;
   $id = 0;
 
-  for ($i = 0; $i < count($room_list); $i++) {
+  for ($i = 0; $i < arrayCount($room_list); $i++) {
     $tmpfile = tempnam("/tmp", "PHP_");
     $status = asteriskCMD('meetme list '.$room_list[$i]['room'].' concise', $tmpfile);
     if ($status == 0) {
@@ -347,7 +347,7 @@ require_once '../common/header.php';
 
   $channel = (getPREFdef($global_prefs, 'meetme_channel_show') === 'yes');
 
-  for ($rnum = 0; $rnum < count($room_list); $rnum++) {
+  for ($rnum = 0; $rnum < arrayCount($room_list); $rnum++) {
     $room = $room_list[$rnum]['room'];
     putHtml('<p class="dialogText" style="text-align: left;">');
     putHtml('&nbsp;<strong>Conference: </strong>'.$room.'&nbsp;&nbsp;');
@@ -365,7 +365,7 @@ require_once '../common/header.php';
     putHtml('<table width="100%" class="datatable">');
     putHtml("<tr>");
 
-    if (($n = count($db['data'])) > 0) {
+    if (($n = arrayCount($db['data'])) > 0) {
       echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "User#", "</td>";
       echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "CID Num", "</td>";
       echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "CID Name", "</td>";
@@ -407,7 +407,7 @@ require_once '../common/header.php';
     putHtml("</tr>");
     putHtml("</table>");
   }
-  if (count($room_list) == 0) {
+  if (arrayCount($room_list) == 0) {
     putHtml('<p>No active MeetMe conferences.</p>');
   }
   putHtml("</form>");

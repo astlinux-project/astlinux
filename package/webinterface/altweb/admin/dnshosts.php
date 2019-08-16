@@ -35,11 +35,11 @@ function saveDNSHOSTSsettings($conf_dir, $conf_file, $db, $delete = NULL) {
 
   $value = 'STATICHOSTS="';
   fwrite($fp, "### STATICHOSTS\n".$value."\n");
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     for ($i = 0; $i < $n; $i++) {
       $skip = FALSE;
       if (! is_null($delete)) {
-        for ($j = 0; $j < count($delete); $j++) {
+        for ($j = 0; $j < arrayCount($delete); $j++) {
           if ($delete[$j] == $i) {
             $skip = TRUE;
             break;
@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (! ($global_admin || $global_staff_enable_dnshosts)) {
     $result = 999;
   } elseif (isset($_POST['submit_save'])) {
-    $n = count($db['data']);
+    $n = arrayCount($db['data']);
     $id = $n;
     for ($i = 0; $i < $n; $i++) {
       if ($db['data'][$i]['ip'] === tuq($_POST['ip'])) {
@@ -155,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } elseif (isset($_POST['submit_delete'])) {
     $delete = $_POST['delete'];
-    if (count($delete) > 0) {
+    if (arrayCount($delete) > 0) {
       $result = saveDNSHOSTSsettings($DNSHOSTSCONFDIR, $DNSHOSTSCONFFILE, $db, $delete);
     }
   }
@@ -214,7 +214,7 @@ require_once '../common/header.php';
 <?php
   if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $n = count($db['data']);
+    $n = arrayCount($db['data']);
     if ($id < $n && $id >= 0) {
       $ldb = $db['data'][$id];
     }
@@ -242,7 +242,7 @@ require_once '../common/header.php';
   putHtml('<table width="100%" class="datatable">');
   putHtml('<tr>');
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "IP Address", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Host Name(s)", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "MAC Address", "</td>";

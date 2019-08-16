@@ -351,7 +351,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } elseif (isset($_POST['submit_delete'])) {
     $resequence = 0;
     $delete = $_POST['delete'];
-    for ($i = 0; $i < count($delete); $i++) {
+    for ($i = 0; $i < arrayCount($delete); $i++) {
       if (strstr($delete[$i], '../') !== FALSE) {
         $result = 4;
       } elseif (is_file($VOICEMAILDIR.$delete[$i].'.txt')) {
@@ -362,7 +362,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
     }
     if ($resequence > 0) {
-      for ($i = 0; $i < count($delete); $i++) {
+      for ($i = 0; $i < arrayCount($delete); $i++) {
         $cnt = sequenceVMdir($VOICEMAILDIR.$delete[$i]);
         notifyVMdir('', $delete[$i], $cnt, TRUE);
       }
@@ -476,7 +476,7 @@ require_once '../common/insert-wav-inline.php';
   putHtml('<table width="100%" class="datatable">');
   putHtml("<tr>");
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     if ($context) {
       echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Context", "</td>";
     }

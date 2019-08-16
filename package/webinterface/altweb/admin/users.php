@@ -185,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } elseif (isset($_POST['submit_delete'])) {
     $delete = $_POST['delete'];
-    for ($i = 0; $i < count($delete); $i++) {
+    for ($i = 0; $i < arrayCount($delete); $i++) {
       if (delVMmailbox($context, $delete[$i], $VOICEMAILCONF) == 0) {
         $result = 10;
       } else {
@@ -253,7 +253,7 @@ require_once '../common/header.php';
 
   if (isset($_GET['mbox'])) {
     $mbox = $_GET['mbox'];
-    if (($n = count($db['data'])) > 0) {
+    if (($n = arrayCount($db['data'])) > 0) {
       for ($i = 0; $i < $n; $i++) {
         if ($mbox === $db['data'][$i]['mbox']) {
           $ldb = $db['data'][$i];
@@ -286,7 +286,7 @@ require_once '../common/header.php';
   putHtml('<table width="100%" class="datatable">');
   putHtml("<tr>");
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Mailbox", "</td>";
     if (! $hidePASS) {
       echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Password", "</td>";

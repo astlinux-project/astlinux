@@ -86,7 +86,7 @@ require_once $COMMON.'header.php';
   putHtml('<table width="100%" class="datatable">');
   putHtml('<tr>');
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Package", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "License", "</td>";
     for ($i = 0; $i < $n; $i++) {

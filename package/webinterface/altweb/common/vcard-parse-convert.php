@@ -599,7 +599,7 @@ class Contact_Vcard_Parse {
             // if, after all this, there are no parameter values for the
             // parameter name, retain no info about the parameter (saves
             // ram and checking-time later).
-            if (count($params[$name]) == 0) {
+            if (is_array($params[$name]) && count($params[$name]) == 0) {
                 unset($params[$name]);
             }
         }
@@ -934,7 +934,7 @@ class vcard_convert extends Contact_Vcard_Parse
 	/**
 	 * Constructor taking a list of converter properties
 	 */
-	function vcard_convert($p = array())
+	function vcard_convert_list($p = array())
 	{
 		foreach ($p as $prop => $value)
 			$this->$prop = $value;
@@ -985,7 +985,7 @@ class vcard_convert extends Contact_Vcard_Parse
 			if (!isset($this->charset))
 				$this->charset = 'UTF-8';
 				
-			return count($this->cards);
+			return (is_array($this->cards) ? count($this->cards) : 0);
 		}
 		else
 			return false;

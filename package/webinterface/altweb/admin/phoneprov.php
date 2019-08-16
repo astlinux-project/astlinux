@@ -131,7 +131,7 @@ function isMACinfo($mac, $sql) {
       }
     }
   }
-  if (count($info) < 1) {
+  if (arrayCount($info) < 1) {
     return(FALSE);
   }
   return($info);
@@ -306,7 +306,7 @@ function phoneprovDBtoDATA($db) {
   global $MAXNUM;
   $id = 0;
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     for ($i = 0; $i < $n; $i++) {
       $data[$id]['mac'] = $db['data'][$i]['key'];
       $datatokens = explode(' ', $db['data'][$i]['value']);
@@ -430,7 +430,7 @@ function importPHONEPROVfiles($family) {
 function savePHONEPROVenabled($family, $data) {
   $err = 0;
 
-  if (($n = count($data)) > 0) {
+  if (($n = arrayCount($data)) > 0) {
     for ($i = 0; $i < $n; $i++) {
       if ($data[$i]['enabled'] !== $data[$i]['orig_enabled']) {
         $mac = $data[$i]['mac'];
@@ -473,7 +473,7 @@ function generatePHONEPROVfiles($data, $reload, &$result_str, &$status) {
   }
   fwrite($fp, "### AstLinux Web Interface - Phone Provisioning - Mass Deployment ###\n###\n");
 
-  if (($n = count($data)) > 0) {
+  if (($n = arrayCount($data)) > 0) {
     for ($i = 0; $i < $n; $i++) {
       if ($data[$i]['enabled'] === '1') {
         $template = $data[$i]['template'];
@@ -525,10 +525,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $disabled = $_POST['disabled'];
-    if (($n = count($data)) > 0) {
+    if (($n = arrayCount($data)) > 0) {
       for ($i = 0; $i < $n; $i++) {
         $data[$i]['enabled'] = '1';
-        if (($m = count($disabled)) > 0) {
+        if (($m = arrayCount($disabled)) > 0) {
           for ($j = 0; $j < $m; $j++) {
             if ($disabled[$j] === $data[$i]['mac']) {
               $data[$i]['enabled'] = '0';
@@ -553,7 +553,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           $ext_cid = expandPHONEPROVext($pdata);
           if ($ext_cid !== '') {
             $enabled = '1';
-            if (($m = count($disabled)) > 0) {
+            if (($m = arrayCount($disabled)) > 0) {
               for ($j = 0; $j < $m; $j++) {
                 if ($disabled[$j] === $mac) {
                   $enabled = '0';
@@ -594,7 +594,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } elseif (isset($_POST['submit_delete'])) {
     $delete = $_POST['delete'];
-    for ($i = 0; $i < count($delete); $i++) {
+    for ($i = 0; $i < arrayCount($delete); $i++) {
       $result = delPHONEPROVmac($family, $delete[$i]);
     }
   } elseif (isset($_POST['submit_import'])) {
@@ -716,7 +716,7 @@ require_once '../common/header.php';
 
   if (isset($_GET['key'])) {
     $mac = rawurldecode($_GET['key']);
-    if (($n = count($data)) > 0) {
+    if (($n = arrayCount($data)) > 0) {
       for ($i = 0; $i < $n; $i++) {
         if ($mac === $data[$i]['mac']) {
           $ldata = $data[$i];
@@ -815,7 +815,7 @@ if (($templates = getPHONEPROVtemplates("$phoneprov_base_dir/templates")) !== FA
   putHtml('<table width="100%" class="datatable">');
   putHtml("<tr>");
 
-  if (($n = count($data)) > 0) {
+  if (($n = arrayCount($data)) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "MAC Address", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Template", "</td>";
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Extensions", "</td>";

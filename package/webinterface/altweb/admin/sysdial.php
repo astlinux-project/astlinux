@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } elseif (isset($_POST['submit_delete'])) {
     $delete = $_POST['delete'];
-    for ($i = 0; $i < count($delete); $i++) {
+    for ($i = 0; $i < arrayCount($delete); $i++) {
       if (delAstDB($family, $delete[$i]) == 0) {
         $result = 0;
         delAstDB($familyname, $delete[$i]);
@@ -83,18 +83,18 @@ require_once '../common/header.php';
   $dbname = parseAstDB($familyname);
 
   // Sort by Number
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     foreach ($db['data'] as $key => $row) {
       $number[$key] = '1'.$row['key'];  // Use leading '1' to not ignore leading 0's
     }
     array_multisort($number, SORT_ASC, SORT_NUMERIC, $db['data']);
   }
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     for ($i = 0; $i < $n; $i++) {
       $key = $db['data'][$i]['key'];
       $name = '';
-      if (($m = count($dbname['data'])) > 0) {
+      if (($m = arrayCount($dbname['data'])) > 0) {
         for ($j = 0; $j < $m; $j++) {
           if ($dbname['data'][$j]['key'] === $key) {
             $name = $dbname['data'][$j]['value'];
@@ -110,7 +110,7 @@ require_once '../common/header.php';
   $RESULT_NUMBER = '';
   if (isset($_GET['key'])) {
     $key = $_GET['key'];
-    if (($n = count($db['data'])) > 0) {
+    if (($n = arrayCount($db['data'])) > 0) {
       for ($i = 0; $i < $n; $i++) {
         if ($key === $db['data'][$i]['key']) {
           $ldb = $db['data'][$i];
@@ -178,7 +178,7 @@ require_once '../common/result.php';
   putHtml('<table width="100%" class="datatable">');
   putHtml("<tr>");
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Extension", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Speed Dial", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Name", "</td>";

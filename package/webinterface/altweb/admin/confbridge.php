@@ -169,7 +169,7 @@ function parseCONFBRIDGEdata($room_list) {
 
   $id = 0;
 
-  for ($i = 0; $i < count($room_list); $i++) {
+  for ($i = 0; $i < arrayCount($room_list); $i++) {
     $tmpfile = tempnam("/tmp", "PHP_");
     $status = asteriskCMD('confbridge list '.$room_list[$i]['room'], $tmpfile);
     if ($status == 0) {
@@ -345,7 +345,7 @@ require_once '../common/header.php';
 
   $channel = (getPREFdef($global_prefs, 'meetme_channel_show') === 'yes');
 
-  for ($rnum = 0; $rnum < count($room_list); $rnum++) {
+  for ($rnum = 0; $rnum < arrayCount($room_list); $rnum++) {
     $room = $room_list[$rnum]['room'];
     putHtml('<p class="dialogText" style="text-align: left;">');
     putHtml('&nbsp;<strong>Conference: </strong>'.$room.'&nbsp;&nbsp;');
@@ -359,7 +359,7 @@ require_once '../common/header.php';
     putHtml('<table width="100%" class="datatable">');
     putHtml("<tr>");
 
-    if (($n = count($db['data'])) > 0) {
+    if (($n = arrayCount($db['data'])) > 0) {
       echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "CID Num", "</td>";
       echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "User Profile", "</td>";
       if ($channel) {
@@ -397,7 +397,7 @@ require_once '../common/header.php';
   }
   if (getDOTtuple($ASTERISKversion, 1) == 1) {
     putHtml('<p style="color: red;">ConfBridge is not available, Asterisk 10 or later is required.</p>');
-  } elseif (count($room_list) == 0) {
+  } elseif (arrayCount($room_list) == 0) {
     putHtml('<p>No active ConfBridge conferences.</p>');
   }
   putHtml("</form>");

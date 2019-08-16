@@ -68,7 +68,7 @@ function saveIPSECsettings($conf_dir, $conf_file, $db, $delete = NULL) {
 
   $value = 'IPSECM_XAUTH_USER_PASS="';
   fwrite($fp, "### Authentication\n".$value."\n");
-  if (count($db['data']) > 0) {
+  if (arrayCount($db['data']) > 0) {
     foreach ($db['data'] as $data) {
       if ($data['user'] !== '' && $data['pass'] !== '') {
         $skip = FALSE;
@@ -153,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (! $global_admin) {
     $result = 999;
   } elseif (isset($_POST['submit_save']) || isset($_POST['submit_ipsec_config'])) {
-    $n = count($db['data']);
+    $n = arrayCount($db['data']);
     $id = $n;
     for ($i = 0; $i < $n; $i++) {
       if ($db['data'][$i]['user'] === str_replace(' ', '', stripshellsafe($_POST['user']))) {
@@ -172,7 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } elseif (isset($_POST['submit_delete'])) {
     $delete = $_POST['delete'];
-    if (count($delete) > 0) {
+    if (arrayCount($delete) > 0) {
       $result = saveIPSECsettings($IPSECXAUTHCONFDIR, $IPSECXAUTHCONFFILE, $db, $delete);
     }
   }
@@ -222,7 +222,7 @@ require_once '../common/header.php';
 
   if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $n = count($db['data']);
+    $n = arrayCount($db['data']);
     for ($i = 0; $i < $n; $i++) {
       if ($id === $db['data'][$i]['user']) {
         $ldb = $db['data'][$i];
@@ -331,7 +331,7 @@ require_once '../common/header.php';
   putHtml('<table width="66%" class="datatable">');
   putHtml("<tr>");
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Users", "</td>";
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Delete", "</td>";
     for ($i = 0; $i < $n; $i++) {

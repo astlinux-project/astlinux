@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   } elseif (isset($_POST['submit_delete'])) {
     $delete = $_POST['delete'];
-    for ($i = 0; $i < count($delete); $i++) {
+    for ($i = 0; $i < arrayCount($delete); $i++) {
       if (strstr($delete[$i], '../') !== FALSE) {
         $result = 4;
       } elseif (is_file($MONITORDIR.$delete[$i])) {
@@ -164,7 +164,7 @@ require_once '../common/insert-wav-inline.php';
   putHtml('<table width="100%" class="datatable">');
   putHtml("<tr>");
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', "Size", "</td>";
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Date - Time", "</td>";
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Action", "</td>";

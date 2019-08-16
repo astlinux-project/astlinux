@@ -167,11 +167,11 @@ function saveIPSECsettings($conf_dir, $conf_file, $db, $delete = NULL) {
 
   $value = 'IPSEC_PSK_ASSOCIATIONS="';
   fwrite($fp, "### Peer Tunnels\n".$value."\n");
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     for ($i = 0; $i < $n; $i++) {
       $skip = FALSE;
       if (! is_null($delete)) {
-        for ($j = 0; $j < count($delete); $j++) {
+        for ($j = 0; $j < arrayCount($delete); $j++) {
           if ($delete[$j] == $i) {
             $skip = TRUE;
             break;
@@ -363,7 +363,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (! $global_admin) {
     $result = 999;
   } elseif (isset($_POST['submit_save'])) {
-    $n = count($db['data']);
+    $n = arrayCount($db['data']);
     $id = $n;
     for ($i = 0; $i < $n; $i++) {
       if ($db['data'][$i]['remote_host'] === tuq($_POST['remote_host'])) {
@@ -389,7 +389,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } elseif (isset($_POST['submit_delete'])) {
     $delete = $_POST['delete'];
-    if (count($delete) > 0) {
+    if (arrayCount($delete) > 0) {
       $result = saveIPSECsettings($IPSECCONFDIR, $IPSECCONFFILE, $db, $delete);
     }
   } elseif (isset($_FILES['creds'])) {
@@ -518,7 +518,7 @@ require_once '../common/header.php';
 
   if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $n = count($db['data']);
+    $n = arrayCount($db['data']);
     if ($id < $n && $id >= 0) {
       $ldb = $db['data'][$id];
     }
@@ -545,7 +545,7 @@ require_once '../common/header.php';
   putHtml('<table width="100%" class="datatable">');
   putHtml('<tr>');
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Remote-Host", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Remote-Net", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Local-Host", "</td>";

@@ -173,7 +173,7 @@ function getARNOvars($db) {
     $udp = '';
     $ip = '';
 
-    if (($n = count($db['data'])) > 0) {
+    if (($n = arrayCount($db['data'])) > 0) {
       for ($i = 0; $i < $n; $i++) {
         $data = $db['data'][$i];
         if ($data['enabled'] !== '0' && $data['action'] === $key) {
@@ -282,11 +282,11 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
 
   $value = 'GUI_FIREWALL_RULES="';
   fwrite($fp, "### Generic Firewall Rules\n".$value."\n");
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     for ($i = 0; $i < $n; $i++) {
       $skip = FALSE;
       if (! is_null($delete)) {
-        for ($j = 0; $j < count($delete); $j++) {
+        for ($j = 0; $j < arrayCount($delete); $j++) {
           if ($delete[$j] == $i) {
             $db['data'][$i]['enabled'] = '0';  // required for getARNOvars
             $skip = TRUE;
@@ -484,7 +484,7 @@ function parseFIREWALLconf($vars) {
 //
 function existFWRule($db, $action, $proto, $s_addr, $s_lport, $s_uport, $d_addr, $d_lport, $d_uport, $e_addr) {
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     for ($i = 0; $i < $n; $i++) {
       $data = $db['data'][$i];
       if ($data['action'] === $action &&
@@ -630,11 +630,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $disabled = $_POST['disabled'];
-    $id = count($db['data']);
+    $id = arrayCount($db['data']);
     for ($i = 0; $i < $id; $i++) {
       $db['data'][$i]['enabled'] = '1';
-      if (count($disabled) > 0) {
-        for ($j = 0; $j < count($disabled); $j++) {
+      if (arrayCount($disabled) > 0) {
+        for ($j = 0; $j < arrayCount($disabled); $j++) {
           if ($disabled[$j] == $i) {
             $db['data'][$i]['enabled'] = '0';
             break;
@@ -672,7 +672,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } elseif (isset($_POST['submit_delete'])) {
     $delete = $_POST['delete'];
-    if (count($delete) > 0) {
+    if (arrayCount($delete) > 0) {
       $result = saveFIREWALLsettings($FIREWALLCONFDIR, $FIREWALLCONFFILE, $db, $delete);
     }
   }
@@ -841,7 +841,7 @@ require_once '../common/header.php';
 <?php
   if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $n = count($db['data']);
+    $n = arrayCount($db['data']);
     if ($id < $n && $id >= 0) {
       $ldb = $db['data'][$id];
     }
@@ -907,7 +907,7 @@ require_once '../common/header.php';
   putHtml('<table width="100%" class="datatable">');
   putHtml('<tr>');
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     echo '<td>&nbsp;</td>';
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Action", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Protocol", "</td>";

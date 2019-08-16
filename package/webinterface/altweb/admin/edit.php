@@ -718,7 +718,7 @@ require_once '../common/header.php';
     putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - WAN Failover Shell Script</option>');
   }
   putHtml('</optgroup>');
-  if (is_dir('/mnt/kd/openvpn/ccd') && count($globfiles = glob('/mnt/kd/openvpn/ccd/*')) > 0) {
+  if (is_dir('/mnt/kd/openvpn/ccd') && arrayCount($globfiles = glob('/mnt/kd/openvpn/ccd/*')) > 0) {
     putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; OpenVPN Client Configs &mdash;&mdash;&mdash;&mdash;">');
     foreach ($globfiles as $globfile) {
       if (is_file($globfile) && is_writable($globfile)) {
@@ -728,7 +728,7 @@ require_once '../common/header.php';
     }
     putHtml('</optgroup>');
   }
-  if (is_dir('/mnt/kd/ipsec/strongswan') && count($globfiles = glob('/mnt/kd/ipsec/strongswan/*')) > 0) {
+  if (is_dir('/mnt/kd/ipsec/strongswan') && arrayCount($globfiles = glob('/mnt/kd/ipsec/strongswan/*')) > 0) {
     putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; IPsec strongSwan Configs &mdash;&mdash;&mdash;&mdash;">');
     foreach ($globfiles as $globfile) {
       if (is_file($globfile) && is_writable($globfile)) {
@@ -738,7 +738,7 @@ require_once '../common/header.php';
     }
     putHtml('</optgroup>');
   }
-  if (is_dir('/mnt/kd/wireguard/peer') && count($globfiles = glob('/mnt/kd/wireguard/peer/*.peer')) > 0) {
+  if (is_dir('/mnt/kd/wireguard/peer') && arrayCount($globfiles = glob('/mnt/kd/wireguard/peer/*.peer')) > 0) {
     putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; WireGuard VPN Configs &mdash;&mdash;&mdash;&mdash;">');
     foreach ($globfiles as $globfile) {
       if (is_file($globfile) && is_writable($globfile)) {
@@ -746,7 +746,7 @@ require_once '../common/header.php';
         putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - WireGuard VPN Peer Config</option>');
       }
     }
-    if (is_dir('/mnt/kd/wireguard/peer/wg0.clients') && count($globfiles = glob('/mnt/kd/wireguard/peer/wg0.clients/*.peer')) > 0) {
+    if (is_dir('/mnt/kd/wireguard/peer/wg0.clients') && arrayCount($globfiles = glob('/mnt/kd/wireguard/peer/wg0.clients/*.peer')) > 0) {
       foreach ($globfiles as $globfile) {
         if (is_file($globfile) && is_writable($globfile)) {
           $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
@@ -760,7 +760,7 @@ require_once '../common/header.php';
     }
     putHtml('</optgroup>');
   }
-  if (is_dir('/mnt/kd/avahi') && count($globfiles = glob('/mnt/kd/avahi/*')) > 0) {
+  if (is_dir('/mnt/kd/avahi') && arrayCount($globfiles = glob('/mnt/kd/avahi/*')) > 0) {
     putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; Avahi mDNS/DNS-SD Configs &mdash;&mdash;&mdash;&mdash;">');
     foreach ($globfiles as $globfile) {
       if (is_file($globfile) && is_writable($globfile)) {
@@ -768,7 +768,7 @@ require_once '../common/header.php';
         putHtml('<option value="'.$globfile.'"'.$sel.'>'.basename($globfile).' - Avahi Daemon Configuration</option>');
       }
     }
-    if (is_dir('/mnt/kd/avahi/services') && count($globfiles = glob('/mnt/kd/avahi/services/*.service')) > 0) {
+    if (is_dir('/mnt/kd/avahi/services') && arrayCount($globfiles = glob('/mnt/kd/avahi/services/*.service')) > 0) {
       foreach ($globfiles as $globfile) {
         if (is_file($globfile) && is_writable($globfile)) {
           $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
@@ -778,7 +778,7 @@ require_once '../common/header.php';
     }
     putHtml('</optgroup>');
   }
-  if (is_dir('/mnt/kd/ups') && count($globfiles = glob('/mnt/kd/ups/*.conf')) > 0) {
+  if (is_dir('/mnt/kd/ups') && arrayCount($globfiles = glob('/mnt/kd/ups/*.conf')) > 0) {
     putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; UPS Monitoring Configs &mdash;&mdash;&mdash;&mdash;">');
     foreach ($globfiles as $globfile) {
       if (is_file($globfile) && is_writable($globfile)) {
@@ -792,7 +792,7 @@ require_once '../common/header.php';
     }
     putHtml('</optgroup>');
   }
-  if (is_dir('/mnt/kd/monit/monit.d') && count($globfiles = glob('/mnt/kd/monit/monit.d/*.conf')) > 0) {
+  if (is_dir('/mnt/kd/monit/monit.d') && arrayCount($globfiles = glob('/mnt/kd/monit/monit.d/*.conf')) > 0) {
     putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; Monit Monitoring Configs &mdash;&mdash;&mdash;&mdash;">');
     foreach ($globfiles as $globfile) {
       if (is_file($globfile) && is_writable($globfile)) {
@@ -806,7 +806,7 @@ require_once '../common/header.php';
     }
     putHtml('</optgroup>');
   }
-  if (is_dir('/mnt/kd/docs') && count($globfiles = glob('/mnt/kd/docs/*')) > 0) {
+  if (is_dir('/mnt/kd/docs') && arrayCount($globfiles = glob('/mnt/kd/docs/*')) > 0) {
     putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; Documentation &mdash;&mdash;&mdash;&mdash;">');
     foreach ($globfiles as $globfile) {
       if (is_file($globfile) && is_writable($globfile)) {
@@ -816,7 +816,7 @@ require_once '../common/header.php';
     }
     putHtml('</optgroup>');
   }
-  if (is_dir('/mnt/kd/fop2') && count($globfiles = glob('/mnt/kd/fop2/*.cfg')) > 0) {
+  if (is_dir('/mnt/kd/fop2') && arrayCount($globfiles = glob('/mnt/kd/fop2/*.cfg')) > 0) {
     putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; Flash Operating Panel2 Configs &mdash;&mdash;&mdash;&mdash;">');
     foreach ($globfiles as $globfile) {
       if (is_file($globfile) && is_writable($globfile)) {
@@ -830,7 +830,7 @@ require_once '../common/header.php';
     }
     putHtml('</optgroup>');
   }
-  if (is_dir('/mnt/kd/kamailio') && count($globfiles = glob('/mnt/kd/kamailio/*.cfg')) > 0) {
+  if (is_dir('/mnt/kd/kamailio') && arrayCount($globfiles = glob('/mnt/kd/kamailio/*.cfg')) > 0) {
     putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; Kamailio Configs &mdash;&mdash;&mdash;&mdash;">');
     foreach ($globfiles as $globfile) {
       if (is_file($globfile) && is_writable($globfile)) {
@@ -840,7 +840,7 @@ require_once '../common/header.php';
     }
     putHtml('</optgroup>');
   }
-  if (is_dir('/mnt/kd/phoneprov/templates') && count($globfiles = glob('/mnt/kd/phoneprov/templates/*.conf')) > 0) {
+  if (is_dir('/mnt/kd/phoneprov/templates') && arrayCount($globfiles = glob('/mnt/kd/phoneprov/templates/*.conf')) > 0) {
     putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; IP Phone Provisioning Templates &mdash;&mdash;&mdash;&mdash;">');
     foreach ($globfiles as $globfile) {
       if (is_file($globfile) && is_writable($globfile)) {

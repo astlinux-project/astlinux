@@ -248,7 +248,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = 999;
   } elseif (isset($_POST['submit_save'])) {
     $ok = 0;
-    $n = count($db['data']);
+    $n = arrayCount($db['data']);
     for ($i = 0; $i < $n; $i++) {
       if ($db['data'][$i]['user'] === str_replace(' ', '', stripshellsafe($_POST['user']))) {
         $ok = changeUserPass();
@@ -276,7 +276,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } elseif (isset($_POST['submit_delete'])) {
     $ok = 0;
     $delete = $_POST['delete'];
-    if (count($delete) > 0) {
+    if (arrayCount($delete) > 0) {
       foreach ($delete as $deluser) {
         if (($ok = deleteUser($deluser)) === FALSE) {
           break;
@@ -570,7 +570,7 @@ if (is_file('/mnt/kd/prosody/prosody.cfg.lua')) {
   putHtml('<table width="66%" class="datatable">');
   putHtml("<tr>");
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Users", "</td>";
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Delete", "</td>";
     for ($i = 0; $i < $n; $i++) {

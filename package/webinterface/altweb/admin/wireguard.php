@@ -261,7 +261,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } elseif (isset($_POST['submit_delete_client'])) {
     saveWIREGUARDsettings($WIREGUARDCONFDIR, $WIREGUARDCONFFILE);
     $delete = $_POST['delete'];
-    if (count($delete) > 0) {
+    if (arrayCount($delete) > 0) {
       $result = remove_client($delete);
     } else {
       $result = 0;
@@ -543,7 +543,7 @@ if (is_file($WG_LOCK_FILE) && trim(@file_get_contents($WG_LOCK_FILE)) === $wg_if
     putHtml('<table width="85%" class="datatable">');
     putHtml("<tr>");
 
-    if (($n = count($data)) > 0) {
+    if (($n = arrayCount($data)) > 0) {
       echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Client Name", "</td>";
       echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Configuration", "</td>";
       echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Credentials", "</td>";

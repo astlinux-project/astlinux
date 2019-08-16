@@ -870,7 +870,7 @@ if (is_file('/usr/sbin/upgrade-RUNNIX-image')) {
   putHtml('<table width="100%" class="datatable">');
   putHtml('<tr>');
 
-  if (count($db['data']) > 0) {
+  if (arrayCount($db['data']) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Variable", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Configuration Value", "</td>";
     $i = 0;

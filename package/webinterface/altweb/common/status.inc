@@ -780,7 +780,7 @@ putHtml('</tr>');
 // IPv6
 if (! is_null($ipv6_addr = getIPV6address())) {
   echo '<tr ', ($i++ % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
-  if ((count($ipv6_addr['prefixes'])) > 0) {
+  if ((arrayCount($ipv6_addr['prefixes'])) > 0) {
     echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', 'IPv6 Prefixes:', '</td>';
     echo '<td style="text-align: left;">';
     foreach ($ipv6_addr['prefixes'] as $line) {
@@ -1040,7 +1040,7 @@ if ($daemon['miniupnpd'] > 0) {
       putHtml('<pre><table class="statusdatatable">');
       putHtml("<tr>");
       $cur_time = time();
-      if (($n = count($upnp['clients'])) > 0) {
+      if (($n = arrayCount($upnp['clients'])) > 0) {
         echo "<td>", "Public Port", "</td>";
         echo "<td>", "Protocol", "</td>";
         echo "<td>", "Local IPv4", "</td>";
@@ -1078,7 +1078,7 @@ if ($daemon['dnsmasq'] > 0) {
         }
         putHtml('<pre><table class="statusdatatable">');
         putHtml("<tr>");
-        if (($n = count($dhcp['clients'])) > 0) {
+        if (($n = arrayCount($dhcp['clients'])) > 0) {
           echo "<td>", ($dhcpv6 ? "IPv6" : "IPv4")." Address", "</td>";
           echo "<td>", "MAC Address", "</td>";
           echo "<td>", "Host Name", "</td>";
@@ -1104,7 +1104,7 @@ if ($daemon['dnsmasq'] > 0) {
       $is_mac2vendor = is_mac2vendor();
       putHtml('<pre><table class="statusdatatable">');
       putHtml("<tr>");
-      if (($n = count($dhcp['clients'])) > 0) {
+      if (($n = arrayCount($dhcp['clients'])) > 0) {
         echo "<td>", "IPv4 Address", "</td>";
         echo "<td>", "MAC Address", "</td>";
         echo "<td>", "Host Name", "</td>";
@@ -1148,7 +1148,7 @@ if ($daemon['openvpn'] > 0 && getPREFdef($global_prefs, 'status_openvpn_client_s
   if (is_file('/var/run/openvpn.pid') && !is_null($openvpn = parseOpenVPNlog($OVPNLOGFILE))) {
     putHtml("<h2>OpenVPN Server Status:</h2>");
 
-    if (isset($openvpn['clients']) && ($n = count($openvpn['clients'])) > 0) {
+    if (isset($openvpn['clients']) && ($n = arrayCount($openvpn['clients'])) > 0) {
       putHtml('<pre><table class="statusdatatable">');
       putHtml("<tr>");
       echo "<td>", $openvpn['header']['CommonName'], "</td>";
@@ -1191,7 +1191,7 @@ if ($daemon['racoon'] > 0) {
     } else {
       putHtml('<pre><table class="statusdatatable">');
       putHtml("<tr>");
-      if (($n = count($ipsec['states'])) > 0) {
+      if (($n = arrayCount($ipsec['states'])) > 0) {
         echo "<td>", "Source", "</td>";
         echo "<td>", "Destination", "</td>";
         echo "<td>", "Created", "</td>";
@@ -1268,7 +1268,7 @@ if (isset($status_wireguard_vpn)) {
     $wireguard = parseWireGuard($wireguard_data);
     unset($wireguard_data);
 
-    if (isset($wireguard['peers'], $wireguard['info']['endpoint']) && ($n = count($wireguard['peers'])) > 0) {
+    if (isset($wireguard['peers'], $wireguard['info']['endpoint']) && ($n = arrayCount($wireguard['peers'])) > 0) {
       putHtml('<pre><table class="statusdatatable">');
       putHtml("<tr>");
       echo "<td>", "Peer", "</td>";
@@ -1586,7 +1586,7 @@ if (is_file($CONNTRACK)) {
       }
       putHtml('<pre><table class="statusdatatable">');
       putHtml("<tr>");
-      if (($n = count($firewall['states'])) > 0) {
+      if (($n = arrayCount($firewall['states'])) > 0) {
         echo "<td>", "Source", "</td>";
         echo "<td>", "Port (#'s)", "</td>";
         echo "<td>", "Destination", "</td>";
@@ -1629,7 +1629,7 @@ if ($daemon['upsmon'] > 0) {
     } else {
       putHtml('<table class="statusdatatable">');
       putHtml("<tr>");
-      if (($n = count($upsmon['status'])) > 0) {
+      if (($n = arrayCount($upsmon['status'])) > 0) {
         echo "<td>", "Model", "</td>";
         echo "<td>", "Status", "</td>";
         echo "<td>", "Utility", "</td>";

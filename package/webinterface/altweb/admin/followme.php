@@ -70,7 +70,7 @@ function fmDBtoDATA($db, $key) {
 
   $data = NULL;
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     for ($i = 0; $i < $n; $i++) {
       if ($key !== FALSE) {
         if ($key === $db['data'][$i]['key']) {
@@ -302,7 +302,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } elseif (isset($_POST['submit_delete'])) {
     $delete = $_POST['delete'];
-    for ($i = 0; $i < count($delete); $i++) {
+    for ($i = 0; $i < arrayCount($delete); $i++) {
       if (delFMextension($family, $delete[$i], $FOLLOWMECONF) == 0) {
         $result = reloadFMmodule($RELOAD_FOLLOWME_CMD, $FOLLOWMECONF);
       } else {
@@ -368,14 +368,14 @@ require_once '../common/header.php';
 
   $MANAGE = $global_staff;
   if (($data = fmDBtoDATA($db, ($MANAGE ? FALSE : $global_user))) !== NULL) {
-    if (count($data) == 1) {
+    if (arrayCount($data) == 1) {
       $ldata = $data[0];
     }
   }
 
   if (isset($_GET['key']) && $MANAGE) {
     $key = $_GET['key'];
-    if (($n = count($data)) > 0) {
+    if (($n = arrayCount($data)) > 0) {
       for ($i = 0; $i < $n; $i++) {
         if ($key === $data[$i]['key']) {
           $ldata = $data[$i];
@@ -471,7 +471,7 @@ require_once '../common/header.php';
     putHtml('<table width="100%" class="datatable">');
     putHtml("<tr>");
 
-    if (($n = count($data)) > 0) {
+    if (($n = arrayCount($data)) > 0) {
       echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Extension", "</td>";
       echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Follow-Me Numbers", "</td>";
       echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Delete", "</td>";

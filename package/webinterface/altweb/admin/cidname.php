@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   } elseif (isset($_POST['submit_delete'])) {
     $delete = $_POST['delete'];
-    for ($i = 0; $i < count($delete); $i++) {
+    for ($i = 0; $i < arrayCount($delete); $i++) {
       if (delAstDB($family, $delete[$i]) == 0) {
         $result = 0;
       } else {
@@ -84,7 +84,7 @@ require_once '../common/header.php';
     $key = $_GET['num'];
     $ldb['key'] = $key;
     $RESULT_NUMBER = $key;
-    if (($n = count($db['data'])) > 0) {
+    if (($n = arrayCount($db['data'])) > 0) {
       for ($i = 0; $i < $n; $i++) {
         if ($key === $db['data'][$i]['key']) {
           $ldb = $db['data'][$i];
@@ -139,7 +139,7 @@ require_once '../common/result.php';
   putHtml('<table width="100%" class="datatable">');
   putHtml("<tr>");
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "CID Number", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "CID Name", "</td>";
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Delete", "</td>";

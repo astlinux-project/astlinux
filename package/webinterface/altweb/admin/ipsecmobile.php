@@ -676,7 +676,7 @@ if ($openssl !== FALSE) {
     putHtml('<table width="85%" class="datatable">');
     putHtml("<tr>");
 
-    if (($n = count($data)) > 0) {
+    if (($n = arrayCount($data)) > 0) {
       echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Peer Name", "</td>";
       echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Credentials", "</td>";
       for ($i = 0; $i < $n; $i++) {

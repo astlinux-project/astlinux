@@ -75,14 +75,14 @@ if ($opts['type'] === 'aastra') {
   $db = parseAstDB($familyname);
 
   // Sort by Name
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     foreach ($db['data'] as $key => $row) {
       $name[$key] = strtolower($row['value']);
     }
     array_multisort($name, SORT_ASC, SORT_STRING, $db['data']);
   }
 
-  if (($n = count($db['data'])) > 0) {
+  if (($n = arrayCount($db['data'])) > 0) {
     for ($i = 0; $i < $n; $i++) {
       $number = $ext_prefix.$db['data'][$i]['key'];
       $value = htmlspecialchars($db['data'][$i]['value']);

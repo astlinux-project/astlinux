@@ -245,7 +245,7 @@ if (opensslOPENVPNis_valid($openssl)) {
   }
   fwrite($fp, "### TLS-Auth File\n".$value."\n");
   if (! is_null($disabled)) {
-    if (count($disabled) > 0) {
+    if (arrayCount($disabled) > 0) {
       $value = 'OVPN_VALIDCLIENTS="';
       fwrite($fp, "### Valid Clients\n".$value."\n");
       $client_list = opensslGETclients($openssl);
@@ -884,7 +884,7 @@ if ($openssl !== FALSE) {
     putHtml('<table width="85%" class="datatable">');
     putHtml("<tr>");
 
-    if (($n = count($data)) > 0) {
+    if (($n = arrayCount($data)) > 0) {
       echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Client Name", "</td>";
       echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Credentials", "</td>";
       echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Disabled", "</td>";

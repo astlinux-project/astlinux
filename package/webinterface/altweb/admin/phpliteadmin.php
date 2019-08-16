@@ -722,7 +722,7 @@ if ($auth->isAuthorized())
 		}
 		else
 		{
-			$str = preg_replace('@[^\w-.]@','', $_POST['new_dbname']);
+			$str = preg_replace('@[^\w\-.]@','', $_POST['new_dbname']);
 			$dbname = $str;
 			$dbpath = $str;
 			if(checkDbName($dbname))
@@ -1193,7 +1193,7 @@ if(isset($_GET['action']) && isset($_GET['confirm']))
 						else
 							$query .= "DEFAULT ".$db->quote($_POST[$i.'_defaultvalue'])." ";
 					}
-					$query = substr($query, 0, sizeof($query)-2);
+					$query = substr($query, 0, -1);
 					$query .= ", ";
 				}
 			}
@@ -1206,7 +1206,7 @@ if(isset($_GET['action']) && isset($_GET['confirm']))
 				}
 				$query .= "PRIMARY KEY (".$compound_key."), ";
 			}
-			$query = substr($query, 0, sizeof($query)-3);
+			$query = substr($query, 0, -2);
 			$query .= ")";
 			$result = $db->query($query);
 			if($result===false)
@@ -1481,7 +1481,7 @@ if(isset($_GET['action']) && isset($_GET['confirm']))
 							$query .= ")";
 						$query .= ", ";
 					}
-					$query = substr($query, 0, sizeof($query)-3);
+					$query = substr($query, 0, -2);
 					$query .= " WHERE ".$db->wherePK($target_table, json_decode($pks[$i]));
 					$result1 = $db->query($query);
 					if($result1===false)
@@ -5301,7 +5301,7 @@ class Database
 		while(!feof($csv_handle))
 		{
 			$csv_data = fgetcsv($csv_handle, 0, $field_terminate, $field_enclosed, $field_escaped);
-			if($csv_data[0] != NULL || count($csv_data)>1)
+			if(is_array($csv_data) && ($csv_data[0] != NULL || count($csv_data)>1))
 			{
 				$csv_number_of_rows++;
 				if($fields_in_first_row && $csv_number_of_rows==1)

@@ -382,7 +382,7 @@ function parseCDRlog(&$db, $match, $key, $map, $default, $extra, $last, $databas
 //
 function sortCDRdb(&$db, $sortby) {
 
-  if (count($db['data']) > 1) {
+  if (arrayCount($db['data']) > 1) {
     if ($db['sortedby'] !== $sortby) {
       if ($sortby === 'time' || $sortby === 'billsec') {
         $sortorder = SORT_DESC;
@@ -552,7 +552,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
     }
   } elseif (isset($_POST['submit_export'])) {
-    if (($n = count($db['data'])) > 0) {
+    if (($n = arrayCount($db['data'])) > 0) {
       $search = isset($_POST['current_search']) ? $_POST['current_search'] : '';
       $key = isset($_POST['current_key']) ? $_POST['current_key'] : '';
       $name = 'CDR'.(($key === '') ? '' : '-'.$key).(($search === '') ? '' : '-'.rawurlencode($search)).'.csv';
@@ -626,15 +626,15 @@ require_once '../common/header.php';
   if (isset($_GET['previous_page'], $db['lastmtime'])) {
     $db['displayStart'] = max( $db['displayStart'] - $db['displayLength'], 0);
   } elseif (isset($_GET['next_page'], $db['lastmtime'])) {
-    if (($db['displayStart'] + $db['displayLength']) < count($db['data'])) {
+    if (($db['displayStart'] + $db['displayLength']) < arrayCount($db['data'])) {
       $db['displayStart'] += $db['displayLength'];
     }
   } elseif (isset($_GET['start_page_at'], $db['lastmtime'])) {
     $startat = (int)$_GET['start_page_at'];
     if ($startat < 0) {
       $db['displayStart'] = 0;
-    } elseif ($startat >= count($db['data'])) {
-      $db['displayStart'] = max( count($db['data']) - $db['displayLength'], 0);
+    } elseif ($startat >= arrayCount($db['data'])) {
+      $db['displayStart'] = max( arrayCount($db['data']) - $db['displayLength'], 0);
     } else {
       $db['displayStart'] = $startat;
     }
@@ -645,7 +645,7 @@ require_once '../common/header.php';
     sortCDRdb($db, 'time');
   }
 
-  $n = count($db['data']);
+  $n = arrayCount($db['data']);
   if (($start = min( $n, $db['displayStart'])) < 0) {
     $start = 0;
   }
@@ -684,7 +684,7 @@ require_once '../common/header.php';
 <?php
 if ($databases === 'yes') {
   $database_files = getCDRdatabases();
-  if (count($database_files) > 1) {
+  if (arrayCount($database_files) > 1) {
     putHtml('Database:');
     putHtml('<select name="databases">');
     foreach ($database_files as $value) {
@@ -782,7 +782,7 @@ putHtml($sel.'</option>');
   </form>
 <?php
 
-  $n = count($db['data']);
+  $n = arrayCount($db['data']);
   if (($start = min( $n, $db['displayStart'])) < 0) {
     $start = 0;
   }

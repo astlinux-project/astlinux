@@ -18,6 +18,7 @@
 // 01-12-2012, Added asteriskURLrepo()
 // 01-04-2014, Added statusPROCESS()
 // 07-11-2019, Added gen_BackupExcludeSuffix_args()
+// 08-16-2019, Added arrayCount()
 //
 // System location of prefs file
 $KD_PREFS_LOCATION = '/mnt/kd/webgui-prefs.txt';
@@ -34,6 +35,15 @@ function putHtml($arg) {
 //
 function putText($arg) {
   echo htmlspecialchars($arg), "\n";
+}
+
+// Function: arrayCount
+// Return count($array) for array
+// Return 0 for non-array (NULL)
+//
+function arrayCount($array) {
+
+  return(is_array($array) ? count($array) : 0);
 }
 
 // Function: shell
@@ -795,7 +805,7 @@ function pad_ipv4_str($ip) {
 
   if (strpos($ip, ':') === FALSE && strpos($ip, '.') !== FALSE) {
     $tokens = explode('.', $ip);
-    if (count($tokens) == 4) {
+    if (arrayCount($tokens) == 4) {
       $str = str_pad($tokens[0], 3, '0', STR_PAD_LEFT).'.'.
              str_pad($tokens[1], 3, '0', STR_PAD_LEFT).'.'.
              str_pad($tokens[2], 3, '0', STR_PAD_LEFT).'.'.
