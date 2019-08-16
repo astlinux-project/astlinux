@@ -127,6 +127,8 @@ Released @TBD@
           select the desired theme for CodeMirror.
           Tip: [solarized], [seti-mks] and [zenburn] are worth a look.
 
+-- Tweak to eliminate PHP 7 Warning and Deprecated errors.
+
 
 Additions for AstLinux 1.3.6:
 =============================
