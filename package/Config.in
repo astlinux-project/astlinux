@@ -441,6 +441,7 @@ endmenu
 menu "Miscellaneous"
 source "package/empty/Config.in"
 source "package/htpasswd/Config.in"
+source "package/iprange/Config.in"
 source "package/mac2vendor/Config.in"
 source "package/netcalc/Config.in"
 source "package/qemu/Config.in"
