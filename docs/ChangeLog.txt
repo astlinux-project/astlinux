@@ -34,6 +34,8 @@ Released @TBD@
 
 -- ethtool, version bump to 5.2
 
+-- iprange, version 1.0.4, new command, a tool capable of managing sets of IPs
+
 -- nut, version 2.7.4, using "Buildroot" patch for OpenSSL 1.1 compatibility
 
 -- Fossil, major version bump to 2.9, adds numerous enhancements to the look and feel of the web interface
