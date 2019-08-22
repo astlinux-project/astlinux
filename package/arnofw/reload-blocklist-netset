@@ -5,14 +5,14 @@
 ## Regularly update .netset IP/Net entries to be used by Arno's Iptables Firewall (AIF)
 ##
 ## Cron may be used to run this script once or twice every day.  Example:
-## 15 05,15 * * * reload-blocklist-netset /mnt/kd/blocklists firehol_level1 voipbl >/dev/null 2>&1
+## 15 05,15 * * * reload-blocklist-netset /mnt/kd/blocklists firehol_level1 firehol_webclient >/dev/null 2>&1
 ##
 ## Important: Do not use the cron time schedule as above, make changes so the servers are not hit at the same time.
 ##
 ## Multiple netset entries may be space or comma separated.
 ##
 ## In this example, a /mnt/kd/blocklists/firehol_level1.netset
-##              and a /mnt/kd/blocklists/voipbl.netset file will be created.
+##              and a /mnt/kd/blocklists/firehol_webclient.netset file will be created.
 ## Note: The specified directory must pre-exist, it will not be created.
 ##
 ## This script prevents any netset from being updated more often than
@@ -27,9 +27,11 @@ UPDATES=0
 
 FIREHOL="${BLOCKLIST_FIREHOL_ROOT_URL:-https://iplists.firehol.org/files}"
 
-VOIPBL="${BLOCKLIST_VOIPBL_ROOT_URL:-http://www.voipbl.org/update/}"
-
 SPAMHAUS="${BLOCKLIST_SPAMHAUS_ROOT_URL:-https://www.spamhaus.org/drop}"
+
+CUSTOM="${BLOCKLIST_CUSTOM_URLS}"
+
+CUSTOMV6="${BLOCKLIST_CUSTOMV6_URLS}"
 
 list_netsets()
 {
@@ -40,12 +42,15 @@ Available IPv4 Blocklist Netsets:
  firehol_level2: Blacklist that track attacks, during about the last 48 hours.
  firehol_level3: Blacklist that track attacks, spyware, viruses, reported or detected in the last 30 days.
  firehol_webclient: Blacklist made from blocklists that a web client should never talk to. Use with firehol_level1.
-         voipbl: VoIP Blacklist - sponsored by ScopServ International - http://www.voipbl.org/
+       asterisk: Aggregate multiple Asterisk/SIP/VoIP blacklists, including blocklist_de_sip.
+         voipbl: VoIP Blacklist - no longer maintained, not recommended.
   spamhaus_drop: Spamhaus DROP (Don't Route Or Peer), consisting of netblocks that are "hijacked" by cyber-crime operations.
  spamhaus_edrop: Spamhaus EDROP is an extension of the DROP list that includes suballocated netblocks.
+         custom: Use variable BLOCKLIST_CUSTOM_URLS containing one or more (space/newline separated) URLs.
 
 Available IPv6 Blocklist Netsets:
 spamhaus_dropv6: Spamhaus DROPv6 list includes IPv6 ranges allocated to spammers or cyber criminals.
+       customv6: Use variable BLOCKLIST_CUSTOMV6_URLS containing one or more (space/newline separated) URLs.
 
 EOF
 }
@@ -54,31 +59,33 @@ netset_url()
 {
   local netset="$1"
 
+  ## Defaults
+  URL=""
+  ALT_URL=""
+  AGE=0
+  FILTER=0
+  ##
+
   case $netset in
   ## IPv4
     firehol_level1)
       URL="$FIREHOL/firehol_level1.netset"
-      ALT_URL=""
       AGE=3600
       ;;
     firehol_level2)
       URL="$FIREHOL/firehol_level2.netset"
-      ALT_URL=""
       AGE=3600
       ;;
     firehol_level3)
       URL="$FIREHOL/firehol_level3.netset"
-      ALT_URL=""
       AGE=3600
       ;;
     firehol_webclient)
       URL="$FIREHOL/firehol_webclient.netset"
-      ALT_URL=""
       AGE=3600
       ;;
      voipbl)
-      URL="$VOIPBL"
-      ALT_URL="$FIREHOL/voipbl.netset"
+      URL="$FIREHOL/voipbl.netset"
       AGE=43200
       ;;
     spamhaus_drop)
@@ -91,18 +98,27 @@ netset_url()
       ALT_URL="$FIREHOL/spamhaus_edrop.netset"
       AGE=43200
       ;;
+    asterisk)
+      URL="$FIREHOL/blocklist_de_sip.ipset $FIREHOL/bi_asterisk_0_1d.ipset $FIREHOL/bi_asterisk_2_30d.ipset
+           $FIREHOL/bi_voip_0_1d.ipset $FIREHOL/bi_voip_1_7d.ipset"
+      AGE=3600
+      FILTER=1
+      ;;
+    custom)
+      URL="$CUSTOM"
+      AGE=3600
+      FILTER=1
+      ;;
 
   ## IPv6
     spamhaus_dropv6)
       URL="$SPAMHAUS/dropv6.txt"
-      ALT_URL=""
       AGE=43200
       ;;
-
-    *)
-      URL=""
-      ALT_URL=""
-      AGE=0
+    customv6)
+      URL="$CUSTOMV6"
+      AGE=3600
+      FILTER=2
       ;;
   esac
 }
@@ -130,7 +146,7 @@ valid_update_age()
 
 blocklist_netset()
 {
-  local netset tmp_file count mesg IFS
+  local netset url tmp_dir tmp_file tmp_index count mesg IFS
 
   IFS=' ,'
   for netset in $*; do
@@ -144,30 +160,57 @@ blocklist_netset()
       echo "reload-blocklist-netset: The file '$netset.netset' has been updated within $AGE seconds, skipping." >&2
       continue
     fi
-    tmp_file="$(mktemp "/tmp/reload_blocklist.XXXXXX")"
-    if ! download_file "$tmp_file" "$URL"; then
-      if [ -z "$ALT_URL" ] || ! download_file "$tmp_file" "$ALT_URL"; then
-        rm -f "$tmp_file"
-        mesg="Retrieving '$netset' netset failed for '$URL', skipping."
-        logger -s -t reload-blocklist-netset -p kern.info "$mesg"
-        continue
-      fi
-    fi
-    if grep -q -i -e '^<!DOCTYPE HTML' -e '^<HTML' "$tmp_file"; then
-      rm -f "$tmp_file"
-      mesg="Netset '$netset' text format is invalid for '$URL', skipping."
+
+    tmp_index=0
+    tmp_dir="$(mktemp -d "/tmp/reload_blocklist_XXXXXX")"
+    ## sanity check for tmp_dir since we are recursively removing later.
+    if [ "${tmp_dir##/tmp/reload_blocklist_*}" != "" ] || [ ! -d "$tmp_dir" ]; then
+      mesg="Creating temp directory for '$netset' netset failed, skipping."
       logger -s -t reload-blocklist-netset -p kern.info "$mesg"
       continue
     fi
 
-    cp "$tmp_file" "$DIR/$netset.netset"
-    rm -f "$tmp_file"
-    UPDATES=$((UPDATES + 1))
+    for url in $URL; do
+      tmp_index=$((tmp_index + 1))
+      tmp_file="$tmp_dir/netset$tmp_index.txt"
 
-    count=$(grep -c '^[0-9a-fA-F]' "$DIR/$netset.netset")
-    mesg="Netset '$netset' has been updated. Contains $count addresses/nets."
-    logger -t reload-blocklist-netset -p kern.info "$mesg"
-    echo "$mesg"
+      if ! download_file "$tmp_file" "$url"; then
+        if [ -z "$ALT_URL" ] || ! download_file "$tmp_file" "$ALT_URL"; then
+          rm -rf "$tmp_dir"
+          mesg="Retrieving '$netset' netset failed for '$url', skipping."
+          logger -s -t reload-blocklist-netset -p kern.info "$mesg"
+          break
+        fi
+      fi
+      if grep -q -i -e '^<!DOCTYPE HTML' -e '^<HTML' "$tmp_file"; then
+        rm -rf "$tmp_dir"
+        mesg="Netset '$netset' text format is invalid for '$url', skipping."
+        logger -s -t reload-blocklist-netset -p kern.info "$mesg"
+        break
+      fi
+    done
+    if [ -d "$tmp_dir" ]; then
+      if [ $FILTER -eq 1 ]; then
+        tmp_file="$tmp_dir/out.netset"
+        iprange "$tmp_dir"/netset*.txt > "$tmp_file"
+        if [ $? -ne 0 ]; then
+          mesg="Aggregating '$netset' netset(s) failed, concatenating instead."
+          logger -s -t reload-blocklist-netset -p kern.info "$mesg"
+          cat "$tmp_dir"/netset*.txt > "$tmp_file"
+        fi
+      elif [ $FILTER -eq 2 ]; then
+        tmp_file="$tmp_dir/out.netset"
+        cat "$tmp_dir"/netset*.txt > "$tmp_file"
+      fi
+      cp "$tmp_file" "$DIR/$netset.netset"
+      rm -rf "$tmp_dir"
+      UPDATES=$((UPDATES + 1))
+
+      count=$(grep -c '^[0-9a-fA-F]' "$DIR/$netset.netset")
+      mesg="Netset '$netset' has been updated. Contains $count addresses/nets."
+      logger -t reload-blocklist-netset -p kern.info "$mesg"
+      echo "$mesg"
+    fi
   done
 }
 
