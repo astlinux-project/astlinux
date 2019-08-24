@@ -82,6 +82,12 @@ Released @TBD@
 
 -- whois, version bump to 5.5.0
 
+-- arnofw (AIF), reload-blocklist-netset cron script, add new netset types
+   asterisk: Aggregate multiple Asterisk/SIP/VoIP blacklists, including blocklist_de_sip.
+   custom: Use variable BLOCKLIST_CUSTOM_URLS containing one or more (space/newline separated) URLs.
+   customv6: Use variable BLOCKLIST_CUSTOMV6_URLS containing one or more (space/newline separated) URLs.
+   More info: http://doc.astlinux-project.org/userdoc:tt_firewall_external_block_list#updating_netset_blocklists
+
 -- (Custom Build Only) mosquitto, MQTT client, version 1.6.4
 
 ** Asterisk
