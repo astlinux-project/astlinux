@@ -137,6 +137,9 @@ Released @TBD@
 
 -- Tweak to eliminate PHP 7 Warning and Deprecated errors.
 
+-- Edit tab, add [Apply user.conf variables] as the first selector to { Reload/Restart }.
+   Additionally a basic syntax check is performed on the resulting /etc/rc.conf file.
+
 
 Additions for AstLinux 1.3.6:
 =============================
