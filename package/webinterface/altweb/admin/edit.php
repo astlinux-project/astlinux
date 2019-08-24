@@ -20,6 +20,7 @@
 // 11-12-2018, Added WireGuard VPN Mobile Client support
 // 06-13-2019, Added Reload WireGuard VPN
 // 07-30-2019, Added CodeMirror text editing
+// 08-24-2019, Added Apply user.conf variables
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -27,6 +28,7 @@ $myself = $_SERVER['PHP_SELF'];
 require_once '../common/functions.php';
 
 $select_reload = array (
+  'APPLY' => 'Apply user.conf variables',
   'reload' => 'Reload Asterisk',
   'iptables' => 'Restart Firewall',
   'dnsmasq' => 'Restart DNS &amp; DHCP',
@@ -291,6 +293,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 53, $result, 'init');
       } elseif ($process === 'IPTABLES') {
         $result = restartPROCESS('iptables', 66, $result, 'reload');
+      } elseif ($process === 'APPLY') {
+        $result = restartPROCESS('', 67, 97, 'apply');
       } elseif ($process === 'cron') {
         $result = updateCRON('root', 30, $result);
       }
@@ -365,7 +369,7 @@ require_once '../common/header.php';
   if (isset($_GET['reload_restart'])) {
     $reload_restart = $_GET['reload_restart'];
   } else {
-    $reload_restart = 'system';
+    $reload_restart = 'APPLY';
   }
 
   putHtml("<center>");
@@ -449,6 +453,10 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Keepalived'.statusPROCESS('keepalived').'.</p>');
     } elseif ($result == 66) {
       putHtml('<p style="color: green;">Firewall Blocklist has been Reloaded.</p>');
+    } elseif ($result == 67) {
+      putHtml('<p style="color: green;">User System Variables applied with user.conf file.</p>');
+    } elseif ($result == 97) {
+      putHtml('<p style="color: red;">Syntax error in system variables when applying user.conf file.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {

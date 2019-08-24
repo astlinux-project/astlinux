@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } elseif (isset($_POST['submit_save'])) {
     $result = saveBACKUPsettings($BACKUPCONFDIR, $BACKUPCONFFILE);
     if ($result == 11) {
-      $result = restartPROCESS('', $result, 99, 'apply');
+      $result = restartPROCESS('', $result, 97, 'apply');
     }
   }
   header('Location: '.$myself.'?result='.$result);
@@ -109,6 +109,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: red;">Error creating file.</p>');
     } elseif ($result == 11) {
       putHtml('<p style="color: green;">Tarsnap Backup settings are saved and applied.</p>');
+    } elseif ($result == 97) {
+      putHtml('<p style="color: red;">Syntax error in system variables when applying settings.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 999) {
