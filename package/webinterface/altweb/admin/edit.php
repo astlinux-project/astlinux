@@ -29,7 +29,7 @@ require_once '../common/functions.php';
 
 $select_reload = array (
   'APPLY' => 'Apply user.conf variables',
-  'reload' => 'Reload Asterisk',
+  'ASTERISK' => 'Reload Asterisk',
   'iptables' => 'Restart Firewall',
   'dnsmasq' => 'Restart DNS &amp; DHCP',
   'dynamicdns' => 'Restart Dynamic DNS',
@@ -152,6 +152,57 @@ $ast_label = array (
   'zapata.conf' => 'Analog Interface Settings'
 );
 
+// Function menuSelectHint()
+//
+function menuSelectHint($file) {
+
+  $menu = 'APPLY';
+
+  if ($file !== '') {
+    $hints = explode('/', $file);
+    // Note: the leading file / sets hints[0] to ''
+    if ($hints[1] === 'mnt' && $hints[2] === 'kd') {
+      $hint = isset($hints[3]) ? $hints[3] : '';
+    } elseif ($hints[1] === 'etc') {
+      $hint = isset($hints[2]) ? $hints[2] : '';
+    } else {
+      $hint = '';
+    }
+    if ($hint !== '') {
+      $menu_hint = array (
+        'ddclient.conf' => 'dynamicdns',
+        'dnsmasq.static' => 'dnsmasq',
+        'dnsmasq.leases' => 'dnsmasq',
+        'chrony.conf' => 'ntpd',
+        'msmtp-aliases.conf' => 'msmtp',
+        'ldap.conf' => 'ldap',
+        'slapd.conf' => 'slapd',
+        'vsftpd.conf' => 'vsftpd',
+        'blocklists' => 'IPTABLES',
+        'crontabs' => 'cron',
+        'prosody' => 'prosody',
+        'snmp' => 'snmpd',
+        'keepalived' => 'keepalived',
+        'openvpn' => 'openvpn',
+        'ipsec' => 'ipsec',
+        'wireguard' => 'WIREGUARD',
+        'avahi' => 'avahi',
+        'ups' => 'ups',
+        'monit' => 'monit',
+        'fop2' => 'FOP2',
+        'kamailio' => 'kamailio',
+        'asterisk' => 'ASTERISK',
+        'arno-iptables-firewall' => 'iptables'
+      );
+      if (isset($menu_hint[$hint])) {
+        $menu = $menu_hint[$hint];
+      }
+    }
+  }
+
+  return($menu);
+}
+
 // Function saveEDITfile()
 //
 function saveEDITfile($text, $file, $cleanup) {
@@ -217,7 +268,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = 99;
     $process = $_POST['reload_restart'];
     if (isset($_POST['confirm_reload'])) {
-      if ($process === 'reload') {
+      if ($process === 'ASTERISK') {
         if (($cmd = getPREFdef($global_prefs, 'system_asterisk_reload_cmdstr')) === '') {
           $cmd = 'module reload';
         }
@@ -369,7 +420,7 @@ require_once '../common/header.php';
   if (isset($_GET['reload_restart'])) {
     $reload_restart = $_GET['reload_restart'];
   } else {
-    $reload_restart = 'APPLY';
+    $reload_restart = menuSelectHint($openfile);
   }
 
   putHtml("<center>");
