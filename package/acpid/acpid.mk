@@ -4,9 +4,9 @@
 #
 #############################################################
 
-ACPID_VERSION = 2.0.30
+ACPID_VERSION = 2.0.32
 ACPID_SOURCE = acpid-$(ACPID_VERSION).tar.xz
-ACPID_SITE = http://downloads.sourceforge.net/project/acpid2
+ACPID_SITE = https://downloads.sourceforge.net/project/acpid2
 
 define ACPID_SET_EVENTS_FILES
 	mkdir -p $(TARGET_DIR)/etc/acpi/events
