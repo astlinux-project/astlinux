@@ -24,13 +24,15 @@ Released @TBD@
 
 -- libsrtp, version bump to 2.2.0, adds OpenSSL 1.1 compatibility
 
--- php, major version bump to 7.2.21, adds OpenSSL 1.1 compatibility
+-- php, major version bump to 7.2.22, adds OpenSSL 1.1 compatibility
 
 -- sqlite, version bump to 3.29.0
 
 -- strace, version bump to 5.2
 
 -- e2fsprogs, version bump to 1.45.3
+
+-- acpid, version bump to 2.0.32
 
 -- ethtool, version bump to 5.2
 
