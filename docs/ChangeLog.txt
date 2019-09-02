@@ -32,11 +32,15 @@ Released @TBD@
 
 -- e2fsprogs, version bump to 1.45.3
 
+-- libusb, version bump to 1.0.23
+
 -- acpid, version bump to 2.0.32
 
 -- ethtool, version bump to 5.2
 
 -- iprange, version 1.0.4, new command, a tool capable of managing sets of IPs
+
+-- logrotate, version bump to 3.15.1
 
 -- nut, version 2.7.4, using "Buildroot" patch for OpenSSL 1.1 compatibility
 
@@ -45,6 +49,8 @@ Released @TBD@
 -- Monit, version bump to 5.26.0, security and bug fixes.
 
 -- zabbix, version bump to 3.0.28
+
+-- ca-certificates, update trusted root certificates 2019-08-28
 
 -- Time Zone Database update, tzdata2019b and php-timezonedb-2019.2
 
@@ -83,6 +89,8 @@ Released @TBD@
 -- tarsnap, add /mnt/kd/acme to the default included directories
 
 -- whois, version bump to 5.5.0
+
+-- unbound (host), version bump to 1.9.3
 
 -- arnofw (AIF), reload-blocklist-netset cron script, add new netset types
    asterisk: Aggregate multiple Asterisk/SIP/VoIP blacklists, including blocklist_de_sip.
