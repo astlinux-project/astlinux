@@ -102,6 +102,27 @@ p {
   background-position:100% -42px;
 }
 
+#gttBtn {
+  display: none;
+  position: fixed;
+  top: 48px;
+  right: 10px;
+  z-index: 88;
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  background-color: #887E77;
+  color: #FFA500;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+#gttBtn:hover {
+  background-color: #6E6E77;
+}
+
 .button {
   height: 24px;
   margin: 0;
