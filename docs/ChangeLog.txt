@@ -152,6 +152,8 @@ Released @TBD@
 
 -- Edit tab, add Reload/Restart menu selection hints to be context-sensitive.
 
+-- All tabs, add a 'Goto Top' button on the upper-right when scrolled down such that tabs are not shown.
+
 
 Additions for AstLinux 1.3.6:
 =============================
