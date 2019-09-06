@@ -64,7 +64,7 @@ Released @TBD@
 
 -- OpenSSH, version 8.0p1, adds OpenSSL 1.1 compatibility
 
--- WireGuard VPN, version bump to 0.0.20190702
+-- WireGuard VPN, version bump to 0.0.20190905
 
 -- libcurl (curl) version bump to 7.65.3
 
@@ -107,7 +107,7 @@ Released @TBD@
    Add json-integer-overflow patches.
    Add security patches for: AST-2019-002, AST-2019-003
 
--- Asterisk 13.28.0 (version bump) and 16.5.0 (version bump)
+-- Asterisk 13.28.1 (version bump) and 16.5.1 (version bump)
    New modules: app_attended_transfer.so, app_blind_transfer.so
 
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
