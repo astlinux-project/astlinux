@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-WIREGUARD_VERSION = 0.0.20190702
+WIREGUARD_VERSION = 0.0.20190905
 WIREGUARD_SITE = https://git.zx2c4.com/WireGuard/snapshot
 WIREGUARD_SOURCE = WireGuard-$(WIREGUARD_VERSION).tar.xz
 WIREGUARD_DEPENDENCIES = host-pkg-config linux libmnl
@@ -15,6 +15,7 @@ WIREGUARD_MAKE_OPTS = \
 	WITH_BASHCOMPLETION=no \
 	WITH_WGQUICK=no \
 	WITH_SYSTEMDUNITS=no \
+	KERNELRELEASE=$(LINUX_VERSION_PROBED) \
 	KERNELDIR=$(LINUX_DIR)
 
 define WIREGUARD_BUILD_CMDS
