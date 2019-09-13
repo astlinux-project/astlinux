@@ -52,7 +52,7 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2019-08-28
 
--- Time Zone Database update, tzdata2019b and php-timezonedb-2019.2
+-- Time Zone Database update, tzdata2019c and php-timezonedb-2019.3
 
 -- mac2vendor, oui.txt database snapshot 2019-07-12
 
@@ -60,13 +60,13 @@ Released @TBD@
 
 ** Networking
 
--- OpenSSL, major version bump to 1.1.1c
+-- OpenSSL, major version bump to 1.1.1d, security fixes: CVE-2019-1549, CVE-2019-1563, CVE-2019-1547
 
 -- OpenSSH, version 8.0p1, adds OpenSSL 1.1 compatibility
 
 -- WireGuard VPN, version bump to 0.0.20190905
 
--- libcurl (curl) version bump to 7.65.3
+-- libcurl (curl) version bump to 7.66.0, security fixes: CVE-2019-5481, CVE-2019-5482
 
 -- ipsec-tools, version 0.8.2, using "Buildroot" patch for OpenSSL 1.1 compatibility
 
