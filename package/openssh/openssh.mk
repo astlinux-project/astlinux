@@ -13,7 +13,7 @@ OPENSSH_DEPENDENCIES = zlib openssl
 OPENSSH_CONF_OPT = \
 	--libexecdir=/usr/libexec \
 	--sysconfdir=/etc/ssh \
-	--with-sandbox=no \
+	--with-sandbox=rlimit \
 	--disable-lastlog \
 	--disable-utmp \
 	--disable-utmpx \
