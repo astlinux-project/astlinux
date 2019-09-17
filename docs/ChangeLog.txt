@@ -22,6 +22,8 @@ Released @TBD@
 
 -- e1000e version bump to 3.5.1 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
+-- expat, version bump to 2.2.8, security fix: CVE-2019-15903
+
 -- libsrtp, version bump to 2.2.0, adds OpenSSL 1.1 compatibility
 
 -- php, major version bump to 7.2.22, adds OpenSSL 1.1 compatibility
@@ -98,7 +100,7 @@ Released @TBD@
    customv6: Use variable BLOCKLIST_CUSTOMV6_URLS containing one or more (space/newline separated) URLs.
    More info: http://doc.astlinux-project.org/userdoc:tt_firewall_external_block_list#updating_netset_blocklists
 
--- (Custom Build Only) mosquitto, MQTT client, version 1.6.4
+-- (Custom Build Only) mosquitto, MQTT client, version 1.6.5
 
 ** Asterisk
 
