@@ -2,14 +2,14 @@
 #             -= Arno's iptables firewall - WireGuard VPN plugin =-
 #
 PLUGIN_NAME="WireGuard VPN plugin"
-PLUGIN_VERSION="1.01"
+PLUGIN_VERSION="1.02"
 PLUGIN_CONF_FILE="wireguard-vpn.conf"
 #
-# Last changed          : November 28, 2018
+# Last changed          : September 18, 2019
 # Requirements          : AIF 2.0.0+
 # Comments              : This plugin allows access to a WireGuard VPN.
 #
-# Author                : (C) Copyright 2018 by Lonnie Abelbeck & Arno van Amersfoort
+# Author                : (C) Copyright 2018-2019 by Lonnie Abelbeck & Arno van Amersfoort
 # Homepage              : http://rocky.eld.leidenuniv.nl/
 # Email                 : a r n o v a AT r o c k y DOT e l d DOT l e i d e n u n i v DOT n l
 #                         (note: you must remove all spaces and substitute the @ and the .
@@ -33,6 +33,9 @@ PLUGIN_CONF_FILE="wireguard-vpn.conf"
 plugin_start()
 {
   local host port redirect_ports eif IFS
+
+  iptables -N WIREGUARD_INPUT 2>/dev/null
+  iptables -F WIREGUARD_INPUT
 
   if [ -z "$WIREGUARD_VPN_TUNNEL_HOSTS" ]; then
     WIREGUARD_VPN_TUNNEL_HOSTS="0/0"
@@ -70,6 +73,85 @@ plugin_start()
     fi
   fi
 
+  echo "${INDENT}Setting up internal(WG->Local) INPUT policy"
+  INDENT="${INDENT} "
+
+  if [ -n "$WIREGUARD_VPN_HOST_OPEN_TCP" -o -n "$WIREGUARD_VPN_HOST_OPEN_UDP" ]; then
+    unset IFS
+    for rule in $WIREGUARD_VPN_HOST_OPEN_TCP; do
+      if parse_rule "$rule" WIREGUARD_VPN_HOST_OPEN_TCP "hosts-ports"; then
+
+        echo "${INDENT}Allowing $hosts(WG->Local) for TCP port(s): $ports"
+
+        IFS=' ,'
+        for host in $(ip_range "$hosts"); do
+          for port in $ports; do
+            iptables -A WIREGUARD_INPUT -s $host -p tcp --dport $port -j ACCEPT
+          done
+        done
+      fi
+    done
+
+    unset IFS
+    for rule in $WIREGUARD_VPN_HOST_OPEN_UDP; do
+      if parse_rule "$rule" WIREGUARD_VPN_HOST_OPEN_UDP "hosts-ports"; then
+
+        echo "${INDENT}Allowing $hosts(WG->Local) for UDP port(s): $ports"
+
+        IFS=' ,'
+        for host in $(ip_range "$hosts"); do
+          for port in $ports; do
+            iptables -A WIREGUARD_INPUT -s $host -p udp --dport $port -j ACCEPT
+          done
+        done
+      fi
+    done
+  elif [ -n "$WIREGUARD_VPN_HOST_DENY_TCP" -o -n "$WIREGUARD_VPN_HOST_DENY_UDP" ]; then
+    unset IFS
+    for rule in $WIREGUARD_VPN_HOST_DENY_TCP; do
+      if parse_rule "$rule" WIREGUARD_VPN_HOST_DENY_TCP "hosts:ANYHOST-ports:ANYPORT"; then
+
+        echo "${INDENT}Denying $hosts(WG->Local) for TCP port(s): $ports"
+
+        IFS=' ,'
+        for host in $(ip_range "$hosts"); do
+          for port in $ports; do
+            iptables -A WIREGUARD_INPUT -s $host -p tcp --dport $port -j DROP
+          done
+        done
+      fi
+    done
+
+    unset IFS
+    for rule in $WIREGUARD_VPN_HOST_DENY_UDP; do
+      if parse_rule "$rule" WIREGUARD_VPN_HOST_DENY_UDP "hosts:ANYHOST-ports:ANYPORT"; then
+
+        echo "${INDENT}Denying $hosts(WG->Local) for UDP port(s): $ports"
+
+        IFS=' ,'
+        for host in $(ip_range "$hosts"); do
+          for port in $ports; do
+            iptables -A WIREGUARD_INPUT -s $host -p udp --dport $port -j DROP
+          done
+        done
+      fi
+    done
+  fi
+
+  iptables -A WIREGUARD_INPUT -p icmp --icmp-type echo-request -m limit --limit 20/second --limit-burst 100 -j ACCEPT
+  iptables -A WIREGUARD_INPUT -p icmp --icmp-type echo-request -j DROP
+
+  if [ -n "$WIREGUARD_VPN_HOST_OPEN_TCP" -o -n "$WIREGUARD_VPN_HOST_OPEN_UDP" ]; then
+    echo "${INDENT}Denying all remaining WG->Local traffic"
+    iptables -A WIREGUARD_INPUT -j DROP
+  else
+    echo "${INDENT}Allowing all remaining WG->Local traffic"
+    ## Fall through to support "Deny LAN->Local" rules
+  fi
+  INDENT="${INDENT% }"
+
+  iptables -A INT_INPUT_CHAIN -i $WIREGUARD_VPN_IF -j WIREGUARD_INPUT
+
   return 0
 }
 
@@ -88,6 +170,9 @@ plugin_restart()
 # Plugin stop function
 plugin_stop()
 {
+
+  iptables -F WIREGUARD_INPUT
+  iptables -X WIREGUARD_INPUT 2>/dev/null
 
   return 0
 }
