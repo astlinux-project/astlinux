@@ -10,6 +10,7 @@
 // 11-07-2017
 // 11-12-2018, Add Mobile Client defaults
 // 11-15-2018, Add Mobile Client credentials
+// 09-18-2019, Add WG->Local firewall rules
 //
 // System location of /mnt/kd/rc.conf.d directory
 $WIREGUARDCONFDIR = '/mnt/kd/rc.conf.d';
@@ -41,6 +42,11 @@ $wg_redirect_ports_menu = array (
 $wg_peer_isolation_menu = array (
   'no'  => 'Pass Peer->Peer traffic',
   'yes' => 'Deny Peer->Peer traffic'
+);
+
+$wg_local_firewall_menu = array (
+  'deny' => 'Deny WG->Local',
+  'pass' => 'Pass WG->Local'
 );
 
 $wg_client_routing_menu = array (
@@ -215,6 +221,27 @@ function saveWIREGUARDsettings($conf_dir, $conf_file) {
 
   $value = 'WIREGUARD_PEER_ISOLATION="'.$_POST['isolation'].'"';
   fwrite($fp, "### Peer Isolation\n".$value."\n");
+
+  fwrite($fp, "### WG->Local Firewall Rules\n");
+  if ($_POST['wg_local'] == 'pass') {
+    $value = 'WIREGUARD_HOST_OPEN_TCP="'.tuq($_POST['wg_local_tcp']).'"';
+    fwrite($fp, $value."\n");
+    $value = 'WIREGUARD_HOST_OPEN_UDP="'.tuq($_POST['wg_local_udp']).'"';
+    fwrite($fp, $value."\n");
+    $value = 'WIREGUARD_HOST_DENY_TCP=""';
+    fwrite($fp, $value."\n");
+    $value = 'WIREGUARD_HOST_DENY_UDP=""';
+    fwrite($fp, $value."\n");
+  } else {
+    $value = 'WIREGUARD_HOST_OPEN_TCP=""';
+    fwrite($fp, $value."\n");
+    $value = 'WIREGUARD_HOST_OPEN_UDP=""';
+    fwrite($fp, $value."\n");
+    $value = 'WIREGUARD_HOST_DENY_TCP="'.tuq($_POST['wg_local_tcp']).'"';
+    fwrite($fp, $value."\n");
+    $value = 'WIREGUARD_HOST_DENY_UDP="'.tuq($_POST['wg_local_udp']).'"';
+    fwrite($fp, $value."\n");
+  }
 
   $value = tuq($_POST['wireguard_hostname']);
   if ($value !== '' && strpos($value, ':') !== FALSE) {
@@ -497,6 +524,38 @@ require_once '../common/header.php';
     putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
   }
   putHtml('</select>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Firewall Rules:</td><td style="text-align: left;" colspan="4">');
+  if (getVARdef($db, 'WIREGUARD_HOST_OPEN_TCP') !== '' || getVARdef($db, 'WIREGUARD_HOST_OPEN_UDP') !== '') {
+    $wg_local = 'pass';
+  } else {
+    $wg_local = 'deny';
+  }
+  putHtml('<select name="wg_local">');
+  foreach ($wg_local_firewall_menu as $key => $value) {
+    $sel = ($wg_local === $key) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  putHtml(includeTOPICinfo('WireGuard-Firewall-Rules').'</td><td style="text-align: left;" colspan="5">');
+  putHtml('<i>host1,host2~port1,port2 host3,host4~port3,port4 ...</i>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  putHtml('TCP:</td><td style="text-align: left;" colspan="5">');
+  $value = getVARdef($db, ($wg_local === 'pass') ? 'WIREGUARD_HOST_OPEN_TCP' : 'WIREGUARD_HOST_DENY_TCP');
+  putHtml('<input type="text" size="64" maxlength="256" value="'.$value.'" name="wg_local_tcp" />');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  putHtml('UDP:</td><td style="text-align: left;" colspan="5">');
+  $value = getVARdef($db, ($wg_local === 'pass') ? 'WIREGUARD_HOST_OPEN_UDP' : 'WIREGUARD_HOST_DENY_UDP');
+  putHtml('<input type="text" size="64" maxlength="256" value="'.$value.'" name="wg_local_udp" />');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');

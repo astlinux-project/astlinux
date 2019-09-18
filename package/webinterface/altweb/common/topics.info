@@ -595,4 +595,55 @@ log-level 3
 log /var/log/acme-client.log
 --
 
+[[WireGuard-Firewall-Rules]]
+
+WireGuard Firewall Rules, WG->Local
+
+Important -> The default policy is to allow all WG->Local traffic
+             unless "Pass WG->Local" is defined, then
+             the default policy is to deny all WG->Local traffic.
+
+Syntax: host1,host2~port1,port2 host3,host4~port3,port4 ...
+
+Example: (allow all WG->Local traffic, the default)
+  Firewall Rules: [Deny WG->Local]
+    TCP:
+    UDP:
+
+Example: (allow SSH traffic, deny all other)
+  Firewall Rules: [Pass WG->Local]
+    TCP: 0/0~22
+    UDP:
+
+Example: (deny HTTP/HTTPS traffic, allow all other)
+  Firewall Rules: [Deny WG->Local]
+    TCP: 0/0~80,443
+    UDP:
+
+Example: (allow SSH/HTTP/HTTPS and SIP/RTP-range traffic, deny all other)
+  Firewall Rules: [Pass WG->Local]
+    TCP: 0/0~22,80,443
+    UDP: 0/0~5060,16384-16639
+
+Example: (deny SSH/HTTP/HTTPS traffic for hosts 10.4.0.3 and 10.4.0.111 to 10.4.0.115, allow all other)
+  Firewall Rules: [Deny WG->Local]
+    TCP: 10.4.0.3,10.4.0.111-115~22,80,443
+    UDP:
+
+Example: (deny SSH/HTTP/HTTPS traffic for network 10.4.0.128/26 {10.4.0.129 to 10.4.0.190}, allow all other)
+  Firewall Rules: [Deny WG->Local]
+    TCP: 10.4.0.128/26~22,80,443
+    UDP:
+
+ Tip -> When possible, use network CIDR notation for an IP range rather than N.N.N.nnn-mmm syntax.
+        The N.N.N.nnn-mmm syntax expands into MANY iptables rules.
+
+ Tip -> When WireGuard is active, any changes to the "Firewall Options:" section can
+        be applied by performing "Restart Firewall" from the Network or Edit tabs.
+        "Restart (WireGuard) VPN" will also automatically restart the firewall,
+        but will disrupt active WireGuard tunnels.
+
+Note -> "Reload WireGuard VPN" will NOT automatically restart the firewall.
+
+Note -> The main Network tab -> Firewall Configuration sub-tab has additional WireGuard options.
 
