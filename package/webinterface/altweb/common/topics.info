@@ -603,7 +603,10 @@ Important -> The default policy is to allow all WG->Local traffic
              unless "Pass WG->Local" is defined, then
              the default policy is to deny all WG->Local traffic.
 
-Syntax: host1,host2~port1,port2 host3,host4~port3,port4 ...
+ICMP Echo Request (ping) packets are allowed and rate-limited for WG->Local traffic,
+regardless of the "Firewall Rules:" choice.
+
+TCP/UDP Syntax: host1,host2~port1,port2 host3,host4~port3,port4 ...
 
 Example: (allow all WG->Local traffic, the default)
   Firewall Rules: [Deny WG->Local]
