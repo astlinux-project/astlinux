@@ -138,6 +138,7 @@ plugin_start()
     done
   fi
 
+  echo "${INDENT}Allowing WG->Local ICMP-requests(ping)"
   iptables -A WIREGUARD_INPUT -p icmp --icmp-type echo-request -m limit --limit 20/second --limit-burst 100 -j ACCEPT
   iptables -A WIREGUARD_INPUT -p icmp --icmp-type echo-request -j DROP
 
