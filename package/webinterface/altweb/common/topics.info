@@ -613,20 +613,20 @@ Example: (allow all WG->Local traffic, the default)
     TCP:
     UDP:
 
-Example: (allow SSH traffic, deny all other)
+Example: (allow SSH and DNS traffic, deny all other)
   Firewall Rules: [Pass WG->Local]
-    TCP: 0/0~22
-    UDP:
+    TCP: 0/0~22,53
+    UDP: 0/0~53
 
 Example: (deny HTTP/HTTPS traffic, allow all other)
   Firewall Rules: [Deny WG->Local]
     TCP: 0/0~80,443
     UDP:
 
-Example: (allow SSH/HTTP/HTTPS and SIP/RTP-range traffic, deny all other)
+Example: (allow SSH/HTTP/HTTPS, DNS and SIP/RTP-range traffic, deny all other)
   Firewall Rules: [Pass WG->Local]
-    TCP: 0/0~22,80,443
-    UDP: 0/0~5060,16384-16639
+    TCP: 0/0~22,53,80,443
+    UDP: 0/0~53,5060,16384-16639
 
 Example: (deny SSH/HTTP/HTTPS traffic for hosts 10.4.0.3 and 10.4.0.111 to 10.4.0.115, allow all other)
   Firewall Rules: [Deny WG->Local]
