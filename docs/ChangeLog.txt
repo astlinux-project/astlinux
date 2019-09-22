@@ -22,6 +22,8 @@ Released @TBD@
 
 -- e1000e version bump to 3.5.1 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
+-- genx86_64-vm board type, version bump VMware Tools to open-vm-tools 10.3.10
+
 -- expat, version bump to 2.2.8, security fix: CVE-2019-15903
 
 -- libsrtp, version bump to 2.2.0, adds OpenSSL 1.1 compatibility
