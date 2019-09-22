@@ -4,8 +4,8 @@
 #
 ################################################################################
 
-OPENVMTOOLS_VERSION = 10.1.15
-OPENVMTOOLS_SOURCE = open-vm-tools-$(OPENVMTOOLS_VERSION)-6677369.tar.gz
+OPENVMTOOLS_VERSION = 10.3.10
+OPENVMTOOLS_SOURCE = open-vm-tools-$(OPENVMTOOLS_VERSION)-12406962.tar.gz
 OPENVMTOOLS_SITE = https://github.com/vmware/open-vm-tools/releases/download/stable-$(OPENVMTOOLS_VERSION)
 
 OPENVMTOOLS_AUTORECONF = YES
@@ -20,13 +20,13 @@ OPENVMTOOLS_CONF_OPT = \
 	--without-gtkmm \
 	--without-kernel-modules \
 	--without-xerces \
-	--without-procps \
 	--without-pam \
 	--disable-tests \
 	--disable-docs \
 	--disable-vgauth \
 	--disable-multimon \
 	--disable-grabbitmqproxy \
+	--disable-resolutionkms \
 	--disable-deploypkg
 
 OPENVMTOOLS_CONF_ENV += CUSTOM_DNET_CPPFLAGS=" "

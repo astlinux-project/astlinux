@@ -1,6 +1,6 @@
 --- openvmtools-10.1.5/lib/misc/hostinfoPosix.c.orig	2017-06-09 16:38:40.073221476 -0500
 +++ openvmtools-10.1.5/lib/misc/hostinfoPosix.c	2017-06-09 16:39:54.770805579 -0500
-@@ -179,6 +179,7 @@
+@@ -182,6 +182,7 @@
     {"Annvix",             "/etc/annvix-release"},
     {"Arch",               "/etc/arch-release"},
     {"Arklinux",           "/etc/arklinux-release"},
