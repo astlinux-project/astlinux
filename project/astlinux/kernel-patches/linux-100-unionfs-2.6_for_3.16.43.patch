@@ -535,7 +535,7 @@ diff --git a/MAINTAINERS b/MAINTAINERS
 index c2066f4..aeb19f0 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -9341,6 +9341,15 @@ F:	drivers/cdrom/cdrom.c
+@@ -9348,6 +9348,15 @@ F:	drivers/cdrom/cdrom.c
  F:	include/linux/cdrom.h
  F:	include/uapi/linux/cdrom.h
  
