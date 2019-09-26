@@ -18,7 +18,7 @@ diff --git a/avahi-core/server.c b/avahi-core/server.c
 index a2cb19a8..a2580e38 100644
 --- a/avahi-core/server.c
 +++ b/avahi-core/server.c
-@@ -968,6 +968,7 @@ static void dispatch_packet(AvahiServer *s, AvahiDnsPacket *p, const AvahiAddres
+@@ -969,6 +969,7 @@ static void dispatch_packet(AvahiServer *s, AvahiDnsPacket *p, const AvahiAddres
  
      if (avahi_dns_packet_is_query(p)) {
          int legacy_unicast = 0;
@@ -26,7 +26,7 @@ index a2cb19a8..a2580e38 100644
  
          /* For queries EDNS0 might allow ARCOUNT != 0. We ignore the
           * AR section completely here, so far. Until the day we add
-@@ -985,6 +986,13 @@ static void dispatch_packet(AvahiServer *s, AvahiDnsPacket *p, const AvahiAddres
+@@ -986,6 +987,13 @@ static void dispatch_packet(AvahiServer *s, AvahiDnsPacket *p, const AvahiAddres
              legacy_unicast = 1;
          }
  

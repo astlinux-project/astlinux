@@ -1,7 +1,7 @@
 From d195ac7ddd53ac457c282581783ef5cd756b9608 Mon Sep 17 00:00:00 2001
 From: David Kerr <david@kerr.net>
 Date: Sat, 2 Jul 2016 14:05:24 -0400
-Subject: [PATCH 1/4] Add service types to database for audio streaming, device
+Subject: [PATCH 1/7] Add service types to database for audio streaming, device
  info, amazon fire and qnap nas devices.
 
 ---
@@ -42,7 +42,7 @@ index 6e7e2cd9..4bbf52a3 100644
 From d9caeb59739c4e8af6b0dfbffff8e4ed365d3beb Mon Sep 17 00:00:00 2001
 From: David Kerr <david@kerr.net>
 Date: Sat, 2 Jul 2016 18:14:24 -0400
-Subject: [PATCH 2/4] Adds support for filtering reflector advertisements This
+Subject: [PATCH 2/7] Adds support for filtering reflector advertisements This
  enhancement is provided courtesy of James Rudd <James.Rudd@sbhs.nsw.edu.au>
  and http://jrudd.org/2014/08/avahi-reflector-filtering-patch/
 
@@ -59,10 +59,10 @@ All locally published services are still published even if they do not match the
 The filter also blocks local programs from seeing advertised programs so it is recommend to only enable it on a dedicated bonjour reflector server.
 ---
  avahi-core/core.h                   |  1 +
- avahi-core/server.c                 | 48 ++++++++++++++++++++++++++++++++++++-
+ avahi-core/server.c                 | 48 ++++++++++++++++++++++++++++-
  avahi-daemon/avahi-daemon.conf      |  1 +
- avahi-daemon/main.c                 | 12 ++++++++++
- man/avahi-daemon.conf.5.xml.in      | 10 ++++++++
+ avahi-daemon/main.c                 | 12 ++++++++
+ man/avahi-daemon.conf.5.xml.in      | 10 ++++++
  service-type-database/service-types |  1 -
  6 files changed, 71 insertions(+), 2 deletions(-)
 
@@ -239,7 +239,7 @@ index 4bbf52a3..0b99d403 100644
 From c8723de8100cac0449514e095caa45eb6af416c6 Mon Sep 17 00:00:00 2001
 From: David Kerr <david@kerr.net>
 Date: Sun, 3 Jul 2016 21:46:11 -0400
-Subject: [PATCH 3/4] Uncommented the info messages and changed them to debug
+Subject: [PATCH 3/7] Uncommented the info messages and changed them to debug
  messages.  Added debug message for matches as well as rejects. I have found
  that it is extremely useful to see what mDNS-SD messages are matched or
  rejected in order to debug service discovery and therefore it is best if
@@ -283,7 +283,7 @@ index 1a91907d..018429cc 100644
 From 2e42c6416327c256ab70940c7341caf3830d5c24 Mon Sep 17 00:00:00 2001
 From: David Kerr <david@kerr.net>
 Date: Fri, 24 Feb 2017 23:43:33 -0500
-Subject: [PATCH 4/4] suppress warning message that avahi_server_add_address()
+Subject: [PATCH 4/7] suppress warning message that avahi_server_add_address()
  failed when disable-publishing=yes is set in conf file.  Fixes lathiat/avahi
  issue #38
 
@@ -307,3 +307,131 @@ index 39a860ae..a68a4b90 100644
                  avahi_s_entry_group_free(a->entry_group);
                  a->entry_group = NULL;
                  return;
+
+From 659a7df2c51b2c4dbf227c465ea89ef52ec54432 Mon Sep 17 00:00:00 2001
+From: wisd0me <ak47izatool@gmail.com>
+Date: Wed, 25 Sep 2019 15:38:21 +0700
+Subject: [PATCH 5/7] reflect-filters logic bugfix
+
+This commit fixes the bug, when there is multiple records in the
+response (usually there are), and first record does not correspond to
+any of the configured services - originally, packet was getting dropped.
+With this fix current record is skipped, and the code looks further.
+---
+ avahi-core/server.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/avahi-core/server.c b/avahi-core/server.c
+index 018429cc..622658f3 100644
+--- a/avahi-core/server.c
++++ b/avahi-core/server.c
+@@ -690,7 +690,7 @@ static void handle_response_packet(AvahiServer *s, AvahiDnsPacket *p, AvahiInter
+ 
+                     if (! match){
+                         avahi_log_debug("Reject Ptr SRC [%s] Dest [%s]", record->key->name, record->data.ptr.name);
+-                        return;
++                        goto unref;
+                     }
+                     else
+                         avahi_log_debug("Match Ptr SRC [%s] Dest [%s]", record->key->name, record->data.ptr.name);
+@@ -706,7 +706,7 @@ static void handle_response_packet(AvahiServer *s, AvahiDnsPacket *p, AvahiInter
+ 
+                     if (! match){
+                         avahi_log_debug("Reject Key [%s] iface [%d]", record->key->name, from_local_iface);
+-                        return;
++                        goto unref;
+                     }
+                     else
+                         avahi_log_debug("Match Key [%s] iface [%d]", record->key->name, from_local_iface);
+@@ -721,6 +721,7 @@ static void handle_response_packet(AvahiServer *s, AvahiDnsPacket *p, AvahiInter
+             }
+         }
+ 
++    unref:
+         avahi_record_unref(record);
+     }
+ 
+
+From 6dabb000cc4206ecbf30d016c0a4625c5eae2930 Mon Sep 17 00:00:00 2001
+From: wisd0me <ak47izatool@gmail.com>
+Date: Wed, 25 Sep 2019 15:51:53 +0700
+Subject: [PATCH 6/7] formatting fixed
+
+---
+ avahi-core/server.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/avahi-core/server.c b/avahi-core/server.c
+index 622658f3..7dcfb7b1 100644
+--- a/avahi-core/server.c
++++ b/avahi-core/server.c
+@@ -674,37 +674,37 @@ static void handle_response_packet(AvahiServer *s, AvahiDnsPacket *p, AvahiInter
+         }
+ 
+         if (!avahi_key_is_pattern(record->key)) {
+-            // Filter services that will be cached. Allow all local services
+-            if (!from_local_iface && s->config.enable_reflector && s->config.reflect_filters != NULL){
++            /* Filter services that will be cached. Allow all local services */
++            if (!from_local_iface && s->config.enable_reflector && s->config.reflect_filters != NULL) {
+                AvahiStringList *l;
+                int match = 0;
+ 
+-                if (record->key->type == AVAHI_DNS_TYPE_PTR){
+-                    // Need to match DNS pointer target with filter
++                if (record->key->type == AVAHI_DNS_TYPE_PTR) {
++                    /* Need to match DNS pointer target with filter */
+                     for (l = s->config.reflect_filters; l; l = l->next) {
+-                        if (strstr( record->data.ptr.name, (char*) l->text) != NULL) {
++                        if (strstr(record->data.ptr.name, (char*) l->text) != NULL) {
+                             match = 1;
+                             break;
+                         }
+                     }
+ 
+-                    if (! match){
++                    if (!match) {
+                         avahi_log_debug("Reject Ptr SRC [%s] Dest [%s]", record->key->name, record->data.ptr.name);
+                         goto unref;
+                     }
+                     else
+                         avahi_log_debug("Match Ptr SRC [%s] Dest [%s]", record->key->name, record->data.ptr.name);
+                 }
+-                else if (record->key->type == AVAHI_DNS_TYPE_SRV || record->key->type == AVAHI_DNS_TYPE_TXT){
+-                    // Need to match key name with filter
++                else if (record->key->type == AVAHI_DNS_TYPE_SRV || record->key->type == AVAHI_DNS_TYPE_TXT) {
++                    /* Need to match key name with filter */
+                     for (l = s->config.reflect_filters; l; l = l->next) {
+-                        if (strstr( record->key->name, (char*) l->text) != NULL) {
++                        if (strstr(record->key->name, (char*) l->text) != NULL) {
+                             match = 1;
+                             break;
+                         }
+                     }
+ 
+-                    if (! match){
++                    if (!match) {
+                         avahi_log_debug("Reject Key [%s] iface [%d]", record->key->name, from_local_iface);
+                         goto unref;
+                     }
+
+From 0538cf4c483edd01fecf6287109dbf9e538dd7d5 Mon Sep 17 00:00:00 2001
+From: David Kerr <david@kerr.net>
+Date: Thu, 26 Sep 2019 08:39:34 -0400
+Subject: [PATCH 7/7] bugfix free avahi record before returning from function.
+
+---
+ avahi-core/server.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/avahi-core/server.c b/avahi-core/server.c
+index 250af412..cbb389f5 100644
+--- a/avahi-core/server.c
++++ b/avahi-core/server.c
+@@ -1200,6 +1200,7 @@ static void register_hinfo(AvahiServer *s) {
+ 
+             if (avahi_server_add(s, s->hinfo_entry_group, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, AVAHI_PUBLISH_UNIQUE, r) < 0) {
+                 avahi_log_warn("Failed to add HINFO RR: %s", avahi_strerror(s->error));
++                avahi_record_unref(r);
+                 return;
+             }
+         }
