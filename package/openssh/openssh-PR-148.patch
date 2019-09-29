@@ -1,0 +1,31 @@
+From 36e527f636fbc558d30fe7da63da9846622e1209 Mon Sep 17 00:00:00 2001
+From: Lonnie Abelbeck <lonnie@abelbeck.com>
+Date: Sat, 28 Sep 2019 14:12:20 -0500
+Subject: [PATCH] Allow shmget/shmat/shmdt in preauth privsep child.
+
+New wait_random_seeded() function on OpenSSL 1.1.1d uses shmget, shmat, and shmdt
+in the preauth codepath, allow in seccomp_filter sandbox.
+---
+ sandbox-seccomp-filter.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/sandbox-seccomp-filter.c b/sandbox-seccomp-filter.c
+index 840c5232b..05d38c6c3 100644
+--- a/sandbox-seccomp-filter.c
++++ b/sandbox-seccomp-filter.c
+@@ -208,6 +208,15 @@ static const struct sock_filter preauth_insns[] = {
+ #ifdef __NR_munmap
+ 	SC_ALLOW(__NR_munmap),
+ #endif
++#ifdef __NR_shmget
++	SC_ALLOW(__NR_shmget),
++#endif
++#ifdef __NR_shmat
++	SC_ALLOW(__NR_shmat),
++#endif
++#ifdef __NR_shmdt
++	SC_ALLOW(__NR_shmdt),
++#endif
+ #ifdef __NR_nanosleep
+ 	SC_ALLOW(__NR_nanosleep),
+ #endif

@@ -13,13 +13,19 @@ OPENSSH_DEPENDENCIES = zlib openssl
 OPENSSH_CONF_OPT = \
 	--libexecdir=/usr/libexec \
 	--sysconfdir=/etc/ssh \
-	--with-sandbox=rlimit \
 	--disable-lastlog \
 	--disable-utmp \
 	--disable-utmpx \
 	--disable-wtmp \
 	--disable-wtmpx \
 	--disable-strip
+
+# Currently only x86_64 kernel works with seccomp_filter
+ifeq ($(ARCH),x86_64)
+OPENSSH_CONF_OPT += --with-sandbox=seccomp_filter
+else
+OPENSSH_CONF_OPT += --with-sandbox=rlimit
+endif
 
 ifeq ($(BR2_PACKAGE_LIBEDIT),y)
 OPENSSH_DEPENDENCIES += libedit
