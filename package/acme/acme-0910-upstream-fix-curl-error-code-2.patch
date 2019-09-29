@@ -1,0 +1,61 @@
+From 1ba4ab2bd1d200962b7d611e3aeefcf2d32cc48b Mon Sep 17 00:00:00 2001
+From: neilpang <neil@neilpang.com>
+Date: Tue, 24 Sep 2019 22:10:36 +0800
+Subject: [PATCH] fix https://github.com/Neilpang/acme.sh/issues/2503
+
+---
+ acme.sh | 30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
+
+diff --git a/acme.sh b/acme.sh
+index cfcd35753..39c07cbe1 100755
+--- a/acme.sh
++++ b/acme.sh
+@@ -1675,16 +1675,32 @@ _post() {
+     fi
+     _debug "_CURL" "$_CURL"
+     if [ "$needbase64" ]; then
+-      if [ "$_postContentType" ]; then
+-        response="$($_CURL --user-agent "$USER_AGENT" -X $httpmethod -H "Content-Type: $_postContentType" -H "$_H1" -H "$_H2" -H "$_H3" -H "$_H4" -H "$_H5" --data "$body" "$_post_url" | _base64)"
++      if [ "$body" ]; then
++        if [ "$_postContentType" ]; then
++          response="$($_CURL --user-agent "$USER_AGENT" -X $httpmethod -H "Content-Type: $_postContentType" -H "$_H1" -H "$_H2" -H "$_H3" -H "$_H4" -H "$_H5" --data "$body" "$_post_url" | _base64)"
++        else
++          response="$($_CURL --user-agent "$USER_AGENT" -X $httpmethod -H "$_H1" -H "$_H2" -H "$_H3" -H "$_H4" -H "$_H5" --data "$body" "$_post_url" | _base64)"
++        fi
+       else
+-        response="$($_CURL --user-agent "$USER_AGENT" -X $httpmethod -H "$_H1" -H "$_H2" -H "$_H3" -H "$_H4" -H "$_H5" --data "$body" "$_post_url" | _base64)"
++        if [ "$_postContentType" ]; then
++          response="$($_CURL --user-agent "$USER_AGENT" -X $httpmethod -H "Content-Type: $_postContentType" -H "$_H1" -H "$_H2" -H "$_H3" -H "$_H4" -H "$_H5" "$_post_url" | _base64)"
++        else
++          response="$($_CURL --user-agent "$USER_AGENT" -X $httpmethod -H "$_H1" -H "$_H2" -H "$_H3" -H "$_H4" -H "$_H5" "$_post_url" | _base64)"
++        fi
+       fi
+     else
+-      if [ "$_postContentType" ]; then
+-        response="$($_CURL --user-agent "$USER_AGENT" -X $httpmethod -H "Content-Type: $_postContentType" -H "$_H1" -H "$_H2" -H "$_H3" -H "$_H4" -H "$_H5" --data "$body" "$_post_url")"
++      if [ "$body" ]; then
++        if [ "$_postContentType" ]; then
++          response="$($_CURL --user-agent "$USER_AGENT" -X $httpmethod -H "Content-Type: $_postContentType" -H "$_H1" -H "$_H2" -H "$_H3" -H "$_H4" -H "$_H5" --data "$body" "$_post_url")"
++        else
++          response="$($_CURL --user-agent "$USER_AGENT" -X $httpmethod -H "$_H1" -H "$_H2" -H "$_H3" -H "$_H4" -H "$_H5" --data "$body" "$_post_url")"
++        fi
+       else
+-        response="$($_CURL --user-agent "$USER_AGENT" -X $httpmethod -H "$_H1" -H "$_H2" -H "$_H3" -H "$_H4" -H "$_H5" --data "$body" "$_post_url")"
++        if [ "$_postContentType" ]; then
++          response="$($_CURL --user-agent "$USER_AGENT" -X $httpmethod -H "Content-Type: $_postContentType" -H "$_H1" -H "$_H2" -H "$_H3" -H "$_H4" -H "$_H5" "$_post_url")"
++        else
++          response="$($_CURL --user-agent "$USER_AGENT" -X $httpmethod -H "$_H1" -H "$_H2" -H "$_H3" -H "$_H4" -H "$_H5" "$_post_url")"
++        fi
+       fi
+     fi
+     _ret="$?"
+@@ -1854,7 +1870,7 @@ _send_signed_request() {
+       if [ "$ACME_NEW_NONCE" ]; then
+         _debug2 "Get nonce with HEAD. ACME_NEW_NONCE" "$ACME_NEW_NONCE"
+         nonceurl="$ACME_NEW_NONCE"
+-        if _post "" "$nonceurl" "" "HEAD" "$__request_conent_type"; then
++        if _post "" "$nonceurl" "" "HEAD" "$__request_conent_type" >/dev/null; then
+           _headers="$(cat "$HTTP_HEADER")"
+           _debug2 _headers "$_headers"
+           _CACHED_NONCE="$(echo "$_headers" | grep -i "Replay-Nonce:" | _head_n 1 | tr -d "\r\n " | cut -d ':' -f 2)"

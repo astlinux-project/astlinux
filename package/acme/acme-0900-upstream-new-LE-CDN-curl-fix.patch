@@ -1,0 +1,24 @@
+From 5723fd112fb9238cd09b6cb2737f328d35746eb7 Mon Sep 17 00:00:00 2001
+From: neilpang <neil@neilpang.com>
+Date: Tue, 24 Sep 2019 20:00:21 +0800
+Subject: [PATCH] fix HEAD request against the new LE CDN. curl is fixed
+
+---
+ README.md | 2 +-
+ acme.sh   | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/acme.sh b/acme.sh
+index 980dc02f1..2cb577e15 100755
+--- a/acme.sh
++++ b/acme.sh
+@@ -1670,6 +1670,9 @@ _post() {
+     if [ "$HTTPS_INSECURE" ]; then
+       _CURL="$_CURL --insecure  "
+     fi
++    if [ "$httpmethod" = "HEAD" ]; then
++      _CURL="$_CURL -I  "
++    fi
+     _debug "_CURL" "$_CURL"
+     if [ "$needbase64" ]; then
+       if [ "$_postContentType" ]; then
