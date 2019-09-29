@@ -30,7 +30,7 @@ Released @TBD@
 
 -- strace, version bump to 5.2
 
--- e2fsprogs, version bump to 1.45.3
+-- e2fsprogs, version bump to 1.45.4, security fix: CVE-2019-5094
 
 -- libusb, version bump to 1.0.23
 
