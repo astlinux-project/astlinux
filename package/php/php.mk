@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PHP_VERSION = 7.2.22
+PHP_VERSION = 7.2.23
 PHP_SITE = https://secure.php.net/distributions
 PHP_SOURCE = php-$(PHP_VERSION).tar.xz
 PHP_INSTALL_STAGING = YES
