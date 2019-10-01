@@ -4,7 +4,7 @@
 #
 #############################################################
 
-E1000E_VERSION = 3.5.1
+E1000E_VERSION = 3.6.0
 E1000E_SOURCE = e1000e-$(E1000E_VERSION).tar.gz
 E1000E_SITE = http://downloads.sourceforge.net/project/e1000/e1000e%20stable/$(E1000E_VERSION)
 E1000E_DEPENDENCIES = linux
@@ -17,7 +17,6 @@ E1000E_MAKE_OPT += \
 	LD=$(TARGET_LD) \
 	BUILD_KERNEL=$(LINUX_VERSION_PROBED) \
 	KSRC=$(LINUX_DIR) \
-	RHEL_CODE=0 \
 	VERSION_FILE=$(LINUX_DIR)/include/generated/utsrelease.h \
 	CONFIG_FILE=$(LINUX_DIR)/include/generated/autoconf.h \
 	ARCH=$(KERNEL_ARCH)
