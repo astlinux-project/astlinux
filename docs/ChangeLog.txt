@@ -54,6 +54,8 @@ Released @TBD@
 
 -- rng-tools, version 6.5, jitterentropy version bump to 2.2.0
 
+-- screen, version bump to 4.7.0
+
 -- zabbix, version bump to 3.0.28
 
 -- ca-certificates, update trusted root certificates 2019-08-28
