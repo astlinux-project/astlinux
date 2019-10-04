@@ -14,7 +14,7 @@ Released @TBD@
 
 -- Linux Kernel 3.16.74 (version bump), security and bug fixes
 
--- igb, version bump to 5.3.5.36, Intel Gigabit Ethernet Network Driver
+-- igb, version bump to 5.3.5.39, Intel Gigabit Ethernet Network Driver
 
 -- e1000e version bump to 3.6.0 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
@@ -44,7 +44,7 @@ Released @TBD@
 
 -- logrotate, version bump to 3.15.1
 
--- ne, version bump to 3.2.0
+-- ne, version bump to 3.2.1
 
 -- nut, version 2.7.4, using "Buildroot" patch for OpenSSL 1.1 compatibility
 
