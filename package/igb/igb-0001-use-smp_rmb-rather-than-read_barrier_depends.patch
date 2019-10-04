@@ -27,7 +27,7 @@ diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/in
 index b844902..905328f 100644
 --- a/src/igb_main.c
 +++ b/src/igb_main.c
-@@ -7479,7 +7479,7 @@ static bool igb_clean_tx_irq(struct igb_q_vector *q_vector)
+@@ -7492,7 +7492,7 @@ static bool igb_clean_tx_irq(struct igb_q_vector *q_vector)
  			break;
  
  		/* prevent any other reads prior to eop_desc */

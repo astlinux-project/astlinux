@@ -4,7 +4,7 @@
 #
 #############################################################
 
-IGB_VERSION = 5.3.5.36
+IGB_VERSION = 5.3.5.39
 IGB_SOURCE:=igb-$(IGB_VERSION).tar.gz
 IGB_SITE = http://downloads.sourceforge.net/project/e1000/igb%20stable/$(IGB_VERSION)
 IGB_DEPENDENCIES = linux
@@ -17,7 +17,6 @@ IGB_MAKE_OPT += \
 	LD=$(TARGET_LD) \
 	BUILD_KERNEL=$(LINUX_VERSION_PROBED) \
 	KSRC=$(LINUX_DIR) \
-	RHEL_CODE=0 \
 	VERSION_FILE=$(LINUX_DIR)/include/generated/utsrelease.h \
 	CONFIG_FILE=$(LINUX_DIR)/include/generated/autoconf.h \
 	ARCH=$(KERNEL_ARCH)
