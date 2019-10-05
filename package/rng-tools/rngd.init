@@ -46,6 +46,18 @@ start () {
     fi
 
     start-stop-daemon -S -x /usr/sbin/rngd -p $PIDFILE -m -b -- -f -q $ARGS
+
+    ## Wait until we have acceptable entropy
+    if [ -f /proc/sys/kernel/random/entropy_avail ]; then
+      cnt=10
+      while [ $cnt -gt 0 ] && [ $(cat /proc/sys/kernel/random/entropy_avail) -lt 256 ]; do
+        cnt=$((cnt - 1))
+        sleep 1
+      done
+      if [ $cnt -eq 0 ]; then
+        echo "rngd: System available entropy is low: $(cat /proc/sys/kernel/random/entropy_avail)" >&2
+      fi
+    fi
   fi
 }
 
