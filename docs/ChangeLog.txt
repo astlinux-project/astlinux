@@ -96,9 +96,9 @@ Released @TBD@
 
 -- tarsnap, add /mnt/kd/acme to the default included directories
 
--- whois, version bump to 5.5.0
+-- whois, version bump to 5.5.2
 
--- unbound (host), version bump to 1.9.3
+-- unbound (host), version bump to 1.9.4
 
 -- arnofw (AIF), reload-blocklist-netset cron script, add new netset types
    asterisk: Aggregate multiple Asterisk/SIP/VoIP blacklists, including blocklist_de_sip.
