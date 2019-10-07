@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LIBPCAP_VERSION = 1.9.0
+LIBPCAP_VERSION = 1.9.1
 LIBPCAP_SITE = https://www.tcpdump.org/release
 LIBPCAP_SOURCE = libpcap-$(LIBPCAP_VERSION).tar.gz
 LIBPCAP_INSTALL_STAGING = YES
@@ -13,28 +13,21 @@ LIBPCAP_DEPENDENCIES = zlib host-flex host-bison
 LIBPCAP_CONF_ENV = \
 	ac_cv_header_linux_wireless_h=yes \
 	CFLAGS="$(LIBPCAP_CFLAGS)"
+
 LIBPCAP_CFLAGS = $(TARGET_CFLAGS)
-LIBPCAP_CONF_OPT = --disable-yydebug --with-pcap=linux
+
+LIBPCAP_CONF_OPT = \
+	--disable-yydebug \
+	--with-pcap=linux \
+	--without-dag \
+	--disable-dbus \
+	--disable-bluetooth
 
 # Omit -rpath from pcap-config output
 define LIBPCAP_CONFIG_REMOVE_RPATH
 	$(SED) 's/^V_RPATH_OPT=.*/V_RPATH_OPT=""/g' $(@D)/pcap-config
 endef
 LIBPCAP_POST_BUILD_HOOKS = LIBPCAP_CONFIG_REMOVE_RPATH
-
-# On purpose, not compatible with bluez5
-ifeq ($(BR2_PACKAGE_BLUEZ_UTILS),y)
-LIBPCAP_DEPENDENCIES += bluez_utils
-else
-LIBPCAP_CONF_OPT += --disable-bluetooth
-endif
-
-ifeq ($(BR2_PACKAGE_DBUS),y)
-LIBPCAP_CONF_OPT += --enable-dbus
-LIBPCAP_DEPENDENCIES += dbus
-else
-LIBPCAP_CONF_OPT += --disable-dbus
-endif
 
 ifeq ($(BR2_PACKAGE_LIBUSB),y)
 LIBPCAP_CONF_OPT += --enable-usb
