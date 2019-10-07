@@ -22,7 +22,12 @@ Released @TBD@
 
 -- expat, version bump to 2.2.9, security fix: CVE-2019-15903
 
+-- libpcap, version bump to 1.9.1, security fixes: CVE-2019-15161, CVE-2019-15162, CVE-2019-15163,
+                                                   CVE-2019-15164, CVE-2019-15165, CVE-2018-16301
+
 -- libsrtp, version bump to 2.2.0, adds OpenSSL 1.1 compatibility
+
+-- libyaml, version bump to 0.2.2
 
 -- php, major version bump to 7.2.23, adds OpenSSL 1.1 compatibility
 
