@@ -101,6 +101,8 @@ Released @TBD@
 
 -- tarsnap, add /mnt/kd/acme to the default included directories
 
+-- tcpdump, version bump to 4.9.3, security fixes: 27 CVE's
+
 -- whois, version bump to 5.5.2
 
 -- unbound (host), version bump to 1.9.4
