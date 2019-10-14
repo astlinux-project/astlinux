@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 3.16.74 (version bump), security and bug fixes
 
+-- RUNNIX, version bump to runnix-0.5.10, with Linux Kernel 3.16.74, e2fsprogs 1.45.4
+
 -- igb, version bump to 5.3.5.39, Intel Gigabit Ethernet Network Driver
 
 -- e1000e version bump to 3.6.0 Intel PCI-Express PRO/1000 Ethernet Linux driver
@@ -117,6 +119,10 @@ Released @TBD@
    New rc.conf variables: WIREGUARD_HOST_OPEN_TCP, WIREGUARD_HOST_OPEN_UDP,
                           WIREGUARD_HOST_DENY_TCP, WIREGUARD_HOST_DENY_UDP
    More info: http://doc.astlinux-project.org/userdoc:tt_wireguard_vpn#wireguard_configuration_options
+
+-- WAN Failover, add optional support for a script called before any Secondary -> Primary WAN link change.
+   The exit value of the optional /mnt/kd/wan-failover-exit.script determines when the failover exits to primary.
+   More info: http://doc.astlinux-project.org/userdoc:tt_wan_failover#exit_action_script_optional
 
 -- (Custom Build Only) autossh, auto-restart ssh connections - typically reverse proxies, version 1.4g
    Warning: No public repository for development, only private.
