@@ -7,7 +7,7 @@
 ##
 ex-vi~Copyright (c) 2001-2002 Caldera International Inc. All rights reserved.
 RUNNIX~Copyright (c) 2006-2019 AstLinux Project, Kristian Kielhofner.
-libSRTP~Copyright (c) 2001-2016 Cisco Systems, Inc. All rights reserved.
+libSRTP~Copyright (c) 2001-2018 Cisco Systems, Inc. All rights reserved.
 iLBC CODEC~Copyright (c) 2011 The WebRTC project authors. All rights reserved.
 Web Interface~Copyright (c) 2008-2019 Lonnie Abelbeck.
 shellinabox~Copyright (c) 2008-2015 Markus Gutschke, Luka Krajger.
@@ -30,7 +30,7 @@ iptables~Copyright (c) 2000-2015 the netfilter coreteam.
 ipset~Copyright (c) 2003-2018 Jozsef Kadlecsik.
 curl~Copyright (c) 1996-2019 Daniel Stenberg.
 rp-pppoe~Copyright (c) 2001-2012 Roaring Penguin Software Inc.
-zabbix~Copyright (c) 2000-2017 SIA Zabbix.
+zabbix~Copyright (c) 2000-2019 SIA Zabbix.
 zlib~Copyright (c) 1995-2017 Jean-loup Gailly.
 SILK CODEC~Copyright (c) 2010-2016 Skype and/or Microsoft. All rights reserved. Licensed via Digium, Inc.
 SpanDSP~Copyright (c) 2003-2015 Steve Underwood. All rights reserved.
@@ -53,10 +53,10 @@ smartmontools~Copyright (c) 2002-2017 Bruce Allen, Christian Franke, et al.
 Monit~Copyright (c) 2001-2019 Tildeslash. All rights reserved.
 sqlite~Copyright (c) 1995-2019 SQLite Consortium.
 sqliteodbc~Copyright (c) 2001-2018 Christian Werner.
-Fossil~Copyright (c) 2007-2018 D. Richard Hipp. All rights reserved.
+Fossil~Copyright (c) 2007-2019 D. Richard Hipp. All rights reserved.
 BusyBox~Copyright (c) 1998-2019 Erik Andersen, Rob Landley, Denys Vlasenko, et al.
 dhcp6c~Copyright (c) 1998-2008 WIDE Project with 2018 Debian patches.
-htop~Copyright (c) 2004-2018 Hisham Muhammad.
+htop~Copyright (c) 2004-2019 Hisham Muhammad.
 stunnel~Copyright (c) 1998-2019 Michal Trojnara.
 avahi~Copyright (c) 2004-2019 Lennart Poettering, Trent Lloyd, Avahi developers.
 Linux Kernel~Copyright (c) 1997-2019 The Linux Kernel Organization, Inc.; Linux is a Registered Trademark of Linus Torvalds.
@@ -74,8 +74,9 @@ getdns~Copyright (c) 2013-2019 NLnet Labs, Verisign, Inc. All rights reserved.
 stubby~Copyright (c) 2013-2019 NLnet Labs, Verisign, Inc. All rights reserved.
 keepalived~Copyright (c) 2001-2019 Alexandre Cassen.
 rng-tools~Copyright (c) 2001-2018 Philipp Rumpf, Neil Horman, et al.
-jitterentropy~Copyright (c) 2014-2018 Stephan Mueller.
+jitterentropy~Copyright (c) 2014-2019 Stephan Mueller.
 libpng~Copyright (c) 1998-2019 Glenn Randers-Pehrson, et al.
 libqrencode~Copyright (c) 2006-2018 Kentaro Fukuchi.
-ne~Copyright (c) 1993-2018 Sebastiano Vigna, Todd M. Lewis.
+ne~Copyright (c) 1993-2019 Sebastiano Vigna, Todd M. Lewis.
 CodeMirror~Copyright (c) 2017-2019 Marijn Haverbeke <marijnh@gmail.com>, et al.
+iprange~Copyright (c) 2003-2015 Gabriel L. Somlo, Costa Tsaousis, et al.

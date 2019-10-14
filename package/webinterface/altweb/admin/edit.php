@@ -776,6 +776,10 @@ require_once '../common/header.php';
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
     putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - WAN Failover Shell Script</option>');
   }
+  if (is_writable($file = '/mnt/kd/wan-failover-exit.script')) {
+    $sel = ($file === $openfile) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - WAN Failover Exit Shell Script</option>');
+  }
   putHtml('</optgroup>');
   if (is_dir('/mnt/kd/openvpn/ccd') && arrayCount($globfiles = glob('/mnt/kd/openvpn/ccd/*')) > 0) {
     putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; OpenVPN Client Configs &mdash;&mdash;&mdash;&mdash;">');
