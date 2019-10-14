@@ -5,7 +5,7 @@
 ## Original: http://code.google.com/p/wanfailoverscript/
 ## Copyright 2010 Louwrentius
 ##
-## Copyright 2014 Modified for AstLinux
+## Copyright 2014-2019 Modified for AstLinux
 ##
 ## Licence = GNU GPL
 ##
@@ -17,6 +17,7 @@ PIDFILE="/var/run/wan-failover.pid"
 STARTFILE="/var/run/wan-failover.start"
 STATUSFILE="/var/log/wan-failover-status.log"
 SCRIPTFILE="/mnt/kd/wan-failover.script"
+SCRIPTFILE_EXIT="/mnt/kd/wan-failover-exit.script"
 
 INTERVAL="${WAN_FAILOVER_TEST_INTERVAL:-20}"
 MAX_LATENCY="${WAN_FAILOVER_MAX_LATENCY:-1000}"
@@ -197,6 +198,9 @@ test_targets() {
     if [ "$ACTIVE_CONNECTION" = "$PRIMARY_STR" ]; then
       TEST_INTERVAL=$INTERVAL
       err="DEBUG"
+    elif [ -x $SCRIPTFILE_EXIT ]; then
+      TEST_INTERVAL=$INTERVAL
+      err="DEBUG"
     else
       TEST_INTERVAL=2
       err="INFO"
@@ -299,6 +303,15 @@ switch() {
     idle_wait $SECONDARY_DELAY
 
   elif [ "$ACTIVE_CONNECTION" = "$SECONDARY_STR" ]; then
+    if [ -x $SCRIPTFILE_EXIT ]; then
+      $SCRIPTFILE_EXIT "SECONDARY_EXIT" "$EXTIF" "$PRIMARY_GW" "$EXT2IF" "$SECONDARY_GW" "$SECONDARY_GWIPV6"
+      if [ $? -ne 0 ]; then
+        log DEBUG "Switch to primary link delayed by ${SCRIPTFILE_EXIT} nonzero return"
+        idle_wait 10
+        return
+      fi
+      log INFO "Switch to primary link allowed by ${SCRIPTFILE_EXIT} zero return"
+    fi
     switch_to_primary
     if [ -x $SCRIPTFILE ]; then
       $SCRIPTFILE "$PRIMARY_STR" "$EXTIF" "$PRIMARY_GW" "$EXT2IF" "$SECONDARY_GW" "$SECONDARY_GWIPV6"
