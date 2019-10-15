@@ -63,6 +63,8 @@ Released @TBD@
 
 -- screen, version bump to 4.7.0
 
+-- sudo, version bump to 1.8.28, security fix: CVE-2019-14287
+
 -- zabbix, version bump to 3.0.28
 
 -- ca-certificates, update trusted root certificates 2019-08-28
