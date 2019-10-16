@@ -67,7 +67,7 @@ Released @TBD@
 
 -- zabbix, version bump to 3.0.28
 
--- ca-certificates, update trusted root certificates 2019-08-28
+-- ca-certificates, update trusted root certificates 2019-10-16
 
 -- Time Zone Database update, tzdata2019c and php-timezonedb-2019.3
 
@@ -138,7 +138,7 @@ Released @TBD@
    Add json-integer-overflow patches.
    Add security patches for: AST-2019-002, AST-2019-003
 
--- Asterisk 13.29.0 (version bump) and 16.6.0 (version bump)
+-- Asterisk 13.29.1 (version bump) and 16.6.1 (version bump)
    New modules: app_attended_transfer.so, app_blind_transfer.so
 
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
