@@ -121,6 +121,21 @@ init () {
   # enabled/disabled without requiring a reboot via the web interface.
   netstat_server=""
 
+  # Always enable /admin/wiki/ alias for Wiki Tab
+  # Automatically create "/mnt/kd/wiki" directory if it doesn't exist
+  if [ ! -d /mnt/kd/wiki ]; then
+    mkdir /mnt/kd/wiki 2>/dev/null     # will fail on virgin RO filesystem, ignore stderr
+  fi
+  # Automatically create "/mnt/kd/wiki/index.html" file if it doesn't exist
+  if [ -d /mnt/kd/wiki ]; then
+    if [ ! -f /mnt/kd/wiki/index.html ] && [ ! -f /mnt/kd/wiki/index.php ]; then
+      if [ -f /stat/etc/docs/lighttpd-wiki.html ]; then
+        cp -a /stat/etc/docs/lighttpd-wiki.html /mnt/kd/wiki/index.html
+      fi
+    fi
+  fi
+  wiki=""
+
   if [ -d /mnt/kd/phoneprov ]; then
     phoneprov=""
   else
@@ -161,6 +176,7 @@ init () {
          -e "s|@FOSSIL_SERVER@|${fossil_server}|g" \
          -e "s|@MONIT_SERVER@|${monit_server}|g" \
          -e "s|@NETSTAT_SERVER@|${netstat_server}|g" \
+         -e "s|@WIKI@|${wiki}|g" \
          -e "s|@PHONEPROV@|${phoneprov}|g" \
          -e "s!@PHONEPROV_ALLOW@!${phoneprov_allow}!g" \
          -e "s|@FOP2@|${fop2}|g" \
