@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2014 Lonnie Abelbeck
+// Copyright (C) 2008-2019 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -9,6 +9,7 @@
 // actionlist.php for AstLinux
 // 08-03-2009
 // 06-26-2014, Added larger User Data field
+// 10-29-2019, Increase Comment field size
 //
 // -- extensions.conf snippet --
 //
@@ -229,7 +230,7 @@ require_once '../common/header.php';
   putHtml('User&nbsp;Data:<input type="text" size="70" maxlength="128" name="actiondata" value="'.$sel.'" />');
   putHtml('</td></tr>');
   putHtml('<tr><td class="dialogText" style="text-align: right;" colspan="2">');
-  putHtml('Comment<i>(optional)</i>:<input type="text" size="42" maxlength="42" name="comment" value="'.htmlspecialchars($ldb['comment']).'" />');
+  putHtml('Comment<i>(optional)</i>:<input type="text" size="60" maxlength="60" name="comment" value="'.htmlspecialchars($ldb['comment']).'" />');
   putHtml('</td></tr>');
   putHtml('</table>');
 
