@@ -93,6 +93,9 @@ Released @TBD@
 
 -- keepalived, version bump to 2.0.18
 
+-- lighttpd, add /admin/wiki/ alias to /mnt/kd/wiki/ for 'staff' or 'admin' users
+   Optionally, replace /mnt/kd/wiki/index.html (or index.php) with a custom wiki web page.
+
 -- luasec, version bump to 0.8.2, adds OpenSSL 1.1 compatibility
 
 -- msmtp, version bump to 1.8.6
@@ -187,6 +190,11 @@ Released @TBD@
 
 -- WireGuard sub-tab, add WG->Local TCP/UDP firewall rules support.
    More info: http://doc.astlinux-project.org/userdoc:tt_wireguard_vpn#wireguard_configuration_options
+
+-- Prefs tab, add "Show Wiki Tab" and "External Wiki Link" options.
+   The Wiki Link may be an external site or access the local Wiki using /mnt/kd/wiki/ with:
+     External Wiki Link: https://localhost/admin/wiki/
+   Note: Only 'staff' or 'admin' web users are allowed to access the local Wiki.
 
 
 Additions for AstLinux 1.3.6:
