@@ -25,6 +25,7 @@
 // 11-06-2017, Added Show WireGuard VPN Status
 // 07-11-2019, Added Backup Exclude Suffixes
 // 07-31-2019, Added Disable CodeMirror Editor
+// 10-29-2019, Added Wiki tab and link
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -428,6 +429,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $value = 'external_url_name_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
     }
+    if (($value = tuqp($_POST['external_wiki_link'])) !== '') {
+      $value = 'external_wiki_link_cmdstr = "'.$value.'"';
+      fwrite($fp, $value."\n");
+    }
     if (($value = tuqp($_POST['external_cli_link'])) !== '') {
       $value = 'external_cli_link_cmdstr = "'.$value.'"';
       fwrite($fp, $value."\n");
@@ -556,6 +561,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (! isset($_POST['tab_staff'])) {
       $value = 'tab_staff_disable_staff = yes';
+      fwrite($fp, $value."\n");
+    }
+    if (isset($_POST['tab_wiki'])) {
+      $value = 'tab_wiki_show = yes';
       fwrite($fp, $value."\n");
     }
     // Special non-editable options, retain from save to save
@@ -1183,6 +1192,9 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">External URL Name:</td><td colspan="4">');
   $value = getPREFdef($global_prefs, 'external_url_name_cmdstr');
   putHtml('<input type="text" size="48" maxlength="64" value="'.$value.'" name="external_url_name" /></td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">External Wiki Link:</td><td colspan="4">');
+  $value = getPREFdef($global_prefs, 'external_wiki_link_cmdstr');
+  putHtml('<input type="text" size="48" maxlength="128" value="'.$value.'" name="external_wiki_link" /></td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">External CLI Link:</td><td colspan="4">');
   $value = getPREFdef($global_prefs, 'external_cli_link_cmdstr');
   putHtml('<input type="text" size="48" maxlength="128" value="'.$value.'" name="external_cli_link" /></td></tr>');
@@ -1304,6 +1316,10 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_staff_disable_staff') !== 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="tab_staff" name="tab_staff"'.$sel.' /></td><td colspan="5">Show Staff Tab for &quot;staff&quot; user</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'tab_wiki_show') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="tab_wiki" name="tab_wiki"'.$sel.' /></td><td colspan="5">Show Wiki Tab</td></tr>');
 
   putHtml('</table>');
   putHtml('</form>');

@@ -11,6 +11,7 @@
 // 07-20-2009, Add manual session garbage collection
 // 03-04-2011, Add custom tab support
 // 07-29-2013, Use charset 'utf-8' instead of 'iso-8859-1'
+// 10-29-2019, Add Wiki tab and link
 
 // Function: getCUSTOMtabs
 //
@@ -82,6 +83,19 @@ function getURLlink($g_prefs) {
 function getURLname($g_prefs) {
   if (($cmd = getPREFdef($g_prefs, 'external_url_name_cmdstr')) === '') {
     $cmd = 'Help';
+  }
+  return(htmlspecialchars($cmd));
+}
+
+// Function: getWIKIlink
+//
+function getWIKIlink($g_prefs, $g_staff) {
+  if (($cmd = getPREFdef($g_prefs, 'external_wiki_link_cmdstr')) !== '') {
+    if ((! $g_staff) && (strpos($cmd, '://localhost') !== FALSE)) {
+      $cmd = '';
+    } else {
+      $cmd = url_localhost_handler($cmd);
+    }
   }
   return(htmlspecialchars($cmd));
 }
@@ -174,12 +188,16 @@ header('Content-Type: text/html; charset=utf-8');
     putHtml('<td width="140"><img src="/common/logo-small.gif" width="113" height="23" alt="AstLinux" /></td>');
     putHtml('<td><h1>'.getTITLEname($global_prefs).'</h1></td>');
     $URLlink = getURLlink($global_prefs);
+    $WIKIlink = getWIKIlink($global_prefs, $global_staff);
     $CLIlink = getCLIlink($global_prefs);
     $FOP2link = getFOP2link($global_prefs);
-    if ($URLlink !== '' || ($global_admin && $CLIlink !== '') || $FOP2link !== '') {
+    if ($URLlink !== '' || $WIKIlink !== '' || ($global_admin && $CLIlink !== '') || $FOP2link !== '') {
       putHtml('<td style="text-align: right;">');
       if ($URLlink !== '') {
         putHtml('<a href="'.$URLlink.'" class="headerText" target="_blank">'.getURLname($global_prefs).'</a>');
+      }
+      if ($WIKIlink !== '') {
+        putHtml('<a href="'.$WIKIlink.'" class="headerText" target="_blank">Wiki</a>');
       }
       if ($global_admin && $CLIlink !== '') {
         if (strncmp($CLIlink, 'ssh://', 6) == 0) {
@@ -287,6 +305,9 @@ header('Content-Type: text/html; charset=utf-8');
         putHtml('<li><a href="/admin/system.php"><span>System</span></a></li>');
       } elseif ($global_user === 'staff' && (! $global_staff_disable_staff)) {
         putHtml('<li><a href="/admin/staff.php"><span>Staff</span></a></li>');
+      }
+      if ($global_staff && (getPREFdef($global_prefs, 'tab_wiki_show') === 'yes')) {
+        putHtml('<li><a href="/admin/wiki.php"><span>Wiki</span></a></li>');
       }
     }
     putHtml('</ul>');
