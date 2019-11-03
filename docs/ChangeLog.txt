@@ -195,6 +195,7 @@ Released @TBD@
    The Wiki Link may be an external site or access the local Wiki using /mnt/kd/wiki/ with:
      External Wiki Link: https://localhost/admin/wiki/
    Note: Only 'staff' or 'admin' web users are allowed to access the local Wiki.
+   More info: http://doc.astlinux-project.org/userdoc:tt_web_interface_wiki
 
 
 Additions for AstLinux 1.3.6:
