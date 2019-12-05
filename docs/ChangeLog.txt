@@ -16,7 +16,7 @@ Released @TBD@
 
 ** Networking
 
--- WireGuard VPN, version bump to 0.0.20191127
+-- WireGuard VPN, version bump to 0.0.20191205
 
 ** Asterisk
 
