@@ -3,16 +3,12 @@
 # lm-sensors
 #
 #############################################################
-LM_SENSORS_VERSION = 3.5.0
-LM_SENSORS_SOURCE = lm_sensors-$(LM_SENSORS_VERSION).tar.gz
-LM_SENSORS_SITE = https://s3.amazonaws.com/files.astlinux-project
+
+LM_SENSORS_VERSION = 3-6-0
+LM_SENSORS_SOURCE = lm-sensors-$(LM_SENSORS_VERSION).tar.gz
+LM_SENSORS_SITE = https://github.com/lm-sensors/lm-sensors/archive/V$(LM_SENSORS_VERSION)
 LM_SENSORS_INSTALL_STAGING = YES
 LM_SENSORS_DEPENDENCIES = host-bison host-flex
-
-##
-## curl -L -o dl/lm_sensors-3.5.0.tar.gz https://github.com/lm-sensors/lm-sensors/archive/V3-5-0.tar.gz
-## ./scripts/upload-dl-pair dl/lm_sensors-3.5.0.tar.gz
-##
 
 LM_SENSORS_BINS_ = bin/sensors-conf-convert
 LM_SENSORS_BINS_$(BR2_PACKAGE_LM_SENSORS_SENSORS) += bin/sensors
