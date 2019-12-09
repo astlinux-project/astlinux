@@ -3,7 +3,8 @@
 # tiff
 #
 #############################################################
-TIFF_VERSION = 4.0.10
+
+TIFF_VERSION = 4.1.0
 TIFF_SITE = https://download.osgeo.org/libtiff
 TIFF_SOURCE = tiff-$(TIFF_VERSION).tar.gz
 TIFF_INSTALL_STAGING = YES
