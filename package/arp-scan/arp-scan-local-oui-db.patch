@@ -1,6 +1,6 @@
 --- arp-scan-1.9/arp-scan.c.orig	2016-02-12 16:06:08.000000000 -0600
 +++ arp-scan-1.9/arp-scan.c	2016-02-12 16:48:27.000000000 -0600
-@@ -331,32 +331,21 @@
+@@ -339,32 +339,21 @@
   * Create MAC/Vendor hash table if quiet if not in effect.
   */
     if (!quiet_flag) {
@@ -10,32 +10,32 @@
 +      char fn[32];
        int count;
  
-       if ((hash_table = hash_new()) == NULL)
-          err_sys("hash_new");
+       if ((hcreate(HASH_TABLE_SIZE)) == 0)
+          err_sys("hcreate");
  
 -      fn = get_mac_vendor_filename(ouifilename, DATADIR, OUIFILENAME);
--      count = add_mac_vendor(hash_table, fn);
+-      count = add_mac_vendor(fn);
 -      if (verbose > 1 && count > 0)
 -         warn_msg("DEBUG: Loaded %d IEEE OUI/Vendor entries from %s.",
 -                  count, fn);
 -      free(fn);
 -
 -      fn = get_mac_vendor_filename(iabfilename, DATADIR, IABFILENAME);
--      count = add_mac_vendor(hash_table, fn);
+-      count = add_mac_vendor(fn);
 -      if (verbose > 1 && count > 0)
 -         warn_msg("DEBUG: Loaded %d IEEE IAB/Vendor entries from %s.",
 -                  count, fn);
 -      free(fn);
 -
 -      fn = get_mac_vendor_filename(macfilename, DATADIR, MACFILENAME);
--      count = add_mac_vendor(hash_table, fn);
+-      count = add_mac_vendor(fn);
 -      if (verbose > 1 && count > 0)
 -         warn_msg("DEBUG: Loaded %d MAC/Vendor entries from %s.",
 -                  count, fn);
 -      free(fn);
 +      for (cp = list; *cp != '\0'; cp++) {
 +         snprintf(fn, 32, "/usr/share/oui-db/xxxxx%c", *cp);
-+         count = add_mac_vendor(hash_table, fn);
++         count = add_mac_vendor(fn);
 +         if (verbose > 1 && count > 0)
 +            warn_msg("DEBUG: Loaded %d IEEE OUI/Vendor entries from %s.",
 +                     count, fn);
@@ -43,8 +43,8 @@
     }
  /*
   *      Populate the list from the specified file if --file was specified, or
-@@ -2269,7 +2258,7 @@
- add_mac_vendor(struct hash_control *table, const char *map_filename) {
+@@ -2298,7 +2287,7 @@
+ add_mac_vendor(const char *map_filename) {
     static int first_call=1;
     FILE *fp;	/* MAC/Vendor file handle */
 -   static const char *oui_pat_str = "([^\t]+)\t[\t ]*([^\t\r\n]+)";

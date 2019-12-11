@@ -4,9 +4,10 @@
 #
 ################################################################################
 
-ARP_SCAN_VERSION = 1.9
+ARP_SCAN_VERSION = 1.9.7
 ARP_SCAN_SOURCE = arp-scan-$(ARP_SCAN_VERSION).tar.gz
-ARP_SCAN_SITE = https://github.com/royhills/arp-scan/releases/download/$(ARP_SCAN_VERSION)
+ARP_SCAN_SITE = https://github.com/royhills/arp-scan/archive/$(ARP_SCAN_VERSION)
+ARP_SCAN_AUTORECONF = YES
 
 ARP_SCAN_DEPENDENCIES = libpcap
 
