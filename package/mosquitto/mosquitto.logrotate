@@ -1,0 +1,8 @@
+#
+/var/log/mosquitto/mosquitto.log {
+  missingok
+  size 100k
+  copytruncate
+  rotate 1
+}
+

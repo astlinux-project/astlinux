@@ -75,6 +75,7 @@ define MOSQUITTO_INSTALL_BROKER
 	$(INSTALL) -D -m 0644 $(@D)/mosquitto.conf $(TARGET_DIR)/stat/etc/mosquitto/mosquitto.conf.example
 	ln -s /tmp/etc/mosquitto $(TARGET_DIR)/etc/mosquitto
 	$(INSTALL) -D -m 0755 package/mosquitto/mosquitto.init $(TARGET_DIR)/etc/init.d/mosquitto
+	$(INSTALL) -D -m 0644 package/mosquitto/mosquitto.logrotate $(TARGET_DIR)/etc/logrotate.d/mosquitto
 	ln -sf ../../init.d/mosquitto $(TARGET_DIR)/etc/runlevels/default/S58mosquitto
 	ln -sf ../../init.d/mosquitto $(TARGET_DIR)/etc/runlevels/default/K02mosquitto
 endef
