@@ -14,9 +14,40 @@ Released @TBD@
 
 -- Linux Kernel 3.16.74 (no change)
 
+-- igb, version bump to 5.3.5.42, Intel Gigabit Ethernet Network Driver
+
+-- libedit, version bump to 20191211-3.1
+
+-- libxml2, version bump to 2.9.10
+
+-- lm-sensors, version bump to 3.6.0
+
+-- php, version bump to 7.2.25
+
+-- sqlite, version bump to 3.30.1
+
+-- strace, version bump to 5.4
+
+-- sudo, version bump to 1.8.29
+
+-- tiff, version bump to 4.1.0, security fixes: CVE-2018-12900, CVE-2018-17000, CVE-2019-6128,
+                                                CVE-2019-7663, CVE-2019-14973, CVE-2018-19210
+
+-- ca-certificates, update trusted root certificates 2019-11-27
+
 ** Networking
 
--- WireGuard VPN, version bump to 0.0.20191205
+-- WireGuard VPN, version bump to 0.0.20191212
+
+-- OpenVPN, version bump to 2.4.8
+
+-- libcurl (curl) version bump to 7.67.0
+
+-- arp-scan, version bump to 1.9.7
+
+-- stunnel, version bump to 5.56
+
+-- (Custom Build Only) mosquitto, version bump to 1.6.8.  Add support for MQTT broker with MQTT_BROKER="yes"
 
 ** Asterisk
 
