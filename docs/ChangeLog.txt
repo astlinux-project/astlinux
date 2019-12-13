@@ -47,6 +47,8 @@ Released @TBD@
 
 -- stunnel, version bump to 5.56
 
+-- unbound (host), version bump to 1.9.6
+
 -- (Custom Build Only) mosquitto, version bump to 1.6.8.  Add support for MQTT broker with MQTT_BROKER="yes"
 
 ** Asterisk
@@ -62,7 +64,7 @@ Released @TBD@
 
 ** Web Interface
 
--- (no change)
+-- Status tab, NTP Time Sources: use "chronyc -N sources" if supported.
 
 
 Additions for AstLinux 1.3.7.1:
