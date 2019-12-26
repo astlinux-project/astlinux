@@ -7,7 +7,7 @@
 WIREGUARD_VERSION = 0.0.20191226
 WIREGUARD_SITE = https://git.zx2c4.com/wireguard-linux-compat/snapshot
 WIREGUARD_SOURCE = wireguard-linux-compat-$(WIREGUARD_VERSION).tar.xz
-WIREGUARD_DEPENDENCIES = host-pkg-config linux libmnl
+WIREGUARD_DEPENDENCIES = linux
 
 WIREGUARD_MAKE_OPTS = \
 	CC=$(TARGET_CC) \
