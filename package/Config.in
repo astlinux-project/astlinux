@@ -580,6 +580,7 @@ endif
 source "package/whois/Config.in"
 source "package/wide-dhcpv6/Config.in"
 source "package/wireguard/Config.in"
+source "package/wireguard-tools/Config.in"
 source "package/wireless_tools/Config.in"
 source "package/wpa_supplicant/Config.in"
 

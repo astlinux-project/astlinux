@@ -18,6 +18,7 @@ The previous stderr DNS error message will continue to be generated.
 This change effects:
 wg setconf ... (Containing: Endpoint = <dns-hostname>:<port>)
 wg addconf ... (Containing: Endpoint = <dns-hostname>:<port>)
+wg syncconf... (Containing: Endpoint = <dns-hostname>:<port>)
 wg set ... endpoint <dns-hostname>:<port> ...
 ---
  src/tools/config.c | 2 +-
@@ -25,8 +26,8 @@ wg set ... endpoint <dns-hostname>:<port> ...
 
 diff --git a/src/tools/config.c b/src/tools/config.c
 index 5d15356..97c34ab 100644
---- a/src/tools/config.c
-+++ b/src/tools/config.c
+--- a/src/config.c
++++ b/src/config.c
 @@ -259,7 +259,7 @@ static inline bool parse_endpoint(struct sockaddr *endpoint, const char *value)
  				(retries >= 0 && !retries--)) {
  			free(mutable);

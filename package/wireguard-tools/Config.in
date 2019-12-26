@@ -1,0 +1,9 @@
+config BR2_PACKAGE_WIREGUARD_TOOLS
+	bool "wireguard-tools"
+	select BR2_PACKAGE_LIBMNL
+	help
+	  This supplies the main userspace tooling for using and
+	  configuring WireGuard tunnels, including the wg(8) utility.
+
+	  https://www.wireguard.com
+
