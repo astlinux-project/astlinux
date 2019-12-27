@@ -22,7 +22,7 @@ Released @TBD@
 
 -- lm-sensors, version bump to 3.6.0
 
--- php, version bump to 7.2.25
+-- php, version bump to 7.2.26
 
 -- sqlite, version bump to 3.30.1
 
@@ -33,11 +33,13 @@ Released @TBD@
 -- tiff, version bump to 4.1.0, security fixes: CVE-2018-12900, CVE-2018-17000, CVE-2019-6128,
                                                 CVE-2019-7663, CVE-2019-14973, CVE-2018-19210
 
+-- zabbix, version bump to 3.0.29
+
 -- ca-certificates, update trusted root certificates 2019-11-27
 
 ** Networking
 
--- WireGuard VPN, version bump to 0.0.20191212
+-- WireGuard VPN, module 0.0.20191226 (version bump), tools 1.0.20191226 (version bump)
 
 -- OpenVPN, version bump to 2.4.8
 
