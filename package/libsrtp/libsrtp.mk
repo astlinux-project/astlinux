@@ -5,8 +5,7 @@
 #############################################################
 
 LIBSRTP_VERSION = 2.2.0
-LIBSRTP_SITE = https://s3.amazonaws.com/files.astlinux-project
-#LIBSRTP_SITE = https://github.com/cisco/libsrtp/releases
+LIBSRTP_SITE = https://github.com/cisco/libsrtp/archive/v$(LIBSRTP_VERSION)
 LIBSRTP_SOURCE = libsrtp-$(LIBSRTP_VERSION).tar.gz
 LIBSRTP_INSTALL_STAGING = YES
 LIBSRTP_DEPENDENCIES = host-pkg-config openssl
