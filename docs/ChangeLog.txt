@@ -39,7 +39,7 @@ Released @TBD@
 
 ** Networking
 
--- WireGuard VPN, module 0.0.20191226 (version bump), tools 1.0.20200102 (version bump)
+-- WireGuard VPN, module 0.0.20200105 (version bump), tools 1.0.20200102 (version bump)
 
 -- OpenVPN, version bump to 2.4.8
 
