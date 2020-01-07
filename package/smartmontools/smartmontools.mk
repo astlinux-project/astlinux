@@ -4,7 +4,7 @@
 #
 #############################################################
 
-SMARTMONTOOLS_VERSION = 6.6
+SMARTMONTOOLS_VERSION = 7.1
 SMARTMONTOOLS_SITE = http://downloads.sourceforge.net/project/smartmontools/smartmontools/$(SMARTMONTOOLS_VERSION)
 
 define SMARTMONTOOLS_LATEST_DRIVEDB
