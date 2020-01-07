@@ -13,18 +13,16 @@ gen_msmtp_config() {
 account default
 host $SMTP_SERVER
 port $PORT
-timeout 30
-maildomain $DOMAIN"
+timeout 30"
 
   if [ -n "$SMTP_HOST_DOMAIN" ]; then
     echo "domain $SMTP_HOST_DOMAIN"
   fi
 
   if [ -n "$SMTP_FROM" ]; then
-    echo "auto_from off
-from $SMTP_FROM"
+    echo "from $SMTP_FROM"
   else
-    echo "auto_from on"
+    echo "from %U@$DOMAIN"
   fi
 
   if [ "$SMTP_TLS" = "yes" ]; then
