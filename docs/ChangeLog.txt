@@ -20,6 +20,10 @@ Released @TBD@
 
 -- libxml2, version bump to 2.9.10
 
+-- e2fsprogs, version bump to 1.45.5
+
+-- ethtool, version bump to 5.4
+
 -- lm-sensors, version bump to 3.6.0
 
 -- php, version bump to 7.2.26
@@ -45,7 +49,7 @@ Released @TBD@
 
 -- OpenVPN, version bump to 2.4.8
 
--- libcurl (curl) version bump to 7.67.0
+-- libcurl (curl) version bump to 7.68.0
 
 -- arp-scan, version bump to 1.9.7
 
