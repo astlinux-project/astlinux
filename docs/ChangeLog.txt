@@ -18,6 +18,8 @@ Released @TBD@
 
 -- libedit, version bump to 20191231-3.1
 
+-- libjpeg, version bump to 9d
+
 -- libxml2, version bump to 2.9.10
 
 -- e2fsprogs, version bump to 1.45.5
@@ -45,7 +47,7 @@ Released @TBD@
 
 ** Networking
 
--- WireGuard VPN, module 0.0.20200105 (version bump), tools 1.0.20200102 (version bump)
+-- WireGuard VPN, module 0.0.20200121 (version bump), tools 1.0.20200121 (version bump)
 
 -- OpenVPN, version bump to 2.4.8
 
