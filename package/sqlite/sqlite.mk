@@ -4,9 +4,9 @@
 #
 #############################################################
 
-SQLITE_VERSION = 3300100
+SQLITE_VERSION = 3310100
 SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VERSION).tar.gz
-SQLITE_SITE = https://www.sqlite.org/2019
+SQLITE_SITE = https://www.sqlite.org/2020
 SQLITE_INSTALL_STAGING = YES
 
 # sqlite-0001-editline-configure-fix.patch
