@@ -28,15 +28,17 @@ Released @TBD@
 
 -- lm-sensors, version bump to 3.6.0
 
+-- pciutils, version bump to 3.6.3
+
 -- php, version bump to 7.2.27, security fixes: CVE-2020-7060, CVE-2020-7059
 
--- sqlite, version bump to 3.30.1
+-- sqlite, version bump to 3.31.1
 
 -- smartctl (smartmontools), version bump to 7.1
 
 -- strace, version bump to 5.4
 
--- sudo, version bump to 1.8.30
+-- sudo, version bump to 1.8.31
 
 -- tiff, version bump to 4.1.0, security fixes: CVE-2018-12900, CVE-2018-17000, CVE-2019-6128,
                                                 CVE-2019-7663, CVE-2019-14973, CVE-2018-19210
@@ -47,7 +49,7 @@ Released @TBD@
 
 ** Networking
 
--- WireGuard VPN, module 0.0.20200121 (version bump), tools 1.0.20200121 (version bump)
+-- WireGuard VPN, module 0.0.20200128 (version bump), tools 1.0.20200121 (version bump)
 
 -- OpenVPN, version bump to 2.4.8
 
