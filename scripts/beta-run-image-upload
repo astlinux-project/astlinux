@@ -75,7 +75,7 @@ upload_run_images()
 
 upload_iso_vm_image()
 {
-  local local_dir="$1" file
+  local local_dir="$1" file sha256="/tmp/sha256"
 
   for file in $(ls -1 "$local_dir/"*.iso); do
     case $file in
@@ -86,6 +86,14 @@ upload_iso_vm_image()
           echo "beta-run-image-upload: failed."
           exit 1
         fi
+
+        sha256sum "$file" | cut -d' ' -f1 > "$sha256"
+        s3cmd put --acl-public "$sha256" "s3://$S3_BUCKET/$ISO_DIR/$ISO_VM.sha256"
+        if [ $? -ne 0 ]; then
+          echo "beta-run-image-upload: failed."
+          exit 1
+        fi
+        rm -f "$sha256"
         echo ""
         ;;
     esac

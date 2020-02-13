@@ -66,13 +66,22 @@ upload_flash_images()
 
 upload_iso_images()
 {
-  local local_dir="$1" firmware_path="$2"
+  local local_dir="$1" firmware_path="$2" sha256="/tmp/sha256"
 
   for file in $(ls -1 "$local_dir/"*.iso); do
     echo "ISO Image: ${file##*/}"
     upload_file "$firmware_path" "$file" count
     echo ""
   done
+
+  # Successful upload, update the 'sha256' file
+  (
+    cd "$local_dir/"
+    sha256sum *.iso > "$sha256"
+  )
+  upload_file "$firmware_path" "$sha256"
+  rm -f "$sha256"
+  echo ""
 }
 
 set_asterisk_version()
