@@ -45,15 +45,15 @@ index 1069020..7d13bb4 100644
  	else if (!strcasecmp(param, "takecall"))
  		ast_copy_string(f->takecall, val, sizeof(f->takecall));
  	else if (!strcasecmp(param, "declinecall"))
-@@ -405,6 +413,7 @@ static int reload_followme(int reload)
- 	char *numberstr;
+@@ -404,6 +412,7 @@ static int reload_followme(int reload)
+ 	struct number *cur, *nm;
  	int timeout;
  	int numorder;
-+	const char* enable_callee_prompt_str;
++	const char *enable_callee_prompt_str;
  	const char *takecallstr;
  	const char *declinecallstr;
  	const char *tmpstr;
-@@ -437,6 +446,12 @@ static int reload_followme(int reload)
+@@ -436,6 +445,12 @@ static int reload_followme(int reload)
  			featuredigittimeout = 5000;
  	}
  
@@ -66,7 +66,7 @@ index 1069020..7d13bb4 100644
  	if ((takecallstr = ast_variable_retrieve(cfg, "general", "takecall")) && !ast_strlen_zero(takecallstr)) {
  		ast_copy_string(takecall, takecallstr, sizeof(takecall));
  	}
-@@ -665,26 +680,30 @@ static struct ast_channel *wait_for_winner(struct findme_user_listptr *findme_us
+@@ -667,26 +682,30 @@ static struct ast_channel *wait_for_winner(struct findme_user_listptr *findme_us
  			if (tmpuser->digts && (tmpuser->digts > featuredigittimeout)) {
  				ast_verb(3, "<%s> We've been waiting for digits longer than we should have.\n",
  					ast_channel_name(tmpuser->ochan));
@@ -114,7 +114,7 @@ index 1069020..7d13bb4 100644
  				}
  			}
  			if (ast_channel_stream(tmpuser->ochan)) {
-@@ -801,23 +820,28 @@ static struct ast_channel *wait_for_winner(struct findme_user_listptr *findme_us
+@@ -799,23 +818,28 @@ static struct ast_channel *wait_for_winner(struct findme_user_listptr *findme_us
  						/* If call has been answered, then the eventual hangup is likely to be normal hangup */
  						ast_channel_hangupcause_set(winner, AST_CAUSE_NORMAL_CLEARING);
  						ast_channel_hangupcause_set(caller, AST_CAUSE_NORMAL_CLEARING);
@@ -156,7 +156,7 @@ index 1069020..7d13bb4 100644
  						}
  						break;
  					case AST_CONTROL_BUSY:
-@@ -941,6 +965,11 @@ static struct ast_channel *wait_for_winner(struct findme_user_listptr *findme_us
+@@ -939,6 +963,11 @@ static struct ast_channel *wait_for_winner(struct findme_user_listptr *findme_us
  						break;
  					}
  				}
@@ -168,7 +168,7 @@ index 1069020..7d13bb4 100644
  				if (tmpuser && tmpuser->state == 3 && f->frametype == AST_FRAME_DTMF) {
  					int cmp_len;
  
-@@ -1380,6 +1404,7 @@ static int app_exec(struct ast_channel *chan, const char *data)
+@@ -1378,6 +1407,7 @@ static int app_exec(struct ast_channel *chan, const char *data)
  
  	/* Lock the profile lock and copy out everything we need to run with before unlocking it again */
  	ast_mutex_lock(&f->lock);
