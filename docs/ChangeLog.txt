@@ -22,6 +22,8 @@ Released @TBD@
 
 -- libxml2, version bump to 2.9.10
 
+-- pcre, version bump to 8.44
+
 -- e2fsprogs, version bump to 1.45.5
 
 -- ethtool, version bump to 5.4
@@ -64,6 +66,8 @@ Released @TBD@
 
 -- keepalived, version bump to 2.0.20
 
+-- luasec, version bump to 0.9
+
 -- msmtp, version bump to 1.8.7
 
 -- openldap, version bump to 2.4.49
@@ -72,7 +76,7 @@ Released @TBD@
 
 -- unbound (host), version bump to 1.9.6
 
--- whois, version bump to 5.5.5
+-- whois, version bump to 5.5.6
 
 -- (Custom Build Only) mosquitto, version bump to 1.6.8.  Add support for MQTT broker with MQTT_BROKER="yes"
 
