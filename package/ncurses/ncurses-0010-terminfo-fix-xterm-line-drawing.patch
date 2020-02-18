@@ -1,11 +1,11 @@
---- ncurses-6.1/misc/terminfo.src.orig	2018-10-23 03:39:35.901100718 -0500
-+++ ncurses-6.1/misc/terminfo.src	2018-10-23 03:42:45.253923875 -0500
-@@ -4328,7 +4328,7 @@
+--- ncurses-6.2/misc/terminfo.src.orig	2020-02-18 14:32:23.224139080 -0600
++++ ncurses-6.2/misc/terminfo.src	2020-02-18 14:34:31.727594416 -0600
+@@ -4513,7 +4513,7 @@
+ # This version reflects the current xterm features.
  xterm-new|modern xterm terminal emulator,
  	npc,
- 	indn=\E[%p1%dS, kb2=\EOE, kcbt=\E[Z, kent=\EOM,
--	rin=\E[%p1%dT, use=ansi+rep, use=ecma+strikeout,
-+	rin=\E[%p1%dT, use=ecma+strikeout,
+-	kcbt=\E[Z, kent=\EOM, use=ecma+index, use=ansi+rep,
++	kcbt=\E[Z, kent=\EOM, use=ecma+index,
+ 	use=ecma+strikeout, use=xterm+keypad, use=vt420+lrmm,
  	use=xterm+sm+1006, use=xterm+pcfkeys, use=xterm+tmux,
  	use=xterm-basic,
- 

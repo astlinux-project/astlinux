@@ -4,9 +4,9 @@
 #
 #############################################################
 
-NCURSES_VERSION = 6.1
+NCURSES_VERSION = 6.2
 NCURSES_SOURCE = ncurses-$(NCURSES_VERSION).tar.gz
-NCURSES_SITE = $(BR2_GNU_MIRROR)/ncurses
+NCURSES_SITE = https://invisible-mirror.net/archives/ncurses
 NCURSES_INSTALL_STAGING = YES
 NCURSES_DEPENDENCIES = host-ncurses
 HOST_NCURSES_DEPENDENCIES =
