@@ -30,6 +30,8 @@ Released @TBD@
 
 -- lm-sensors, version bump to 3.6.0
 
+-- ncurses, version bump to 6.2
+
 -- pciutils, version bump to 3.6.3
 
 -- php, version bump to 7.2.27, security fixes: CVE-2020-7060, CVE-2020-7059
