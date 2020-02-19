@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 3.16.74 (no change)
+-- Linux Kernel 3.16.82 (version bump), security and bug fixes
 
 -- igb, version bump to 5.3.5.42, Intel Gigabit Ethernet Network Driver
 
