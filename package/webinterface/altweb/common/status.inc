@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2019 Lonnie Abelbeck
+// Copyright (C) 2008-2020 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -45,6 +45,7 @@
 // 11-23-2018, Improved WireGuard VPN Status
 // 02-10-2019, Added DNSMASQ lease DB support
 // 06-26-2019, Added ChangeLog display
+// 02-21-2020, Remove PPTP VPN support
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -91,7 +92,6 @@ function getDaemons() {
   $status['openvpn'] = 0;
   $status['racoon'] = 0;
   $status['charon'] = 0;
-  $status['pptpd'] = 0;
   $status['upsmon'] = 0;
   $status['syslogd'] = 0;
   $status['zabbix_agentd'] = 0;
@@ -1230,16 +1230,6 @@ if (isset($status_ipsec_associations)) {
     }
     pclose($status_ipsec_associations);
 
-    putHtml("</pre>");
-  }
-}
-
-if ($daemon['pptpd'] > 0) {
-  if (getPREFdef($global_prefs, 'status_pptp_server') !== 'no') {
-    putHtml("<h2>PPTP VPN Server Status:</h2>");
-    putHtml("<pre>");
-    $line = trim(shell_exec('. /etc/rc.conf; echo "$PPTP_SUBNET"'));
-    putText('PPTP VPN Server is active on subnet: '.$line);
     putHtml("</pre>");
   }
 }

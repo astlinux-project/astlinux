@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2019 Lonnie Abelbeck
+// Copyright (C) 2008-2020 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -51,6 +51,7 @@
 // 03-05-2019, Added NETSTAT_EXTIF support
 // 04-11-2019, Changed Outbound SMTP defaults
 // 06-13-2019, Added Reload WireGuard VPN
+// 02-21-2020, Remove PPTP VPN support
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -645,9 +646,6 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   if (isset($_POST['ipsec']) && ! isset($_POST['racoon']) && ! isset($_POST['ipsecmobile'])) {
     $x_value .= ' ipsec';
   }
-  if (isset($_POST['pptp'])) {
-    $x_value .= ' pptp';
-  }
   if (isset($_POST['wireguard'])) {
     $x_value .= ' wireguard';
   }
@@ -1019,10 +1017,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       header('Location: /admin/edit.php?file='.$file);
       exit;
     }
-  } elseif (isset($_POST['submit_edit_pptp'])) {
-    $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
-    header('Location: /admin/pptp.php');
-    exit;
   } elseif (isset($_POST['submit_edit_wireguard'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     header('Location: /admin/wireguard.php');
@@ -1106,8 +1100,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 27, $result, 'init');
       } elseif ($process === 'dnsmasq') {
         $result = restartPROCESS($process, 28, $result, 'init');
-      } elseif ($process === 'pptpd') {
-        $result = restartPROCESS($process, 33, $result, 'init');
       } elseif ($process === 'miniupnpd') {
         $result = restartPROCESS($process, 34, $result, 'init');
       } elseif ($process === 'ups') {
@@ -1210,8 +1202,6 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">OpenVPN Client'.statusPROCESS('openvpnclient').'.</p>');
     } elseif ($result == 31) {
       putHtml('<p style="color: green;">SMTP Mail has Restarted.</p>');
-    } elseif ($result == 33) {
-      putHtml('<p style="color: green;">PPTP VPN Server'.statusPROCESS('pptpd').'.</p>');
     } elseif ($result == 34) {
       putHtml('<p style="color: green;">Universal Plug\'n\'Play'.statusPROCESS('miniupnpd').'.</p>');
     } elseif ($result == 35) {
@@ -1327,8 +1317,6 @@ require_once '../common/header.php';
   putHtml('<option value="racoon"'.$sel.'>Restart IPsec VPN</option>');
   $sel = ($reboot_restart === 'ipsec') ? ' selected="selected"' : '';
   putHtml('<option value="ipsec"'.$sel.'>Restart IPsec strongSwan</option>');
-  $sel = ($reboot_restart === 'pptpd') ? ' selected="selected"' : '';
-  putHtml('<option value="pptpd"'.$sel.'>Restart PPTP VPN Server</option>');
   $sel = ($reboot_restart === 'wireguard') ? ' selected="selected"' : '';
   putHtml('<option value="wireguard"'.$sel.'>Restart WireGuard VPN</option>');
   $sel = ($reboot_restart === 'WIREGUARD') ? ' selected="selected"' : '';
@@ -2169,15 +2157,6 @@ if (is_file('/etc/init.d/ipsec')) {
   }
   putHtml('</td></tr>');
 }
-
-  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  $sel = isVARtype('VPN', $db, $cur_db, 'pptp') ? ' checked="checked"' : '';
-  putHtml('<input type="checkbox" value="pptp" name="pptp"'.$sel.' />');
-  putHtml('</td><td style="text-align: left;" colspan="5">');
-  putHtml('PPTP Server');
-  putHtml('&ndash;');
-  putHtml('<input type="submit" value="PPTP Configuration" name="submit_edit_pptp" class="button" />');
-  putHtml('</td></tr>');
 
 if (is_file('/etc/init.d/wireguard')) {
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2019 Lonnie Abelbeck
+// Copyright (C) 2008-2020 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -21,6 +21,7 @@
 // 06-13-2019, Added Reload WireGuard VPN
 // 07-30-2019, Added CodeMirror text editing
 // 08-24-2019, Added Apply user.conf variables
+// 02-21-2020, Remove PPTP VPN support
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -39,7 +40,6 @@ $select_reload = array (
   'openvpnclient' => 'Restart OpenVPN Client',
   'racoon' => 'Restart IPsec VPN',
   'ipsec' => 'Restart IPsec strongSwan',
-  'pptpd' => 'Restart PPTP VPN Server',
   'wireguard' => 'Restart WireGuard VPN',
   'WIREGUARD' => 'Reload WireGuard VPN',
   'fossil' => 'Restart Fossil Server',
@@ -300,8 +300,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 27, $result, 'init');
       } elseif ($process === 'dnsmasq') {
         $result = restartPROCESS($process, 28, $result, 'init');
-      } elseif ($process === 'pptpd') {
-        $result = restartPROCESS($process, 33, $result, 'init');
       } elseif ($process === 'miniupnpd') {
         $result = restartPROCESS($process, 34, $result, 'init');
       } elseif ($process === 'ups') {
@@ -460,8 +458,6 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Cron Jobs for root will be reloaded within a minute.</p>');
     } elseif ($result == 31) {
       putHtml('<p style="color: green;">SMTP Mail has Restarted.</p>');
-    } elseif ($result == 33) {
-      putHtml('<p style="color: green;">PPTP VPN Server'.statusPROCESS('pptpd').'.</p>');
     } elseif ($result == 34) {
       putHtml('<p style="color: green;">Universal Plug\'n\'Play'.statusPROCESS('miniupnpd').'.</p>');
     } elseif ($result == 35) {

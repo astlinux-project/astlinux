@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2019 Lonnie Abelbeck
+// Copyright (C) 2008-2020 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -26,6 +26,7 @@
 // 07-11-2019, Added Backup Exclude Suffixes
 // 07-31-2019, Added Disable CodeMirror Editor
 // 10-29-2019, Added Wiki tab and link
+// 02-21-2020, Remove PPTP VPN support
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -80,10 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (! isset($_POST['ipsec_associations'])) {
       $value = 'status_ipsec_associations = no';
-      fwrite($fp, $value."\n");
-    }
-    if (! isset($_POST['pptp_server'])) {
-      $value = 'status_pptp_server = no';
       fwrite($fp, $value."\n");
     }
     if (! isset($_POST['wireguard_vpn'])) {
@@ -648,9 +645,6 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_ipsec_associations') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="ipsec_associations" name="ipsec_associations"'.$sel.' /></td><td colspan="5">Show IPsec Associations</td></tr>');
-  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  $sel = (getPREFdef($global_prefs, 'status_pptp_server') !== 'no') ? ' checked="checked"' : '';
-  putHtml('<input type="checkbox" value="pptp_server" name="pptp_server"'.$sel.' /></td><td colspan="5">Show PPTP VPN Status</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_wireguard_vpn') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="wireguard_vpn" name="wireguard_vpn"'.$sel.' /></td><td colspan="5">Show WireGuard VPN Status</td></tr>');

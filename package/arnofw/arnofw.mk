@@ -48,6 +48,8 @@ define ARNOFW_INSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/stat/$(ARNOFW_CONFIG_DIR)/plugins/traffic-accounting.conf
 	rm -f $(TARGET_DIR)/$(ARNOFW_SCRIPT_DIR)/plugins/??rpc.plugin
 	rm -f $(TARGET_DIR)/stat/$(ARNOFW_CONFIG_DIR)/plugins/rpc.conf
+	rm -f $(TARGET_DIR)/$(ARNOFW_SCRIPT_DIR)/plugins/??pptp-vpn.plugin
+	rm -f $(TARGET_DIR)/stat/$(ARNOFW_CONFIG_DIR)/plugins/pptp-vpn.conf
 	##
 	## Overwrite the config files with our custom versions
 	##
@@ -98,11 +100,6 @@ define ARNOFW_INSTALL_TARGET_CMDS
 	##
 	$(INSTALL) -m 0644 package/arnofw/sip-user-agent/30sip-user-agent.plugin.sh $(TARGET_DIR)/$(ARNOFW_SCRIPT_DIR)/plugins/30sip-user-agent.plugin
 	$(INSTALL) -m 0644 package/arnofw/sip-user-agent/sip-user-agent.conf $(TARGET_DIR)/stat/$(ARNOFW_CONFIG_DIR)/plugins/sip-user-agent.conf
-	##
-	## Install local version of PPTP VPN plugin
-	##
-	$(INSTALL) -m 0644 package/arnofw/pptp-vpn/50pptp-vpn.plugin.sh $(TARGET_DIR)/$(ARNOFW_SCRIPT_DIR)/plugins/50pptp-vpn.plugin
-	$(INSTALL) -m 0644 package/arnofw/pptp-vpn/pptp-vpn-astlinux.conf $(TARGET_DIR)/stat/$(ARNOFW_CONFIG_DIR)/plugins/pptp-vpn.conf
 	##
 	## Install local version of WireGuard VPN plugin
 	##

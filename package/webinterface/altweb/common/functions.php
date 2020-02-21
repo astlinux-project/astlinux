@@ -90,7 +90,7 @@ function restartPROCESS($process, $ret_good, $ret_fail, $start = 'start', $wait 
     $cmd .= ';/usr/sbin/gen-rc-conf';
     if ($process === 'openvpn' || $process === 'openvpnclient' ||
         $process === 'racoon' || $process === 'ipsec' ||
-        $process === 'pptpd' || $process === 'wireguard') {
+        $process === 'wireguard') {
       $cmd .= ';service iptables restart >/dev/null 2>/dev/null';
     }
     $cmd .= ';service '.$process.' '.$start.' >/dev/null 2>/dev/null';

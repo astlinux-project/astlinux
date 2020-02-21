@@ -36,6 +36,20 @@ update_system_default_users()
   done
 }
 
+delete_removed_package_config_files()
+{
+  local pkg config_file IFS
+
+  unset IFS
+  for pkg in pptp; do
+    config_file="/mnt/kd/rc.conf.d/gui.${pkg}.conf"
+    if [ -f "$config_file" ]; then
+      rm "$config_file"
+      echo "FIRSTRUN: Deleted unsupported config file: $config_file"
+    fi
+  done
+}
+
 init () {
   local new old=""
 
@@ -65,6 +79,9 @@ init () {
       add_system_default_users /oldroot/image
       update_system_default_users /oldroot/image
     fi
+
+    # Delete config files for removed packages
+    delete_removed_package_config_files
 
     case $old in
       astlinux-1.0.*)
