@@ -4,23 +4,24 @@
 #
 #############################################################
 
-PPPD_VERSION = 2.4.7
+PPPD_VERSION = 2.4.8
 PPPD_SOURCE = ppp-$(PPPD_VERSION).tar.gz
-PPPD_SITE = ftp://ftp.samba.org/pub/ppp
+PPPD_SITE = https://github.com/paulusmack/ppp/archive/ppp-$(PPPD_VERSION)
+PPPD_DEPENDENCIES = openssl
 
 PPPD_INSTALL_STAGING = YES
 PPPD_TARGET_BINS = chat pppd pppdump pppstats
 PPPD_RADIUS_CONF = dictionary dictionary.ascend dictionary.compat \
 			dictionary.merit dictionary.microsoft \
-			issue port-id-map realms server radiusclient.conf
+			issue port-id-map realms servers radiusclient.conf
 
 ifeq ($(BR2_PACKAGE_PPPD_FILTER),y)
-	PPPD_DEPENDENCIES += libpcap
-	PPPD_MAKE_OPT += FILTER=y
+PPPD_DEPENDENCIES += libpcap
+PPPD_MAKE_OPT += FILTER=y
 endif
 
 ifeq ($(BR2_INET_IPV6),y)
-	PPPD_MAKE_OPT += HAVE_INET6=y
+PPPD_MAKE_OPT += HAVE_INET6=y
 endif
 
 define PPPD_CONFIGURE_CMDS
