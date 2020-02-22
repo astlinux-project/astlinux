@@ -41,7 +41,7 @@ Released @TBD@
 
 -- pciutils, version bump to 3.6.3
 
--- php, version bump to 7.2.27, security fixes: CVE-2020-7060, CVE-2020-7059
+-- php, version bump to 7.2.28, security fixes: CVE-2020-7060, CVE-2020-7059, CVE-2020-7062
 
 -- screen, version bump to 4.8.0
 
@@ -85,7 +85,7 @@ Released @TBD@
 
 -- stunnel, version bump to 5.56
 
--- unbound (host), version bump to 1.9.6
+-- unbound (host), version bump to 1.10.0
 
 -- whois, version bump to 5.5.6
 
