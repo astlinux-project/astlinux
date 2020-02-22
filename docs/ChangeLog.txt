@@ -15,7 +15,7 @@ Released @TBD@
 -- The PPTP VPN server has been removed.
    pfSense dropped support of PPTP VPN with version 2.3 in 2016.
    Apple dropped support of PPTP VPN with iOS 10 and macOS 10.12 in 2016.
-   PPTP VPN is insecure and you should not be using it anymore.
+   PPTP VPN (MS-CHAPv2) is insecure and is no longer supported in AstLinux.
 
 ** System
 
