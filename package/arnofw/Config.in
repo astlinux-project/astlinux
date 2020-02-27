@@ -6,5 +6,5 @@ config BR2_PACKAGE_ARNOFW
 
 	  Customized by the AstLinux Project
 
-	  Origional: https://github.com/arno-iptables-firewall/aif/
-	             https://rocky.eld.leidenuniv.nl/
+	  Original: https://github.com/arno-iptables-firewall/aif/
+	            https://rocky.eld.leidenuniv.nl/
