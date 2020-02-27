@@ -1,0 +1,216 @@
+Version 2.0.2-04-astlinux (February 27, 2020)
+---------------------------------------------
+* == Simplify integration of AIF ==
+* Move relevant AIF code into the astlinux-project repo.  Based on AIF 2.0.2 plus upstream fixes.
+* Move custom plugins into the new repo source location.
+* Include previous arnofw-upstream-0000... to arnofw-upstream-0004... upstream patches:
+  Commit: https://github.com/astlinux-project/astlinux/commit/4eb135c25edc58a467a685495ec7d73f08714a49
+  Commit: https://github.com/astlinux-project/astlinux/commit/2b65c6adf781457b020ba50622594551a2528536
+  Commit: https://github.com/astlinux-project/astlinux/commit/2a8eefe2d73899741961fbd78ac0417826cd6b78
+  Commit: https://github.com/astlinux-project/astlinux/commit/ffb40f0730626f0b5ff2b3c6444b8af6f8bbe823
+
+Version 2.0.2 (July 28, 2017)
+-----------------------------
++ Added new Parasitic Network plugin, allows "clients" on the same subnet to use this device as a gateway upstream.
+* Improve lock-file handling in the "DynDNS Host Open" and "Traffic Accounting" plugins.
++ Disable nf_conntrack automatic helper assignment when possible, attach with CT target, Issue #35
+! Fixed IPv6 NAT table was not flushed on start/stop/restart, Issue #36
++ Added EXT_IF_DHCPV6_IPV6 config variable supporting DHCPv6 when DHCP is not enabled, Issue #34
++ Added ability to selectively log blocked hosts by inbound and outbound direction.
+  BLOCKED_HOST_LOG Options: 0 = Disable, 1 = Inbound & Outbound, 2 = Inbound, 3 = Outbound
+
+Version 2.0.1g (October 11, 2016)
+---------------------------------
++ Added new BLOCK_NETSET_DIR variable which efficiently creates ipsets for blocklists using .netset files.
++ Added expert DEFAULT_NETSET_WHITELIST and DEFAULT_NETSET_WHITELISTV6 variables when BLOCK_NETSET_DIR is defined.
++ Added ipset support when IPTABLES_IPSET=1 and ipset is installed, disabled by default, Issues: #1, #24, #31
++ Added LAN to DMZ forwarding policy, new optional LAN_DMZ_ALLOW_IF variable, Issue #30
++ Added NAT_IF option to optionally specify external interfaces to be used for NAT
++ Added LAN to LAN (Inter-LAN) filtering rules, LAN_LAN_HOST_OPEN_xxx, Issue #28
+- Removed unused INT_FORWARD_IN_CHAIN and INT_FORWARD_OUT_CHAIN user chains, related to Issue #28
+  Note: Any custom rule or plugin should generally use the FORWARD_CHAIN or POST_FORWARD_CHAIN to access the FORWARD chain.
+        Additionally, the new LAN_LAN_HOST_OPEN_xxx rules natively handle Inter-LAN filtering.
+* New support for ICMPv6 Multicast Listener Discovery, enable with OPEN_ICMPV6_MLD=1, disabled by default
+* Keep external ICMPv6 packets appearing as annoying logs, common with native IPv6 ISP's. Thanks to David Kerr
++ Added new PPTP VPN Passthrough plugin, suggested by Yuriy Cherniavsky, Issue #27
+* Detect and remove stale lockfiles for plugin helpers
+! Support kernel version check where "uname -r" doesn't contain a '-' character
+! Leave the IPv6 sysctl accept_ra setting alone when forwarding=1, fixes WAN DHCPv6-client, Issue #21
+
+Version 2.0.1f (October 1, 2015)
+--------------------------------
+* Honour Debian recommendations for systemd service file
+! Enable xtables lock "wait" option found in iptables 1.4.20+, Issue #17
+! Using NAT_STATIC_IP with multiple ext interfaces would fail in case not enough ext IPs were specified
+* Don't hardcode IP4TABLES/IP6TABLES binary in the config file. Just autodetect it like the other binaries
+! Misc. fixes for newer SuSE & Redhat systems concerning systemd & init
+* Moved get host cache logic from traffic accounting plugin to environment to avoid (future) code duplication
+! Fixed NAT_LOCAL_REDIRECT=1 packets from being logged as if they were dropped
++ Added tcp_be_liberal option
++ Allow rp_filter to be mode 2 (loose)
+! Fixed functions get_ifs() and get_ips() with a '#', distinguish IPv4 from VLAN interfaces and check for
+  IPv6 addresses (thanks to Mike C. Fletcher)
+* Improve y/n user handling
+* Improve log handling for dyndns plugin
++ Try to auto detect external net settings automatically on start
+* Improve error handling especially for plugins
+* Several plugin updates
+
+Version 2.0.1e (February 2, 2014)
+---------------------------------
+* Updated arno-fwfilter
+* Updated install.sh for Git
+* traffic-shaper plugin, allow DOWNLINK=0 to disable inbound (ingress) shaping
+* Updated Gentoo init script (thanks to Erki Ferenc)
+- Removed some Gentoo specific stuff that isn't required anymore
+- Removed TRACE option. It's broken and there's no good way to implement it
++ Added DMZ_INPUT_DENY_LOG variable support for default "AIF:DMZ-INPUT denied:" logs, "0" disables logs
++ Added DMZ_OUTPUT_DENY_LOG variable support for default "AIF:DMZ->LAN denied:" logs, "0" disables logs
+* DYNDNS & Traffic Accounting Plugin refactor
+* Misc. tweaks
+
+Version 2.0.1d (November 16, 2012)
+----------------------------------
++ Reintroduce DNS fast fail option + add additional option (DNS_FAST_FAIL_ONCE) to allow plugins to use it
++ Added nat-loopback plugin for local nets using existing NAT_FORWARD_TCP and NAT_FORWARD_UDP rules.
++ Added new main command 'status-plugins [name]'.  Useful [name] values are: dyndns-host-open, multiroute, nat-loopback,
+  rpc, traffic-accounting and traffic-shaper.  When [name] is specified, only that plugin is shown.
+  For Example:
+    $ arno-iptables-firewall status-plugins                       (shows all plugins status results)
+    $ arno-iptables-firewall status-plugins dyndns-host-open      (shows only dyndns-host-open plugin status results)
++ Added outbound-snat plugin to support when a NAT'ed external interface has multiple IPv4 addresses, it may be
+  desirable to specify which internal IP's or CIDR's use which external IPv4 addresses for outbound connections.
+! Fixed modprobe() function when using kmod. Apparently kmod doesn't echo anything (to stderr) when a module is not found?!
+! Fix logging dropped packets matching (ie, not just TCP) for LAN_INET_FORWARD_CHAIN and DMZ_INET_FORWARD_CHAIN.
++ Added new variables LAN_INET_DEFAULT_POLICY_DROP, DMZ_INET_DEFAULT_POLICY_DROP and LAN_DEFAULT_POLICY_DROP
+  to define the default policies. When undefined the 'automatic' policy is the default as with all previous versions.
+* Allow plugins to maintain a dynamic chain (e.g. MINIUPNPD) in the nat table and not get automatically flushed on a restart.
+* Improved traffic-accounting & dyndns-host-open plugins with a new host cache mechanism
+
+Version 2.0.1c (June 27, 2012)
+------------------------------
+! Fix a script 'IFS' issue if IPv6 and DMZ is enabled together with DMZ_HOST_OPEN_IP (thanks to Ingmar Schraub)
+! Newer kernels (3.4+) replaced ipt_LOG & ip6t_LOG with xt_LOG (thanks to Adam Young)
+
+Version 2.0.1b (March 16, 2012)
+-------------------------------
+! RESERVED_NET_DROP only worked when RESERVED_NET_LOG was enabled (regression) (thanks to gregoryach@gmail.com)
+! Removed stray line in install.sh
+* Updated/corrected documentation
+
+Version 2.0.1a (March 7, 2012)
+------------------------------
+* Misc. tweaks for arno-fwfilter (thanks Mark van Dijk)
+* Use ls instead of [ -n (find) ] as it's much faster (thanks Lonnie)
+* As with previous versions, when LAN_INET_OPEN_xxx and LAN_INET_HOST_OPEN_xxx are NOT defined
+  the default LAN->INET policy is ACCEPT. Changed is when *any* of these variables are defined
+  the default LAN->INET policy is DROP for all ports and protocols, not just TCP/UDP/IP as before.
+* As with previous versions, when DMZ_INET_OPEN_xxx and DMZ_INET_HOST_OPEN_xxx are NOT defined
+  the default DMZ->INET policy is ACCEPT. Changed is when *any* of these variables are defined
+  the default DMZ->INET policy is DROP for all ports and protocols, not just TCP/UDP/IP as before.
+* Tweak the handling of some of the sysctl kernel settings. This now also
+  allows disabling setting/resetting some settings (like forwarding)
+* Default UDP connection timeout to 60 seconds
++ Added support for new LOCAL_CONFIG_DIR variable, defaults to "/etc/arno-iptables-firewall/conf.d" (Debian bug #658458)
+! Set default policy to DROP if either LAN_INET_HOST_OPEN_xxx or DMZ_INET_HOST_OPEN_xxx are defined,
+  to match the documentation. (thanks Schilling Thomas Ing for reporting)
+* Improve documentation
+
+Version 2.0.1 (December 18, 2011)
+---------------------------------
+- Removed DNS_FAST_FAIL & RESOLV_IPS since they are both obsolete
+* Few changes in the install/uninstall scripts. eg. arno-fwfilter now installs to /usr/local/bin instead
+
+Version 2.0.1-BETA1 (October 10, 2011)
+--------------------------------------
+! Fixed kernel_ver_chk() function to properly handle kernel 3. (thanks Gunawan Lim for reporting)
+! Fixed variables containing REJECT_UDP with IPv6 enabled, it should use 'icmp6-addr-unreachable' for IPv6.
+* Updated "DynDNS Host Open" and "DMZ-DNAT" plugins to use new parse_rule() function.
+* AIF variables are now parsed with a common function, now missing fields are logged with a warning.
+* Misc. tweaks
+
+Version 2.0.0c (July 28, 2011)
+-----------------------------------
+* Call insserv during configure, when available. This is required for eg.
+  Debian/Ubuntu systems that use dependency based booting
+! Fixed MULTICAST jumping should be done at the end of the EXT_INPUT_CHAIN, not
+  at the beginning else users won't be able create "normal" rules for it
+* Updated several plugins
+* Several tweaks
+
+Version 2.0.0b (March 25, 2011)
+-------------------------------
++ Perform kernel check when IPv6 support is enabled
+- Don't auto detect external interface settings during configure. It's too
+  confusing and fills out the wrong values for certain setups (like laptops that are moved around)
++ Show platform information on start/restart when verbose
+! remove bash-ism related to traffic-shaper plugin (Reported by Debian upstream, Debian bug #619496)
+! remove bash-ism in ipsec-vpn plugin (Reported by Debian upstream, Debian bug #617510)
+! workaround Busybox 'ash' bug when IPV6_SUPPORT is enabled
++ Added pptp-vpn plugin for local PPTP server support
+! arno-fwfilter uses incorrect URL for location lookup (Debian bug #613631, thanks to Tony Evans for the patch)
++ Drop all IPv6 packets with Routing Header Type 0, new variable IPV6_DROP_RH_ZERO (thanks Klemen Mihevc)
+! Fixed handling HOST_OPEN_ICMP, HOST_DENY_ICMP_NOLOG and HOST_DENY_ICMP variables
+  with IPv6 addresses. (thanks Klemen Mihevc)
+* Tweaked NAT module loading + cosmetics. iptable_nat is a required module for
+  AIF because of the plugin framework/helper chains so it's wrong to only load
+  it when NAT is enabled in the main script.
+
+Version 2.0.0a (December 30, 2010)
+----------------------------------------
+! Set IFS=' ' in our batch-functions else the wrappers fail in some cases
+- Removed old legacy plugin support that used the PLUGIN_PATH variable
+! Fixed an issue when the value of IPV6_SUPPORT was changed then followed with a 'restart'
+* (Cosmetic) tweaks
+
+Version 2.0.0 (November 15, 2010)
+---------------------------------
+! dig wrapper using nslookup, extract IPv4 addresses over IPv6 addresses
+* ipsec-vpn plugin, removed unnecessary EXT_INPUT_CHAIN rule and added IPv6 support
+  for matching AH headers
+
+Version 1.9.9-RC1 (October 25, 2010)
+------------------------------------
+- Removed deprecated check_binary() function from environment
++ Added support for an optional plugin_restart() function in plugins using a new plugin template,
+  while supporting previous plugins without a plugin_restart() function
+* Refactor load_modules() using our new modprobe_multi() 
+* Allow modprobe_multi() function arguments to be grouped by a comma
++ Use IDENT environment variable for plugins
++ Added SHAPER_IF variable to traffic-shaper plugin to specify a single external interface
+  should the default EXT_IF value contain more than one interface
++ Added SIP_VOIP_REMOTE_HOSTS variable to sip-voip plugin to limit access by source address
+- Removed obsolete module_probe() function. Use modprobe() instead
++ Added IPV6_AUTO_CONFIGURATION variable to control autoconf when IP_FORWARDING = 0
++ Added IPV6_OVER_IPV4_SERVER variable for ipv6-over-ipv4 plugin, restricting 6to4 source packets
+* Misc. tweaks & fixes
+
+Version 1.9.9-BETA1 (October 8, 2010)
+-------------------------------------
+* Refactor setting kernel parameters
+! Revert change that didn't masquerade IPv6/proto 41, so outgoing forwarded connections work properly
++ Added EXTERNAL_DHCPV6_SERVER variable to allow DHCPv6 clients on the *external* interface
+* The default INET->DMZ policy is now DROP.  Common variables this change may effect are:
+  INET_DMZ_HOST_OPEN_xxx and INET_DMZ_OPEN_xxx
++ Added support for Link-Local-Multicast ICMPv6 echo-request packets
++ Added LINK_LOCAL_DROP_LOG variable which controls logging of dropped IPv6 Link-Local addresses.
++ Added FORWARD_LINK_LOCAL variable which, by default (0), disables forwarding of IPv6 Link-Local addresses.
++ Added EXT_MULTICAST_CHAIN to handle external-inbound multicast traffic
++ Added DHCPv6 support for the EXT_IF_DHCP_IP variable.
++ Added a new variable FORWARD_DROP_LOG to disable logging dropped forwards when set to 0, defaults to 1.
+! Fixed handling of destination host~port fields where only the host was specified.
++ Added a new set of variables INET_FORWARD_xxx to allow forwarding INET IPv6 and non-NAT'ed IPv4 packets
+  to other interfaces.  The format is similar to the IPv4 NAT_FORWARD_xxx without port mapping.
++ Added a new variable OPEN_ICMPV6 to allow independent control of INET ICMP for IPv4 and IPv6, enabled by default.
+! Fixed handling of INET_DMZ_HOST_OPEN_xxx variables
+! Fixed handling of INET_DMZ_HOST_DENY_xxx variables
+! Fixed handling of INET_DMZ_DENY_TCP
+! Fixed variable typo, INET_DMZ_HOST_DENY_TCP was not handled
++ Added IPv6 reserved network support, label logs by IPv4 and IPv6
+! Fixed RESERVED_NET_LOG is now independant from DROP_PRIVATE_ADDRESSES
++ Added option to the configure script to enable/disable IPv6 + several tweaks
+* Sanity check should always be the first thing we do since we probably can't
+  write the log-file in case we're not root
++ Automatically disable IPV6_SUPPORT if IPv6 is not detected in the kernel
++ Add support for mixed IPv4/IPv6 when IPV6_SUPPORT=1
+
