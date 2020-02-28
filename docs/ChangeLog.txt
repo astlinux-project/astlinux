@@ -60,6 +60,8 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2020-01-01
 
+-- mac2vendor, oui.txt database snapshot 2020-02-28
+
 -- Update build system tools:
    == squashfs, version bump to 4.4
 
