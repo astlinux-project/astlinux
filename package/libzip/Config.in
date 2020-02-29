@@ -1,0 +1,10 @@
+config BR2_PACKAGE_LIBZIP
+	bool "libzip"
+	select BR2_PACKAGE_ZLIB
+	help
+	  C library for reading, creating, and modifying zip archives.
+	  This package also contains zipcmp, ziptool and zipmerge
+	  utilities.
+
+	  https://libzip.org/
+

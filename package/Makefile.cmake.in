@@ -20,6 +20,17 @@
 #
 ################################################################################
 
+# Set compiler variables.
+ifeq ($(BR2_CCACHE),y)
+CMAKE_HOST_C_COMPILER = $(HOST_DIR)/bin/ccache
+CMAKE_HOST_CXX_COMPILER = $(HOST_DIR)/bin/ccache
+CMAKE_HOST_C_COMPILER_ARG1 = $(HOSTCC_NOCCACHE)
+CMAKE_HOST_CXX_COMPILER_ARG1 = $(HOSTCXX_NOCCACHE)
+else
+CMAKE_HOST_C_COMPILER = $(HOSTCC)
+CMAKE_HOST_CXX_COMPILER = $(HOSTCXX)
+endif
+
 ################################################################################
 # CMAKETARGETS_INNER -- defines how the configuration, compilation and
 # installation of a CMake package should be done, implements a few hooks to
@@ -52,8 +63,8 @@ $(2)_MAKE			?= $(MAKE)
 $(2)_MAKE_ENV			?=
 $(2)_MAKE_OPT			?=
 $(2)_INSTALL_HOST_OPT		?= install
-$(2)_INSTALL_STAGING_OPT	?= DESTDIR=$$(STAGING_DIR) install
-$(2)_INSTALL_TARGET_OPT		?= DESTDIR=$$(TARGET_DIR) install
+$(2)_INSTALL_STAGING_OPT	?= DESTDIR=$$(STAGING_DIR) install/fast
+$(2)_INSTALL_TARGET_OPT		?= DESTDIR=$$(TARGET_DIR) install/fast
 $(2)_CLEAN_OPT			?= clean
 
 $(2)_SRCDIR			= $$($(2)_DIR)/$($(2)_SUBDIR)
@@ -74,6 +85,15 @@ define $(2)_CONFIGURE_CMDS
 	$$($$(PKG)_CONF_ENV) $(HOST_DIR)/usr/bin/cmake $$($$(PKG)_SRCDIR) \
 		-DCMAKE_TOOLCHAIN_FILE="$$(BASE_DIR)/toolchainfile.cmake" \
 		-DCMAKE_INSTALL_PREFIX="/usr" \
+		-DCMAKE_COLOR_MAKEFILE=OFF \
+		-DBUILD_DOC=OFF \
+		-DBUILD_DOCS=OFF \
+		-DBUILD_EXAMPLE=OFF \
+		-DBUILD_EXAMPLES=OFF \
+		-DBUILD_TEST=OFF \
+		-DBUILD_TESTS=OFF \
+		-DBUILD_TESTING=OFF \
+		-DBUILD_SHARED_LIBS=ON \
 		$$($$(PKG)_CONF_OPT) \
 	)
 endef
@@ -90,6 +110,25 @@ define $(2)_CONFIGURE_CMDS
 		-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY="BOTH" \
 		-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE="BOTH" \
 		-DCMAKE_INSTALL_PREFIX="$$(HOST_DIR)/usr" \
+		-DCMAKE_C_FLAGS="$$(HOST_CFLAGS)" \
+		-DCMAKE_CXX_FLAGS="$$(HOST_CXXFLAGS)" \
+		-DCMAKE_EXE_LINKER_FLAGS="$$(HOST_LDFLAGS)" \
+		-DCMAKE_SHARED_LINKER_FLAGS="$$(HOST_LDFLAGS)" \
+		-DCMAKE_ASM_COMPILER="$$(HOSTAS)" \
+		-DCMAKE_C_COMPILER="$$(CMAKE_HOST_C_COMPILER)" \
+		-DCMAKE_CXX_COMPILER="$$(CMAKE_HOST_CXX_COMPILER)" \
+		$(if $$(CMAKE_HOST_C_COMPILER_ARG1),\
+			-DCMAKE_C_COMPILER_ARG1="$$(CMAKE_HOST_C_COMPILER_ARG1)" \
+			-DCMAKE_CXX_COMPILER_ARG1="$$(CMAKE_HOST_CXX_COMPILER_ARG1)" \
+		) \
+		-DCMAKE_COLOR_MAKEFILE=OFF \
+		-DBUILD_DOC=OFF \
+		-DBUILD_DOCS=OFF \
+		-DBUILD_EXAMPLE=OFF \
+		-DBUILD_EXAMPLES=OFF \
+		-DBUILD_TEST=OFF \
+		-DBUILD_TESTS=OFF \
+		-DBUILD_TESTING=OFF \
 		$$($$(PKG)_CONF_OPT) \
 	)
 endef

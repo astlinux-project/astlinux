@@ -281,6 +281,7 @@ menu "Libraries"
 
 menu "Compression and decompression"
 source "package/libarchive/Config.in"
+source "package/libzip/Config.in"
 source "package/lzo/Config.in"
 source "package/spandsp/Config.in"
 source "package/zlib/Config.in"
