@@ -39,7 +39,9 @@ Released @TBD@
 
 -- ncurses, version bump to 6.2
 
--- pciutils, version bump to 3.6.3
+-- ne, version bump to 3.3.0
+
+-- pciutils, version bump to 3.6.4
 
 -- php, version bump to 7.2.28, security fixes: CVE-2020-7060, CVE-2020-7059, CVE-2020-7062
 
@@ -80,6 +82,11 @@ Released @TBD@
    == Remove the parasitic-net plugin
 
 -- arp-scan, version bump to 1.9.7
+
+-- chrony, version bump to 2020-02-29 development snapshot
+   Adds 'maxsamples 1' and 'chronyc -N sources' support
+
+-- dnsmasq, version 2.80, security fix: CVE-2019-14834
 
 -- keepalived, version bump to 2.0.20
 
