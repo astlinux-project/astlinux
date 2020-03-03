@@ -66,6 +66,7 @@ Released @TBD@
 
 -- Update build system tools:
    == squashfs, version bump to 4.4
+   == cmake, version bump to 3.15.5
 
 ** Networking
 
@@ -104,7 +105,7 @@ Released @TBD@
 
 -- whois, version bump to 5.5.6
 
--- (Custom Build Only) mosquitto, version bump to 1.6.8.  Add support for MQTT broker with MQTT_BROKER="yes"
+-- (Custom Build Only) mosquitto, version bump to 1.6.9.  Add support for MQTT broker with MQTT_BROKER="yes"
 
 ** Asterisk
 
