@@ -37,6 +37,8 @@ Released @TBD@
 
 -- lm-sensors, version bump to 3.6.0
 
+-- logrotate, version bump to 3.16.0
+
 -- ncurses, version bump to 6.2
 
 -- ne, version bump to 3.3.0
@@ -58,7 +60,7 @@ Released @TBD@
 -- tiff, version bump to 4.1.0, security fixes: CVE-2018-12900, CVE-2018-17000, CVE-2019-6128,
                                                 CVE-2019-7663, CVE-2019-14973, CVE-2018-19210
 
--- zabbix, version bump to 3.0.29
+-- zabbix, version bump to 3.0.30
 
 -- ca-certificates, update trusted root certificates 2020-01-01
 
@@ -74,7 +76,7 @@ Released @TBD@
 
 -- OpenVPN, version bump to 2.4.8
 
--- libcurl (curl) version bump to 7.68.0
+-- libcurl (curl) version bump to 7.69.0
 
 -- arnofw (AIF), simplify integration of AIF within the build system, no functional change. After which:
    == Set the version to '2.0.2-04-astlinux'
