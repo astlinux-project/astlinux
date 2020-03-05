@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LOGROTATE_VERSION = 3.15.1
+LOGROTATE_VERSION = 3.16.0
 LOGROTATE_SOURCE = logrotate-$(LOGROTATE_VERSION).tar.gz
 LOGROTATE_SITE = https://github.com/logrotate/logrotate/releases/download/$(LOGROTATE_VERSION)
 
