@@ -6,14 +6,9 @@
 
 ACME_VERSION = 2.8.5
 ACME_SOURCE = acme.sh-$(ACME_VERSION).tar.gz
-ACME_SITE = https://s3.amazonaws.com/files.astlinux-project
+ACME_SITE = https://github.com/acmesh-official/acme.sh/archive/$(ACME_VERSION)
 
 ACME_REMOVE_TARGET_DNSAPI = dns_myapi.sh dns_lexicon.sh dns_cyon.sh dns_inwx.sh $(if $(BR2_PACKAGE_BIND),,dns_nsupdate.sh) README.md
-
-##
-## curl -L -o dl/acme.sh-2.8.5.tar.gz https://github.com/acmesh-official/acme.sh/archive/2.8.5.tar.gz
-## ./scripts/upload-dl-pair dl/acme.sh-2.8.5.tar.gz
-##
 
 define ACME_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0644 package/acme/deploy/astlinux.sh $(TARGET_DIR)/stat/etc/acme/deploy/astlinux.sh
