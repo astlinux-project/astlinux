@@ -31,6 +31,8 @@ Released @TBD@
 
 -- pcre, version bump to 8.44
 
+-- acme-client, version bump to 2.8.5
+
 -- e2fsprogs, version bump to 1.45.5
 
 -- ethtool, version bump to 5.4
