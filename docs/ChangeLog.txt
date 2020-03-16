@@ -57,7 +57,7 @@ Released @TBD@
 
 -- strace, version bump to 5.5
 
--- sudo, version bump to 1.8.31
+-- sudo, version bump to 1.8.31p1
 
 -- tiff, version bump to 4.1.0, security fixes: CVE-2018-12900, CVE-2018-17000, CVE-2019-6128,
                                                 CVE-2019-7663, CVE-2019-14973, CVE-2018-19210
@@ -78,7 +78,7 @@ Released @TBD@
 
 -- OpenVPN, version bump to 2.4.8
 
--- libcurl (curl) version bump to 7.69.0
+-- libcurl (curl) version bump to 7.69.1
 
 -- arnofw (AIF), simplify integration of AIF within the build system, no functional change. After which:
    == Set the version to '2.0.2-04-astlinux'
@@ -88,7 +88,7 @@ Released @TBD@
 
 -- arp-scan, version bump to 1.9.7
 
--- chrony, version bump to 2020-02-29 development snapshot
+-- chrony, version bump to 4.0-pre1
    Adds 'maxsamples 1' and 'chronyc -N sources' support
 
 -- dnsmasq, version 2.80, security fix: CVE-2019-14834
@@ -122,6 +122,10 @@ Released @TBD@
 
 -- pjsip 2.9 (no change)
 
+-- FOP2, available version bump to 2.31.27
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
+
 ** Web Interface
 
 -- Status tab, NTP Time Sources: use "chronyc -N sources" if supported.
@@ -153,10 +157,6 @@ Released 2019-11-25
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
 -- pjsip 2.9 (no change)
-
--- FOP2, available version bump to 2.31.27
-   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
-   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
