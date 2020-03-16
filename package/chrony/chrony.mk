@@ -4,11 +4,9 @@
 #
 ################################################################################
 
-#CHRONY_VERSION = 3.5
-CHRONY_VERSION = 2020-02-29
-#CHRONY_SITE = https://download.tuxfamily.org/chrony
-CHRONY_SITE = https://s3.amazonaws.com/files.astlinux-project
-CHRONY_DEPENDENCIES = libcap
+CHRONY_VERSION = 4.0-pre1
+CHRONY_SITE = https://download.tuxfamily.org/chrony
+CHRONY_DEPENDENCIES = host-pkg-config libcap
 
 CHRONY_CONF_OPT = \
 	--host-system=Linux \
@@ -19,6 +17,9 @@ CHRONY_CONF_OPT = \
 	--with-user=ntp \
 	--disable-ipv6 \
 	--disable-phc \
+	--disable-nts \
+	--without-gnutls \
+	--without-nettle \
 	--without-seccomp \
 	--without-tomcrypt
 
@@ -55,7 +56,7 @@ define CHRONY_BUILD_CMDS
 endef
 
 define CHRONY_INSTALL_TARGET_CMDS
-	touch $(@D)/doc/chrony{.conf,c,d}.man.in  # needed for snapshot tarball missing man pages
+	#touch $(@D)/doc/chrony{.conf,c,d}.man.in  # needed for snapshot tarball missing man pages
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR="$(TARGET_DIR)" install
 	$(INSTALL) -D -m 755 package/chrony/ntpd.init $(TARGET_DIR)/etc/init.d/ntpd
 	ln -sf /tmp/etc/chrony.conf $(TARGET_DIR)/etc/chrony.conf
