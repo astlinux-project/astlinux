@@ -21,6 +21,8 @@ Released @TBD@
 
 -- Linux Kernel 3.16.82 (version bump), security and bug fixes
 
+-- RUNNIX, version bump to runnix-0.5.11, with Linux Kernel 3.16.82, e2fsprogs 1.45.5
+
 -- igb, version bump to 5.3.5.42, Intel Gigabit Ethernet Network Driver
 
 -- libedit, version bump to 20191231-3.1
