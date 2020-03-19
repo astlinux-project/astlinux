@@ -49,7 +49,8 @@ Released @TBD@
 
 -- pciutils, version bump to 3.6.4
 
--- php, version bump to 7.2.28, security fixes: CVE-2020-7060, CVE-2020-7059, CVE-2020-7062
+-- php, version bump to 7.2.29, security fixes: CVE-2020-7060, CVE-2020-7059, CVE-2020-7062,
+                                                CVE-2020-7066, CVE-2020-7064
 
 -- screen, version bump to 4.8.0
 
@@ -75,6 +76,8 @@ Released @TBD@
    == cmake, version bump to 3.15.5
 
 ** Networking
+
+-- OpenSSL, version bump to 1.1.1e, security fix: CVE-2019-1551
 
 -- WireGuard VPN, module 0.0.20200318 (version bump), tools 1.0.20200206 (version bump)
 
