@@ -76,7 +76,7 @@ Released @TBD@
 
 ** Networking
 
--- WireGuard VPN, module 0.0.20200215 (version bump), tools 1.0.20200206 (version bump)
+-- WireGuard VPN, module 0.0.20200318 (version bump), tools 1.0.20200206 (version bump)
 
 -- OpenVPN, version bump to 2.4.8
 
@@ -125,6 +125,7 @@ Released @TBD@
 -- pjsip 2.9 (no change)
 
 -- FOP2, available version bump to 2.31.27
+   Note: FOP2 HTTPS support only uses TLSv1, Firefox 74+ requires: about:config -> security.tls.version.min=1
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
    More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
