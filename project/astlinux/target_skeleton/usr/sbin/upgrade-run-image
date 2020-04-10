@@ -236,6 +236,12 @@ upgrade() {
     if [ -n "$XVER" ]; then
       rm -f $BASE/os/$XVER.*
       rm -f $BASE/os/Xver
+      ## Cleanup old non-versioned initrd.img if not used
+      if [ -f $BASE/os/initrd.img -a -f $BASE/os/$OVER.run.conf ]; then
+        if ! grep -q '/os/initrd.img' $BASE/os/$OVER.run.conf; then
+          rm -f $BASE/os/initrd.img
+        fi
+      fi
     fi
     tar -xzf /tmp/up/$VER.tar.gz -C $BASE/tmp/
     TAR_ARCHIVE_RTN=$?
