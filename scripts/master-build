@@ -15,8 +15,6 @@ BOARDS_SMP64="genx86_64 genx86_64-serial"
 
 BOARDS_SMP64VM="genx86_64-vm"
 
-BOARDS_SMP32="geni586 geni586-serial"
-
 RUNFS_DIR="output/build/runfs"
 
 build_board()
@@ -174,16 +172,6 @@ for asterisk in ast13se ast13 ast16; do
     exit 1
   fi
 
-  # SMP32 Builds
-  echo "Cleaning out any existing builds..."
-  rm -rf output
-
-  cp "$CONFIG" .config
-
-  for board in $BOARDS_SMP32; do
-    build_board "$FIRMWARE"
-  done
-
   # SMP64 Builds
   echo "Cleaning out any existing builds..."
   rm -rf output
@@ -215,7 +203,7 @@ rm -rf output
 
 cp runnix-iso.config .config
 
-for board in $BOARDS_SMP32 $BOARDS_SMP64 $BOARDS_SMP64VM; do
+for board in $BOARDS_SMP64 $BOARDS_SMP64VM; do
   ISO_NAME="${ASTVER}-${board}.iso"
   if [ "${board}" != "${board%-serial}" ]; then
     SERIAL="serial"

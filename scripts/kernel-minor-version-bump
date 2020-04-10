@@ -34,17 +34,14 @@ error_restore_exit()
   exit 1
 }
 
-CONFIGS="$(ls -1 astlinux-*[.]config)"
-CONFIGS="$CONFIGS $(ls -1 x86_64-configs/astlinux-*[.]config)"
+CONFIGS="$(ls -1 x86_64-configs/astlinux-*[.]config)"
 CONFIGS="$CONFIGS runnix.config runnix-iso.config"
 
 CT_CONFIGS="$(ls -1 crosstool-ng-src/ct-ng-*[.]config)"
 
-LINUX32_CONFIGS="$(ls -1 project/astlinux/geni586/linux*[.]config)"
-LINUX32_CONFIGS="$LINUX32_CONFIGS $(ls -1 project/runnix/geni586/linux*[.]config)"
-LINUX32_CONFIGS="$LINUX32_CONFIGS $(ls -1 project/runnix-iso/geni586/linux*[.]config)"
-
 LINUX64_CONFIGS="$(ls -1 project/astlinux/genx86_64/linux*[.]config)"
+LINUX64_CONFIGS="$LINUX64_CONFIGS $(ls -1 project/runnix/genx86_64/linux*[.]config)"
+LINUX64_CONFIGS="$LINUX64_CONFIGS $(ls -1 project/runnix-iso/genx86_64/linux*[.]config)"
 
 unset IFS
 for config in $CONFIGS $CT_CONFIGS crosstool-ng-src/get-files.sh; do
@@ -57,44 +54,11 @@ done
 mv .config .config.save
 
 unset IFS
-for linux in $LINUX32_CONFIGS; do
-  case "$linux" in
-    */astlinux/*) configs="$(ls -1 astlinux-*[.]config)" ;;
-    */runnix/*) configs="runnix.config" ;;
-    */runnix-iso/*) configs="runnix-iso.config" ;;
-    *) configs="" ;;
-  esac
-
-  if [ -z "$configs" ]; then
-    echo "$0: No config found for linux: $linux"
-    error_restore_exit
-  fi
-
-  for config in $configs; do
-    echo "Kernel i386: $linux, Using config: $config"
-    cp "$config" .config
-    make linux-dirclean
-    make linux-patch
-    if [ $? -ne 0 ]; then
-      error_restore_exit
-    fi
-    (
-      cd output/build/linux-custom/
-      cp "../../../$linux" .config
-      ARCH=i386 make oldconfig
-      echo "========"
-      diff -u "../../../$linux" .config
-      echo "========"
-      cp .config "../../../$linux"
-    )
-    break
-  done
-done
-
-unset IFS
 for linux in $LINUX64_CONFIGS; do
   case "$linux" in
     */astlinux/*) configs="$(ls -1 x86_64-configs/astlinux-*[.]config)" ;;
+    */runnix/*) configs="runnix.config" ;;
+    */runnix-iso/*) configs="runnix-iso.config" ;;
     *) configs="" ;;
   esac
 

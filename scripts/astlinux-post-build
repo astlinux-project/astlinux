@@ -77,7 +77,7 @@ target="$1"
 base="${target%/output/target}"
 
 if [ ! -f "$base/astlinux.board" ]; then
-  echo "geni586" > "$base/astlinux.board"
+  echo "genx86_64" > "$base/astlinux.board"
 fi
 
 board="$(cat "$base/astlinux.board")"

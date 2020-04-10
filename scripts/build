@@ -87,7 +87,7 @@ if [ -n "$1" ]; then
 fi
 
 if [ ! -f "astlinux.board" ]; then
-  echo "geni586" > "astlinux.board"
+  echo "genx86_64" > "astlinux.board"
 fi
 
 board="$(cat "astlinux.board")"

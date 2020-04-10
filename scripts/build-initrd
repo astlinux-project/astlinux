@@ -41,10 +41,11 @@ if [ -z "$build_arch" ]; then
   exit 1
 fi
 
-if [ "$build_arch" = "x86_64" ]; then
-  initrd_config_file="x86_64-configs/initrd.config"
-else
-  initrd_config_file="initrd.config"
+initrd_config_file="${build_arch}-configs/initrd.config"
+
+if [ ! -f "$initrd_config_file" ]; then
+  echo "Invalid build architecture '$build_arch', exiting."
+  exit 1
 fi
 
 if [ -f "initrd.arch" ]; then
