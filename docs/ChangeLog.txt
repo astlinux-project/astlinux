@@ -5,10 +5,43 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.3.9:
+Additions for AstLinux 1.3.10:
 =============================
 
 Released @TBD@
+
+** IMPORTANT NOTICE
+
+-- AstLinux now only supports 64-bit, x86_64 architectures.
+
+-- Current supported board types are: "genx86_64", "genx86_64-serial" and "genx86_64-vm"
+
+** System
+
+-- Linux Kernel 3.16.82 (no change)
+
+-- Update build system tools:
+   == bison, version bump to 3.4.2
+   == m4, version bump to 1.4.18
+
+** Networking
+
+-- sipsak, version bump to 0.9.7
+
+** Asterisk
+
+-- Asterisk 13.23.1 ('13se' version)
+   Older than latest Asterisk 13.x version but more tested, built --without-pjproject
+
+-- Asterisk 13.31.0 (no change) and 16.8.0 (no change)
+
+-- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
+
+-- pjsip 2.9 (no change)
+
+** Web Interface
+
+-- (no change)
 
 
 Additions for AstLinux 1.3.8:
