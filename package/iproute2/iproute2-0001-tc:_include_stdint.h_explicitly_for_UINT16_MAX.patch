@@ -1,0 +1,27 @@
+From ae717baf15fb4d30749ada3948d9445892bac239 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 20 May 2017 14:28:46 -0700
+Subject: [PATCH] tc: include stdint.h explicitly for UINT16_MAX
+
+Fixes
+| tc_core.c:190:29: error: 'UINT16_MAX' undeclared (first use in this function); did you mean '__INT16_MAX__'?
+|    if ((sz >> s->size_log) > UINT16_MAX) {
+|                              ^~~~~~~~~~
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ tc/tc_core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tc/tc_core.c b/tc/tc_core.c
+index 7bbe0d73..821b741b 100644
+--- a/tc/tc_core.c
++++ b/tc/tc_core.c
+@@ -12,6 +12,7 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <stdint.h>
+ #include <unistd.h>
+ #include <syslog.h>
+ #include <fcntl.h>

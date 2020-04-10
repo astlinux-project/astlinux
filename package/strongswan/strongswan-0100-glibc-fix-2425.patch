@@ -1,0 +1,25 @@
+commit d4593353c97347fc9505a5a4fe3cfb66b246874f
+Author: Tobias Brunner <tobias@strongswan.org>
+Date:   Thu Sep 14 11:59:30 2017 +0200
+
+    utils: Include stdint.h
+    
+    Recent releases of glibc don't include the full stdint.h header in some
+    network headers included by utils.h.  So uintptr_t might not be defined.
+    Since we use fixed width integers, including the latter, all over the place
+    we make sure the complete file is included.
+    
+    Fixes #2425.
+
+diff --git a/src/libstrongswan/utils/utils.h b/src/libstrongswan/utils/utils.h
+index 33b8d19..ec994bf 100644
+--- a/src/libstrongswan/utils/utils.h
++++ b/src/libstrongswan/utils/utils.h
+@@ -25,6 +25,7 @@
+ #define _GNU_SOURCE
+ #include <sys/types.h>
+ #include <stdlib.h>
++#include <stdint.h>
+ #include <stddef.h>
+ #include <sys/time.h>
+ #include <string.h>

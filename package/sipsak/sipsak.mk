@@ -4,9 +4,9 @@
 #
 #############################################################
 
-SIPSAK_VERSION = 0.9.6-1
+SIPSAK_VERSION = 0.9.7
 SIPSAK_SOURCE = sipsak-$(SIPSAK_VERSION).tar.gz
-SIPSAK_SITE = http://downloads.sourceforge.net/project/sipsak.berlios
+SIPSAK_SITE = https://github.com/nils-ohlmeier/sipsak/releases/download/$(SIPSAK_VERSION)
 SIPSAK_DEPENDENCIES = openssl
 
 # Generate a modern ./configure
