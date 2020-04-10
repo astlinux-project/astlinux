@@ -41,7 +41,7 @@ make_release()
     sed -i 's/ astlive / astlive noram /' ${ASTVER}/${ASTVER}.run.conf
   fi
 
-  cp initrd.img ${ASTVER}/initrd.img
+  cp initrd.img ${ASTVER}/${ASTVER}.initrd.img
   tar -cvzf ${ASTVER}.tar.gz ${ASTVER}
   sha1sum ${ASTVER}.tar.gz > ${ASTVER}.tar.gz.sha1
 }
