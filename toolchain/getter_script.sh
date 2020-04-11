@@ -9,12 +9,6 @@ WGET_ARGS="--passive-ftp --timeout=30 -c -t 2"
 wget $WGET_ARGS $@
 wget_rtn=$?
 
-# SSL verification failure
-if [ $wget_rtn -eq 5 ]; then
-  wget --no-check-certificate $WGET_ARGS $@
-  wget_rtn=$?
-fi
-
 # Alternate site on error
 if [ $wget_rtn -ne 0 ]; then
   echo "Retrying from AstLinux alternate site..."
