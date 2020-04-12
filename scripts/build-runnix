@@ -13,9 +13,9 @@ SYSLINUX_VERSION="$(awk -F'=' '/^SYSLINUX_VERSION/ { print $2; exit }' boot/sysl
 
 SYSLINUX_DIR="output/build/syslinux-${SYSLINUX_VERSION// /}"
 
-MEMTEST_VER="$(awk -F'=' '/^MEMTEST_VER/ { print $2; exit }' package/memtest/memtest.mk)"
+MEMTEST_VERSION="$(awk -F'=' '/^MEMTEST_VERSION/ { print $2; exit }' package/memtest/memtest.mk)"
 
-MEMTEST_DIR="output/build/memtest86+-${MEMTEST_VER// /}"
+MEMTEST_DIR="output/build/memtest-${MEMTEST_VERSION// /}"
 
 make_release()
 {
@@ -28,8 +28,8 @@ make_release()
   mkdir -p ${RUNVER}
   cp -a project/runnix/files/* ${RUNVER}/
   find ${RUNVER} -type d -name .svn | xargs rm -rf
-  cp -p ${SYSLINUX_DIR}/mbr/mbr.bin ${RUNVER}/mbr.bin
-  cp -p ${SYSLINUX_DIR}/linux/syslinux ${RUNVER}/syslinux
+  cp -p ${SYSLINUX_DIR}/bios/mbr/mbr.bin ${RUNVER}/mbr.bin
+  cp -p ${SYSLINUX_DIR}/bios/linux/syslinux ${RUNVER}/syslinux
   cp -p ${KERNEL} ${RUNVER}/rootfs_vfat/runnix
   cp -p ${ROOTFS_EXT2_GZ} ${RUNVER}/rootfs_vfat/runnix.img
   cp -p ${MEMTEST_DIR}/memtest.bin ${RUNVER}/rootfs_vfat/memtest

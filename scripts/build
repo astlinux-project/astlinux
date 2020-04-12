@@ -96,6 +96,10 @@ if [ -z "$board" ] || [ ! -d "project/astlinux/board/$board" ]; then
   exit_error "Unknown Board type."
 fi
 
+if [ "$(uname -m)" != "x86_64" ]; then
+  exit_error "Build system must be x86_64."
+fi
+
 x_tools_dir="$(awk -F'"' '/^BR2_TOOLCHAIN_EXTERNAL_PATH=/ { print $2; nextfile }' .config | sed 's:^[^/]*::')"
 if [ -z "$x_tools_dir" ]; then
   exit_error "BR2_TOOLCHAIN_EXTERNAL_PATH not found in .config file."

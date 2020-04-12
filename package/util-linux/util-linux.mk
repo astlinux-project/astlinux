@@ -33,6 +33,14 @@ UTIL_LINUX_CONF_OPT += \
 	--without-systemd \
 	--without-systemdsystemunitdir
 
+HOST_UTIL_LINUX_DEPENDENCIES = host-pkg-config
+
+# We also don't want the host-python dependency
+HOST_UTIL_LINUX_CONF_OPT = \
+	--without-python \
+	--without-systemd \
+	--without-systemdsystemunitdir
+
 # If both util-linux and busybox are selected, make certain util-linux
 # wins the fight over who gets to have their utils actually installed
 ifeq ($(BR2_PACKAGE_BUSYBOX),y)
@@ -101,6 +109,17 @@ UTIL_LINUX_CONF_OPT += \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_WRITE),--enable-write,--disable-write) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_ZRAMCTL),--enable-zramctl,--disable-zramctl)
 
+# In the host version of util-linux, we only require libuuid and
+# libmount (plus libblkid as an indirect dependency of libmount).
+# So disable all of the programs
+HOST_UTIL_LINUX_CONF_OPT += \
+	--enable-libblkid \
+	--enable-libmount \
+	--enable-libuuid \
+	--without-ncurses \
+	--without-ncursesw \
+	--without-tinfo \
+	--disable-all-programs
 
 define UTIL_LINUX_REMOVE_BINARIES
 	## Removing selected /sbin binaries
@@ -122,6 +141,7 @@ UTIL_LINUX_POST_INSTALL_TARGET_HOOKS = UTIL_LINUX_REMOVE_BINARIES
 endif
 
 $(eval $(call AUTOTARGETS,package,util-linux))
+$(eval $(call AUTOTARGETS,package,util-linux,host))
 
 # MKINSTALLDIRS comes from tweaked m4/nls.m4, but autoreconf uses staging
 # one, so it disappears

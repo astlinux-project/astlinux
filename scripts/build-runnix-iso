@@ -47,7 +47,7 @@ make_release()
     cp -p project/runnix-iso/files/configs/isolinux-serial.cfg ${RUNDIR}/isolinux/isolinux.cfg
     touch ${RUNDIR}/os/serialflag
   fi
-  cp -p ${SYSLINUX_DIR}/core/isolinux.bin ${RUNDIR}/isolinux/isolinux.bin
+  cp -p ${SYSLINUX_DIR}/bios/core/isolinux.bin ${RUNDIR}/isolinux/isolinux.bin
   cp -p ${KERNEL} ${RUNDIR}/runnix/runnix
   cp -p ${ROOTFS_EXT2_GZ} ${RUNDIR}/runnix/runnix.img
 
@@ -75,9 +75,9 @@ make_release()
     -input-charset utf-8 \
     ${RUNDIR}
 
-  if [ -x "${SYSLINUX_DIR}/utils/isohybrid" ]; then
+  if [ -x "${SYSLINUX_DIR}/bios/utils/isohybrid" ]; then
     echo "Blessing as Hybrid ISO..."
-    sudo "${SYSLINUX_DIR}/utils/isohybrid" "${ISO_NAME}"
+    sudo "${SYSLINUX_DIR}/bios/utils/isohybrid" "${ISO_NAME}"
   else
     echo "Error: No Hybrid ISO support."
   fi

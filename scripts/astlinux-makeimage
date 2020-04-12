@@ -9,15 +9,7 @@ PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
 
 HOST_BIN="./output/host/usr/sbin"
 
-#
-# If the RUNNIX package was built on a x86_64 system, ./syslinux is not executable on a 32-bit build system.
-# In such a case, we need to locally build host-syslinux for 32-bit systems, host-fdisk is always needed.
-#
-if [ "$(uname -m)" != "x86_64" ]; then
-  REQUIRED_HOST_CMDS="fdisk syslinux"
-else
-  REQUIRED_HOST_CMDS="fdisk"
-fi
+REQUIRED_HOST_CMDS="fdisk"
 
 REQUIRED_CMDS="which sudo mkdosfs mkfs losetup gzip"
 
@@ -200,11 +192,7 @@ echo "
 ##
 "
 
-if [ -x $HOST_BIN/syslinux ]; then
-  SYSLINUX="$(pwd)/$HOST_BIN/syslinux"
-else
-  SYSLINUX="./syslinux"
-fi
+SYSLINUX="./syslinux"
 
 # run syslinux and copy the master boot record
 (
