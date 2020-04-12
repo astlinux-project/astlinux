@@ -192,12 +192,10 @@ echo "
 ##
 "
 
-SYSLINUX="./syslinux"
-
 # run syslinux and copy the master boot record
 (
   cd ${RUNNIX_DIR}
-  sudo ${SYSLINUX} ${LOOPD}1
+  sudo ./syslinux --install ${LOOPD}1
   sudo bash -c "cat mbr.bin > ${LOOPD}0"
 )
 

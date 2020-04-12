@@ -48,6 +48,7 @@ make_release()
     touch ${RUNDIR}/os/serialflag
   fi
   cp -p ${SYSLINUX_DIR}/bios/core/isolinux.bin ${RUNDIR}/isolinux/isolinux.bin
+  cp -p ${SYSLINUX_DIR}/bios/com32/elflink/ldlinux/ldlinux.c32 ${RUNDIR}/isolinux/ldlinux.c32
   cp -p ${KERNEL} ${RUNDIR}/runnix/runnix
   cp -p ${ROOTFS_EXT2_GZ} ${RUNDIR}/runnix/runnix.img
 
