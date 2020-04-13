@@ -56,9 +56,9 @@ make_runfs()
   if [ -f "${RUNNIX_DIR}/configs/${board}.cfg" ]; then
     cp -p ${RUNNIX_DIR}/configs/${board}.cfg ${RUNFS_DIR}/syslinux.cfg
   elif [ -n "${RUNNIX_KCMD_CONSOLE}" ]; then
-    cp -p ${RUNNIX_DIR}/configs/default-serial.cfg ${RUNFS_DIR}/syslinux.cfg
+    cp -p ${RUNNIX_DIR}/configs/default6-serial.cfg ${RUNFS_DIR}/syslinux.cfg
   else
-    cp -p ${RUNNIX_DIR}/configs/default.cfg ${RUNFS_DIR}/syslinux.cfg
+    cp -p ${RUNNIX_DIR}/configs/default6.cfg ${RUNFS_DIR}/syslinux.cfg
   fi
 
   rm -f ${RUNFS_DIR}/os/astlinux-*

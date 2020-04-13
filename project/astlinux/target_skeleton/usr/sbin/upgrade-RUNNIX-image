@@ -193,10 +193,14 @@ upgrade() {
 
     # Install syslinux.cfg
     syslinux=""
+    slver=""
+    if [ -f "$BASE/ldlinux.c32" -a -f "$BASE/menu.c32" ]; then  ## implies Syslinux 6.x
+      slver="6"
+    fi
     if [ -f "$BASE/rtmp/$VER/configs/$ARCH.cfg" ]; then
       syslinux="$BASE/rtmp/$VER/configs/$ARCH.cfg"
-    elif [ -f "$BASE/rtmp/$VER/configs/default${IS_SERIAL:+$IS_SERIAL}.cfg" ]; then
-      syslinux="$BASE/rtmp/$VER/configs/default${IS_SERIAL:+$IS_SERIAL}.cfg"
+    elif [ -f "$BASE/rtmp/$VER/configs/default${slver}${IS_SERIAL}.cfg" ]; then
+      syslinux="$BASE/rtmp/$VER/configs/default${slver}${IS_SERIAL}.cfg"
     fi
     if [ -n "$syslinux" ]; then
       # Match the serial speed/tty of unionfs /etc/inittab if appropriate

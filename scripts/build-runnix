@@ -33,6 +33,8 @@ make_release()
   cp -p ${KERNEL} ${RUNVER}/rootfs_vfat/runnix
   cp -p ${ROOTFS_EXT2_GZ} ${RUNVER}/rootfs_vfat/runnix.img
   cp -p ${MEMTEST_DIR}/memtest.bin ${RUNVER}/rootfs_vfat/memtest
+  cp -p ${SYSLINUX_DIR}/bios/com32/menu/menu.c32 ${RUNVER}/rootfs_vfat/menu.c32
+  cp -p ${SYSLINUX_DIR}/bios/com32/libutil/libutil.c32 ${RUNVER}/rootfs_vfat/libutil.c32
   echo "${RUNVER}" > ${RUNVER}/rootfs_vfat/ver
 
   tar -cvzf ${RUNVER}.tar.gz ${RUNVER}
