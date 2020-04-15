@@ -122,19 +122,14 @@ if ! sudo /bin/true; then
   exit 1
 fi
 
-if [ -d /dev/loop ]; then
-  LOOPD=/dev/loop/
-else
-  LOOPD=/dev/loop
-fi
-
 rm -f runnix.img bximage.out
 
 # dd if=/dev/zero of=runnix.img bs=1024 count=$(($DISK_SIZE*1024))
 
 ./scripts/bximage -q -hd -mode=flat -size=$DISK_SIZE runnix.img > bximage.out
 
-sudo losetup ${LOOPD}0 runnix.img
+LOOP0="$(sudo losetup -f)"
+sudo losetup $LOOP0 runnix.img
 
 CYL=`awk -F\= '/^  cyl=/ {print $2}' bximage.out`
 HEADS=`awk -F\= '/^  heads=/ {print $2}' bximage.out`
@@ -151,7 +146,7 @@ fi
 
 if [ -z "$CYL" -o -z "$HEADS" -o -z "$SECTORS" ]; then
   echo "Unable to parse geometry; automation failed."
-  sudo losetup -d ${LOOPD}0
+  sudo losetup -d $LOOP0
   exit 1
 fi
 
@@ -166,25 +161,26 @@ echo "Disk Geometry: CYL=$CYL HEADS=$HEADS SECTORS=$SECTORS"
     echo -e "n\np\n1\n\n\nt\n6\na"
   fi
   echo "w"
-) | sudo $HOST_BIN/fdisk -c=dos -u=cylinders -C $CYL -H $HEADS -S $SECTORS ${LOOPD}0
+) | sudo $HOST_BIN/fdisk -c=dos -u=cylinders -C $CYL -H $HEADS -S $SECTORS $LOOP0
 
-temp="${LOOPD}0"
+temp="$LOOP0"
 PREFIXLEN=${#temp}
 PREFIX="^${temp//\//\\/}"
 
 # need to filter out bootable marker ('*') so it doesn't show up as $2
-eval $(sudo $HOST_BIN/fdisk -c=dos -u=sectors -l ${LOOPD}0 | tr '*' ' ' | awk "/${PREFIX}/ { printf \"%s=%s\\n\", substr(\$1, $PREFIXLEN+1), \$2; }")
+eval $(sudo $HOST_BIN/fdisk -c=dos -u=sectors -l $LOOP0 | tr '*' ' ' | awk "/${PREFIX}/ { printf \"%s=%s\\n\", substr(\$1, $PREFIXLEN+1), \$2; }")
 
 if [ -z "$p1" -o \( $AST_SIZE -gt 0 -a -z "$p2" \) ]; then
   echo "Couldn't extract partition offsets." >&2
-  sudo losetup -d ${LOOPD}0
+  sudo losetup -d $LOOP0
   exit 1
 fi
 
-sudo losetup -o $(($p1*512)) ${LOOPD}1 runnix.img
+LOOP1="$(sudo losetup -f)"
+sudo losetup -o $(($p1*512)) $LOOP1 runnix.img
 
 LABEL="RUNNIX"
-sudo mkdosfs -F 16 -n $LABEL ${LOOPD}1
+sudo mkdosfs -F 16 -n $LABEL $LOOP1
 
 echo "
 ##
@@ -195,12 +191,12 @@ echo "
 # run syslinux and copy the master boot record
 (
   cd ${RUNNIX_DIR}
-  sudo ./syslinux --install ${LOOPD}1
-  sudo bash -c "cat mbr.bin > ${LOOPD}0"
+  sudo ./syslinux --install $LOOP1
+  sudo bash -c "cat mbr.bin > $LOOP0"
 )
 
 sudo mkdir -p /mnt/runnix
-sudo mount -t vfat ${LOOPD}1 /mnt/runnix
+sudo mount -t vfat $LOOP1 /mnt/runnix
 
 sudo cp -r -P --preserve=mode,timestamps ${RUNFS_DIR}/. /mnt/runnix
 
@@ -223,22 +219,23 @@ done
 
 sudo rmdir /mnt/runnix
 
-sudo losetup -d ${LOOPD}1
+sudo losetup -d $LOOP1
 
 # allow an argument of 0 to skip creating this partition.
 if [ $AST_SIZE -gt 0 -a -n "$ASTRW_FORMAT" ]; then
-  sudo losetup -o $(($p2*512)) ${LOOPD}2 runnix.img
+  LOOP2="$(sudo losetup -f)"
+  sudo losetup -o $(($p2*512)) $LOOP2 runnix.img
 
-  sudo mkfs -t ext2 -L ASTURW ${LOOPD}2
+  sudo mkfs -t ext2 -L ASTURW $LOOP2
 
-  sudo losetup -d ${LOOPD}2
+  sudo losetup -d $LOOP2
 fi
 
 if [ -n "$DUMP_PARTITIONS" ]; then
-  sudo $HOST_BIN/fdisk -c=dos -u=sectors -l ${LOOPD}0
+  sudo $HOST_BIN/fdisk -c=dos -u=sectors -l $LOOP0
 fi
 
-sudo losetup -d ${LOOPD}0
+sudo losetup -d $LOOP0
 
 IMG_NAME="$ASTVER.img"
 
