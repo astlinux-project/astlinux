@@ -1,0 +1,11 @@
+--- syslinux-6.03/com32/elflink/ldlinux/ldlinux.c.orig	2020-04-14 17:36:21.303049095 -0500
++++ syslinux-6.03/com32/elflink/ldlinux/ldlinux.c	2020-04-14 17:39:29.688898273 -0500
+@@ -296,7 +296,7 @@
+ 
+ void ldlinux_console_init(void)
+ {
+-	openconsole(&dev_stdcon_r, &dev_ansiserial_w);
++	openconsole(&dev_stdcon_r, &dev_serial_w);
+ }
+ 
+ __export int main(int argc __unused, char **argv)

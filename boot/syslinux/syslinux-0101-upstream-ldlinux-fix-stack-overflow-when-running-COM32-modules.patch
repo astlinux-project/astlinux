@@ -1,0 +1,98 @@
+From 7bb4e1335435397243c9b63a64a5c61c82691357 Mon Sep 17 00:00:00 2001
+From: Sylvain Gault <sylvain.gault@gmail.com>
+Date: Mon, 12 Oct 2015 05:03:26 +0200
+Subject: [PATCH] ldlinux: fix stack overflow when running COM32 modules
+
+When a COM32 module exits, the functions never return and a new call to
+ldlinux_enter_command is made. This could fill the stack and overflow on
+some data present in memory.
+
+This patch use setjmp/longjmp to return to the main function and restart
+from there when a COM32 module exits.
+
+Signed-off-by: Sylvain Gault <sylvain.gault@gmail.com>
+---
+ com32/elflink/ldlinux/execute.c |  4 +++-
+ com32/elflink/ldlinux/ldlinux.c | 28 ++++++++++++++++++++--------
+ 2 files changed, 23 insertions(+), 9 deletions(-)
+
+diff --git a/com32/elflink/ldlinux/execute.c b/com32/elflink/ldlinux/execute.c
+index 653c880d..39555715 100644
+--- a/com32/elflink/ldlinux/execute.c
++++ b/com32/elflink/ldlinux/execute.c
+@@ -44,6 +44,7 @@ const struct image_types image_boot_types[] = {
+     { NULL, 0 },
+ };
+ 
++extern jmp_buf __return_to_command_prompt;
+ extern int create_args_and_load(char *);
+ 
+ __export void execute(const char *cmdline, uint32_t type, bool sysappend)
+@@ -136,7 +137,8 @@ __export void execute(const char *cmdline, uint32_t type, bool sysappend)
+ 		/* Restore the console */
+ 		ldlinux_console_init();
+ 
+-		ldlinux_enter_command();
++		/* Jump back to the main to call ldlinux_enter_command */
++		longjmp(__return_to_command_prompt, 1);
+ 	} else if (type == IMAGE_TYPE_CONFIG) {
+ 		char *argv[] = { LDLINUX, NULL, NULL };
+ 		char *config;
+diff --git a/com32/elflink/ldlinux/ldlinux.c b/com32/elflink/ldlinux/ldlinux.c
+index 9b01dd3a..0172117b 100644
+--- a/com32/elflink/ldlinux/ldlinux.c
++++ b/com32/elflink/ldlinux/ldlinux.c
+@@ -31,6 +31,8 @@ static const struct file_ext file_extensions[] = {
+ 	{ NULL, 0 },
+ };
+ 
++jmp_buf __return_to_command_prompt;
++
+ /*
+  * Return a pointer to one byte after the last character of the
+  * command.
+@@ -302,6 +304,7 @@ __export int main(int argc __unused, char **argv)
+ 	const void *adv;
+ 	const char *cmdline;
+ 	size_t count = 0;
++	int retval;
+ 
+ 	ldlinux_console_init();
+ 
+@@ -333,16 +336,25 @@ __export int main(int argc __unused, char **argv)
+ 		if (!syslinux_setadv(ADV_BOOTONCE, 0, NULL))
+ 			syslinux_adv_write();
+ 
+-		load_kernel(cmdline); /* Shouldn't return */
+-		ldlinux_enter_command();
+-	}
+-
+-	if (!forceprompt && !shift_is_held())
+-		ldlinux_auto_boot();
++		/*
++		 * The corresponding longjmp is located in the execute function
++		 * after a COM32 module has returned.
++		 */
++		retval = setjmp(__return_to_command_prompt);
++		if (retval == 0)
++			load_kernel(cmdline); /* Shouldn't return */
++	} else {
++		retval = setjmp(__return_to_command_prompt);
++		if (retval == 0) {
++			if (!forceprompt && !shift_is_held())
++				ldlinux_auto_boot();
+ 
+-	if (defaultlevel > 1)
+-		ldlinux_auto_boot();
++			if (defaultlevel > 1)
++				ldlinux_auto_boot();
++		}
++	}
+ 
++	retval = setjmp(__return_to_command_prompt);
+ 	ldlinux_enter_command();
+ 	return 0;
+ }
+-- 
+2.11.4.GIT
+

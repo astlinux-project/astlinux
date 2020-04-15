@@ -4,7 +4,7 @@
 #
 #############################################################
 
-RUNNIX_VERSION = 0.6.0a
+RUNNIX_VERSION = 0.6.0c
 RUNNIX_SOURCE = runnix-$(RUNNIX_VERSION).tar.gz
 RUNNIX_SITE = https://s3.amazonaws.com/mirror.astlinux-project/runnix5
 RUNNIX_SITE = https://abelbeck.com/lonnie/runnix6

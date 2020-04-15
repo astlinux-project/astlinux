@@ -1,0 +1,13 @@
+--- syslinux-6.03/com32/elflink/ldlinux/msg.c.orig	2020-04-14 14:56:20.640677512 -0500
++++ syslinux-6.03/com32/elflink/ldlinux/msg.c	2020-04-14 15:00:12.799796959 -0500
+@@ -201,6 +201,10 @@
+ 	case 0x0F:		/* ^O = color code follows */
+ 		msg_ctrl_o();
+ 		break;
++	case 0x0A:		/* <NL> -> <CR><NL> */
++		msg_normal(0x0D);
++		msg_normal(0x0A);
++		break;
+ 	case 0x0D:		/* Ignore <CR> */
+ 		break;
+ 	case 0x0C:		/* <FF> = clear screen */

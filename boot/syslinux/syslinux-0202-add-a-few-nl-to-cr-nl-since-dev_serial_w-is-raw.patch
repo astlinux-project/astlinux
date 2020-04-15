@@ -1,0 +1,39 @@
+--- syslinux-6.03/com32/elflink/ldlinux/kernel.c.orig	2020-04-14 19:12:05.512891970 -0500
++++ syslinux-6.03/com32/elflink/ldlinux/kernel.c	2020-04-14 19:13:06.976448399 -0500
+@@ -70,7 +70,7 @@
+ 	}
+ 
+ 	if (!opt_quiet)
+-		printf("ok\n");
++		printf("ok\r\n");
+ 
+ 	/* Find and load initramfs */
+ 	temp = strstr(cmdline, "initrd=");
+@@ -116,7 +116,7 @@
+ 		    free(initrd_name);
+ 
+ 		    if (!opt_quiet)
+-			printf("ok\n");
++			printf("ok\r\n");
+ 		} while (*temp == ',');
+ 	}
+ 
+@@ -126,6 +126,6 @@
+ 
+ bail:
+ 	free(cmdline);
+-	printf("%s\n", strerror(errno));
++	printf("%s\r\n", strerror(errno));
+ 	return 1;
+ }
+--- syslinux-6.03/com32/elflink/ldlinux/ldlinux.c.orig	2020-04-14 19:12:21.059762012 -0500
++++ syslinux-6.03/com32/elflink/ldlinux/ldlinux.c	2020-04-14 19:13:45.529677312 -0500
+@@ -265,7 +265,7 @@
+ 		}
+ 
+ 		cmdline = edit_cmdline("boot:", 1, NULL, cat_help_file, &to);
+-		printf("\n");
++		printf("\r\n");
+ 
+ 		/* return if user only press enter or we timed out */
+ 		if (!cmdline || cmdline[0] == '\0') {

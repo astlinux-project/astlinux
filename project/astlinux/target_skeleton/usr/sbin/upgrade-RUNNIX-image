@@ -7,8 +7,7 @@ ORANGE=2
 GREEN=0
 #
 # Default RUNNIX Repositories
-SRC_URL4="https://mirror.astlinux-project.org/runnix4"
-SRC_URL5="https://mirror.astlinux-project.org/runnix5"
+SRC_URL6="https://mirror.astlinux-project.org/runnix6"
 #
 # Default RUNNIX Version (use if no local 'ver' file)
 RUN_VER="runnix-0.2.1"
@@ -298,6 +297,11 @@ revert() {
 
 # main
 
+if [ "$(uname -m)" != "x86_64" ]; then
+  echo "RUNNIX Upgrade requires x86_64 hardware."
+  exit $RED
+fi
+
 if [ -d /tmp/up ]; then
   echo "Firmware Upgrade in Progress, please wait..."
   exit $ORANGE
@@ -306,12 +310,7 @@ elif [ -d /tmp/runup ]; then
   exit $ORANGE
 fi
 
-# runnix-0.5 requires a CPU with PAE
-if grep -q '^flags.*:.* pae ' /proc/cpuinfo; then
-  SRC_URL="$SRC_URL5"
-else
-  SRC_URL="$SRC_URL4"
-fi
+SRC_URL="$SRC_URL6"
 
 case $1 in
 
