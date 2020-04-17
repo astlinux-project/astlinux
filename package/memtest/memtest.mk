@@ -18,7 +18,7 @@ define MEMTEST_BUILD_CMDS
 endef
 
 define MEMTEST_INSTALL_TARGET_CMDS
-    ## The build-runnix script will install memtest.bin on the RUNNIX image as memtest
+	## The build-runnix script will install memtest.bin on the RUNNIX image as memtest
 endef
 
 $(eval $(call GENTARGETS,package,memtest))
