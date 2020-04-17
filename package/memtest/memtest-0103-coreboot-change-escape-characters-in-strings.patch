@@ -1,0 +1,61 @@
+From b72a23a5eb8cf40e4fbb4bad3a256c3554660286 Mon Sep 17 00:00:00 2001
+From: Ben Gardner <bgardner@wabtec.com>
+Date: Fri, 4 Mar 2016 17:40:38 -0600
+Subject: memtest86+: Change escape characters in strings into "\x1b"
+
+Change-Id: I32809e6b2cad5265cb8fc768a632097b12c6c1d8
+Signed-off-by: Ben Gardner <gardner.ben@gmail.com>
+Reviewed-on: https://review.coreboot.org/13908
+Tested-by: build bot (Jenkins)
+Reviewed-by: Stefan Reinauer <stefan.reinauer@coreboot.org>
+---
+ init.c | 12 ++++++------
+ lib.c  |  2 +-
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/init.c b/init.c
+index 6969745..0864033 100644
+--- a/init.c
++++ b/init.c
+@@ -148,11 +148,11 @@ static void display_init(void)
+ 
+ 
+ 	serial_echo_init();
+-  serial_echo_print("[LINE_SCROLL;24r"); /* Set scroll area row 7-23 */
+-  serial_echo_print("[H[2J");   /* Clear Screen */
+-  serial_echo_print("[37m[44m");
+-  serial_echo_print("[0m");
+-  serial_echo_print("[37m[44m");
++	serial_echo_print("\x1b[LINE_SCROLL;24r"); /* Set scroll area row 7-23 */
++	serial_echo_print("\x1b[H\x1b[2J");   /* Clear Screen */
++	serial_echo_print("\x1b[37m\x1b[44m");
++	serial_echo_print("\x1b[0m");
++	serial_echo_print("\x1b[37m\x1b[44m");
+ 
+ 	/* Clear screen & set background to blue */
+ 	for(i=0, pp=(char *)(SCREEN_ADR); i<80*24; i++) {
+@@ -177,7 +177,7 @@ static void display_init(void)
+ 		*pp = 0x71;
+ 	}
+ 
+-   serial_echo_print("[0m");
++	serial_echo_print("\x1b[0m");
+ }
+ 
+ /*
+diff --git a/lib.c b/lib.c
+index 01b93be..57c610c 100644
+--- a/lib.c
++++ b/lib.c
+@@ -794,7 +794,7 @@ void ttyprint(int y, int x, const char *p)
+ 	x++; y++;
+ 	itoa(sx, x);
+ 	itoa(sy, y);
+-	serial_echo_print("[");
++	serial_echo_print("\x1b[");
+ 	serial_echo_print(sy);
+ 	serial_echo_print(";");
+ 	serial_echo_print(sx);
+-- 
+cgit v1.2.1
+

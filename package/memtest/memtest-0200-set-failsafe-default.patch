@@ -1,0 +1,37 @@
++++ memtest-5.01/init.c.orig	2020-04-17 08:39:38.305994445 -0500
++++ memtest-5.01/init.c	2020-04-17 08:39:38.305994445 -0500
+@@ -70,7 +70,7 @@ void failsafe(int msec, int scs)
+ 		*pp = 0x9E;
+ 	}	
+ 	
+-	cprint(18, 18, "==> Press F1 to enter Fail-Safe Mode <==");
++	cprint(18, 18, "==> Press F1 to exit  Fail-Safe Mode <==");
+ 	
+ 	if(v->fail_safe & 2)
+ 	{
+@@ -103,12 +103,12 @@ void failsafe(int msec, int scs)
+ 		c &= 0x7f;
+ 		
+ 		/* F1 */
+-		if(c == scs) { v->fail_safe |= 1;	break; }
++		if(c == scs) { v->fail_safe ^= 1;	break; }
+ 					
+ 		/* F2 */
+ 		if(c == scs+1) 
+ 		{ 
+-			v->fail_safe ^= 2;
++			v->fail_safe ^= 3;
+ 			break;
+ 
+ 		}
+@@ -640,8 +640,8 @@ void smp_default_mode(void)
+   	if(result != -1) { v->fail_safe |= 0b10; }
+   }
+   
+-  // For 5.01 release, SMP disabled by defualt by config.h toggle
+-  if(CONSERVATIVE_SMP) { v->fail_safe |= 0b10; }
++  // For 5.01 release, SMP disabled and FailSafe enabled by defualt by config.h toggle
++  if(CONSERVATIVE_SMP) { v->fail_safe |= 0b11; }
+   	
+ }
+ 

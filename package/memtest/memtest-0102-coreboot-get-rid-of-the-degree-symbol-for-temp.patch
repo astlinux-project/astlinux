@@ -1,0 +1,33 @@
+From fb4ff616966d040b7b7f0321c7ab2b9b131ee938 Mon Sep 17 00:00:00 2001
+From: Martin Roth <martinroth@google.com>
+Date: Thu, 25 Feb 2016 16:27:04 -0800
+Subject: memtest86+: Get rid of the degree symbol for temperature
+
+The degree symbol doesn't print well over serial, and isn't needed
+for people to understand.  CPU Temp: 65 C is as easily understood
+as 65 degrees C.
+
+Change-Id: I22fc3670f0cab711346130642a5ec70b5d614208
+Signed-off-by: Martin Roth <martinroth@google.com>
+Reviewed-on: https://review.coreboot.org/13829
+Reviewed-by: Ben Gardner <gardner.ben@gmail.com>
+---
+ init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/init.c b/init.c
+index 37ebfbb..d617add 100644
+--- a/init.c
++++ b/init.c
+@@ -314,7 +314,7 @@ void init(void)
+ 	if(v->check_temp > 0 && !(v->fail_safe & 4))
+ 	{
+ 		cprint(LINE_CPU, 26, "|  CPU Temp");
+-		cprint(LINE_CPU+1, 26, "|      øC");
++		cprint(LINE_CPU+1, 26, "|       C");
+ 	}
+ 	
+ 		beep(600);
+-- 
+cgit v1.2.1
+

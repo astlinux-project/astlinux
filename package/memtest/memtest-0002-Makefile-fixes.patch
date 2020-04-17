@@ -1,0 +1,65 @@
+--- memtest-5.01/Makefile.orig	2020-04-16 09:25:34.602271529 -0500
++++ memtest-5.01/Makefile	2020-04-16 09:26:08.876186785 -0500
+@@ -3,33 +3,29 @@
+ # Author:		Chris Brady
+ # Created:		January 1, 1996
+ 
++AS ?= as
++AS += -32
++CC ?= gcc
+ 
+-#
+-# Path for the floppy disk device
+-#
+-FDISK=/dev/fd0
++CFLAGS= -Wall -march=i486 -m32 -O0 -fomit-frame-pointer -fno-builtin \
++        -ffreestanding -fPIC $(SMP_FL) -fno-stack-protector -fgnu89-inline
+ 
+-AS=as -32
+-CC=gcc
++LDFLAGS= -m elf_i386
+ 
+-CFLAGS= -Wall -march=i486 -m32 -O1 -fomit-frame-pointer -fno-builtin \
+-	-ffreestanding -fPIC $(SMP_FL) -fno-stack-protector 
+-	
+ OBJS= head.o reloc.o main.o test.o init.o lib.o patn.o screen_buffer.o \
+       config.o cpuid.o linuxbios.o pci.o memsize.o spd.o error.o dmi.o controller.o \
+       smp.o vmem.o random.o
+-      
++
+ 
+ all: clean memtest.bin memtest 
+-		 scp memtest.bin root@192.168.0.12:/srv/tftp/mt86plus
+ 
+ # Link it statically once so I know I don't have undefined
+ # symbols and then link it dynamically so I have full
+ # relocation information
+ memtest_shared: $(OBJS) memtest_shared.lds Makefile
+-	$(LD) --warn-constructors --warn-common -static -T memtest_shared.lds \
++	$(LD) --warn-constructors --warn-common -static -T memtest_shared.lds $(LDFLAGS) \
+ 	 -o $@ $(OBJS) && \
+-	$(LD) -shared -Bsymbolic -T memtest_shared.lds -o $@ $(OBJS)
++	$(LD) -shared -Bsymbolic -T memtest_shared.lds $(LDFLAGS) -o $@ $(OBJS)
+ 
+ memtest_shared.bin: memtest_shared
+ 	objcopy -O binary $< memtest_shared.bin
+@@ -54,7 +50,7 @@ reloc.o: reloc.c
+ 	$(CC) -c $(CFLAGS) -fno-strict-aliasing reloc.c
+ 
+ test.o: test.c
+-	$(CC) -c -Wall -march=i486 -m32 -O0 -fomit-frame-pointer -fno-builtin -ffreestanding test.c
++	$(CC) -c -Wall -march=i486 -m32 -O0 -fomit-frame-pointer -fno-builtin -ffreestanding -fno-strict-overflow test.c
+ 
+ random.o: random.c
+ 	$(CC) -c -Wall -march=i486 -m32 -O3 -fomit-frame-pointer -fno-builtin -ffreestanding random.c
+@@ -72,10 +68,8 @@ iso:
+ 	./makeiso.sh
+ 
+ install: all
+-	dd <memtest.bin >$(FDISK) bs=8192
+ 
+ install-precomp:
+-	dd <precomp.bin >$(FDISK) bs=8192
+ 	
+ dos: all
+ 	cat mt86+_loader memtest.bin > memtest.exe

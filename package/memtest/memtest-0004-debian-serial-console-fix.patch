@@ -1,0 +1,21 @@
+Fix passing serial options on the command line
+Index: memtest86+-5.01/lib.c
+===================================================================
+--- memtest86+-5.01.orig/lib.c
++++ memtest86+-5.01/lib.c
+@@ -1141,7 +1141,7 @@ void serial_console_setup(char *param)
+ 
+ 	end++;
+ 
+-	if (*end != '\0' || *end != ' ')
++	if (*end != '\0' && *end != ' ')
+ 		return;  /* garbage at the end */
+ 
+ 	serial_bits = bits;
+@@ -1196,4 +1196,4 @@ void get_list(int x, int y, int len, cha
+ 		   return;
+ 		}
+ 	}
+-}
+\ No newline at end of file
++}

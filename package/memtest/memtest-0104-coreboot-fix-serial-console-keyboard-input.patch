@@ -1,0 +1,70 @@
+From 17128acc9d102733fd894aaf4ced1bb8acf6933c Mon Sep 17 00:00:00 2001
+From: Martin Roth <martinroth@google.com>
+Date: Thu, 3 Mar 2016 19:45:49 -0700
+Subject: memtest86+: fix serial console keyboard input
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This is from a patch that was posted in the memtest86+ forum:
+
+From: Maxime de Roucy <maxime.deroucy@gmail.com>
+Date: Sun, 27 Sep 2015 15:26:29 +0200
+Subject: [PATCH 6/8] fix serial console keyboard input
+
+"Without this patch you can't send keyboard command (ESC, c, SC, SP…)
+through the serial console."
+
+Change-Id: I834d125e30e06d0d312631d52caa1a629373dc40
+Signed-off-by: Martin Roth <martinroth@google.com>
+Reviewed-on: https://review.coreboot.org/13899
+Tested-by: build bot (Jenkins)
+Reviewed-by: Stefan Reinauer <stefan.reinauer@coreboot.org>
+---
+ lib.c | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
+
+diff --git a/lib.c b/lib.c
+index 57c610c..8fc42cf 100644
+--- a/lib.c
++++ b/lib.c
+@@ -604,23 +604,21 @@ int get_key() {
+ 	int c;
+ 
+ 	c = inb(0x64);
+-	if ((c & 1) == 0) {
+-		if (serial_cons) {
+-			int comstat;
+-			comstat = serial_echo_inb(UART_LSR);
+-			if (comstat & UART_LSR_DR) {
+-				c = serial_echo_inb(UART_RX);
+-				/* Pressing '.' has same effect as 'c'
+-				   on a keyboard.
+-				   Oct 056   Dec 46   Hex 2E   Ascii .
+-				*/
+-				return (ascii_to_keycode(c));
+-			}
++	if ((c & 1) && (c != 0xff)) {
++		return inb(0x60);
++	} else if (serial_cons) {
++		int comstat;
++		comstat = serial_echo_inb(UART_LSR);
++		if (comstat & UART_LSR_DR) {
++			c = serial_echo_inb(UART_RX);
++			/* Pressing '.' has same effect as 'c'
++			   on a keyboard.
++			   Oct 056   Dec 46   Hex 2E   Ascii .
++			*/
++			return (ascii_to_keycode(c));
+ 		}
+-		return(0);
+ 	}
+-	c = inb(0x60);
+-	return((c));
++	return(0);
+ }
+ 
+ void check_input(void)
+-- 
+cgit v1.2.1
+
