@@ -103,7 +103,7 @@ $(TARGET_DIR)/$(WANPIPE_TARGET_BINARY): $(WANPIPE_DIR)/.built
 		INSTALLPREFIX=$(TARGET_DIR) \
 		$(WANPIPE_CONFIGURE) \
 		install
-	$(DEPMOD) -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) -r $(LINUX_VERSION_PROBED)
+	$(DEPMOD) -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) $(LINUX_VERSION_PROBED)
 	$(INSTALL) -D -m 0755 -s $(WANPIPE_DIR)/$(WANPIPE_BINARY) $(TARGET_DIR)/$(WANPIPE_TARGET_BINARY)
 	ln -sf ../../etc/wanpipe/util/wan_aftup/wan_aftup $(TARGET_DIR)/usr/sbin/wan_aftup
 	$(INSTALL) -D -m 0755 -s $(WANPIPE_DIR)/util/wancfg/wancfg $(TARGET_DIR)/usr/sbin/wancfg

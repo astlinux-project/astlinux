@@ -51,7 +51,7 @@ $(TARGET_DIR)/$(RHINO_TARGET_BINARY): $(RHINO_DIR)/.built
 		INSTALL_PREFIX=$(TARGET_DIR) \
 		DAHDI_DIR=$(DAHDI_LINUX_DIR) \
 		install
-	$(DEPMOD) -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) -r $(LINUX_VERSION_PROBED)
+	$(DEPMOD) -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) $(LINUX_VERSION_PROBED)
 	echo -e "#!/bin/sh\necho \""$(RHINO_VERSION)"\"" > $(TARGET_DIR)/$(RHINO_TARGET_BINARY)
 	chmod 755 $(TARGET_DIR)/$(RHINO_TARGET_BINARY)
 
@@ -59,7 +59,7 @@ rhino: $(TARGET_DIR)/$(RHINO_TARGET_BINARY)
 
 rhino-clean:
 	rm -rf $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/rhino
-	$(DEPMOD) -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) -r $(LINUX_VERSION_PROBED)
+	$(DEPMOD) -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) $(LINUX_VERSION_PROBED)
 	rm -f $(TARGET_DIR)/$(RHINO_TARGET_BINARY)
 	rm -f $(RHINO_DIR)/.built
 

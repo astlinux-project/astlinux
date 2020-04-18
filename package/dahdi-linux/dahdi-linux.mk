@@ -69,7 +69,7 @@ $(TARGET_DIR)/$(DAHDI_LINUX_TARGET_BINARY): $(DAHDI_LINUX_DRIVERS_DIR)/$(DAHDI_L
 ifeq ($(BR2_PACKAGE_DAHDI_NO_CARD_FIRMWARE),y)
 	find $(TARGET_DIR)/lib/firmware/ -type f -name "*dahdi-fw-*" -print0 | xargs -0 rm -f
 endif
-	$(DEPMOD) -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) -r $(LINUX_VERSION_PROBED)
+	$(DEPMOD) -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) $(LINUX_VERSION_PROBED)
 
 dahdi-linux: $(TARGET_DIR)/$(DAHDI_LINUX_TARGET_BINARY) \
        		$(STAGING_DIR)/usr/include/dahdi/kernel.h
@@ -81,7 +81,7 @@ dahdi-linux-unpack: $(DAHDI_LINUX_DIR)/.configured
 dahdi-linux-clean:
 	rm -Rf $(STAGING_DIR)/usr/include/dahdi.h
 	rm -Rf $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/dahdi
-	$(DEPMOD) -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) -r $(LINUX_VERSION_PROBED)
+	$(DEPMOD) -ae -F $(LINUX_DIR)/System.map -b $(TARGET_DIR) $(LINUX_VERSION_PROBED)
 	rm -f $(TARGET_DIR)/$(DAHDI_LINUX_TARGET_BINARY)
 
 dahdi-linux-dirclean:
