@@ -30,7 +30,7 @@ endif
 LINUX_PATCHES = $(call qstrip,$(BR2_LINUX_KERNEL_PATCH))
 
 LINUX_INSTALL_IMAGES = YES
-LINUX_DEPENDENCIES  += host-module-init-tools
+LINUX_DEPENDENCIES  += host-kmod
 
 LINUX_MAKE_FLAGS = \
 	HOSTCC="$(HOSTCC)" \
