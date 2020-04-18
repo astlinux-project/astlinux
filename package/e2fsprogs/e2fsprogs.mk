@@ -4,7 +4,7 @@
 #
 #############################################################
 
-E2FSPROGS_VERSION = 1.45.5
+E2FSPROGS_VERSION = 1.45.6
 E2FSPROGS_SITE = http://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v$(E2FSPROGS_VERSION)
 E2FSPROGS_INSTALL_STAGING = YES
 E2FSPROGS_INSTALL_STAGING_OPT = DESTDIR=$(STAGING_DIR) LDCONFIG=true install-libs
@@ -73,6 +73,10 @@ E2FSPROGS_BINTARGETS_ += usr/sbin/e4crypt
 
 define E2FSPROGS_TARGET_REMOVE_UNNEEDED
 	rm -f $(addprefix $(TARGET_DIR)/, $(E2FSPROGS_BINTARGETS_))
+	## Remove unneeded development stuff on target
+	rm -f $(TARGET_DIR)/usr/bin/compile_et $(TARGET_DIR)/usr/bin/mk_cmds
+	rm -rf $(TARGET_DIR)/usr/share/et
+	rm -rf $(TARGET_DIR)/usr/share/ss
 endef
 
 E2FSPROGS_POST_INSTALL_TARGET_HOOKS += E2FSPROGS_TARGET_REMOVE_UNNEEDED
