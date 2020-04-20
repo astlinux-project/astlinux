@@ -4,10 +4,10 @@
 #
 #############################################################
 
-NEON_VERSION = 0.30.2
-NEON_SITE = http://www.webdav.org/neon/
+NEON_VERSION = 0.31.1
+NEON_SITE = https://notroj.github.io/neon
 NEON_INSTALL_STAGING = YES
-NEON_CONF_OPT = --without-gssapi --disable-rpath
+NEON_CONF_OPT = --without-gssapi
 
 NEON_DEPENDENCIES = host-pkg-config
 
