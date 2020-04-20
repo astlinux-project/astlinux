@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-CHRONY_VERSION = 4.0-pre1
+CHRONY_VERSION = 4.0-pre2
 CHRONY_SITE = https://download.tuxfamily.org/chrony
 CHRONY_DEPENDENCIES = host-pkg-config libcap
 
