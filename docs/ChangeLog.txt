@@ -20,11 +20,37 @@ Released @TBD@
 
 -- Linux Kernel 3.16.82 (no change)
 
+-- RUNNIX, version bump to runnix-0.6.0d, major update
+   == 64-bit, x86_64
+   == syslinux, version bump to 6.03
+   == Memtest86+, version bump to 5.01, patched to also work over serial console
+
+-- libyaml, version bump to 0.2.3
+
+-- e2fsprogs, version bump to 1.45.6
+
+-- kmod, version 27, new package which replaces module-init-tools
+
+-- php, version bump to 7.2.30, security fixes
+
+-- strace, version bump to 5.6
+
+-- udev, now use eudev version 3.2.9
+
 -- Update build system tools:
+   == New toolchain: glibc 2.27, binutils 2.29.1, gcc 6.5.0, using crosstool-ng-1.24.0
    == bison, version bump to 3.4.2
    == m4, version bump to 1.4.18
 
 ** Networking
+
+-- WireGuard VPN, module 1.0.20200413 (version bump), tools 1.0.20200319 (no change)
+
+-- OpenVPN, version bump to 2.4.9, security fix: CVE-2020-11810
+
+-- chrony, version bump to 4.0-pre2
+
+-- msmtp, version bump to 1.8.8
 
 -- sipsak, version bump to 0.9.7
 
@@ -38,6 +64,8 @@ Released @TBD@
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
 -- pjsip 2.9 (no change)
+
+-- neon, version bump to 0.31.1, used for Asterisk Calendar Support
 
 ** Web Interface
 
