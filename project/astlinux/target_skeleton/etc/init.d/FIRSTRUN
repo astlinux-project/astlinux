@@ -20,6 +20,19 @@ add_system_default_users()
   done
 }
 
+add_system_default_groups()
+{
+  local base="$1" group IFS
+
+  unset IFS
+  for group in input kvm render; do
+    if ! grep -q "^${group}:" "/etc/group"; then
+      grep "^${group}:" "${base}/etc/group" >> "/etc/group"
+      echo "FIRSTRUN: Added system default '${group}' group to '/etc/group'"
+    fi
+  done
+}
+
 update_system_default_users()
 {
   local base="$1" user file current IFS
@@ -74,9 +87,11 @@ init () {
     # Update system default user/group files to ASTURW files
     if [ -d /oldroot/mnt/asturo ]; then
       add_system_default_users /oldroot/mnt/asturo
+      add_system_default_groups /oldroot/mnt/asturo
       update_system_default_users /oldroot/mnt/asturo
     elif [ -d /oldroot/image ]; then
       add_system_default_users /oldroot/image
+      add_system_default_groups /oldroot/image
       update_system_default_users /oldroot/image
     fi
 

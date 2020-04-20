@@ -18,6 +18,7 @@ NUT_CONF_OPT = \
 	--with-user=nobody \
 	--with-group=nobody \
 	--datadir=/usr/share/ups \
+	--with-udev-dir=/etc/udev \
 	--sysconfdir=/etc/ups
 
 NUT_CONF_ENV = \

@@ -14,6 +14,9 @@ ntp:x:38:
 video:x:44:
 avahi:x:70:
 users:x:100:
+input:x:105:
+kvm:x:106:
+render:x:107:
 prosody:x:130:
 ldap:x:439:
 zabbix:x:906:

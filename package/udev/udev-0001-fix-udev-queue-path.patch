@@ -1,0 +1,16 @@
+--- udev-3.2.9/src/udev/udevd.c.orig	2020-04-19 10:30:28.985797245 -0500
++++ udev-3.2.9/src/udev/udevd.c	2020-04-19 10:35:04.722373434 -0500
+@@ -684,11 +684,11 @@
+         int r;
+ 
+         if (!udev_list_node_is_empty(&event_list)) {
+-                r = touch("/run/udev/queue");
++                r = touch(UDEV_ROOT_RUN "/udev/queue");
+                 if (r < 0)
+                         log_warning_errno(r, "could not touch /run/udev/queue: %m");
+         } else {
+-                r = unlink("/run/udev/queue");
++                r = unlink(UDEV_ROOT_RUN "/udev/queue");
+                 if (r < 0 && errno != ENOENT)
+                         log_warning("could not unlink /run/udev/queue: %m");
+         }

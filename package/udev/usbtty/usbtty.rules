@@ -1,3 +1,3 @@
 # Spawn getty for selected usb tty serial devices:
-SUBSYSTEM=="tty", ACTION=="add", ENV{ID_BUS}=="usb", ENV{DEVNAME}=="ttyUSB[0-9]", \
+SUBSYSTEM=="tty", ACTION=="add", ENV{ID_BUS}=="usb", KERNEL=="ttyUSB[0-9]", \
   RUN+="/usr/share/usbtty/usb-getty udev $env{DEVNAME}"
