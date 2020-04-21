@@ -53,14 +53,14 @@ unmount_tmpfs_runup() {
 }
 
 check() {
+
+  ARCH=""
+  SERIAL=""
   IS_SERIAL=""
 
   for i in $(cat /proc/cmdline); do
     if echo $i | grep -q "astlinux="; then
       ARCH="$(echo $i | sed -e 's/astlinux=//')"
-      if [ "$ARCH" = "via" -o "$ARCH" = "viac7" ]; then  # Redirect deprecated boards
-        ARCH="geni586"
-      fi
     elif echo $i | grep -q "console="; then
       SERIAL="$(echo $i | sed -e 's/console=//')"
     fi
@@ -71,13 +71,9 @@ check() {
     exit $RED
   fi
 
-  if [ "$ARCH" = "geni586" -o "$ARCH" = "genx86_64" ]; then
-    if [ -n "$SERIAL" ]; then
-      IS_SERIAL="-serial"
-      ARCH="${ARCH}${IS_SERIAL}"
-    fi
-  elif [ "$ARCH" = "net5501" -o "$ARCH" = "alix" ]; then
+  if [ -n "$SERIAL" ]; then
     IS_SERIAL="-serial"
+    ARCH="${ARCH}${IS_SERIAL}"
   fi
 
   if ! mount_oldroot_cdrom; then

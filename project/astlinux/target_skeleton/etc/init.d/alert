@@ -40,10 +40,8 @@ welcome_msg()
   memavail="$(awk '/^MemAvailable:/ { print int(($2 + 512) / 1024) }' /proc/meminfo)"
 
   board="$(cat /proc/cmdline | sed -n -r -e 's:^.* astlinux=([^ ]+).*$:\1:p')"
-  if [ "$board" = "geni586" -o "$board" = "genx86_64" ]; then
-    if grep -q ' console=' /proc/cmdline; then
-      board="${board}-serial"
-    fi
+  if grep -q ' console=' /proc/cmdline; then
+    board="${board}-serial"
   fi
 
   if [ -x /usr/sbin/system-vendor ]; then
@@ -151,48 +149,17 @@ start () {
 
   welcome_msg
 
-  # Turn OFF the errorled (after finshed booting)
-  if grep -q "astlinux=net5501" /proc/cmdline; then
-
-    echo 0 >/sys/class/leds/net5501:1/brightness
-  fi
-
-  if grep -q "astlinux=alix" /proc/cmdline; then
-
-    echo heartbeat >/sys/class/leds/alix:1/trigger
-    echo 0 >/sys/class/leds/alix:2/brightness
-  fi
-
   # Generate Alert Sounds (after finished booting)
-  if grep -q "astlinux=gen[ix][0-9]" /proc/cmdline; then
-
-    if is_alert_sound_type startup; then
-      play_alert_sound_type startup
-    fi
+  if is_alert_sound_type startup; then
+    play_alert_sound_type startup
   fi
 }
 
 stop () {
 
-  # Turn on the errorled (on reboot/shutdown)
-  if grep -q "astlinux=net5501" /proc/cmdline; then
-
-    echo 1 >/sys/class/leds/net5501:1/brightness
-  fi
-
-  if grep -q "astlinux=alix" /proc/cmdline; then
-
-    echo none >/sys/class/leds/alix:1/trigger
-    echo 1 >/sys/class/leds/alix:1/brightness
-    echo 1 >/sys/class/leds/alix:2/brightness
-  fi
-
   # Generate Alert Sounds (on reboot/shutdown)
-  if grep -q "astlinux=gen[ix][0-9]" /proc/cmdline; then
-
-    if is_alert_sound_type shutdown; then
-      play_alert_sound_type shutdown
-    fi
+  if is_alert_sound_type shutdown; then
+    play_alert_sound_type shutdown
   fi
 }
 

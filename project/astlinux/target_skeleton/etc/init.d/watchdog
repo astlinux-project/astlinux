@@ -3,14 +3,8 @@
 . /etc/rc.conf
 
 if [ "$WDMODULE" = "auto" ]; then
-  if grep -q "astlinux=net5501" /proc/cmdline; then
-    WDMODULE="geodewdt"
-  elif grep -q "astlinux=alix" /proc/cmdline; then
-    WDMODULE="geodewdt"
-  else
-    echo "Watchdog disabled, no 'auto' setting available for this target device."
-    WDMODULE=""
-  fi
+  echo "Watchdog disabled, no 'auto' setting available for this target device."
+  WDMODULE=""
 fi
 
 if [ -n "$WDTIME" ]; then

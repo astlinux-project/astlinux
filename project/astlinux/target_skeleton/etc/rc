@@ -186,24 +186,6 @@ $fstab_shm
 
   case $ASTLINUX in
 
-  net5501)
-    modprobe cs5535_mfd
-    modprobe gpio_cs5535
-    modprobe leds_gpio
-    sleep 1
-    echo 1 >/sys/class/leds/net5501:1/brightness
-    ;;
-
-  alix)
-    modprobe cs5535_mfd
-    modprobe gpio_cs5535
-    modprobe leds_gpio
-    modprobe ledtrig-heartbeat
-    sleep 1
-    echo 1 >/sys/class/leds/alix:1/brightness
-    echo 1 >/sys/class/leds/alix:2/brightness
-    ;;
-
   genx86_64-vm)
     # Xen
     if [ -f /sys/hypervisor/type ] && grep -q 'xen' /sys/hypervisor/type; then

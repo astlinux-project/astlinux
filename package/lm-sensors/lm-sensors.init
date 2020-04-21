@@ -22,13 +22,6 @@ start () {
       done
     fi
 
-    if grep -q "astlinux=net5501" /proc/cmdline; then
-      modprobe pc87360 init=2
-    elif grep -q "astlinux=alix" /proc/cmdline; then
-      modprobe scx200_acb base=0x810,0x820
-      modprobe lm90
-    fi
-
     sleep 2
 
     sensors -s
@@ -44,13 +37,6 @@ stop () {
       for i in $SENSEMODS; do
         modprobe -r $i
       done
-    fi
-
-    if grep -q "astlinux=net5501" /proc/cmdline; then
-      modprobe -r pc87360
-    elif grep -q "astlinux=alix" /proc/cmdline; then
-      modprobe -r lm90
-      modprobe -r scx200_acb
     fi
   fi
 }

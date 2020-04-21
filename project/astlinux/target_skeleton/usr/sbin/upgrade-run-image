@@ -130,16 +130,14 @@ merge_kcmd()
 }
 
 check() {
+
+  ARCH=""
+  SERIAL=""
+
   for i in `cat /proc/cmdline`; do
     if echo $i | grep -q "astlinux="; then
       ARCH=`echo $i | sed -e 's/astlinux=//'`
-      if [ "$ARCH" = "via" -o "$ARCH" = "viac7" ]; then  # Redirect deprecated boards
-        ARCH="geni586"
-      elif [ "$ARCH" = "geni586" -a "$ARCH_BITS" = "64" ]; then
-        ARCH="genx86_64"
-      elif [ "$ARCH" = "genx86_64" -a "$ARCH_BITS" = "32" ]; then
-        ARCH="geni586"
-      elif [ "$ARCH" = "genx86_64" -a "$ARCH_BITS" = "vm" ]; then
+      if [ "$ARCH" = "genx86_64" -a "$ARCH_BITS" = "vm" ]; then
         ARCH="genx86_64-vm"
       elif [ "$ARCH" = "genx86_64-vm" -a "$ARCH_BITS" = "64" ]; then
         ARCH="genx86_64"
@@ -154,10 +152,8 @@ check() {
     exit $RED
   fi
 
-  if [ "$ARCH" = "geni586" -o "$ARCH" = "genx86_64" ]; then
-    if [ -n "$SERIAL" ]; then
-      ARCH="${ARCH}-serial"
-    fi
+  if [ -n "$SERIAL" ]; then
+    ARCH="${ARCH}-serial"
   fi
 
   URL="${SRC_URL}/${ARCH}"
