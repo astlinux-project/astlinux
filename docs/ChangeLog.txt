@@ -44,6 +44,8 @@ Released @TBD@
 
 ** Networking
 
+-- OpenSSL, version bump to 1.1.1g, security fix: CVE-2020-1967
+
 -- WireGuard VPN, module 1.0.20200413 (version bump), tools 1.0.20200319 (no change)
 
 -- OpenVPN, version bump to 2.4.9, security fix: CVE-2020-11810
