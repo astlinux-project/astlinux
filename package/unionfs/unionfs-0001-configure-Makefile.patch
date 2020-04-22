@@ -1,0 +1,17 @@
+--- unionfs-2.1/src/Makefile.orig	2020-04-22 13:29:26.526419676 -0500
++++ unionfs-2.1/src/Makefile	2020-04-22 13:32:40.547518802 -0500
+@@ -1,11 +1,11 @@
+-CFLAGS += -Wall -fPIC
++# CFLAGS += -Wall -fPIC
+ CPPFLAGS += $(shell pkg-config --cflags fuse)
+ CPPFLAGS += -DFUSE_USE_VERSION=29
+ 
+-CPPFLAGS += -DLIBC_XATTR # glibc nowadays includes xattr
++# CPPFLAGS += -DLIBC_XATTR # glibc nowadays includes xattr
+ # CPPFLAGS += -DLIBATTR_XATTR # define this to libattr xattr include
+ 
+-# CPPFLAGS += -DDISABLE_XATTR # disable xattr support
++CPPFLAGS += -DDISABLE_XATTR # disable xattr support
+ # CPPFLAGS += -DDISABLE_AT    # disable *at function support
+ 
+ LDFLAGS +=

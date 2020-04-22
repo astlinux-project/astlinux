@@ -1,0 +1,10 @@
+config BR2_PACKAGE_UNIONFS
+	bool "unionfs (FUSE)"
+	depends on BR2_TOOLCHAIN_HAS_THREADS # libfuse
+	depends on BR2_USE_MMU # libfuse
+	select BR2_PACKAGE_LIBFUSE
+	help
+	  A userspace unionfs implementation.
+
+	  https://github.com/rpodgorny/unionfs-fuse
+
