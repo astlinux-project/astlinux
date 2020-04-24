@@ -7,7 +7,7 @@ KD="mnt/kd"
 ASTERISK_SOUNDS="stat/var/lib/asterisk/sounds"
 ASTERISK_MOH="stat/var/lib/asterisk/moh"
 PACKAGES="stat/var/packages"
-LOCALE="usr/lib/locale"
+LOCALE="stat/var/lib/locale"
 
 system()
 {
@@ -21,7 +21,7 @@ system()
 
 kd()
 {
-  if mount | grep -q "/$KD"; then
+  if mount | grep -q "/$KD  *type  *ext2"; then
     echo "/$KD is not on ASTURW. /$KD is a separate partition." >&2
   else
     find $ASTURW/$KD -type f

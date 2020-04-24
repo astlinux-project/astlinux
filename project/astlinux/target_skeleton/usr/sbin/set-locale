@@ -10,7 +10,7 @@ GREEN=0
 SRC_URL="https://mirror.astlinux-project.org/locale"
 #
 # base locale directory
-BASE="/usr/lib/locale"
+BASE="/stat/var/lib/locale"
 #
 
 get_locale()

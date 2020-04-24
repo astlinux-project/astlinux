@@ -49,6 +49,20 @@ update_system_default_users()
   done
 }
 
+move_old_locale_files()
+{
+  local base="$1" to_dir
+
+  to_dir="/stat/var/lib/locale"
+
+  if [ -f "$base/locale-archive" ]; then
+    mkdir -p "$to_dir"
+    cp "$base/locale-archive" "$to_dir/"
+    cp "$base/.locale" "$to_dir/"
+    rm -rf "$base"
+  fi
+}
+
 delete_removed_package_config_files()
 {
   local pkg config_file IFS
@@ -85,15 +99,14 @@ init () {
     fi
 
     # Update system default user/group files to ASTURW files
-    if [ -d /oldroot/mnt/asturo ]; then
-      add_system_default_users /oldroot/mnt/asturo
-      add_system_default_groups /oldroot/mnt/asturo
-      update_system_default_users /oldroot/mnt/asturo
-    elif [ -d /oldroot/image ]; then
-      add_system_default_users /oldroot/image
-      add_system_default_groups /oldroot/image
-      update_system_default_users /oldroot/image
+    if [ -d /mnt/unionfs/asturo/etc ]; then
+      add_system_default_users /mnt/unionfs/asturo
+      add_system_default_groups /mnt/unionfs/asturo
+      update_system_default_users /mnt/unionfs/asturo
     fi
+
+    # Move old locale files from /usr/lib/locale
+    move_old_locale_files /oldroot/mnt/asturw/usr/lib/locale
 
     # Delete config files for removed packages
     delete_removed_package_config_files

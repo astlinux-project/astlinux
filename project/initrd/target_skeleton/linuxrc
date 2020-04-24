@@ -29,17 +29,6 @@ astlive () {
 
   # Mount root, image, etc.
 
-  for i in ${CMDLINE}; do
-    if echo $i | grep -q "asturw="; then
-      ASTURW=`echo $i | awk '/^asturw=/ { print substr($0, 8); }'`
-    fi
-  done
-
-  # Auto detect ASTURW
-  if [ "$ASTURW" = "auto" -a -x /sbin/findfs ]; then
-    ASTURW=`/sbin/findfs LABEL=ASTURW 2>/dev/null`
-  fi
-
   # Get amount of RAM in machine (in mB)
   MEM=`awk '/^MemTotal:/ { print int($2 / 1024) }' /proc/meminfo`
 
@@ -76,84 +65,19 @@ of RAM. You should consider getting more."
     exec /bin/sh
   fi
 
-  if [ -n "$ASTURW" ]; then
-    echo "Configuring for unionfs..."
+  if [ "$RAMFS" = "yes" ]; then
+    image_to_tmpfs /new
 
-    echo "Checking asturw filesystem"
-
-    e2fsck -y -C 0 $ASTURW
-    status=$?
-
-    case $status in
-    0)
-      echo "Asturw filesystem clean."
-      ;;
-
-    1)
-      echo "Fsck detected and repaired errors on $ASTURW"
-      ;;
-
-    2)
-      echo "Fsck detected and repaired errors on $ASTURW; rebooting..."
-      sleep 5
-      reboot -f
-      ;;
-
-    *)
-      echo "Fsck detected errors on $ASTURW ($status)"
-      echo "execute e2fsck $ASTURW to attempt to repair errors manually."
-      exec /bin/sh
-      ;;
-    esac
-
-    if [ "$RAMFS" = "yes" ]; then
-      mkdir -p /mnt/asturw /mnt/asturo
-
-      mount -t ext2 -o noatime $ASTURW /mnt/asturw
-
-      image_to_tmpfs /mnt/asturo
-
-      mount -t unionfs -o dirs=/mnt/asturw=rw:/mnt/asturo=ro none /new
-
-      cd /
-      echo "unmounting squashfs image"
-      umount /dev/loop0
-
-      # DJH think this is extraneous
-      # don't forget to release the image
-      losetup -d /dev/loop0
-
-      # unmount the 'cdrom'
-      echo "unmounting /cdrom"
-      umount /cdrom
-
-    else
-      echo "Astlinux files will remain on loopback device."
-
-      mkdir -p /mnt/asturw
-
-      mount -t ext2 -o noatime $ASTURW /mnt/asturw
-
-      mount -t unionfs -o dirs=/mnt/asturw=rw:/image=ro none /new
-    fi
+    # unmount the loop device
+    cd /
+    umount /dev/loop0
+    losetup -d /dev/loop0
+    echo "unmounting /cdrom"
+    umount /cdrom
 
   else
-    # non unionfs stuff
-    if [ "$RAMFS" = "yes" ]; then
-      image_to_tmpfs /new
-
-      # unmount the loop device
-      cd /
-      umount /dev/loop0
-      losetup -d /dev/loop0
-      echo "unmounting /cdrom"
-      umount /cdrom
-
-    else
-      echo "Moving mount point to /new"
-      mount --move /image /new
-    fi
-
+    echo "Moving mount point to /new"
+    mount --move /image /new
   fi
 
   umount /sys
@@ -173,14 +97,6 @@ mount -t proc none /proc
 mount -t sysfs none /sys
 
 CMDLINE="`cat /proc/cmdline`"
-LSMOD="`ls /lib/modules/*.ko 2>/dev/null`"
-
-if [ -n "$LSMOD" ]; then
-  echo "Loading required modules..."
-  for i in $LSMOD; do
-    insmod $i
-  done
-fi
 
 CDROM=""
 
