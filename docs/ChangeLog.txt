@@ -25,6 +25,14 @@ Released @TBD@
    == syslinux, version bump to 6.03
    == Memtest86+, version bump to 5.01, patched to also work over serial console
 
+-- unionfs, move from old kernel unionfs to FUSE unionfs version 2.1
+   To better secure the filesystem, now only '/etc' and '/stat' will be read-write
+   over the read-only base firmware image.  Previously '/' (everything) was overlaid.
+
+-- initial-setup, remove 'combined' partition format option, always use 'format separate'
+
+-- libfuse, version 2.9.9, new package to support FUSE unionfs
+
 -- libyaml, version bump to 0.2.3
 
 -- e2fsprogs, version bump to 1.45.6
@@ -71,7 +79,8 @@ Released @TBD@
 
 ** Web Interface
 
--- (no change)
+-- setup.php, remove 'Combined' partition option.
+   Always create separate Unionfs and /mnt/kd/ partitions.
 
 
 Additions for AstLinux 1.3.8:
