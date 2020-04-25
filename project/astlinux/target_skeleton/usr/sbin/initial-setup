@@ -6,15 +6,71 @@ ORANGE=2
 # green color message for web interface
 GREEN=0
 
+gen_kd_files()
+{
+  # Args: dest_directory
+
+  cp /stat/etc/rc.conf ${1}/
+  cp -a /tmp/etc/asterisk ${1}/
+  cp -a /var/spool/asterisk/voicemail ${1}/
+  cp -a /tmp/tftpboot ${1}/
+
+  mkdir ${1}/ssh
+  cp -a /tmp/etc/ssh/ssh_host_* ${1}/ssh/
+
+  mkdir ${1}/home
+  mkdir ${1}/monitor
+  mkdir ${1}/dictate
+
+  mkdir ${1}/dahdi
+  if [ -f /stat/etc/dahdi/system.conf ]; then
+    cp -a /stat/etc/dahdi/system.conf ${1}/dahdi/
+  else
+    touch ${1}/dahdi/system.conf
+  fi
+
+  touch ${1}/webgui-prefs.txt
+
+  if [ -f /var/db/dnsmasq.leases ]; then
+    cp -a /var/db/dnsmasq.leases ${1}/
+  else
+    touch ${1}/dnsmasq.leases
+  fi
+
+  cp /stat/etc/dnsmasq.static ${1}/
+
+  cp -a /var/log/asterisk/cdr-csv ${1}/
+
+  if [ -d /stat/etc/wanpipe ]; then
+    cp -a /stat/etc/wanpipe ${1}/
+  fi
+
+  cp -a /var/spool/cron/crontabs ${1}/
+
+  if [ -f /var/db/astdb ]; then
+    cp -a /var/db/astdb ${1}/
+  else
+    touch ${1}/astdb
+  fi
+
+  if [ -f /var/db/astdb.sqlite3 ]; then
+    cp -a /var/db/astdb.sqlite3 ${1}/
+  fi
+
+  if [ -d /stat/etc/arno-iptables-firewall ]; then
+    cp -a /stat/etc/arno-iptables-firewall ${1}/
+  fi
+}
+
 find_runnix_drive() {
 
   # Find Runnix Drive
   DRIVE=""
   if [ -x /sbin/findfs ]; then
-    DRIVE="`/sbin/findfs LABEL=RUNNIX | awk '{ print substr($1,1,length($1)-1); }'`"
+    DRIVE="$(/sbin/findfs LABEL=RUNNIX | awk '{ print substr($1,1,length($1)-1); }')"
   fi
   if [ -z "$DRIVE" ]; then
-    DRIVE="`mount | awk '/\/oldroot\/cdrom/ { print substr($1,1,length($1)-1); }'`"
+    DRIVE="$(mount | awk '/\/oldroot\/cdrom/ { print substr($1,1,length($1)-1); }')"
   fi
   if [ -z "$DRIVE" ]; then
     echo "Runnix Drive could not be found."
@@ -33,7 +89,7 @@ is_configured() {
 }
 
 genunion() {
-  # Args: partition, make_kd
+  # Args: partition
 
   if mount | grep -q "$1"; then
     echo "Partition $1 is currently in use."
@@ -44,20 +100,6 @@ genunion() {
     echo "Creating ASTURW filesystem on $1 failed."
     exit $RED
   fi
-
-  if [ "$2" != 'yes' ]; then
-    return 0
-  fi
-
-  mkdir /tmp/asturw
-  if ! mount $1 /tmp/asturw; then
-    rmdir /tmp/asturw
-    echo "Mounting ASTURW on $1 failed."
-    exit $RED
-  fi
-  mkdir -p /tmp/asturw/mnt/kd
-
-  /usr/sbin/functions gen_kd_files /tmp/asturw/mnt/kd
 
   return 0
 }
@@ -80,7 +122,7 @@ genkd() {
     exit $RED
   fi
 
-  /usr/sbin/functions gen_kd_files /mnt/kd
+  gen_kd_files /mnt/kd
 
   return 0
 }
@@ -94,19 +136,18 @@ format_separate() {
   find_runnix_drive
 
   # Number of partitions
-  PNUM="`/sbin/fdisk -l | grep "^$1" | wc -l`"
+  PNUM="$(/sbin/fdisk -l | grep "^$1" | wc -l)"
 
   if [ "$DRIVE" = "$1" ]; then
-    PNUM=$((PNUM-1))
     part_union=2
     part_kd=3
   else
-    part_union=1
-    part_kd=2
+    echo "Drive $1 does not match RUNNIX drive: $DRIVE."
+    exit $RED
   fi
 
-  if [ "$PNUM" -ne 0 ]; then
-    echo "Drive $1 currently has partitions."
+  if [ $PNUM -ne 1 ]; then
+    echo "Drive $1 currently has added partitions."
     exit $RED
   fi
 
@@ -124,52 +165,9 @@ ${part_kd}
 w
 EOF
   # Ignore fdisk result, check for success
-  PNUM="`/sbin/fdisk -l | grep "^$1" | wc -l`"
-  if [ "$DRIVE" = "$1" ]; then
-    PNUM=$((PNUM-1))
-  fi
-  if [ "$PNUM" -eq 0 ]; then
-    echo "Format of drive $1 failed, use fdisk manually."
-    exit $RED
-  fi
-}
+  PNUM="$(/sbin/fdisk -l | grep "^$1" | wc -l)"
 
-format_combined() {
-  # Args: drive
-  local part_union
-
-  # Find Runix Drive
-  find_runnix_drive
-
-  # Number of partitions
-  PNUM="`/sbin/fdisk -l | grep "^$1" | wc -l`"
-
-  if [ "$DRIVE" = "$1" ]; then
-    PNUM=$((PNUM-1))
-    part_union=2
-  else
-    part_union=1
-  fi
-
-  if [ "$PNUM" -ne 0 ]; then
-    echo "Drive $1 currently has partitions."
-    exit $RED
-  fi
-
-  /sbin/fdisk "$1" <<EOF >/dev/null
-n
-p
-${part_union}
-
-
-w
-EOF
-  # Ignore fdisk result, check for success
-  PNUM="`/sbin/fdisk -l | grep "^$1" | wc -l`"
-  if [ "$DRIVE" = "$1" ]; then
-    PNUM=$((PNUM-1))
-  fi
-  if [ "$PNUM" -eq 0 ]; then
+  if [ $PNUM -ne 3 ]; then
     echo "Format of drive $1 failed, use fdisk manually."
     exit $RED
   fi
@@ -184,33 +182,24 @@ configure() {
   find_runnix_drive
 
   # Number of partitions
-  PNUM="`/sbin/fdisk -l | grep "^$1" | wc -l`"
+  PNUM="$(/sbin/fdisk -l | grep "^$1" | wc -l)"
 
   if [ "$DRIVE" = "$1" ]; then
-    PNUM=$((PNUM-1))
     part_union=2
     part_kd=3
   else
-    part_union=1
-    part_kd=2
+    echo "Drive $1 does not match RUNNIX drive: $DRIVE."
+    exit $RED
   fi
 
   case $PNUM in
 
-  1)
+  3)
     if is_configured; then
       echo "Drive $1 does not require configuration."
       exit $RED
     fi
-    genunion "${1}${part_union}" yes
-    ;;
-
-  2)
-    if is_configured; then
-      echo "Drive $1 does not require configuration."
-      exit $RED
-    fi
-    genunion "${1}${part_union}" no
+    genunion "${1}${part_union}"
     genkd "${1}${part_kd}"
     ;;
 
@@ -228,7 +217,7 @@ status() {
   find_runnix_drive
 
   # Number of partitions
-  PNUM="`/sbin/fdisk -l | grep "^$DRIVE" | wc -l`"
+  PNUM="$(/sbin/fdisk -l | grep "^$DRIVE" | wc -l)"
 
   case $PNUM in
 
@@ -236,7 +225,7 @@ status() {
     echo "ok-format $DRIVE"
     ;;
 
-  [2-3])
+  3)
     if is_configured; then
       echo "ok-unionfs $DRIVE"
     else
@@ -251,6 +240,25 @@ status() {
   esac
 }
 
+usage_exit()
+{
+  case $1 in
+
+  format)
+    echo "Usage: initial-setup format separate /dev/hdd [unionfs_size_MB]"
+    ;;
+  configure)
+    echo "Usage: initial-setup configure /dev/hdd"
+    ;;
+  *)
+    echo "Usage: initial-setup format|configure|status"
+    ;;
+
+  esac
+
+  exit 1
+}
+
 # main
 
 case $1 in
@@ -260,8 +268,7 @@ format)
 
   separate)
     if [ -z "$3" ]; then
-      echo "Usage: initial-setup format separate /dev/hdd [unionfs_size_MB]"
-      exit 1
+      usage_exit $1
     fi
     SIZE="$4"
     if [ -z "$SIZE" ]; then
@@ -271,16 +278,12 @@ format)
     ;;
 
   combined)
-    if [ -z "$3" ]; then
-      echo "Usage: initial-setup format combined /dev/hdd"
-      exit 1
-    fi
-    format_combined "$3"
+    echo "initial-setup: \"format combined\" is no longer supported."
+    usage_exit $1
     ;;
 
   *)
-    echo "Usage: initial-setup format separate|combined /dev/hdd [unionfs_size_MB]"
-    exit 1
+    usage_exit $1
     ;;
 
   esac
@@ -290,8 +293,7 @@ format)
 
 configure)
   if [ -z "$2" ]; then
-    echo "Usage: initial-setup configure /dev/hdd"
-    exit 1
+    usage_exit $1
   fi
   configure "$2"
   echo "Configure successful."
@@ -303,8 +305,7 @@ status)
   ;;
 
 *)
-  echo "Usage: initial-setup format|configure|status"
-  exit 1
+  usage_exit
   ;;
 
 esac

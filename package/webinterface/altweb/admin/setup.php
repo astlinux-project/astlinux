@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2016 Lonnie Abelbeck
+// Copyright (C) 2008-2020 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -8,6 +8,7 @@
 
 // setup.php for AstLinux
 // 01-01-2009
+// 04-25-2020, Remove 'Combined Unionfs and /mnt/kd/ partition' option
 //
 // Script name to call
 $INITIAL_SETUP = '/usr/sbin/initial-setup';
@@ -70,11 +71,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } elseif (isset($_POST['submit_cancel'])) {
     cancelSETUP();
   } elseif (isset($_POST['submit_format'])) {
-    if (isset($_POST['format_type']) && isset($_POST['unionfs_size']) && isset($_POST['target_drive'])) {
-      $format_type = $_POST['format_type'];
+    if (isset($_POST['unionfs_size']) && isset($_POST['target_drive'])) {
       $target_drive = tuq($_POST['target_drive']);
-      if ($format_type === 'combined') {
-        $result_str = shell($INITIAL_SETUP.' format combined '.$target_drive.' 2>/dev/null', $status);
+      $unionfs_size = tuq($_POST['unionfs_size']);
+      if ($unionfs_size > 9) {
+        $result_str = shell($INITIAL_SETUP.' format separate '.$target_drive.' '.$unionfs_size.' 2>/dev/null', $status);
         if ($status != 0) {
           putACTIONresult($result_str, $status);
           exit;
@@ -82,18 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           systemREBOOT($myself, 10, TRUE);
         }
       } else {
-        $unionfs_size = tuq($_POST['unionfs_size']);
-        if ($unionfs_size > 9) {
-          $result_str = shell($INITIAL_SETUP.' format separate '.$target_drive.' '.$unionfs_size.' 2>/dev/null', $status);
-          if ($status != 0) {
-            putACTIONresult($result_str, $status);
-            exit;
-          } else {
-            systemREBOOT($myself, 10, TRUE);
-          }
-        } else {
-          $result = 9;
-        }
+        $result = 9;
       }
     }
   } elseif (isset($_POST['submit_configure'])) {
@@ -164,13 +154,7 @@ require_once '../common/header.php';
     putHtml('</select>');
     putHtml('</td></tr>');
     putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
-    putHtml('&nbsp;<input type="radio" value="combined" name="format_type" checked="checked" />');
-    putHtml('Combined Unionfs and /mnt/kd/ partition');
-    putHtml('</td></tr>');
-    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">&nbsp;</td></tr>');
-    putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
-    putHtml('&nbsp;<input type="radio" value="separate" name="format_type" />');
-    putHtml('Separate Unionfs and /mnt/kd/ partitions');
+    putHtml('&nbsp;Create separate Unionfs and /mnt/kd/ partitions:<br />');
     putHtml('</td></tr>');
     putHtml('<tr class="dtrow1"><td style="text-align: right;">&nbsp;');
     putHtml('</td><td style="text-align: left;" colspan="5">');
