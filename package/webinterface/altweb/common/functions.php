@@ -220,9 +220,6 @@ function systemREBOOT($myself, $result, $setup = FALSE) {
   }
 
   $arch = system_image_arch();
-  if ($arch === 'net4801' || $arch === 'wrap') {
-    $count_down_secs += 20;
-  }
 
   $cmd = '/sbin/kernel-reboot';
   if (! is_executable($cmd)
@@ -235,7 +232,7 @@ function systemREBOOT($myself, $result, $setup = FALSE) {
   shell($cmd.' -d4 >/dev/null 2>/dev/null &', $status);
   if ($status == 0) {
     if ($setup) {
-      $count_down_secs += 50;
+      $count_down_secs += 10;
       $opts = '&setup';
     } else {
       $opts = '';
