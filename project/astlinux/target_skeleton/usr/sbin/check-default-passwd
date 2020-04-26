@@ -11,7 +11,7 @@ WEB_GUI_HTPASSWD="${HTPASSWD:-/stat/var/www/admin/.htpasswd}"
 case $1 in
 
 root)
-  if grep -q 'root:$1$$axJeFIpwicqOTwFpuoUAs1:' "$SYSTEM_ROOT_PASSWD" || [ ! -f "/oldroot/mnt/asturw$SYSTEM_ROOT_PASSWD" ]; then
+  if grep -q 'root:$1$$axJeFIpwicqOTwFpuoUAs1:' "$SYSTEM_ROOT_PASSWD" || [ ! -f "/mnt/asturw$SYSTEM_ROOT_PASSWD" ]; then
     echo "$SYSTEM_ROOT_PASSWD"
     exit 0
   fi
@@ -19,7 +19,7 @@ root)
 
 admin)
   if [ -f "$WEB_GUI_HTPASSWD" ]; then
-    if grep -q 'admin:6kERs0/UltqFI' "$WEB_GUI_HTPASSWD" || [ -z "$HTPASSWD" -a ! -f "/oldroot/mnt/asturw$WEB_GUI_HTPASSWD" ]; then
+    if grep -q 'admin:6kERs0/UltqFI' "$WEB_GUI_HTPASSWD" || [ -z "$HTPASSWD" -a ! -f "/mnt/asturw$WEB_GUI_HTPASSWD" ]; then
       echo "$WEB_GUI_HTPASSWD"
       exit 0
     fi

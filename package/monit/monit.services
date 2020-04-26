@@ -30,7 +30,7 @@ check filesystem var_tmpfs
   if space usage > 80% then alert
 
 check filesystem asturw
-  path /oldroot/mnt/asturw
+  path /mnt/asturw
   if space usage > 80% then alert
 
 #check filesystem kd

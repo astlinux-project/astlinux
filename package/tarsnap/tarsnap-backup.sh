@@ -259,9 +259,9 @@ do_backup()
   fi
 
   ##
-  ## /oldroot/mnt/asturw
+  ## /mnt/asturw
   ##
-  cd_dir="/oldroot/mnt/asturw"
+  cd_dir="/mnt/asturw"
   if ! cd "$cd_dir"; then
     return 1
   fi

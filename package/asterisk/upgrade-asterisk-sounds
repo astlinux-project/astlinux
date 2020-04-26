@@ -251,8 +251,8 @@ if [ -d /tmp/snd ]; then
   exit $ORANGE
 fi
 
-if mount | grep -q "/oldroot/mnt/asturw"; then
-  ASTURW="/oldroot/mnt/asturw"
+if mount | grep -q "/mnt/asturw"; then
+  ASTURW="/mnt/asturw"
 else
   echo "Unable to find ASTURW partition."
   exit $RED

@@ -81,7 +81,7 @@ find_runnix_drive() {
 is_configured() {
 
   # Is unionfs here?
-  if mount | grep -q "/oldroot/mnt/asturw"; then
+  if mount | grep -q "/mnt/asturw"; then
     return 0
   fi
 

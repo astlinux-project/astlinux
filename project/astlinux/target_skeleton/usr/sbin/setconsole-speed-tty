@@ -155,8 +155,8 @@ case $speed in
 
   reset)
 
-    if [ -f /oldroot/mnt/asturw/etc/inittab ]; then
-      rm /oldroot/mnt/asturw/etc/inittab
+    if [ -f /mnt/asturw/etc/inittab ]; then
+      rm /mnt/asturw/etc/inittab
 
       nspeed="$(get_speed)"
       test_serial_console "$nspeed"

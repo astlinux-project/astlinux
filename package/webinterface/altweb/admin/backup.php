@@ -174,7 +174,7 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('<strong>Backup [asturw]:</strong>');
   putHtml('</td><td style="text-align: left;" colspan="4">');
-  putHtml('<i>Directory and File names are relative to /oldroot/mnt/asturw/</i>');
+  putHtml('<i>Directory and File names are relative to '.$MNT_ASTURW_DIR.'/</i>');
   putHtml('</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');

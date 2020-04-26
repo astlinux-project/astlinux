@@ -106,7 +106,7 @@ init () {
     fi
 
     # Move old locale files from /usr/lib/locale
-    move_old_locale_files /oldroot/mnt/asturw/usr/lib/locale
+    move_old_locale_files /mnt/asturw/usr/lib/locale
 
     # Delete config files for removed packages
     delete_removed_package_config_files

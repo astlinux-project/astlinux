@@ -106,7 +106,7 @@ unionfs_for_dir()
   local dir="$1" upath asturw asturo union fuse_opt union_opt
 
   upath="/mnt/unionfs"
-  asturw="/oldroot/mnt/asturw/$dir"
+  asturw="/mnt/asturw/$dir"
   asturo="$upath/asturo/$dir"
   union="$upath/union/$dir"
 
@@ -234,11 +234,11 @@ $fstab_shm
 
   ## Check and mount unionfs
   if [ -n "$ASTURW" ]; then
-    echo "$ASTURW /oldroot/mnt/asturw ext2 noauto,noatime 0 0" >> /tmp/etc/fstab
+    echo "$ASTURW /mnt/asturw ext2 noauto,noatime 0 0" >> /tmp/etc/fstab
 
     ast_checkfs $ASTURW
 
-    mount /oldroot/mnt/asturw >/dev/null
+    mount /mnt/asturw >/dev/null
 
     unionfs_for_dir etc
     unionfs_for_dir stat

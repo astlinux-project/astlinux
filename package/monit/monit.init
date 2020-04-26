@@ -58,6 +58,11 @@ init ()
     if [ -d /stat/etc/monit ]; then
       cp -a /stat/etc/monit/* /mnt/kd/monit/
     fi
+  elif [ -f /mnt/kd/monit/monit.d/services.conf ]; then
+    ## Adjust for ASTURW path change
+    if grep -q '/oldroot/mnt/asturw' /mnt/kd/monit/monit.d/services.conf; then
+      sed -i 's|/oldroot/mnt/asturw|/mnt/asturw|g' /mnt/kd/monit/monit.d/services.conf
+    fi
   fi
 
   if [ ! -d /tmp/etc/monit ]; then

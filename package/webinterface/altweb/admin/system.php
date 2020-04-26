@@ -233,7 +233,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $excludepath .= 'stat/var/packages/*'."\n";
       $excludepath .= 'usr/lib/locale/*'."\n";
       @file_put_contents($excludefile, $excludepath);
-      shell($tarcmd.$asturw.' -X '.$excludefile.' $(ls -1 /oldroot/mnt/asturw/ | sed -e "s/^mnt$//") -C /oldroot/mnt/asturw >/dev/null 2>/dev/null', $status);
+      shell($tarcmd.$asturw.' -X '.$excludefile.' $(ls -1 '.$MNT_ASTURW_DIR.'/ | sed -e "s/^mnt$//") -C '.$MNT_ASTURW_DIR.' >/dev/null 2>/dev/null', $status);
       @unlink($excludefile);
       if ($status != 0) {
         @unlink($asturw);

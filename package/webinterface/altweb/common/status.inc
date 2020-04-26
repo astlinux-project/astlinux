@@ -320,8 +320,9 @@ function isDHCPactive() {
 // Function: noASTURWstorage
 //
 function noASTURWstorage() {
+  global $MNT_ASTURW_DIR;
 
-  shell('mount 2>/dev/null | grep -q "/oldroot/mnt/asturw"', $status);
+  shell('mount 2>/dev/null | grep -q "'.$MNT_ASTURW_DIR.'"', $status);
 
   return($status != 0);
 }
