@@ -145,10 +145,6 @@ do_reboot()
   # Stop services and unmount all file systems or remount 'ro' if busy
   /etc/rc shutdown
 
-  echo "Stopping udevd..."
-  udevadm control --timeout=121 --exit
-  killall udevd 2>/dev/null
-
   echo "Trying kexec..."
   /sbin/kexec -e
 

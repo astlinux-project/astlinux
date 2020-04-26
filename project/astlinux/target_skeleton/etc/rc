@@ -454,8 +454,11 @@ shutdown() {
     hwclock -wu --rtc /dev/rtc0 2>/dev/null
   fi
 
-  umount -a -r 2>/dev/null
+  echo "Stopping udevd..."
+  udevadm control --timeout=121 --exit
+  killall udevd 2>/dev/null
 
+  umount -a -r 2>/dev/null
 }
 
 # can't read cmdline here, because /proc isn't yet mounted
