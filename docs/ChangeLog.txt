@@ -28,6 +28,7 @@ Released @TBD@
 -- unionfs, move from old kernel unionfs to FUSE unionfs version 2.1
    To better secure the filesystem, now only '/etc' and '/stat' will be read-write
    over the read-only base firmware image.  Previously '/' (everything) was overlaid.
+   Additionally, mount ASTURW as /mnt/asturw instead of /oldroot/mnt/asturw .
 
 -- initial-setup, remove 'combined' partition format option, always use 'format separate'
 
