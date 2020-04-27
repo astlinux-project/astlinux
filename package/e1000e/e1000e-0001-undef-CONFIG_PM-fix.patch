@@ -1,0 +1,12 @@
+--- e1000e-3.8.4/src/netdev.c.orig	2020-04-27 11:05:46.088873461 -0500
++++ e1000e-3.8.4/src/netdev.c	2020-04-27 11:12:32.198488858 -0500
+@@ -8117,7 +8117,9 @@
+ 
+ 	e1000_init_manageability_pt(adapter);
+ 
++#ifdef CONFIG_PM
+ 	e1000e_pm_thaw(&pdev->dev);
++#endif /* CONFIG_PM */
+ 
+ 	/* If the controller has AMT, do not set DRV_LOAD until the interface
+ 	 * is up.  For all other cases, let the f/w know that the h/w is now
