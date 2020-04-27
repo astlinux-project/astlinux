@@ -3,8 +3,19 @@
 ACTION="$1"
 GEN_LOCALE="$(pwd)/scripts/gen-locale"
 
+## locale  -> Build on Centos 7  (glibc 2.17)
+## locale2 -> Build on Debian 10 (glibc 2.28)
+LOCALE_VER="locale2"
+
+auth_file="$HOME/.s3cfg"
+
 if [ "$ACTION" != "test" -a "$ACTION" != "upload" ]; then
   echo "Usage: master-locale test|upload"
+  exit 1
+fi
+
+if [ ! -f "$auth_file" ] && [ "$ACTION" = "upload" ]; then
+  echo "master-locale: authentication file \"$auth_file\" not found."
   exit 1
 fi
 
@@ -51,7 +62,6 @@ es_PY
 es_SV
 es_UY
 es_VE
-et_EE
 fi_FI
 fr_BE
 fr_CA
@@ -100,13 +110,13 @@ for i in $locales; do
     sha1sum locale-archive.gz > locale-archive.gz.sha1
     for file in locale-archive.gz locale-archive.gz.sha1; do
     if [ "$ACTION" = "upload" ]; then
-      s3cmd put --acl-public "$file" "s3://${S3_BUCKET}/locale/${locale}/${file}"
+      s3cmd put --acl-public "$file" "s3://${S3_BUCKET}/${LOCALE_VER}/${locale}/${file}"
       if [ $? -ne 0 ]; then
         rm -f "$TMP_LIST_FILE" "$LOCALE_FILE.gz" "$LOCALE_FILE.gz.sha1"
         exit 1
       fi
     else
-      echo "s3cmd put --acl-public $file s3://${S3_BUCKET}/locale/${locale}/${file}"
+      echo "s3cmd put --acl-public $file s3://${S3_BUCKET}/${LOCALE_VER}/${locale}/${file}"
     fi
     done
   else
@@ -116,13 +126,13 @@ done
 
 file="$TMP_LIST_FILE"
 if [ "$ACTION" = "upload" ]; then
-  s3cmd put --acl-public "$file" "s3://${S3_BUCKET}/locale/locales.txt"
+  s3cmd put --acl-public "$file" "s3://${S3_BUCKET}/${LOCALE_VER}/locales.txt"
   if [ $? -ne 0 ]; then
     rm -f "$TMP_LIST_FILE" "$LOCALE_FILE" "$LOCALE_FILE.gz" "$LOCALE_FILE.gz.sha1"
     exit 1
   fi
 else
-  echo "s3cmd put --acl-public $file s3://${S3_BUCKET}/locale/locales.txt"
+  echo "s3cmd put --acl-public $file s3://${S3_BUCKET}/${LOCALE_VER}/locales.txt"
 fi
 
 if [ $err_cnt -gt 0 ]; then
