@@ -25,6 +25,8 @@ Released @TBD@
    == syslinux, version bump to 6.03
    == Memtest86+, version bump to 5.01, patched to also work over serial console
 
+-- e1000e version bump to 3.8.4 Intel PCI-Express PRO/1000 Ethernet Linux driver
+
 -- unionfs, move from old kernel unionfs to FUSE unionfs version 2.1
    To better secure the filesystem, now only '/etc' and '/stat' will be read-write
    over the read-only base firmware image.  Previously '/' (everything) was overlaid.
@@ -46,6 +48,8 @@ Released @TBD@
 
 -- udev, now use eudev version 3.2.9
 
+-- (Custom Build Only) flashrom, version bump to 1.2
+
 -- Update build system tools:
    == New toolchain: glibc 2.27, binutils 2.29.1, gcc 6.5.0, using crosstool-ng-1.24.0
    == bison, version bump to 3.4.2
@@ -55,13 +59,13 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.1.1g, security fix: CVE-2020-1967
 
--- WireGuard VPN, module 1.0.20200413 (version bump), tools 1.0.20200319 (no change)
+-- WireGuard VPN, module 1.0.20200426 (version bump), tools 1.0.20200319 (no change)
 
 -- OpenVPN, version bump to 2.4.9, security fix: CVE-2020-11810
 
 -- chrony, version bump to 4.0-pre2
 
--- msmtp, version bump to 1.8.8
+-- msmtp, version bump to 1.8.10
 
 -- sipsak, version bump to 0.9.7
 
