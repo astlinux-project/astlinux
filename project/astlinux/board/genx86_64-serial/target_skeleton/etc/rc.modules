@@ -3,25 +3,16 @@
 ## Comment out any modules you don't need.
 ##
 ## Ethernet support
-## 10/100 first, then Gigabit
-3c59x
-typhoon
-tulip
-e100
-natsemi
-forcedeth
 #8139cp
 8139too
-via-rhine
-via-velocity
+#via-rhine
+#via-velocity
 #vmxnet3
 pcnet32
-acenic
 e1000
 e1000e
 igb
-ns83820
 r8168
 r8169
 tg3
-skge
+#skge
