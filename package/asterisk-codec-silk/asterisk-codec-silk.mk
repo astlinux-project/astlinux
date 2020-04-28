@@ -4,31 +4,16 @@
 #
 ##############################################################
 ifeq ($(BR2_PACKAGE_ASTERISK_v13se),y)
-  ifeq ($(ARCH),x86_64)
 ASTERISK_CODEC_SILK_VERSION := 13.0_1.0.3-x86_64
 ASTERISK_CODEC_SILK_SITE := https://downloads.digium.com/pub/telephony/codec_silk/asterisk-13.0/x86-64
-  else
-ASTERISK_CODEC_SILK_VERSION := 13.0_1.0.3-x86_32
-ASTERISK_CODEC_SILK_SITE := https://downloads.digium.com/pub/telephony/codec_silk/asterisk-13.0/x86-32
-  endif
 endif
 ifeq ($(BR2_PACKAGE_ASTERISK_v13),y)
-  ifeq ($(ARCH),x86_64)
 ASTERISK_CODEC_SILK_VERSION := 13.0_1.0.3-x86_64
 ASTERISK_CODEC_SILK_SITE := https://downloads.digium.com/pub/telephony/codec_silk/asterisk-13.0/x86-64
-  else
-ASTERISK_CODEC_SILK_VERSION := 13.0_1.0.3-x86_32
-ASTERISK_CODEC_SILK_SITE := https://downloads.digium.com/pub/telephony/codec_silk/asterisk-13.0/x86-32
-  endif
 endif
 ifeq ($(BR2_PACKAGE_ASTERISK_v16),y)
-  ifeq ($(ARCH),x86_64)
 ASTERISK_CODEC_SILK_VERSION := 16.0_1.0.3-x86_64
 ASTERISK_CODEC_SILK_SITE := https://downloads.digium.com/pub/telephony/codec_silk/asterisk-16.0/x86-64
-  else
-ASTERISK_CODEC_SILK_VERSION := 16.0_1.0.3-x86_32
-ASTERISK_CODEC_SILK_SITE := https://downloads.digium.com/pub/telephony/codec_silk/asterisk-16.0/x86-32
-  endif
 endif
 ASTERISK_CODEC_SILK_SOURCE := codec_silk-$(ASTERISK_CODEC_SILK_VERSION).tar.gz
 ASTERISK_CODEC_SILK_DIR := $(BUILD_DIR)/codec_silk-$(ASTERISK_CODEC_SILK_VERSION)

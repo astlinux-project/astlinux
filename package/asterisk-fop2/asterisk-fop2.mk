@@ -5,16 +5,9 @@
 #############################################################
 
 ASTERISK_FOP2_VERSION = 2.31.27
-ASTERISK_FOP2_SOURCE = fop2-$(ASTERISK_FOP2_VERSION)-debian-i386.tgz
+ASTERISK_FOP2_SOURCE = fop2-$(ASTERISK_FOP2_VERSION)-debian-x86_64.tgz
 ASTERISK_FOP2_SITE = http://download2.fop2.com
 # Note: be sure to edit "project/astlinux/target_skeleton/usr/sbin/upgrade-package" on version change
-
-ASTERISK_FOP2_X86_64_SOURCE = fop2-$(ASTERISK_FOP2_VERSION)-debian-x86_64.tgz
-
-define ASTERISK_FOP2_X86_64_DOWNLOAD
-	$(call DOWNLOAD,$(ASTERISK_FOP2_SITE),$(ASTERISK_FOP2_X86_64_SOURCE))
-endef
-ASTERISK_FOP2_POST_DOWNLOAD_HOOKS += ASTERISK_FOP2_X86_64_DOWNLOAD
 
 define ASTERISK_FOP2_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 package/asterisk-fop2/fop2.init $(TARGET_DIR)/etc/init.d/fop2
