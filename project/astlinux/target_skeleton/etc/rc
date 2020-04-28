@@ -149,10 +149,6 @@ init() {
       KDDEV=`echo $i | sed -e 's/astkd=//'`
       ;;
 
-    astopt=*)
-      OPTDEV=`echo $i | sed -e 's/astopt=//'`
-      ;;
-
     astimg=*)
       ASTIMG=`echo $i | sed -e 's/astimg=//'`
       if echo $ASTIMG | grep -q .run; then
@@ -305,10 +301,6 @@ $fstab_shm
     echo "Checking $ROOTDEV"
 
     ast_checkfs $ROOTDEV
-  fi
-
-  if [ -n "$OPTDEV" ]; then
-    echo "ASTOPT IS NO LONGER SUPPORTED - $OPTDEV WILL NOT BE MOUNTED"
   fi
 
   if [ -n "$KDDEV" ]; then
