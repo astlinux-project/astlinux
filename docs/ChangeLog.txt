@@ -20,10 +20,11 @@ Released @TBD@
 
 -- Linux Kernel 3.16.82 (no change)
 
--- RUNNIX, version bump to runnix-0.6.0d, major update
+-- RUNNIX, version bump to runnix-0.6.0, major update
    == 64-bit, x86_64
    == syslinux, version bump to 6.03
    == Memtest86+, version bump to 5.01, patched to also work over serial console
+   == e2fsprogs, version bump to 1.45.6
 
 -- e1000e version bump to 3.8.4 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
@@ -47,6 +48,8 @@ Released @TBD@
 -- strace, version bump to 5.6
 
 -- udev, now use eudev version 3.2.9
+
+-- Time Zone Database update, tzdata2020a and php-timezonedb-2020.1
 
 -- (Custom Build Only) flashrom, version bump to 1.2
 
