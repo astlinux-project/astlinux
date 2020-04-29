@@ -312,7 +312,7 @@ $(TARGET_DIR)/$(ASTERISK_TARGET_BINARY): $(ASTERISK_DIR)/$(ASTERISK_BINARY)
 	$(INSTALL) -D -m 0755 package/asterisk/asterisk-sip-monitor $(TARGET_DIR)/usr/sbin/asterisk-sip-monitor
 	$(INSTALL) -D -m 0755 package/asterisk/asterisk-sip-monitor-ctrl $(TARGET_DIR)/usr/sbin/asterisk-sip-monitor-ctrl
 	$(INSTALL) -D -m 0755 $(ASTERISK_DIR)/contrib/scripts/ast_tls_cert $(TARGET_DIR)/usr/sbin/ast_tls_cert
-	mkdir -p $(TARGET_DIR)/stat/var/lib/asterisk
+	mkdir -p $(TARGET_DIR)/stat/var/lib/asterisk/licenses
 	mv $(TARGET_DIR)/var/lib/asterisk/* $(TARGET_DIR)/stat/var/lib/asterisk/
 	rmdir $(TARGET_DIR)/var/lib/asterisk
 	rm -f $(TARGET_DIR)/stat/var/lib/asterisk/astdb

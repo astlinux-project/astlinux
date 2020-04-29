@@ -2,6 +2,48 @@
 
 . /etc/rc.conf
 
+asterisk_unionfs_for_dir()
+{
+  local dir="$1" action="$2" upath asturw asturo union fuse_opt union_opt
+
+  upath="/mnt/unionfs"
+  asturw="/mnt/asturw/$dir"
+  asturo="$upath/asturo/$dir"
+  union="$upath/union/$dir"
+
+  if [ "$action" = "del" ]; then
+    if [ ! -d "$union" ]; then
+      return 1
+    fi
+
+    if umount "/$dir"; then
+      if umount "$union"; then
+        rmdir "$union"
+        umount "$asturo"
+        rmdir "$asturo"
+      fi
+    fi
+  elif [ "$action" = "add" ]; then
+    if [ -d "$union" ]; then
+      return 1
+    fi
+
+    fuse_opt="-o allow_other,use_ino,nonempty,suid"
+    union_opt="-o cow,max_files=1024"
+
+    if [ ! -d "$asturw" ]; then
+      mkdir -p "$asturw"
+    fi
+    mkdir -p "$asturo"
+    mkdir -p "$union"
+    mount --bind "/$dir" "$asturo"
+    unionfs $fuse_opt $union_opt "${asturw}=RW:${asturo}=RO" "$union"
+    mount --bind "$union" "/$dir"
+  fi
+
+  return 0
+}
+
 make_symlink_or_dir()
 {
   # Args: symlink-to link-or-dir
@@ -152,6 +194,12 @@ WARNING WARNING WARNING
   fi
 
   if [ -f /etc/asterisk/extensions.conf ]; then
+
+    if [ "$ASTERISK_RW_MODULES_DIR" = "yes" ]; then
+      asterisk_unionfs_for_dir usr/lib/asterisk/modules add
+    else
+      asterisk_unionfs_for_dir usr/lib/asterisk/modules del
+    fi
 
     ulimit -s unlimited
     if [ "$SAFE_ASTERISK" = "yes" ]; then
