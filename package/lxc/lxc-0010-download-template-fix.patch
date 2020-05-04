@@ -1,0 +1,20 @@
+--- lxc-3.2.1/templates/lxc-download.in.orig	2020-05-04 09:28:47.442874005 -0500
++++ lxc-3.2.1/templates/lxc-download.in	2020-05-04 09:32:51.760054242 -0500
+@@ -388,7 +388,7 @@
+ 
+ # Setup the cache
+ if [ "${DOWNLOAD_TARGET}" = "system" ]; then
+-  LXC_CACHE_BASE="${LOCALSTATEDIR}/cache/lxc/"
++  LXC_CACHE_BASE="/mnt/kd/lxc/cache/"
+ else
+   LXC_CACHE_BASE="${HOME}/.cache/lxc/"
+ fi
+@@ -514,7 +514,7 @@
+ # is to use a function wrapper, but the latter can't be used here as the args
+ # are dynamic. We thus need to ignore the warning brought by shellcheck.
+ # shellcheck disable=SC2086
+-tar  --anchored ${EXCLUDES} --numeric-owner -xpJf "${LXC_CACHE_PATH}/rootfs.tar.xz" -C "${LXC_ROOTFS}"
++tar ${EXCLUDES} -xJf "${LXC_CACHE_PATH}/rootfs.tar.xz" -C "${LXC_ROOTFS}"
+ 
+ mkdir -p "${LXC_ROOTFS}/dev/pts/"
+ 

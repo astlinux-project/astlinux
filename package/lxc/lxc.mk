@@ -37,4 +37,21 @@ else
 LXC_CONF_OPT += --disable-openssl
 endif
 
+define LXC_POST_INSTALL
+	$(INSTALL) -m 0755 -D package/lxc/scripts/cgroupfs-mount $(TARGET_DIR)/usr/bin/cgroupfs-mount
+	$(INSTALL) -m 0755 -D package/lxc/scripts/cgroupfs-umount $(TARGET_DIR)/usr/bin/cgroupfs-umount
+	$(INSTALL) -m 0755 -D package/lxc/lxc.init $(TARGET_DIR)/etc/init.d/lxc
+	ln -sf ../../init.d/lxc $(TARGET_DIR)/etc/runlevels/default/S98lxc
+	ln -sf ../../init.d/lxc $(TARGET_DIR)/etc/runlevels/default/K00lxc
+endef
+LXC_POST_INSTALL_TARGET_HOOKS = LXC_POST_INSTALL
+
+define LXC_UNINSTALL_TARGET_CMDS
+	rm -f $(TARGET_DIR)/usr/bin/cgroupfs-mount
+	rm -f $(TARGET_DIR)/usr/bin/cgroupfs-umount
+	rm -f $(TARGET_DIR)/etc/init.d/lxc
+	rm -f $(TARGET_DIR)/etc/runlevels/default/S98lxc
+	rm -f $(TARGET_DIR)/etc/runlevels/default/K00lxc
+endef
+
 $(eval $(call AUTOTARGETS,package,lxc))
