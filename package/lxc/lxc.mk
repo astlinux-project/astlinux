@@ -38,6 +38,7 @@ LXC_CONF_OPT += --disable-openssl
 endif
 
 define LXC_POST_INSTALL
+	$(INSTALL) -m 0644 -D package/lxc/config/*.conf $(TARGET_DIR)/usr/share/lxc/config/
 	$(INSTALL) -m 0755 -D package/lxc/scripts/cgroupfs-mount $(TARGET_DIR)/usr/bin/cgroupfs-mount
 	$(INSTALL) -m 0755 -D package/lxc/scripts/cgroupfs-umount $(TARGET_DIR)/usr/bin/cgroupfs-umount
 	$(INSTALL) -m 0755 -D package/lxc/lxc.init $(TARGET_DIR)/etc/init.d/lxc
