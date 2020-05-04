@@ -1,5 +1,37 @@
---- lxc-3.2.1/templates/lxc-download.in.orig	2020-05-04 09:28:47.442874005 -0500
-+++ lxc-3.2.1/templates/lxc-download.in	2020-05-04 09:32:51.760054242 -0500
+--- lxc-3.2.1/templates/lxc-download.in.orig	2020-05-04 13:05:31.640683452 -0500
++++ lxc-3.2.1/templates/lxc-download.in	2020-05-04 13:10:01.953328384 -0500
+@@ -74,9 +74,9 @@
+   fi
+ }
+ 
+-wget_wrapper() {
++curl_wrapper() {
+   for _ in $(seq 3); do
+-    if wget "$@"; then
++    if curl -sSfL --globoff --connect-timeout 30 "$@"; then
+       return 0
+     fi
+   done
+@@ -85,8 +85,8 @@
+ }
+ 
+ download_file() {
+-  if ! wget_wrapper -T 30 -q "https://${DOWNLOAD_SERVER}/$1" -O "$2" >/dev/null 2>&1; then
+-    if ! wget_wrapper -T 30 -q "http://${DOWNLOAD_SERVER}/$1" -O "$2" >/dev/null 2>&1; then
++  if ! curl_wrapper -o "$2" "https://${DOWNLOAD_SERVER}/$1" >/dev/null 2>&1; then
++    if ! curl_wrapper -o "$2" "http://${DOWNLOAD_SERVER}/$1" >/dev/null 2>&1; then
+       if [ "$3" = "noexit" ]; then
+         return 1
+       else
+@@ -266,7 +266,7 @@
+ done
+ 
+ # Check for required binaries
+-for bin in tar xz wget; do
++for bin in tar xz curl; do
+   if ! command -V "${bin}" >/dev/null 2>&1; then
+     echo "ERROR: Missing required tool: ${bin}" 1>&2
+     exit 1
 @@ -388,7 +388,7 @@
  
  # Setup the cache
