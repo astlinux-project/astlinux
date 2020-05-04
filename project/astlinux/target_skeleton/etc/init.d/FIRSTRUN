@@ -55,11 +55,10 @@ move_old_locale_files()
 
   to_dir="/stat/var/lib/locale"
 
-  if [ -f "$base/locale-archive" ]; then
+  if [ -f "$base/locale-archive" -a -f "$base/.locale" ]; then
     mkdir -p "$to_dir"
-    cp "$base/locale-archive" "$to_dir/"
-    cp "$base/.locale" "$to_dir/"
-    rm -rf "$base"
+    mv "$base/locale-archive" "$to_dir/"
+    mv "$base/.locale" "$to_dir/"
   fi
 }
 
