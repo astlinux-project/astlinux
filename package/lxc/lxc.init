@@ -45,7 +45,7 @@ start ()
 
     set_sys_entry 1 /sys/fs/cgroup/memory/memory.use_hierarchy
 
-    lxc-autostart -a -A
+    lxc-autostart
 
     : > $STATEFILE
   fi
