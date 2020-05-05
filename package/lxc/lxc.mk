@@ -13,6 +13,7 @@ LXC_CONF_OPT = \
 	--localstatedir=/var \
 	--with-runtime-path=/var/run \
 	--with-distro=buildroot \
+	--disable-commands \
 	--disable-apparmor \
 	--disable-seccomp \
 	--disable-selinux \
@@ -38,12 +39,12 @@ LXC_CONF_OPT += --disable-openssl
 endif
 
 define LXC_REMOVE_TARGET_FILES
-	rm -f $(TARGET_DIR)/usr/bin/lxc-usernsexec
 	rm -f $(TARGET_DIR)/usr/share/lxc/templates/lxc-local
 	rm -f $(TARGET_DIR)/usr/share/lxc/templates/lxc-oci
 	rm -f $(TARGET_DIR)/usr/share/lxc/config/nesting.conf
 	rm -f $(TARGET_DIR)/usr/share/lxc/config/oci.common.conf
 	rm -f $(TARGET_DIR)/usr/share/lxc/lxc-patch.py
+	rm -rf $(TARGET_DIR)/usr/libexec/lxc
 	rm -rf $(TARGET_DIR)/usr/share/lxc/selinux
 endef
 LXC_POST_INSTALL_TARGET_HOOKS = LXC_REMOVE_TARGET_FILES
