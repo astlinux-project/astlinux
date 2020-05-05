@@ -37,6 +37,17 @@ else
 LXC_CONF_OPT += --disable-openssl
 endif
 
+define LXC_REMOVE_TARGET_FILES
+	rm -f $(TARGET_DIR)/usr/bin/lxc-usernsexec
+	rm -f $(TARGET_DIR)/usr/share/lxc/templates/lxc-local
+	rm -f $(TARGET_DIR)/usr/share/lxc/templates/lxc-oci
+	rm -f $(TARGET_DIR)/usr/share/lxc/config/nesting.conf
+	rm -f $(TARGET_DIR)/usr/share/lxc/config/oci.common.conf
+	rm -f $(TARGET_DIR)/usr/share/lxc/lxc-patch.py
+	rm -rf $(TARGET_DIR)/usr/share/lxc/selinux
+endef
+LXC_POST_INSTALL_TARGET_HOOKS = LXC_REMOVE_TARGET_FILES
+
 define LXC_POST_INSTALL
 	$(INSTALL) -m 0644 -D package/lxc/config/*.conf $(TARGET_DIR)/usr/share/lxc/config/
 	$(INSTALL) -m 0755 -D package/lxc/scripts/cgroupfs-mount $(TARGET_DIR)/usr/bin/cgroupfs-mount
@@ -45,7 +56,7 @@ define LXC_POST_INSTALL
 	ln -sf ../../init.d/lxc $(TARGET_DIR)/etc/runlevels/default/S98lxc
 	ln -sf ../../init.d/lxc $(TARGET_DIR)/etc/runlevels/default/K00lxc
 endef
-LXC_POST_INSTALL_TARGET_HOOKS = LXC_POST_INSTALL
+LXC_POST_INSTALL_TARGET_HOOKS += LXC_POST_INSTALL
 
 define LXC_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/bin/cgroupfs-mount

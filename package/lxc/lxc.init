@@ -4,9 +4,24 @@
 
 STATEFILE="/var/run/lxc/lxc.state"
 
+set_sys_entry()
+{
+  local value="$1" path="$2"
+
+  if [ ! -e "$path" ]; then
+    return 1
+  fi
+
+  if [ "$(cat "$path")" = "$value" ]; then
+    return 0
+  fi
+
+  echo "$value" > "$path"
+}
+
 init ()
 {
-  if [ "$LXC_CONTAINER" != "yes" ]; then
+  if [ "$LXC_ENABLE" != "yes" ]; then
     exit
   fi
 
@@ -23,10 +38,14 @@ init ()
 
 start ()
 {
-  if [ "$LXC_CONTAINER" = "yes" ] && [ ! -f $STATEFILE ]; then
+  if [ "$LXC_ENABLE" = "yes" ] && [ ! -f $STATEFILE ]; then
     echo "Starting LXC container..."
 
     /usr/bin/cgroupfs-mount
+
+    set_sys_entry 1 /sys/fs/cgroup/memory/memory.use_hierarchy
+
+    lxc-autostart -a -A
 
     : > $STATEFILE
   fi
@@ -36,6 +55,8 @@ stop ()
 {
   if [ -f $STATEFILE ]; then
     echo "Stopping LXC container..."
+
+    lxc-autostart --shutdown -a -A -t ${LXC_STOP_TIMEOUT:-5}
 
     /usr/bin/cgroupfs-umount
 
