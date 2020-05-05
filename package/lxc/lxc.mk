@@ -39,6 +39,8 @@ LXC_CONF_OPT += --disable-openssl
 endif
 
 define LXC_REMOVE_TARGET_FILES
+	rm -f $(TARGET_DIR)/usr/bin/lxc-checkpoint
+	rm -f $(TARGET_DIR)/usr/bin/lxc-execute
 	rm -f $(TARGET_DIR)/usr/share/lxc/templates/lxc-local
 	rm -f $(TARGET_DIR)/usr/share/lxc/templates/lxc-oci
 	rm -f $(TARGET_DIR)/usr/share/lxc/config/nesting.conf
