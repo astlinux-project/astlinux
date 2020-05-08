@@ -1,6 +1,6 @@
 #!/bin/ash
 
-MY_VERSION="2.0.2-04-astlinux"
+MY_VERSION="2.0.2-05-astlinux"
 
 # Location of the main configuration file for the firewall
 ##########################################################
@@ -928,9 +928,18 @@ setup_default_policies()
   fi
   iptables -A HOST_BLOCK_DST_DROP -j DROP
 
-  # The LINK_LOCAL_DROP chain should always DROP
+  # The LINK_LOCAL_DROP chain should usually DROP
+  # (except for select icmpv6 and mDNS)
   ###########################################################
   if [ "$IPV6_SUPPORT" = "1" ]; then
+    unset IFS
+    for icmpv6_type in $ICMPV6_SPECIAL_TYPES; do
+      ip6tables -A LINK_LOCAL_DROP -p icmpv6 --icmpv6-type $icmpv6_type -m hl --hl-eq 255 -j RETURN
+    done
+    for icmpv6_type in $ICMPV6_MLD_TYPES; do
+      ip6tables -A LINK_LOCAL_DROP -p icmpv6 --icmpv6-type $icmpv6_type -m hl --hl-eq 1 -j RETURN
+    done
+    ip6tables -A LINK_LOCAL_DROP -p udp --sport 5353 --dport 5353 -j RETURN
     if [ "$LINK_LOCAL_DROP_LOG" != "0" ]; then
       ip6tables -A LINK_LOCAL_DROP -m limit --limit 1/m --limit-burst 1 -j LOG --log-level $LOGLEVEL --log-prefix "AIF:Dropped Link-Local: "
     fi
