@@ -414,6 +414,7 @@ function getETHinterfaces() {
         strncmp($eth, 'tun', 3) &&
         strncmp($eth, 'tap', 3) &&
         strncmp($eth, 'sit', 3) &&
+        strncmp($eth, 'veth', 4) &&
         strncmp($eth, 'ip6tun', 6) &&
         strncmp($eth, 'ip6pd', 5) &&
         strncmp($eth, 'dummy', 5)) {

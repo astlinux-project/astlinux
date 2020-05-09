@@ -887,7 +887,7 @@ function get_new_ETHinterfaces(&$eth, $vlans_str) {
 
   if (is_file($USERCONFFILE)) {
     $user_vars = parseRCconf($USERCONFFILE);
-    $br_values = array("BRIDGE0" => "br0", "BRIDGE1" => "br1", "BRIDGE2" => "br2");
+    $br_values = array("BRIDGE0" => "br0", "BRIDGE1" => "br1", "BRIDGE2" => "br2", "LXC_BRIDGE0" => "lxcbr0");
     foreach ($br_values as $br_value => $value) {
       if (getVARdef($user_vars, $br_value) !== '') {
         $vars[] = $value;

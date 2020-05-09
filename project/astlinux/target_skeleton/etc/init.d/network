@@ -272,7 +272,7 @@ phyeth_disable_offload()
   logger -s -t network -p kern.info "Disabling \"$off_list\" offload on all configured ethernet interfaces."
 
   unset IFS
-  for eth in $EXTIF $EXT2IF $PPPOEIF $INTIF $INT2IF $INT3IF $INT4IF $DMZIF $BRIDGE0 $BRIDGE1 $BRIDGE2; do
+  for eth in $EXTIF $EXT2IF $PPPOEIF $INTIF $INT2IF $INT3IF $INT4IF $DMZIF $BRIDGE0 $BRIDGE1 $BRIDGE2 $LXC_BRIDGE0; do
     case $eth in
       eth*)
         for off in $off_list; do
@@ -338,7 +338,7 @@ start () {
   local IF
 
   # IPv6
-  if [ "$IPV6" = "yes" -o -n "$BRIDGE0" -o -n "$BRIDGE1" -o -n "$BRIDGE2" -o -n "$WIREGUARD_IP" ]; then
+  if [ "$IPV6" = "yes" -o -n "$BRIDGE0" -o -n "$BRIDGE1" -o -n "$BRIDGE2" -o -n "$LXC_BRIDGE0" -o -n "$WIREGUARD_IP" ]; then
     modprobe ipv6
     # Disable IPv6 Autoconf by default
     IFS=$'\n'
@@ -366,7 +366,7 @@ start () {
   ip link set dev lo up
 
   # look for nas[0123] being any one of our interfaces, and create it
-  for IF in $PPPOEIF $BRIDGE0 $BRIDGE1 $BRIDGE2 $INTIF $INT2IF $INT3IF $INT4IF; do
+  for IF in $PPPOEIF $BRIDGE0 $BRIDGE1 $BRIDGE2 $LXC_BRIDGE0 $INTIF $INT2IF $INT3IF $INT4IF; do
     case $IF in
     nas[0123])
       create_nasX $IF ;;
@@ -441,6 +441,15 @@ start () {
     for i in $BRIDGE2; do
       ip link set dev $i up
       ip link set dev $i master br2
+    done
+  fi
+
+  if [ -n "$LXC_BRIDGE0" ]; then
+    modprobe bridge
+    ip link add name lxcbr0 type bridge
+    for i in $LXC_BRIDGE0; do
+      ip link set dev $i up
+      ip link set dev $i master lxcbr0
     done
   fi
 
@@ -852,6 +861,15 @@ stop () {
     ip link delete br2 type bridge
   fi
 
+  if [ -n "$LXC_BRIDGE0" ]; then
+    ip link set dev lxcbr0 down
+    for i in $LXC_BRIDGE0; do
+      ip link set dev $i nomaster
+      ip link set dev $i down
+    done
+    ip link delete lxcbr0 type bridge
+  fi
+
   #VLANS
   if [ -n "$VLANS" ]; then
     for i in $VLANS; do
@@ -861,7 +879,7 @@ stop () {
   fi
 
   # ATM interfaces
-  for IF in $PPPOEIF $BRIDGE0 $BRIDGE1 $BRIDGE2 $INTIF $INT2IF $INT3IF $INT4IF; do
+  for IF in $PPPOEIF $BRIDGE0 $BRIDGE1 $BRIDGE2 $LXC_BRIDGE0 $INTIF $INT2IF $INT3IF $INT4IF; do
     case $IF in
     nas[0123])
       ip link set dev "$IF" down
