@@ -2,7 +2,7 @@
 
 . /etc/rc.conf
 
-STATEFILE="/var/run/lxc/lxc.state"
+LOCK_FILE="/var/lock/lxc.lock"
 
 set_sys_entry()
 {
@@ -32,13 +32,11 @@ init ()
   fi
 
   ln -snf /mnt/kd/lxc/container /var/lib/lxc
-
-  mkdir -p "${STATEFILE%/*}"
 }
 
 start ()
 {
-  if [ "$LXC_ENABLE" = "yes" ] && [ ! -f $STATEFILE ]; then
+  if [ "$LXC_ENABLE" = "yes" ] && [ ! -f $LOCK_FILE ]; then
     echo "Starting LXC container..."
 
     /usr/bin/cgroupfs-mount
@@ -47,20 +45,20 @@ start ()
 
     lxc-autostart
 
-    : > $STATEFILE
+    : > $LOCK_FILE
   fi
 }
 
 stop ()
 {
-  if [ -f $STATEFILE ]; then
+  if [ -f $LOCK_FILE ]; then
     echo "Stopping LXC container..."
 
     lxc-autostart --shutdown -a -A -t ${LXC_STOP_TIMEOUT:-5}
 
     /usr/bin/cgroupfs-umount
 
-    rm -f $STATEFILE
+    rm -f $LOCK_FILE
   fi
 }
 
