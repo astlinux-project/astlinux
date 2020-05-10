@@ -46,6 +46,7 @@
 // 02-10-2019, Added DNSMASQ lease DB support
 // 06-26-2019, Added ChangeLog display
 // 02-21-2020, Remove PPTP VPN support
+// 05-10-2020, Added Linux Containers (LXC)
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -660,6 +661,12 @@ require_once $COMMON.'header.php';
 
 $daemon = getDaemons();
 
+if (is_file('/var/lock/lxc.lock')) {
+  if (getPREFdef($global_prefs, 'status_linux_containers') !== 'no') {
+    $cmd = '/usr/bin/lxc-ls -f -F "NAME,STATE,AUTOSTART,RAM,INTERFACE,IPV4,IPV6"';
+    $status_linux_containers = @popen($cmd, 'r');
+  }
+}
 if (getPREFdef($global_prefs, 'status_disk_usage') !== 'no') {
     $cmd = 'df -h /tmp | grep "^ *[A-Z][a-z]"';
     $cmd .= '; df -h | grep "^/dev/[sv]d[a-h][0-9]" | sort -k 1,1';
@@ -948,6 +955,27 @@ if (is_file('/etc/ppp/pppoe.conf')) {
       fclose($ph);
     }
     @unlink($tmpfile);
+    putHtml("</pre>");
+  }
+}
+
+if (isset($status_linux_containers)) {
+  if ($status_linux_containers !== FALSE) {
+    putHtml("<h2>Linux Containers:</h2>");
+    putHtml("<pre>");
+
+    $valid_line = FALSE;
+    while (! feof($status_linux_containers)) {
+      if (($line = rtrim(fgets($status_linux_containers, 1024))) !== '') {
+        putText($line);
+        $valid_line = TRUE;
+      }
+    }
+    pclose($status_linux_containers);
+
+    if (! $valid_line) {
+      putText('No Linux Containers have been created');
+    }
     putHtml("</pre>");
   }
 }

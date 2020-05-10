@@ -53,6 +53,7 @@
 // 06-13-2019, Added Reload WireGuard VPN
 // 02-21-2020, Remove PPTP VPN support
 // 05-08-2020, Dynamically add VLAN and BRIDGE entries to interface list
+// 05-10-2020, Added Linux Containers (LXC)
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -1173,6 +1174,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS('wireguard', 52, $result, 'reload');
       } elseif ($process === 'keepalived') {
         $result = restartPROCESS($process, 53, $result, 'init');
+      } elseif ($process === 'lxc') {
+        $result = restartPROCESS($process, 54, $result, 'init');
       }
     } else {
       $result = 2;
@@ -1276,6 +1279,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">WireGuard VPN has been Reloaded.</p>');
     } elseif ($result == 53) {
       putHtml('<p style="color: green;">Keepalived'.statusPROCESS('keepalived').'.</p>');
+    } elseif ($result == 54) {
+      putHtml('<p style="color: green;">Linux Containers'.statusPROCESS('lxc').'.</p>');
     } elseif ($result == 99) {
       putHtml('<p style="color: red;">Action Failed.</p>');
     } elseif ($result == 100) {
@@ -1388,6 +1393,10 @@ require_once '../common/header.php';
   if (is_file('/etc/init.d/keepalived')) {
     $sel = ($reboot_restart === 'keepalived') ? ' selected="selected"' : '';
     putHtml('<option value="keepalived"'.$sel.'>Restart Keepalived</option>');
+  }
+  if (is_file('/etc/init.d/lxc')) {
+    $sel = ($reboot_restart === 'lxc') ? ' selected="selected"' : '';
+    putHtml('<option value="lxc"'.$sel.'>Restart Linux Containers</option>');
   }
   if (is_addon_package('fop2')) {
     $sel = ($reboot_restart === 'fop2') ? ' selected="selected"' : '';

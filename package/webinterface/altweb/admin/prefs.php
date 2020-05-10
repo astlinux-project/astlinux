@@ -27,6 +27,7 @@
 // 07-31-2019, Added Disable CodeMirror Editor
 // 10-29-2019, Added Wiki tab and link
 // 02-21-2020, Remove PPTP VPN support
+// 05-10-2020, Added Linux Containers (LXC)
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -53,6 +54,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (! isset($_POST['pppoe_connection'])) {
       $value = 'status_pppoe_connection = no';
+      fwrite($fp, $value."\n");
+    }
+    if (! isset($_POST['linux_containers'])) {
+      $value = 'status_linux_containers = no';
       fwrite($fp, $value."\n");
     }
     if (! isset($_POST['disk_usage'])) {
@@ -621,6 +626,9 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_pppoe_connection') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="pppoe_connection" name="pppoe_connection"'.$sel.' /></td><td colspan="5">Show PPPoE Connection Status when Active</td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'status_linux_containers') !== 'no') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="linux_containers" name="linux_containers"'.$sel.' /></td><td colspan="5">Show Linux Containers Status</td></tr>');
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_disk_usage') !== 'no') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="disk_usage" name="disk_usage"'.$sel.' /></td><td colspan="5">Show Disk Usage</td></tr>');

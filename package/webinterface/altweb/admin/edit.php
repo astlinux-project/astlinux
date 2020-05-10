@@ -22,6 +22,7 @@
 // 07-30-2019, Added CodeMirror text editing
 // 08-24-2019, Added Apply user.conf variables
 // 02-21-2020, Remove PPTP VPN support
+// 05-10-2020, Added Linux Containers (LXC)
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -59,6 +60,9 @@ $select_reload = array (
 );
 if (is_file('/etc/init.d/keepalived')) {
   $select_reload['keepalived'] = 'Restart Keepalived';
+}
+if (is_file('/etc/init.d/lxc')) {
+  $select_reload['lxc'] = 'Restart Linux Containers';
 }
 if (is_addon_package('fop2')) {
   $select_reload['fop2'] = 'Restart Asterisk FOP2';
@@ -183,6 +187,7 @@ function menuSelectHint($file) {
         'prosody' => 'prosody',
         'snmp' => 'snmpd',
         'keepalived' => 'keepalived',
+        'lxc' => 'lxc',
         'openvpn' => 'openvpn',
         'ipsec' => 'ipsec',
         'wireguard' => 'WIREGUARD',
@@ -340,6 +345,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS('wireguard', 52, $result, 'reload');
       } elseif ($process === 'keepalived') {
         $result = restartPROCESS($process, 53, $result, 'init');
+      } elseif ($process === 'lxc') {
+        $result = restartPROCESS($process, 54, $result, 'init');
       } elseif ($process === 'IPTABLES') {
         $result = restartPROCESS('iptables', 66, $result, 'reload');
       } elseif ($process === 'APPLY') {
@@ -376,6 +383,8 @@ require_once '../common/header.php';
   $openfile = isset($_GET['file']) ? $_GET['file'] : '';
   $pos = strrpos($openfile, '/');
   $dir = substr($openfile, 0, $pos);
+  $pos = strrpos($dir, '/');
+  $dir_up = substr($dir, 0, $pos);
 
   if ($dir === '/mnt/kd' ||
       $dir === '/mnt/kd/dahdi' ||
@@ -404,6 +413,7 @@ require_once '../common/header.php';
       $dir === '/mnt/kd/keepalived' ||
       $dir === '/etc/asterisk' ||
       $dir === '/etc/asterisk/includes' ||
+      $dir_up === '/mnt/kd/lxc/container' ||
       $openfile === '/etc/rc.modules' ||
       $openfile === '/etc/modprobe.d/options.conf' ||
       $openfile === '/etc/udev/rules.d/70-persistent-net.rules' ||
@@ -498,6 +508,8 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">WireGuard VPN has been Reloaded.</p>');
     } elseif ($result == 53) {
       putHtml('<p style="color: green;">Keepalived'.statusPROCESS('keepalived').'.</p>');
+    } elseif ($result == 54) {
+      putHtml('<p style="color: green;">Linux Containers'.statusPROCESS('lxc').'.</p>');
     } elseif ($result == 66) {
       putHtml('<p style="color: green;">Firewall Blocklist has been Reloaded.</p>');
     } elseif ($result == 67) {
@@ -777,6 +789,17 @@ require_once '../common/header.php';
     putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - WAN Failover Exit Shell Script</option>');
   }
   putHtml('</optgroup>');
+  if (is_dir('/mnt/kd/lxc/container') && arrayCount($globfiles = glob('/mnt/kd/lxc/container/*/config')) > 0) {
+    putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; Linux Containers Configs &mdash;&mdash;&mdash;&mdash;">');
+    foreach ($globfiles as $globfile) {
+      if (is_file($globfile) && is_writable($globfile)) {
+        $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
+        $lxc_name = basename(strstr($globfile, '/config', TRUE));
+        putHtml('<option value="'.$globfile.'"'.$sel.'>'.$lxc_name.' - Linux Container Config</option>');
+      }
+    }
+    putHtml('</optgroup>');
+  }
   if (is_dir('/mnt/kd/openvpn/ccd') && arrayCount($globfiles = glob('/mnt/kd/openvpn/ccd/*')) > 0) {
     putHtml('<optgroup label="&mdash;&mdash;&mdash;&mdash; OpenVPN Client Configs &mdash;&mdash;&mdash;&mdash;">');
     foreach ($globfiles as $globfile) {

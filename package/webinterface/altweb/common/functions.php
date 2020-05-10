@@ -185,6 +185,12 @@ function statusPROCESS($process) {
     } else {
       $str = $stopped;
     }
+  } elseif ($process === 'lxc') {
+    if (is_file('/var/lock/lxc.lock')) {
+      $str = $running;
+    } else {
+      $str = $stopped;
+    }
   }
   if ($str === '') {
     if (is_file($path.$process.'.pid')) {
