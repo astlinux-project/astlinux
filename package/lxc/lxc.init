@@ -21,22 +21,26 @@ set_sys_entry()
 
 init ()
 {
-  if [ "$LXC_ENABLE" != "yes" ]; then
-    exit
-  fi
-
+  # Automatically create "/mnt/kd/lxc" directory if it doesn't exist
   if [ ! -d /mnt/kd/lxc ]; then
-    mkdir /mnt/kd/lxc
-    mkdir /mnt/kd/lxc/container
-    mkdir /mnt/kd/lxc/cache
+    mkdir /mnt/kd/lxc 2>/dev/null     # will fail on virgin RO filesystem, ignore stderr
   fi
 
-  ln -snf /mnt/kd/lxc/container /var/lib/lxc
+  if [ -d /mnt/kd/lxc ]; then
+    mkdir -p /mnt/kd/lxc/container
+    mkdir -p /mnt/kd/lxc/cache
+
+    ln -snf /mnt/kd/lxc/container /var/lib/lxc
+  fi
 }
 
 start ()
 {
-  if [ "$LXC_ENABLE" = "yes" ] && [ ! -f $LOCK_FILE ]; then
+  if [ -z "$LXC_BRIDGE0" ]; then
+    exit
+  fi
+
+  if ls /mnt/kd/lxc/container/*/config >/dev/null 2>&1 && [ ! -f $LOCK_FILE ]; then
     echo "Starting LXC container..."
 
     /usr/bin/cgroupfs-mount

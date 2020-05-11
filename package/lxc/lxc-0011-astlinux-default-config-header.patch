@@ -7,8 +7,8 @@
 -	fprintf(f, "\n# Uncomment the following line to support nesting containers:\n");
 -	fprintf(f, "#lxc.include = " LXCTEMPLATECONFIG "/nesting.conf\n");
 -	fprintf(f, "# (Be aware this has security implications)\n\n");
-+	fprintf(f, "\n# Uncomment the following line to auto-start with LXC_ENABLE=\"yes\"\n");
-+	fprintf(f, "#lxc.start.auto=1\n");
++	fprintf(f, "\n# Container Auto Start: 0 (no) or 1 (yes), defaults to 0\n");
++	fprintf(f, "lxc.start.auto=1\n");
  	if (fwrite(contents, 1, flen, f) != flen) {
  		SYSERROR("Writing original contents");
  		free(contents);
