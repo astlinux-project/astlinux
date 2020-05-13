@@ -46,7 +46,7 @@
  # are dynamic. We thus need to ignore the warning brought by shellcheck.
  # shellcheck disable=SC2086
 -tar  --anchored ${EXCLUDES} --numeric-owner -xpJf "${LXC_CACHE_PATH}/rootfs.tar.xz" -C "${LXC_ROOTFS}"
-+tar ${EXCLUDES} -xJf "${LXC_CACHE_PATH}/rootfs.tar.xz" -C "${LXC_ROOTFS}"
++tar ${EXCLUDES} --numeric-owner -xpJf "${LXC_CACHE_PATH}/rootfs.tar.xz" -C "${LXC_ROOTFS}"
  
  mkdir -p "${LXC_ROOTFS}/dev/pts/"
  
