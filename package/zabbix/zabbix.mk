@@ -4,9 +4,9 @@
 #
 #############################################################
 
-ZABBIX_VERSION = 3.0.30
+ZABBIX_VERSION = 4.0.20
 ZABBIX_SOURCE = zabbix-$(ZABBIX_VERSION).tar.gz
-ZABBIX_SITE = http://downloads.sourceforge.net/sourceforge/zabbix
+ZABBIX_SITE = https://cdn.zabbix.com/zabbix/sources/stable/4.0
 
 ZABBIX_CONF_OPT = \
 	--disable-static \
@@ -36,7 +36,14 @@ ifeq ($(BR2_PACKAGE_OPENSSL),y)
 ZABBIX_DEPENDENCIES += openssl
 ZABBIX_CONF_OPT += --with-openssl=$(STAGING_DIR)/usr
 else
-ZABBIX_CONF_OPT += --with-openssl=no
+ZABBIX_CONF_OPT += --without-openssl
+endif
+
+ifeq ($(BR2_PACKAGE_PCRE),y)
+ZABBIX_DEPENDENCIES += pcre
+ZABBIX_CONF_OPT += --with-libpcre=$(STAGING_DIR)/usr
+else
+ZABBIX_CONF_OPT += --without-libpcre
 endif
 
 define ZABBIX_INSTALL_TARGET_CMDS
