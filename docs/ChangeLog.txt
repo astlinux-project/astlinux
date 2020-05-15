@@ -27,6 +27,8 @@ Released @TBD@
    == Memtest86+, version bump to 5.01, patched to also work over serial console
    == e2fsprogs, version bump to 1.45.6
 
+-- igb, version bump to 5.3.5.61, Intel Gigabit Ethernet Network Driver
+
 -- e1000e version bump to 3.8.4 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
 -- unionfs, move from old kernel unionfs to FUSE unionfs version 2.1
@@ -50,11 +52,13 @@ Released @TBD@
 
 -- kmod, version 27, new package which replaces module-init-tools
 
--- php, version bump to 7.2.30, security fixes
+-- php, version bump to 7.2.31, security fixes: CVE-2019-11048 and others
 
 -- strace, version bump to 5.6
 
 -- udev, now use eudev version 3.2.9
+
+-- zabbix, major version bump to 4.0.20, next LTS series
 
 -- Time Zone Database update, tzdata2020a and php-timezonedb-2020.1
 
@@ -69,7 +73,7 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.1.1g, security fix: CVE-2020-1967
 
--- WireGuard VPN, module 1.0.20200506 (version bump), tools 1.0.20200510 (version bump)
+-- WireGuard VPN, module 1.0.20200506 (version bump), tools 1.0.20200513 (version bump)
 
 -- OpenVPN, version bump to 2.4.9, security fix: CVE-2020-11810
 
