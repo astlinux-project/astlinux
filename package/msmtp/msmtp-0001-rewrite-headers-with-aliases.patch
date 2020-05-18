@@ -1,0 +1,80 @@
+--- msmtp-1.8.10/src/msmtp.c.orig	2020-05-18 08:27:59.966249550 -0500
++++ msmtp-1.8.10/src/msmtp.c	2020-05-18 10:23:11.781646752 -0500
+@@ -3938,6 +3938,77 @@
+         goto exit;
+     }
+ 
++#define HEADER_BUFSIZE 1024
++    /* rewrite headers to be RFC compliant */
++    if (header_tmpfile != NULL)
++    {
++        /* test if headers need to be rewritten */
++        int header_rewrite = 0;
++        char *line = xmalloc(HEADER_BUFSIZE);
++        while (fgets(line, HEADER_BUFSIZE, header_tmpfile) != NULL)
++        {
++            /* alias entries will cause this */
++            if ((strncasecmp(line, "To:", 3) == 0 || strncasecmp(line, "Cc:", 3) == 0) && strchr(line, '@') == NULL)
++            {
++                header_rewrite = 1;
++                break;
++            }
++        }
++        if (fseeko(header_tmpfile, 0, SEEK_SET) != 0)
++        {
++            print_error(_("cannot rewind temporary file: %s"),
++                    sanitize_string(strerror(errno)));
++            error_code = EX_IOERR;
++            free(line);
++            goto exit;
++        }
++
++        /* rewrite headers */
++        if (header_rewrite)
++        {
++            FILE *dup_header_tmpfile;
++            if (!(dup_header_tmpfile = tmpfile()))
++            {
++                print_error(_("cannot create temporary file: %s"),
++                        sanitize_string(strerror(errno)));
++                error_code = EX_IOERR;
++                free(line);
++                goto exit;
++            }
++
++            while (fgets(line, HEADER_BUFSIZE, header_tmpfile) != NULL)
++            {
++                char *cur = line, *end = line + HEADER_BUFSIZE;
++                if ((strncasecmp(line, "To:", 3) == 0 || strncasecmp(line, "Cc:", 3) == 0) && strchr(line, '@') == NULL)
++                {
++                    cur += strlen(line);
++                    while (line < cur && isspace((unsigned char)*(cur-1))) cur--;
++                    (void)snprintf(cur, end - cur, ":;\n");
++                }
++
++                if (fputs(line, dup_header_tmpfile) == EOF)
++                {
++                    fclose(dup_header_tmpfile);
++                    error_code = EX_IOERR;
++                    free(line);
++                    goto exit;
++                }
++            }
++            fclose(header_tmpfile);
++            header_tmpfile = dup_header_tmpfile;
++
++            if (fseeko(header_tmpfile, 0, SEEK_SET) != 0)
++            {
++                print_error(_("cannot rewind temporary file: %s"),
++                        sanitize_string(strerror(errno)));
++                error_code = EX_IOERR;
++                free(line);
++                goto exit;
++            }
++        }
++        free(line);
++    }
++
+     /* initialize libraries */
+ #ifndef HAVE_SYSLOG
+     if (conf.sendmail && account->syslog)
