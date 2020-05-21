@@ -73,7 +73,7 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.1.1g, security fix: CVE-2020-1967
 
--- WireGuard VPN, module 1.0.20200506 (version bump), tools 1.0.20200513 (version bump)
+-- WireGuard VPN, module 1.0.20200520 (version bump), tools 1.0.20200513 (version bump)
 
 -- OpenVPN, version bump to 2.4.9, security fix: CVE-2020-11810
 
@@ -87,9 +87,11 @@ Released @TBD@
 
 -- sipsak, version bump to 0.9.7
 
+-- unbound (host), version bump to 1.10.1, security fixes: CVE-2020-12662, CVE-2020-12663
+
 ** Asterisk
 
--- Asterisk 13.23.1 ('13se' version)
+-- Asterisk 13.29.2 ('13se' version bump)
    Older than latest Asterisk 13.x version but more tested, built --without-pjproject
 
 -- Asterisk 13.33.0 (version bump) and 16.10.0 (version bump)
