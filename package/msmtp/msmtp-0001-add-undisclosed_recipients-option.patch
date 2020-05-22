@@ -60,7 +60,7 @@
          printf("dsn_notify = %s\n",
                  account->dsn_notify ? account->dsn_notify : _("(not set)"));
          printf("dsn_return = %s\n",
-@@ -3938,6 +3963,51 @@
+@@ -3938,6 +3963,50 @@
          goto exit;
      }
  
@@ -95,6 +95,7 @@
 +                goto exit;
 +            }
 +        }
++        free(line);
 +        fclose(header_tmpfile);
 +        header_tmpfile = dup_header_tmpfile;
 +
@@ -103,10 +104,8 @@
 +            print_error(_("cannot rewind temporary file: %s"),
 +                    sanitize_string(strerror(errno)));
 +            error_code = EX_IOERR;
-+            free(line);
 +            goto exit;
 +        }
-+        free(line);
 +    }
 +
      /* initialize libraries */
