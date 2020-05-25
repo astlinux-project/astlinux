@@ -240,6 +240,41 @@ ipv6_tunnel()
   esac
 }
 
+bridge_load_configure()
+{
+  local br_list="$1" br_name="$2" br IFS
+
+  modprobe bridge
+
+  ## Disable bridge firewalling for intra-bridge traffic
+  sysctl -w net/bridge/bridge-nf-call-arptables=0 >/dev/null
+  sysctl -w net/bridge/bridge-nf-call-ip6tables=0 >/dev/null
+  sysctl -w net/bridge/bridge-nf-call-iptables=0 >/dev/null
+
+  ip link add name $br_name type bridge
+
+  unset IFS
+  for br in $br_list; do
+    ip link set dev $br up
+    ip link set dev $br master $br_name
+  done
+}
+
+bridge_remove()
+{
+  local br_list="$1" br_name="$2" br IFS
+
+  ip link set dev $br_name down
+
+  unset IFS
+  for br in $br_list; do
+    ip link set dev $br nomaster
+    ip link set dev $br down
+  done
+
+  ip link delete $br_name type bridge
+}
+
 alias_interface()
 {
   local action="$1" interface="$2" alias_list="$3" cnt alias IFS
@@ -418,39 +453,19 @@ start () {
 
   #BRIDGES
   if [ -n "$BRIDGE0" ]; then
-    modprobe bridge
-    ip link add name br0 type bridge
-    for i in $BRIDGE0; do
-      ip link set dev $i up
-      ip link set dev $i master br0
-    done
+    bridge_load_configure "$BRIDGE0" br0
   fi
 
   if [ -n "$BRIDGE1" ]; then
-    modprobe bridge
-    ip link add name br1 type bridge
-    for i in $BRIDGE1; do
-      ip link set dev $i up
-      ip link set dev $i master br1
-    done
+    bridge_load_configure "$BRIDGE1" br1
   fi
 
   if [ -n "$BRIDGE2" ]; then
-    modprobe bridge
-    ip link add name br2 type bridge
-    for i in $BRIDGE2; do
-      ip link set dev $i up
-      ip link set dev $i master br2
-    done
+    bridge_load_configure "$BRIDGE2" br2
   fi
 
   if [ -n "$LXC_BRIDGE0" ]; then
-    modprobe bridge
-    ip link add name lxcbr0 type bridge
-    for i in $LXC_BRIDGE0; do
-      ip link set dev $i up
-      ip link set dev $i master lxcbr0
-    done
+    bridge_load_configure "$LXC_BRIDGE0" lxcbr0
   fi
 
   # and now we retry applying the MAC address if it's a bridge interface.
@@ -541,7 +556,6 @@ start () {
     br[012])
       ip link set dev $PPPOEIF up
       # because bridging does weird and unpleasant things to PPPoE packets
-      sysctl -w net/bridge/bridge-nf-call-iptables=0 >/dev/null
       sysctl -w net/bridge/bridge-nf-filter-pppoe-tagged=0 >/dev/null
       ;;
     esac
@@ -835,39 +849,19 @@ stop () {
 
   #BRIDGES
   if [ -n "$BRIDGE0" ]; then
-    ip link set dev br0 down
-    for i in $BRIDGE0; do
-      ip link set dev $i nomaster
-      ip link set dev $i down
-    done
-    ip link delete br0 type bridge
+    bridge_remove "$BRIDGE0" br0
   fi
 
   if [ -n "$BRIDGE1" ]; then
-    ip link set dev br1 down
-    for i in $BRIDGE1; do
-      ip link set dev $i nomaster
-      ip link set dev $i down
-    done
-    ip link delete br1 type bridge
+    bridge_remove "$BRIDGE1" br1
   fi
 
   if [ -n "$BRIDGE2" ]; then
-    ip link set dev br2 down
-    for i in $BRIDGE2; do
-      ip link set dev $i nomaster
-      ip link set dev $i down
-    done
-    ip link delete br2 type bridge
+    bridge_remove "$BRIDGE2" br2
   fi
 
   if [ -n "$LXC_BRIDGE0" ]; then
-    ip link set dev lxcbr0 down
-    for i in $LXC_BRIDGE0; do
-      ip link set dev $i nomaster
-      ip link set dev $i down
-    done
-    ip link delete lxcbr0 type bridge
+    bridge_remove "$LXC_BRIDGE0" lxcbr0
   fi
 
   #VLANS
