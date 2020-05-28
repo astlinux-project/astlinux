@@ -2,17 +2,17 @@
 #               -= Arno's iptables firewall - NAT Loopback plugin =-
 #
 PLUGIN_NAME="NAT Loopback plugin"
-PLUGIN_VERSION="1.01"
+PLUGIN_VERSION="1.02"
 PLUGIN_CONF_FILE="nat-loopback.conf"
 #
-# Last changed          : July 12, 2016
+# Last changed          : May 28, 2020
 # Requirements          : AIF 2.0.1g+
 # Comments              : NAT Loopback for local nets using existing NAT_FORWARD_TCP
 #                         and NAT_FORWARD_UDP rules.
 #                         Local nets may be able to use the external IPv4 address and
 #                         port to access NAT forwarded internal servers.
 #
-# Author                : (C) Copyright 2012-2016 by Lonnie Abelbeck & Arno van Amersfoort
+# Author                : (C) Copyright 2012-2020 by Lonnie Abelbeck & Arno van Amersfoort
 # Homepage              : http://rocky.eld.leidenuniv.nl/
 # Email                 : a r n o v a AT r o c k y DOT e l d DOT l e i d e n u n i v DOT n l
 #                         (note: you must remove all spaces and substitute the @ and the .
@@ -131,6 +131,7 @@ plugin_start()
                                    -p tcp --dport $dport -j SNAT --to-source $destip
                 done
               fi
+              break # Only use first external interface
             done
           done
         done
@@ -163,6 +164,7 @@ plugin_start()
                                    -p udp --dport $dport -j SNAT --to-source $destip
                 done
               fi
+              break # Only use first external interface
             done
           done
         done
