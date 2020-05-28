@@ -18,7 +18,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 3.16.83 (version bump), security and bug fixes
+-- Linux Kernel 3.16.84 (version bump), security and bug fixes
    Kernel config: Add NAMESPACES and CGROUPS for Linux Containers
 
 -- RUNNIX, version bump to runnix-0.6.0, major update
@@ -52,7 +52,11 @@ Released @TBD@
 
 -- kmod, version 27, new package which replaces module-init-tools
 
+-- netcalc, version bump to 2.1.5
+
 -- php, version bump to 7.2.31, security fixes: CVE-2019-11048 and others
+
+-- sqlite, version bump to 3.32.1
 
 -- strace, version bump to 5.6
 
@@ -86,6 +90,8 @@ Released @TBD@
 -- openldap, version bump to 2.4.50
 
 -- sipsak, version bump to 0.9.7
+
+-- sngrep, version bump to 1.4.7
 
 -- unbound (host), version bump to 1.10.1, security fixes: CVE-2020-12662, CVE-2020-12663
 
