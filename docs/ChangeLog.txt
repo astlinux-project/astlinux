@@ -113,6 +113,8 @@ Released @TBD@
    Example: If you had a codec_g729a.so module installed, you must define: ASTERISK_RW_MODULES_DIR="yes"
    Note: With AstLinux 1.3.8 and older this was implied to be "yes".
 
+-- (Custom Build Only) mosquitto, version bump to 1.6.10
+
 ** Web Interface
 
 -- setup.php, remove 'Combined' partition option.
