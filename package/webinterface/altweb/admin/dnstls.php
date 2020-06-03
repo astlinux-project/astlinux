@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2018 Lonnie Abelbeck
+// Copyright (C) 2018-2020 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -8,6 +8,7 @@
 
 // dnstls.php for AstLinux
 // 04-14-2018
+// 06-03-2020, Added Import DoT Resolver menu
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -19,6 +20,24 @@ $DNSTLSCONFFILE = '/mnt/kd/rc.conf.d/gui.dnstls.conf';
 $myself = $_SERVER['PHP_SELF'];
 
 require_once '../common/functions.php';
+
+$select_dot_resolver = array (
+  'Quad9 DNSSEC (block threats/malware)' => '9.9.9.9~dns.quad9.net 149.112.112.112~dns.quad9.net',
+  'Quad9 (no filtering, no upstream DNSSEC)' => '9.9.9.10~dns.quad9.net 149.112.112.10~dns.quad9.net',
+  'Cloudflare DNSSEC (no filtering)' => '1.1.1.1~cloudflare-dns.com 1.0.0.1~cloudflare-dns.com',
+  'Cloudflare DNSSEC (block malware)' => '1.1.1.2~cloudflare-dns.com 1.0.0.2~cloudflare-dns.com',
+  'Cloudflare DNSSEC (block malware/adult)' => '1.1.1.3~cloudflare-dns.com 1.0.0.3~cloudflare-dns.com',
+  'Google DNSSEC (no filtering)' => '8.8.8.8~dns.google 8.8.4.4~dns.google'
+);
+
+$select_dot_resolver6 = array (
+  'Quad9 DNSSEC (block threats/malware)' => '2620:fe::fe~dns.quad9.net 9.9.9.9~dns.quad9.net',
+  'Quad9 (no filtering, no upstream DNSSEC)' => '2620:fe::10~dns.quad9.net 9.9.9.10~dns.quad9.net',
+  'Cloudflare DNSSEC (no filtering)' => '2606:4700:4700::1111~cloudflare-dns.com 1.1.1.1~cloudflare-dns.com',
+  'Cloudflare DNSSEC (block malware)' => '2606:4700:4700::1112~cloudflare-dns.com 1.1.1.2~cloudflare-dns.com',
+  'Cloudflare DNSSEC (block malware/adult)' => '2606:4700:4700::1113~cloudflare-dns.com 1.1.1.3~cloudflare-dns.com',
+  'Google DNSSEC (no filtering)' => '2001:4860:4860::8888~dns.google 8.8.8.8~dns.google'
+);
 
 // Function: saveDNSTLSsettings
 //
@@ -42,10 +61,12 @@ function saveDNSTLSsettings($conf_dir, $conf_file) {
   $value = 'DNS_TLS_QUERY_ALL="'.$_POST['dns_tls_query_all'].'"';
   fwrite($fp, "### Query All Servers\n".$value."\n");
 
-  $value = tuq(str_replace(chr(13), ' ', $_POST['dns_tls_servers']));
-  $value = str_replace(chr(10), '', $value);
-  if (strlen($value) > 512) {  // sanity check
-    $value = substr($value, 0, 512);
+  if (($value = $_POST['import_resolver']) === '') {
+    $value = tuq(str_replace(chr(13), ' ', $_POST['dns_tls_servers']));
+    $value = str_replace(chr(10), '', $value);
+    if (strlen($value) > 512) {  // sanity check
+      $value = substr($value, 0, 512);
+    }
   }
   $value = 'DNS_TLS_SERVERS="'.$value.'"';
   fwrite($fp, "### Upstream Servers\n".$value."\n");
@@ -178,6 +199,24 @@ if (is_file('/mnt/kd/stubby/stubby.yml')) {
   putHtml('Note: Configuration overridden by file: /mnt/kd/stubby/stubby.yml');
   putHtml('</td></tr>');
 }
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Import DoT Resolver:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  putHtml('<select name="import_resolver">');
+  putHtml('<option value="">&ndash; select resolver to overwrite servers &ndash;</option>');
+  putHtml('<optgroup label="&mdash;&mdash; IPv4-only &mdash;&mdash;">');
+  foreach ($select_dot_resolver as $key => $value) {
+    putHtml('<option value="'.$value.'">'.$key.'</option>');
+  }
+  putHtml('</optgroup>');
+  putHtml('<optgroup label="&mdash;&mdash; IPv4/IPv6 &mdash;&mdash;">');
+  foreach ($select_dot_resolver6 as $key => $value) {
+    putHtml('<option value="'.$value.'">'.$key.'</option>');
+  }
+  putHtml('</optgroup>');
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
   putHtml('Server(s):');
   putHtml('</td><td style="text-align: left;" colspan="4">');
