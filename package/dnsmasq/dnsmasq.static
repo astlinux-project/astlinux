@@ -21,7 +21,20 @@
 #dhcp-option=lan,44,192.168.100.2
 #dhcp-option=lan2,44,192.168.101.2
 #dhcp-option=lan3,44,192.168.102.2
+#dhcp-option=lan4,44,192.168.103.2
 #dhcp-option=dmz,44,192.168.200.2
+
+## Override default dns-server option
+## Example: Pi-hole IPv4 address 192.168.200.10
+#dhcp-option=lan,option:dns-server,192.168.200.10
+#dhcp-option=lan2,option:dns-server,192.168.200.10
+#dhcp-option=lan3,option:dns-server,192.168.200.10
+#dhcp-option=lan4,option:dns-server,192.168.200.10
+#dhcp-option=dmz,option:dns-server,192.168.200.10
+
+## UniFi DHCP option 43, Controller Assignment
+## Example: UniFi Controller IPv4 address 192.168.200.20
+#dhcp-option=vendor:ubnt,1,192.168.200.20
 
 ## Set allowed TFTP interfaces, defaults to DHCP interfaces when enabled with "enable-tftp".
 ## (Note: AstLinux 1.1.4 or later is required)
