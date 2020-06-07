@@ -13,4 +13,11 @@ ETHTOOL_CONF_OPT = \
 	--without-bash-completion-dir \
 	--disable-pretty-dump
 
+ifeq ($(BR2_PACKAGE_LIBMNL),y)
+ETHTOOL_DEPENDENCIES += libmnl
+ETHTOOL_CONF_OPT += --enable-netlink
+else
+ETHTOOL_CONF_OPT += --disable-netlink
+endif
+
 $(eval $(call AUTOTARGETS,package,ethtool))
