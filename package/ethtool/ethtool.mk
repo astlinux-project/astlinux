@@ -4,7 +4,7 @@
 #
 #############################################################
 
-ETHTOOL_VERSION = 5.6
+ETHTOOL_VERSION = 5.7
 ETHTOOL_SITE = $(BR2_KERNEL_MIRROR)/software/network/ethtool
 
 ETHTOOL_DEPENDENCIES = host-pkg-config
@@ -13,11 +13,7 @@ ETHTOOL_CONF_OPT = \
 	--without-bash-completion-dir \
 	--disable-pretty-dump
 
-ifeq ($(BR2_PACKAGE_LIBMNL),y)
-ETHTOOL_DEPENDENCIES += libmnl
-ETHTOOL_CONF_OPT += --enable-netlink
-else
+## netlink support requires Kernel 5.6+
 ETHTOOL_CONF_OPT += --disable-netlink
-endif
 
 $(eval $(call AUTOTARGETS,package,ethtool))
