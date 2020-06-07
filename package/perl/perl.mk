@@ -50,7 +50,7 @@ PERL_CONF_OPT = \
 	--target-tools-prefix=$(TARGET_CROSS) \
 	--prefix=/usr \
 	-Dsitelib=/mnt/kd/perl \
-	-Dld="$(TARGET_CC_NOCCACHE)" \
+	-Dld="$(TARGET_CC)" \
 	-Dccflags="$(TARGET_CFLAGS) -DAPPLLIB_EXP=\\\"/mnt/kd/perl:/usr/local/share/perl\\\" " \
 	-Dldflags="$(TARGET_LDFLAGS) -lm" \
 	-Dmydomain="" \
