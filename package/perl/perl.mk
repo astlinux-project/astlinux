@@ -4,8 +4,8 @@
 #
 #############################################################
 
-PERL_VERSION_MAJOR = 30
-PERL_VERSION = 5.$(PERL_VERSION_MAJOR).3
+PERL_VERSION_MAJOR = 24
+PERL_VERSION = 5.$(PERL_VERSION_MAJOR).4
 PERL_SITE = https://www.cpan.org/src/5.0
 PERL_SOURCE = perl-$(PERL_VERSION).tar.xz
 PERL_INSTALL_STAGING = YES
