@@ -44,21 +44,27 @@ Released @TBD@
 
 -- libfuse, version 2.9.9, new package to support FUSE unionfs
 
--- libyaml, version bump to 0.2.3
+-- libyaml, version bump to 0.2.5
 
 -- acme-client, version 2.8.5, add upstream patch from 2.8.6 to fix Cloudflare 'dnsapi' changes.
 
 -- e2fsprogs, version bump to 1.45.6
 
+-- ethtool, version bump to 5.7
+
 -- kmod, version 27, new package which replaces module-init-tools
 
--- netcalc, version bump to 2.1.5
+-- netcalc, version bump to 2.1.6
+
+-- pciutils, version bump to 3.7.0
+
+-- perl, version 5.24.4 w/Debian CVE patches, using perlcross 1.3.4
 
 -- php, version bump to 7.2.31, security fixes: CVE-2019-11048 and others
 
--- sqlite, version bump to 3.32.1
+-- sqlite, version bump to 3.32.2
 
--- strace, version bump to 5.6
+-- strace, version bump to 5.7
 
 -- udev, now use eudev version 3.2.9
 
@@ -85,7 +91,7 @@ Released @TBD@
 
 -- chrony, version bump to 4.0-pre2
 
--- msmtp, version bump to 1.8.10
+-- msmtp, version bump to 1.8.11
    New rc.conf variable: SMTP_UNDISCLOSED_RECIPIENTS
 
 -- openldap, version bump to 2.4.50
