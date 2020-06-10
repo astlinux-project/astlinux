@@ -91,6 +91,8 @@ Released @TBD@
 
 -- chrony, version bump to 4.0-pre2
 
+-- iperf3, version bump to 3.8
+
 -- msmtp, version bump to 1.8.11
    New rc.conf variable: SMTP_UNDISCLOSED_RECIPIENTS
 
