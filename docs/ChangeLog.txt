@@ -83,7 +83,7 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.1.1g, security fix: CVE-2020-1967
 
--- WireGuard VPN, module 1.0.20200520 (version bump), tools 1.0.20200513 (version bump)
+-- WireGuard VPN, module 1.0.20200611 (version bump), tools 1.0.20200513 (version bump)
 
 -- OpenVPN, version bump to 2.4.9, security fix: CVE-2020-11810
 
@@ -91,7 +91,7 @@ Released @TBD@
 
 -- chrony, version bump to 4.0-pre2
 
--- iperf3, version bump to 3.8
+-- iperf3, version bump to 3.8.1
 
 -- msmtp, version bump to 1.8.11
    New rc.conf variable: SMTP_UNDISCLOSED_RECIPIENTS
@@ -109,7 +109,7 @@ Released @TBD@
 -- Asterisk 13.29.2 ('13se' version bump)
    Older than latest Asterisk 13.x version but more tested, built --without-pjproject
 
--- Asterisk 13.33.0 (version bump) and 16.10.0 (version bump)
+-- Asterisk 13.34.0 (version bump) and 16.11.0 (version bump)
 
 -- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
 
