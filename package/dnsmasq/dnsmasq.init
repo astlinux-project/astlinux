@@ -416,6 +416,8 @@ nameserver 127.0.0.1" > /tmp/etc/resolv.conf
   # Regenerate /etc/hosts
   # Allows dnsmasq to be restarted with a new STATICHOSTS
   SYS_gen_etc_hosts > /tmp/etc/hosts
+  # Regenerate /etc/ethers
+  SYS_gen_etc_ethers > /tmp/etc/ethers
 
   if [ -f /mnt/kd/dnsmasq.leases ]; then
     ln -sf /mnt/kd/dnsmasq.leases /var/db/dnsmasq.leases
@@ -430,10 +432,6 @@ nameserver 127.0.0.1" > /tmp/etc/resolv.conf
       cp "/mnt/kd/${DB##*/}" "$DB"
     fi
   done
-
-  if [ ! -f /etc/ethers ]; then
-    touch /tmp/etc/ethers
-  fi
 
   rm -f /tmp/etc/dnsmasq.conf
 

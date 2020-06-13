@@ -387,15 +387,7 @@ start () {
 
   SYS_gen_etc_hosts > /tmp/etc/hosts
 
-  : > /tmp/etc/ethers
-
-  if [ -f /stat/etc/ethers ]; then
-    cat /stat/etc/ethers >> /tmp/etc/ethers
-  fi
-
-  if [ -f /mnt/kd/ethers ]; then
-    cat /mnt/kd/ethers >> /tmp/etc/ethers
-  fi
+  SYS_gen_etc_ethers > /tmp/etc/ethers
 
   ip addr add 127.0.0.1/8 dev lo scope host
   ip link set dev lo up

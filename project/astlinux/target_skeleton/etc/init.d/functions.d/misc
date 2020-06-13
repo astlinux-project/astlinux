@@ -1,5 +1,5 @@
 #
-# Function include file for init.d/ 
+# Function include file for init.d/
 #
 # Miscellaneous Tools
 #
@@ -55,6 +55,17 @@ $hostipv6	$HOSTNAME.$DOMAIN $HOSTNAME}
     for i in $STATICHOSTS; do
       echo "$i" | awk -F~ '{ print $2 "\t" $1 ($4 == "" ? "" : "\t# "$4); }'
     done
+  fi
+}
+
+SYS_gen_etc_ethers()
+{
+  if [ -f /stat/etc/ethers ]; then
+    cat /stat/etc/ethers
+  fi
+
+  if [ -f /mnt/kd/ethers ]; then
+    cat /mnt/kd/ethers
   fi
 }
 
