@@ -18,7 +18,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 3.16.84 (version bump), security and bug fixes
+-- Linux Kernel 3.16.85 (version bump), security and bug fixes
    Kernel config: Add NAMESPACES and CGROUPS for Linux Containers
 
 -- RUNNIX, version bump to runnix-0.6.0, major update
@@ -94,6 +94,7 @@ Released @TBD@
 -- iperf3, version bump to 3.8.1
 
 -- msmtp, version bump to 1.8.11
+   msmtpd: support SMTP session reuse, fixes Monit and multiple email alerts
    New rc.conf variable: SMTP_UNDISCLOSED_RECIPIENTS
 
 -- openldap, version bump to 2.4.50
