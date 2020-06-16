@@ -18,11 +18,11 @@ fi
 
 PIDFILE="/var/run/fop2.pid"
 
-# fop2 uses Perl Archive (PAR) which generates many "/tmp/par-root/cache-" files
-# The value of TMPSIZEMAX should be 2x the normal par-root size (to allow for two different versions)
-# plus the standard 10 MB headroom.  Removing the /tmp/par-root directory on a fop2 stop would
+# fop2 uses Perl Archive (PAR) which generates many "/tmp/par-HHHHHHHH/cache-" files
+# The value of TMPSIZEMAX should be 2x the normal par-HHHHHHHH size (to allow for two different versions)
+# plus the standard 10 MB headroom.  Removing the /tmp/par-HHHHHHHH directory on a fop2 stop would
 # eliminate the 2x requirement, but would be bad practice if another PAR application was in use.
-TMPSIZEMAX=50000
+TMPSIZEMAX=90000
 
 set_version_specific_options()
 {
