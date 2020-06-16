@@ -105,6 +105,8 @@ Released @TBD@
 
 -- unbound (host), version bump to 1.10.1, security fixes: CVE-2020-12662, CVE-2020-12663
 
+-- (Custom Build Only) mosquitto, version bump to 1.6.10
+
 ** Asterisk
 
 -- Asterisk 13.29.2 ('13se' version bump)
@@ -123,7 +125,11 @@ Released @TBD@
    Example: If you had a codec_g729a.so module installed, you must define: ASTERISK_RW_MODULES_DIR="yes"
    Note: With AstLinux 1.3.8 and older this was implied to be "yes".
 
--- (Custom Build Only) mosquitto, version bump to 1.6.10
+-- FOP2, available version bump to 2.31.28
+   Adds support for TLS v1.2
+   Note: The /tmp/par-* directory almost doubled in size, from 18MB to 34MB, as such a reboot may be needed after upgrade.
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
