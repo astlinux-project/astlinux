@@ -62,7 +62,9 @@ Released @TBD@
 
 -- php, version bump to 7.2.31, security fixes: CVE-2019-11048 and others
 
--- sqlite, version bump to 3.32.2
+-- sqlite, version bump to 3.32.3
+
+-- sqliteodbc, version bump to 0.9997
 
 -- strace, version bump to 5.7
 
