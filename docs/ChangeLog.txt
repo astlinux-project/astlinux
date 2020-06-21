@@ -64,7 +64,7 @@ Released @TBD@
 
 -- sqlite, version bump to 3.32.3
 
--- sqliteodbc, version bump to 0.9997
+-- sqliteodbc, version bump to 0.9998
 
 -- strace, version bump to 5.7
 
@@ -120,7 +120,7 @@ Released @TBD@
 
 -- pjsip 2.9 (no change)
 
--- neon, version bump to 0.31.1, used for Asterisk Calendar Support
+-- neon, version bump to 0.31.2, used for Asterisk Calendar Support
 
 -- New rc.conf variable ASTERISK_RW_MODULES_DIR, give directory /usr/lib/asterisk/modules/
    read/write permissions, "yes" or "no", defaults to "no".
