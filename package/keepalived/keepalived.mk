@@ -7,7 +7,7 @@
 KEEPALIVED_VERSION = 2.1.3
 KEEPALIVED_SOURCE = keepalived-$(KEEPALIVED_VERSION).tar.gz
 KEEPALIVED_SITE = http://www.keepalived.org/software
-KEEPALIVED_DEPENDENCIES = host-pkg-config linux openssl iptables
+KEEPALIVED_DEPENDENCIES = host-pkg-config linux openssl
 
 KEEPALIVED_CONF_OPT = \
 	--disable-warnings \
@@ -18,6 +18,13 @@ KEEPALIVED_CONF_OPT = \
 	--disable-linkbeat \
 	--with-run-dir=/var \
 	--with-init=SYSV
+
+ifeq ($(BR2_PACKAGE_IPTABLES),y)
+KEEPALIVED_DEPENDENCIES += iptables
+KEEPALIVED_CONF_OPT += --enable-iptables
+else
+KEEPALIVED_CONF_OPT += --disable-iptables
+endif
 
 define KEEPALIVED_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/keepalived/keepalived $(TARGET_DIR)/usr/sbin/keepalived

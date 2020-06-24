@@ -3,7 +3,6 @@ config BR2_PACKAGE_KEEPALIVED
 	depends on BR2_USE_MMU
 	depends on BR2_LINUX_KERNEL
 	select BR2_PACKAGE_OPENSSL
-	select BR2_PACKAGE_IPTABLES
 	help
 	  The main goal of this project is to provide simple and robust
 	  facilities for loadbalancing and high-availability to Linux
