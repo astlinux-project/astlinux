@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008 Lonnie Abelbeck
+// Copyright (C) 2008-2020 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -10,6 +10,7 @@
 // 04-15-2008
 // 04-25-2008, Added inline wav
 // 06-05-2008, Added multi-user support
+// 06-23-2020, Added filename label support
 //
 // System location of the asterisk monitor directory
 $MONITORDIR = '/var/spool/asterisk/monitor/';
@@ -64,13 +65,80 @@ function parseMONITORfiles($dir, $username) {
   return($db);
 }
 
+// Function: displayMONITORpath
+//
+function displayMONITORpath($path, &$label) {
+  $label = '';
+  $str = '';
+
+  if (($suffix_pos = strrpos($path, '.')) === FALSE) {
+    return($str);
+  }
+  $str = substr($path, 0, $suffix_pos);
+
+  if (($label_pos = strrpos($str, '_LBL_')) !== FALSE) {
+    $label = substr($str, $label_pos + 5);
+    $str = substr($str, 0, $label_pos);
+    if ($label !== '') {
+      $str .= '&nbsp;<strong>'.$label.'</strong>';
+    }
+  }
+  return($str);
+}
+
+// Function: save_edit_label
+//
+function save_edit_label($dir, $path, $label) {
+  $label = preg_replace('/[^a-zA-Z0-9._ -]+/', '', $label);
+  $label = str_replace(' ', '_', $label);
+
+  if (! is_file($dir.$path)) {
+    return(5);
+  }
+  if (($suffix_pos = strrpos($path, '.')) === FALSE) {
+    return(1);
+  }
+  $suffix = substr($path, $suffix_pos);
+  $rtn = 10;
+
+  if (($label_pos = strrpos($path, '_LBL_')) !== FALSE) {
+    if ($label === '') {
+      // remove label
+      $new = substr($path, 0, $label_pos).$suffix;
+      $rtn = 11;
+    } else {
+      // update label
+      $new = substr($path, 0, $label_pos).'_LBL_'.$label.$suffix;
+    }
+  } else {
+    if ($label === '') {
+      // no label
+      $new = $path;
+    } else {
+      // add label
+      $new = substr($path, 0, $suffix_pos).'_LBL_'.$label.$suffix;
+    }
+  }
+  if ($path === $new) {
+    return(0);
+  }
+  if (@rename($dir.$path, $dir.$new) === FALSE) {
+    return(6);
+  }
+  return($rtn);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $result = 1;
   if ($global_staff_disable_monitor) {
     $result = 999;
   } elseif (isset($_POST['submit_reload'])) {
-    header('Location: '.$myself);
-    exit;
+    $result = 0;
+    if (isset($_POST['label_path'], $_POST['edit_label'])) {
+      $label_path = $_POST['label_path'];
+      $edit_label = tuq($_POST['edit_label']);
+      $result = save_edit_label($MONITORDIR, $label_path, $edit_label);
+    }
   } elseif (isset($_POST['submit_delete'])) {
     $delete = $_POST['delete'];
     for ($i = 0; $i < arrayCount($delete); $i++) {
@@ -122,6 +190,14 @@ require_once '../common/insert-wav-inline.php';
       }
     }
   }
+  if (isset($_GET['label'])) {
+    $label = rawurldecode($_GET['label']);
+    if (strstr($label, '../') !== FALSE) {
+      $label = '';
+    } elseif (! is_file($MONITORDIR.$label)) {
+      $label = '';
+    }
+  }
 
   putHtml('<center>');
   if (isset($_GET['result'])) {
@@ -132,6 +208,12 @@ require_once '../common/insert-wav-inline.php';
       putHtml('<p style="color: red;">Permission Denied.</p>');
     } elseif ($result == 5) {
       putHtml('<p style="color: red;">File Not Found.</p>');
+    } elseif ($result == 6) {
+      putHtml('<p style="color: red;">File rename failed.</p>');
+    } elseif ($result == 10) {
+      putHtml('<p style="color: green;">Recording filename label was updated.</p>');
+    } elseif ($result == 11) {
+      putHtml('<p style="color: green;">Recording filename label was removed.</p>');
     } elseif ($result == 999) {
       putHtml('<p style="color: red;">Permission denied for user "'.$global_user.'".</p>');
     } else {
@@ -169,6 +251,7 @@ require_once '../common/insert-wav-inline.php';
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Date - Time", "</td>";
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Action", "</td>";
     echo '<td class="dialogText" style="text-align: left; font-weight: bold;">', "Monitor Recording", "</td>";
+    echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Label", "</td>";
     echo '<td class="dialogText" style="text-align: center; font-weight: bold;">', "Delete", "</td>";
     for ($i = 0; $i < $n; $i++) {
       putHtml("</tr>");
@@ -184,7 +267,17 @@ require_once '../common/insert-wav-inline.php';
       }
       echo '</td>';
 
-      echo '<td style="text-align: left;">', $db['data'][$i]['name'], '</td>';
+      echo '<td style="text-align: left;">', displayMONITORpath($db['data'][$i]['name'], $cur_label), '</td>';
+
+      echo '<td style="text-align: center;">';
+      if (isset($label) && $label === $db['data'][$i]['name']) {
+        echo '<input type="hidden" name="label_path" value="'.$label.'" />';
+        echo '<input type="text" size="20" maxlength="64" name="edit_label" value="'.$cur_label.'" />';
+      } else {
+        echo '<a href="'.$myself.'?label='.rawurlencode($db['data'][$i]['name']).'" class="actionText">&nbsp;+&nbsp;</a>';
+      }
+      echo '</td>';
+
       echo '<td style="text-align: center;">', '<input type="checkbox" name="delete[]" value="', $db['data'][$i]['name'], '" />', '</td>';
     }
   } else {
