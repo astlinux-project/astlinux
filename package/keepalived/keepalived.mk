@@ -4,17 +4,16 @@
 #
 ################################################################################
 
-KEEPALIVED_VERSION = 2.0.20
+KEEPALIVED_VERSION = 2.1.3
 KEEPALIVED_SOURCE = keepalived-$(KEEPALIVED_VERSION).tar.gz
 KEEPALIVED_SITE = http://www.keepalived.org/software
-KEEPALIVED_DEPENDENCIES = host-pkg-config linux openssl
+KEEPALIVED_DEPENDENCIES = host-pkg-config linux openssl iptables
 
 KEEPALIVED_CONF_OPT = \
 	--disable-warnings \
 	--disable-log-file \
 	--disable-dbus \
 	--disable-libnl \
-	--disable-libiptc \
 	--disable-track-process \
 	--disable-linkbeat \
 	--with-run-dir=/var \
