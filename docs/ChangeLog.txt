@@ -72,6 +72,10 @@ Released @TBD@
 
 -- zabbix, major version bump to 4.0.20, next LTS series
 
+-- system-vendor, update system-vendor.ids
+
+-- ca-certificates, update trusted root certificates 2020-06-24
+
 -- Time Zone Database update, tzdata2020a and php-timezonedb-2020.1
 
 -- (Custom Build Only) flashrom, version bump to 1.2
@@ -89,7 +93,7 @@ Released @TBD@
 
 -- OpenVPN, version bump to 2.4.9, security fix: CVE-2020-11810
 
--- libcurl (curl) version bump to 7.70.0
+-- libcurl (curl) version bump to 7.71.0, security fixes: CVE-2020-8169, CVE-2020-8177
 
 -- chrony, version bump to 4.0-pre2
 
