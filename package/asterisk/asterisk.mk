@@ -190,6 +190,7 @@ ASTERISK_CONFIGURE_ARGS+= \
                         --with-pjproject="$(STAGING_DIR)/usr"
 else
 ASTERISK_CONFIGURE_ARGS+= \
+                        --without-pjproject-bundled \
                         --without-pjproject
 endif
 
