@@ -4,10 +4,7 @@
  		ast_str_append(tmp, 0, "<presentity uri=\"%s;method=SUBSCRIBE\" />\n", mfrom);
  		ast_str_append(tmp, 0, "<atom id=\"%s\">\n", exten);
  		ast_str_append(tmp, 0, "<address uri=\"%s;user=ip\" priority=\"0.800000\">\n", mto);
-+	  if (strncmp(p->useragent, "NECSDT", 6) != 0) {  /* non-NEC UA */
- 		ast_str_append(tmp, 0, "<status status=\"%s\" />\n", (local_state ==  NOTIFY_OPEN) ? "open" : (local_state == NOTIFY_INUSE) ? "inuse" : "closed");
- 		ast_str_append(tmp, 0, "<msnsubstatus substatus=\"%s\" />\n", (local_state == NOTIFY_OPEN) ? "online" : (local_state == NOTIFY_INUSE) ? "onthephone" : "offline");
-+	  } else {  /* NEC IP Phones */
++	  if (strncmp(p->useragent, "NECSDT", 6) == 0) {  /* NEC IP Phones */
 +		switch(data->state) {
 +		case AST_EXTENSION_RINGING:
 +			ast_str_append(tmp, 0, "<status status=\"%s\" />\n", "open");
@@ -27,6 +24,9 @@
 +			ast_str_append(tmp, 0, "<msnsubstatus substatus=\"%s\" />\n", "online");
 +			break;
 +		}
++	  } else {
+ 		ast_str_append(tmp, 0, "<status status=\"%s\" />\n", (local_state ==  NOTIFY_OPEN) ? "open" : (local_state == NOTIFY_INUSE) ? "inuse" : "closed");
+ 		ast_str_append(tmp, 0, "<msnsubstatus substatus=\"%s\" />\n", (local_state == NOTIFY_OPEN) ? "online" : (local_state == NOTIFY_INUSE) ? "onthephone" : "offline");
 +	  }
  		ast_str_append(tmp, 0, "</address>\n</atom>\n</presence>\n");
  		break;
