@@ -1,0 +1,26 @@
+--- monit-5.27.0/configure.ac.orig	2020-06-30 08:30:43.950797308 -0500
++++ monit-5.27.0/configure.ac	2020-06-30 08:36:42.248675327 -0500
+@@ -442,7 +442,9 @@
+         #endif
+         #endif
+         return 1;
+-        ])], [CFLAGS="$CFLAGS -std=c11"], [CFLAGS="$CFLAGS -std=c99"])
++        ])], [CFLAGS="$CFLAGS -std=c11"], [CFLAGS="$CFLAGS -std=c99"],
++        AC_MSG_NOTICE([WARNING: result CFLAGS -std=c11 guessed because of cross compilation])
++        CFLAGS="$CFLAGS -std=c11")
+ AC_CHECK_HEADERS([stdint.h stdbool.h], [], [AC_MSG_ERROR([toolchain does not have C99 headers])])
+ 
+ 
+--- monit-5.27.0/libmonit/configure.ac.orig	2020-06-30 08:30:51.734607209 -0500
++++ monit-5.27.0/libmonit/configure.ac	2020-06-30 08:35:40.304498947 -0500
+@@ -336,7 +336,9 @@
+         #endif
+         #endif
+         return 1;
+-        ])], [CFLAGS="$CFLAGS -std=c11"], [CFLAGS="$CFLAGS -std=c99"])
++        ])], [CFLAGS="$CFLAGS -std=c11"], [CFLAGS="$CFLAGS -std=c99"],
++        AC_MSG_NOTICE([WARNING: result CFLAGS -std=c11 guessed because of cross compilation])
++        CFLAGS="$CFLAGS -std=c11")
+ AC_CHECK_HEADERS([stdint.h stdbool.h], [], [AC_MSG_ERROR([toolchain does not have C99 headers])])
+ 
+ # ------------------------------------------------------------------------

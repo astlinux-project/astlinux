@@ -4,12 +4,19 @@
 #
 ################################################################################
 
-MONIT_VERSION = 5.26.0
+MONIT_VERSION = 5.27.0
 MONIT_SITE = https://mmonit.com/monit/dist
 MONIT_DEPENDENCIES = host-bison host-flex
 #
 # Touching Makefile.am and configure.ac:
-MONIT_AUTORECONF = YES
+#MONIT_AUTORECONF = YES
+define MONIT_BOOTSTRAP_AFTER_PATCH
+	(cd $(@D); \
+		$(HOST_CONFIGURE_OPTS) \
+		./bootstrap \
+	)
+endef
+MONIT_POST_PATCH_HOOKS += MONIT_BOOTSTRAP_AFTER_PATCH
 
 MONIT_CONF_ENV = \
 	ac_cv_ipv6=yes \
