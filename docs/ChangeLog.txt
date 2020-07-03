@@ -54,6 +54,8 @@ Released @TBD@
 
 -- kmod, version 27, new package which replaces module-init-tools
 
+-- Monit, version bump to 5.27.0
+
 -- netcalc, version bump to 2.1.6
 
 -- pciutils, version bump to 3.7.0
@@ -93,7 +95,7 @@ Released @TBD@
 
 -- OpenVPN, version bump to 2.4.9, security fix: CVE-2020-11810
 
--- libcurl (curl) version bump to 7.71.0, security fixes: CVE-2020-8169, CVE-2020-8177
+-- libcurl (curl) version bump to 7.71.1, security fixes: CVE-2020-8169, CVE-2020-8177
 
 -- chrony, version bump to 4.0-pre2
 
