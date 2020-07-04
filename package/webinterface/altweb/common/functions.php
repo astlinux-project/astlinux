@@ -624,25 +624,22 @@ function get_HOSTNAME_DOMAIN() {
 //
 function asteriskURLrepo() {
 
-  $version = trim(shell_exec('/usr/sbin/asterisk -V'));
+  $version = trim(shell_exec('/usr/sbin/asterisk -V ; [ ! -f /usr/lib/asterisk/modules/res_pjproject.so ] && echo "se"'));
 
-  if (($i = strpos($version, ' ')) !== FALSE) {
-    $ver3 = substr($version, $i + 1, 3);
-  } else {
-    $ver3 = '';
+  $ver = '';
+  if (($tokens = preg_split('/[\s.]+/', $version)) !== FALSE) {
+    if (isset($tokens[1])) {
+      $ver = $tokens[1];
+      if ($tokens[count($tokens)-1] === 'se') {
+        $ver .= 'se';
+      }
+    }
   }
-
-  $str = 'https://mirror.astlinux-project.org/';
-
-  if ($ver3 === '1.4') {
-    $str .= 'firmware-1.x';
-  } elseif ($ver3 === '1.8') {
-    $str .= 'ast18-firmware-1.x';
-  } elseif ($ver3 === '11.') {
-    $str .= 'ast11-firmware-1.x';
-  } else {
-    $str .= 'ast13-firmware-1.x';
+  if ($ver == '') {
+    $ver = '16';
   }
+  $str = 'https://mirror.astlinux-project.org/ast'.$ver.'-firmware-1.x';
+
   return($str);
 }
 
