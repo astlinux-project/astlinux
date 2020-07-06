@@ -99,6 +99,8 @@ Released @TBD@
 
 -- chrony, version bump to 4.0-pre2
 
+-- ddclient-curl version bump to 3.8.3-06
+
 -- iperf3, version bump to 3.8.1
 
 -- keepalived, version bump to 2.1.3
