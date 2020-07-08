@@ -47,6 +47,7 @@
 // 06-26-2019, Added ChangeLog display
 // 02-21-2020, Remove PPTP VPN support
 // 05-10-2020, Added Linux Containers (LXC)
+// 07-08-2020, Added Firewall status indicator
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -352,6 +353,26 @@ function noASTERISKsounds($asterisk) {
   }
 
   return($status != 0);
+}
+
+// Function: DNS_Firewall_add_columns_html
+//
+function DNS_Firewall_add_columns_html(&$first) {
+
+  if ($first) {
+    if (is_file('/var/tmp/aif_active_plugins')) {
+      $str = 'Enabled';
+      $color = 'green';
+    } else {
+      $str = 'Disabled';
+      $color = 'red';
+    }
+    echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', 'Firewall:', '</td>';
+    echo '<td style="text-align: left; color: '.$color.';">', $str, '</td>';
+    $first = FALSE;
+  } else {
+    echo '<td>&nbsp;</td><td>&nbsp;</td>';
+  }
 }
 
 // Function: getIPV6address
@@ -803,11 +824,15 @@ if (! is_null($ipv6_addr = getIPV6address())) {
   echo '<td style="text-align: left;">', ($ipv6_addr['address'] !== '' ? $ipv6_addr['address'] : 'Link-local'), '</td>';
   putHtml('</tr>');
 }
+
 // DNS
+$first_line = TRUE;
 if (isDNS_TLS() || isDNSCRYPT()) {
   echo '<tr ', ($i++ % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
   echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', 'DNS:', '</td>';
-  putHtml('<td style="text-align: left;" colspan="3">'.(isDNS_TLS() ? 'DNS-TLS' : 'DNSCrypt').' Proxy Server Enabled</td></tr>');
+  echo '<td style="text-align: left;">', (isDNS_TLS() ? 'DNS-TLS' : 'DNSCrypt').' Proxy Server Enabled', '</td>';
+  DNS_Firewall_add_columns_html($first_line);
+  putHtml('</tr>');
 } else {
   $rconf = is_file('/etc/resolv-extern.conf') ? '/etc/resolv-extern.conf' : '/etc/resolv.conf';
   if (($fp = @fopen($rconf, 'r')) !== FALSE) {
@@ -815,13 +840,16 @@ if (isDNS_TLS() || isDNSCRYPT()) {
       if (($line = trim(fgets($fp, 1024))) !== '') {
         echo '<tr ', ($i++ % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
         echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', 'DNS:', '</td>';
-        echo '<td style="text-align: left;" colspan="3">', $line, '</td>';
+        echo '<td style="text-align: left;">', $line, '</td>';
+        DNS_Firewall_add_columns_html($first_line);
         putHtml('</tr>');
       }
     }
     fclose($fp);
   }
 }
+unset($first_line);
+
 // System Time
 echo '<tr ', ($i++ % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
 echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', 'System Time:', '</td>';
