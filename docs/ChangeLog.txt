@@ -70,6 +70,8 @@ Released @TBD@
 
 -- strace, version bump to 5.7
 
+-- sudo, version bump to 1.8.31p2
+
 -- udev, now use eudev version 3.2.9
 
 -- zabbix, major version bump to 4.0.20, next LTS series
