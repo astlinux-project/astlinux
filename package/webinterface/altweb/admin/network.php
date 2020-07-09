@@ -1230,7 +1230,7 @@ require_once '../common/header.php';
     } elseif ($result == 25) {
       putHtml('<p style="color: green;">Asterisk'.statusPROCESS('asterisk').'.</p>');
     } elseif ($result == 26) {
-      putHtml('<p style="color: green;">Firewall has Restarted.</p>');
+      putHtml('<p style="color: green;">Firewall'.statusPROCESS('iptables').'.</p>');
     } elseif ($result == 27) {
       putHtml('<p style="color: green;">Dynamic DNS'.statusPROCESS('dynamicdns').'.</p>');
     } elseif ($result == 28) {

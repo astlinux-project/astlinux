@@ -694,7 +694,7 @@ require_once '../common/header.php';
     } elseif ($result == 5) {
       putHtml('<p style="color: red;">Firewall support files require upgrading, click &quot;Upgrade/Restart Firewall&quot; to proceed.</p>');
     } elseif ($result == 10) {
-      putHtml('<p style="color: green;">Firewall has Restarted.</p>');
+      putHtml('<p style="color: green;">Firewall'.statusPROCESS('iptables').'.</p>');
     } elseif ($result == 11) {
       putHtml('<p style="color: green;">Settings saved, click "Restart Firewall" to apply any changed settings.</p>');
     } elseif ($result == 20) {

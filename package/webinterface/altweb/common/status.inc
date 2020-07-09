@@ -360,7 +360,7 @@ function noASTERISKsounds($asterisk) {
 function DNS_Firewall_add_columns_html(&$first) {
 
   if ($first) {
-    if (is_file('/var/tmp/aif_active_plugins')) {
+    if (isFIREWALL()) {
       $str = 'Enabled';
       $color = 'green';
     } else {

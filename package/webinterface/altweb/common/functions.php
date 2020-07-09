@@ -191,6 +191,12 @@ function statusPROCESS($process) {
     } else {
       $str = $stopped;
     }
+  } elseif ($process === 'iptables') {
+    if (isFIREWALL()) {
+      $str = $running;
+    } else {
+      $str = $stopped;
+    }
   }
   if ($str === '') {
     if (is_file($path.$process.'.pid')) {
@@ -917,6 +923,13 @@ function isDNS_TLS()
 function isDNSCRYPT()
 {
   return(is_file('/var/run/dnscrypt-proxy.pid'));
+}
+
+// Function: isFIREWALL
+//
+function isFIREWALL()
+{
+  return(is_file('/var/tmp/aif_active_plugins'));
 }
 
 // Function: getTABname
