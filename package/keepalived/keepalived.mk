@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-KEEPALIVED_VERSION = 2.1.3
+KEEPALIVED_VERSION = 2.1.4
 KEEPALIVED_SOURCE = keepalived-$(KEEPALIVED_VERSION).tar.gz
 KEEPALIVED_SITE = http://www.keepalived.org/software
 KEEPALIVED_DEPENDENCIES = host-pkg-config linux openssl
