@@ -9,4 +9,6 @@ config BR2_PACKAGE_IFTOP
 	  a table of current bandwidth usage by pairs of hosts. Handy for 
 	  answering the question "why is our ADSL link so slow?".
 
-	  http://www.ex-parrot.com/pdw/iftop/
+	  https://www.ex-parrot.com/pdw/iftop/
+	  https://code.blinkace.com/pdw/iftop
+

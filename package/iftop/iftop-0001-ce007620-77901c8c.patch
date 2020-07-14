@@ -1,0 +1,1297 @@
+From dc26689ad528935d0735a5e0a6f1e687a5275c62 Mon Sep 17 00:00:00 2001
+From: pdw <>
+Date: Mon, 31 Mar 2014 07:03:12 +0000
+Subject: [PATCH 01/16] Test commit.
+
+---
+ ChangeLog | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ChangeLog b/ChangeLog
+index 6d5d535..06611ae 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -4,6 +4,7 @@ $Id$
+ Attributions apply to all preceding items up to the next blank line.
+ Unattributed items are by Paul Warren and Chris Lightfoot.
+ 
++
+ 1.0
+ 
+ * Remove blinking cursor from UI
+-- 
+2.20.1
+
+
+From 25c75c0a747725691fffb75909fc6f790143593b Mon Sep 17 00:00:00 2001
+From: Paul Warren <pdw@ex-parrot.com>
+Date: Tue, 3 Jan 2017 21:41:44 +0000
+Subject: [PATCH 02/16] Delete known issues related to very old distributions
+ from README.
+
+---
+ README | 17 -----------------
+ 1 file changed, 17 deletions(-)
+
+diff --git a/README b/README
+index 6db6262..ea041e5 100644
+--- a/README
++++ b/README
+@@ -7,23 +7,6 @@ iftop must be run as root.
+ 
+ KNOWN ISSUES
+ 
+-RedHat 7.2:
+-
+-There is a bug in the version of ncurses distibuted with RedHat 7.2 that
+-will cause iftop to segfault.  The RPM in RedHat's Rawhide distribution
+-fixes this.
+-
+-Slackware 8.1:
+-
+-You may need to upgrade your libpcap (by updating the tcpdump package) 
+-in order to compile iftop.
+-
+-FreeBSD 4.7:
+-
+-This version of FreeBSD lacks a proper gethostbyaddr_r function. You should
+-choose an alternative name resolution technique using the --with-resolver=...
+-option to configure.
+-
+ Solaris:
+ 
+ On Solaris, iftop has to run in promiscuous mode in order to capture
+-- 
+2.20.1
+
+
+From 2866de1379d414509d05188342302db1b2a6aa33 Mon Sep 17 00:00:00 2001
+From: Paul Warren <pdw@ex-parrot.com>
+Date: Tue, 3 Jan 2017 21:42:37 +0000
+Subject: [PATCH 03/16] Fix typo.
+
+---
+ AUTHORS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/AUTHORS b/AUTHORS
+index 496c9c8..4dc0abb 100644
+--- a/AUTHORS
++++ b/AUTHORS
+@@ -3,5 +3,5 @@ Originally written by:
+ Paul Warren, pdw@ex-parrot.com
+ Chris Lightfoot, chris@ex-parrot.com
+ 
+-Other contributors are acknolwedged in ChangeLog.
++Other contributors are acknowledged in ChangeLog.
+ 
+-- 
+2.20.1
+
+
+From bc66e31834419c12770d790694bc9e60eccd11e2 Mon Sep 17 00:00:00 2001
+From: Paul Warren <pdw@ex-parrot.com>
+Date: Tue, 3 Jan 2017 21:53:09 +0000
+Subject: [PATCH 05/16] Clean up libpcap on exit - Brian Russell
+ <brussell@brocade.com>
+
+On exit, call pcap_close() so that any resources used internally
+by libpcap can be cleaned up.
+
+http://lists.beasts.org/pipermail/iftop-users/2016-September/000455.html
+---
+ iftop.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/iftop.c b/iftop.c
+index a090dcf..f9875c9 100644
+--- a/iftop.c
++++ b/iftop.c
+@@ -839,6 +839,8 @@ int main(int argc, char **argv) {
+     }
+ 
+     pthread_cancel(thread);
++    pthread_join(thread, NULL);
++    pcap_close(pd);
+ 
+     ui_finish();
+     
+-- 
+2.20.1
+
+
+From 3a4a63c3e9b80238529a15e9b8413ba7e8a04114 Mon Sep 17 00:00:00 2001
+From: Paul Warren <pdw@ex-parrot.com>
+Date: Tue, 3 Jan 2017 21:55:24 +0000
+Subject: [PATCH 06/16] Update changelog
+
+---
+ ChangeLog | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/ChangeLog b/ChangeLog
+index 06611ae..47de20f 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -1,5 +1,4 @@
+ Change log for iftop
+-$Id: ChangeLog,v 1.42 2014/01/19 20:32:50 pdw Exp $
+ 
+ Attributions apply to all preceding items up to the next blank line.
+ Unattributed items are by Paul Warren and Chris Lightfoot.
+@@ -7,6 +6,9 @@ Unattributed items are by Paul Warren and Chris Lightfoot.
+ 
+ 1.0
+ 
++* Clean up libpcap on exit
++    Brian Russell <brian.russell@brocade.com>
++
+ * Remove blinking cursor from UI
+     Gerrit Renker <renker@ualberta.ca>
+ 
+-- 
+2.20.1
+
+
+From 014c6e628f5bb54f06f290f71770520bb7c403ce Mon Sep 17 00:00:00 2001
+From: Paul Warren <pdw@ex-parrot.com>
+Date: Tue, 3 Jan 2017 22:08:49 +0000
+Subject: [PATCH 07/16] Remove pre-release warning.
+
+---
+ configure.ac | 20 --------------------
+ 1 file changed, 20 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index f2e026a..cfb9c6d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -442,23 +442,3 @@ AC_SUBST(ac_aux_dir)
+ 
+ AC_OUTPUT(Makefile config/Makefile)
+ 
+-if echo $PACKAGE_VERSION | grep 'pre' > /dev/null ; then 
+-	AC_MSG_WARN([
+-******************************************************************************
+-
+-This is a pre-release version.  Pre-releases are subject to limited 
+-announcements, and therefore limited circulation, as a means of testing
+-the more widely circulated final releases.  
+-
+-Please do not be surprised if this release is broken, and if it is broken, do
+-not assume that someone else has spotted it.  Instead, please drop a note on
+-the mailing list, or a brief email to me on pdw@ex-parrot.com
+-
+-Thank you for taking the time to be the testing phase of this development
+-process.
+-
+-Paul Warren
+-
+-******************************************************************************
+-])
+-fi
+-- 
+2.20.1
+
+
+From 96a691484e6e3c6fa415b46e466c85323d017baa Mon Sep 17 00:00:00 2001
+From: Paul Warren <pdw@ex-parrot.com>
+Date: Wed, 4 Jan 2017 22:55:26 +0000
+Subject: [PATCH 08/16] Fix mac address display
+
+iftop would display portions of mac address with large ffffff prefixes.
+Make if_hw_addr type consistent.  Kevin Darbyshire-Bryant <kevin@darbyshire-bryant.me.uk>
+---
+ ChangeLog     | 3 +++
+ addrs_dlpi.c  | 2 +-
+ addrs_ioctl.c | 2 +-
+ addrs_ioctl.h | 2 +-
+ iftop.c       | 2 +-
+ 5 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/ChangeLog b/ChangeLog
+index 47de20f..a69e22a 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -6,6 +6,9 @@ Unattributed items are by Paul Warren and Chris Lightfoot.
+ 
+ 1.0
+ 
++* Fix MAC address display
++    Kevin Darbyshire-Bryant <kevin@darbyshire-bryant.me.uk>
++
+ * Clean up libpcap on exit
+     Brian Russell <brian.russell@brocade.com>
+ 
+diff --git a/addrs_dlpi.c b/addrs_dlpi.c
+index 188fef8..6c04ea1 100644
+--- a/addrs_dlpi.c
++++ b/addrs_dlpi.c
+@@ -50,7 +50,7 @@ extern char *strncat2(char *dest, char *src, int n);
+  */
+ 
+ int
+-get_addrs_dlpi(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr)
++get_addrs_dlpi(char *interface, u_int8_t if_hw_addr[], struct in_addr *if_ip_addr)
+ {
+   int got_hw_addr = 0;
+   int got_ip_addr = 0;
+diff --git a/addrs_ioctl.c b/addrs_ioctl.c
+index 870c83b..7d01fb2 100644
+--- a/addrs_ioctl.c
++++ b/addrs_ioctl.c
+@@ -45,7 +45,7 @@
+  */
+ 
+ int
+-get_addrs_ioctl(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr, struct in6_addr *if_ip6_addr)
++get_addrs_ioctl(char *interface, u_int8_t if_hw_addr[], struct in_addr *if_ip_addr, struct in6_addr *if_ip6_addr)
+ {
+   int s;
+   struct ifreq ifr = {};
+diff --git a/addrs_ioctl.h b/addrs_ioctl.h
+index f93a0b4..739de61 100644
+--- a/addrs_ioctl.h
++++ b/addrs_ioctl.h
+@@ -7,6 +7,6 @@
+ #define __ADDRS_IOCTL_H_
+ 
+ int
+-get_addrs_ioctl(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr, struct in6_addr *if_ip6_addr);
++get_addrs_ioctl(char *interface, u_int8_t if_hw_addr[], struct in_addr *if_ip_addr, struct in6_addr *if_ip6_addr);
+ 
+ #endif /* __ADDRS_IOCTL_H_ */
+diff --git a/iftop.c b/iftop.c
+index f9875c9..032df61 100644
+--- a/iftop.c
++++ b/iftop.c
+@@ -55,7 +55,7 @@
+ 
+ /* ethernet address of interface. */
+ int have_hw_addr = 0;
+-char if_hw_addr[6];    
++u_int8_t if_hw_addr[6];
+ 
+ /* IP address of interface */
+ int have_ip_addr = 0;
+-- 
+2.20.1
+
+
+From 839800b6e076dd1733dab8a5e13993ccb36c308b Mon Sep 17 00:00:00 2001
+From: Paul Warren <pdw@ex-parrot.com>
+Date: Wed, 4 Jan 2017 22:58:24 +0000
+Subject: [PATCH 09/16] Fixes for compilation warnings, reported by David
+ Binderman <dcb314@hotmail.com>
+
+---
+ iftop.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/iftop.c b/iftop.c
+index 032df61..feec42f 100644
+--- a/iftop.c
++++ b/iftop.c
+@@ -146,7 +146,7 @@ void tick(int print) {
+     if(t - last_timestamp >= RESOLUTION) {
+         analyse_data();
+         if (options.no_curses) {
+-          if (!options.timed_output || (options.timed_output && t - first_timestamp >= options.timed_output)) {
++          if (!options.timed_output || (t - first_timestamp >= options.timed_output)) {
+             tui_print();
+             if (options.timed_output) {
+               finish(SIGINT);
+@@ -546,7 +546,6 @@ static void handle_tokenring_packet(unsigned char* args, const struct pcap_pkthd
+ 
+ static void handle_ppp_packet(unsigned char* args, const struct pcap_pkthdr* pkthdr, const unsigned char* packet)
+ {
+-	register u_int length = pkthdr->len;
+ 	register u_int caplen = pkthdr->caplen;
+ 	u_int proto;
+ 
+@@ -558,11 +557,9 @@ static void handle_ppp_packet(unsigned char* args, const struct pcap_pkthdr* pkt
+             return;
+ 
+ 		packet += 2;
+-		length -= 2;
+ 
+ 		proto = EXTRACT_16BITS(packet);
+ 		packet += 2;
+-		length -= 2;
+ 
+         if(proto == PPP_IP || proto == ETHERTYPE_IP || proto == ETHERTYPE_IPV6) {
+             handle_ip_packet((struct ip*)packet, -1);
+-- 
+2.20.1
+
+
+From eb087b0c831bcae116f4fab6c861adce54fddce9 Mon Sep 17 00:00:00 2001
+From: Paul Warren <pdw@ex-parrot.com>
+Date: Wed, 4 Jan 2017 23:00:12 +0000
+Subject: [PATCH 10/16] =?UTF-8?q?Fix=20compilation=20warning=20from=20Fr?=
+ =?UTF-8?q?=C3=A9d=C3=A9ric=20Perrin=20<fperrin@brocade.com>?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ ui_common.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/ui_common.c b/ui_common.c
+index 8cb1e22..a4d4ba0 100644
+--- a/ui_common.c
++++ b/ui_common.c
+@@ -263,9 +263,6 @@ void analyse_data() {
+ 	} u_screen_line = { &screen_line };
+         addr_pair ap;
+         int i;
+-        int tsent, trecv;
+-        tsent = trecv = 0;
+-
+ 
+         ap = *(addr_pair*)n->key;
+ 
+-- 
+2.20.1
+
+
+From 9addd978c444aabfc2af6fa888436ac00770a4c8 Mon Sep 17 00:00:00 2001
+From: Paul Warren <pdw@ex-parrot.com>
+Date: Wed, 4 Jan 2017 23:03:34 +0000
+Subject: [PATCH 11/16] =?UTF-8?q?Option=20to=20display=20packet=20counts?=
+ =?UTF-8?q?=20-=20Fr=C3=A9d=C3=A9ric=20Perrin=20<fperrin@brocade.com>?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Add a "-u unit" CLI option, as well as a "bandwidth-unit" configuration
+file option. With "-u packets", traffic is accounted using packets per
+second; the other options are "-u bits" and "-u bytes".
+
+"-B" is still recognized as synonym to "-u bytes".
+
+The default is "-u bits", keeping the current behaviour of iftop
+(everything is in bits/s, except the cumulative totals).
+---
+ cfgfile.c   |  3 ++-
+ iftop.8     | 12 +++++++++---
+ iftop.c     | 24 ++++++++++++++++--------
+ options.c   | 39 ++++++++++++++++++++++++++++++++++-----
+ options.h   |  8 +++++++-
+ tui.c       | 16 ++++++++--------
+ ui.c        | 33 ++++++++++++++++++++-------------
+ ui_common.c | 22 +++++++++++++++-------
+ ui_common.h |  2 +-
+ 9 files changed, 112 insertions(+), 47 deletions(-)
+
+diff --git a/cfgfile.c b/cfgfile.c
+index fa50c9e..581909b 100644
+--- a/cfgfile.c
++++ b/cfgfile.c
+@@ -30,7 +30,8 @@ char * config_directives[] = {
+ 	"promiscuous",
+ 	"hide-source",
+ 	"hide-destination",
+-	"use-bytes", 
++	"use-bytes",
++	"bandwidth-unit",
+ 	"sort", 
+ 	"line-display", 
+ 	"show-totals", 
+diff --git a/iftop.8 b/iftop.8
+index fb843cf..6bc38a7 100644
+--- a/iftop.8
++++ b/iftop.8
+@@ -11,7 +11,7 @@ iftop - display bandwidth usage on an interface by host
+ 
+ .SH SYNOPSIS
+ \fBiftop\fP \fB-h\fP |
+-[\fB-nNpblBP\fP] [\fB-i\fP \fIinterface\fP] [\fB-f\fP \fIfilter code\fP] [\fB-F\fP \fInet\fP/\fImask\fP]
++[\fB-nNpblP\fP] [\fB-u\fP \fIunit\fP] [\fB-i\fP \fIinterface\fP] [\fB-f\fP \fIfilter code\fP] [\fB-F\fP \fInet\fP/\fImask\fP]
+ [\fB-G\fP \fInet6\fP/\fImask6\fP]
+ .SH DESCRIPTION
+ \fBiftop\fP listens to network traffic on a named \fIinterface\fP, or on the
+@@ -75,8 +75,11 @@ Don't display bar graphs of traffic.
+ \fB-m\fP \fIlimit\fP
+ Set the upper limit for the bandwidth scale.  Specified as a number with a 'K', 'M' or 'G' suffix.
+ .TP
++\fB-u\fP \fIbits\fP|\fIbytes\fP|\fIpackets\fP
++Display bandwidth rates in the given unit (per second).
++.TP
+ \fB-B\fP
+-Display bandwidth rates in bytes/sec rather than bits/sec.
++Synonym for \fB-u\fP \fIbits\fP.
+ .TP
+ \fB-i\fP \fIinterface\fP
+ Listen to packets on \fIinterface\fP.
+@@ -236,8 +239,11 @@ Hides source host names.
+ \fBhide-destination:\fP \fI(yes|no)\fP
+ Hides destination host names.
+ .TP
++\fBbandwidth-unit:\fP \fI(bits|bytes|packets)\fP
++Use the specified unit for bandwidth display. The default is bits.
++.TP
+ \fBuse-bytes:\fP \fI(yes|no)\fP
+-Use bytes for bandwidth display, rather than bits.
++\fBuse-bytes: yes\fP is a synonym of \fBbandwidth-unit: packets\fP.
+ .TP
+ \fBsort:\fP \fI(2s|10s|40s|source|destination)\fP
+ Sets which column is used to sort the display.
+diff --git a/iftop.c b/iftop.c
+index feec42f..3d5d622 100644
+--- a/iftop.c
++++ b/iftop.c
+@@ -431,14 +431,22 @@ static void handle_ip_packet(struct ip* iptr, int hw_dir)
+     }
+ 
+     /* Do accounting. */
+-    switch (IP_V(iptr)) {
+-      case 4:
+-          len = ntohs(iptr->ip_len);
+-          break;
+-      case 6:
+-          len = ntohs(ip6tr->ip6_plen) + 40;
+-      default:
+-          break;
++    switch (options.bandwidth_unit) {
++      case OPTION_BW_BITS:
++      case OPTION_BW_BYTES:
++	  switch (IP_V(iptr)) {
++	    case 4:
++		len = ntohs(iptr->ip_len);
++		break;
++	    case 6:
++		len = ntohs(ip6tr->ip6_plen) + 40;
++	    default:
++		break;
++	  }
++	  break;
++      case OPTION_BW_PKTS:
++	  len = 1;
++	  break;
+     }
+ 
+     /* Update record */
+diff --git a/options.c b/options.c
+index b438d4c..10b08e7 100644
+--- a/options.c
++++ b/options.c
+@@ -30,7 +30,7 @@
+ 
+ options_t options;
+ 
+-char optstr[] = "+i:f:nNF:G:lhpbBPm:c:s:tL:o:";
++char optstr[] = "+i:f:nNF:G:lhpbBu:Pm:c:s:tL:o:";
+ 
+ /* Global options. */
+ 
+@@ -75,6 +75,13 @@ config_enumeration_type showports_enumeration[] = {
+ 	{ NULL, -1 }
+ };
+ 
++config_enumeration_type bandwidth_unit_enumeration[] = {
++	{ "bits", OPTION_BW_BITS },
++	{ "bytes", OPTION_BW_BYTES },
++	{ "packets", OPTION_BW_PKTS },
++	{ NULL, -1 }
++};
++
+ static int is_bad_interface_name(char *i) {
+     char **p;
+     for (p = bad_interface_names; *p; ++p)
+@@ -145,7 +152,7 @@ void options_set_defaults() {
+     options.aggregate_dest = 0;
+     options.paused = 0;
+     options.showhelp = 0;
+-    options.bandwidth_in_bytes = 0;
++    options.bandwidth_unit = OPTION_BW_BITS;
+     options.sort = OPTION_SORT_DIV2;
+     options.screenfilter = NULL;
+     options.freezeorder = 0;
+@@ -188,7 +195,8 @@ static void usage(FILE *fp) {
+ "   -p                  run in promiscuous mode (show traffic between other\n"
+ "                       hosts on the same network segment)\n"
+ "   -b                  don't display a bar graph of traffic\n"
+-"   -B                  Display bandwidth in bytes\n"
++"   -B                  display bandwidth in bytes\n"
++"   -a                  display bandwidth in packets\n"
+ "   -i interface        listen on named interface\n"
+ "   -f filter code      use filter code to select packets to count\n"
+ "                       (default: none, but only IP packets are counted)\n"
+@@ -271,9 +279,13 @@ void options_read_args(int argc, char **argv) {
+                 break;
+ 
+             case 'B':
+-                config_set_string("use-bytes", "true");
++                config_set_string("bandwidth-unit", "bytes");
+                 break;
+ 
++	    case 'u':
++		config_set_string("bandwidth-unit", optarg);
++		break;
++
+             case 's':
+                 config_set_string("timed-output", optarg);
+                 break;
+@@ -370,6 +382,23 @@ int options_config_get_promiscuous() {
+     return 0;
+ }
+ 
++int options_config_get_bw_unit() {
++    int i;
++
++    if (options_config_get_enum("bandwidth-unit", bandwidth_unit_enumeration,
++				(int*)&options.bandwidth_unit))
++	return 1;
++    /* compatibility with use-bytes / -B */
++    if (options_config_get_bool("use-bytes", &i)) {
++	if (i)
++	    options.bandwidth_unit = OPTION_BW_BYTES;
++	else
++	    options.bandwidth_unit = OPTION_BW_BITS;
++	return 1;
++    }
++    return 0;
++}
++
+ int options_config_get_bw_rate(char *directive, long long* result) {
+     char* units;
+     long long mult = 1;
+@@ -544,7 +573,7 @@ void options_make() {
+     options_config_get_promiscuous();
+     options_config_get_bool("hide-source", &options.aggregate_src);
+     options_config_get_bool("hide-destination", &options.aggregate_dest);
+-    options_config_get_bool("use-bytes", &options.bandwidth_in_bytes);
++    options_config_get_bw_unit();
+     options_config_get_enum("sort", sort_enumeration, (int*)&options.sort);
+     options_config_get_enum("line-display", linedisplay_enumeration, (int*)&options.linedisplay);
+     options_config_get_bool("show-totals", &options.show_totals);
+diff --git a/options.h b/options.h
+index 8526254..9628dfe 100644
+--- a/options.h
++++ b/options.h
+@@ -34,6 +34,12 @@ typedef enum {
+   OPTION_LINEDISPLAY_ONE_LINE_SENT
+ } option_linedisplay_t;
+ 
++typedef enum {
++  OPTION_BW_BITS,
++  OPTION_BW_BYTES,
++  OPTION_BW_PKTS,
++} option_bw_unit_t;
++
+ /* 
+  * This structure has to be defined in the same order as the config 
+  * directives in cfgfile.c.  Clearly this is EBW.
+@@ -59,7 +65,7 @@ typedef struct {
+     int timed_output;
+     int no_curses;
+     int num_lines;
+-    int bandwidth_in_bytes;
++    option_bw_unit_t bandwidth_unit;
+     option_sort_t sort;
+ 
+     int bar_interval;
+diff --git a/tui.c b/tui.c
+index 31d4109..75c6e08 100644
+--- a/tui.c
++++ b/tui.c
+@@ -87,7 +87,7 @@ void tui_print() {
+     /* Send rate per connection */
+     printf("%4d %s%s", l, host1, " =>");
+     for(j = 0; j < HISTORY_DIVISIONS; j++) {
+-      readable_size(screen_line->sent[j], buf0_10, 10, 1024, options.bandwidth_in_bytes);
++      readable_size(screen_line->sent[j], buf0_10, 10, 1024, options.bandwidth_unit);
+       printf(" %10s", buf0_10);
+     }
+     /* Cumulative sent data per connection */
+@@ -97,7 +97,7 @@ void tui_print() {
+     /* Receive rate per connection */
+     printf("     %s%s", host2, " <=");
+     for(j = 0; j < HISTORY_DIVISIONS; j++) {
+-      readable_size(screen_line->recv[j], buf0_10, 10, 1024, options.bandwidth_in_bytes);
++      readable_size(screen_line->recv[j], buf0_10, 10, 1024, options.bandwidth_unit);
+       printf(" %10s", buf0_10);
+     }
+     /* Cumulative received data per connection */
+@@ -115,21 +115,21 @@ void tui_print() {
+   snprintf(labellong, PRINT_WIDTH + 9, "%-*s", PRINT_WIDTH + 9, "Total send rate:");
+   printf("%s ", labellong);
+   for(j = 0; j < HISTORY_DIVISIONS; j++) {
+-    readable_size((((host_pair_line *)&totals)->sent[j]) , buf0_10, 10, 1024, options.bandwidth_in_bytes);
++    readable_size(((host_pair_line *)&totals)->sent[j], buf0_10, 10, 1024, options.bandwidth_unit);
+     printf("%10s%c", buf0_10, j == HISTORY_DIVISIONS - 1 ? '\n' : ' ');
+   }
+ 
+   snprintf(labellong, PRINT_WIDTH + 9, "%-*s", PRINT_WIDTH + 9, "Total receive rate:");
+   printf("%s ", labellong);
+   for(j = 0; j < HISTORY_DIVISIONS; j++) {
+-    readable_size((((host_pair_line *)&totals)->recv[j]) , buf0_10, 10, 1024, options.bandwidth_in_bytes);
++    readable_size(((host_pair_line *)&totals)->recv[j], buf0_10, 10, 1024, options.bandwidth_unit);
+     printf("%10s%c", buf0_10, j == HISTORY_DIVISIONS - 1 ? '\n' : ' ');
+   }
+ 
+   snprintf(labellong, PRINT_WIDTH + 9, "%-*s", PRINT_WIDTH + 9, "Total send and receive rate:");
+   printf("%s ", labellong);
+   for(j = 0; j < HISTORY_DIVISIONS; j++) {
+-    readable_size((((host_pair_line *)&totals)->sent[j] + ((host_pair_line *)&totals)->recv[j]) , buf0_10, 10, 1024, options.bandwidth_in_bytes);
++    readable_size(((host_pair_line *)&totals)->sent[j] + ((host_pair_line *)&totals)->recv[j], buf0_10, 10, 1024, options.bandwidth_unit);
+     printf("%10s%c", buf0_10, j == HISTORY_DIVISIONS - 1 ? '\n' : ' ');
+   }
+ 
+@@ -141,9 +141,9 @@ void tui_print() {
+ 
+   /* Peak traffic */
+   snprintf(labellong, PRINT_WIDTH + 9, "%-*s", PRINT_WIDTH + 9, "Peak rate (sent/received/total):");
+-  readable_size(peaksent / RESOLUTION, buf0_10, 10, 1024, options.bandwidth_in_bytes);
+-  readable_size(peakrecv / RESOLUTION, buf1_10, 10, 1024, options.bandwidth_in_bytes);
+-  readable_size(peaktotal / RESOLUTION, buf2_10, 10, 1024, options.bandwidth_in_bytes);
++  readable_size(peaksent / RESOLUTION, buf0_10, 10, 1024, options.bandwidth_unit);
++  readable_size(peakrecv / RESOLUTION, buf1_10, 10, 1024, options.bandwidth_unit);
++  readable_size(peaktotal / RESOLUTION, buf2_10, 10, 1024, options.bandwidth_unit);
+   printf("%s %10s %10s %10s\n", labellong, buf0_10, buf1_10, buf2_10);
+ 
+   /* Cumulative totals */
+diff --git a/ui.c b/ui.c
+index 57ca6c0..771be31 100644
+--- a/ui.c
++++ b/ui.c
+@@ -153,7 +153,7 @@ static void draw_bar_scale(int* y) {
+             char s[40], *p;
+             int x;
+             /* This 1024 vs 1000 stuff is just plain evil */
+-            readable_size(i, s, sizeof s, options.log_scale ? 1000 : 1024, options.bandwidth_in_bytes);
++            readable_size(i, s, sizeof s, options.log_scale ? 1000 : 1024, options.bandwidth_unit);
+             p = s + strspn(s, " ");
+             x = get_bar_length(i * 8);
+             mvaddch(*y + 1, x, ACS_BTEE);
+@@ -177,13 +177,13 @@ static void draw_bar_scale(int* y) {
+     }
+ }
+ 
+-void draw_line_total(float sent, float recv, int y, int x, option_linedisplay_t linedisplay, int bytes) {
++void draw_line_total(float sent, float recv, int y, int x, option_linedisplay_t linedisplay, option_bw_unit_t unit) {
+     char buf[10];
+     float n = 0;
+     switch(linedisplay) {
+         case OPTION_LINEDISPLAY_TWO_LINE:
+-          draw_line_total(sent, recv, y, x, OPTION_LINEDISPLAY_ONE_LINE_SENT, bytes);
+-          draw_line_total(sent, recv, y+1, x, OPTION_LINEDISPLAY_ONE_LINE_RECV, bytes);
++          draw_line_total(sent, recv, y, x, OPTION_LINEDISPLAY_ONE_LINE_SENT, unit);
++          draw_line_total(sent, recv, y+1, x, OPTION_LINEDISPLAY_ONE_LINE_RECV, unit);
+           break;
+         case OPTION_LINEDISPLAY_ONE_LINE_SENT:
+           n = sent;
+@@ -196,7 +196,7 @@ void draw_line_total(float sent, float recv, int y, int x, option_linedisplay_t
+           break;
+     }
+     if(linedisplay != OPTION_LINEDISPLAY_TWO_LINE) {
+-        readable_size(n, buf, 10, 1024, bytes);
++        readable_size(n, buf, 10, 1024, unit);
+         mvaddstr(y, x, buf);
+     }
+ }
+@@ -214,7 +214,7 @@ void draw_line_totals(int y, host_pair_line* line, option_linedisplay_t linedisp
+     int x = (COLS - 8 * HISTORY_DIVISIONS);
+ 
+     for(j = 0; j < HISTORY_DIVISIONS; j++) {
+-        draw_line_total(line->sent[j], line->recv[j], y, x, linedisplay, options.bandwidth_in_bytes);
++        draw_line_total(line->sent[j], line->recv[j], y, x, linedisplay, options.bandwidth_unit);
+         x += 8;
+     }
+     
+@@ -247,7 +247,7 @@ void draw_totals(host_pair_line* totals) {
+     draw_line_totals(y, totals, OPTION_LINEDISPLAY_TWO_LINE);
+     y += 2;
+     for(j = 0; j < HISTORY_DIVISIONS; j++) {
+-        readable_size((totals->sent[j] + totals->recv[j]) , buf, 10, 1024, options.bandwidth_in_bytes);
++        readable_size((totals->sent[j] + totals->recv[j]) , buf, 10, 1024, options.bandwidth_unit);
+         mvaddstr(y, x, buf);
+         x += 8;
+     }
+@@ -262,6 +262,7 @@ void ui_print() {
+     static char *line;
+     static int lcols;
+     int y = 0;
++    option_bw_unit_t cumunit;
+ 
+     if (dontshowdisplay)
+         return;
+@@ -375,25 +376,31 @@ void ui_print() {
+     /* Cummulative totals */
+     mvaddstr(y, 16, "cum: ");
+ 
+-    readable_size(history_totals.total_sent, line, 10, 1024, 1);
++    /* Previous versions of iftop always displayed totals in bytes, even when
++       use-bytes = false. Stay compatible when the default unit hasn't been
++       changed. */
++    cumunit = options.bandwidth_unit;
++    if (cumunit == OPTION_BW_BITS)
++      cumunit = OPTION_BW_BYTES;
++    readable_size(history_totals.total_sent, line, 10, 1024, cumunit);
+     mvaddstr(y, 22, line);
+ 
+-    readable_size(history_totals.total_recv, line, 10, 1024, 1);
++    readable_size(history_totals.total_recv, line, 10, 1024, cumunit);
+     mvaddstr(y+1, 22, line);
+ 
+-    readable_size(history_totals.total_recv + history_totals.total_sent, line, 10, 1024, 1);
++    readable_size(history_totals.total_recv + history_totals.total_sent, line, 10, 1024, cumunit);
+     mvaddstr(y+2, 22, line);
+ 
+     /* peak traffic */
+     mvaddstr(y, 32, "peak: ");
+ 
+-    readable_size(peaksent / RESOLUTION, line, 10, 1024, options.bandwidth_in_bytes);
++    readable_size(peaksent / RESOLUTION, line, 10, 1024, options.bandwidth_unit);
+     mvaddstr(y, 39, line);
+ 
+-    readable_size(peakrecv / RESOLUTION, line, 10, 1024, options.bandwidth_in_bytes);
++    readable_size(peakrecv / RESOLUTION, line, 10, 1024, options.bandwidth_unit);
+     mvaddstr(y+1, 39, line);
+ 
+-    readable_size(peaktotal / RESOLUTION, line, 10, 1024, options.bandwidth_in_bytes);
++    readable_size(peaktotal / RESOLUTION, line, 10, 1024, options.bandwidth_unit);
+     mvaddstr(y+2, 39, line);
+ 
+     mvaddstr(y, COLS - 8 * HISTORY_DIVISIONS - 8, "rates:");
+diff --git a/ui_common.c b/ui_common.c
+index a4d4ba0..dcf6646 100644
+--- a/ui_common.c
++++ b/ui_common.c
+@@ -21,8 +21,11 @@
+ int history_divs[HISTORY_DIVISIONS] = {1, 5, 20};
+ 
+ #define UNIT_DIVISIONS 4
+-char* unit_bits[UNIT_DIVISIONS] =  { "b", "Kb", "Mb", "Gb"};
+-char* unit_bytes[UNIT_DIVISIONS] =  { "B", "KB", "MB", "GB"};
++char* unit_disp[][UNIT_DIVISIONS] = {
++  [OPTION_BW_BITS]  = { "b", "Kb", "Mb", "Gb"},
++  [OPTION_BW_BYTES] = { "B", "KB", "MB", "GB"},
++  [OPTION_BW_PKTS]  = { "p", "Kp", "Mp", "GB"},
++};
+ 
+ extern hash_type* history;
+ extern int history_pos;
+@@ -121,29 +124,34 @@ int screen_line_compare(void* a, void* b) {
+ /*
+  * Format a data size in human-readable format
+  */
+-void readable_size(float n, char* buf, int bsize, int ksize, int bytes) {
++void readable_size(float n, char* buf, int bsize, int ksize,
++		   option_bw_unit_t unit) {
+ 
+     int i = 0;
+     float size = 1;
+ 
+     /* Convert to bits? */
+-    if(bytes == 0) { 
++    if (unit == OPTION_BW_BITS) { 
+       n *= 8;
+     }
+ 
++    /* Force power of ten for pps */
++    if (unit == OPTION_BW_PKTS)
++      ksize = 1000;
++
+     while(1) {
+       if(n < size * 1000 || i >= UNIT_DIVISIONS - 1) {
+-        snprintf(buf, bsize, " %4.0f%s", n / size, bytes ? unit_bytes[i] : unit_bits[i]); 
++        snprintf(buf, bsize, " %4.0f%s", n / size, unit_disp[unit][i]); 
+         break;
+       }
+       i++;
+       size *= ksize;
+       if(n < size * 10) {
+-        snprintf(buf, bsize, " %4.2f%s", n / size, bytes ? unit_bytes[i] : unit_bits[i]); 
++        snprintf(buf, bsize, " %4.2f%s", n / size, unit_disp[unit][i]); 
+         break;
+       }
+       else if(n < size * 100) {
+-        snprintf(buf, bsize, " %4.1f%s", n / size, bytes ? unit_bytes[i] : unit_bits[i]); 
++        snprintf(buf, bsize, " %4.1f%s", n / size, unit_disp[unit][i]); 
+         break;
+       }
+   }
+diff --git a/ui_common.h b/ui_common.h
+index e4fcc2e..63ae5bb 100644
+--- a/ui_common.h
++++ b/ui_common.h
+@@ -43,6 +43,6 @@ hash_type* service_hash;
+ void analyse_data(void);
+ void screen_list_init(void);
+ void sprint_host(char * line, int af, struct in6_addr* addr, unsigned int port, unsigned int protocol, int L, int unspecified_as_star);
+-void readable_size(float, char*, int, int, int);
++void readable_size(float, char*, int, int, option_bw_unit_t);
+ 
+ #endif /* __UI_COMMON_H_ */
+-- 
+2.20.1
+
+
+From 3fae1acf1478f36b16763660bbf93c7d32a6a028 Mon Sep 17 00:00:00 2001
+From: Paul Warren <pdw@ex-parrot.com>
+Date: Thu, 5 Jan 2017 21:16:43 +0000
+Subject: [PATCH 12/16] =?UTF-8?q?Fix=20handling=20of=20packets=20that=20ar?=
+ =?UTF-8?q?e=20too=20short=20to=20be=20valid=20-=20Fr=C3=A9d=C3=A9ric=20Pe?=
+ =?UTF-8?q?rrin=20<fperrin@brocade.com>?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+When packets that are too short to be valid IP packets happen to start
+with 0x45 or 0x60, iftop will still try to read source and destination
+addresses, which will usually just be random garbage.
+
+Note the assumption about what libpcap guarantees in the comments to
+handle_ip_packet():
+
+    * It is assumed that the snaplen (currently hard-coded to 1000) is
+    * big enough to always capture the IP header past the L2 encap, and
+    * that pcap never truncates the packet to less than snaplen; in
+    * other words, that pcaphdr->caplen = MIN(pcaphdr->len, snaplen).
+---
+ ChangeLog |  3 ++
+ iftop.c   | 91 ++++++++++++++++++++++++++++++++-----------------------
+ 2 files changed, 56 insertions(+), 38 deletions(-)
+
+diff --git a/ChangeLog b/ChangeLog
+index a69e22a..9efcb95 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -6,6 +6,9 @@ Unattributed items are by Paul Warren and Chris Lightfoot.
+ 
+ 1.0
+ 
++* Fix handling of short packets
++    Frédéric Perrin <fperrin@brocade.com>
++
+ * Fix MAC address display
+     Kevin Darbyshire-Bryant <kevin@darbyshire-bryant.me.uk>
+ 
+diff --git a/iftop.c b/iftop.c
+index 3d5d622..aaec6aa 100644
+--- a/iftop.c
++++ b/iftop.c
+@@ -249,16 +249,16 @@ void assign_addr_pair(addr_pair* ap, struct ip* iptr, int flip) {
+   }
+ }
+ 
+-static void handle_ip_packet(struct ip* iptr, int hw_dir)
++static void handle_ip_packet(struct ip* iptr, int hw_dir, int pld_len)
+ {
+     int direction = 0; /* incoming */
++    int len;
+     history_type* ht;
+     union {
+       history_type **ht_pp;
+       void **void_pp;
+     } u_ht = { &ht };
+     addr_pair ap;
+-    unsigned int len = 0;
+     struct in6_addr scribdst;   /* Scratch pad. */
+     struct in6_addr scribsrc;   /* Scratch pad. */
+     /* Reinterpret packet type. */
+@@ -268,7 +268,21 @@ static void handle_ip_packet(struct ip* iptr, int hw_dir)
+ 
+     tick(0);
+ 
+-    if( (IP_V(iptr) ==4 && options.netfilter == 0)
++    /*
++     * Sanity check: drop obviously short packets.
++     * pld_len comes from pcaphdr->len - sizeof(struct l2_header).
++     *
++     * It is assumed that the snaplen (currently hard-coded to 1000) is
++     * big enough to always capture the IP header past the L2 encap, and
++     * that pcap never truncates the packet to less than snaplen; in
++     * other words, that pcaphdr->caplen = MIN(pcaphdr->len, snaplen).
++     */
++    if (pld_len < sizeof (struct ip))
++	return;
++    if (IP_V(iptr) == 6 && pld_len < sizeof (struct ip6_hdr))
++	return;
++
++    if( (IP_V(iptr) == 4 && options.netfilter == 0)
+             || (IP_V(iptr) == 6 && options.netfilter6 == 0) ) { 
+         /*
+          * Net filter is off, so assign direction based on MAC address
+@@ -424,7 +438,6 @@ static void handle_ip_packet(struct ip* iptr, int hw_dir)
+           break;
+     }
+ 
+-
+     if(hash_find(history, &ap, u_ht.void_pp) == HASH_STATUS_KEY_NOT_FOUND) {
+         ht = history_create();
+         hash_insert(history, &ap, ht);
+@@ -434,19 +447,13 @@ static void handle_ip_packet(struct ip* iptr, int hw_dir)
+     switch (options.bandwidth_unit) {
+       case OPTION_BW_BITS:
+       case OPTION_BW_BYTES:
+-	  switch (IP_V(iptr)) {
+-	    case 4:
+-		len = ntohs(iptr->ip_len);
+-		break;
+-	    case 6:
+-		len = ntohs(ip6tr->ip6_plen) + 40;
+-	    default:
+-		break;
+-	  }
++	  len = pld_len;
+ 	  break;
+       case OPTION_BW_PKTS:
+ 	  len = 1;
+ 	  break;
++      default:
++	  return;
+     }
+ 
+     /* Update record */
+@@ -476,7 +483,7 @@ static void handle_ip_packet(struct ip* iptr, int hw_dir)
+ 
+ static void handle_raw_packet(unsigned char* args, const struct pcap_pkthdr* pkthdr, const unsigned char* packet)
+ {
+-    handle_ip_packet((struct ip*)packet, -1);
++    handle_ip_packet((struct ip*)packet, -1, pkthdr->len);
+ }
+ 
+ #ifdef DLT_PFLOG
+@@ -490,18 +497,19 @@ static void handle_pflog_packet(unsigned char* args, const struct pcap_pkthdr* p
+ 	hdrlen = BPF_WORDALIGN(hdr->length);
+ 	length -= hdrlen;
+ 	packet += hdrlen;
+-	handle_ip_packet((struct ip*)packet, -1);
++	handle_ip_packet((struct ip*)packet, -1, length);
+ }
+ #endif
+ 
+ static void handle_null_packet(unsigned char* args, const struct pcap_pkthdr* pkthdr, const unsigned char* packet)
+ {
+-    handle_ip_packet((struct ip*)(packet + 4), -1);
++    handle_ip_packet((struct ip*)(packet + 4), -1, pkthdr->len);
+ }
+ 
+-static void handle_llc_packet(const struct llc* llc, int dir) {
+-
+-    struct ip* ip = (struct ip*)((void*)llc + sizeof(struct llc));
++static void handle_llc_packet(const struct llc* llc, int dir, int llclen) {
++    int hdrlen = sizeof(struct llc);
++    int pldlen = llclen - hdrlen;
++    struct ip* ip = (struct ip*)((void*)llc + hdrlen);
+ 
+     /* Taken from tcpdump/print-llc.c */
+     if(llc->ssap == LLCSAP_SNAP && llc->dsap == LLCSAP_SNAP
+@@ -513,11 +521,11 @@ static void handle_llc_packet(const struct llc* llc, int dir) {
+         switch(orgcode) {
+           case OUI_ENCAP_ETHER:
+           case OUI_CISCO_90:
+-            handle_ip_packet(ip, dir);
++	      handle_ip_packet(ip, dir, pldlen);
+             break;
+           case OUI_APPLETALK:
+             if(et == ETHERTYPE_ATALK) {
+-              handle_ip_packet(ip, dir);
++		handle_ip_packet(ip, dir, pldlen);
+             }
+             break;
+           default:;
+@@ -529,33 +537,36 @@ static void handle_llc_packet(const struct llc* llc, int dir) {
+ static void handle_tokenring_packet(unsigned char* args, const struct pcap_pkthdr* pkthdr, const unsigned char* packet)
+ {
+     struct token_header *trp;
++    int hdrlen = 0;
+     int dir = -1;
+     trp = (struct token_header *)packet;
+ 
+     if(IS_SOURCE_ROUTED(trp)) {
+-      packet += RIF_LENGTH(trp);
++      hdrlen += RIF_LENGTH(trp);
+     }
+-    packet += TOKEN_HDRLEN;
++    hdrlen += TOKEN_HDRLEN;
++    packet += hdrlen;
+ 
+     if(memcmp(trp->token_shost, if_hw_addr, 6) == 0 ) {
+       /* packet leaving this i/f */
+       dir = 1;
+-    } 
+-        else if(memcmp(trp->token_dhost, if_hw_addr, 6) == 0 || memcmp("\xFF\xFF\xFF\xFF\xFF\xFF", trp->token_dhost, 6) == 0) {
++    }
++    else if(memcmp(trp->token_dhost, if_hw_addr, 6) == 0 || memcmp("\xFF\xFF\xFF\xFF\xFF\xFF", trp->token_dhost, 6) == 0) {
+       /* packet entering this i/f */
+       dir = 0;
+     }
+ 
+     /* Only know how to deal with LLC encapsulated packets */
+     if(FRAME_TYPE(trp) == TOKEN_FC_LLC) {
+-      handle_llc_packet((struct llc*)packet, dir);
++        handle_llc_packet((struct llc*)packet, dir, pkthdr->len - hdrlen);
+     }
+ }
+ 
+ static void handle_ppp_packet(unsigned char* args, const struct pcap_pkthdr* pkthdr, const unsigned char* packet)
+ {
+-	register u_int caplen = pkthdr->caplen;
+-	u_int proto;
++    register u_int length = pkthdr->len;
++    register u_int caplen = pkthdr->caplen;
++    u_int proto;
+ 
+ 	if (caplen < 2) 
+         return;
+@@ -565,12 +576,14 @@ static void handle_ppp_packet(unsigned char* args, const struct pcap_pkthdr* pkt
+             return;
+ 
+ 		packet += 2;
++        length -= 2;
+ 
+ 		proto = EXTRACT_16BITS(packet);
+ 		packet += 2;
++		length -= 2;
+ 
+         if(proto == PPP_IP || proto == ETHERTYPE_IP || proto == ETHERTYPE_IPV6) {
+-            handle_ip_packet((struct ip*)packet, -1);
++            handle_ip_packet((struct ip*)packet, -1, length);
+         }
+     }
+ }
+@@ -593,24 +606,25 @@ static void handle_cooked_packet(unsigned char *args, const struct pcap_pkthdr *
+ 	dir=1;
+ 	break;
+     }
+-    handle_ip_packet((struct ip*)(packet+SLL_HDR_LEN), dir);
++    handle_ip_packet((struct ip*)(packet+SLL_HDR_LEN), dir,
++		     thdr->len - SLL_HDR_LEN);
+ }
+ #endif /* DLT_LINUX_SLL */
+ 
+ static void handle_eth_packet(unsigned char* args, const struct pcap_pkthdr* pkthdr, const unsigned char* packet)
+ {
+     struct ether_header *eptr;
+-    int ether_type;
+-    const unsigned char *payload;
++    int ether_type, hdrlen;
++
+     eptr = (struct ether_header*)packet;
+     ether_type = ntohs(eptr->ether_type);
+-    payload = packet + sizeof(struct ether_header);
++    hdrlen = sizeof(struct ether_header);
+ 
+     if(ether_type == ETHERTYPE_8021Q) {
+         struct vlan_8021q_header* vptr;
+-        vptr = (struct vlan_8021q_header*)payload;
++        vptr = (struct vlan_8021q_header*) (packet + hdrlen);
+         ether_type = ntohs(vptr->ether_type);
+-        payload += sizeof(struct vlan_8021q_header);
++        hdrlen += sizeof(struct vlan_8021q_header);
+     }
+ 
+     if(ether_type == ETHERTYPE_IP || ether_type == ETHERTYPE_IPV6) {
+@@ -634,8 +648,8 @@ static void handle_eth_packet(unsigned char* args, const struct pcap_pkthdr* pkt
+         }
+ 
+         /* Distinguishing ip_hdr and ip6_hdr will be done later. */
+-        iptr = (struct ip*)(payload); /* alignment? */
+-        handle_ip_packet(iptr, dir);
++        iptr = (struct ip*) (packet + hdrlen); /* alignment? */
++        handle_ip_packet(iptr, dir, pkthdr->len - hdrlen);
+     }
+ }
+ 
+@@ -648,7 +662,8 @@ static void handle_radiotap_packet(unsigned char* args, const struct pcap_pkthdr
+ {
+     /* 802.11 MAC header is = 34 bytes (not sure if that's universally true) */
+     /* We could try harder to figure out hardware direction from the MAC header */
+-    handle_ip_packet((struct ip*)(packet + ((struct radiotap_header *)packet)->it_len + 34),-1);
++    int hdrlen = ((struct radiotap_header *)packet)->it_len + 34;
++    handle_ip_packet((struct ip*)(packet + hdrlen), -1, pkthdr->len - hdrlen);
+ }
+ 
+ 
+-- 
+2.20.1
+
+
+From 53e1150f66a478d3c52180d395a123ae9fcb8618 Mon Sep 17 00:00:00 2001
+From: Paul Warren <pdw@ex-parrot.com>
+Date: Thu, 5 Jan 2017 21:23:57 +0000
+Subject: [PATCH 13/16] Support for unlimited number of lines of output in text
+ mode - Roman Hoog Antink <rha@open.ch>
+
+---
+ ChangeLog | 3 +++
+ tui.c     | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/ChangeLog b/ChangeLog
+index 9efcb95..4b639f1 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -6,6 +6,9 @@ Unattributed items are by Paul Warren and Chris Lightfoot.
+ 
+ 1.0
+ 
++* Support for unlimited number of lines of output for text mode
++    Roman Hoog Antink <rha@open.ch>
++
+ * Fix handling of short packets
+     Frédéric Perrin <fperrin@brocade.com>
+ 
+diff --git a/tui.c b/tui.c
+index 75c6e08..af10a2f 100644
+--- a/tui.c
++++ b/tui.c
+@@ -73,7 +73,7 @@ void tui_print() {
+   printf("\n");
+ 
+   /* Traverse the list of all connections */
+-  while((nn = sorted_list_next_item(&screen_list, nn)) != NULL && l < options.num_lines) {
++  while((nn = sorted_list_next_item(&screen_list, nn)) != NULL && (!options.num_lines || l < options.num_lines)) {
+     /* Increment the line counter */
+     l++;
+ 
+-- 
+2.20.1
+
+
+From 35af3cf65f17961d173b31fd3b00166ec095c226 Mon Sep 17 00:00:00 2001
+From: Paul Warren <pdw@mythic-beasts.com>
+Date: Mon, 6 Feb 2017 21:35:37 +0000
+Subject: [PATCH 14/16] Fix bug with DNS resolution.
+ https://bugzilla.redhat.com/show_bug.cgi?id=1120254
+
+---
+ resolver.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/resolver.c b/resolver.c
+index adddbc1..a3123bd 100644
+--- a/resolver.c
++++ b/resolver.c
+@@ -438,11 +438,11 @@ void resolver_worker(void* ptr) {
+ 		    char **ch_pp;
+ 		    void **void_pp;
+ 		} u_old = { &old };
+-                if(hash_find(ns_hash, &addr, u_old.void_pp) == HASH_STATUS_OK) {
++                if(hash_find(ns_hash, &addr.as_addr6, u_old.void_pp) == HASH_STATUS_OK) {
+                     hash_delete(ns_hash, &addr);
+                     xfree(old);
+                 }
+-                hash_insert(ns_hash, &addr, (void*)hostname);
++                hash_insert(ns_hash, &addr.as_addr6, (void*)hostname);
+             }
+ 
+         }
+@@ -488,7 +488,7 @@ void resolve(int af, void* addr, char* result, int buflen) {
+ 
+         pthread_mutex_lock(&resolver_queue_mutex);
+ 
+-        if(hash_find(ns_hash, raddr, u_hostname.void_pp) == HASH_STATUS_OK) {
++        if(hash_find(ns_hash, &raddr->as_addr6, u_hostname.void_pp) == HASH_STATUS_OK) {
+             /* Found => already resolved, or on the queue, no need to keep
+ 	     * it around */
+             free(raddr);
+@@ -497,7 +497,7 @@ void resolve(int af, void* addr, char* result, int buflen) {
+             hostname = xmalloc(INET6_ADDRSTRLEN);
+             inet_ntop(af, &raddr->addr, hostname, INET6_ADDRSTRLEN);
+ 
+-            hash_insert(ns_hash, raddr, hostname);
++            hash_insert(ns_hash, &raddr->as_addr6, hostname);
+ 
+             if(((head + 1) % RESOLVE_QUEUE_LENGTH) == tail) {
+                 /* queue full */
+-- 
+2.20.1
+
+
+From 949ed0f7e2c54c598868c270b82c2d702131a339 Mon Sep 17 00:00:00 2001
+From: Paul Warren <pdw@ex-parrot.com>
+Date: Wed, 22 Mar 2017 09:11:22 +0000
+Subject: [PATCH 15/16] Choose first running interface, rather than first "up"
+ interface (Redhat #1403025) Robert Scheck <robert@fedoraproject.org>
+
+---
+ ChangeLog | 3 +++
+ options.c | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/ChangeLog b/ChangeLog
+index 4b639f1..94ad8d8 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -6,6 +6,9 @@ Unattributed items are by Paul Warren and Chris Lightfoot.
+ 
+ 1.0
+ 
++* Choose first running interface, rather than first "up" interface (Redhat #1403025)
++    Robert Scheck <robert@fedoraproject.org>
++
+ * Support for unlimited number of lines of output for text mode
+     Roman Hoog Antink <rha@open.ch>
+ 
+diff --git a/options.c b/options.c
+index 10b08e7..a075357 100644
+--- a/options.c
++++ b/options.c
+@@ -110,7 +110,7 @@ static char *get_first_interface(void) {
+     while(nameindex[j].if_index != 0) {
+         if (strcmp(nameindex[j].if_name, "lo") != 0 && !is_bad_interface_name(nameindex[j].if_name)) {
+             strncpy(ifr.ifr_name, nameindex[j].if_name, sizeof(ifr.ifr_name));
+-            if ((s == -1) || (ioctl(s, SIOCGIFFLAGS, &ifr) == -1) || (ifr.ifr_flags & IFF_UP)) {
++            if ((s == -1) || (ioctl(s, SIOCGIFFLAGS, &ifr) == -1) || (ifr.ifr_flags & IFF_RUNNING)) {
+                 i = xstrdup(nameindex[j].if_name);
+                 break;
+             }
+-- 
+2.20.1
+
+
+From 77901c8c53e01359d83b8090aacfe62214658183 Mon Sep 17 00:00:00 2001
+From: Paul Warren <pdw@ex-parrot.com>
+Date: Wed, 3 Oct 2018 18:02:36 +0100
+Subject: [PATCH 16/16] Support scales beyond 1Gbps
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Guido Jäkel <Guido.Jaekel@GMX.DE>
+---
+ ui.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/ui.c b/ui.c
+index 771be31..abaadd2 100644
+--- a/ui.c
++++ b/ui.c
+@@ -71,7 +71,7 @@ int dontshowdisplay = 0;
+ 
+ /* Barchart scales. */
+ static struct {
+-    int max, interval;
++    long max; int interval;
+ } scale[] = {
+         {      64000,     10 },     /* 64 kbit/s */
+         {     128000,     10 },
+@@ -79,7 +79,9 @@ static struct {
+         {    1000000,     10 },     /* 1 Mbit/s */
+         {   10000000,     10 },     
+         {  100000000,    100 },
+-        { 1000000000,    100 }      /* 1 Gbit/s */
++        { 1000000000,    100 },     /* 1 Gbit/s */
++        {10000000000,    100 },
++       {100000000000,    100 }
+     };
+ static int rateidx = 0, wantbiggerrate;
+ 
+@@ -105,7 +107,7 @@ static float get_max_bandwidth() {
+ }
+ 
+ /* rate in bits */
+-static int get_bar_length(const int rate) {
++static int get_bar_length(const long rate) {
+     float l;
+     if (rate <= 0)
+         return 0;
+-- 
+2.20.1
+

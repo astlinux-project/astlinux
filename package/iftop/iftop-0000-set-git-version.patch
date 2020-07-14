@@ -1,0 +1,11 @@
+--- iftop-1.0pre4/configure.ac.orig	2020-07-14 10:37:07.992003472 -0500
++++ iftop-1.0pre4/configure.ac	2020-07-14 10:38:08.620471192 -0500
+@@ -22,7 +22,7 @@
+ dnl Boilerplate configuration
+ dnl
+ 
+-AC_INIT([iftop], [1.0pre4], [pdw@ex-parrot.com], [iftop], [http://www.ex-parrot.com/pdw/iftop/])
++AC_INIT([iftop], [1.0-77901c8c], [pdw@ex-parrot.com], [iftop], [http://www.ex-parrot.com/pdw/iftop/])
+ 
+ AC_CONFIG_AUX_DIR(config)
+ 
