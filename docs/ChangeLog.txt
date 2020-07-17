@@ -110,7 +110,7 @@ Released @TBD@
 
 -- iperf3, version bump to 3.8.1
 
--- keepalived, version bump to 2.1.4
+-- keepalived, version bump to 2.1.5
 
 -- msmtp, version bump to 1.8.11
    msmtpd: support SMTP session reuse, fixes Monit and multiple email alerts
