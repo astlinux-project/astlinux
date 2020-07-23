@@ -79,7 +79,7 @@ Released @TBD@
 
 -- system-vendor, update system-vendor.ids
 
--- ca-certificates, update trusted root certificates 2020-06-24
+-- ca-certificates, update trusted root certificates 2020-07-22
 
 -- mac2vendor, oui.txt database snapshot 2020-07-14
 
