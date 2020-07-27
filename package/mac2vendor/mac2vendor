@@ -2,6 +2,19 @@
 
 MAC_VENDOR_DB="/usr/share/oui-db"
 
+# Test for LAA (locally administered) unicast
+laa_unicast()
+{
+  local lower_4bits="${1:1:1}"
+
+  ## match set bit 0010 for "locally administered" and unset bit 0001 for "unicast"
+  case $lower_4bits in
+    2|6|A|E) return 0 ;;
+  esac
+
+  return 1
+}
+
 # Expand an IPv6 address to 39 characters
 ipv6_expand()
 {
@@ -84,5 +97,15 @@ else
   fi
 fi
 
-grep -m1 "^$MAC~" "$MAC_VENDOR_DB/xxxxx${MAC:5:1}" | cut -d'~' -f2
+vendor="$(grep -m1 "^$MAC~" "$MAC_VENDOR_DB/xxxxx${MAC:5:1}" | cut -d'~' -f2)"
 
+if [ -n "$vendor" ]; then
+  echo "$vendor"
+elif laa_unicast $MAC; then
+  echo "Randomized MAC Address"
+  exit 2
+else
+  exit 1
+fi
+
+exit 0
