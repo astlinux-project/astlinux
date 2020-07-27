@@ -862,6 +862,16 @@ function is_mac2vendor() {
   return(is_dir($mac_vendor_db));
 }
 
+// Function: laa_unicast
+//
+function laa_unicast($mac) {
+
+  $lower_4bits = substr($mac, 1, 1);
+  $match_hex = array('2', '6', 'A', 'E');
+
+  return(in_array($lower_4bits, $match_hex));
+}
+
 // Function: mac2vendor
 //
 function mac2vendor($mac) {
@@ -875,6 +885,8 @@ function mac2vendor($mac) {
       if (($lines = @file($mac_vendor_db.'/xxxxx'.$match[5], FILE_IGNORE_NEW_LINES)) !== FALSE) {
         if (($grep = current(preg_grep("/^$match~/", $lines))) !== FALSE) {
           $vendor = substr($grep, 7);
+        } elseif (laa_unicast($match)) {
+          $vendor = '(Randomized MAC Address)';
         }
       }
     }
