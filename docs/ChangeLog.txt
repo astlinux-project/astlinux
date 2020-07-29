@@ -10,6 +10,31 @@ Additions for AstLinux 1.3.11:
 
 Released @TBD@
 
+** System
+
+-- Linux Kernel 3.16.85 (no change)
+
+-- mac2vendor, add test for laa-unicast, displays 'Randomized MAC Address'
+
+** Networking
+
+-- WireGuard VPN, module 1.0.20200729 (version bump), tools 1.0.20200513 (no change)
+
+** Asterisk
+
+-- Asterisk 13.29.2 ('13se' no change)
+   Older than latest Asterisk 13.x version but more tested, built --without-pjproject
+
+-- Asterisk 13.34.0 (no change) and 16.11.1 (no change)
+
+-- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
+
+-- pjsip 2.9 (no change)
+
+** Web Interface
+
+-- Status tab, DHCP Leases, label 'Vendor Name' as (Randomized MAC Address) when appropriate.
+
 
 Additions for AstLinux 1.3.10:
 =============================
