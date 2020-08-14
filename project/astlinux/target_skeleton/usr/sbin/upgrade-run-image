@@ -355,7 +355,7 @@ check)
   if [ -n "$2" ]; then
     SRC_URL=$2
   else
-    echo "Usage: upgrade-run-image check firmware_repository_url [32|64|vm]"
+    echo "Usage: upgrade-run-image check firmware_repository_url [64|vm]"
     exit 1
   fi
   ARCH_BITS="$3"
@@ -368,7 +368,7 @@ upgrade)
   if [ -n "$2" ]; then
     SRC_URL=$2
   else
-    echo "Usage: upgrade-run-image upgrade firmware_repository_url [32|64|vm]"
+    echo "Usage: upgrade-run-image upgrade firmware_repository_url [64|vm]"
     exit 1
   fi
   ARCH_BITS="$3"
@@ -391,7 +391,7 @@ revert)
   ;;
 
 *)
-  echo "Usage: upgrade-run-image check|upgrade|show|revert firmware_repository_url [32|64|vm]"
+  echo "Usage: upgrade-run-image check|upgrade|show|revert firmware_repository_url [64|vm]"
   exit 1
   ;;
 
