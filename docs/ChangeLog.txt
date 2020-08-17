@@ -14,11 +14,31 @@ Released @TBD@
 
 -- Linux Kernel 3.16.85 (no change)
 
+-- igb, version bump to 5.3.6, Intel Gigabit Ethernet Network Driver
+
+-- ethtool, version bump to 5.8
+
+-- logrotate, version bump to 3.17.0
+
 -- mac2vendor, add test for laa-unicast, displays 'Randomized MAC Address'
+
+-- php, version bump to 7.2.33
+
+-- sqlite, version bump to 3.33.0
+
+-- strace, version bump to 5.8
 
 ** Networking
 
 -- WireGuard VPN, module 1.0.20200729 (version bump), tools 1.0.20200513 (no change)
+
+-- iperf3, version bump to 3.9
+
+-- openldap, version bump to 2.4.51
+
+-- unbound (host), version bump to 1.11.0
+
+-- (Custom Build Only) mosquitto, version bump to 1.6.11
 
 ** Asterisk
 
