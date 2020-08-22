@@ -294,7 +294,9 @@ load_modules()
   # write rules matching the state of a connection
   modprobe_multi nf_conntrack ip_conntrack
   if [ "$IPV6_SUPPORT" = "1" ]; then
-    modprobe nf_conntrack_ipv6
+    ## kernel >= 4.19 merged nf_conntrack_ipv{4,6} into nf_conntrack
+    ## Use generic alias for nf_conntrack_ipv6
+    modprobe nf_conntrack-10
   fi
 
   # Allows tracking for various protocols, placing entries in the conntrack table etc.

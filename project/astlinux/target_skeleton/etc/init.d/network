@@ -247,9 +247,7 @@ bridge_load_configure()
   modprobe bridge
 
   ## Disable bridge firewalling for intra-bridge traffic
-  sysctl -w net/bridge/bridge-nf-call-arptables=0 >/dev/null
-  sysctl -w net/bridge/bridge-nf-call-ip6tables=0 >/dev/null
-  sysctl -w net/bridge/bridge-nf-call-iptables=0 >/dev/null
+  ## Note: For kernels >= 3.18, not loading br_netfilter avoids filtering.
 
   ip link add name $br_name type bridge
 

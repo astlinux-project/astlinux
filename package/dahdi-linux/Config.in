@@ -18,17 +18,6 @@ config BR2_PACKAGE_DAHDI_OSLEC
 
 		http://www.rowetel.com/blog/?page_id=454
 
-config BR2_PACKAGE_DAHDI_HFCS
-	bool "dahdi_hfcs"
-	default n
-	depends on BR2_PACKAGE_DAHDI_LINUX
-	help
-		Adds dahdi_hfcs driver (single port HFC BRI cards)
-		Note: Requires chan_dahdi in asterisk 1.6 and newer.
-		Note: Requires DAHDI 2.6+
-
-		http://sourceforge.net/projects/dahdi-hfcs/
-
 config BR2_PACKAGE_DAHDI_NO_CARD_FIRMWARE
 	bool "dahdi_no_card_firmware"
 	default n

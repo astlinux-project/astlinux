@@ -4,12 +4,12 @@
 #
 #############################################################
 
-IPROUTE2_VERSION = 3.16.0
+IPROUTE2_VERSION = 4.20.0
 IPROUTE2_SOURCE = iproute2-$(IPROUTE2_VERSION).tar.xz
 IPROUTE2_SITE = $(BR2_KERNEL_MIRROR)/linux/utils/net/iproute2
-IPROUTE2_TARGET_SBINS = ip tc bridge ss rtmon ifcfg rtpr routel routef nstat ifstat rtacct lnstat genl ctstat rtstat
+IPROUTE2_TARGET_SBINS = ip tc bridge ss rtmon ifcfg rtpr routel routef nstat ifstat rtacct lnstat genl ctstat rtstat tipc devlink rdma
 
-IPROUTE2_DEPENDENCIES += host-bison host-flex host-pkg-config
+IPROUTE2_DEPENDENCIES = host-bison host-flex host-pkg-config $(if $(BR2_PACKAGE_LIBMNL),libmnl)
 
 # If both iproute2 and busybox are selected, make certain we win
 # the fight over who gets to have their utils actually installed.
@@ -20,36 +20,29 @@ endif
 # If we've got iptables enable xtables support for tc
 ifeq ($(BR2_PACKAGE_IPTABLES),y)
 IPROUTE2_DEPENDENCIES += iptables
-define IPROUTE2_WITH_IPTABLES
-	# Makefile is busted so it never passes IPT_LIB_DIR properly
-	$(SED) "s/-DIPT/-DXT/" $(@D)/tc/Makefile
-	echo "TC_CONFIG_XT:=y" >>$(@D)/Config
+else
+define IPROUTE2_DISABLE_IPTABLES
+	# m_xt.so is built unconditionally
+	echo "TC_CONFIG_XT:=n" >>$(@D)/config.mk
 endef
 endif
 
 define IPROUTE2_CONFIGURE_CMDS
-	# Cross-compile configure
-	$(SED) 's/gcc/$$CC $$CFLAGS/g' $(@D)/configure
 	cd $(@D) && $(TARGET_CONFIGURE_OPTS) ./configure
-	# arpd needs berkeleydb
-	$(SED) "/^TARGETS=/s: arpd : :" $(@D)/misc/Makefile
-	echo "IPT_LIB_DIR:=/usr/lib/xtables" >>$(@D)/Config
-	$(IPROUTE2_WITH_IPTABLES)
+	$(IPROUTE2_DISABLE_IPTABLES)
 endef
 
 define IPROUTE2_BUILD_CMDS
-	$(SED) 's/$$(CCOPTS)//' $(@D)/netem/Makefile
-	$(TARGET_MAKE_ENV) LDFLAGS="$(TARGET_LDFLAGS)" $(MAKE) \
+	$(TARGET_MAKE_ENV) LDFLAGS="$(TARGET_LDFLAGS)" \
+		CFLAGS="$(TARGET_CFLAGS) -DXT_LIB_DIR=\\\"/usr/lib/xtables\\\"" \
+		CBUILD_CFLAGS="$(HOST_CFLAGS)" $(MAKE) V=1 LIBDB_LIBS=-lpthread \
 		DBM_INCLUDE="$(STAGING_DIR)/usr/include" \
 		SHARED_LIBS=y \
-		CC="$(TARGET_CC)" CCOPTS="$(TARGET_CFLAGS) -D_GNU_SOURCE" -C $(@D)
+	-C $(@D)
 endef
 
 define IPROUTE2_INSTALL_TARGET_CMDS
-	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR="$(TARGET_DIR)" \
-		SBINDIR=/sbin \
-		DOCDIR=/usr/share/doc/iproute2-$(IPROUTE2_VERSION) \
-		MANDIR=/usr/share/man install
+	$(TARGET_MAKE_ENV) DESTDIR="$(TARGET_DIR)" $(MAKE) -C $(@D) install
 	# Wants bash
 	rm -f $(TARGET_DIR)/sbin/ifcfg
 endef

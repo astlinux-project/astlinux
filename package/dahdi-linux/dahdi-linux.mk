@@ -3,7 +3,7 @@
 # dahdi-linux
 #
 ##############################################################
-DAHDI_LINUX_VERSION := 2.10.2
+DAHDI_LINUX_VERSION := 3.1.0
 DAHDI_LINUX_SOURCE := dahdi-linux-$(DAHDI_LINUX_VERSION).tar.gz
 DAHDI_LINUX_SITE := https://downloads.asterisk.org/pub/telephony/dahdi-linux/releases
 DAHDI_LINUX_DIR := $(BUILD_DIR)/dahdi-linux-$(DAHDI_LINUX_VERSION)
@@ -33,11 +33,6 @@ ifeq ($(strip $(BR2_PACKAGE_DAHDI_OSLEC)),y)
 	mkdir -p $(DAHDI_LINUX_DIR)/drivers/staging/echo
 	cp -a $(BUILD_DIR)/linux-$(LINUX_VERSION)/drivers/misc/echo/* $(DAHDI_LINUX_DIR)/drivers/staging/echo
 	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ oslec-$(DAHDI_LINUX_VERSION_TUPLE)-\*.patch
-endif
-ifeq ($(BR2_PACKAGE_DAHDI_HFCS),y)
-	mkdir -p $(DAHDI_LINUX_DIR)/drivers/dahdi/hfcs
-	cp -a package/dahdi-linux/hfcs-$(DAHDI_LINUX_VERSION_TUPLE)/* $(DAHDI_LINUX_DIR)/drivers/dahdi/hfcs
-	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ hfcs-$(DAHDI_LINUX_VERSION_TUPLE)-\*.patch
 endif
 	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ dahdi-linux-$(DAHDI_LINUX_VERSION_SINGLE)-\*.patch
 	toolchain/patch-kernel.sh $(DAHDI_LINUX_DIR) package/dahdi-linux/ dahdi-linux-$(DAHDI_LINUX_VERSION_TUPLE)-\*.patch

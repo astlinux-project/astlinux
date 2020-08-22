@@ -1,5 +1,6 @@
 config BR2_PACKAGE_TG3
 	bool "tg3"
+	depends on BR2_DEPRECATED
 	depends on BR2_LINUX_KERNEL
 	default n
 	help

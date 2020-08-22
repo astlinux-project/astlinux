@@ -1,6 +1,7 @@
 config BR2_PACKAGE_RHINO
 	bool "rhino"
-        depends on BR2_LINUX_KERNEL
+	depends on BR2_DEPRECATED
+	depends on BR2_LINUX_KERNEL
 	select BR2_PACKAGE_DAHDI_LINUX
 	default n
 	help

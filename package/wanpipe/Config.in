@@ -1,5 +1,6 @@
 config BR2_PACKAGE_WANPIPE
 	bool "wanpipe"
+	depends on BR2_DEPRECATED
 	select BR2_PACKAGE_DAHDI_LINUX
 	select BR2_PACKAGE_FLEX
 	depends on BR2_LINUX_KERNEL

@@ -4,21 +4,6 @@
 
 LOCK_FILE="/var/lock/lxc.lock"
 
-set_sys_entry()
-{
-  local value="$1" path="$2"
-
-  if [ ! -e "$path" ]; then
-    return 1
-  fi
-
-  if [ "$(cat "$path")" = "$value" ]; then
-    return 0
-  fi
-
-  echo "$value" > "$path"
-}
-
 init ()
 {
   # Automatically create "/mnt/kd/lxc" directory if it doesn't exist
@@ -44,8 +29,6 @@ start ()
     echo "Starting LXC container..."
 
     /usr/bin/cgroupfs-mount
-
-    set_sys_entry 1 /sys/fs/cgroup/memory/memory.use_hierarchy
 
     lxc-autostart
 
