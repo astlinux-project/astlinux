@@ -6,6 +6,22 @@ PIDFILE="/var/run/rngd.pid"
 
 HWRNG_DEVICE="/dev/hwrng"
 
+valid_hwrng_device()
+{
+  local rng_current
+
+  if [ -e $HWRNG_DEVICE ]; then
+    if [ -e /sys/class/misc/hw_random/rng_current ]; then
+      rng_current="$(cat /sys/class/misc/hw_random/rng_current)"
+      if [ "${rng_current:-none}" != "none" ]; then
+        return 0
+      fi
+    fi
+  fi
+
+  return 1
+}
+
 init () {
 
   if [ "$HWRNG_MODULE" = "no" ]; then
@@ -30,7 +46,7 @@ start () {
   if [ "$HWRNG_MODULE" != "no" ]; then
     echo "Starting rngd..."
 
-    if [ -e $HWRNG_DEVICE ]; then
+    if valid_hwrng_device; then
       ## Exclude Intel RDRAND (rdrand) and jitterentropy (jitter)
       ARGS="-r $HWRNG_DEVICE -x rdrand -x jitter"
     else
