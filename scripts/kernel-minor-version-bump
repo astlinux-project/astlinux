@@ -1,11 +1,11 @@
 #!/bin/bash
 
-BASE_VER="3.16."
+BASE_VER="4.19."
 
 if [ -z "$1" -o -z "$2" ]; then
   echo "
 Usage: $0 FROM_minor_version TO_minor_version
-Example: $0 44 47
+Example: $0 140 141
 Base Version: ${BASE_VER}xx
 
 Note: Can be run multiple times as needed.
