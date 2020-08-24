@@ -591,10 +591,10 @@ setup_kernel_settings()
     sysctl -w net.ipv4.tcp_rfc1337=0
   fi
 
-  # Set out local port range. Kernel default = "1024 4999"
-  ########################################################
+  # Set our local port range. Kernel default = "32768 60999"
+  ##########################################################
   if [ -z "$LOCAL_PORT_RANGE" ]; then
-    LOCAL_PORT_RANGE="32768 61000"
+    LOCAL_PORT_RANGE="32768 60999"
   fi
   sysctl -w net.ipv4.ip_local_port_range="$LOCAL_PORT_RANGE"
 
