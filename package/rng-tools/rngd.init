@@ -70,8 +70,9 @@ start () {
         cnt=$((cnt - 1))
         sleep 1
       done
-      if [ $cnt -eq 0 ]; then
-        echo "rngd: System available entropy is low: $(cat /proc/sys/kernel/random/entropy_avail)" >&2
+      entropy_avail="$(cat /proc/sys/kernel/random/entropy_avail)"
+      if [ $cnt -eq 0 -a $entropy_avail -lt 256 ]; then
+        echo "rngd: System available entropy is low: $entropy_avail" >&2
       fi
     fi
   fi
