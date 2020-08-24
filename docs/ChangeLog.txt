@@ -18,6 +18,8 @@ Released @TBD@
 
 -- ethtool, version bump to 5.8
 
+-- Fossil, version bump to 2.10.2, security fixes
+
 -- logrotate, version bump to 3.17.0
 
 -- mac2vendor, add test for laa-unicast, displays 'Randomized MAC Address'
@@ -30,15 +32,21 @@ Released @TBD@
 
 ** Networking
 
--- WireGuard VPN, module 1.0.20200729 (version bump), tools 1.0.20200513 (no change)
+-- WireGuard VPN, module 1.0.20200729 (version bump), tools 1.0.20200820 (version bump)
+
+-- libcurl (curl) version bump to 7.72.0, security fix: CVE-2020-8231
 
 -- iperf3, version bump to 3.9
+
+-- msmtp, version bump to 1.8.12
+
+-- iproute2 (ip, tc, bridge, etc.) version bump to 4.20.0
 
 -- openldap, version bump to 2.4.51
 
 -- unbound (host), version bump to 1.11.0
 
--- (Custom Build Only) mosquitto, version bump to 1.6.11
+-- (Custom Build Only) mosquitto, version bump to 1.6.12
 
 ** Asterisk
 
@@ -47,7 +55,7 @@ Released @TBD@
 
 -- Asterisk 13.34.0 (no change) and 16.11.1 (no change)
 
--- DAHDI, dahdi-linux 2.10.2 (no change) and dahdi-tools 2.10.2 (no change)
+-- DAHDI, dahdi-linux 3.1.0 (version bump) and dahdi-tools 3.1.0 (version bump)
 
 -- pjsip 2.9 (no change)
 
