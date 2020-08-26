@@ -168,6 +168,9 @@ endmenu
 
 menu "Hardware handling"
 
+comment "Firmware"
+source "package/linux-firmware/Config.in"
+
 comment "Network Interface Kernel Drivers"
 source "package/e1000e/Config.in"
 source "package/igb/Config.in"

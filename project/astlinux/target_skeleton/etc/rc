@@ -268,6 +268,8 @@ $fstab_shm
     (while read i; do
      if [ "$i" = "sleep" ]; then
        sleep 2
+     elif [ "$i" = "r8168" ]; then
+       modprobe r8169 2>/dev/null
      elif [ "$i" = "virtio-pci" ]; then
        modprobe virtio_net 2>/dev/null
      elif [ "$i" != "rtc" ]; then

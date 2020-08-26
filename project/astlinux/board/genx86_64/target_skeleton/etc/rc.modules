@@ -12,7 +12,6 @@ pcnet32
 e1000
 e1000e
 igb
-r8168
 r8169
 tg3
 #skge

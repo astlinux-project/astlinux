@@ -1,0 +1,10 @@
+config BR2_PACKAGE_LINUX_FIRMWARE
+	bool "linux-firmware"
+	depends on BR2_LINUX_KERNEL
+	default n
+	help
+	  This package provides various binary firmware files (closed
+	  binary blobs) for such devices like LAN, WLAN cards etc.
+
+	  https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
+
