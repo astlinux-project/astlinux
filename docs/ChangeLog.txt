@@ -10,6 +10,11 @@ Additions for AstLinux 1.4.0:
 
 Released @TBD@
 
+** IMPORTANT NOTICE
+
+-- DAHDI is now version 3.1.0 to support the new kernel, as such
+   previous add-on DAHDI_HFCS and RHINO drivers are no longer supported.
+
 ** System
 
 -- Linux Kernel 4.19.140 (major bump)
@@ -64,6 +69,7 @@ Released @TBD@
 -- Asterisk 13.34.0 (no change) and 16.11.1 (no change)
 
 -- DAHDI, dahdi-linux 3.1.0 (version bump) and dahdi-tools 3.1.0 (version bump)
+   Note: Added patch to return support for TDM800P/AEX800 and TDM410P/AEX410 PCI cards.
 
 -- pjsip 2.9 (no change)
 
