@@ -42,7 +42,7 @@ Released @TBD@
 
 ** Networking
 
--- WireGuard VPN, module 1.0.20200729 (version bump), tools 1.0.20200820 (version bump)
+-- WireGuard VPN, module 1.0.20200729 (version bump), tools 1.0.20200827 (version bump)
 
 -- libcurl (curl) version bump to 7.72.0, security fix: CVE-2020-8231
 
@@ -56,7 +56,7 @@ Released @TBD@
 
 -- iptables, version bump to 1.8.4
 
--- openldap, version bump to 2.4.51
+-- openldap, version bump to 2.4.52
 
 -- unbound (host), version bump to 1.11.0
 
