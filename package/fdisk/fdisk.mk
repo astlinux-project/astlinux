@@ -6,7 +6,7 @@
 #
 #############################################################
 
-FDISK_VERSION_MAJOR = 2.28
+FDISK_VERSION_MAJOR = 2.33
 FDISK_VERSION = $(FDISK_VERSION_MAJOR).2
 FDISK_SOURCE = util-linux-$(FDISK_VERSION).tar.xz
 FDISK_SITE = $(BR2_KERNEL_MIRROR)/linux/utils/util-linux/v$(FDISK_VERSION_MAJOR)
@@ -31,8 +31,10 @@ HOST_FDISK_CONF_OPT += \
 	--without-udev \
 	--without-python \
 	--without-btrfs \
+	--without-selinux \
 	--without-systemd \
 	--without-systemdsystemunitdir \
+	--without-ncursesw \
 	--without-ncurses
 
 HOST_FDISK_CONF_OPT += \
@@ -46,6 +48,7 @@ HOST_FDISK_CONF_OPT += \
 	--disable-bfs \
 	--disable-cal \
 	--disable-chfn-chsh \
+	--disable-chmem \
 	--disable-cramfs \
 	--disable-eject \
 	--disable-fallocate \
@@ -61,6 +64,7 @@ HOST_FDISK_CONF_OPT += \
 	--disable-last --disable-login --disable-runuser --disable-su --disable-sulogin \
 	--disable-losetup \
 	--disable-lslogins \
+	--disable-lsmem \
 	--disable-mesg \
 	--disable-minix \
 	--disable-more \
@@ -74,7 +78,7 @@ HOST_FDISK_CONF_OPT += \
 	--disable-pivot_root \
 	--disable-raw \
 	--disable-rename \
-	--disable-reset \
+	--disable-rfkill \
 	--disable-schedutils \
 	--disable-setpriv \
 	--disable-setterm \
