@@ -4,13 +4,12 @@
 #
 #############################################################
 
-UTIL_LINUX_VERSION_MAJOR = 2.28
+UTIL_LINUX_VERSION_MAJOR = 2.33
 UTIL_LINUX_VERSION = $(UTIL_LINUX_VERSION_MAJOR).2
 UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VERSION).tar.xz
 UTIL_LINUX_SITE = $(BR2_KERNEL_MIRROR)/linux/utils/util-linux/v$(UTIL_LINUX_VERSION_MAJOR)
 UTIL_LINUX_INSTALL_STAGING = YES
 UTIL_LINUX_DEPENDENCIES = host-pkg-config
-UTIL_LINUX_CONF_ENV = scanf_cv_type_modifier=no
 
 UTIL_LINUX_CONF_OPT += \
 	--localstatedir=/var/run \
@@ -30,6 +29,7 @@ UTIL_LINUX_CONF_OPT += \
 	--without-udev \
 	--without-python \
 	--without-btrfs \
+	--without-selinux \
 	--without-systemd \
 	--without-systemdsystemunitdir
 
@@ -38,6 +38,8 @@ HOST_UTIL_LINUX_DEPENDENCIES = host-pkg-config
 # We also don't want the host-python dependency
 HOST_UTIL_LINUX_CONF_OPT = \
 	--without-python \
+	--without-btrfs \
+	--without-selinux \
 	--without-systemd \
 	--without-systemdsystemunitdir
 
@@ -49,8 +51,10 @@ endif
 
 ifeq ($(BR2_PACKAGE_NCURSES),y)
 UTIL_LINUX_DEPENDENCIES += ncurses
+UTIL_LINUX_CONF_OPT += --without-ncursesw --with-ncurses --disable-widechar
+UTIL_LINUX_CONF_ENV += NCURSES6_CONFIG=$(STAGING_DIR)/usr/bin/$(NCURSES_CONFIG_SCRIPTS)
 else
-UTIL_LINUX_CONF_OPT += --without-ncurses
+UTIL_LINUX_CONF_OPT += --without-ncursesw --without-ncurses
 endif
 
 # Disable/Enable utilities
@@ -60,6 +64,7 @@ UTIL_LINUX_CONF_OPT += \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_BFS),--enable-bfs,--disable-bfs) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_CAL),--enable-cal,--disable-cal) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_CHFN_CHSH),--enable-chfn-chsh,--disable-chfn-chsh) \
+	$(if $(BR2_PACKAGE_UTIL_LINUX_CHMEM),--enable-chmem,--disable-chmem) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_CRAMFS),--enable-cramfs,--disable-cramfs) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_EJECT),--enable-eject,--disable-eject) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_FALLOCATE),--enable-fallocate,--disable-fallocate) \
@@ -80,6 +85,7 @@ UTIL_LINUX_CONF_OPT += \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_LOGIN_UTILS),--enable-last --enable-login --enable-runuser --enable-su --enable-sulogin,--disable-last --disable-login --disable-runuser --disable-su --disable-sulogin) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_LOSETUP),--enable-losetup,--disable-losetup) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_LSLOGINS),--enable-lslogins,--disable-lslogins) \
+	$(if $(BR2_PACKAGE_UTIL_LINUX_LSMEM),--enable-lsmem,--disable-lsmem) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_MESG),--enable-mesg,--disable-mesg) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_MINIX),--enable-minix,--disable-minix) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_MORE),--enable-more,--disable-more) \
@@ -93,7 +99,7 @@ UTIL_LINUX_CONF_OPT += \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_PIVOT_ROOT),--enable-pivot_root,--disable-pivot_root) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_RAW),--enable-raw,--disable-raw) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_RENAME),--enable-rename,--disable-rename) \
-	$(if $(BR2_PACKAGE_UTIL_LINUX_RESET),--enable-reset,--disable-reset) \
+	$(if $(BR2_PACKAGE_UTIL_LINUX_RFKILL),--enable-rfkill,--disable-rfkill) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_SCHEDUTILS),--enable-schedutils,--disable-schedutils) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_SETPRIV),--enable-setpriv,--disable-setpriv) \
 	$(if $(BR2_PACKAGE_UTIL_LINUX_SETTERM),--enable-setterm,--disable-setterm) \
@@ -121,13 +127,13 @@ HOST_UTIL_LINUX_CONF_OPT += \
 	--without-tinfo \
 	--disable-all-programs
 
-define UTIL_LINUX_REMOVE_BINARIES
+define UTIL_LINUX_REMOVE_MINIMAL_BINARIES
 	## Removing selected /sbin binaries
-	for i in ctrlaltdel fsfreeze blkdiscard chcpu wipefs mkfs mkswap swaplabel sfdisk cfdisk; do \
+	for i in ctrlaltdel fsfreeze blkdiscard blkzone chcpu wipefs mkfs mkswap swaplabel sfdisk cfdisk; do \
 	  rm -f $(TARGET_DIR)/sbin/$$i ; \
 	done
 	## Removing selected /usr/bin binaries
-	for i in colcrt colrm column rev tailf pg script scriptreplay flock ipcmk ipcrm lsns look mcookie namei; do \
+	for i in choom colcrt colrm column fincore rev pg script scriptreplay flock ipcmk ipcrm look mcookie namei uuidparse; do \
 	  rm -f $(TARGET_DIR)/usr/bin/$$i ; \
 	done
 	## Removing selected /usr/sbin binaries
@@ -136,8 +142,21 @@ define UTIL_LINUX_REMOVE_BINARIES
 	done
 endef
 
+define UTIL_LINUX_REMOVE_DEFAULT_BINARIES
+	## Removing selected /sbin binaries
+	for i in blkzone; do \
+	  rm -f $(TARGET_DIR)/sbin/$$i ; \
+	done
+	## Removing selected /usr/bin binaries
+	for i in choom fincore uuidparse; do \
+	  rm -f $(TARGET_DIR)/usr/bin/$$i ; \
+	done
+endef
+
 ifeq ($(BR2_PACKAGE_UTIL_LINUX_MINIMAL_BINARIES),y)
-UTIL_LINUX_POST_INSTALL_TARGET_HOOKS = UTIL_LINUX_REMOVE_BINARIES
+UTIL_LINUX_POST_INSTALL_TARGET_HOOKS = UTIL_LINUX_REMOVE_MINIMAL_BINARIES
+else
+UTIL_LINUX_POST_INSTALL_TARGET_HOOKS = UTIL_LINUX_REMOVE_DEFAULT_BINARIES
 endif
 
 $(eval $(call AUTOTARGETS,package,util-linux))

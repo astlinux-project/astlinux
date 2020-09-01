@@ -61,10 +61,10 @@ config BR2_PACKAGE_UTIL_LINUX_BINARIES
 	  blkdiscard, blkid, blockdev, chcpu, col, colcrt, colrm,
 	  column, ctrlaltdel, dmesg, fdisk, findfs, flock,
 	  fsfreeze, getopt, hexdump, ipcmk, isosize, ldattach,
-	  look, lscpu, lsipc, lsns, mcookie, mkfs,
+	  look, lscpu, lsipc, mcookie, mkfs,
 	  mkswap, namei, prlimit, readprofile, renice, rev, rtcwake,
 	  script, scriptreplay, setarch, setsid, sfdisk, swaplabel,
-	  swapoff, tailf, uuidgen, whereis, wipefs
+	  swapoff, uuidgen, whereis, wipefs
 
 	  The setarch utility also installs architecture-specific
 	  symlinks like linux32, linux64, uname26, i386 and x86_64.
@@ -102,6 +102,11 @@ config BR2_PACKAGE_UTIL_LINUX_CHFN_CHSH
 
 comment "chfn/chsh needs a uClibc or glibc toolchain w/ wchar, locale, dynamic library"
 	depends on !(BR2_ENABLE_LOCALE && BR2_USE_WCHAR)
+
+config BR2_PACKAGE_UTIL_LINUX_CHMEM
+	bool "chmem"
+	help
+	  Sets a particular size or range of memory online or offline
 
 config BR2_PACKAGE_UTIL_LINUX_CRAMFS
 	bool "cramfs utilities"
@@ -201,6 +206,13 @@ config BR2_PACKAGE_UTIL_LINUX_LSLOGINS
 	help
 	  Display information about known users in the system
 
+config BR2_PACKAGE_UTIL_LINUX_LSMEM
+	bool "lsmem"
+	depends on BR2_USE_MMU # libsmartcols
+	select BR2_PACKAGE_UTIL_LINUX_LIBSMARTCOLS
+	help
+	  List the ranges of available memory with their online status
+
 config BR2_PACKAGE_UTIL_LINUX_MESG
 	bool "mesg"
 	help
@@ -285,10 +297,14 @@ config BR2_PACKAGE_UTIL_LINUX_RENAME
 	help
 	  Rename files
 
-config BR2_PACKAGE_UTIL_LINUX_RESET
-	bool "reset"
+config BR2_PACKAGE_UTIL_LINUX_RFKILL
+	bool "rfkill"
+	depends on BR2_USE_MMU # libsmartcols
+	select BR2_PACKAGE_UTIL_LINUX_LIBSMARTCOLS
 	help
-	  Reset the terminal
+	  Tool for enabling and disabling wireless devices. This new
+	  implementation is based upon, and backward compatible with,
+	  the original rfkill from Johannes Berg and Marcel Holtmann.
 
 config BR2_PACKAGE_UTIL_LINUX_SCHEDUTILS
 	bool "scheduling utilities"
