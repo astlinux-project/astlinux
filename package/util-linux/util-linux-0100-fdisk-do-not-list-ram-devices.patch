@@ -1,0 +1,13 @@
+--- util-linux-2.33.2/disk-utils/fdisk-list.c.orig	2020-09-01 13:14:46.267652325 -0500
++++ util-linux-2.33.2/disk-utils/fdisk-list.c	2020-09-01 13:30:19.926429036 -0500
+@@ -337,6 +337,10 @@
+ 		if (devno <= 0)
+ 			continue;
+ 
++		/* do not list RAM disks */
++		if (strstr(line, " ram") && devno >= 256)
++			continue;
++
+ 		if (sysfs_devno_is_dm_private(devno, NULL) ||
+ 		    sysfs_devno_is_wholedisk(devno) <= 0)
+ 			continue;
