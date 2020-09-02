@@ -41,4 +41,9 @@ define UNIXODBC_UNINSTALL_TARGET_CMDS
         rm -f $(TARGET_DIR)/etc/runlevels/default/S01unixodbc
 endef
 
+define UNIXODBC_STAGING_UNIXODBC_CONF_FIXUP
+	$(SED) "s,^#define UNIXODBC_SOURCE.*,/* #undef UNIXODBC_SOURCE */," $(STAGING_DIR)/usr/include/unixodbc_conf.h
+endef
+UNIXODBC_POST_INSTALL_STAGING_HOOKS += UNIXODBC_STAGING_UNIXODBC_CONF_FIXUP
+
 $(eval $(call AUTOTARGETS,package,unixodbc))
