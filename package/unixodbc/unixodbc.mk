@@ -3,7 +3,8 @@
 # unixodbc
 #
 #############################################################
-UNIXODBC_VERSION = 2.3.7
+
+UNIXODBC_VERSION = 2.3.8
 UNIXODBC_SOURCE = unixODBC-$(UNIXODBC_VERSION).tar.gz
 UNIXODBC_SITE = http://www.unixodbc.org
 UNIXODBC_DEPENDENCIES = host-bison host-flex libtool $(if $(BR2_PACKAGE_FLEX),flex)
@@ -14,6 +15,7 @@ UNIXODBC_CONF_OPT = \
 	--disable-static \
 	--disable-gui \
 	--disable-readline \
+	--disable-editline \
 	--with-pic \
 	--disable-drivers
 
