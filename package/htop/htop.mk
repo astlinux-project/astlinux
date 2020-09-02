@@ -4,10 +4,17 @@
 #
 #############################################################
 
-HTOP_VERSION = 2.2.0
+HTOP_VERSION = 3.0.0
 HTOP_SOURCE = htop-$(HTOP_VERSION).tar.gz
-HTOP_SITE = https://hisham.hm/htop/releases/$(HTOP_VERSION)
+HTOP_SITE = https://github.com/htop-dev/htop/archive/$(HTOP_VERSION)
 HTOP_DEPENDENCIES = ncurses
+
+define HTOP_POST_EXTRACT_FIX
+	mkdir -p $(@D)/m4
+endef
+HTOP_POST_EXTRACT_HOOKS += HTOP_POST_EXTRACT_FIX
+HTOP_AUTORECONF = YES
+
 # Prevent htop build system from searching the host paths
 HTOP_CONF_ENV = HTOP_NCURSES_CONFIG_SCRIPT=$(STAGING_DIR)/usr/bin/$(NCURSES_CONFIG_SCRIPTS)
 
