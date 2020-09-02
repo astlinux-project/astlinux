@@ -1,6 +1,6 @@
 #!/bin/ash
 
-MY_VERSION="2.0.2-05-astlinux"
+MY_VERSION="2.0.2-06-astlinux"
 
 # Location of the main configuration file for the firewall
 ##########################################################
@@ -295,8 +295,9 @@ load_modules()
   modprobe_multi nf_conntrack ip_conntrack
   if [ "$IPV6_SUPPORT" = "1" ]; then
     ## kernel >= 4.19 merged nf_conntrack_ipv{4,6} into nf_conntrack
-    ## Use generic alias for nf_conntrack_ipv6
-    modprobe nf_conntrack-10
+    if ! kernel_ver_chk 4 19 0; then
+      modprobe nf_conntrack_ipv6
+    fi
   fi
 
   # Allows tracking for various protocols, placing entries in the conntrack table etc.

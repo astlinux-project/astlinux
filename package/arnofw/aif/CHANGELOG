@@ -1,3 +1,12 @@
+Version 2.0.2-06-astlinux (September 2, 2020)
+---------------------------------------------
+* Misc fixes for Kernel 4.19
+
+Version 2.0.2-05-astlinux (May 28, 2020)
+----------------------------------------
+* Make the default LINK_LOCAL_DROP less agressive so it can be left enabled, which is the default.
+* NAT Loopback plugin, eliminate duplicate rules. (Thanks to David Kerr)
+
 Version 2.0.2-04-astlinux (February 28, 2020)
 ---------------------------------------------
 * == Simplify integration of AIF ==
