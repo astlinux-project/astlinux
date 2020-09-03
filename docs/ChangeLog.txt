@@ -18,7 +18,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.140 (major bump)
+-- Linux Kernel 4.19.142 (major bump)
 
 -- igb, version bump to 5.3.6, Intel Gigabit Ethernet Network Driver
 
@@ -30,6 +30,10 @@ Released @TBD@
 
 -- Fossil, version bump to 2.10.2, security fixes
 
+-- htop, version bump to 3.0.1
+
+-- libqrencode, version bump to 4.1.0
+
 -- logrotate, version bump to 3.17.0
 
 -- mac2vendor, add test for laa-unicast, displays 'Randomized MAC Address'
@@ -39,6 +43,10 @@ Released @TBD@
 -- sqlite, version bump to 3.33.0
 
 -- strace, version bump to 5.8
+
+-- util-linux, version bump to 2.33.2, add 'nsenter' command
+
+-- unixodbc, version bump to 2.3.8
 
 ** Networking
 
@@ -67,14 +75,14 @@ Released @TBD@
 -- Asterisk 13.29.2 ('13se' no change)
    Older than latest Asterisk 13.x version but more tested, built --without-pjproject
 
--- Asterisk 13.34.0 (no change) and 16.11.1 (no change)
+-- Asterisk 13.36.0 (version bump) and 16.13.0 (version bump)
 
 -- DAHDI, dahdi-linux 3.1.0 (version bump) and dahdi-tools 3.1.0 (version bump)
-   Note: Added patch to return support for (wctdm24xxp) TDM800P/AEX800 and TDM410P/AEX410 PCI cards.
-   Note: Added patch to return support for (wctdm) TDM400P PCI cards.
-   Note: Added patch to return support for (wcfxo) X100P PCI cards.
+   Note: Add patch to return support for (wctdm24xxp) TDM800P/AEX800 and TDM410P/AEX410 PCI cards.
+   Note: Add patch to return support for (wctdm) TDM400P PCI cards.
+   Note: Add patch to return support for (wcfxo) X100P PCI cards.
 
--- pjsip 2.9 (no change)
+-- pjsip 2.10 (version bump)
 
 ** Web Interface
 
