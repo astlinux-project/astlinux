@@ -4,7 +4,7 @@
 #
 #############################################################
 
-HTOP_VERSION = 3.0.0
+HTOP_VERSION = 3.0.1
 HTOP_SOURCE = htop-$(HTOP_VERSION).tar.gz
 HTOP_SITE = https://github.com/htop-dev/htop/archive/$(HTOP_VERSION)
 HTOP_DEPENDENCIES = ncurses
