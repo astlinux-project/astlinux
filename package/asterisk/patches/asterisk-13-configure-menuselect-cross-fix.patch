@@ -1,6 +1,6 @@
 --- asterisk-13.33.0/configure.ac.orig	2020-05-01 07:55:19.067081856 -0500
 +++ asterisk-13.33.0/configure.ac	2020-05-01 07:58:58.894851848 -0500
-@@ -2859,11 +2859,13 @@
+@@ -2863,11 +2863,13 @@
  AC_OUTPUT
  
  ${ac_cv_path_EGREP} 'CURSES|GTK2|OSARCH|NEWT' makeopts > makeopts.acbak2
