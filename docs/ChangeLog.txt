@@ -20,6 +20,8 @@ Released @TBD@
 
 -- Linux Kernel 4.19.142 (major bump)
 
+-- RUNNIX, version bump to runnix-0.6.2-rc1, with Linux Kernel 4.19.142, e2fsprogs 1.45.6, util-linux 2.33.2
+
 -- igb, version bump to 5.3.6, Intel Gigabit Ethernet Network Driver
 
 -- Remove r8168 RealTek NIC driver, use kernel built-in r8169 NIC driver instead
