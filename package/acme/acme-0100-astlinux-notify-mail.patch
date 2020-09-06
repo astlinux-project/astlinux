@@ -1,15 +1,12 @@
 --- acme-2.8.7/notify/mail.sh.orig	2020-09-05 14:36:40.583836390 -0500
 +++ acme-2.8.7/notify/mail.sh	2020-09-05 14:44:35.444728582 -0500
-@@ -8,6 +8,13 @@
+@@ -8,6 +8,10 @@
  #MAIL_NOVALIDATE=""
  #MAIL_MSMTP_ACCOUNT=""
  
 +. /etc/rc.conf
-+if [ -n "$ACME_ACCOUNT_EMAIL" ]; then
-+  MAIL_BIN="sendmail"
-+  MAIL_FROM="${MAIL_FROM:-$ACME_ACCOUNT_EMAIL}"
-+  MAIL_TO="${MAIL_TO:-$ACME_ACCOUNT_EMAIL}"
-+fi
++MAIL_BIN="sendmail"
++MAIL_TO="$ACME_ACCOUNT_EMAIL"
 +
  mail_send() {
    _subject="$1"

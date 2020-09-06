@@ -8,7 +8,7 @@ ACME_VERSION = 2.8.7
 ACME_SOURCE = acme.sh-$(ACME_VERSION).tar.gz
 ACME_SITE = https://github.com/acmesh-official/acme.sh/archive/$(ACME_VERSION)
 
-ACME_DNSAPI_FILES += \
+ACME_DNSAPI_FILES = \
 	dns_acmedns.sh dns_acmeproxy.sh dns_active24.sh dns_ad.sh dns_ali.sh \
 	dns_autodns.sh dns_aws.sh dns_azure.sh dns_cf.sh \
 	dns_clouddns.sh dns_cloudns.sh dns_cn.sh dns_conoha.sh dns_cx.sh \
