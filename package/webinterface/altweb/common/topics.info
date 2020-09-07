@@ -453,9 +453,9 @@ Options:
 ---------------------------------
 ACME (Let's Encrypt) Certificates
 ---------------------------------
-AstLinux uses the "acme-client" command as a front-end to the core acme.sh script provided by the https://github.com/Neilpang/acme.sh project.
+AstLinux uses the "acme-client" command as a front-end to the core acme.sh script provided by the https://github.com/acmesh-official/acme.sh project.
 
-The acme-client command limits issued certificates to only use DNS challenge validation, as such you need a supported DNS provider, of which there are well over 20 as of this writing.
+The acme-client command limits issued certificates to only use DNS challenge validation, as such you need a supported DNS provider, of which there are well over 80 as of this writing.
 
 The Command Line Interface (CLI) must be used to initially issue and deploy ACME certificates.
 
@@ -466,6 +466,8 @@ ACME Configuration
 Use the web interface "Network tab -> ACME (Let's Encrypt) Certificate:" section to define which services will be deployed ACME certificates.
 
 The "ACME Account Email Address" registration email address is used for expiry notifications, while optional it seems like a good idea to specify.
+
+Note -> The "ACME Account Email Address" can be used for renewal notifications, more info: 'Additional CLI Commands' below.
 
 In order to apply web interface settings changes, use the CLI command:
 
@@ -478,8 +480,8 @@ Issuing Certificates
 This example on host pbx4 uses the acme-client command, the core acme.sh version can be obtained by issuing:
 
 CLI> acme-client --version
-https://github.com/Neilpang/acme.sh
-v2.7.2
+https://github.com/acmesh-official/acme.sh
+v2.8.7
 
 Only DNS challenge validation is supported within AstLinux, as such you need a supported DNS provider, in this example we are using Cloudflare. We need to export the CF_Key and CF_Email variables, adjust to match your credentials ...
 
@@ -578,6 +580,12 @@ CLI> acme-client --revoke -d pbx4.example.org
 Remove a certificate by domain:
 
 CLI> acme-client --remove -d pbx4.example.org
+
+Enable renewal notifications via email:
+
+CLI> acme-client --set-notify --notify-hook mail --notify-level 2
+
+Tip -> As above, with '--notify-level 1' only email errors and '--notify-level 0' disables email notifications
 
 
 ----------------
