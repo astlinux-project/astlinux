@@ -4,7 +4,7 @@
 #
 #############################################################
 
-UNIXODBC_VERSION = 2.3.8
+UNIXODBC_VERSION = 2.3.9
 UNIXODBC_SOURCE = unixODBC-$(UNIXODBC_VERSION).tar.gz
 UNIXODBC_SITE = http://www.unixodbc.org
 UNIXODBC_DEPENDENCIES = host-bison host-flex libtool $(if $(BR2_PACKAGE_FLEX),flex)
@@ -20,7 +20,7 @@ UNIXODBC_CONF_OPT = \
 	--disable-drivers
 
 define UNIXODBC_INSTALL_TARGET_CMDS
-        cp -a $(STAGING_DIR)/usr/lib/libodbc*so* $(TARGET_DIR)/usr/lib/
+	cp -a $(STAGING_DIR)/usr/lib/libodbc*so* $(TARGET_DIR)/usr/lib/
 	$(INSTALL) -m 0755 -D package/unixodbc/unixodbc.init $(TARGET_DIR)/etc/init.d/unixodbc
 	$(INSTALL) -m 0755 -D $(STAGING_DIR)/usr/bin/isql $(TARGET_DIR)/usr/bin/isql
 	$(INSTALL) -m 0755 -D $(STAGING_DIR)/usr/bin/odbcinst $(TARGET_DIR)/usr/bin/odbcinst
@@ -31,19 +31,14 @@ define UNIXODBC_INSTALL_TARGET_CMDS
 endef
 
 define UNIXODBC_UNINSTALL_TARGET_CMDS
-        rm -f $(TARGET_DIR)/usr/lib/libodbc*so*
-        rm -f $(TARGET_DIR)/etc/init.d/unixodbc
-        rm -f $(TARGET_DIR)/usr/bin/isql
-        rm -f $(TARGET_DIR)/usr/bin/odbcinst
-        rm -f $(TARGET_DIR)/etc/odbc.ini
-        rm -f $(TARGET_DIR)/etc/odbcinst.ini
-        rm -f $(TARGET_DIR)/etc/ODBCDataSources
-        rm -f $(TARGET_DIR)/etc/runlevels/default/S01unixodbc
+	rm -f $(TARGET_DIR)/usr/lib/libodbc*so*
+	rm -f $(TARGET_DIR)/etc/init.d/unixodbc
+	rm -f $(TARGET_DIR)/usr/bin/isql
+	rm -f $(TARGET_DIR)/usr/bin/odbcinst
+	rm -f $(TARGET_DIR)/etc/odbc.ini
+	rm -f $(TARGET_DIR)/etc/odbcinst.ini
+	rm -f $(TARGET_DIR)/etc/ODBCDataSources
+	rm -f $(TARGET_DIR)/etc/runlevels/default/S01unixodbc
 endef
-
-define UNIXODBC_STAGING_UNIXODBC_CONF_FIXUP
-	$(SED) "s,^#define UNIXODBC_SOURCE.*,/* #undef UNIXODBC_SOURCE */," $(STAGING_DIR)/usr/include/unixodbc_conf.h
-endef
-UNIXODBC_POST_INSTALL_STAGING_HOOKS += UNIXODBC_STAGING_UNIXODBC_CONF_FIXUP
 
 $(eval $(call AUTOTARGETS,package,unixodbc))
