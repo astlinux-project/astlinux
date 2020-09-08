@@ -28,6 +28,8 @@ Released @TBD@
 
 -- linux-firmware, new package, provide binary blobs for r8169 and tg3 NIC drivers
 
+-- acme-client, version 2.8.7, add email notify support.
+
 -- ethtool, version bump to 5.8
 
 -- Fossil, version bump to 2.10.2, security fixes
@@ -48,7 +50,9 @@ Released @TBD@
 
 -- util-linux, version bump to 2.33.2, add 'nsenter' command
 
--- unixodbc, version bump to 2.3.8
+-- unixodbc, version bump to 2.3.9
+
+-- zabbix, version bump to 4.0.24
 
 ** Networking
 
