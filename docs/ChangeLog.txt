@@ -56,7 +56,7 @@ Released @TBD@
 
 ** Networking
 
--- WireGuard VPN, module 1.0.20200729 (version bump), tools 1.0.20200827 (version bump)
+-- WireGuard VPN, module 1.0.20200908 (version bump), tools 1.0.20200827 (version bump)
 
 -- libcurl (curl) version bump to 7.72.0, security fix: CVE-2020-8231
 
