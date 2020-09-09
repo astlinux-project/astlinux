@@ -4,7 +4,7 @@
 #
 #############################################################
 
-OPENLDAP_VERSION = 2.4.52
+OPENLDAP_VERSION = 2.4.53
 OPENLDAP_SOURCE = openldap-$(OPENLDAP_VERSION).tgz
 OPENLDAP_SITE = http://www.openldap.org/software/download/OpenLDAP/openldap-release
 OPENLDAP_INSTALL_STAGING = YES
