@@ -35,6 +35,9 @@ build_board()
   fi
 
   ./scripts/astlinux-makeimage -z $FAT_SIZE $FAT_SIZE 0
+  if [ $? -ne 0 ]; then
+    exit 1
+  fi
 
   mkdir "$output_path/$firmware/$board"
   mkdir -p "$output_path/img/${ASTVER}-${board}"

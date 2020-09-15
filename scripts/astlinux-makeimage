@@ -99,7 +99,7 @@ if [ ! -f output/target/etc/rc ]; then
   echo "It doesn't look like you have built AstLinux yet.
 You need to run ./scripts/build first. For more help please visit
 
-http://www.astlinux.org
+https://www.astlinux-project.org/
 
 " >&2
   exit 1
@@ -128,8 +128,10 @@ rm -f runnix.img bximage.out
 
 ./scripts/bximage -q -hd -mode=flat -size=$DISK_SIZE runnix.img > bximage.out
 
-LOOP0="$(sudo losetup -f)"
-sudo losetup $LOOP0 runnix.img
+LOOP0="$(sudo losetup -f --show runnix.img)"
+if [ -z "$LOOP0" ]; then
+  exit 1
+fi
 
 CYL=`awk -F\= '/^  cyl=/ {print $2}' bximage.out`
 HEADS=`awk -F\= '/^  heads=/ {print $2}' bximage.out`
@@ -170,14 +172,23 @@ PREFIX="^${temp//\//\\/}"
 # need to filter out bootable marker ('*') so it doesn't show up as $2
 eval $(sudo $HOST_BIN/fdisk -c=dos -u=sectors -l $LOOP0 | tr '*' ' ' | awk "/${PREFIX}/ { printf \"%s=%s\\n\", substr(\$1, $PREFIXLEN+1), \$2; }")
 
+sudo losetup -d $LOOP0
+
 if [ -z "$p1" -o \( $AST_SIZE -gt 0 -a -z "$p2" \) ]; then
   echo "Couldn't extract partition offsets." >&2
-  sudo losetup -d $LOOP0
   exit 1
 fi
 
-LOOP1="$(sudo losetup -f)"
-sudo losetup -o $(($p1*512)) $LOOP1 runnix.img
+## Work around "Resource temporarily unavailable" errors
+sleep 5
+LOOP1="$(sudo losetup -f --show -o $(($p1*512)) runnix.img)"
+if [ -z "$LOOP1" ]; then
+  sleep 10
+  LOOP1="$(sudo losetup -f --show -o $(($p1*512)) runnix.img)"
+  if [ -z "$LOOP1" ]; then
+    exit 1
+  fi
+fi
 
 LABEL="RUNNIX"
 sudo mkdosfs -F 16 -n $LABEL $LOOP1
@@ -188,11 +199,10 @@ echo "
 ##
 "
 
-# run syslinux and copy the master boot record
+# install syslinux
 (
   cd ${RUNNIX_DIR}
   sudo ./syslinux --install $LOOP1
-  sudo bash -c "cat mbr.bin > $LOOP0"
 )
 
 sudo mkdir -p /mnt/runnix
@@ -223,13 +233,26 @@ sudo losetup -d $LOOP1
 
 # allow an argument of 0 to skip creating this partition.
 if [ $AST_SIZE -gt 0 -a -n "$ASTRW_FORMAT" ]; then
-  LOOP2="$(sudo losetup -f)"
-  sudo losetup -o $(($p2*512)) $LOOP2 runnix.img
+  LOOP2="$(sudo losetup -f --show -o $(($p2*512)) runnix.img)"
+  if [ -z "$LOOP2" ]; then
+    exit 1
+  fi
 
   sudo mkfs -t ext2 -L ASTURW $LOOP2
 
   sudo losetup -d $LOOP2
 fi
+
+LOOP0="$(sudo losetup -f --show runnix.img)"
+if [ -z "$LOOP0" ]; then
+  exit 1
+fi
+
+# copy the master boot record
+(
+  cd ${RUNNIX_DIR}
+  sudo bash -c "cat mbr.bin > $LOOP0"
+)
 
 if [ -n "$DUMP_PARTITIONS" ]; then
   sudo $HOST_BIN/fdisk -c=dos -u=sectors -l $LOOP0
