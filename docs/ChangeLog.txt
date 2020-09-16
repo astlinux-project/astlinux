@@ -60,7 +60,7 @@ Released @TBD@
 
 -- libcurl (curl) version bump to 7.72.0, security fix: CVE-2020-8231
 
--- chrony, version bump to 4.0-pre3
+-- chrony, version bump to 4.0-pre4
 
 -- iperf3, version bump to 3.9
 
@@ -70,7 +70,7 @@ Released @TBD@
 
 -- iptables, version bump to 1.8.4
 
--- openldap, version bump to 2.4.52
+-- openldap, version bump to 2.4.53
 
 -- unbound (host), version bump to 1.11.0
 
