@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-CHRONY_VERSION = 4.0-pre3
+CHRONY_VERSION = 4.0-pre4
 CHRONY_SITE = https://download.tuxfamily.org/chrony
 CHRONY_DEPENDENCIES = host-pkg-config libcap
 
@@ -29,14 +29,10 @@ else
 CHRONY_CONF_OPT += --without-nss
 endif
 
-ifeq ($(BR2_PACKAGE_READLINE),y)
-CHRONY_DEPENDENCIES += readline
-CHRONY_CONF_OPT += --without-editline
-else ifeq ($(BR2_PACKAGE_LIBEDIT),y)
+ifeq ($(BR2_PACKAGE_LIBEDIT),y)
 CHRONY_DEPENDENCIES += libedit
-CHRONY_CONF_OPT += --without-readline
 else
-CHRONY_CONF_OPT += --without-editline --without-readline
+CHRONY_CONF_OPT += --without-editline
 endif
 
 # If pps-tools is available, build it before so the package can use it
