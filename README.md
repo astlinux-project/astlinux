@@ -18,7 +18,7 @@ Using a Virtual Machine is suggested, typical recommended configuration:
 
 Linux Build Systems known to work (must be x86_64):
 
-- CentOS 7 - (used for official releases)
+- CentOS 7
 - Debian 9
 - Debian 10 - (recommended)
 - Ubuntu 14.04
