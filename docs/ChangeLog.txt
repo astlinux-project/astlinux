@@ -38,6 +38,8 @@ Released @TBD@
 
 -- libqrencode, version bump to 4.1.0
 
+-- libxml2, version 2.9.10, security fixes: CVE-2020-7595, CVE-2019-20388, CVE-2020-24977
+
 -- logrotate, version bump to 3.17.0
 
 -- mac2vendor, add test for laa-unicast, displays 'Randomized MAC Address'
