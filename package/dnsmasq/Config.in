@@ -1,5 +1,6 @@
 config BR2_PACKAGE_DNSMASQ
 	bool "dnsmasq"
+	depends on BR2_USE_MMU # fork()
 	select BR2_PACKAGE_NETCALC
 	help
 	  A lightweight DNS and DHCP server.  It is intended to provide
@@ -30,3 +31,4 @@ config BR2_PACKAGE_DNSMASQ_IDN
 	help
 	  Enable IDN support in dnsmasq.
 	  This option is a big space taker since is pulls in many libraries.
+
