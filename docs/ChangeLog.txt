@@ -64,6 +64,8 @@ Released @TBD@
 
 -- chrony, version bump to 4.0-pre4
 
+-- dnsmasq, version bump to 2.82
+
 -- iperf3, version bump to 3.9
 
 -- msmtp, version bump to 1.8.12
