@@ -4,10 +4,9 @@
 #
 #############################################################
 
-RUNNIX_VERSION = 0.6.2-rc1
+RUNNIX_VERSION = 0.6.2
 RUNNIX_SOURCE = runnix-$(RUNNIX_VERSION).tar.gz
-#RUNNIX_SITE = https://s3.amazonaws.com/mirror.astlinux-project/runnix6
-RUNNIX_SITE = https://abelbeck.com/lonnie/runnix6
+RUNNIX_SITE = https://s3.amazonaws.com/mirror.astlinux-project/runnix6
 RUNNIX_DEPENDENCIES = host-fdisk
 
 RUNFS_DIR = $(BUILD_DIR)/runfs
