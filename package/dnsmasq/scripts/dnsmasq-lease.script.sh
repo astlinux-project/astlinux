@@ -10,9 +10,23 @@ old_time_secs=""
 old_vendor=""
 old_hostname=""
 
+# Test for LAA (locally administered) unicast
+laa_unicast()
+{
+  local first_8bits="${1%????}"
+  local lower_4bits="${first_8bits#?}"
+
+  ## match set bit 0010 for "locally administered" and unset bit 0001 for "unicast"
+  case $lower_4bits in
+    2|6|A|E) return 0 ;;
+  esac
+
+  return 1
+}
+
 mac2vendor()
 {
-  local raw_mac="$1" MAC_VENDOR_DB MAC
+  local raw_mac="$1" MAC_VENDOR_DB MAC vendor
 
   MAC_VENDOR_DB="/usr/share/oui-db"
 
@@ -23,8 +37,16 @@ mac2vendor()
   MAC="$(echo "$raw_mac" | tr -d ':' | tr 'a-f' 'A-F')"
   MAC="${MAC%??????}"
 
-  if [ ${#MAC} -eq 6 ]; then
-    grep -m1 "^${MAC}~" "$MAC_VENDOR_DB/xxxxx${MAC#?????}" | cut -d'~' -f2
+  if [ ${#MAC} -ne 6 ]; then
+    return
+  fi
+
+  vendor="$(grep -m1 "^${MAC}~" "$MAC_VENDOR_DB/xxxxx${MAC#?????}" | cut -d'~' -f2)"
+
+  if [ -n "$vendor" ]; then
+    echo "$vendor"
+  elif laa_unicast $MAC; then
+    echo "(Randomized MAC Address)"
   fi
 }
 
