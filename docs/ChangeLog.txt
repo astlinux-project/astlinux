@@ -44,7 +44,7 @@ Released @TBD@
 
 -- mac2vendor, add test for laa-unicast, displays 'Randomized MAC Address'
 
--- php, version bump to 7.2.33
+-- php, version bump to 7.2.34, security fixes: CVE-2020-7069, CVE-2020-7070
 
 -- sqlite, version bump to 3.33.0
 
