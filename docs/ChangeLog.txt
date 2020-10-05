@@ -8,7 +8,7 @@
 Additions for AstLinux 1.4.0:
 =============================
 
-Released @TBD@
+Released 2020-10-05
 
 ** IMPORTANT NOTICE
 
