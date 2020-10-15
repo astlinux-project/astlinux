@@ -612,6 +612,7 @@ require_once '../common/header.php';
       cm.setOption("mode", "text/xml");
     } else if (name.search('^/mnt/kd/rc[.]') >= 0 ||
                name.search('[.]script$') >= 0 ||
+               name.search('[.]sh$') >= 0 ||
                name.search('/arno-iptables-firewall/(.*[.]conf$|custom-rules)') >= 0) {
       cm.setOption("mode", "text/x-sh");
     } else {
