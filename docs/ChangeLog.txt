@@ -10,6 +10,39 @@ Additions for AstLinux 1.4.1:
 
 Released @TBD@
 
+** System
+
+-- Linux Kernel 4.19.146 (no change)
+
+-- ca-certificates, update trusted root certificates 2020-10-14
+
+-- Time Zone Database update, tzdata2020b and php-timezonedb-2020.2
+
+** Networking
+
+-- OpenSSL, version bump to 1.1.1h, security fix: none
+
+-- WireGuard VPN, module 1.0.20200908 (no change), tools 1.0.20200827 (no change)
+
+-- libcurl (curl) version bump to 7.73.0
+
+-- chrony, version bump to 4.0
+
+** Asterisk
+
+-- Asterisk 13.29.2 ('13se' no change)
+   Older than latest Asterisk 13.x version but more tested, built --without-pjproject
+
+-- Asterisk 13.36.0 (no change) and 16.13.0 (no change)
+
+-- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
+
+-- pjsip 2.10 (no change)
+
+** Web Interface
+
+-- Edit tab, make '.sh' files use 'shell' codemirror mode (syntax).
+
 
 Additions for AstLinux 1.4.0:
 =============================
