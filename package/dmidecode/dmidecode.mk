@@ -4,7 +4,7 @@
 #
 #############################################################
 
-DMIDECODE_VERSION = 3.2
+DMIDECODE_VERSION = 3.3
 DMIDECODE_SITE = https://download.savannah.gnu.org/releases/dmidecode
 DMIDECODE_SOURCE = dmidecode-$(DMIDECODE_VERSION).tar.xz
 
