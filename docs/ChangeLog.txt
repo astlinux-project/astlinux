@@ -14,9 +14,15 @@ Released @TBD@
 
 -- Linux Kernel 4.19.146 (no change)
 
+-- libqrencode, version bump to 4.1.1
+
+-- strace, version bump to 5.9
+
 -- ca-certificates, update trusted root certificates 2020-10-14
 
 -- Time Zone Database update, tzdata2020b and php-timezonedb-2020.2
+
+-- (Custom Build Only) dmidecode, version bump to 3.3
 
 ** Networking
 
@@ -27,6 +33,12 @@ Released @TBD@
 -- libcurl (curl) version bump to 7.73.0
 
 -- chrony, version bump to 4.0
+
+-- openldap, version bump to 2.4.54
+
+-- unbound (host), version bump to 1.12.0
+
+-- whois, version bump to 5.5.7
 
 ** Asterisk
 
