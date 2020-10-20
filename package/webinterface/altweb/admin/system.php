@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2019 Lonnie Abelbeck
+// Copyright (C) 2008-2020 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -21,6 +21,7 @@
 // 12-16-2017, Updated backup files
 // 06-25-2019, Updated backup files
 // 07-11-2019, Added Backup Exclude Suffixes support
+// 10-20-2020, Added view syslog messages.0 or messages.1
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -603,6 +604,11 @@ require_once '../common/header.php';
   putHtml('<optgroup label="&mdash; System Configuration &mdash;">');
   if (is_file($file = '/var/log/messages')) {
     putHtml('<option value="'.$file.'">syslog log messages</option>');
+  }
+  if (is_file($file = '/var/log/messages.0')) {
+    putHtml('<option value="'.$file.'">syslog log messages.0</option>');
+  } elseif (is_file($file = '/var/log/messages.1')) {
+    putHtml('<option value="'.$file.'">syslog log messages.1</option>');
   }
   if (is_file($file = '/var/log/asterisk/messages')) {
     putHtml('<option value="'.$file.'">asterisk logs</option>');
