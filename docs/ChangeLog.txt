@@ -14,9 +14,17 @@ Released @TBD@
 
 -- Linux Kernel 4.19.146 (no change)
 
+-- igb, version bump to 5.4.6, Intel Gigabit Ethernet Network Driver
+
+-- ethtool, version bump to 5.9
+
+-- expat, version bump to 2.2.10
+
 -- libqrencode, version bump to 4.1.1
 
 -- strace, version bump to 5.9
+
+-- zabbix, version bump to 4.0.25
 
 -- ca-certificates, update trusted root certificates 2020-10-14
 
@@ -34,7 +42,11 @@ Released @TBD@
 
 -- chrony, version bump to 4.0
 
+-- mtr, version bump to 0.94
+
 -- openldap, version bump to 2.4.54
+
+-- stunnel, version bump to 5.57
 
 -- unbound (host), version bump to 1.12.0
 
@@ -45,7 +57,7 @@ Released @TBD@
 -- Asterisk 13.29.2 ('13se' no change)
    Older than latest Asterisk 13.x version but more tested, built --without-pjproject
 
--- Asterisk 13.36.0 (no change) and 16.13.0 (no change)
+-- Asterisk 13.37.0 (version bump) and 16.14.0 (version bump)
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
 
@@ -54,6 +66,8 @@ Released @TBD@
 ** Web Interface
 
 -- Edit tab, make '.sh' files use 'shell' codemirror mode (syntax).
+
+-- System tab, add view syslog messages.0 or messages.1
 
 
 Additions for AstLinux 1.4.0:
