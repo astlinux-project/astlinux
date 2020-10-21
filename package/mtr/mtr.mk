@@ -4,8 +4,8 @@
 #
 #############################################################
 
-MTR_VERSION = 0.93
-MTR_SITE = ftp://ftp.bitwizard.nl/mtr
+MTR_VERSION = 0.94
+MTR_SITE = https://www.bitwizard.nl/mtr/files
 MTR_SOURCE = mtr-$(MTR_VERSION).tar.gz
 
 MTR_DEPENDENCIES = host-pkg-config ncurses libcap
