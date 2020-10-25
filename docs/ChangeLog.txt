@@ -22,13 +22,15 @@ Released @TBD@
 
 -- libqrencode, version bump to 4.1.1
 
+-- Monit, version bump to 5.27.1
+
 -- strace, version bump to 5.9
 
 -- zabbix, version bump to 4.0.25
 
 -- ca-certificates, update trusted root certificates 2020-10-14
 
--- Time Zone Database update, tzdata2020b and php-timezonedb-2020.2
+-- Time Zone Database update, tzdata2020d and php-timezonedb-2020.4
 
 -- (Custom Build Only) dmidecode, version bump to 3.3
 
