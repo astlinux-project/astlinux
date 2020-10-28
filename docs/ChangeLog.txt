@@ -16,6 +16,8 @@ Released @TBD@
 
 -- igb, version bump to 5.4.6, Intel Gigabit Ethernet Network Driver
 
+-- e1000e version bump to 3.8.7 Intel PCI-Express PRO/1000 Ethernet Linux driver
+
 -- ethtool, version bump to 5.9
 
 -- expat, version bump to 2.2.10
