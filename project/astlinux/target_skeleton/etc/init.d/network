@@ -320,41 +320,6 @@ init () {
 
   mkdir -p /tmp/etc/wide-dhcpv6
 
-  if [ -n "$IFRENAME" ]; then
-
-    #clear existing iftabs
-    : > /tmp/etc/iftab
-    : > /tmp/etc/iftab.init
-
-    #set COUNT
-    COUNT=10
-
-    for i in $IFRENAME; do
-      IF="$(echo $i | cut -d: -f1)"
-      DRIVER="$(echo $i | cut -d: -f2)"
-      ID="$(echo $i | cut -d: -f3)"
-
-      COUNT=$((COUNT-1))
-
-      if echo $ID | grep -q i; then
-        RID="$(echo $ID | tr -d i)"
-        echo "eth$COUNT driver $DRIVER interrupt $RID" >> /tmp/etc/iftab.init
-        echo "$IF driver $DRIVER interrupt $RID" >> /tmp/etc/iftab
-      fi
-
-    done
-  fi
-
-  if [ -f /etc/iftab.init ]; then
-    echo "Remapping interfaces (init)..."
-    ifrename -c /etc/iftab.init
-  fi
-
-  if [ -f /etc/iftab ]; then
-    echo "Remapping interfaces..."
-    ifrename -c /etc/iftab
-  fi
-
   if [ -n "$PHYETH" ]; then
     for i in $PHYETH; do
       INT="$(echo $i | cut -d: -f1)"
