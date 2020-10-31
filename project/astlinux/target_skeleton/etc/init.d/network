@@ -5,55 +5,6 @@
 . /etc/init.d/functions.d/network
 . /etc/init.d/functions.d/misc
 
-nthfield()
-{
-  echo "${!1}" | cut "-d$2" "-f$3"
-}
-
-create_nasX()
-{
-  local name list type tag value VPI VCI ATMINFO CARD IF="$1" IFS
-
-  CARD="${IF:3:1}"
-
-  if [ -n "$ATM_MODULE" ]; then
-    modprobe $ATM_MODULE
-  fi
-
-  name="ATM_PARAMS${CARD}"
-  ATM_PARAMS="${!name}"
-
-  # initialize any values
-  IFS=$'\n'
-  for list in $ATM_PARAMS; do
-    type="$(nthfield list ~ 1)"
-    tag="$(nthfield list ~ 2)"
-    value="$(nthfield list ~ 3)"
-    case $type in
-    solos)
-      soloscli -s $CARD "$tag" "$value"
-      ;;
-    esac
-  done
-
-  name="ATM_CIRCUIT${CARD}"
-  ATMINFO="${!name}"
-
-  if [ -z "$ATMINFO" ]; then
-    echo "Need VPI/VCI information for interface $PPPOEIF ($name)." >&2
-    return 1
-  fi
-
-  VPI="$(echo $ATMINFO | cut -d. -f1)"
-  VCI="$(echo $ATMINFO | cut -d. -f2)"
-
-  br2684ctl -b -c "$CARD" -e 0 -p 1 -s 2040 -a "$CARD.$VPI.$VCI"
-
-  ip link set dev "$IF" up
-
-  return 0
-}
-
 gen_nopd_dhcp6c_conf()
 {
   local interface="$1"
@@ -355,14 +306,6 @@ start () {
   ip addr add 127.0.0.1/8 dev lo scope host
   ip link set dev lo up
 
-  # look for nas[0123] being any one of our interfaces, and create it
-  for IF in $PPPOEIF $BRIDGE0 $BRIDGE1 $BRIDGE2 $LXC_BRIDGE0 $INTIF $INT2IF $INT3IF $INT4IF; do
-    case $IF in
-    nas[0123])
-      create_nasX $IF ;;
-    esac
-  done
-
   # if you want to change an interface's MAC address, you must do so
   # before marking it up or joining it to a bridge.
   if [ -n "$EXTIF" -a -n "$EXTIFMAC" -a "$EXTIF" != "none" ]; then
@@ -506,7 +449,7 @@ start () {
   # PPPoE Again!
   if isextppp; then
     case $PPPOEIF in
-    eth*|nas[0123])
+    eth*)
       ip link set dev $PPPOEIF up ;;
     br[012])
       ip link set dev $PPPOEIF up
@@ -826,20 +769,6 @@ stop () {
       ip link delete $i
     done
   fi
-
-  # ATM interfaces
-  for IF in $PPPOEIF $BRIDGE0 $BRIDGE1 $BRIDGE2 $LXC_BRIDGE0 $INTIF $INT2IF $INT3IF $INT4IF; do
-    case $IF in
-    nas[0123])
-      ip link set dev "$IF" down
-      killall br2684ctl
-      if [ -n "$ATM_MODULE" ]; then
-        modprobe -r $ATM_MODULE
-      fi
-      break			# only need to do this once
-      ;;
-    esac
-  done
 
   echo "Network DOWN"
 }
