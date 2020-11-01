@@ -1,0 +1,13 @@
+diff --git a/Makefile.linux b/Makefile.linux
+index e4063ac..059a0df 100644
+--- a/Makefile.linux
++++ b/Makefile.linux
+@@ -153,8 +153,6 @@ LDLIBS += $(shell $(PKG_CONFIG) --static --libs-only-l libmnl)
+ LDLIBS += $(shell $(PKG_CONFIG) --static --libs-only-l libnetfilter_conntrack)
+ endif # ($(TEST),1)
+ 
+-LDLIBS += $(shell $(PKG_CONFIG) --static --libs-only-l libssl)
+-
+ TEST := $(shell $(PKG_CONFIG) --exists uuid && echo 1)
+ ifeq ($(TEST),1)
+ LDLIBS += $(shell $(PKG_CONFIG) --static --libs-only-l uuid)

@@ -7,7 +7,7 @@
 MINIUPNPD_VERSION = 2.1
 MINIUPNPD_SOURCE = miniupnpd-$(MINIUPNPD_VERSION).tar.gz
 MINIUPNPD_SITE = http://miniupnp.free.fr/files
-MINIUPNPD_DEPENDENCIES = host-pkg-config linux iptables openssl util-linux
+MINIUPNPD_DEPENDENCIES = host-pkg-config linux iptables util-linux
 
 define MINIUPNPD_IPTABLES_PATH_FIX
 	$(SED) 's:/sbin/iptables:/usr/sbin/iptables:g' \
