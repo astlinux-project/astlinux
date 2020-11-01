@@ -28,7 +28,7 @@ Released @TBD@
 
 -- strace, version bump to 5.9
 
--- zabbix, version bump to 4.0.25
+-- zabbix, version bump to 4.0.26
 
 -- ca-certificates, update trusted root certificates 2020-10-14
 
@@ -46,9 +46,12 @@ Released @TBD@
 
 -- chrony, version bump to 4.0
 
+-- miniupnpd, version 2.1, add Debian security fixes: CVE-2019-12107, CVE-2019-12108
+                                      CVE-2019-12109, CVE-2019-12110, CVE-2019-12111
+
 -- mtr, version bump to 0.94
 
--- openldap, version bump to 2.4.54
+-- openldap, version bump to 2.4.55
 
 -- stunnel, version bump to 5.57
 
