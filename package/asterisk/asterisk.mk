@@ -325,6 +325,7 @@ $(TARGET_DIR)/$(ASTERISK_TARGET_BINARY): $(ASTERISK_DIR)/$(ASTERISK_BINARY)
 	touch -c $(TARGET_DIR)/$(ASTERISK_TARGET_BINARY)
 	rm -f $(TARGET_DIR)/etc/asterisk/*.old
 	rm -f $(TARGET_DIR)/stat/var/lib/asterisk/mohmp3/*
+	rm -f $(TARGET_DIR)/usr/sbin/astversion
 # Remove unwanted MOH sound files to save space
 	rm -f $(TARGET_DIR)/stat/var/lib/asterisk/moh/macroform-robot_dity.*
 	rm -f $(TARGET_DIR)/stat/var/lib/asterisk/moh/macroform-cold_day.*
