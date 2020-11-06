@@ -64,7 +64,7 @@ Released @TBD@
 -- Asterisk 13.29.2 ('13se' no change)
    Older than latest Asterisk 13.x version but more tested, built --without-pjproject
 
--- Asterisk 13.37.0 (version bump) and 16.14.0 (version bump)
+-- Asterisk 13.37.1 (version bump) and 16.14.1 (version bump)
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
 
