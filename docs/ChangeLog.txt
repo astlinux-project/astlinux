@@ -40,7 +40,7 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.1.1h, security fix: none
 
--- WireGuard VPN, module 1.0.20200908 (no change), tools 1.0.20200827 (no change)
+-- WireGuard VPN, module 1.0.20201112 (version bump), tools 1.0.20200827 (no change)
 
 -- libcurl (curl) version bump to 7.73.0
 
@@ -51,7 +51,9 @@ Released @TBD@
 
 -- mtr, version bump to 0.94
 
--- openldap, version bump to 2.4.55
+-- openldap, version bump to 2.4.56
+
+-- sngrep, version bump to 1.4.8
 
 -- stunnel, version bump to 5.57
 
