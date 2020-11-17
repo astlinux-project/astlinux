@@ -49,6 +49,8 @@ Released @TBD@
 -- miniupnpd, version 2.1, add Debian security fixes: CVE-2019-12107, CVE-2019-12108
                                       CVE-2019-12109, CVE-2019-12110, CVE-2019-12111
 
+-- msmtp, version bump to 1.8.13
+
 -- mtr, version bump to 0.94
 
 -- openldap, version bump to 2.4.56
@@ -56,6 +58,8 @@ Released @TBD@
 -- sngrep, version bump to 1.4.8
 
 -- stunnel, version bump to 5.57
+
+-- tcpdump, version 4.9.3, security fix: CVE-2020-8037
 
 -- unbound (host), version bump to 1.12.0
 
