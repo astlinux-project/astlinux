@@ -86,6 +86,8 @@ Released @TBD@
 
 -- System tab, add view syslog messages.0 or messages.1
 
+-- Edit tab, CodeMirror, add shell syntax Heredoc support.
+
 
 Additions for AstLinux 1.4.0:
 =============================
