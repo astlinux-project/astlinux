@@ -70,7 +70,8 @@ Released @TBD@
 -- Asterisk 13.29.2 ('13se' no change)
    Older than latest Asterisk 13.x version but more tested, built --without-pjproject
 
--- Asterisk 13.37.1 (version bump) and 16.14.1 (version bump)
+-- Asterisk 13.38.0 (version bump) and 16.15.0 (version bump)
+   Adds: Asterisk 16 res_stir_shaken.so, res_pjsip_stir_shaken.so - STIR/SHAKEN support
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
 
