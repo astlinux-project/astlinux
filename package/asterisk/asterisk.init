@@ -166,6 +166,8 @@ CREATE VIEW 'standard' AS SELECT calldate, clid, dst, dcontext, billsec, userfie
 EOF
     fi
   fi
+
+  make_symlink_or_dir "/mnt/kd/cel-custom" "/var/log/asterisk/cel-custom"
 }
 
 start () {
