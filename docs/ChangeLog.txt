@@ -77,6 +77,12 @@ Released @TBD@
 
 -- pjsip 2.10 (no change)
 
+-- Add support for persistent /mnt/kd/call-file/ directory for certain tmpfs spool directories.
+   If the directory /mnt/kd/call-file/ exists, the following symlinks will automatically occur:
+   == /var/spool/asterisk/tmp -> /mnt/kd/call-file/tmp
+   == /var/spool/asterisk/outgoing -> /mnt/kd/call-file/outgoing
+   == /var/spool/asterisk/outgoing_done -> /mnt/kd/call-file/outgoing_done
+
 -- FOP2, available version bump to 2.31.29
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
    More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
