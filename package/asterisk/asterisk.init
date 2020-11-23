@@ -94,9 +94,6 @@ init () {
     if [ -L /var/spool/asterisk/dictate ]; then
       rm -f /var/spool/asterisk/dictate
     fi
-    if [ -L /var/spool/asterisk/tmp ]; then
-      rm -f /var/spool/asterisk/tmp
-    fi
   fi
   cp -a /stat/var/spool/asterisk/* /var/spool/asterisk/
 
@@ -112,18 +109,18 @@ init () {
   make_symlink_or_dir "/mnt/kd/dictate" "/var/spool/asterisk/dictate"
 
   if [ -d /mnt/kd/call-file ]; then
-    if [ ! -d /mnt/kd/call-file/tmp ]; then
-      mkdir /mnt/kd/call-file/tmp
-    fi
     if [ ! -d /mnt/kd/call-file/outgoing ]; then
       mkdir /mnt/kd/call-file/outgoing
+    fi
+    if [ ! -d /mnt/kd/call-file/outgoing_tmp ]; then
+      mkdir /mnt/kd/call-file/outgoing_tmp
     fi
     if [ ! -d /mnt/kd/call-file/outgoing_done ]; then
       mkdir /mnt/kd/call-file/outgoing_done
     fi
   fi
-  make_symlink_or_dir "/mnt/kd/call-file/tmp" "/var/spool/asterisk/tmp"
   make_symlink_or_dir "/mnt/kd/call-file/outgoing" "/var/spool/asterisk/outgoing"
+  make_symlink_or_dir "/mnt/kd/call-file/outgoing_tmp" "/var/spool/asterisk/outgoing_tmp"
   make_symlink_or_dir "/mnt/kd/call-file/outgoing_done" "/var/spool/asterisk/outgoing_done"
 
   make_symlink_or_dir "/mnt/kd/asterisk" "/tmp/etc/asterisk"
