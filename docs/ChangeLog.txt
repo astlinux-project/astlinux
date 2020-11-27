@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.154 (version bump), security and bug fixes
+-- Linux Kernel 4.19.160 (version bump), security and bug fixes
 
 -- igb, version bump to 5.4.6, Intel Gigabit Ethernet Network Driver
 
