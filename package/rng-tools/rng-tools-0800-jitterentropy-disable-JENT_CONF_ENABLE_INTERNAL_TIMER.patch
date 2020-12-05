@@ -1,0 +1,11 @@
+--- rng-tools-6.5/jitterentropy-library/jitterentropy.h.orig	2020-12-05 14:19:32.800804847 -0600
++++ rng-tools-6.5/jitterentropy-library/jitterentropy.h	2020-12-05 14:21:17.671698417 -0600
+@@ -59,7 +59,7 @@
+  * must offer POSIX threads. If this option is disabled, no linking
+  * with the POSIX threads library is needed.
+  */
+-#define JENT_CONF_ENABLE_INTERNAL_TIMER
++/* #define JENT_CONF_ENABLE_INTERNAL_TIMER */
+ 
+ /***************************************************************************
+  * Jitter RNG State Definition Section
