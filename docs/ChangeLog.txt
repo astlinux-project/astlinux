@@ -32,6 +32,8 @@ Released @TBD@
 
 -- expat, version bump to 2.2.10
 
+-- htop, version bump to 3.0.3
+
 -- libqrencode, version bump to 4.1.1
 
 -- Monit, version bump to 5.27.1
@@ -42,7 +44,7 @@ Released @TBD@
 
 -- zabbix, version bump to 4.0.27
 
--- ca-certificates, update trusted root certificates 2020-10-14
+-- ca-certificates, update trusted root certificates 2020-12-08
 
 -- Time Zone Database update, tzdata2020d and php-timezonedb-2020.4
 
@@ -50,11 +52,11 @@ Released @TBD@
 
 ** Networking
 
--- OpenSSL, version bump to 1.1.1h, security fix: none
+-- OpenSSL, version bump to 1.1.1i, security fix: CVE-2020-1971
 
 -- WireGuard VPN, module 1.0.20201112 (version bump), tools 1.0.20200827 (no change)
 
--- libcurl (curl) version bump to 7.73.0
+-- libcurl (curl) version bump to 7.74.0, security fixes: CVE-2020-8284, CVE-2020-8285, CVE-2020-8286
 
 -- chrony, version bump to 4.0
 
