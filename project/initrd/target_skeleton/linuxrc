@@ -4,7 +4,7 @@ export PATH=/usr/bin:/usr/sbin:/bin:/sbin
 DRIVES="sda sdb sdc sdd sde sdf sdg sdh vda vdb vdc vdd"
 
 # Max image size in 1024 (k) bytes
-MAX_IMAGEFS_SIZE=196608   # 192m
+MAX_IMAGEFS_SIZE=262144   # 256m
 
 #functions
 

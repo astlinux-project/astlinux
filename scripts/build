@@ -4,7 +4,7 @@
 #
 
 # Max image size in 1024 (k) bytes
-MAX_IMAGEFS_SIZE=196608   # 192m
+MAX_IMAGEFS_SIZE=262144   # 256m
 
 REQUIRED_CMDS="which zcat bzcat make gcc bison flex msgfmt makeinfo autoconf nasm wget rsync sed perl gettext intltool-extract"
 
