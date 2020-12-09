@@ -4,7 +4,7 @@
 #
 #############################################################
 
-HTOP_VERSION = 3.0.2
+HTOP_VERSION = 3.0.3
 HTOP_SOURCE = htop-$(HTOP_VERSION).tar.gz
 HTOP_SITE = https://github.com/htop-dev/htop/archive/$(HTOP_VERSION)
 HTOP_DEPENDENCIES = ncurses
@@ -19,7 +19,8 @@ HTOP_AUTORECONF = YES
 HTOP_CONF_ENV = HTOP_NCURSES_CONFIG_SCRIPT=$(STAGING_DIR)/usr/bin/$(NCURSES_CONFIG_SCRIPTS)
 
 HTOP_CONF_OPT = \
-	--disable-unicode
+	--disable-unicode \
+	--enable-linux-affinity
 
 define HTOP_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/htop $(TARGET_DIR)/usr/bin/htop
