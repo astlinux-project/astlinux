@@ -77,7 +77,10 @@ Released @TBD@
 
 -- tcpdump, version 4.9.3, security fix: CVE-2020-8037
 
--- unbound (host), version bump to 1.13.0
+-- getdns/stubby, remove package, replace getdns/stubby with unbound for DNS-over-TLS
+   Remove stubby specific rc.conf variables: DNS_TLS_DNSSEC, DNS_TLS_QUERY_ALL
+
+-- unbound, version bump to 1.13.0
 
 -- whois, version bump to 5.5.7
 
