@@ -54,6 +54,7 @@
 // 02-21-2020, Remove PPTP VPN support
 // 05-08-2020, Dynamically add VLAN and BRIDGE entries to interface list
 // 05-10-2020, Added Linux Containers (LXC)
+// 12-13-2020, Replace getdns/stubby with unbound for DNS-over-TLS
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -1946,7 +1947,7 @@ require_once '../common/header.php';
   putHtml('DNS&nbsp;Forwarder &amp; DHCP Server:');
   putHtml('<input type="submit" value="Configure DNS Hosts" name="submit_dns_hosts" class="button" /></td></tr>');
 
-  if (is_file('/etc/init.d/stubby')) {
+  if (is_file('/etc/init.d/unbound')) {
     putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
     putHtml('DNS-TLS Proxy Server:');
     putHtml('<input type="submit" value="Configure DNS-TLS" name="submit_dns_tls" class="button" /></td></tr>');

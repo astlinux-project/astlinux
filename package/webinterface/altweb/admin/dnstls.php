@@ -9,6 +9,7 @@
 // dnstls.php for AstLinux
 // 04-14-2018
 // 06-03-2020, Added Import DoT Resolver menu
+// 12-13-2020, Replace getdns/stubby with unbound for DNS-over-TLS
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -55,12 +56,6 @@ function saveDNSTLSsettings($conf_dir, $conf_file) {
   $value = 'DNS_TLS_PROXY="'.$_POST['proxy'].'"';
   fwrite($fp, "### DNS-TLS Enable\n".$value."\n");
 
-  $value = 'DNS_TLS_DNSSEC="'.$_POST['dns_tls_dnssec'].'"';
-  fwrite($fp, "### Local DNSSEC\n".$value."\n");
-
-  $value = 'DNS_TLS_QUERY_ALL="'.$_POST['dns_tls_query_all'].'"';
-  fwrite($fp, "### Query All Servers\n".$value."\n");
-
   if (($value = $_POST['import_resolver']) === '') {
     $value = tuq(str_replace(chr(13), ' ', $_POST['dns_tls_servers']));
     $value = str_replace(chr(10), '', $value);
@@ -86,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } elseif (isset($_POST['submit_restart'])) {
     $result = 99;
     if (isset($_POST['confirm_restart'])) {
-      $result = restartPROCESS('stubby', 10, $result, 'init');
+      $result = restartPROCESS('unbound', 10, $result, 'init');
       $result = restartPROCESS('dnsmasq', $result, 99, 'init');
     } else {
       $result = 2;
@@ -114,7 +109,7 @@ require_once '../common/header.php';
     } elseif ($result == 3) {
       putHtml('<p style="color: red;">Error creating file.</p>');
     } elseif ($result == 10) {
-      putHtml('<p style="color: green;">DNS-TLS Proxy Server'.statusPROCESS('stubby').'.</p>');
+      putHtml('<p style="color: green;">DNS-TLS Proxy Server'.statusPROCESS('unbound').'.</p>');
     } elseif ($result == 11) {
       putHtml('<p style="color: green;">Settings saved, click "Restart DNS-TLS" to apply any changed settings.</p>');
     } elseif ($result == 99) {
@@ -168,35 +163,13 @@ if (isDNSCRYPT()) {
   putHtml('</select>');
   putHtml('</td></tr>');
 
-  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
-  putHtml('DNSSEC Validation:');
-  putHtml('</td><td style="text-align: left;" colspan="4">');
-  putHtml('<select name="dns_tls_dnssec">');
-  $value = getVARdef($db, 'DNS_TLS_DNSSEC', $cur_db);
-  putHtml('<option value="no">use upstream validation</option>');
-  $sel = ($value === 'yes') ? ' selected="selected"' : '';
-  putHtml('<option value="yes"'.$sel.'>perform local validation</option>');
-  putHtml('</select>');
-  putHtml('</td></tr>');
-
-  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
-  putHtml('Query Server(s):');
-  putHtml('</td><td style="text-align: left;" colspan="4">');
-  putHtml('<select name="dns_tls_query_all">');
-  $value = getVARdef($db, 'DNS_TLS_QUERY_ALL', $cur_db);
-  putHtml('<option value="no">one until unavailable, then next</option>');
-  $sel = ($value === 'yes') ? ' selected="selected"' : '';
-  putHtml('<option value="yes"'.$sel.'>across all available server(s)</option>');
-  putHtml('</select>');
-  putHtml('</td></tr>');
-
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
   putHtml('<strong>Upstream Recursive Server(s):</strong>');
   putHtml('</td></tr>');
 
-if (is_file('/mnt/kd/stubby/stubby.yml')) {
+if (is_file('/mnt/kd/unbound/unbound.conf')) {
   putHtml('<tr class="dtrow1"><td style="color: orange; text-align: center;" colspan="6">');
-  putHtml('Note: Configuration overridden by file: /mnt/kd/stubby/stubby.yml');
+  putHtml('Note: Configuration overridden by file: /mnt/kd/unbound/unbound.conf');
   putHtml('</td></tr>');
 }
   putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');

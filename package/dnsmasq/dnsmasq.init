@@ -68,8 +68,8 @@ dnscrypt_tls_proxy_servers()
     fi
   fi
 
-  ## Stubby has precedence
-  if [ -f /etc/init.d/stubby ]; then
+  ## Unbound has precedence
+  if [ -f /etc/init.d/unbound ]; then
     if [ "$DNS_TLS_PROXY" = "yes" ]; then
       servers="127.0.0.1#2853"
     fi

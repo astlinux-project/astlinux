@@ -20,6 +20,7 @@
 // 07-11-2019, Added gen_BackupExcludeSuffix_args()
 // 08-16-2019, Added arrayCount()
 // 04-24-2020, Added MNT_ASTURW_DIR for /mnt/asturw or /oldroot/mnt/asturw
+// 12-13-2020, Replace getdns/stubby with unbound for DNS-over-TLS
 //
 // System location of prefs file
 $KD_PREFS_LOCATION = '/mnt/kd/webgui-prefs.txt';
@@ -123,7 +124,7 @@ function statusPROCESS($process) {
   $stopped = ' is Stopped';
 
   if ($process === 'asterisk' || $process === 'prosody' || $process === 'slapd' ||
-      $process === 'kamailio' || $process === 'stubby') {
+      $process === 'kamailio' || $process === 'unbound') {
     $path .= $process.'/';
   } elseif ($process === 'dynamicdns') {
     if (is_file($path.'ddclient.pid')) {
@@ -927,7 +928,7 @@ function getPREFdef($db, $var)
 //
 function isDNS_TLS()
 {
-  return(is_file('/var/run/stubby/stubby.pid'));
+  return(is_file('/var/run/unbound/unbound.pid'));
 }
 
 // Function: isDNSCRYPT

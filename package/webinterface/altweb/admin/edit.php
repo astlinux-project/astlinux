@@ -404,7 +404,7 @@ require_once '../common/header.php';
       $dir === '/mnt/kd/monit/monit.d' ||
       $dir === '/mnt/kd/ups' ||
       $dir === '/mnt/kd/prosody' ||
-      $dir === '/mnt/kd/stubby' ||
+      $dir === '/mnt/kd/unbound' ||
       $dir === '/mnt/kd/docs' ||
       $dir === '/mnt/kd/arno-iptables-firewall' ||
       $dir === '/mnt/kd/arno-iptables-firewall/plugins' ||
@@ -769,9 +769,9 @@ require_once '../common/header.php';
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
     putHtml('<option value="'.$file.'"'.$sel.'>keepalived/'.basename($file).' - Keepalived Config</option>');
   }
-  if (is_writable($file = '/mnt/kd/stubby/stubby.yml')) {
+  if (is_writable($file = '/mnt/kd/unbound/unbound.conf')) {
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
-    putHtml('<option value="'.$file.'"'.$sel.'>stubby/'.basename($file).' - DNS-TLS Stubby Config</option>');
+    putHtml('<option value="'.$file.'"'.$sel.'>unbound/'.basename($file).' - DNS-TLS Unbound Config</option>');
   }
   if (is_writable($file = '/mnt/kd/dhcp6c.script')) {
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
