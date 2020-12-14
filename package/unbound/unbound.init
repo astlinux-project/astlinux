@@ -46,6 +46,7 @@ gen_unbound_conf()
 # A manually generated unbound config will use /mnt/kd/unbound/unbound.conf if it exists.
 
 server:
+module-config: \"iterator\"
 username: nobody
 num-threads: 1
 port: 2853
