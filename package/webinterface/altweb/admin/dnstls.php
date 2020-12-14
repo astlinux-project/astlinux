@@ -56,6 +56,9 @@ function saveDNSTLSsettings($conf_dir, $conf_file) {
   $value = 'DNS_TLS_PROXY="'.$_POST['proxy'].'"';
   fwrite($fp, "### DNS-TLS Enable\n".$value."\n");
 
+  $value = 'DNS_TLS_PRIVATE="'.$_POST['dns_tls_private'].'"';
+  fwrite($fp, "### Allow RFC1918 addresses\n".$value."\n");
+
   if (($value = $_POST['import_resolver']) === '') {
     $value = tuq(str_replace(chr(13), ' ', $_POST['dns_tls_servers']));
     $value = str_replace(chr(10), '', $value);
@@ -160,6 +163,17 @@ if (isDNSCRYPT()) {
   putHtml('<option value="no">disabled</option>');
   $sel = ($value === 'yes') ? ' selected="selected"' : '';
   putHtml('<option value="yes"'.$sel.'>enabled</option>');
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Private Addresses:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  putHtml('<select name="dns_tls_private">');
+  $value = getVARdef($db, 'DNS_TLS_PRIVATE', $cur_db);
+  putHtml('<option value="no">Block DNS containing RFC1918 addresses</option>');
+  $sel = ($value === 'yes') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>Allow DNS containing RFC1918 addresses</option>');
   putHtml('</select>');
   putHtml('</td></tr>');
 

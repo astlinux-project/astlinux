@@ -50,16 +50,40 @@ username: nobody
 num-threads: 1
 port: 2853
 interface: 127.0.0.1
+do-udp: yes
+do-tcp: yes
+do-ip4: yes
 do-ip6: ${do_ip6}
+prefer-ip6: no
 cache-max-ttl: 14400
 minimal-responses: yes
 qname-minimisation: yes
 rrset-roundrobin: yes
+use-caps-for-id: no
 tls-cert-bundle: \"/usr/lib/ssl/certs/ca-bundle.crt\"
 verbosity: 1
 "
+    if [ "$DNS_TLS_PRIVATE" != "yes" ]; then
+      echo "# Block DNS containing RFC1918 addresses
+private-address: 10.0.0.0/8
+private-address: ::ffff:a00:0/104
+private-address: 172.16.0.0/12
+private-address: ::ffff:ac10:0/108
+private-address: 169.254.0.0/16
+private-address: ::ffff:a9fe:0/112
+private-address: 192.168.0.0/16
+private-address: ::ffff:c0a8:0/112
+private-address: fd00::/8
+private-address: fe80::/10
+"
+    else
+      echo "# Allow DNS containing RFC1918 addresses
+"
+    fi
+
+    echo '# Forward all DNS queries'
     echo 'forward-zone:'
-    echo 'name: "."  # Allow all DNS queries'
+    echo 'name: "."'
 
     # Default to Quad9 TLS for IPv4
     unset IFS
