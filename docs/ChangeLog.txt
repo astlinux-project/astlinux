@@ -60,7 +60,7 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.1.1i, security fix: CVE-2020-1971
 
--- WireGuard VPN, module 1.0.20201112 (version bump), tools 1.0.20200827 (no change)
+-- WireGuard VPN, module 1.0.20201221 (version bump), tools 1.0.20200827 (no change)
 
 -- libcurl (curl) version bump to 7.74.0, security fixes: CVE-2020-8284, CVE-2020-8285, CVE-2020-8286
 
