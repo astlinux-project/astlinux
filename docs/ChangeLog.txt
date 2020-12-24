@@ -28,11 +28,13 @@ Released @TBD@
 
 -- e1000e version bump to 3.8.7 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
--- ethtool, version bump to 5.9
+-- ethtool, version bump to 5.10
 
 -- expat, version bump to 2.2.10
 
 -- htop, version bump to 3.0.3
+
+-- kexec, version bump to 2.0.21
 
 -- libqrencode, version bump to 4.1.1
 
@@ -45,6 +47,8 @@ Released @TBD@
 -- sqlite, version bump to 3.34.0
 
 -- strace, version bump to 5.10
+
+-- tiff, version bump to 4.2.0, security fixes
 
 -- usbutils, version bump to 013
 
@@ -63,6 +67,9 @@ Released @TBD@
 -- WireGuard VPN, module 1.0.20201221 (version bump), tools 1.0.20200827 (no change)
 
 -- libcurl (curl) version bump to 7.74.0, security fixes: CVE-2020-8284, CVE-2020-8285, CVE-2020-8286
+
+-- arnofw (AIF), set the version to '2.0.2-07-astlinux'
+   New firewall.conf variables: DMZ_OPEN_ICMPV6=1, DMZ_OPEN_ICMPV6_MLD=0, DMZ_OPEN_MULTICAST=0
 
 -- chrony, version bump to 4.0
 
@@ -97,7 +104,7 @@ Released @TBD@
 -- Asterisk 13.29.2 ('13se' no change)
    Older than latest Asterisk 13.x version but more tested, built --without-pjproject
 
--- Asterisk 13.38.0 (version bump) and 16.15.0 (version bump)
+-- Asterisk 13.38.1 (version bump) and 16.15.1 (version bump)
    Adds: Asterisk 16 res_stir_shaken.so, res_pjsip_stir_shaken.so - STIR/SHAKEN support
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
