@@ -1,6 +1,6 @@
 #!/bin/ash
 
-MY_VERSION="2.0.2-06-astlinux"
+MY_VERSION="2.0.2-07-astlinux"
 
 # Location of the main configuration file for the firewall
 ##########################################################
