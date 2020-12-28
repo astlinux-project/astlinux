@@ -4,10 +4,10 @@
 #
 ##############################################################
 
-ZONEINFO_VERSION := 2020d
+ZONEINFO_VERSION := 2020e
 ZONEINFO_DATA := tzdata$(ZONEINFO_VERSION).tar.gz
 ZONEINFO_SOURCE := tzcode$(ZONEINFO_VERSION).tar.gz
-ZONEINFO_SITE := http://www.iana.org/time-zones/repository/releases
+ZONEINFO_SITE := https://www.iana.org/time-zones/repository/releases
 ZONEINFO_DIR := $(BUILD_DIR)/zoneinfo
 ZONEINFO_BINARY := usr/share/zoneinfo/.tzversion
 
