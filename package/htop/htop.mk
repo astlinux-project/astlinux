@@ -23,6 +23,7 @@ HTOP_CONF_OPT = \
 	--enable-linux-affinity
 
 ifeq ($(BR2_PACKAGE_LM_SENSORS),y)
+HTOP_DEPENDENCIES += lm-sensors
 HTOP_CONF_OPT += --with-sensors
 else
 HTOP_CONF_OPT += --without-sensors
