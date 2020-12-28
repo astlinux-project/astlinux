@@ -4,7 +4,7 @@
 #
 #############################################################
 
-HTOP_VERSION = 3.0.3
+HTOP_VERSION = 3.0.4
 HTOP_SOURCE = htop-$(HTOP_VERSION).tar.gz
 HTOP_SITE = https://github.com/htop-dev/htop/archive/$(HTOP_VERSION)
 HTOP_DEPENDENCIES = ncurses
@@ -21,6 +21,12 @@ HTOP_CONF_ENV = HTOP_NCURSES_CONFIG_SCRIPT=$(STAGING_DIR)/usr/bin/$(NCURSES_CONF
 HTOP_CONF_OPT = \
 	--disable-unicode \
 	--enable-linux-affinity
+
+ifeq ($(BR2_PACKAGE_LM_SENSORS),y)
+HTOP_CONF_OPT += --with-sensors
+else
+HTOP_CONF_OPT += --without-sensors
+endif
 
 define HTOP_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/htop $(TARGET_DIR)/usr/bin/htop
