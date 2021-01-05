@@ -1,0 +1,25 @@
+#!/bin/sh
+
+## AstLinux PPPoE scripts
+## Initial version, 2021-01-05
+##
+
+PIDFILE="/var/run/pppoe.pid"
+
+PPP_PIDFILE="/var/run/ppp0.pid"
+
+if [ -f "$PIDFILE" ]; then
+  logger -s -t pppoe-stop -p "daemon.info" "PPPoE is stopping..."
+
+  kill $(cat "$PIDFILE")
+  rm "$PIDFILE"
+
+  cnt=5
+  while [ $cnt -gt 0 -a -f "$PPP_PIDFILE" ]; do
+    cnt=$((cnt - 1))
+    sleep 1
+  done
+fi
+
+exit 0
+

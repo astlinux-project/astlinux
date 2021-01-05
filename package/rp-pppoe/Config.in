@@ -1,5 +1,6 @@
 config BR2_PACKAGE_RP_PPPOE
 	bool "rp-pppoe"
+	depends on BR2_DEPRECATED
 	depends on BR2_PACKAGE_PPPD
 	help
 	  An implementation of the Point-to-point protocol over Ethernet.

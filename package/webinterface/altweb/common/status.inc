@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2020 Lonnie Abelbeck
+// Copyright (C) 2008-2021 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -48,6 +48,7 @@
 // 02-21-2020, Remove PPTP VPN support
 // 05-10-2020, Added Linux Containers (LXC)
 // 07-08-2020, Added Firewall status indicator
+// 01-05-2021, pppoe-status, accept return values of 0 and 1
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -954,7 +955,7 @@ if (is_file('/etc/ppp/pppoe.conf')) {
     putHtml("<pre>");
     $tmpfile = tempnam("/tmp", "PHP_");
     shell('/usr/sbin/pppoe-status >'.$tmpfile, $status);
-    if ($status == 0) {
+    if ($status == 0 || $status == 1) {
       $ph = @fopen($tmpfile, "r");
       while (! feof($ph)) {
         if (($line = trim(fgets($ph, 1024))) !== '') {

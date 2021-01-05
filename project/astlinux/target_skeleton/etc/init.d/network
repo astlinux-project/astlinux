@@ -458,60 +458,8 @@ start () {
       ;;
     esac
 
-    mkdir /tmp/etc/ppp
-    echo "ETH=$PPPOEIF
-USER=$PPPOEUSER
-DEMAND=no
-DNSTYPE=SERVER
-PEERDNS=yes
-DNS1=
-DEFAULTROUTE=yes
-CONNECT_TIMEOUT=30
-CONNECT_POLL=2
-ACNAME=
-SERVICENAME=
-PING=\".\"
-CONFIG=\"/etc/ppp/pppoe.conf\"
-PIDFILE=\"/var/run/pppoe.conf-adsl.pid\"
-SYNCHRONOUS=no
-CLAMPMSS=1412
-LCP_INTERVAL=20
-LCP_FAILURE=3
-PPPOE_TIMEOUT=80
-FIREWALL=NONE
-PPPOE_EXTRA=\"\"" > /tmp/etc/ppp/pppoe.conf
-
-    PPPVER="$( (pppd --version 2>&1 >/dev/null ) | awk '/^pppd version/ { print $3; }')"
-
-    if [ -n "$PPPOEKERNEL" ]; then
-      echo "LINUX_PLUGIN=\"/usr/lib/pppd/$PPPVER/rp-pppoe.so\"" >> /tmp/etc/ppp/pppoe.conf
-    else
-      echo "LINUX_PLUGIN=\"\"" >> /tmp/etc/ppp/pppoe.conf
-    fi
-
-    PPPOE_PPPD_EXTRA="persist maxfail 0"
-
-    if [ -n "$PPPOEDEBUG" ]; then
-      if [ -n "$PPPOEKERNEL" ]; then
-        PPPOE_PPPD_EXTRA="${PPPOE_PPPD_EXTRA} kdebug 1"
-      fi
-      PPPOE_PPPD_EXTRA="${PPPOE_PPPD_EXTRA} debug"
-    fi
-    echo "PPPD_EXTRA=\"${PPPOE_PPPD_EXTRA}\"" >> /tmp/etc/ppp/pppoe.conf
-
-    echo "$PPPOEUSER * $PPPOEPASS" > /tmp/etc/ppp/pap-secrets
-    echo "$PPPOEUSER * $PPPOEPASS" > /tmp/etc/ppp/chap-secrets
-    chmod 600 /tmp/etc/ppp/chap-secrets /tmp/etc/ppp/pap-secrets
-
-    echo "Attempting to bring up PPPoE on $PPPOEIF"
-    echo "This could take some time..."
-
-    if [ -x /usr/sbin/pppoe-start ]; then
-      /usr/sbin/pppoe-start
-    else
-      /usr/sbin/adsl-start
-    fi
-    sleep 5
+    /usr/sbin/pppoe-start
+    sleep 4
 
     #end PPPoE
   else
@@ -700,10 +648,6 @@ stop () {
     kill $(cat "$PID")
   done
 
-  if [ -f /var/run/ppp0.pid ]; then
-    kill $(cat /var/run/ppp0.pid)
-  fi
-
   if [ -n "$EXTIF" -a "$EXTIF" != "none" ]; then
     echo "Bringing down $EXTIF..."
     if [ -n "$EXTIP_ALIAS" ]; then
@@ -768,6 +712,10 @@ stop () {
       ip link set dev $i down
       ip link delete $i
     done
+  fi
+
+  if [ -f /var/run/pppoe.pid ]; then
+    /usr/sbin/pppoe-stop
   fi
 
   echo "Network DOWN"

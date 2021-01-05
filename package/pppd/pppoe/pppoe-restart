@@ -1,0 +1,33 @@
+#!/bin/sh
+
+## Usage: pppoe-restart [ "only-if-down" ]
+##
+
+if [ "$1" = "only-if-down" ]; then
+  if /usr/sbin/pppoe-status >/dev/null 2>&1; then
+    exit 0
+  fi
+fi
+
+. /etc/rc.conf
+
+. /etc/init.d/functions.d/network
+
+delay=${PPPOE_RESTART_DELAY:-2}
+
+/usr/sbin/pppoe-stop
+
+# kill any remaining pppd/pppoe processes
+for pid in $(pgrep -f '^pppd .*/pppoe.so '); do
+  kill -9 $pid
+  sleep 1
+done
+
+if isextppp; then
+  sleep $delay
+  /usr/sbin/pppoe-start
+else
+  echo "pppoe-restart: PPPoE not enabled." >&2
+  exit 1
+fi
+

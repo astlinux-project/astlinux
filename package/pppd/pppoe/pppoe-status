@@ -1,0 +1,30 @@
+#!/bin/sh
+
+## AstLinux PPPoE scripts
+## Initial version, 2021-01-05
+##
+
+PIDFILE="/var/run/pppoe.pid"
+
+PPP_PIDFILE="/var/run/ppp0.pid"
+
+if [ ! -f "$PIDFILE" ]; then
+  echo "pppoe-status: PPPoE is stopped"
+  exit 1
+fi
+
+if [ ! -f "$PPP_PIDFILE" ]; then
+  echo "pppoe-status: Link is down, though PPPoE is running"
+  exit 1
+fi
+
+addr="$(ip -o addr show ppp0 2>/dev/null | awk '$3 == "inet" { print $4; }')"
+if [ -n "$addr" ]; then
+  echo "pppoe-status: Link is up and running on interface ppp0, IPv4: $addr"
+  ifconfig ppp0
+  exit 0
+fi
+
+echo "pppoe-status: Link is up, but missing IPv4 address"
+exit 1
+

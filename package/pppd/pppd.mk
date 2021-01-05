@@ -37,7 +37,7 @@ endef
 
 define PPPD_UNINSTALL_TARGET_CMDS
 	rm -f $(addprefix $(TARGET_DIR)/usr/sbin/, $(PPPD_TARGET_BINS))
-	rm -f $(TARGET_DIR)/usr/sbin/pppoe-discovery
+	rm -f $(TARGET_DIR)/usr/sbin/pppoe-*
 	rm -rf $(TARGET_DIR)/usr/lib/pppd
 	rm -rf $(TARGET_DIR)/etc/ppp/radius
 endef
@@ -68,6 +68,10 @@ define PPPD_INSTALL_TARGET_CMDS
 		$(INSTALL) -D $(PPPD_DIR)/$$sbin/$$sbin \
 			$(TARGET_DIR)/usr/sbin/$$sbin; \
 	done
+	for sbin in pppoe-start pppoe-stop pppoe-restart pppoe-status; do \
+		$(INSTALL) -D -m 0755 package/pppd/pppoe/$$sbin \
+			$(TARGET_DIR)/usr/sbin/$$sbin; \
+	done
 	$(INSTALL) -D $(PPPD_DIR)/pppd/plugins/minconn.so \
 		$(TARGET_DIR)/usr/lib/pppd/$(PPPD_VERSION)/minconn.so
 	$(INSTALL) -D $(PPPD_DIR)/pppd/plugins/passprompt.so \
@@ -79,7 +83,7 @@ define PPPD_INSTALL_TARGET_CMDS
 #		$(TARGET_DIR)/usr/lib/pppd/$(PPPD_VERSION)/pppoatm.so
 ##
 	$(INSTALL) -D $(PPPD_DIR)/pppd/plugins/rp-pppoe/rp-pppoe.so \
-		$(TARGET_DIR)/usr/lib/pppd/$(PPPD_VERSION)/rp-pppoe.so
+		$(TARGET_DIR)/usr/lib/pppd/$(PPPD_VERSION)/pppoe.so
 	$(INSTALL) -D $(PPPD_DIR)/pppd/plugins/rp-pppoe/pppoe-discovery \
 		$(TARGET_DIR)/usr/sbin/pppoe-discovery
 	$(INSTALL) -D $(PPPD_DIR)/pppd/plugins/winbind.so \
