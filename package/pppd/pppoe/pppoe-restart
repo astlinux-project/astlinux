@@ -17,12 +17,6 @@ delay=${PPPOE_RESTART_DELAY:-2}
 
 /usr/sbin/pppoe-stop
 
-# kill any remaining pppd/pppoe processes
-for pid in $(pgrep -f '^pppd .*/pppoe.so '); do
-  kill -9 $pid
-  sleep 1
-done
-
 if isextppp; then
   sleep $delay
   /usr/sbin/pppoe-start

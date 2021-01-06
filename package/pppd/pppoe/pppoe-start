@@ -54,7 +54,7 @@ maxfail 0"
 if [ "$PPPOEDEBUG" = "yes" ]; then
   PPPD_ARGS="$PPPD_ARGS
 show-password
-kdebug 1"
+debug"
 else
   PPPD_ARGS="$PPPD_ARGS
 hide-password"
@@ -72,9 +72,7 @@ echo "$PPPOEUSER * $PPPOEPASS" > /tmp/etc/ppp/chap-secrets
 chmod 600 /tmp/etc/ppp/chap-secrets /tmp/etc/ppp/pap-secrets
 
 if [ -f "$PIDFILE" ]; then
-  kill $(cat "$PIDFILE")
-  sleep 1
-  rm "$PIDFILE"
+  /usr/sbin/pppoe-stop
 fi
 
 ## kill any remaining pppd/pppoe processes

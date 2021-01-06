@@ -12,6 +12,7 @@ if [ -f "$PIDFILE" ]; then
   logger -s -t pppoe-stop -p "daemon.info" "PPPoE is stopping..."
 
   kill $(cat "$PIDFILE")
+  sleep 1
   rm "$PIDFILE"
 
   cnt=5
