@@ -51,6 +51,11 @@ lcp-echo-failure 3
 persist
 maxfail 0"
 
+if [ "$IPV6" != "yes" ]; then
+  PPPD_ARGS="$PPPD_ARGS
+noipv6"
+fi
+
 if [ "$PPPOEDEBUG" = "yes" ]; then
   PPPD_ARGS="$PPPD_ARGS
 show-password
@@ -73,12 +78,13 @@ chmod 600 /tmp/etc/ppp/chap-secrets /tmp/etc/ppp/pap-secrets
 
 if [ -f "$PIDFILE" ]; then
   /usr/sbin/pppoe-stop
+  sleep 2
 fi
 
 ## kill any remaining pppd/pppoe processes
 for pid in $(pgrep -f '^pppd .*/pppoe.so '); do
   kill -9 $pid
-  sleep 1
+  sleep 2
 done
 
 ## Start pppd daemon
@@ -99,7 +105,8 @@ echo "$PID" > "$PIDFILE"
 
 ## Monitor the connection until Link is up
 
-cnt=30
+cnt=30    # total seconds to monitor
+delay=2   # seconds per monitor loop
 while [ $cnt -gt 0 ]; do
   if ! kill -0 "$PID"; then
     log ERROR "The pppd daemon stopped, PPPoE failed."
@@ -113,8 +120,8 @@ while [ $cnt -gt 0 ]; do
     exit 0
   fi
 
-  cnt=$((cnt - 1))
-  sleep 1
+  cnt=$((cnt - delay))
+  sleep $delay
 done
 
 log ERROR "PPPoE Link is down, continuing in background."
