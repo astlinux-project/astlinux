@@ -42,6 +42,8 @@ Released @TBD@
 
 -- Monit, version bump to 5.27.1
 
+-- php, version 7.2.34, security fix patch: CVE-2020-7071
+
 -- rng-tools, version 6.5, jitterentropy version bump to 3.0.0
 
 -- sqlite, version bump to 3.34.0
@@ -83,6 +85,10 @@ Released @TBD@
 -- mtr, version bump to 0.94
 
 -- openldap, version bump to 2.4.56
+
+-- pppd, version bump to 2.4.9
+   New PPPoE client support with pppd's pppoe kernel driver and our custom scripts
+   The Roaring Penguin RP-PPPoE package is no longer used
 
 -- sngrep, version bump to 1.4.8
 
