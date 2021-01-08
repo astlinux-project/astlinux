@@ -109,7 +109,11 @@ delay=2   # seconds per monitor loop
 while [ $cnt -gt 0 ]; do
   if ! kill -0 "$PID"; then
     log ERROR "The pppd daemon stopped, PPPoE failed."
-    rm -f "$PIDFILE"
+    if [ -f "$PIDFILE" ]; then
+      if [ "$(cat "$PIDFILE")" = "$PID" ]; then
+        rm "$PIDFILE"
+      fi
+    fi
     exit 1
   fi
 
