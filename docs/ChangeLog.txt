@@ -24,7 +24,7 @@ Released @TBD@
 
 -- Linux Kernel 4.19.160 (version bump), security and bug fixes
 
--- igb, version bump to 5.4.6, Intel Gigabit Ethernet Network Driver
+-- igb, version bump to 5.5.2, Intel Gigabit Ethernet Network Driver
 
 -- e1000e version bump to 3.8.7 Intel PCI-Express PRO/1000 Ethernet Linux driver
 
@@ -35,6 +35,8 @@ Released @TBD@
 -- htop, version bump to 3.0.4, add support for libsensors CPU thermals
 
 -- kexec, version bump to 2.0.21
+
+-- libpcap, version bump to 1.10.0
 
 -- libqrencode, version bump to 4.1.1
 
@@ -94,7 +96,7 @@ Released @TBD@
 
 -- stunnel, version bump to 5.57
 
--- tcpdump, version 4.9.3, security fix: CVE-2020-8037
+-- tcpdump, version 4.99.0
 
 -- getdns/stubby, remove package, replace getdns/stubby with unbound for DNS-over-TLS
    New rc.conf variable: DNS_TLS_PRIVATE
