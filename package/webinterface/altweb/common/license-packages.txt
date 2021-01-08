@@ -19,17 +19,16 @@ dnsmasq~Copyright (c) 2000-2018 Simon Kelley.
 OpenSSL~Copyright (c) 1998-2020 The OpenSSL Project. All rights reserved.
 OpenSSH~Copyright (c) 1995-2019 Tatu Ylonen, Espoo, Finland. All rights reserved.
 OpenVPN~Copyright (c) 2002-2020 OpenVPN Technologies, Inc.
-PHP~Copyright (c) 1999-2020 The PHP Group. All rights reserved.
+PHP~Copyright (c) 1999-2021 The PHP Group. All rights reserved.
 vsftpd~Copyright (c) 2001-2015 Daniel Jacobowitz.
 lighttpd~Copyright (c) 2004-2018 Jan Kneschke.
 msmtp~Copyright (c) 2000-2020 Martin Lambers.
 libxml2~Copyright (c) 1998-2020 Daniel Veillard. All Rights Reserved.
 libtiff~Copyright (c) 1988-2020 Sam Leffler, Copyright (c) 1991-1997 Silicon Graphics, Inc.
 libjpeg~Copyright (c) 1991-2020 Thomas G. Lane, Guido Vollbeding.
-iptables~Copyright (c) 2000-2015 the netfilter coreteam.
+iptables~Copyright (c) 2000-2019 the netfilter coreteam.
 ipset~Copyright (c) 2003-2018 Jozsef Kadlecsik.
 curl~Copyright (c) 1996-2020 Daniel Stenberg.
-rp-pppoe~Copyright (c) 2001-2012 Roaring Penguin Software Inc.
 zabbix~Copyright (c) 2000-2020 SIA Zabbix.
 zlib~Copyright (c) 1995-2017 Jean-loup Gailly.
 SILK CODEC~Copyright (c) 2010-2016 Skype and/or Microsoft. All rights reserved. Licensed via Digium, Inc.
