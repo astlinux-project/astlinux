@@ -32,7 +32,7 @@ Released @TBD@
 
 -- expat, version bump to 2.2.10
 
--- htop, version bump to 3.0.4, add support for libsensors CPU thermals
+-- htop, version bump to 3.0.5, add support for libsensors CPU thermals
 
 -- kexec, version bump to 2.0.21
 
@@ -41,6 +41,8 @@ Released @TBD@
 -- libqrencode, version bump to 4.1.1
 
 -- libusb, version bump to 1.0.24
+
+-- logrotate, version bump to 3.18.0
 
 -- Monit, version bump to 5.27.1
 
@@ -76,6 +78,8 @@ Released @TBD@
    New firewall.conf variables: DMZ_OPEN_ICMPV6=1, DMZ_OPEN_ICMPV6_MLD=0, DMZ_OPEN_MULTICAST=0
 
 -- chrony, version bump to 4.0
+
+-- keepalived, version bump to 2.2.0
 
 -- lighttpd, version 1.4.51, add security fix: CVE-2019-11072
 
