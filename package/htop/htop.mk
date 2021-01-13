@@ -4,15 +4,11 @@
 #
 #############################################################
 
-HTOP_VERSION = 3.0.4
+HTOP_VERSION = 3.0.5
 HTOP_SOURCE = htop-$(HTOP_VERSION).tar.gz
 HTOP_SITE = https://github.com/htop-dev/htop/archive/$(HTOP_VERSION)
 HTOP_DEPENDENCIES = ncurses
 
-define HTOP_POST_EXTRACT_FIX
-	mkdir -p $(@D)/m4
-endef
-HTOP_POST_EXTRACT_HOOKS += HTOP_POST_EXTRACT_FIX
 HTOP_AUTORECONF = YES
 
 # Prevent htop build system from searching the host paths
