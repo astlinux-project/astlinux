@@ -22,7 +22,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.160 (version bump), security and bug fixes
+-- Linux Kernel 4.19.167 (version bump), security and bug fixes
 
 -- igb, version bump to 5.5.2, Intel Gigabit Ethernet Network Driver
 
@@ -61,6 +61,8 @@ Released @TBD@
 -- zabbix, version bump to 4.0.27
 
 -- ca-certificates, update trusted root certificates 2020-12-08
+
+-- mac2vendor, oui.txt database snapshot 2021-01-14
 
 -- Time Zone Database update, tzdata2020e and php-timezonedb-2020.5
 
