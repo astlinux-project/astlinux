@@ -54,6 +54,10 @@ lcp-echo-failure 3"
   else
     echo "hide-password"
   fi
+
+  if [ -n "$PPPOE_PPP_OPTIONS" ]; then
+    echo "$PPPOE_PPP_OPTIONS"
+  fi
 }
 
 LINUX_PLUGIN="$(find /usr/lib/pppd -name "pppoe.so")"
