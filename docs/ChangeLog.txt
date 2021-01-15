@@ -96,6 +96,7 @@ Released @TBD@
 
 -- pppd, version bump to 2.4.9
    New PPPoE client support with pppd's pppoe kernel driver and our custom scripts
+   New rc.conf variable: PPPOE_PPP_OPTIONS
    The Roaring Penguin RP-PPPoE package is no longer used
 
 -- sngrep, version bump to 1.4.8
