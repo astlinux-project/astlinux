@@ -81,7 +81,7 @@ Released @TBD@
 
 -- chrony, version bump to 4.0
 
--- keepalived, version bump to 2.2.0
+-- keepalived, version bump to 2.2.1
 
 -- lighttpd, version 1.4.51, add security fix: CVE-2019-11072
 
