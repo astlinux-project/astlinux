@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2015-2018 Lonnie Abelbeck
+// Copyright (C) 2015-2021 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -11,6 +11,7 @@
 // 08-02-2015, Add Status, Reload and Reboot links
 // 08-04-2015, Add pjsip support
 // 07-30-2018, Display PHONEPROV_GW_IP from user.conf
+// 01-19-2021, Add a lockfile for "Generate Files"
 //
 // System location of /mnt/kd/rc.conf.d directory
 $PHONEPROVCONFDIR = '/mnt/kd/rc.conf.d';
@@ -460,12 +461,32 @@ function addPHONEPROVmac($family, $key, $enabled, $template, $ext_cid, $password
   return($err);
 }
 
+// Function: lockfile_cleanup
+// (shutdown_function)
+function lockfile_cleanup($lock_file)
+{
+  if (is_file($lock_file)) {
+    unlink($lock_file);
+  }
+}
+
 // Function: generatePHONEPROVfiles
 //
 function generatePHONEPROVfiles($data, $reload, &$result_str, &$status) {
   $result_str = '';
   $status = 0;
+  $lock_file = '/var/lock/webgui-phoneprov.lock';
   $conf_file = '/mnt/kd/webgui-massdeployment.conf';
+
+  if (($fp = @fopen($lock_file, 'x')) === FALSE) {
+    $result_str = 'Locked by another user, try again later.';
+    $status = 1;
+    return(3);
+  }
+  $remote_addr = $_SERVER['REMOTE_ADDR'];
+  fwrite($fp, $remote_addr."\n");
+  fclose($fp);
+  register_shutdown_function('lockfile_cleanup', $lock_file);
 
   if (($fp = @fopen($conf_file, 'wb')) === FALSE) {
     $status = 1;
@@ -504,6 +525,9 @@ function generatePHONEPROVfiles($data, $reload, &$result_str, &$status) {
     $cmd .= ' -f ';
   }
   $cmd .= $conf_file.' 2>&1 1>/dev/null';
+  $cmd .= '; rtn=$?';
+  $cmd .= '; rm -f '.$lock_file;
+  $cmd .= '; exit $rtn';
 
   @exec('cd /root;/usr/sbin/gen-rc-conf;'.$cmd, $result_array, $status);
   $result_str = '';
