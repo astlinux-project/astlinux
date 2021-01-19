@@ -148,6 +148,8 @@ Released @TBD@
 
 -- Replace getdns/stubby with unbound for DNS-over-TLS support.
 
+-- PhoneProv tab, add a lockfile for "Generate Files".
+
 
 Additions for AstLinux 1.4.0:
 =============================
