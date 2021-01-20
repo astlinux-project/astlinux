@@ -24,6 +24,8 @@ Released @TBD@
 
 -- Linux Kernel 4.19.167 (version bump), security and bug fixes
 
+-- RUNNIX, version bump to runnix-0.6.3, with Linux Kernel 4.19.167, kexec 2.0.21
+
 -- igb, version bump to 5.5.2, Intel Gigabit Ethernet Network Driver
 
 -- e1000e version bump to 3.8.7 Intel PCI-Express PRO/1000 Ethernet Linux driver
@@ -44,7 +46,7 @@ Released @TBD@
 
 -- logrotate, version bump to 3.18.0
 
--- Monit, version bump to 5.27.1
+-- Monit, version bump to 5.27.2
 
 -- php, version 7.2.34, security fix patch: CVE-2020-7071
 
@@ -80,6 +82,8 @@ Released @TBD@
    New firewall.conf variables: DMZ_OPEN_ICMPV6=1, DMZ_OPEN_ICMPV6_MLD=0, DMZ_OPEN_MULTICAST=0
 
 -- chrony, version bump to 4.0
+
+-- dnsmasq, version bump to 2.83, security fixes: CVE-2020-25684, CVE-2020-25685, CVE-2020-25686
 
 -- keepalived, version bump to 2.2.1
 
