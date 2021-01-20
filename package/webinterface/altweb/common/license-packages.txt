@@ -55,7 +55,7 @@ sqliteodbc~Copyright (c) 2001-2020 Christian Werner.
 Fossil~Copyright (c) 2007-2019 D. Richard Hipp. All rights reserved.
 BusyBox~Copyright (c) 1998-2019 Erik Andersen, Rob Landley, Denys Vlasenko, et al.
 dhcp6c~Copyright (c) 1998-2008 WIDE Project with 2018 Debian patches.
-htop~Copyright (c) 2004-2019 Hisham Muhammad, (c) 2020-2021 htop dev team.
+htop~Copyright (c) 2020-2021 htop dev team, Copyright (c) 2004-2019 Hisham Muhammad.
 stunnel~Copyright (c) 1998-2019 Michal Trojnara.
 avahi~Copyright (c) 2004-2019 Lennart Poettering, Trent Lloyd, Avahi developers.
 Linux Kernel~Copyright (c) 1997-2021 The Linux Kernel Organization, Inc.; Linux is a Registered Trademark of Linus Torvalds.
