@@ -62,7 +62,7 @@ Released @TBD@
 
 -- zabbix, version bump to 4.0.27
 
--- ca-certificates, update trusted root certificates 2020-12-08
+-- ca-certificates, update trusted root certificates 2021-01-19
 
 -- mac2vendor, oui.txt database snapshot 2021-01-14
 
