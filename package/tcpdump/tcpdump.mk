@@ -20,7 +20,7 @@ TCPDUMP_CONF_OPT = \
 	--disable-local-libpcap \
 	$(if $(BR2_PACKAGE_TCPDUMP_SMB),--enable-smb,--disable-smb)
 
-TCPDUMP_DEPENDENCIES = zlib libpcap
+TCPDUMP_DEPENDENCIES = zlib libpcap host-pkg-config
 
 # make install installs an unneeded extra copy of the tcpdump binary
 define TCPDUMP_REMOVE_DUPLICATED_BINARY

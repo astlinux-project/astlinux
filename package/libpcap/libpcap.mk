@@ -8,7 +8,7 @@ LIBPCAP_VERSION = 1.10.0
 LIBPCAP_SITE = https://www.tcpdump.org/release
 LIBPCAP_SOURCE = libpcap-$(LIBPCAP_VERSION).tar.gz
 LIBPCAP_INSTALL_STAGING = YES
-LIBPCAP_DEPENDENCIES = zlib host-flex host-bison
+LIBPCAP_DEPENDENCIES = zlib host-flex host-bison host-pkg-config
 
 LIBPCAP_CONF_ENV = \
 	ac_cv_header_linux_wireless_h=yes \
@@ -39,8 +39,7 @@ endif
 
 ifeq ($(BR2_PACKAGE_LIBNL),y)
 LIBPCAP_DEPENDENCIES += libnl
-LIBPCAP_CFLAGS += "-I$(STAGING_DIR)/usr/include/libnl3"
-LIBPCAP_CONF_OPT += --with-libnl=$(STAGING_DIR)/usr
+LIBPCAP_CONF_OPT += --with-libnl
 else
 LIBPCAP_CONF_OPT += --without-libnl
 endif
