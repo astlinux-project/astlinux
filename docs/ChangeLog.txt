@@ -50,9 +50,9 @@ Released @TBD@
 
 -- php, version 7.2.34, security fix patch: CVE-2020-7071
 
--- rng-tools, version 6.5, jitterentropy version bump to 3.0.0
+-- rng-tools, version 6.5, jitterentropy version bump to 3.0.1
 
--- sqlite, version bump to 3.34.0
+-- sqlite, version bump to 3.34.1
 
 -- strace, version bump to 5.10
 
@@ -74,7 +74,7 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.1.1i, security fix: CVE-2020-1971
 
--- WireGuard VPN, module 1.0.20201221 (version bump), tools 1.0.20200827 (no change)
+-- WireGuard VPN, module 1.0.20210124 (version bump), tools 1.0.20200827 (no change)
 
 -- libcurl (curl) version bump to 7.74.0, security fixes: CVE-2020-8284, CVE-2020-8285, CVE-2020-8286
 
@@ -83,7 +83,7 @@ Released @TBD@
 
 -- chrony, version bump to 4.0
 
--- dnsmasq, version bump to 2.83, security fixes: CVE-2020-25684, CVE-2020-25685, CVE-2020-25686
+-- dnsmasq, version bump to 2.84test3, security fixes: CVE-2020-25684, CVE-2020-25685, CVE-2020-25686
 
 -- keepalived, version bump to 2.2.1
 
