@@ -4,8 +4,8 @@
 #
 #############################################################
 
-DNSMASQ_VERSION = 2.84test3
-DNSMASQ_SITE = http://thekelleys.org.uk/dnsmasq/test-releases
+DNSMASQ_VERSION = 2.84
+DNSMASQ_SITE = http://thekelleys.org.uk/dnsmasq
 DNSMASQ_MAKE_ENV = $(TARGET_MAKE_ENV) CC="$(TARGET_CC)"
 DNSMASQ_MAKE_OPT = COPTS="$(DNSMASQ_COPTS)" PREFIX=/usr CFLAGS="$(TARGET_CFLAGS)"
 DNSMASQ_MAKE_OPT += DESTDIR=$(TARGET_DIR) LDFLAGS="$(TARGET_LDFLAGS)"
