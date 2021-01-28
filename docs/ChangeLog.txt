@@ -56,6 +56,8 @@ Released @TBD@
 
 -- strace, version bump to 5.10
 
+-- sudo, version 1.8.31p2, backport CVE-2021-3156 security fixes
+
 -- tiff, version bump to 4.2.0, security fixes
 
 -- usbutils, version bump to 013
