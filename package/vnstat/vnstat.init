@@ -48,18 +48,14 @@ start () {
   if [ "$VNSTAT_ENABLE" = "yes" -a -f /etc/vnstat.conf ]; then
     echo "Starting vnstat..."
 
-    ARGS="-d -p $PIDFILE --config /etc/vnstat.conf --noadd -u nobody -g nobody"
+    ARGS="--config /etc/vnstat.conf -u nobody -g nobody"
 
     ## Create initial DB if needed
     if [ ! -f $DB_DIR/vnstat.db ]; then
-      if vnstatd $ARGS >/dev/null 2>&1; then
-        ## This should never occur since --noadd with no DB should always fail
-        sleep 2
-        if [ -f $PIDFILE ]; then
-          kill $(cat $PIDFILE) >/dev/null 2>&1
-        fi
-        sleep 2
-        ##
+      vnstatd $ARGS --initdb
+      if [ ! -f $DB_DIR/vnstat.db ]; then
+        logger -s -t vnstat -p kern.info "Failed to create database '$DB_DIR/vnstat.db', failed to start."
+        exit 1
       fi
     fi
 
@@ -76,12 +72,12 @@ start () {
 
     unset IFS
     for x in $interfaces; do
-      if vnstat --add -i ${x##*~} >/dev/null; then
-        vnstat --setalias ${x%~*} -i ${x##*~}
+      if vnstat --config /etc/vnstat.conf --add -i ${x##*~} >/dev/null; then
+        vnstat --config /etc/vnstat.conf --setalias ${x%~*} -i ${x##*~}
       fi
     done
 
-    vnstatd $ARGS
+    vnstatd $ARGS -d -p $PIDFILE --noadd
   fi
 }
 
