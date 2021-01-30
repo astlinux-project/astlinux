@@ -51,12 +51,9 @@ start () {
     ARGS="--config /etc/vnstat.conf -u nobody -g nobody"
 
     ## Create initial DB if needed
-    if [ ! -f $DB_DIR/vnstat.db ]; then
-      vnstatd $ARGS --initdb
-      if [ ! -f $DB_DIR/vnstat.db ]; then
-        logger -s -t vnstat -p kern.info "Failed to create database '$DB_DIR/vnstat.db', failed to start."
-        exit 1
-      fi
+    if ! vnstatd $ARGS --initdb; then
+      logger -s -t vnstat -p kern.info "Database error using '$DB_DIR/vnstat.db', failed to start."
+      exit 1
     fi
 
     if [ "$EXTIF" = "ppp0" -a -n "$PPPOEIF" ]; then
@@ -72,9 +69,7 @@ start () {
 
     unset IFS
     for x in $interfaces; do
-      if vnstat --config /etc/vnstat.conf --add -i ${x##*~} >/dev/null; then
-        vnstat --config /etc/vnstat.conf --setalias ${x%~*} -i ${x##*~}
-      fi
+      vnstat --config /etc/vnstat.conf --setalias ${x%~*} --add -i ${x##*~} >/dev/null
     done
 
     vnstatd $ARGS -d -p $PIDFILE --noadd
