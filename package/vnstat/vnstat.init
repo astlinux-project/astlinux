@@ -6,6 +6,11 @@ PIDFILE="/var/run/vnstat/vnstat.pid"
 
 DB_DIR="/mnt/kd/vnstat"
 
+## Gracefully exit if the Network tab has not been configured.
+if [ ! -f /mnt/kd/rc.conf.d/gui.network.conf ]; then
+  exit 0
+fi
+
 gen_vnstat_conf()
 {
 
@@ -16,16 +21,20 @@ gen_vnstat_conf()
   fi
   echo "DatabaseDir \"$DB_DIR\""
   echo "UnitMode 2"
+  echo "PollInterval 10"
+  echo "UpdateInterval 20"
+  echo "SaveInterval 60"
+  echo "OfflineSaveInterval 60"
 }
 
 init () {
 
-  if [ "$VNSTAT_ENABLE" != "yes" ]; then
+  if [ "$VNSTAT_ENABLE" = "no" ]; then
     exit
   fi
 
   if [ ! -d $DB_DIR ]; then
-    mkdir $DB_DIR 2>/dev/null     # will fail on virgin RO filesystem, ignore stderr
+    mkdir $DB_DIR
   fi
 
   if [ -d $DB_DIR ]; then
@@ -45,14 +54,14 @@ init () {
 start () {
   local ARGS x interfaces IFS
 
-  if [ "$VNSTAT_ENABLE" = "yes" -a -f /etc/vnstat.conf ]; then
+  if [ "$VNSTAT_ENABLE" != "no" -a -f /etc/vnstat.conf ]; then
     echo "Starting vnstat..."
 
     ARGS="--config /etc/vnstat.conf -u nobody -g nobody"
 
     ## Create initial DB if needed
     if ! vnstatd $ARGS --initdb; then
-      logger -s -t vnstat -p kern.info "Database error using '$DB_DIR/vnstat.db', failed to start."
+      logger -s -t vnstat -p kern.info "Configuration or database error, failed to start."
       exit 1
     fi
 
