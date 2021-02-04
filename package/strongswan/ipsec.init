@@ -33,15 +33,6 @@ init ()
 start ()
 {
   if SYS_is_vpn_type ipsec; then
-    if SYS_is_vpn_type racoon || SYS_is_vpn_type ipsecmobile; then
-      echo "Failed starting strongSwan IPsec, racoon IPsec is also enabled." >&2
-      exit 1
-    fi
-
-    ## Stop racoon IPsec if it is running
-    if [ -f /etc/init.d/racoon -a -f /var/run/racoon.pid ]; then
-      service racoon stop
-    fi
 
     /usr/sbin/ipsec start >/dev/null
 

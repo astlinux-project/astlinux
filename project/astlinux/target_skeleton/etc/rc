@@ -223,7 +223,7 @@ $fstab_shm
 " > /tmp/etc/fstab
 
   mkdir /var/spool /var/lib
-  mkdir /var/empty /var/lock /var/db /var/run /var/racoon
+  mkdir /var/empty /var/lock /var/db /var/run
   touch /var/run/utmp
   mkdir /var/run/screen /var/state /tmp/bin
   mkdir -m 1777 /var/tmp
