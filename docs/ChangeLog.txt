@@ -10,6 +10,43 @@ Additions for AstLinux 1.4.2:
 
 Released @TBD@
 
+** IMPORTANT NOTICE
+
+-- The ipsec-tools (racoon) support in AstLinux has been removed. The development of ipsec-tools has been ABANDONED.
+   The Network tab -> VPN Type: "IPsec Peers" and "IPsec Mobile" in the web interface has been removed.
+   The AstLinux Team suggests using either WireGuard or OpenVPN for your VPN needs, but if IPsec is required for
+   compatibility reasons the Network tab -> VPN Type: "IPsec strongSwan" should be able to do what you want,
+   albeit in a less than ideal text based configuration.
+   More info: https://doc.astlinux-project.org/userdoc:tt_ipsec_vpn_strongswan
+
+** System
+
+-- Linux Kernel 4.19.167 (no change), security and bug fixes
+
+** Networking
+
+-- ipsec-tools (racoon) package has been removed.
+   More info: https://doc.astlinux-project.org/userdoc:tt_ipsec_vpn_strongswan
+
+-- vnStat, new package, version 2.6, interface counter history is saved to /mnt/kd/vnstat/vnstat.db every hour.
+   Enabled by default to keep a log of network traffic for external interface(s). No sniffing of traffic is performed.
+   New rc.conf variable VNSTAT_ENABLE can be set to "no" to disable.
+
+** Asterisk
+
+-- Asterisk 13.29.2 ('13se' no change)
+   Older than latest Asterisk 13.x version but more tested, built --without-pjproject
+
+-- Asterisk 13.38.1 (no change) and 16.15.1 (no change)
+
+-- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
+
+-- pjsip 2.10 (no change)
+
+** Web Interface
+
+-- Network tab -> VPN Type: "IPsec Peers" and "IPsec Mobile" has been removed. Remove IPsec (racoon) VPN support.
+
 
 Additions for AstLinux 1.4.1:
 =============================
