@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2020 Lonnie Abelbeck
+// Copyright (C) 2008-2021 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -55,6 +55,7 @@
 // 05-08-2020, Dynamically add VLAN and BRIDGE entries to interface list
 // 05-10-2020, Added Linux Containers (LXC)
 // 12-13-2020, Replace getdns/stubby with unbound for DNS-over-TLS
+// 02-04-2021, Remove IPsec (racoon) VPN support
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -640,13 +641,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   if (isset($_POST['openvpnclient'])) {
     $x_value .= ' openvpnclient';
   }
-  if (isset($_POST['racoon'])) {
-    $x_value .= ' racoon';
-  }
-  if (isset($_POST['ipsecmobile'])) {
-    $x_value .= ' ipsecmobile';
-  }
-  if (isset($_POST['ipsec']) && ! isset($_POST['racoon']) && ! isset($_POST['ipsecmobile'])) {
+  if (isset($_POST['ipsec'])) {
     $x_value .= ' ipsec';
   }
   if (isset($_POST['wireguard'])) {
@@ -1038,14 +1033,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       header('Location: /admin/edit.php?file='.$file);
       exit;
     }
-  } elseif (isset($_POST['submit_edit_racoon'])) {
-    $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
-    header('Location: /admin/ipsec.php');
-    exit;
-  } elseif (isset($_POST['submit_edit_ipsecmobile'])) {
-    $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
-    header('Location: /admin/ipsecmobile.php');
-    exit;
   } elseif (isset($_POST['submit_edit_ipsec'])) {
     $result = saveNETWORKsettings($NETCONFDIR, $NETCONFFILE);
     if (is_writable($file = '/mnt/kd/ipsec/strongswan/ipsec.conf')) {
@@ -1121,8 +1108,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 22, $result, 'init');
       } elseif ($process === 'msmtp') {
         $result = restartPROCESS($process, 31, $result, 'init');
-      } elseif ($process === 'racoon') {
-        $result = restartPROCESS($process, 23, $result, 'init');
       } elseif ($process === 'openvpn') {
         $result = restartPROCESS($process, 24, $result, 'init');
       } elseif ($process === 'openvpnclient') {
@@ -1224,8 +1209,6 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">PPPoE has Restarted.</p>');
     } elseif ($result == 22) {
       putHtml('<p style="color: green;">NTP Time'.statusPROCESS('ntpd').'.</p>');
-    } elseif ($result == 23) {
-      putHtml('<p style="color: green;">IPsec VPN'.statusPROCESS('racoon').'.</p>');
     } elseif ($result == 24) {
       putHtml('<p style="color: green;">OpenVPN Server'.statusPROCESS('openvpn').'.</p>');
     } elseif ($result == 25) {
@@ -1353,8 +1336,6 @@ require_once '../common/header.php';
   putHtml('<option value="openvpn"'.$sel.'>Restart OpenVPN Server</option>');
   $sel = ($reboot_restart === 'openvpnclient') ? ' selected="selected"' : '';
   putHtml('<option value="openvpnclient"'.$sel.'>Restart OpenVPN Client</option>');
-  $sel = ($reboot_restart === 'racoon') ? ' selected="selected"' : '';
-  putHtml('<option value="racoon"'.$sel.'>Restart IPsec VPN</option>');
   $sel = ($reboot_restart === 'ipsec') ? ' selected="selected"' : '';
   putHtml('<option value="ipsec"'.$sel.'>Restart IPsec strongSwan</option>');
   $sel = ($reboot_restart === 'wireguard') ? ' selected="selected"' : '';
@@ -2169,24 +2150,6 @@ require_once '../common/header.php';
   putHtml('OpenVPN Server');
   putHtml('&ndash;');
   putHtml('<input type="submit" value="OpenVPN Configuration" name="submit_edit_openvpn" class="button" />');
-  putHtml('</td></tr>');
-
-  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  $sel = isVARtype('VPN', $db, $cur_db, 'racoon') ? ' checked="checked"' : '';
-  putHtml('<input type="checkbox" value="racoon" name="racoon"'.$sel.' />');
-  putHtml('</td><td style="text-align: left;" colspan="5">');
-  putHtml('IPsec Peers');
-  putHtml('&ndash;');
-  putHtml('<input type="submit" value="IPsec Configuration" name="submit_edit_racoon" class="button" />');
-  putHtml('</td></tr>');
-
-  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
-  $sel = isVARtype('VPN', $db, $cur_db, 'ipsecmobile') ? ' checked="checked"' : '';
-  putHtml('<input type="checkbox" value="ipsecmobile" name="ipsecmobile"'.$sel.' />');
-  putHtml('</td><td style="text-align: left;" colspan="5">');
-  putHtml('IPsec Mobile');
-  putHtml('&ndash;');
-  putHtml('<input type="submit" value="IPsec Configuration" name="submit_edit_ipsecmobile" class="button" />');
   putHtml('</td></tr>');
 
 if (is_file('/etc/init.d/ipsec')) {

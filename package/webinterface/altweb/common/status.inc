@@ -49,6 +49,7 @@
 // 05-10-2020, Added Linux Containers (LXC)
 // 07-08-2020, Added Firewall status indicator
 // 01-05-2021, pppoe-status, accept return values of 0 and 1
+// 02-04-2021, Remove IPsec (racoon) VPN support
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -93,7 +94,6 @@ function getDaemons() {
   $status['miniupnpd'] = 0;
   $status['dnsmasq'] = 0;
   $status['openvpn'] = 0;
-  $status['racoon'] = 0;
   $status['charon'] = 0;
   $status['upsmon'] = 0;
   $status['syslogd'] = 0;
@@ -134,43 +134,6 @@ function parseUPSstatus($log) {
           case 'battery.runtime':
             $status['status'][$cid]["$ips[1]"] = $ips[2];
             break;
-          }
-        }
-      }
-    }
-    fclose($ph);
-  }
-  return(isset($status) ? $status : NULL);
-}
-
-// Function: parseIPSECstates
-//
-function parseIPSECstates($log) {
-
-  $cid = -1;
-  if (($ph = @fopen($log, "r")) !== FALSE) {
-    while (! feof($ph)) {
-      if (($line = rtrim(fgets($ph, 1024))) !== '') {
-        if (preg_match('/^([0-9a-fA-F][0-9a-fA-F.:]*).* ([0-9a-fA-F][0-9a-fA-F.:]*)/', $line, $ips)) {
-          $cid++;
-          $status['states'][$cid]['src'] = $ips[1];
-          $status['states'][$cid]['dst'] = $ips[2];
-          $status['states'][$cid]['created'] = '';
-          $status['states'][$cid]['lifetime'] = 0;
-          $status['states'][$cid]['age'] = 0;
-          $status['states'][$cid]['bytes'] = 0;
-          $status['states'][$cid]['type'] = '';
-        } elseif ($cid >= 0) {
-          $line = ltrim($line);
-          if (preg_match('/^created:(.*)current:/', $line, $data)) {
-            $status['states'][$cid]['created'] = trim($data[1]);
-          } elseif (preg_match('/^diff:[^0-9]*([0-9][0-9]*)[^0-9]*([0-9][0-9]*)/', $line, $data)) {
-            $status['states'][$cid]['age'] = (float)$data[1];
-            $status['states'][$cid]['lifetime'] = (float)$data[2];
-          } elseif (preg_match('/^current:[^0-9]*([0-9][0-9]*)/', $line, $data)) {
-            $status['states'][$cid]['bytes'] = (float)$data[1];
-          } elseif (preg_match('/^(.*)spi=/', $line, $data)) {
-            $status['states'][$cid]['type'] = trim($data[1]);
           }
         }
       }
@@ -1234,45 +1197,6 @@ if ($daemon['openvpn'] > 0 && getPREFdef($global_prefs, 'status_openvpn_client_s
       putText('No Active Clients connected to this OpenVPN Server');
       putHtml("</pre>");
     }
-  }
-}
-
-if ($daemon['racoon'] > 0) {
-  if (getPREFdef($global_prefs, 'status_ipsec_associations') !== 'no') {
-    putHtml("<h2>IPsec Associations:</h2>");
-    $tmpfile = tempnam("/tmp", "PHP_");
-    shell('/usr/sbin/setkey -D | grep -e "^[0-9]" -e " mode=" -e "^[^a-z]*created:" -e "^[^a-z]*diff:" -e "^[^a-z]*current:" >'.$tmpfile, $status);
-
-    if (is_null($ipsec = parseIPSECstates($tmpfile))) {
-      putHtml("<pre>");
-      putText('No Associations found');
-      putHtml("</pre>");
-    } else {
-      putHtml('<pre><table class="statusdatatable">');
-      putHtml("<tr>");
-      if (($n = arrayCount($ipsec['states'])) > 0) {
-        echo "<td>", "Source", "</td>";
-        echo "<td>", "Destination", "</td>";
-        echo "<td>", "Created", "</td>";
-        echo "<td>", "Lifetime", "</td>";
-        echo "<td>", "Age", "</td>";
-        echo "<td>", "Bytes", "</td>";
-        echo "<td>", "Type", "</td>";
-        for ($i = 0; $i < $n; $i++) {
-          putHtml("</tr><tr>");
-          echo "<td>", $ipsec['states'][$i]['src'], "</td>";
-          echo "<td>", $ipsec['states'][$i]['dst'], "</td>";
-          echo "<td>", $ipsec['states'][$i]['created'], "</td>";
-          echo "<td>", $ipsec['states'][$i]['lifetime'], "</td>";
-          echo "<td>", $ipsec['states'][$i]['age'], "</td>";
-          echo "<td>", $ipsec['states'][$i]['bytes'], "</td>";
-          echo "<td>", $ipsec['states'][$i]['type'], "</td>";
-        }
-      }
-      putHtml("</tr>");
-      putHtml("</table></pre>");
-    }
-    @unlink($tmpfile);
   }
 }
 

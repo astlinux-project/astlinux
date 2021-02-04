@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2020 Lonnie Abelbeck
+// Copyright (C) 2008-2021 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -23,6 +23,7 @@
 // 08-24-2019, Added Apply user.conf variables
 // 02-21-2020, Remove PPTP VPN support
 // 05-10-2020, Added Linux Containers (LXC)
+// 02-04-2021, Remove IPsec (racoon) VPN support
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -39,7 +40,6 @@ $select_reload = array (
   'msmtp' => 'Restart SMTP Mail',
   'openvpn' => 'Restart OpenVPN Server',
   'openvpnclient' => 'Restart OpenVPN Client',
-  'racoon' => 'Restart IPsec VPN',
   'ipsec' => 'Restart IPsec strongSwan',
   'wireguard' => 'Restart WireGuard VPN',
   'WIREGUARD' => 'Reload WireGuard VPN',
@@ -291,8 +291,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = restartPROCESS($process, 22, $result, 'init');
       } elseif ($process === 'msmtp') {
         $result = restartPROCESS($process, 31, $result, 'init');
-      } elseif ($process === 'racoon') {
-        $result = restartPROCESS($process, 23, $result, 'init');
       } elseif ($process === 'openvpn') {
         $result = restartPROCESS($process, 24, $result, 'init');
       } elseif ($process === 'openvpnclient') {
@@ -450,8 +448,6 @@ require_once '../common/header.php';
       putHtml('<p style="color: green;">Asterisk Modules Reloaded.</p>');
     } elseif ($result == 22) {
       putHtml('<p style="color: green;">NTP Time'.statusPROCESS('ntpd').'.</p>');
-    } elseif ($result == 23) {
-      putHtml('<p style="color: green;">IPsec VPN'.statusPROCESS('racoon').'.</p>');
     } elseif ($result == 24) {
       putHtml('<p style="color: green;">OpenVPN Server'.statusPROCESS('openvpn').'.</p>');
     } elseif ($result == 25) {

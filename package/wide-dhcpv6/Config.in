@@ -1,5 +1,6 @@
 config BR2_PACKAGE_WIDE_DHCPV6
 	bool "wide-dhcpv6"
+	select BR2_PACKAGE_FLEX
 	help
 	  WIDE-DHCPv6 is an open-source implementation of Dynamic Host Configuration Protocol
 	  for IPv6 (DHCPv6) originally developed by the KAME project.

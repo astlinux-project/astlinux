@@ -97,19 +97,6 @@ setFOREIGNnet()
   done
 }
 
-setIPSECnet()
-{
-  # args: IP, NM
-  local NETWORK PREFIX
-
-  if [ -n "$1" -a -n "$2" ]; then
-    eval $(ipcalc -np $1 $2)
-
-    NAT_INTERNAL_NET="$NAT_INTERNAL_NET${NAT_INTERNAL_NET:+ }$NETWORK/$PREFIX"
-    NAT=1
-  fi
-}
-
 getLANinterface()
 {
   # args: LAN
@@ -243,14 +230,10 @@ astlinux_wrapper()
     EXTERNAL_DHCP_SERVER=1
   fi
 
-  if isVPNtype racoon || isVPNtype ipsecmobile || isVPNtype ipsec; then
+  if isVPNtype ipsec; then
     RP_FILTER=0
   elif isVPNtype wireguard; then
     RP_FILTER=2
-  fi
-
-  if isVPNtype ipsecmobile && [ "$IPSECM_AUTH_METHOD" = "xauth_rsa_server" ]; then
-    setIPSECnet "$IPSECM_XAUTH_POOLBASE" "$IPSECM_XAUTH_POOLMASK"
   fi
 
   ovpn_if=""

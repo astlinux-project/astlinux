@@ -7,7 +7,7 @@
 WIDE_DHCPV6_VERSION = 20080615
 WIDE_DHCPV6_SOURCE = wide-dhcpv6-$(WIDE_DHCPV6_VERSION).tar.gz
 WIDE_DHCPV6_SITE = http://downloads.sourceforge.net/project/wide-dhcpv6/wide-dhcpv6/wide-dhcpv6-$(WIDE_DHCPV6_VERSION)
-WIDE_DHCPV6_DEPENDENCIES = host-bison host-flex
+WIDE_DHCPV6_DEPENDENCIES = host-bison host-flex flex
 
 WIDE_DHCPV6_CONF_OPT = \
 	--sysconfdir=/etc/wide-dhcpv6 \

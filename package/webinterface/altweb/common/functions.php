@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2020 Lonnie Abelbeck
+// Copyright (C) 2008-2021 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -94,7 +94,7 @@ function restartPROCESS($process, $ret_good, $ret_fail, $start = 'start', $wait 
     $cmd .= ';sleep '.$wait;
     $cmd .= ';/usr/sbin/gen-rc-conf';
     if ($process === 'openvpn' || $process === 'openvpnclient' ||
-        $process === 'racoon' || $process === 'ipsec' ||
+        $process === 'ipsec' ||
         $process === 'wireguard') {
       $cmd .= ';service iptables restart >/dev/null 2>/dev/null';
     }
