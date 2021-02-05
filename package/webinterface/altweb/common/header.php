@@ -266,6 +266,9 @@ header('Content-Type: text/html; charset=utf-8');
       if ($global_staff && (getPREFdef($global_prefs, 'tab_users_show') === 'yes')) {
         putHtml('<li><a href="/admin/users.php"><span>Users</span></a></li>');
       }
+      if ($global_staff && (getPREFdef($global_prefs, 'tab_vnstat_show') === 'yes')) {
+        putHtml('<li><a href="/admin/vnstat.php"><span>vnStat</span></a></li>');
+      }
       if ($global_staff && (getPREFdef($global_prefs, 'tab_netstat_show') === 'yes')) {
         putHtml('<li><a href="/admin/netstat.php"><span>NetStat</span></a></li>');
       }

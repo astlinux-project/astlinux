@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2020 Lonnie Abelbeck
+// Copyright (C) 2008-2021 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -28,6 +28,7 @@
 // 10-29-2019, Added Wiki tab and link
 // 02-21-2020, Remove PPTP VPN support
 // 05-10-2020, Added Linux Containers (LXC)
+// 02-05-2021, Added Show vnStat Tab
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -547,6 +548,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (! isset($_POST['cli_disable_staff'])) {
       $value = 'tab_cli_disable_staff = no';
+      fwrite($fp, $value."\n");
+    }
+    if (isset($_POST['tab_vnstat'])) {
+      $value = 'tab_vnstat_show = yes';
       fwrite($fp, $value."\n");
     }
     if (isset($_POST['tab_netstat'])) {
@@ -1280,6 +1285,10 @@ require_once '../common/header.php';
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_users_show') === 'yes') ? ' checked="checked"' : '';
   putHtml('<input type="checkbox" value="tab_users" name="tab_users"'.$sel.' /></td><td colspan="5">Show Users Tab</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  $sel = (getPREFdef($global_prefs, 'tab_vnstat_show') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="tab_vnstat" name="tab_vnstat"'.$sel.' /></td><td colspan="5">Show vnStat Tab</td></tr>');
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'tab_netstat_show') === 'yes') ? ' checked="checked"' : '';
