@@ -47,6 +47,8 @@ Released @TBD@
 
 -- Network tab -> VPN Type: "IPsec Peers" and "IPsec Mobile" has been removed. Remove IPsec (racoon) VPN support.
 
+-- Added vnStat tab, available to "admin/staff" users.  Hidden by default in Prefs tab.
+
 
 Additions for AstLinux 1.4.1:
 =============================
