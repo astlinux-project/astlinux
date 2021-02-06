@@ -49,6 +49,8 @@ Released @TBD@
 
 -- Added vnStat tab, available to "admin/staff" users.  Hidden by default in Prefs tab.
 
+-- Staff tab, encrypted "primary" backup, exclude /mnt/kd/lxc/ directory.
+
 
 Additions for AstLinux 1.4.1:
 =============================
