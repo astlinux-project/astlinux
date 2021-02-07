@@ -35,6 +35,8 @@ endef
 define LIBCAP_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D)/libcap $(LIBCAP_MAKE_FLAGS) \
 		DESTDIR=$(TARGET_DIR) prefix=/usr lib=lib $(LIBCAP_MAKE_INSTALL_TARGET)
+	## Make executable so it is stripped later (not needed or desired)
+	## chmod 755 $(TARGET_DIR)/usr/lib/libcap.so.$(LIBCAP_VERSION)
 endef
 
 define HOST_LIBCAP_BUILD_CMDS
