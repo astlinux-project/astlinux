@@ -4,7 +4,7 @@
 #
 ##############################################################
 
-ZONEINFO_VERSION := 2020e
+ZONEINFO_VERSION := 2021a
 ZONEINFO_DATA := tzdata$(ZONEINFO_VERSION).tar.gz
 ZONEINFO_SOURCE := tzcode$(ZONEINFO_VERSION).tar.gz
 ZONEINFO_SITE := https://www.iana.org/time-zones/repository/releases
