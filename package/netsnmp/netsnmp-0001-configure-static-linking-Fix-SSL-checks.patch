@@ -1,7 +1,7 @@
 From bd59be8e4e339870a1400f6866a7b73ca11f6460 Mon Sep 17 00:00:00 2001
 From: Giulio Benetti <giulio.benetti@micronovasrl.com>
 Date: Wed, 12 Sep 2018 20:16:39 +0200
-Subject: [PATCH 1/3] configure, static linking: Fix SSL checks
+Subject: [PATCH] configure, static linking: Fix SSL checks
 
 During checking of DTLS_method, the stub program is linked only with -ssl
 libssl.a lacks some function from -lcrypto:
@@ -19,16 +19,20 @@ See also https://sourceforge.net/p/net-snmp/patches/1374/.
 
 Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
 [bvanassche: Edited subject / rewrote this patch]
+[yann.morin.1998@free.fr:
+  - use an actual backport of bd59be8e4e339870a1400f6866a7b73ca11f6460
+]
+Signed-off-by: Yann E. MORIN <yann.morin.1998@free.fr>
 ---
  configure                   | 52 ++++++++++++++++++++++++++++++++++---
  configure.d/config_os_libs2 | 14 +++++++---
  2 files changed, 58 insertions(+), 8 deletions(-)
 
 diff --git a/configure b/configure
-index 6504a8e58..1116cecaa 100755
+index 6504a8e58a..1116cecaad 100755
 --- a/configure
 +++ b/configure
-@@ -24647,16 +24647,60 @@ fi
+@@ -25238,16 +25238,60 @@ fi
  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_crypto_EVP_md5" >&5
  $as_echo "$ac_cv_lib_crypto_EVP_md5" >&6; }
  if test "x$ac_cv_lib_crypto_EVP_md5" = xyes; then :
@@ -74,12 +78,12 @@ index 6504a8e58..1116cecaa 100755
 +$as_echo "$ac_cv_lib_crypto_EVP_md5" >&6; }
 +if test "x$ac_cv_lib_crypto_EVP_md5" = xyes; then :
 +  CRYPTO="crypto"; LIBCRYPTO="-lcrypto -lz"
++fi
++
++
  fi
  
 -        fi
-+
-+fi
-+
 +	else
 +	    LIBCRYPTO="-l${CRYPTO}"
 +	fi
@@ -92,20 +96,20 @@ index 6504a8e58..1116cecaa 100755
              netsnmp_save_LIBS="$LIBS"
              LIBS="$LIBCRYPTO"
              for ac_func in AES_cfb128_encrypt                           EVP_sha224        EVP_sha384                                   EVP_MD_CTX_create EVP_MD_CTX_destroy                           EVP_MD_CTX_new    EVP_MD_CTX_free                              DH_set0_pqg DH_get0_pqg DH_get0_key                           ASN1_STRING_get0_data X509_NAME_ENTRY_get_object                           X509_NAME_ENTRY_get_data X509_get_signature_nid
-@@ -24710,7 +24754,7 @@ _ACEOF
+@@ -25301,7 +25345,7 @@ _ACEOF
              LIBS="$netsnmp_save_LIBS"
          fi
          netsnmp_save_LIBS="$LIBS"
 -        LIBS="-lssl"
 +        LIBS="-lssl $LIBCRYPTO"
-         for ac_func in TLS_method TLSv1_method DTLS_method DTLSv1_method                       SSL_library_init SSL_load_error_strings
+         for ac_func in TLS_method TLSv1_method DTLS_method DTLSv1_method                       SSL_library_init SSL_load_error_strings		       ERR_get_error_all
  do :
    as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
 diff --git a/configure.d/config_os_libs2 b/configure.d/config_os_libs2
-index 4a1ad1551..75214cfff 100644
+index 4a1ad1551f..75214cfff3 100644
 --- a/configure.d/config_os_libs2
 +++ b/configure.d/config_os_libs2
-@@ -309,13 +309,19 @@ if test "x$tryopenssl" != "xno" -a "x$tryopenssl" != "xinternal"; then
+@@ -302,13 +302,19 @@ if test "x$tryopenssl" != "xno" -a "x$tryopenssl" != "xinternal"; then
          LIBS="$netsnmp_save_LIBS"
  
          if test x$CRYPTO = x; then
@@ -128,15 +132,15 @@ index 4a1ad1551..75214cfff 100644
              netsnmp_save_LIBS="$LIBS"
              LIBS="$LIBCRYPTO"
              AC_CHECK_FUNCS([AES_cfb128_encrypt]dnl
-@@ -345,7 +351,7 @@ if test "x$tryopenssl" != "xno" -a "x$tryopenssl" != "xinternal"; then
+@@ -338,7 +344,7 @@ if test "x$tryopenssl" != "xno" -a "x$tryopenssl" != "xinternal"; then
              LIBS="$netsnmp_save_LIBS"
          fi
          netsnmp_save_LIBS="$LIBS"
 -        LIBS="-lssl"
 +        LIBS="-lssl $LIBCRYPTO"
          AC_CHECK_FUNCS([TLS_method TLSv1_method DTLS_method DTLSv1_method]dnl
-                        [SSL_library_init SSL_load_error_strings])
-         LIBS="$netsnmp_save_LIBS"
+                        [SSL_library_init SSL_load_error_strings]dnl
+ 		       [ERR_get_error_all])
 -- 
-2.17.1
+2.25.1
 

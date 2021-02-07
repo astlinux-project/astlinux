@@ -1,22 +1,25 @@
-From d8694929b12b47febb0f7f43f46041387874fe52 Mon Sep 17 00:00:00 2001
+From 13da2bcde8e22dd0127a668374fdf79bed04d353 Mon Sep 17 00:00:00 2001
 From: Bart Van Assche <bvanassche@acm.org>
 Date: Mon, 17 Sep 2018 07:33:34 -0700
-Subject: [PATCH 2/3] configure: Fix -lcrypto -lz test
+Subject: [PATCH] configure: Fix -lcrypto -lz test
 
 Avoid that the second crypto library test uses the cached result from
 the first test by explicitly clearing the cached test result.
 
-Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+[yann.morin.1998@free.fr:
+  - use an actual backport of 13da2bcde8e22dd0127a668374fdf79bed04d353
+]
+Signed-off-by: Yann E. MORIN <yann.morin.1998@free.fr>
 ---
  configure                   | 1 +
  configure.d/config_os_libs2 | 1 +
  2 files changed, 2 insertions(+)
 
 diff --git a/configure b/configure
-index 1116cecaa..33b8c93e5 100755
+index 1116cecaad..33b8c93e57 100755
 --- a/configure
 +++ b/configure
-@@ -24650,6 +24650,7 @@ if test "x$ac_cv_lib_crypto_EVP_md5" = xyes; then :
+@@ -25241,6 +25241,7 @@ if test "x$ac_cv_lib_crypto_EVP_md5" = xyes; then :
    CRYPTO="crypto"; LIBCRYPTO="-lcrypto"
  else
  
@@ -25,10 +28,10 @@ index 1116cecaa..33b8c93e5 100755
  $as_echo_n "checking for EVP_md5 in -lcrypto... " >&6; }
  if ${ac_cv_lib_crypto_EVP_md5+:} false; then :
 diff --git a/configure.d/config_os_libs2 b/configure.d/config_os_libs2
-index 75214cfff..81788a209 100644
+index 75214cfff3..81788a2096 100644
 --- a/configure.d/config_os_libs2
 +++ b/configure.d/config_os_libs2
-@@ -311,6 +311,7 @@ if test "x$tryopenssl" != "xno" -a "x$tryopenssl" != "xinternal"; then
+@@ -304,6 +304,7 @@ if test "x$tryopenssl" != "xno" -a "x$tryopenssl" != "xinternal"; then
          if test x$CRYPTO = x; then
              AC_CHECK_LIB([crypto], [EVP_md5],
  			 [CRYPTO="crypto"; LIBCRYPTO="-lcrypto"], [
@@ -37,5 +40,5 @@ index 75214cfff..81788a209 100644
  			     [CRYPTO="crypto"; LIBCRYPTO="-lcrypto -lz"], [],
  			     [-lz])
 -- 
-2.17.1
+2.25.1
 

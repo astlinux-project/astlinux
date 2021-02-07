@@ -25,7 +25,7 @@ diff --git a/configure.d/config_os_libs2 b/configure.d/config_os_libs2
 index 81788a209..93044000b 100644
 --- a/configure.d/config_os_libs2
 +++ b/configure.d/config_os_libs2
-@@ -324,7 +324,7 @@ if test "x$tryopenssl" != "xno" -a "x$tryopenssl" != "xinternal"; then
+@@ -317,7 +317,7 @@ if test "x$tryopenssl" != "xno" -a "x$tryopenssl" != "xinternal"; then
              AC_DEFINE(HAVE_LIBCRYPTO, 1,
                  [Define to 1 if you have the OpenSSL library (-lcrypto or -leay32).])
              netsnmp_save_LIBS="$LIBS"
