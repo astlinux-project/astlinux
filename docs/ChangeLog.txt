@@ -23,14 +23,26 @@ Released @TBD@
 
 -- Linux Kernel 4.19.167 (no change), security and bug fixes
 
+-- zabbix, version bump to 4.0.28
+
+-- Time Zone Database update, tzdata2021a and php-timezonedb-2021.1
+
 ** Networking
 
 -- ipsec-tools (racoon) package has been removed.
    More info: https://doc.astlinux-project.org/userdoc:tt_ipsec_vpn_strongswan
 
+-- libcurl (curl) version bump to 7.75.0
+
+-- netsnmp, version bump to 5.9
+
+-- openldap, version bump to 2.4.57
+
 -- vnStat, new package, version 2.6, interface counter history is saved to /mnt/kd/vnstat/vnstat.db every hour.
    Enabled by default to keep a log of network traffic for external interface(s). No sniffing of traffic is performed.
    New rc.conf variable VNSTAT_ENABLE can be set to "no" to disable.
+
+-- (Custom Build Only) mosquitto, version bump to 1.6.13
 
 ** Asterisk
 
