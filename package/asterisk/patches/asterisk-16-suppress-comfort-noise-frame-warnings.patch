@@ -1,6 +1,6 @@
 --- asterisk-16/channels/chan_sip.c.orig	2018-08-03 13:02:45.762992513 -0500
 +++ asterisk-16/channels/chan_sip.c	2018-08-03 13:06:54.811965946 -0500
-@@ -7603,6 +7603,8 @@
+@@ -7599,6 +7599,8 @@
  			sip_pvt_unlock(p);
  		}
  		break;
