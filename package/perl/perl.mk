@@ -18,7 +18,7 @@ PERL_MODULES = constant version base fields
 PERL_MODULES += Carp Errno Fcntl PathTools POSIX Digest Socket IO XSLoader Exporter B File-Find JSON-PP
 PERL_MODULES += Digest/MD5 Digest/SHA Getopt/Long Time/Local File/Glob Sys/Hostname
 
-PERL_CROSS_VERSION = 1.3.4
+PERL_CROSS_VERSION = 1.3.5
 PERL_CROSS_SITE = https://github.com/arsv/perl-cross/releases/download/$(PERL_CROSS_VERSION)
 PERL_CROSS_SOURCE = perl-cross-$(PERL_CROSS_VERSION).tar.gz
 
