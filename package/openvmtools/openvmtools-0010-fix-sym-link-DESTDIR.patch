@@ -1,0 +1,22 @@
+--- openvmtools-10.3.10/vmblockmounter/Makefile.am.orig	2021-02-10 08:41:21.539122670 -0600
++++ openvmtools-10.3.10/vmblockmounter/Makefile.am	2021-02-10 08:41:41.153804507 -0600
+@@ -35,7 +35,7 @@
+ else
+ install-exec-hook:
+ 	-$(MKDIR_P) $(DESTDIR)/sbin
+-	-$(LN_S) $(DESTDIR)$(sbindir)/mount.vmblock \
++	-$(LN_S) $(sbindir)/mount.vmblock \
+ 		$(DESTDIR)/sbin/mount.vmblock &> /dev/null
+ uninstall-hook:
+ 	rm -f $(DESTDIR)/sbin/mount.vmblock
+--- openvmtools-10.3.10/hgfsmounter/Makefile.am.orig	2021-02-10 08:41:55.464835365 -0600
++++ openvmtools-10.3.10/hgfsmounter/Makefile.am	2021-02-10 08:42:17.551346040 -0600
+@@ -40,7 +40,7 @@
+ else
+ install-exec-hook:
+ 	-$(MKDIR_P) $(DESTDIR)/sbin
+-	-$(LN_S) $(DESTDIR)$(sbindir)/mount.vmhgfs \
++	-$(LN_S) $(sbindir)/mount.vmhgfs \
+ 		$(DESTDIR)/sbin/mount.vmhgfs &> /dev/null
+ uninstall-hook:
+ 	rm -f $(DESTDIR)/sbin/mount.vmhgfs
