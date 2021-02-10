@@ -40,6 +40,8 @@ Released @TBD@
 
 -- openldap, version bump to 2.4.57
 
+-- unbound, version bump to 1.13.1
+
 -- vnStat, new package, version 2.6, interface counter history is saved to /mnt/kd/vnstat/vnstat.db every hour.
    Enabled by default to keep a log of network traffic for external interface(s). No sniffing of traffic is performed.
    New rc.conf variable VNSTAT_ENABLE can be set to "no" to disable.
