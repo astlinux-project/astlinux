@@ -21,7 +21,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.167 (no change), security and bug fixes
+-- Linux Kernel 4.19.175 (version bump), security and bug fixes
 
 -- perl, version 5.24.4, perlcross 1.3.5, security fixes: CVE-2020-10543, CVE-2020-10878, CVE-2020-12723
 
