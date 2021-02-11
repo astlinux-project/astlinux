@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2020 Lonnie Abelbeck
+// Copyright (C) 2008-2021 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -22,6 +22,7 @@
 // 06-25-2019, Updated backup files
 // 07-11-2019, Added Backup Exclude Suffixes support
 // 10-20-2020, Added view syslog messages.0 or messages.1
+// 02-11-2021, Added backup "Linux Containers (lxc)" menu
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -218,8 +219,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($backup_type === 'voicemail') {
       $srcfile = 'voicemail';
       $asturw = '';
+    } elseif ($backup_type === 'lxc') {
+      $srcfile = 'lxc';
+      $asturw = '';
     } elseif ($backup_type === 'config') {
-      $srcfile = '$(ls -1 /mnt/kd/ | sed -e "s/^cdr-.*//" -e "s/^monitor$//" -e "s/^voicemail$//")';
+      $srcfile = '$(ls -1 /mnt/kd/ | sed -e "s/^cdr-.*//" -e "s/^monitor$//" -e "s/^voicemail$//" -e "s/^lxc$//")';
     } elseif ($backup_type === 'unionfs') {
       $srcfile = 'asturw'.$suffix;
       $asturw = '/mnt/kd/asturw'.$suffix;
@@ -709,7 +713,8 @@ require_once '../common/header.php';
   <option value="cdr">Call Detail Records (cdr)</option>
   <option value="monitor">Monitor Recordings (mon)</option>
   <option value="voicemail">Voicemail Messages (vm)</option>
-  <option value="config">All except cdr, mon &amp; vm</option>
+  <option value="lxc">Linux Containers (lxc)</option>
+  <option value="config">All except: cdr, mon, vm, lxc</option>
   </select>
   </td></tr><tr><td style="text-align: center;">
   <input type="submit" value="View Selected File" name="submit_view" />
