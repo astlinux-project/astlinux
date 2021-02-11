@@ -34,6 +34,8 @@ Released @TBD@
 -- ipsec-tools (racoon) package has been removed.
    More info: https://doc.astlinux-project.org/userdoc:tt_ipsec_vpn_strongswan
 
+-- OpenVPN, version bump to 2.4.10
+
 -- libcurl (curl) version bump to 7.75.0
 
 -- netsnmp, version bump to 5.9
@@ -66,6 +68,8 @@ Released @TBD@
 -- Added vnStat tab, available to "admin/staff" users.  Hidden by default in Prefs tab.
 
 -- Staff tab, encrypted "primary" backup, exclude /mnt/kd/lxc/ directory.
+
+-- System tab, add backup "Linux Containers (lxc)" menu.
 
 
 Additions for AstLinux 1.4.1:
