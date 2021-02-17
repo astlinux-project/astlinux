@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LUASEC_VERSION = 0.9
+LUASEC_VERSION = 1.0
 LUASEC_SOURCE = luasec-$(LUASEC_VERSION).tar.gz
 LUASEC_SITE = https://github.com/brunoos/luasec/archive/v$(LUASEC_VERSION)
 LUASEC_DEPENDENCIES = lua openssl luasocket
@@ -14,6 +14,8 @@ define LUASEC_BUILD_CMDS
 		INC_PATH="" \
 		LIB_PATH="" \
 		LIBDIR="-L$(STAGING_DIR)/usr/lib/ -L$(@D)/src/luasocket" \
+		RANLIB="$(TARGET_RANLIB)" \
+		AR="$(TARGET_AR)" \
 		CC="$(TARGET_CC) -std=gnu99" \
 		LD="$(TARGET_LD) -shared"
 endef
