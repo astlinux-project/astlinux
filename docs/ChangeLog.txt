@@ -36,9 +36,13 @@ Released @TBD@
 -- ipsec-tools (racoon) package has been removed.
    More info: https://doc.astlinux-project.org/userdoc:tt_ipsec_vpn_strongswan
 
+-- OpenSSL, version bump to 1.1.1j, security fixes: CVE-2021-23840, CVE-2021-23841
+
 -- OpenVPN, version bump to 2.4.10
 
 -- libcurl (curl) version bump to 7.75.0
+
+-- luasec, version bump to 1.0
 
 -- netsnmp, version bump to 5.9
 
