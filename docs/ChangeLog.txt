@@ -67,6 +67,14 @@ Released @TBD@
 
 -- pjsip 2.10 (no change)
 
+-- safe_asterisk script (disabled by default), new user.conf variable defaults.
+   New rc.conf variable: SAFE_ASTERISK_CONSOLE
+   SAFE_ASTERISK_TTY now defaults to "none"
+   SAFE_ASTERISK_CONSOLE defaults to "no"
+   == WARNING: If the Network tab -> "Asterisk Automatic Restart on Crash" is enabled, and
+   == in the user.conf SAFE_ASTERISK_TTY="7" and SAFE_ASTERISK_CONSOLE="yes" are defined, it will allow
+   == a virtual video console (Alt-Right-Arrow) full CLI access. Even with hosted Virtual Machine web access.
+
 ** Web Interface
 
 -- Network tab -> VPN Type: "IPsec Peers" and "IPsec Mobile" has been removed. Remove IPsec (racoon) VPN support.
