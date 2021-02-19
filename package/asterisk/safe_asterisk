@@ -3,8 +3,8 @@
 . /etc/rc.conf
 
 CLIARGS="$@"                                  # Grab any args passed to safe_asterisk
-TTY="${SAFE_ASTERISK_TTY:-7}"                 # TTY (or "none") for Asterisk to run on
-CONSOLE="yes"                                 # Whether or not you want a console
+TTY="${SAFE_ASTERISK_TTY:-none}"              # TTY (or "none") for Asterisk to run on
+CONSOLE="${SAFE_ASTERISK_CONSOLE:-no}"        # Whether or not you want a console
 NOTIFY="$SAFE_ASTERISK_NOTIFY"                # Who to notify about crashes
 NOTIFY_FROM="$SAFE_ASTERISK_NOTIFY_FROM"      # From email header (optional)
 EXEC="/mnt/kd/ast-crash"                      # Run this command if Asterisk crashes
@@ -16,7 +16,7 @@ LIMIT_MAXCOUNT=5
 LIMIT_INTERVAL=600
 ASTSBINDIR=/usr/sbin
 
-if [ "$TTY" = "none" ]; then
+if [ "$TTY" = "none" -o "$TTY" = "no" ]; then
   TTY=""
 fi
 
@@ -98,7 +98,7 @@ trap '' PIPE
 
 run_asterisk()
 {
-  while :; do 
+  while :; do
 
     if [ -n "$TTY" ]; then
       cd /root
@@ -106,7 +106,7 @@ run_asterisk()
       nice -n $PRIORITY ${ASTSBINDIR}/asterisk -f ${CLIARGS} ${ASTARGS} </dev/${TTY} >/dev/${TTY} 2>/dev/${TTY}
     else
       cd /root
-      nice -n $PRIORITY ${ASTSBINDIR}/asterisk -f ${CLIARGS} ${ASTARGS}
+      nice -n $PRIORITY ${ASTSBINDIR}/asterisk -f ${CLIARGS} ${ASTARGS} </dev/null >/dev/null 2>/dev/null
     fi
     EXITSTATUS=$?
     # wait for any asterisk segfault logs to appear
@@ -167,7 +167,7 @@ Asterisk on '$MACHINE' exited on signal $EXITSIGNAL.  Restarting Asterisk...
     MESG="Automatically restarting Asterisk."
     logger -s -t safe_asterisk -p kern.info "$MESG"
     sleep $SLEEPSECS
-    
+
   done
 }
 
