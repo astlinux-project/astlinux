@@ -58,10 +58,14 @@ Released @TBD@
 
 ** Asterisk
 
--- Asterisk 13.29.2 ('13se' no change)
+-- Asterisk 13.29.2 ('13se' w/sRTP replay protection patch)
    Older than latest Asterisk 13.x version but more tested, built --without-pjproject
 
--- Asterisk 13.38.1 (no change) and 16.16.0 (version bump)
+-- Asterisk 13.38.2 (version bump) and 16.16.1 (version bump)
+
+-- Note: All Asterisk versions now have sRTP replay protection, new rtp.conf config option: srtpreplayprotection=yes
+   This new rtp.conf option is enabled by default.
+   Buggy SIP user agents may require srtpreplayprotection=no if audio issues occur with sRTP streams.
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
 
