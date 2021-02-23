@@ -42,7 +42,7 @@ Released @TBD@
 
 -- OpenVPN, version bump to 2.4.10
 
--- WireGuard VPN, module 1.0.20210219 (version bump), tools 1.0.20200827 (no change)
+-- WireGuard VPN, module 1.0.20210219 (version bump), tools 1.0.20210223 (version bump)
 
 -- libcurl (curl) version bump to 7.75.0
 
@@ -51,6 +51,8 @@ Released @TBD@
 -- netsnmp, version bump to 5.9
 
 -- openldap, version bump to 2.4.57
+
+-- stunnel, version bump to 5.58, security and bug fixes
 
 -- unbound, version bump to 1.13.1
 
