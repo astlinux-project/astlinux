@@ -1,0 +1,154 @@
+From a454d72036d758be831a5a3760d6d199cbdec71f Mon Sep 17 00:00:00 2001
+From: Teemu Toivola <git@humdi.net>
+Date: Sun, 14 Feb 2021 14:59:33 +0200
+Subject: [PATCH] add --dbiflist for getting a list of interfaces in the
+ database
+
+---
+ src/vnstat_func.c | 101 +++++++++++++++++++++++++++++++++++++++++++---
+ src/vnstat_func.h |   2 +
+ 4 files changed, 132 insertions(+), 22 deletions(-)
+
+diff --git a/src/vnstat_func.c b/src/vnstat_func.c
+index fd863a0..f688553 100644
+--- a/src/vnstat_func.c
++++ b/src/vnstat_func.c
+@@ -448,13 +448,34 @@ void parseargs(PARAMS *p, int argc, char **argv)
+ 				exit(EXIT_FAILURE);
+ 			}
+ 		} else if (strcmp(argv[currentarg], "--iflist") == 0) {
+-			getifliststring(&p->ifacelist, 1);
+-			if (strlen(p->ifacelist)) {
+-				printf("Available interfaces: %s\n", p->ifacelist);
+-			} else {
+-				printf("No usable interfaces found.\n");
++			p->query = 0;
++			if (currentarg + 1 < argc && argv[currentarg + 1][0] != '-') {
++				if (!isdigit(argv[currentarg + 1][0]) || atoi(argv[currentarg + 1]) > 1 || atoi(argv[currentarg + 1]) < 0) {
++					printf("Error: Invalid mode parameter \"%s\" for --iflist.\n", argv[currentarg + 1]);
++					printf(" Valid parameters:\n");
++					printf("    0 - show verbose (default)\n");
++					printf("    1 - show one interface per line\n");
++					exit(EXIT_FAILURE);
++				}
++				p->query = atoi(argv[currentarg + 1]);
++				currentarg++;
++			}
++			showiflist(p->query);
++			exit(EXIT_SUCCESS);
++		} else if (strcmp(argv[currentarg], "--dbiflist") == 0) {
++			p->query = 0;
++			if (currentarg + 1 < argc && argv[currentarg + 1][0] != '-') {
++				if (!isdigit(argv[currentarg + 1][0]) || atoi(argv[currentarg + 1]) > 1 || atoi(argv[currentarg + 1]) < 0) {
++					printf("Error: Invalid mode parameter \"%s\" for --dbiflist.\n", argv[currentarg + 1]);
++					printf(" Valid parameters:\n");
++					printf("    0 - show verbose (default)\n");
++					printf("    1 - show one interface per line\n");
++					exit(EXIT_FAILURE);
++				}
++				p->query = atoi(argv[currentarg + 1]);
++				currentarg++;
+ 			}
+-			free(p->ifacelist);
++			showdbiflist(p->query);
+ 			exit(EXIT_SUCCESS);
+ 		} else if (strcmp(argv[currentarg], "--limit") == 0) {
+ 			if (currentarg + 1 < argc && isdigit(argv[currentarg + 1][0])) {
+@@ -888,3 +909,71 @@ void handleifselection(PARAMS *p)
+ 
+ 	iflistfree(&dbifl);
+ }
++
++void showiflist(const int parseable)
++{
++	char *ifacelist = NULL;
++	iflist *ifl = NULL, *ifl_iterator = NULL;
++
++	if (!parseable) {
++		if (!getifliststring(&ifacelist, 1)) {
++			exit(EXIT_FAILURE);
++		}
++		if (strlen(ifacelist)) {
++			printf("Available interfaces: %s\n", ifacelist);
++		} else {
++			printf("No usable interfaces found.\n");
++		}
++		free(ifacelist);
++	} else {
++		if (!getiflist(&ifl, 0, 1)) {
++			exit(EXIT_FAILURE);
++		}
++		ifl_iterator = ifl;
++		while (ifl_iterator != NULL) {
++			printf("%s\n", ifl_iterator->interface);
++			ifl_iterator = ifl_iterator->next;
++		}
++		iflistfree(&ifl);
++	}
++}
++
++void showdbiflist(const int parseable)
++{
++	int dbifcount;
++	iflist *dbifl = NULL, *dbifl_i = NULL;
++
++	if (!db_open_ro()) {
++		printf("Error: Failed to open database \"%s/%s\" in read-only mode.\n", cfg.dbdir, DATABASEFILE);
++		exit(EXIT_FAILURE);
++	}
++
++	dbifcount = db_getiflist(&dbifl);
++	if (dbifcount < 0) {
++		printf("Error: Failed to get interface list from database \"%s/%s\".\n", cfg.dbdir, DATABASEFILE);
++		exit(EXIT_FAILURE);
++	}
++
++	if (dbifcount == 0 && !parseable) {
++		printf("Database is empty.");
++	} else {
++		dbifl_i = dbifl;
++
++		if (!parseable) {
++			printf("Interfaces in database:");
++			while (dbifl_i != NULL) {
++				printf(" %s", dbifl_i->interface);
++				dbifl_i = dbifl_i->next;
++			}
++			printf("\n");
++		} else {
++			while (dbifl_i != NULL) {
++				printf("%s\n", dbifl_i->interface);
++				dbifl_i = dbifl_i->next;
++			}
++		}
++	}
++
++	iflistfree(&dbifl);
++	db_close();
++}
+diff --git a/src/vnstat_func.h b/src/vnstat_func.h
+index 6eac47c..80a516d 100644
+--- a/src/vnstat_func.h
++++ b/src/vnstat_func.h
+@@ -24,5 +24,7 @@ void handleshowdata(PARAMS *p);
+ void showoneinterface(PARAMS *p);
+ void handletrafficmeters(PARAMS *p);
+ void handleifselection(PARAMS *p);
++void showiflist(const int parseable);
++void showdbiflist(const int parseable);
+ 
+ #endif
+diff --git a/src/vnstat_func.c b/src/vnstat_func.c
+index f688553..0a3c107 100644
+--- a/src/vnstat_func.c
++++ b/src/vnstat_func.c
+@@ -116,7 +116,8 @@ void showlonghelp(PARAMS *p)
+ 	printf("      -ru, --rateunit [mode]       swap configured rate unit\n");
+ 	printf("      --limit <limit>              set output entry limit\n");
+ 	printf("      --style <mode>               select output style (0-4)\n");
+-	printf("      --iflist                     show list of available interfaces\n");
++	printf("      --iflist [mode]              show list of available interfaces\n");
++	printf("      --dbiflist [mode]            show list of interfaces in database\n");
+ 	printf("      --dbdir <directory>          select database directory\n");
+ 	printf("      --locale <locale>            set locale\n");
+ 	printf("      --config <config file>       select config file\n");

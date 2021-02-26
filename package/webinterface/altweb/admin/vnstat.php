@@ -43,18 +43,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $ACCESS_RIGHTS = 'staff';
 require_once '../common/header.php';
 
+$iface_opt = '';
+
 if (is_executable('/usr/bin/vnstat')) {
-  $cmd = '/usr/bin/vnstat -hg';
+  @exec('/usr/bin/vnstat --dbiflist 1', $dbiflist_array, $dbiflist_status);
+
+  if ($dbiflist_status != 0) {
+    unset($dbiflist_array);
+  } elseif (isset($dbiflist_array)) {
+    if (count($dbiflist_array) == 1) {
+      $iface = $dbiflist_array[0];
+      if ($iface != '') {
+        $iface_opt = ' -i '.$iface;
+      }
+      unset($dbiflist_array);
+    } elseif (isset($_GET['iface'])) {
+      $match_iface = $_GET['iface'];
+      foreach ($dbiflist_array as $iface) {
+        if ($iface != '' && $iface === $match_iface) {
+          $iface_opt = ' -i '.$iface;
+          break;
+        }
+      }
+    }
+  }
+
+  $cmd = '/usr/bin/vnstat -hg'.$iface_opt;
   $cmd .= '; echo "#next#"';
-  $cmd .= '; /usr/bin/vnstat';
+  $cmd .= '; /usr/bin/vnstat'.$iface_opt;
   $cmd .= '; echo "#next#"';
-  $cmd .= '; /usr/bin/vnstat -m';
+  $cmd .= '; /usr/bin/vnstat -m'.$iface_opt;
   $cmd .= '; echo "#next#"';
-  $cmd .= '; /usr/bin/vnstat -t';
+  $cmd .= '; /usr/bin/vnstat -t'.$iface_opt;
   $cmd .= '; echo "#next#"';
-  $cmd .= '; /usr/bin/vnstat -d';
+  $cmd .= '; /usr/bin/vnstat -d'.$iface_opt;
   $cmd .= '; echo "#next#"';
-  $cmd .= '; /usr/bin/vnstat -y';
+  $cmd .= '; /usr/bin/vnstat -y'.$iface_opt;
   $cmd .= '; echo "#next#"';
   $vnstat_output = @popen($cmd, 'r');
 }
@@ -70,6 +94,13 @@ if (is_executable('/usr/bin/vnstat')) {
 
   putHtml('<table class="status"><tr><td style="text-align: center;">');
   putHtml('<h2>View Network Statistics:</h2>');
+  if (isset($dbiflist_array)) {
+    foreach ($dbiflist_array as $iface) {
+      if ($iface != '') {
+        putHtml('<a href="'.$myself.'?iface='.$iface.'" class="headerText">'.$iface.'</a>');
+      }
+    }
+  }
   putHtml('</td></tr><tr><td>');
 
   if (isset($vnstat_output)) {
@@ -77,7 +108,7 @@ if (is_executable('/usr/bin/vnstat')) {
 
       display_section($vnstat_output, "Hours Graph");
 
-      display_section($vnstat_output, "All Monitored Summary");
+      display_section($vnstat_output, ($iface_opt !== '') ? "Summary" : "All Monitored Summary");
 
       display_section($vnstat_output, "Months");
 
