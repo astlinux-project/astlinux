@@ -25,6 +25,8 @@ Released @TBD@
 
 -- perl, version 5.24.4, perlcross 1.3.5, security fixes: CVE-2020-10543, CVE-2020-10878, CVE-2020-12723
 
+-- screen, version 4.8.0, patch: security fix CVE-2021-26937
+
 -- strace, version bump to 5.11
 
 -- sudo, version bump to 1.8.32, includes previous CVE-2021-3156 fix plus security fixes: CVE-2021-23239, CVE-2021-23240
@@ -52,7 +54,7 @@ Released @TBD@
 
 -- netsnmp, version bump to 5.9
 
--- openldap, version bump to 2.4.57
+-- openldap, version bump to 2.4.57, patch: security fix CVE-2021-27212
 
 -- stunnel, version bump to 5.58, security and bug fixes
 
