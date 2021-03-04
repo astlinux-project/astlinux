@@ -73,7 +73,7 @@ Released @TBD@
 -- Asterisk 13.29.2 ('13se' w/sRTP replay protection patch)
    Older than latest Asterisk 13.x version but more tested, built --without-pjproject
 
--- Asterisk 13.38.2 (version bump) and 16.16.1 (version bump)
+-- Asterisk 13.38.2 (version bump) and 16.16.2 (version bump)
 
 -- Note: All Asterisk versions now have sRTP replay protection, new rtp.conf config option: srtpreplayprotection=yes
    This new rtp.conf option is enabled by default.
