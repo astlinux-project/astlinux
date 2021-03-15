@@ -4,7 +4,7 @@
 #
 #############################################################
 
-UDEV_VERSION = 3.2.9
+UDEV_VERSION = 3.2.10
 UDEV_SOURCE = eudev-$(UDEV_VERSION).tar.gz
 UDEV_SITE = http://dev.gentoo.org/~blueness/eudev
 UDEV_INSTALL_STAGING = YES
