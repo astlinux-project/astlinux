@@ -1,6 +1,6 @@
 --- e2fsprogs-1.45.3/Makefile.in.orig	2019-07-27 10:48:40.236604875 -0500
 +++ e2fsprogs-1.45.3/Makefile.in	2019-07-27 10:49:38.330003589 -0500
-@@ -13,7 +13,7 @@
+@@ -14,7 +14,7 @@
  @DEBUGFS_CMT@DEBUGFS_DIR= debugfs
  @UUID_CMT@UUID_LIB_SUBDIR= lib/uuid
  @BLKID_CMT@BLKID_LIB_SUBDIR= lib/blkid
