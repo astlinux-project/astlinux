@@ -10,6 +10,41 @@ Additions for AstLinux 1.4.3:
 
 Released @TBD@
 
+** System
+
+-- Linux Kernel 4.19.177 (no change), security and bug fixes
+
+-- e2fsprogs, version bump to 1.46.2
+
+-- libedit, version bump to 20210216-3.1
+
+-- sqlite, version bump to 3.35.2
+
+-- udev (eudev), version bump to 3.2.10
+
+** Networking
+
+-- WireGuard VPN, module 1.0.20210219 (no change), tools 1.0.20210315 (version bump)
+
+-- msmtp, version bump to 1.8.15
+
+-- openldap, version bump to 2.4.58
+
+** Asterisk
+
+-- Asterisk 13.29.2 ('13se' w/sRTP replay protection patch)
+   Older than latest Asterisk 13.x version but more tested, built --without-pjproject
+
+-- Asterisk 13.38.2 (no change) and 16.16.2 (no change)
+
+-- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
+
+-- pjsip 2.10 (no change)
+
+** Web Interface
+
+-- (no change)
+
 
 Additions for AstLinux 1.4.2:
 =============================
