@@ -4,7 +4,7 @@
 #
 #############################################################
 
-SQLITE_VERSION = 3340100
+SQLITE_VERSION = 3350200
 SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VERSION).tar.gz
 SQLITE_SITE = https://www.sqlite.org/2021
 SQLITE_INSTALL_STAGING = YES
@@ -19,6 +19,7 @@ SQLITE_CFLAGS += -DSQLITE_ENABLE_COLUMN_METADATA
 SQLITE_CONF_ENV = CFLAGS="$(TARGET_CFLAGS) $(SQLITE_CFLAGS)"
 
 SQLITE_CONF_OPT = \
+	--disable-math \
 	--disable-fts5 \
 	--disable-json1 \
 	--disable-static-shell \
