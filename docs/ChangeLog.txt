@@ -24,6 +24,8 @@ Released @TBD@
 
 ** Networking
 
+-- OpenSSL, version bump to 1.1.1k, security fixes: CVE-2021-3449, CVE-2021-3450
+
 -- WireGuard VPN, module 1.0.20210219 (no change), tools 1.0.20210315 (version bump)
 
 -- msmtp, version bump to 1.8.15
