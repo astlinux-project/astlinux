@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-MONIT_VERSION = 5.27.2
+MONIT_VERSION = 5.28.0
 MONIT_SITE = https://mmonit.com/monit/dist
 MONIT_DEPENDENCIES = host-bison host-flex
 #
