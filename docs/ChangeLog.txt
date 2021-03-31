@@ -16,9 +16,13 @@ Released @TBD@
 
 -- e2fsprogs, version bump to 1.46.2
 
+-- expat, version bump to 2.3.0
+
 -- libedit, version bump to 20210216-3.1
 
--- sqlite, version bump to 3.35.2
+-- Monit, version bump to 5.28.0
+
+-- sqlite, version bump to 3.35.3
 
 -- udev (eudev), version bump to 3.2.10
 
@@ -28,9 +32,13 @@ Released @TBD@
 
 -- WireGuard VPN, module 1.0.20210219 (no change), tools 1.0.20210315 (version bump)
 
+-- libcurl (curl) version bump to 7.76.0
+
 -- msmtp, version bump to 1.8.15
 
 -- openldap, version bump to 2.4.58
+
+-- whois, version bump to 5.5.9
 
 ** Asterisk
 
