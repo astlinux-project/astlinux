@@ -8,6 +8,25 @@ MAX_IMAGEFS_SIZE=262144   # 256m
 
 #functions
 
+sync_inittab() {
+  local mp="$1"
+
+  # Auto detect ASTURW
+  if [ "$ASTURW" = "auto" -a -x /sbin/findfs ]; then
+    ASTURW="$(/sbin/findfs LABEL=ASTURW 2>/dev/null)"
+  fi
+
+  if [ -n "$ASTURW" ]; then
+    mkdir -p /mnt/asturw
+    if mount -t ext2 -o ro $ASTURW /mnt/asturw >/dev/null 2>&1; then
+      if [ -f /mnt/asturw/etc/inittab ]; then
+        cp -p /mnt/asturw/etc/inittab $mp/etc/inittab
+      fi
+      umount /mnt/asturw
+    fi
+  fi
+}
+
 image_to_tmpfs() {
   local mp="$1" used
 
@@ -15,6 +34,8 @@ image_to_tmpfs() {
 
   echo "Copying AstLinux files to RAM..."
   cp -a /image/. $mp/
+
+  sync_inittab $mp
 
   mount -o ro,remount $mp
 
@@ -138,8 +159,8 @@ for i in ${CMDLINE}; do
     ASTIMG=`echo $i | awk '/^astimg=/ { print substr($0, 8); }'`
     ;;
 
-  astins=*)
-    ASTINS=`echo $i | awk '/^astins=/ { print substr($0, 8); }'`
+  asturw=*)
+    ASTURW=`echo $i | awk '/^asturw=/ { print substr($0, 8); }'`
     ;;
 
   newinstall)
