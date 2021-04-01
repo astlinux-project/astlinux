@@ -14,6 +14,11 @@ Released @TBD@
 
 -- Linux Kernel 4.19.177 (no change), security and bug fixes
 
+-- initrd, check for ASTURW /etc/inittab and copy it forward so the linuxrc's /sbin/init can use it.
+   Note: AstLinux 1.3.10 through 1.4.2 ignored any user edits to the /etc/inittab file, rather
+   it always used the default /etc/inittab file (the default is what most users want anyway).
+   Now edits to the /etc/inittab file are honored again, as they were before AstLinux 1.3.10.
+
 -- e2fsprogs, version bump to 1.46.2
 
 -- expat, version bump to 2.3.0
