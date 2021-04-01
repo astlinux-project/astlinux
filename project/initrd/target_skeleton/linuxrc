@@ -12,7 +12,7 @@ sync_inittab() {
   local mp="$1"
 
   # Auto detect ASTURW
-  if [ "$ASTURW" = "auto" -a -x /sbin/findfs ]; then
+  if [ "$ASTURW" = "auto" ]; then
     ASTURW="$(/sbin/findfs LABEL=ASTURW 2>/dev/null)"
   fi
 
