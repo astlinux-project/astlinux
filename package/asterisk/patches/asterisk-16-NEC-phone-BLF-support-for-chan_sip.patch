@@ -1,6 +1,6 @@
 --- asterisk-16.11.1/channels/chan_sip.c.orig	2020-06-27 09:35:11.041947296 -0500
 +++ asterisk-16.11.1/channels/chan_sip.c	2020-06-27 09:49:06.816853992 -0500
-@@ -15289,8 +15289,30 @@
+@@ -15277,8 +15277,30 @@
  		ast_str_append(tmp, 0, "<presentity uri=\"%s;method=SUBSCRIBE\" />\n", mfrom);
  		ast_str_append(tmp, 0, "<atom id=\"%s\">\n", exten);
  		ast_str_append(tmp, 0, "<address uri=\"%s;user=ip\" priority=\"0.800000\">\n", mto);
