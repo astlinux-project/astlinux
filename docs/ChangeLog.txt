@@ -27,7 +27,7 @@ Released @TBD@
 
 -- Monit, version bump to 5.28.0
 
--- sqlite, version bump to 3.35.3
+-- sqlite, version bump to 3.35.4
 
 -- udev (eudev), version bump to 3.2.10
 
