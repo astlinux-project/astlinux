@@ -4,9 +4,9 @@
 #
 ################################################################################
 
-LLDPD_VERSION = 0.9.9
+LLDPD_VERSION = 1.0.9
 LLDPD_SITE = https://media.luffy.cx/files/lldpd
-LLDPD_DEPENDENCIES = host-pkg-config
+LLDPD_DEPENDENCIES = host-pkg-config $(if $(BR2_PACKAGE_LIBCAP),libcap)
 
 LLDPD_CONF_OPT = \
 	--localstatedir=/var \
@@ -17,6 +17,7 @@ LLDPD_CONF_OPT = \
 	--without-snmp \
 	--without-xml \
 	--without-seccomp \
+	--without-libbsd \
 	--disable-doxygen-doc
 
 ifeq ($(BR2_PACKAGE_READLINE),y)
