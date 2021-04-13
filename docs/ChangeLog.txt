@@ -27,6 +27,8 @@ Released @TBD@
 
 -- Monit, version bump to 5.28.0
 
+-- php, version 7.2.34, enable curl module support
+
 -- sqlite, version bump to 3.35.4
 
 -- udev (eudev), version bump to 3.2.10
