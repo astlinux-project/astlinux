@@ -121,7 +121,12 @@ init_dhcp6c()
 {
   local iname="$1" interface="$2"
 
-  sysctl -w net/ipv6/conf/${interface}/accept_ra=2 >/dev/null
+  if [ "$iname" = "ext2if" ]; then
+    sysctl -w net.ipv6.conf.${interface}.accept_ra_defrtr=0 >/dev/null
+  else
+    sysctl -w net.ipv6.conf.${interface}.accept_ra_defrtr=1 >/dev/null
+  fi
+  sysctl -w net.ipv6.conf.${interface}.accept_ra=2 >/dev/null
 
   # Make DUID persistant
   ln -sf /mnt/kd/dhcp6c_duid /var/db/dhcp6c_duid
@@ -454,7 +459,7 @@ start () {
     br[012])
       ip link set dev $PPPOEIF up
       # because bridging does weird and unpleasant things to PPPoE packets
-      sysctl -w net/bridge/bridge-nf-filter-pppoe-tagged=0 >/dev/null
+      sysctl -w net.bridge.bridge-nf-filter-pppoe-tagged=0 >/dev/null
       ;;
     esac
 
@@ -556,7 +561,8 @@ start () {
           ip -6 route add default via $EXTGWIPV6 dev $EXTIF metric 1
         else
           # Use Router Advertisements to set the default route
-          sysctl -w net/ipv6/conf/${EXTIF}/accept_ra=2 >/dev/null
+          sysctl -w net.ipv6.conf.${EXTIF}.accept_ra_defrtr=1 >/dev/null
+          sysctl -w net.ipv6.conf.${EXTIF}.accept_ra=2 >/dev/null
         fi
       fi
     fi
@@ -610,7 +616,8 @@ start () {
           ip -6 route add default via $EXTGWIPV6 dev $EXTIF metric 1
         else
           # Use Router Advertisements to set the default route
-          sysctl -w net/ipv6/conf/${EXTIF}/accept_ra=2 >/dev/null
+          sysctl -w net.ipv6.conf.${EXTIF}.accept_ra_defrtr=1 >/dev/null
+          sysctl -w net.ipv6.conf.${EXTIF}.accept_ra=2 >/dev/null
         fi
       fi
     fi
