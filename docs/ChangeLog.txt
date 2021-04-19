@@ -33,19 +33,28 @@ Released @TBD@
 
 -- udev (eudev), version bump to 3.2.10
 
+-- zabbix, version bump to 4.0.30
+
+-- ca-certificates, update trusted root certificates 2021-04-13
+
 ** Networking
 
 -- OpenSSL, version bump to 1.1.1k, security fixes: CVE-2021-3449, CVE-2021-3450
 
 -- WireGuard VPN, module 1.0.20210219 (no change), tools 1.0.20210315 (version bump)
 
--- libcurl (curl) version bump to 7.76.0, security fixes: CVE-2021-22876, CVE-2021-22890
+-- libcurl (curl) version bump to 7.76.1, security fixes: CVE-2021-22876, CVE-2021-22890
 
 -- msmtp, version bump to 1.8.15
 
 -- openldap, version bump to 2.4.58
 
+-- stunnel, version bump to 5.59
+
 -- whois, version bump to 5.5.9
+
+-- wide-dhcpv6, add patch for dhcp6c to bind to one interface using SO_BINDTODEVICE, supporting multiple dhcp6c instances.
+   Enabling DHCPv6 on both the external and failover interfaces now works.
 
 ** Asterisk
 
@@ -60,7 +69,7 @@ Released @TBD@
 
 ** Web Interface
 
--- (no change)
+-- Status tab, do not include IPv6 addresses from the Failover Interface in the "IPv6 Prefixes" list.
 
 
 Additions for AstLinux 1.4.2:
