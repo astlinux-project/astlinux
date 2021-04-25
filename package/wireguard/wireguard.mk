@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-WIREGUARD_VERSION = 1.0.20210219
+WIREGUARD_VERSION = 1.0.20210424
 WIREGUARD_SITE = https://git.zx2c4.com/wireguard-linux-compat/snapshot
 WIREGUARD_SOURCE = wireguard-linux-compat-$(WIREGUARD_VERSION).tar.xz
 WIREGUARD_DEPENDENCIES = linux
