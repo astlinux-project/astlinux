@@ -1,6 +1,16 @@
---- rng-tools-6.4/rngd.c.orig	2018-09-15 09:23:48.947475444 -0500
-+++ rng-tools-6.4/rngd.c	2018-09-15 09:25:02.530832598 -0500
-@@ -189,15 +189,15 @@
+--- rng-tools-6.5/rngd.c.orig	2021-04-26 10:04:02.106611557 -0500
++++ rng-tools-6.5/rngd.c	2021-04-26 10:05:39.665189277 -0500
+@@ -181,23 +181,23 @@
+ 	},
+ 	[JITTER_OPT_BUF_SZ] = {
+ 		.key = "buffer_size",
+-		.int_val = 16535,
++		.int_val = 2501,
+ 	},
+ 	[JITTER_OPT_REFILL] = {
+ 		.key = "refill_thresh",
+-		.int_val = 16535,
++		.int_val = 2501,
  	},
  	[JITTER_OPT_RETRY_COUNT] = {
  		.key = "retry_count",
