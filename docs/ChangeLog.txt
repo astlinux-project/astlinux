@@ -24,13 +24,17 @@ Released @TBD@
 
 -- expat, version bump to 2.3.0
 
--- libedit, version bump to 20210216-3.1
+-- libedit, version bump to 20210419-3.1
 
 -- Monit, version bump to 5.28.0
 
 -- php, version 7.2.34, enable curl module support
 
+-- rng-tools, version 6.5, jitterentropy version bump to 3.0.2
+
 -- sqlite, version bump to 3.35.5
+
+-- tiff, version bump to 4.3.0
 
 -- udev (eudev), version bump to 3.2.10
 
@@ -42,7 +46,7 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.1.1k, security fixes: CVE-2021-3449, CVE-2021-3450
 
--- WireGuard VPN, module 1.0.20210219 (no change), tools 1.0.20210315 (version bump)
+-- WireGuard VPN, module 1.0.20210424 (version bump), tools 1.0.20210424 (version bump)
 
 -- OpenVPN, version bump to 2.4.11, security fix: CVE-2020-15078
 
@@ -59,9 +63,11 @@ Released @TBD@
 -- wide-dhcpv6, add patch for dhcp6c to bind to one interface using SO_BINDTODEVICE, supporting multiple dhcp6c instances.
    Enabling DHCPv6 on both the external and failover interfaces now works.
 
+-- (Custom Build Only) tinyproxy, version bump to 1.11.0
+
 ** Asterisk
 
--- Asterisk 13.29.2 ('13se' w/sRTP replay protection patch)
+-- Asterisk 13.29.2 ('13se' no change)
    Older than latest Asterisk 13.x version but more tested, built --without-pjproject
 
 -- Asterisk 13.38.2 (no change) and 16.17.0 (version bump)
