@@ -34,6 +34,8 @@ Released @TBD@
 
 -- sqlite, version bump to 3.35.5
 
+-- strace, version bump to 5.12
+
 -- tiff, version bump to 4.3.0
 
 -- udev (eudev), version bump to 3.2.10
@@ -51,6 +53,8 @@ Released @TBD@
 -- OpenVPN, version bump to 2.4.11, security fix: CVE-2020-15078
 
 -- libcurl (curl) version bump to 7.76.1, security fixes: CVE-2021-22876, CVE-2021-22890
+
+-- luasec, version bump to 1.0.1
 
 -- msmtp, version bump to 1.8.15
 
