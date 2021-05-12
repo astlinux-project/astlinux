@@ -1,0 +1,18 @@
+--- asterisk-16.18.0/main/loader.c.orig	2021-05-12 13:29:13.282834486 -0500
++++ asterisk-16.18.0/main/loader.c	2021-05-12 13:31:30.082072430 -0500
+@@ -2484,13 +2484,13 @@
+ 		}
+ 
+ 		if (ast_str_strlen(warning_msg)) {
+-			ast_log(LOG_WARNING, "%s\n", ast_str_buffer(warning_msg));
++			ast_verb(5, "%s\n", ast_str_buffer(warning_msg));
+ 		}
+ 
+ 		ast_free(mod_name);
+ #else
+ 		if (cur->info->support_level == AST_MODULE_SUPPORT_DEPRECATED) {
+-			ast_log(LOG_WARNING, "The deprecated module '%s' has been loaded and is running, it may be removed in a future version\n", cur->resource);
++			ast_verb(5, "The deprecated module '%s' has been loaded and is running, it may be removed in a future version\n", cur->resource);
+ 		}
+ #endif
+ 	}
