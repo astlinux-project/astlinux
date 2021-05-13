@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PROSODY_VERSION = 0.10.3
+PROSODY_VERSION = 0.11.9
 PROSODY_SOURCE = prosody-$(PROSODY_VERSION).tar.gz
 PROSODY_SITE = https://prosody.im/downloads/source
 PROSODY_DEPENDENCIES = lua libidn openssl luafilesystem luaexpat luasocket luasec
