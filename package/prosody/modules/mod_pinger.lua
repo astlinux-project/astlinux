@@ -6,23 +6,23 @@ local idle_timeout = module:get_option_number("c2s_idle_timeout", 300);
 local ping_timeout = module:get_option_number("c2s_ping_timeout",  30);
 
 function update_watchdog(data, session)
-	session.idle_watchdog:reset();
-	session.idle_pinged = nil;
+	if session.idle_watchdog then
+		session.idle_watchdog:reset();
+		session.idle_pinged = nil;
+	end
 	return data;
 end
 
 function check_session(watchdog)
 	local session = watchdog.session;
+	if session.smacks then
+		unwatch_session(session);
+		return;
+	end
 	if not session.idle_pinged then
 		session.idle_pinged = true;
-		if session.smacks then
-			if not session.awaiting_ack then
-				session.send(st.stanza("r", { xmlns = session.smacks }))
-			end
-		else
-			session.send(st.iq({ type = "get", from = module.host, id = "idle-check" })
-					:tag("ping", { xmlns = "urn:xmpp:ping" }));
-		end
+		session.send(st.iq({ type = "get", from = module.host, id = "idle-check" })
+				:tag("ping", { xmlns = "urn:xmpp:ping" }));
 		return ping_timeout; -- Call us again after ping_timeout
 	else
 		module:log("info", "Client %q silent for too long, closing...", session.full_jid);
@@ -42,15 +42,11 @@ end
 
 function unwatch_session(session)
 	if session.idle_watchdog then
+		filters.remove_filter(session, "bytes/in", update_watchdog);
 		session.idle_watchdog:cancel();
 		session.idle_watchdog = nil;
-		filters.remove_filter(session, "bytes/in", update_watchdog);
 	end
 end
 
 module:hook("resource-bind", function (event) watch_session(event.session); end);
 module:hook("resource-unbind", function (event) unwatch_session(event.session); end);
-
--- handle smacks sessions properly (not pinging in hibernated state)
-module:hook("smacks-hibernation-start", function (event) unwatch_session(event.origin); end);
-module:hook("smacks-hibernation-end", function (event) watch_session(event.resumed); end);
