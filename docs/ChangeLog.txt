@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.184 (version bump), security and bug fixes
+-- Linux Kernel 4.19.190 (version bump), security and bug fixes
    Kernel config: Enable TASKSTATS / TASK_IO_ACCOUNTING to generate /proc/[pid]/io stats.
 
 -- initrd, check for ASTURW /etc/inittab and copy it forward so the linuxrc's /sbin/init can use it.
@@ -22,9 +22,13 @@ Released @TBD@
 
 -- e2fsprogs, version bump to 1.46.2
 
+-- ethtool, version bump to 5.12
+
 -- expat, version bump to 2.3.0
 
 -- libedit, version bump to 20210419-3.1
+
+-- libxml2, version 2.9.12, security fix: CVE-2021-3541, plus "an awful lot of serious bug fixes"
 
 -- Monit, version bump to 5.28.0
 
@@ -52,6 +56,10 @@ Released @TBD@
 
 -- OpenVPN, version bump to 2.4.11, security fix: CVE-2020-15078
 
+-- chrony, version bump to 4.1
+
+-- keepalived, version bump to 2.2.2
+
 -- libcurl (curl) version bump to 7.76.1, security fixes: CVE-2021-22876, CVE-2021-22890
 
 -- luasec, version bump to 1.0.1
@@ -59,6 +67,9 @@ Released @TBD@
 -- msmtp, version bump to 1.8.15
 
 -- openldap, version bump to 2.4.58
+
+-- prosody, major version bump to 0.11.9, security fixes: CVE-2021-32917, CVE-2021-32918, CVE-2021-32919,
+                                                          CVE-2021-32920, CVE-2021-32921
 
 -- stunnel, version bump to 5.59
 
@@ -74,7 +85,7 @@ Released @TBD@
 -- Asterisk 13.29.2 ('13se' no change)
    Older than latest Asterisk 13.x version but more tested, built --without-pjproject
 
--- Asterisk 13.38.2 (no change) and 16.17.0 (version bump)
+-- Asterisk 13.38.2 (no change) and 16.18.0 (version bump)
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
 
