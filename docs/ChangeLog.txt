@@ -32,6 +32,8 @@ Released @TBD@
 
 -- Monit, version bump to 5.28.0
 
+-- ne, version bump to 3.3.1
+
 -- php, version 7.2.34, enable curl module support
 
 -- rng-tools, version 6.5, jitterentropy version bump to 3.0.2
