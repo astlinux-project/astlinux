@@ -73,6 +73,8 @@ Released @TBD@
 -- prosody, major version bump to 0.11.9, security fixes: CVE-2021-32917, CVE-2021-32918, CVE-2021-32919,
                                                           CVE-2021-32920, CVE-2021-32921
 
+-- sngrep, version bump to 1.4.9
+
 -- stunnel, version bump to 5.59
 
 -- vnStat, version bump to 2.7
