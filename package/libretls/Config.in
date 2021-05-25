@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETLS
+	bool "libretls"
+	select BR2_PACKAGE_OPENSSL
+	help
+	  LibreTLS is a port of libtls from LibreSSL to OpenSSL.
+	  libtls is a new TLS library, designed to make it easier to write foolproof applications.
+
+	  https://git.causal.agency/libretls/about/

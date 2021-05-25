@@ -303,6 +303,7 @@ source "package/libnss/Config.in"
 source "package/nettle/Config.in"
 source "package/openssl/Config.in"
 source "package/libressl/Config.in"
+source "package/libretls/Config.in"
 source "package/libsodium/Config.in"
 source "package/libsrtp/Config.in"
 endmenu
