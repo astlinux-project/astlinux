@@ -24,11 +24,13 @@ Released @TBD@
 
 -- ethtool, version bump to 5.12
 
--- expat, version bump to 2.3.0
+-- expat, version bump to 2.4.1, security fix: CVE-2013-0340
 
--- libedit, version bump to 20210419-3.1
+-- libedit, version bump to 20210522-3.1
 
 -- libxml2, version bump to 2.9.12, security fix: CVE-2021-3541, plus "an awful lot of serious bug fixes"
+
+-- logrotate, version bump to 3.18.1
 
 -- Monit, version bump to 5.28.0
 
@@ -46,9 +48,9 @@ Released @TBD@
 
 -- udev (eudev), version bump to 3.2.10
 
--- zabbix, version bump to 4.0.30
+-- zabbix, version bump to 4.0.31
 
--- ca-certificates, update trusted root certificates 2021-04-13
+-- ca-certificates, update trusted root certificates 2021-05-25
 
 ** Networking
 
@@ -64,9 +66,11 @@ Released @TBD@
 
 -- libcurl (curl) version bump to 7.76.1, security fixes: CVE-2021-22876, CVE-2021-22890
 
+-- LibreTLS, new package, version 3.3.3p1, a port of libtls from LibreSSL to OpenSSL
+
 -- luasec, version bump to 1.0.1
 
--- msmtp, version bump to 1.8.15
+-- msmtp, version bump to 1.8.15, switch TLS support to libtls (LibreTLS via OpenSSL)
 
 -- openldap, version bump to 2.4.58
 
