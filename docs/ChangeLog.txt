@@ -62,15 +62,20 @@ Released @TBD@
 
 -- chrony, version bump to 4.1
 
+-- iperf3, version bump to 3.10
+
 -- keepalived, version bump to 2.2.2
 
--- libcurl (curl) version bump to 7.76.1, security fixes: CVE-2021-22876, CVE-2021-22890
+-- libcurl (curl) version bump to 7.77.0, security fixes: CVE-2021-22876, CVE-2021-22890, CVE-2021-22897,
+                                                          CVE-2021-22898, CVE-2021-22901
 
 -- LibreTLS, new package, version 3.3.3p1, a port of libtls from LibreSSL to OpenSSL
 
 -- luasec, version bump to 1.0.1
 
 -- msmtp, version bump to 1.8.15, switch TLS support to libtls (LibreTLS via OpenSSL)
+
+-- netsnmp, version bump to 5.9.1
 
 -- openldap, version bump to 2.4.58
 
