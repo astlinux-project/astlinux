@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LIBCURL_VERSION = 7.76.1
+LIBCURL_VERSION = 7.77.0
 LIBCURL_SOURCE = curl-$(LIBCURL_VERSION).tar.gz
 LIBCURL_SITE = https://curl.haxx.se/download
 LIBCURL_INSTALL_STAGING = YES
@@ -36,7 +36,7 @@ LIBCURL_CONF_ENV += ac_cv_lib_crypto_CRYPTO_lock=yes
 # are found first.
 LIBCURL_CONF_ENV += LD_LIBRARY_PATH=$$LD_LIBRARY_PATH:/lib:/usr/lib
 LIBCURL_CONF_OPT += \
-	--with-ssl=$(STAGING_DIR)/usr \
+	--with-openssl=$(STAGING_DIR)/usr \
 	--with-ca-bundle=/usr/lib/ssl/certs/ca-bundle.crt
 else
 LIBCURL_CONF_OPT += --without-ssl
