@@ -32,7 +32,7 @@ diff --git a/configure b/configure
 index 6504a8e58a..1116cecaad 100755
 --- a/configure
 +++ b/configure
-@@ -25238,16 +25238,60 @@ fi
+@@ -25245,16 +25245,60 @@ fi
  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_crypto_EVP_md5" >&5
  $as_echo "$ac_cv_lib_crypto_EVP_md5" >&6; }
  if test "x$ac_cv_lib_crypto_EVP_md5" = xyes; then :
@@ -96,7 +96,7 @@ index 6504a8e58a..1116cecaad 100755
              netsnmp_save_LIBS="$LIBS"
              LIBS="$LIBCRYPTO"
              for ac_func in AES_cfb128_encrypt                           EVP_sha224        EVP_sha384                                   EVP_MD_CTX_create EVP_MD_CTX_destroy                           EVP_MD_CTX_new    EVP_MD_CTX_free                              DH_set0_pqg DH_get0_pqg DH_get0_key                           ASN1_STRING_get0_data X509_NAME_ENTRY_get_object                           X509_NAME_ENTRY_get_data X509_get_signature_nid
-@@ -25301,7 +25345,7 @@ _ACEOF
+@@ -25308,7 +25352,7 @@ _ACEOF
              LIBS="$netsnmp_save_LIBS"
          fi
          netsnmp_save_LIBS="$LIBS"

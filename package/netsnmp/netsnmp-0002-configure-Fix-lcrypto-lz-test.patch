@@ -19,7 +19,7 @@ diff --git a/configure b/configure
 index 1116cecaad..33b8c93e57 100755
 --- a/configure
 +++ b/configure
-@@ -25241,6 +25241,7 @@ if test "x$ac_cv_lib_crypto_EVP_md5" = xyes; then :
+@@ -25248,6 +25248,7 @@ if test "x$ac_cv_lib_crypto_EVP_md5" = xyes; then :
    CRYPTO="crypto"; LIBCRYPTO="-lcrypto"
  else
  
