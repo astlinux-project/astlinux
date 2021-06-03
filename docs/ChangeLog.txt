@@ -62,7 +62,7 @@ Released @TBD@
 
 -- chrony, version bump to 4.1
 
--- iperf3, version bump to 3.10
+-- iperf3, version bump to 3.10.1
 
 -- keepalived, version bump to 2.2.2
 
