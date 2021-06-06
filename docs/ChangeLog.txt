@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.190 (version bump), security and bug fixes
+-- Linux Kernel 4.19.193 (version bump), security and bug fixes.  Reverts many @umn.edu unsuitable commits.
    Kernel config: Enable TASKSTATS / TASK_IO_ACCOUNTING to generate /proc/[pid]/io stats.
 
 -- initrd, check for ASTURW /etc/inittab and copy it forward so the linuxrc's /sbin/init can use it.
@@ -56,7 +56,7 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.1.1k, security fixes: CVE-2021-3449, CVE-2021-3450
 
--- WireGuard VPN, module 1.0.20210424 (version bump), tools 1.0.20210424 (version bump)
+-- WireGuard VPN, module 1.0.20210606 (version bump), tools 1.0.20210424 (version bump)
 
 -- OpenVPN, version bump to 2.4.11, security fix: CVE-2020-15078
 
@@ -77,7 +77,7 @@ Released @TBD@
 
 -- netsnmp, version bump to 5.9.1
 
--- openldap, version bump to 2.4.58
+-- openldap, version bump to 2.4.59
 
 -- prosody, major version bump to 0.11.9, security fixes: CVE-2021-32917, CVE-2021-32918, CVE-2021-32919,
                                                           CVE-2021-32920, CVE-2021-32921
