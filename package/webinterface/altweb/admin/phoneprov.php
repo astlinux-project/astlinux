@@ -50,6 +50,7 @@ $sip_notify_reload = array (
   'aastra' => 'aastra-check-cfg',
   'cisco' => 'cisco-check-cfg',
   'linksys' => 'linksys-warm-restart',
+  'mitel' => 'snom-check-cfg',
   'polycom' => 'polycom-check-cfg',
   'sipura' => 'sipura-check-cfg',
   'snom' => 'snom-check-cfg',
@@ -59,6 +60,7 @@ $sip_notify_reload = array (
 $sip_notify_reboot = array (
   'cisco' => 'linksys-cold-restart',
   'linksys' => 'linksys-cold-restart',
+  'mitel' => 'snom-reboot',
   'snom' => 'snom-reboot',
   'yealink' => 'snom-reboot'
 );
