@@ -4,9 +4,9 @@
 #
 ################################################################################
 
-WHOIS_VERSION = 5.5.9
-WHOIS_SITE = http://ftp.debian.org/debian/pool/main/w/whois
-WHOIS_SOURCE = whois_$(WHOIS_VERSION).tar.xz
+WHOIS_VERSION = 5.5.10
+WHOIS_SITE = https://github.com/rfc1036/whois/archive/v$(WHOIS_VERSION)
+WHOIS_SOURCE = whois-$(WHOIS_VERSION).tar.gz
 
 WHOIS_DEPENDENCIES = host-pkg-config $(if $(BR2_PACKAGE_BUSYBOX),busybox)
 
