@@ -88,7 +88,7 @@ Released @TBD@
 
 -- vnStat, version bump to 2.7
 
--- whois, version bump to 5.5.9
+-- whois, version bump to 5.5.10
 
 -- wide-dhcpv6, add patch for dhcp6c to bind to one interface using SO_BINDTODEVICE, supporting multiple dhcp6c instances.
    Enabling DHCPv6 on both the external and failover interfaces now works.
@@ -106,9 +106,15 @@ Released @TBD@
 
 -- pjsip 2.10 (no change)
 
+-- FOP2, available version bump to 2.31.30
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
+
 ** Web Interface
 
 -- Status tab, do not include IPv6 addresses from the Failover Interface in the "IPv6 Prefixes" list.
+
+-- PhoneProv tab, add default "mitel" vendor for sip_notify_reload/reboot.
 
 
 Additions for AstLinux 1.4.2:
