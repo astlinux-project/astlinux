@@ -4,7 +4,7 @@
 ##
 ## phoneprov-tools
 ##
-## Copyright (C) 2014 Lonnie Abelbeck and Michael Keuter
+## Copyright (C) 2014-2021 Lonnie Abelbeck and Michael Keuter
 ##
 ## This is free software, licensed under the GNU General Public License
 ## version 3 as published by the Free Software Foundation; you can
@@ -82,6 +82,7 @@ merge_variables()
       -e "s|@MAC6@|${mac6}|g" \
       -e "s|@EXT@|${ext}|g" \
       -e "s|@CID_NAME@|${cid_name}|g" \
+      -e "s|@CID_FULL@|${cid_full}|g" \
       -e "s|@PASSWORD@|${password}|g" \
       -e "s|@ACCOUNT@|${account}|g" \
       -e "s|@USERNAME@|${username}|g" \
@@ -92,31 +93,37 @@ merge_indexed_variables()
 {
   sed -e "s|@EXT1@|${EXT[1]}|g" \
       -e "s|@CID_NAME1@|${CID_NAME[1]}|g" \
+      -e "s|@CID_FULL1@|${CID_FULL[1]}|g" \
       -e "s|@PASSWORD1@|${PASSWORD[1]}|g" \
       -e "s|@ACCOUNT1@|${ACCOUNT[1]}|g" \
       -e "s|@USERNAME1@|${USERNAME[1]}|g" \
       -e "s|@EXT2@|${EXT[2]}|g" \
       -e "s|@CID_NAME2@|${CID_NAME[2]}|g" \
+      -e "s|@CID_FULL2@|${CID_FULL[2]}|g" \
       -e "s|@PASSWORD2@|${PASSWORD[2]}|g" \
       -e "s|@ACCOUNT2@|${ACCOUNT[2]}|g" \
       -e "s|@USERNAME2@|${USERNAME[2]}|g" \
       -e "s|@EXT3@|${EXT[3]}|g" \
       -e "s|@CID_NAME3@|${CID_NAME[3]}|g" \
+      -e "s|@CID_FULL3@|${CID_FULL[3]}|g" \
       -e "s|@PASSWORD3@|${PASSWORD[3]}|g" \
       -e "s|@ACCOUNT3@|${ACCOUNT[3]}|g" \
       -e "s|@USERNAME3@|${USERNAME[3]}|g" \
       -e "s|@EXT4@|${EXT[4]}|g" \
       -e "s|@CID_NAME4@|${CID_NAME[4]}|g" \
+      -e "s|@CID_FULL4@|${CID_FULL[4]}|g" \
       -e "s|@PASSWORD4@|${PASSWORD[4]}|g" \
       -e "s|@ACCOUNT4@|${ACCOUNT[4]}|g" \
       -e "s|@USERNAME4@|${USERNAME[4]}|g" \
       -e "s|@EXT5@|${EXT[5]}|g" \
       -e "s|@CID_NAME5@|${CID_NAME[5]}|g" \
+      -e "s|@CID_FULL5@|${CID_FULL[5]}|g" \
       -e "s|@PASSWORD5@|${PASSWORD[5]}|g" \
       -e "s|@ACCOUNT5@|${ACCOUNT[5]}|g" \
       -e "s|@USERNAME5@|${USERNAME[5]}|g" \
       -e "s|@EXT6@|${EXT[6]}|g" \
       -e "s|@CID_NAME6@|${CID_NAME[6]}|g" \
+      -e "s|@CID_FULL6@|${CID_FULL[6]}|g" \
       -e "s|@PASSWORD6@|${PASSWORD[6]}|g" \
       -e "s|@ACCOUNT6@|${ACCOUNT[6]}|g" \
       -e "s|@USERNAME6@|${USERNAME[6]}|g"
@@ -143,6 +150,7 @@ define_indexed_vars() {
   if [ -z "${CID_NAME[$i]}" ]; then
     CID_NAME[$i]="${EXT[$i]}"
   fi
+  CID_FULL[$i]="$(gen_cid_full "${CID_NAME[$i]}" "${EXT[$i]}")"
   PASSWORD[$i]="$(index_var $i "$raw_password")"
   if [ -z "${PASSWORD[$i]}" ]; then
     PASSWORD[$i]="$password"
@@ -152,6 +160,22 @@ define_indexed_vars() {
     ACCOUNT[$i]="${auto_account_prefix}${EXT[$i]}${auto_account_suffix}"
   fi
   USERNAME[$i]="${ACCOUNT[$i]}"
+}
+
+gen_cid_full() {
+  local name="$1" num="$2" ext_name ext_num
+
+  if [[ $name =~ \<[[:space:]]*([0-9#*]+)[[:space:]]*\> ]]; then
+    ext_num="${BASH_REMATCH[1]}"
+  else
+    ext_num="$num"
+  fi
+  if [[ $name =~ ^([^\<]+) ]]; then
+    ext_name="${BASH_REMATCH[1]}"
+  else
+    ext_name="$num"
+  fi
+  echo "\"${ext_name% }\" <$ext_num>"
 }
 
 sql_init()
@@ -300,6 +324,7 @@ fi
 if [ -z "$cid_name" ]; then
   cid_name="$ext"
 fi
+cid_full="$(gen_cid_full "$cid_name" "$ext")"
 
 case $mac_addr in
   ??:??:??:??:??:??)
@@ -485,6 +510,7 @@ username="$account"
 
 EXT[1]="$ext"
 CID_NAME[1]="$cid_name"
+CID_FULL[1]="$cid_full"
 PASSWORD[1]="$password"
 ACCOUNT[1]="$account"
 USERNAME[1]="$username"
