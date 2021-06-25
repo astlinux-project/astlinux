@@ -82,7 +82,7 @@ merge_variables()
       -e "s|@MAC6@|${mac6}|g" \
       -e "s|@EXT@|${ext}|g" \
       -e "s|@CID_NAME@|${cid_name}|g" \
-      -e "s|@CID_FULL@|${cid_full}|g" \
+      -e "s|@CID_NUM@|${cid_num}|g" \
       -e "s|@PASSWORD@|${password}|g" \
       -e "s|@ACCOUNT@|${account}|g" \
       -e "s|@USERNAME@|${username}|g" \
@@ -93,37 +93,37 @@ merge_indexed_variables()
 {
   sed -e "s|@EXT1@|${EXT[1]}|g" \
       -e "s|@CID_NAME1@|${CID_NAME[1]}|g" \
-      -e "s|@CID_FULL1@|${CID_FULL[1]}|g" \
+      -e "s|@CID_NUM1@|${CID_NUM[1]}|g" \
       -e "s|@PASSWORD1@|${PASSWORD[1]}|g" \
       -e "s|@ACCOUNT1@|${ACCOUNT[1]}|g" \
       -e "s|@USERNAME1@|${USERNAME[1]}|g" \
       -e "s|@EXT2@|${EXT[2]}|g" \
       -e "s|@CID_NAME2@|${CID_NAME[2]}|g" \
-      -e "s|@CID_FULL2@|${CID_FULL[2]}|g" \
+      -e "s|@CID_NUM2@|${CID_NUM[2]}|g" \
       -e "s|@PASSWORD2@|${PASSWORD[2]}|g" \
       -e "s|@ACCOUNT2@|${ACCOUNT[2]}|g" \
       -e "s|@USERNAME2@|${USERNAME[2]}|g" \
       -e "s|@EXT3@|${EXT[3]}|g" \
       -e "s|@CID_NAME3@|${CID_NAME[3]}|g" \
-      -e "s|@CID_FULL3@|${CID_FULL[3]}|g" \
+      -e "s|@CID_NUM3@|${CID_NUM[3]}|g" \
       -e "s|@PASSWORD3@|${PASSWORD[3]}|g" \
       -e "s|@ACCOUNT3@|${ACCOUNT[3]}|g" \
       -e "s|@USERNAME3@|${USERNAME[3]}|g" \
       -e "s|@EXT4@|${EXT[4]}|g" \
       -e "s|@CID_NAME4@|${CID_NAME[4]}|g" \
-      -e "s|@CID_FULL4@|${CID_FULL[4]}|g" \
+      -e "s|@CID_NUM4@|${CID_NUM[4]}|g" \
       -e "s|@PASSWORD4@|${PASSWORD[4]}|g" \
       -e "s|@ACCOUNT4@|${ACCOUNT[4]}|g" \
       -e "s|@USERNAME4@|${USERNAME[4]}|g" \
       -e "s|@EXT5@|${EXT[5]}|g" \
       -e "s|@CID_NAME5@|${CID_NAME[5]}|g" \
-      -e "s|@CID_FULL5@|${CID_FULL[5]}|g" \
+      -e "s|@CID_NUM5@|${CID_NUM[5]}|g" \
       -e "s|@PASSWORD5@|${PASSWORD[5]}|g" \
       -e "s|@ACCOUNT5@|${ACCOUNT[5]}|g" \
       -e "s|@USERNAME5@|${USERNAME[5]}|g" \
       -e "s|@EXT6@|${EXT[6]}|g" \
       -e "s|@CID_NAME6@|${CID_NAME[6]}|g" \
-      -e "s|@CID_FULL6@|${CID_FULL[6]}|g" \
+      -e "s|@CID_NUM6@|${CID_NUM[6]}|g" \
       -e "s|@PASSWORD6@|${PASSWORD[6]}|g" \
       -e "s|@ACCOUNT6@|${ACCOUNT[6]}|g" \
       -e "s|@USERNAME6@|${USERNAME[6]}|g"
@@ -140,17 +140,18 @@ index_var() {
 }
 
 define_indexed_vars() {
-  local i="$1"
+  local i="$1" cid_name_num
 
   EXT[$i]="$(index_var $i "$raw_ext" | cut -d'/' -f1)"
   if [ -z "${EXT[$i]}" ]; then
     EXT[$i]="$ext"
   fi
+
   CID_NAME[$i]="$(index_var $i "$raw_ext" | cut -s -d'/' -f2- | tr '_' ' ')"
-  if [ -z "${CID_NAME[$i]}" ]; then
-    CID_NAME[$i]="${EXT[$i]}"
-  fi
-  CID_FULL[$i]="$(gen_cid_full "${CID_NAME[$i]}" "${EXT[$i]}")"
+  cid_name_num="$(gen_cid_name_num "${CID_NAME[$i]}" "${EXT[$i]}")"
+  CID_NAME[$i]="${cid_name_num%%<*}"
+  CID_NUM[$i]="${cid_name_num#*<}"
+
   PASSWORD[$i]="$(index_var $i "$raw_password")"
   if [ -z "${PASSWORD[$i]}" ]; then
     PASSWORD[$i]="$password"
@@ -162,7 +163,7 @@ define_indexed_vars() {
   USERNAME[$i]="${ACCOUNT[$i]}"
 }
 
-gen_cid_full() {
+gen_cid_name_num() {
   local name="$1" num="$2" ext_name ext_num
 
   if [[ $name =~ \<[[:space:]]*([0-9#*]+)[[:space:]]*\> ]]; then
@@ -175,7 +176,7 @@ gen_cid_full() {
   else
     ext_name="$num"
   fi
-  echo "\"${ext_name% }\" <$ext_num>"
+  echo "${ext_name% }<$ext_num"
 }
 
 sql_init()
@@ -186,6 +187,7 @@ CREATE TABLE 'phoneprov_build' (
   'id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
   'ext' TEXT DEFAULT '',
   'cid_name' TEXT DEFAULT '',
+  'cid_num' TEXT DEFAULT '',
   'account' TEXT DEFAULT '',
   'line' INTEGER DEFAULT 1,
   'mac_addr' TEXT DEFAULT '',
@@ -206,6 +208,7 @@ sql_add_extensions() {
       echo "INSERT INTO 'phoneprov_build' (
 'ext',
 'cid_name',
+'cid_num',
 'account',
 'line',
 'mac_addr',
@@ -217,6 +220,7 @@ sql_add_extensions() {
 VALUES (
 '${EXT[$i]}',
 '${CID_NAME[$i]}',
+'${CID_NUM[$i]}',
 '${ACCOUNT[$i]}',
 '${i}',
 '${mac_addr}',
@@ -321,10 +325,9 @@ if [ -z "$mac_addr" -o -z "$ext" ]; then
   usage
 fi
 
-if [ -z "$cid_name" ]; then
-  cid_name="$ext"
-fi
-cid_full="$(gen_cid_full "$cid_name" "$ext")"
+cid_name_num="$(gen_cid_name_num "$cid_name" "$ext")"
+cid_name="${cid_name_num%%<*}"
+cid_num="${cid_name_num#*<}"
 
 case $mac_addr in
   ??:??:??:??:??:??)
@@ -510,7 +513,7 @@ username="$account"
 
 EXT[1]="$ext"
 CID_NAME[1]="$cid_name"
-CID_FULL[1]="$cid_full"
+CID_NUM[1]="$cid_num"
 PASSWORD[1]="$password"
 ACCOUNT[1]="$account"
 USERNAME[1]="$username"
