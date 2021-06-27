@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PCRE_VERSION = 8.44
+PCRE_VERSION = 8.45
 PCRE_SITE = https://downloads.sourceforge.net/project/pcre/pcre/$(PCRE_VERSION)
 PCRE_SOURCE = pcre-$(PCRE_VERSION).tar.bz2
 PCRE_INSTALL_STAGING = YES
