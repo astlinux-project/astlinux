@@ -36,6 +36,8 @@ Released @TBD@
 
 -- ne, version bump to 3.3.1
 
+-- pcre, version bump to 8.45
+
 -- php, version 7.2.34, enable curl module support
 
 -- rng-tools, version 6.5, jitterentropy version bump to 3.0.2
@@ -100,11 +102,15 @@ Released @TBD@
 -- Asterisk 13.29.2 ('13se' no change)
    Older than latest Asterisk 13.x version but more tested, built --without-pjproject
 
--- Asterisk 13.38.2 (no change) and 16.18.0 (version bump)
+-- Asterisk 13.38.2 (no change) and 16.19.0 (version bump)
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
 
 -- pjsip 2.10 (no change)
+
+-- phoneprov-tools, add support for @CID_NUM@ and @CID_NUM1@ to @CID_NUM6@ template variables.
+   Add corresponding new sqlite DB phoneprov entry 'cid_num'.
+   More info: https://doc.astlinux.org/userdoc:tt_ip_phone_provisioning#phone_template_syntax
 
 -- FOP2, available version bump to 2.31.30
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
