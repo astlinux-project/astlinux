@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.193 (version bump), security and bug fixes.  Reverts many @umn.edu unsuitable commits.
+-- Linux Kernel 4.19.196 (version bump), security and bug fixes.  Reverts many @umn.edu unsuitable commits.
    Kernel config: Enable TASKSTATS / TASK_IO_ACCOUNTING to generate /proc/[pid]/io stats.
 
 -- initrd, check for ASTURW /etc/inittab and copy it forward so the linuxrc's /sbin/init can use it.
@@ -27,6 +27,8 @@ Released @TBD@
 -- expat, version bump to 2.4.1, security fix: CVE-2013-0340
 
 -- libedit, version bump to 20210522-3.1
+
+-- libpcap, version bump to 1.10.1
 
 -- libxml2, version bump to 2.9.12, security fix: CVE-2021-3541, plus "an awful lot of serious bug fixes"
 
@@ -87,6 +89,8 @@ Released @TBD@
 -- sngrep, version bump to 1.4.9
 
 -- stunnel, version bump to 5.59
+
+-- tcpdump, version 4.99.1
 
 -- vnStat, version bump to 2.7
 
