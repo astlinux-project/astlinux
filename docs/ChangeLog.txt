@@ -20,6 +20,8 @@ Released @TBD@
    it always used the default /etc/inittab file (the default is what most users want anyway).
    Now edits to the /etc/inittab file are honored again, as they were before AstLinux 1.3.10.
 
+-- RUNNIX, version bump to runnix-0.6.4, with Linux Kernel 4.19.196, e2fsprogs 1.46.2
+
 -- e2fsprogs, version bump to 1.46.2
 
 -- ethtool, version bump to 5.12
