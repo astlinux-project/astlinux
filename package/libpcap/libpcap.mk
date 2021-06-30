@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LIBPCAP_VERSION = 1.10.0
+LIBPCAP_VERSION = 1.10.1
 LIBPCAP_SITE = https://www.tcpdump.org/release
 LIBPCAP_SOURCE = libpcap-$(LIBPCAP_VERSION).tar.gz
 LIBPCAP_INSTALL_STAGING = YES

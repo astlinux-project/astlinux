@@ -4,12 +4,9 @@
 #
 #############################################################
 
-TCPDUMP_VERSION = 4.99.0
+TCPDUMP_VERSION = 4.99.1
 TCPDUMP_SITE = https://www.tcpdump.org/release
 TCPDUMP_SOURCE = tcpdump-$(TCPDUMP_VERSION).tar.gz
-
-## Should be fixed in 4.99.1
-TCPDUMP_AUTORECONF = YES
 
 TCPDUMP_CONF_ENV = \
 	td_cv_buggygetaddrinfo=no \
