@@ -10,6 +10,29 @@ Additions for AstLinux 1.4.4:
 
 Released @TBD@
 
+** System
+
+-- Linux Kernel 4.19.196 (no change)
+
+** Networking
+
+-- (no change)
+
+** Asterisk
+
+-- Asterisk 13.38.2 ('13se' version bump)
+   Latest Asterisk 13.x "Security Fixes Only" version, built --without-pjproject
+
+-- Asterisk 13.38.2 (no change) and 16.19.0 (no change)
+
+-- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
+
+-- pjsip 2.10 (no change)
+
+** Web Interface
+
+-- (no change)
+
 
 Additions for AstLinux 1.4.3:
 =============================
