@@ -1,0 +1,11 @@
+--- linux-custom/drivers/net/ethernet/intel/igc/igc_main.c.orig	2021-07-17 16:49:06.967238268 -0500
++++ linux-custom/drivers/net/ethernet/intel/igc/igc_main.c	2021-07-17 16:49:32.030298516 -0500
+@@ -1311,7 +1311,7 @@
+ 	/* Determine available headroom for copy */
+ 	headlen = size;
+ 	if (headlen > IGC_RX_HDR_LEN)
+-		headlen = eth_get_headlen(skb->dev, va, IGC_RX_HDR_LEN);
++		headlen = eth_get_headlen(va, IGC_RX_HDR_LEN);
+ 
+ 	/* align pull length to size of long to optimize memcpy performance */
+ 	memcpy(__skb_put(skb, headlen), va, ALIGN(headlen, sizeof(long)));
