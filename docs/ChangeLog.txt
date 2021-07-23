@@ -14,16 +14,22 @@ Released @TBD@
 
 -- Linux Kernel 4.19.196 (no change)
 
+-- igb, version bump to 5.7.2, Intel Gigabit Ethernet Network Driver
+
+-- igc, backport from linux-5.4.132, Intel i225 1.0/2.5 Gigabit Ethernet Network Driver
+
+-- libidn, version bump to 1.37
+
 ** Networking
 
 -- (no change)
 
 ** Asterisk
 
--- Asterisk 13.38.2 ('13se' version bump)
+-- Asterisk 13.38.3 ('13se' version bump)
    Latest Asterisk 13.x "Security Fixes Only" version, built --without-pjproject
 
--- Asterisk 13.38.2 (no change) and 16.19.0 (no change)
+-- Asterisk 13.38.3 (version bump) and 16.19.1 (version bump)
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
 
