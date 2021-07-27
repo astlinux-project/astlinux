@@ -14,9 +14,11 @@ Released @TBD@
 
 -- Linux Kernel 4.19.196 (no change)
 
--- igb, version bump to 5.7.2, Intel Gigabit Ethernet Network Driver
+-- ixgbe, enable the Intel 10-Gigabit Ethernet Network Driver
 
--- igc, backport from linux-5.4.132, Intel i225 1.0/2.5 Gigabit Ethernet Network Driver
+-- igc, backport from linux-5.4.132, Intel i225 2.5-Gigabit Ethernet Network Driver
+
+-- igb, version bump to 5.7.2, Intel 1.0-Gigabit Ethernet Network Driver
 
 -- libidn, version bump to 1.37
 
