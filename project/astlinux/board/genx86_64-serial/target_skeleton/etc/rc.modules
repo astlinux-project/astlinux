@@ -14,5 +14,5 @@ e1000e
 igb
 r8169
 tg3
-#skge
 #igc
+#ixgbe
