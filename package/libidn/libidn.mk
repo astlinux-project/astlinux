@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LIBIDN_VERSION = 1.37
+LIBIDN_VERSION = 1.38
 LIBIDN_SITE = https://ftp.gnu.org/gnu/libidn
 LIBIDN_INSTALL_STAGING = YES
 LIBIDN_CONF_ENV = EMACS="no"
