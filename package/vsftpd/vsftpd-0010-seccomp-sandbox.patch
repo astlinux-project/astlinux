@@ -8,7 +8,7 @@ Index: trunk/tunables.c
 ===================================================================
 --- trunk.orig/tunables.c
 +++ trunk/tunables.c
-@@ -226,7 +226,7 @@ tunables_load_defaults()
+@@ -233,7 +233,7 @@ tunables_load_defaults()
    tunable_isolate_network = 1;
    tunable_ftp_enable = 1;
    tunable_http_enable = 0;
