@@ -174,6 +174,7 @@ source "package/linux-firmware/Config.in"
 comment "Network Interface Kernel Drivers"
 source "package/e1000e/Config.in"
 source "package/igb/Config.in"
+source "package/r8125/Config.in"
 source "package/r8168/Config.in"
 source "package/tg3/Config.in"
 

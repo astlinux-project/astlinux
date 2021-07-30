@@ -1,0 +1,12 @@
+config BR2_PACKAGE_R8125
+	bool "r8125"
+	depends on BR2_LINUX_KERNEL
+	default n
+	help
+	  Linux device driver released for Realtek RTL8125
+	  2.5-Gigabit Ethernet controllers with PCI-Express interface.
+
+	  https://www.realtek.com/en/component/zoo/category/network-interface-controllers-10-100-1000m-gigabit-ethernet-pci-express-software
+
+	  https://github.com/awesometic/realtek-r8125-dkms/releases
+
