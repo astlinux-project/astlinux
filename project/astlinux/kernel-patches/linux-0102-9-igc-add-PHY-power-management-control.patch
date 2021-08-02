@@ -22,7 +22,7 @@ diff --git a/drivers/net/ethernet/intel/igc/igc_defines.h b/drivers/net/ethernet
 index 9e34b0969322c..58efa7a02c684 100644
 --- a/drivers/net/ethernet/intel/igc/igc_defines.h
 +++ b/drivers/net/ethernet/intel/igc/igc_defines.h
-@@ -360,6 +360,7 @@
+@@ -363,6 +363,7 @@
  /* PHY Status Register */
  #define MII_SR_LINK_STATUS	0x0004 /* Link Status 1 = link */
  #define MII_SR_AUTONEG_COMPLETE	0x0020 /* Auto Neg Complete */
