@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.196 (no change)
+-- Linux Kernel 4.19.200 (version bump), security and bug fixes.
 
 -- ixgbe, enable the Intel 10-Gigabit Ethernet Network Driver
 
@@ -22,6 +22,8 @@ Released @TBD@
 
 -- igb, version bump to 5.7.2, Intel 1.0-Gigabit Ethernet Network Driver
 
+-- acme-client, version bump to 2.9.0
+
 -- e2fsprogs, version bump to 1.46.3
 
 -- ethtool, version bump to 5.13
@@ -29,6 +31,8 @@ Released @TBD@
 -- libedit, version bump to 20210714-3.1
 
 -- libidn, version bump to 1.38
+
+-- Monit, version bump to 5.28.1
 
 -- rng-tools, version 6.5, jitterentropy version bump to 3.1.0
 
@@ -40,6 +44,8 @@ Released @TBD@
 
 -- libcurl (curl) version bump to 7.78.0, security fixes: CVE-2021-22922, CVE-2021-22923, CVE-2021-22924
                                                           CVE-2021-22925, CVE-2021-22926
+
+-- prosody, version bump to 0.11.10, security fix: CVE-2021-37601
 
 -- vsftpd, version bump to 3.0.4
 
