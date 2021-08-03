@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-ACME_VERSION = 2.8.7
+ACME_VERSION = 2.9.0
 ACME_SOURCE = acme.sh-$(ACME_VERSION).tar.gz
 ACME_SITE = https://github.com/acmesh-official/acme.sh/archive/$(ACME_VERSION)
 
