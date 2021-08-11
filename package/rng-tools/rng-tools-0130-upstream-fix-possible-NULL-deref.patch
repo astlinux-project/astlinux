@@ -1,0 +1,44 @@
+From e4a94ad5d4ea8e5663f1e5d71669317b16105945 Mon Sep 17 00:00:00 2001
+From: Vladis Dronov <vdronov@redhat.com>
+Date: Sat, 12 Jun 2021 13:11:19 +0200
+Subject: [PATCH] Fix minor possibilities of using a NULL pointer
+
+Fix the following covscan warnings by performing a check for a NULL:
+
+2) Move memset() in xread_tpm() to a proper place:
+
+Error: NULL_RETURNS (CWE-476): [#def3]
+rng-tools-6.12/rngd_entsource.c:96: returned_null: "malloc" returns "NULL"
+(checked 89 out of 95 times).
+rng-tools-6.12/rngd_entsource.c:96: var_assigned: Assigning: "temp_buf" =
+"NULL" return value from "malloc".
+rng-tools-6.12/rngd_entsource.c:97: dereference: Dereferencing a pointer
+that might be "NULL" "temp_buf" when calling "memset".
+    96|   temp_buf = (unsigned char *) malloc(size + TPM_GET_RNG_OVERHEAD);
+    97|-> memset(temp_buf, 0, (size+TPM_GET_RNG_OVERHEAD));
+    98|   if (temp_buf == NULL) {
+
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+---
+ rngd_entsource.c | 3 ++-
+ 2 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/rngd_entsource.c b/rngd_entsource.c
+index e5b7d43..b7ebd15 100644
+--- a/rngd_entsource.c
++++ b/rngd_entsource.c
+@@ -95,12 +95,13 @@ int xread_tpm(void *buf, size_t size, struct rng *ent_src)
+ 	}
+ 
+ 	temp_buf = (unsigned char *) malloc(size + TPM_GET_RNG_OVERHEAD);
+-	memset(temp_buf, 0, (size+TPM_GET_RNG_OVERHEAD));
+ 	if (temp_buf == NULL) {
+ 		message(LOG_ERR|LOG_INFO,"No memory");
+ 		close(ent_src->rng_fd);
+ 		return -1;
+ 	}
++	memset(temp_buf, 0, (size+TPM_GET_RNG_OVERHEAD));
++
+ 	/* 32 bits has been reserved for random byte size */
+ 	rng_cmd[13] = (unsigned char)(size & 0xFF);
+ 	rng_cmd[12] = (unsigned char)((size >> 8) & 0xFF);
