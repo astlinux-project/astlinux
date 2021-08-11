@@ -38,6 +38,8 @@ Released @TBD@
 
 -- strace, version bump to 5.13
 
+-- system-vendor, update system-vendor.ids
+
 -- ca-certificates, update trusted root certificates 2021-07-05
 
 ** Networking
@@ -47,7 +49,7 @@ Released @TBD@
 
 -- prosody, version bump to 0.11.10, security fix: CVE-2021-37601
 
--- vsftpd, version bump to 3.0.4
+-- vsftpd, version bump to 3.0.5
 
 ** Asterisk
 
