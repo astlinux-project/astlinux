@@ -4,7 +4,7 @@
 #
 #############################################################
 
-VSFTPD_VERSION = 3.0.4
+VSFTPD_VERSION = 3.0.5
 VSFTPD_SOURCE = vsftpd-$(VSFTPD_VERSION).tar.gz
 VSFTPD_SITE = https://security.appspot.com/downloads
 
