@@ -4,7 +4,7 @@
 #
 #############################################################
 
-USBUTILS_VERSION = 013
+USBUTILS_VERSION = 014
 USBUTILS_SITE = $(BR2_KERNEL_MIRROR)/linux/utils/usb/usbutils
 USBUTILS_SOURCE = usbutils-$(USBUTILS_VERSION).tar.xz
 USBUTILS_DEPENDENCIES = host-pkg-config libusb udev
