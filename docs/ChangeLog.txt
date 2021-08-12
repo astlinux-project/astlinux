@@ -40,6 +40,8 @@ Released @TBD@
 
 -- system-vendor, update system-vendor.ids
 
+-- usbutils, version bump to 014
+
 -- ca-certificates, update trusted root certificates 2021-07-05
 
 ** Networking
@@ -49,6 +51,8 @@ Released @TBD@
 
 -- prosody, version bump to 0.11.10, security fix: CVE-2021-37601
 
+-- unbound, version bump to 1.13.2
+
 -- vsftpd, version bump to 3.0.5
 
 ** Asterisk
@@ -56,7 +60,8 @@ Released @TBD@
 -- Asterisk 13.38.3 ('13se' version bump)
    Latest Asterisk 13.x "Security Fixes Only" version, built --without-pjproject
 
--- Asterisk 13.38.3 (version bump) and 16.19.1 (version bump)
+-- Asterisk 13.38.3 (version bump) and 16.20.0 (version bump)
+   New Asterisk 16 applications: WaitForCondition, Reload, StoreDTMF
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
 
