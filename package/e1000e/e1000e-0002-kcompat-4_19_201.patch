@@ -1,0 +1,15 @@
+--- e1000e-3.8.7/src/kcompat.h.orig	2021-08-23 12:53:20.392457640 -0500
++++ e1000e-3.8.7/src/kcompat.h	2021-08-23 12:55:33.736654687 -0500
+@@ -7135,10 +7135,12 @@
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(5,4,0))
+ #if (!(RHEL_RELEASE_CODE >= RHEL_RELEASE_VERSION(8,2)) && \
+      !(SLE_VERSION_CODE >= SLE_VERSION(15,2,0)))
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,19,201))
+ static inline unsigned int skb_frag_off(const skb_frag_t * frag)
+ {
+ 	return frag->page_offset;
+ }
++#endif /* 4.19.201 */
+ 
+ static inline void skb_frag_off_add(skb_frag_t * frag, int delta)
+ {
