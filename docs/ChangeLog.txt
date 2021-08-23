@@ -12,19 +12,19 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.200 (version bump), security and bug fixes.
+-- Linux Kernel 4.19.204 (version bump), security and bug fixes.
 
 -- ixgbe, enable the Intel 10-Gigabit Ethernet Network Driver
 
 -- igc, backport from linux-5.4.136, Intel i225 2.5-Gigabit Ethernet Network Driver
 
--- r8125, version 9.005.06, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
+-- r8125, version 9.006.04, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
 
 -- igb, version bump to 5.7.2, Intel 1.0-Gigabit Ethernet Network Driver
 
 -- acme-client, version bump to 2.9.0
 
--- e2fsprogs, version bump to 1.46.3
+-- e2fsprogs, version bump to 1.46.4
 
 -- ethtool, version bump to 5.13
 
@@ -48,6 +48,8 @@ Released @TBD@
 
 -- libcurl (curl) version bump to 7.78.0, security fixes: CVE-2021-22922, CVE-2021-22923, CVE-2021-22924
                                                           CVE-2021-22925, CVE-2021-22926
+
+-- luasec, version bump to 1.0.2
 
 -- prosody, version bump to 0.11.10, security fix: CVE-2021-37601
 
