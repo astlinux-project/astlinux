@@ -32,7 +32,7 @@ Released @TBD@
 
 -- libidn, version bump to 1.38
 
--- Monit, version bump to 5.28.1
+-- Monit, version bump to 5.29.0
 
 -- rng-tools, version 6.5, jitterentropy version bump to 3.1.0
 
@@ -46,8 +46,12 @@ Released @TBD@
 
 ** Networking
 
+-- OpenSSL, version bump to 1.1.1l, security fixes: CVE-2021-3711, CVE-2021-3712
+
 -- libcurl (curl) version bump to 7.78.0, security fixes: CVE-2021-22922, CVE-2021-22923, CVE-2021-22924
                                                           CVE-2021-22925, CVE-2021-22926
+
+-- LibreTLS, version bump to 3.3.4
 
 -- luasec, version bump to 1.0.2
 
