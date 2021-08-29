@@ -53,6 +53,8 @@ Released @TBD@
 
 -- LibreTLS, version bump to 3.3.4
 
+-- iperf, version bump to 2.1.4
+
 -- luasec, version bump to 1.0.2
 
 -- prosody, version bump to 0.11.10, security fix: CVE-2021-37601
