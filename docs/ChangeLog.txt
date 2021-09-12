@@ -25,6 +25,10 @@ Released @TBD@
 -- acme-client, version bump to 2.9.0
 
 -- e2fsprogs, version bump to 1.46.4
+   Note: New filesystems created with mke2fs will now always use an inode size of 256 bytes.  This allows y2038 support.
+   Previously, "small" (< 512 MB) filesystems used 128-byte inodes.  When a new AstLinux system is setup, (via webinterface or initial-setup)
+   the Unionfs partition size defaults to 256 MB. Now with 256-byte inodes, the max usable space is reduced to 227 MB (previously 235 MB).
+   For only new system setups, this effectively makes the Unionfs partition 8 MB smaller.  Not a concern for most users.
 
 -- ethtool, version bump to 5.13
 
