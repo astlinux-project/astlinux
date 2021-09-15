@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LIBEDIT_VERSION = 20210714-3.1
+LIBEDIT_VERSION = 20210910-3.1
 LIBEDIT_SITE = https://thrysoee.dk/editline
 LIBEDIT_INSTALL_STAGING = YES
 
