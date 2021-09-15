@@ -30,15 +30,17 @@ Released @TBD@
    the Unionfs partition size defaults to 256 MB. Now with 256-byte inodes, the max usable space is reduced to 227 MB (previously 235 MB).
    For only new system setups, this effectively makes the Unionfs partition 8 MB smaller.  Not a concern for most users.
 
--- ethtool, version bump to 5.13
+-- ethtool, version bump to 5.14
 
--- libedit, version bump to 20210714-3.1
+-- libedit, version bump to 20210910-3.1
 
 -- libidn, version bump to 1.38
 
 -- Monit, version bump to 5.29.0
 
 -- rng-tools, version 6.5, jitterentropy version bump to 3.1.0
+
+-- sqlite, version bump to 3.36.0
 
 -- strace, version bump to 5.14
 
@@ -52,6 +54,8 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.1.1l, security fixes: CVE-2021-3711, CVE-2021-3712
 
+-- WireGuard VPN, module 1.0.20210606 (no change), tools 1.0.20210914 (version bump)
+
 -- libcurl (curl) version bump to 7.78.0, security fixes: CVE-2021-22922, CVE-2021-22923, CVE-2021-22924
                                                           CVE-2021-22925, CVE-2021-22926
 
@@ -62,6 +66,8 @@ Released @TBD@
 -- keepalived, version bump to 2.2.4
 
 -- luasec, version bump to 1.0.2
+
+-- msmtp, version bump to 1.8.16
 
 -- prosody, version bump to 0.11.10, security fix: CVE-2021-37601
 
