@@ -56,8 +56,8 @@ Released @TBD@
 
 -- WireGuard VPN, module 1.0.20210606 (no change), tools 1.0.20210914 (version bump)
 
--- libcurl (curl) version bump to 7.78.0, security fixes: CVE-2021-22922, CVE-2021-22923, CVE-2021-22924
-                                                          CVE-2021-22925, CVE-2021-22926
+-- libcurl (curl) version bump to 7.79.0, security fixes: CVE-2021-22922, CVE-2021-22923, CVE-2021-22924
+                                          CVE-2021-22925, CVE-2021-22926, CVE-2021-22946, CVE-2021-22947
 
 -- LibreTLS, version bump to 3.3.4
 
