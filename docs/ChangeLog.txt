@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.204 (version bump), security and bug fixes.
+-- Linux Kernel 4.19.208 (version bump), security and bug fixes.
 
 -- ixgbe, enable the Intel 10-Gigabit Ethernet Network Driver
 
@@ -55,6 +55,10 @@ Released @TBD@
 -- usbutils, version bump to 014
 
 -- ca-certificates, update trusted root certificates 2021-07-05
+
+-- mac2vendor, oui.txt database snapshot 2021-09-29
+
+-- Time Zone Database update, tzdata2021b and php-timezonedb-2021.2
 
 ** Networking
 
