@@ -54,6 +54,8 @@ Released @TBD@
 
 -- usbutils, version bump to 014
 
+-- zabbix, version bump to 4.0.34
+
 -- ca-certificates, update trusted root certificates 2021-07-05
 
 -- mac2vendor, oui.txt database snapshot 2021-09-29
