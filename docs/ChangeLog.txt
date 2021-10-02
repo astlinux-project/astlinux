@@ -13,6 +13,7 @@ Released @TBD@
 ** System
 
 -- Linux Kernel 4.19.208 (version bump), security and bug fixes.
+   Kernel config: Enable ifb and sch_cake modules, useful for traffic shaping.
 
 -- ixgbe, enable the Intel 10-Gigabit Ethernet Network Driver
 
