@@ -2,11 +2,11 @@
 #      -= Arno's iptables firewall - HTB & HFSC traffic shaper plugin =-
 #
 PLUGIN_NAME="Traffic-Shaper plugin"
-PLUGIN_VERSION="1.3.00"
+PLUGIN_VERSION="1.4.00"
 PLUGIN_CONF_FILE="traffic-shaper.conf"
 #
-# Last changed          : June 1, 2017
-# Requirements          : kernel 3.16 + iproute2
+# Last changed          : October 3, 2021
+# Requirements          : kernel 4.19 + iproute2
 # Comments              : This plugin will shape traffic. It borrows heavily on
 #                         the logic of Maciej's original script (below), with
 #                         some minor changes to the actual bins that traffic
@@ -16,13 +16,12 @@ PLUGIN_CONF_FILE="traffic-shaper.conf"
 #                  [LRA]: Added htb support from astshape in AstLinux
 #                  [LRA]: Classify by DSCP class
 #                  [LRA]: Use sch_fq_codel instead of sch_sfq
+#                  [LRA]: Add sch_cake support, requires Linux 4.19+
 # Author                : (C) Copyright 2008-2010 by Philip Prindeville
 # Credits               : Maciej Blizinski
 # Credits               : Kristian Kielhofner
 # Credits               : Lonnie Abelbeck
-# Homepage              : http://www.voip-info.org/wiki/view/QoS+Linux+with+HFSC
-#                         http://media.blizinski.pl/code/hfsc.gz
-# Freshmeat homepage    : http://freshmeat.net/projects/iptables-firewall/?topic_id=151
+# Homepage              : https://github.com/tohojo/sqm-scripts
 # Email                 : philipp AT redfish-solutions DOT com
 #                         (note: you must remove all spaces and substitute the @ and the .
 #                         at the proper locations!)
@@ -48,6 +47,13 @@ PLUGIN_CONF_FILE="traffic-shaper.conf"
 # 1:40 Default (SIP-signaling)
 # 1:50 Bulk data transfer (HTTP, HTTPS, POP3, SMTP, FTP, etc.)
 # 1:60 Lowest priority (P2P)
+#
+# CAKE (diffserv4) Traffic classes:
+# Latency Sensitive  (CS7, CS6, EF, VA, CS5, CS4)
+# Streaming Media    (AF4x, AF3x, CS3, AF2x, TOS4, CS2, TOS1)
+# Best Effort        (CS0, AF1x, TOS2, and those not specified)
+# Background Traffic (CS1)
+#
 
 # Helper functions
 setclassbyport()
@@ -232,12 +238,58 @@ disable_ethernet_offloading()
 plugin_start()
 {
   case $SHAPER_TYPE in
+  cake)
+    plugin_start_cake ;;
+
   hfsc)
     plugin_start_hfsc ;;
 
   *)
     plugin_start_htb ;;
   esac
+}
+
+# CAKE start function
+plugin_start_cake()
+{
+  local nat natif
+  # Some required modules are already loaded by the main script:
+  modprobe_multi nf_nat ip_nat
+
+  modprobe sch_cake
+
+  printf "${INDENT}Shaping as (Down/Up) %d/%d kb/s using '%s' for interface: %s\n" $DOWNLINK $UPLINK cake "$SHAPER_IF"
+
+  # Not used with CAKE, but define empty chain for consistency
+  iptables -t mangle -N SHAPER_CHAIN
+
+  IFS=' ,'
+  for eif in $SHAPER_IF; do
+
+    # tc doesn't take wildcards, so we need expansion done here
+    for eif1 in $(wildcard_ifs $eif); do
+
+      nat="nonat"
+      for natif in $NAT_IF; do
+        if [ "$natif" = "$eif1" ]; then
+          nat="nat"
+          break
+        fi
+      done
+
+      # add CAKE root qdisc
+      tc qdisc add dev $eif1 root cake bandwidth ${UPLINK}kbit diffserv4 ${nat} ${SHAPER_TUNE_CAKE}
+
+      incoming_traffic_limit $eif1
+
+      disable_ethernet_offloading $eif1
+    done
+
+    # add SHAPER_CHAIN chain to mangle table in iptables
+    iptables -t mangle -A POSTROUTING -o $eif -j SHAPER_CHAIN
+  done
+
+  return 0
 }
 
 # HFSC start function
