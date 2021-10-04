@@ -26,6 +26,7 @@
 // 01-05-2017, Added BLOCKED_HOST_LOG direction support
 // 11-06-2017, Added WIREGUARD_ALLOWLAN support
 // 10-12-2018, Added WIREGUARD_ALLOW_OPENVPN support
+// 10-04-2021, Added CAKE traffic shaper support
 //
 // System location of /mnt/kd/rc.conf.d directory
 $FIREWALLCONFDIR = '/mnt/kd/rc.conf.d';
@@ -135,6 +136,24 @@ $allowlans_label = array (
   'INT2IF INT3IF~INT2IF INT4IF' => '2nd + 3rd, 2nd + 4th',
   'INT2IF INT3IF~INT3IF INT4IF' => '2nd + 3rd, 3rd + 4th',
   'INT2IF INT4IF~INT3IF INT4IF' => '2nd + 4th, 3rd + 4th'
+);
+
+$cake_lla = array (
+  '' => 'disabled',
+  'ethernet' => 'Ethernet: ethernet',
+  'docsis' => 'Ethernet: docsis',
+  'pppoe-ptm' => 'VDSL2: pppoe-ptm',
+  'bridged-ptm' => 'VDSL2: bridged-ptm',
+  'pppoe-vcmux' => 'ADSL: pppoe-vcmux',
+  'pppoe-llcsnap' => 'ADSL: pppoe-llcsnap',
+  'bridged-vcmux' => 'ADSL: bridged-vcmux',
+  'bridged-llcsnap' => 'ADSL: bridged-llcsnap',
+  'conservative' => 'High Overhead: conservative'
+);
+
+$cake_ack_filter = array (
+  '' => 'disabled',
+  'ack-filter' => 'enabled'
 );
 
 $lan_default_policy_label = array (
@@ -384,6 +403,8 @@ function saveFIREWALLsettings($conf_dir, $conf_file, $db, $delete = NULL) {
     $value = 'EXTUP="'.tuq($_POST['shaper_extup']).'"';
     fwrite($fp, $value."\n");
     $value = 'VOIPPORTS="'.tuq($_POST['shaper_voipports']).'"';
+    fwrite($fp, $value."\n");
+    $value = 'EXTSHAPE_TUNE_CAKE="'.trim($_POST['cake_lla'].' '.$_POST['cake_ack_filter']).'"';
     fwrite($fp, $value."\n");
   }
 
@@ -969,7 +990,7 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
   putHtml('<table width="100%" class="stdtable">');
   putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="2">');
   putHtml('<strong>Traffic Shaping:</strong>');
-  $shapetype = (getVARdef($vars, 'SHAPETYPE') === 'hfsc') ? 'hfsc' : 'htb';
+  $shapetype = getVARdef($vars, 'SHAPETYPE');
   putHtml('<select name="shaper_enable_type">');
   $sel = ($TRAFFIC_SHAPER_ENABLE === '0') ? ' selected="selected"' : '';
   putHtml('<option value=""'.$sel.'>Disabled</option>');
@@ -977,6 +998,8 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
   putHtml('<option value="htb"'.$sel.'>Enabled&nbsp;[htb]</option>');
   $sel = ($TRAFFIC_SHAPER_ENABLE === '1' && $shapetype === 'hfsc') ? ' selected="selected"' : '';
   putHtml('<option value="hfsc"'.$sel.'>Enabled&nbsp;[hfsc]</option>');
+  $sel = ($TRAFFIC_SHAPER_ENABLE === '1' && $shapetype === 'cake') ? ' selected="selected"' : '';
+  putHtml('<option value="cake"'.$sel.'>Enabled&nbsp;[cake]</option>');
   putHtml('</select>');
   putHtml('</td></tr>');
 
@@ -1012,6 +1035,32 @@ if (! is_null($TRAFFIC_SHAPER_FILE)) {
     $value = '16384:16639';
   }
   putHtml('<input type="text" size="56" maxlength="128" value="'.$value.'" name="shaper_voipports" />');
+  putHtml('</td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  putHtml('<strong>CAKE Tuning Options</strong>');
+  putHtml('</td><td style="text-align: left;">&nbsp;');
+  putHtml('</td></tr>');
+  $tune_cake = getVARdef($vars, 'EXTSHAPE_TUNE_CAKE');
+  $tune_cake_array = preg_split('/\s+/', $tune_cake, -1, PREG_SPLIT_NO_EMPTY);
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  putHtml('Link Layer Adaption:');
+  putHtml('</td><td style="text-align: left;">');
+  putHtml('<select name="cake_lla">');
+  foreach ($cake_lla as $key => $value) {
+    $sel = (in_array($key, $tune_cake_array)) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;">');
+  putHtml('ACK Filter:');
+  putHtml('</td><td style="text-align: left;">');
+  putHtml('<select name="cake_ack_filter">');
+  foreach ($cake_ack_filter as $key => $value) {
+    $sel = (in_array($key, $tune_cake_array)) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
   putHtml('</td></tr>');
   putHtml('</table>');
 }
