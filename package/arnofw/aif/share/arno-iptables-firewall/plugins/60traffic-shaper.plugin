@@ -5,7 +5,7 @@ PLUGIN_NAME="Traffic-Shaper plugin"
 PLUGIN_VERSION="1.4.00"
 PLUGIN_CONF_FILE="traffic-shaper.conf"
 #
-# Last changed          : October 3, 2021
+# Last changed          : October 5, 2021
 # Requirements          : kernel 4.19 + iproute2
 # Comments              : This plugin will shape traffic. It borrows heavily on
 #                         the logic of Maciej's original script (below), with
@@ -252,7 +252,7 @@ plugin_start()
 # CAKE start function
 plugin_start_cake()
 {
-  local nat natif
+  local nat natif ether_vlan x
   # Some required modules are already loaded by the main script:
   modprobe_multi nf_nat ip_nat
 
@@ -277,8 +277,16 @@ plugin_start_cake()
         fi
       done
 
+      ether_vlan=""
+      for x in ${SHAPER_TUNE_CAKE}; do
+        if [ "$x" = "ethernet" -a "$eif1" != "${eif1#eth}" -a "$eif1" != "${eif1%.*}" ]; then
+          ether_vlan="ether-vlan"
+          break
+        fi
+      done
+
       # add CAKE root qdisc
-      tc qdisc add dev $eif1 root cake bandwidth ${UPLINK}kbit diffserv4 ${nat} ${SHAPER_TUNE_CAKE}
+      tc qdisc add dev $eif1 root cake bandwidth ${UPLINK}kbit diffserv4 ${nat} ${SHAPER_TUNE_CAKE} ${ether_vlan}
 
       incoming_traffic_limit $eif1
 
