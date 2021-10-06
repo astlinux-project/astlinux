@@ -57,11 +57,11 @@ Released @TBD@
 
 -- zabbix, version bump to 4.0.34
 
--- ca-certificates, update trusted root certificates 2021-07-05
+-- ca-certificates, update trusted root certificates 2021-09-30
 
 -- mac2vendor, oui.txt database snapshot 2021-09-29
 
--- Time Zone Database update, tzdata2021b and php-timezonedb-2021.2
+-- Time Zone Database update, tzdata2021c and php-timezonedb-2021.3
 
 ** Networking
 
@@ -73,6 +73,9 @@ Released @TBD@
                                           CVE-2021-22925, CVE-2021-22926, CVE-2021-22946, CVE-2021-22947
 
 -- LibreTLS, version bump to 3.3.4
+
+-- arnofw (AIF), traffic-shaper plugin, add CAKE support
+   New rc.conf variable, EXTSHAPE_TUNE_CAKE to append CAKE tuning options
 
 -- iperf, version bump to 2.1.4
 
@@ -102,9 +105,14 @@ Released @TBD@
 
 -- pjsip 2.10 (no change)
 
+-- neon, version bump to 0.32.1, used for Asterisk Calendar Support
+
 ** Web Interface
 
--- (no change)
+-- Network -> Firewall -> Traffic Shaping, add CAKE support
+   CAKE Tuning Options
+   == Link Layer Adaption: Optimizes framing for link type.
+   == ACK Filter: Only enable if your raw down/up ratio is 15/1 or greater.
 
 
 Additions for AstLinux 1.4.3:
