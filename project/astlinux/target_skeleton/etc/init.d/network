@@ -196,6 +196,44 @@ ipv6_tunnel()
   esac
 }
 
+failover_traffic_shaping()
+{
+  local action="$1" ether_vlan="" x IFS
+  local eif="$EXT2IF" uplink="$EXT2SHAPE_UP" tune="$EXT2SHAPE_TUNE_CAKE"
+
+  case $action in
+
+    start)
+      if [ -z "$uplink" ]; then
+        echo "failover_traffic_shaping: The EXT2SHAPE_UP variable must be defined." >&2
+        return
+      fi
+      modprobe sch_cake
+
+      unset IFS
+      for x in ${tune}; do
+        if [ "$x" = "ethernet" -a "$eif" != "${eif#eth}" -a "$eif" != "${eif%.*}" ]; then
+          ether_vlan="ether-vlan"
+          break
+        fi
+      done
+
+      ## Add CAKE root qdisc
+      tc qdisc add dev $eif root cake bandwidth ${uplink}kbit diffserv4 nat ${tune} ${ether_vlan}
+
+      ## Disable offloading on ethernet devices
+      if [ "$eif" != "${eif#eth}" ]; then
+        ethtool -K $eif tso off gso off gro off 2>/dev/null
+      fi
+      ;;
+
+    stop)
+      tc qdisc del dev $eif root 2>/dev/null
+      ;;
+
+  esac
+}
+
 bridge_load_configure()
 {
   local br_list="$1" br_name="$2" br IFS
@@ -628,12 +666,21 @@ start () {
     ipv6_tunnel start
   fi
 
+  ##Failover Interface Traffic Shaping
+  if [ "$EXT2SHAPE" = "yes" -a -n "$EXT2IF" ] && ! isextppp ext2if; then
+    failover_traffic_shaping start
+  fi
+
   echo "Network UP"
   sleep 1
 }
 
 stop () {
   local IF PID
+
+  if [ "$EXT2SHAPE" = "yes" -a -n "$EXT2IF" ] && ! isextppp ext2if; then
+    failover_traffic_shaping stop
+  fi
 
   if [ "$IPV6" = "yes" -a -n "$IPV6_TUNNEL" ]; then
     echo "Bringing down IPv6 tunnel..."

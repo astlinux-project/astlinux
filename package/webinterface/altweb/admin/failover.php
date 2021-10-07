@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2014 Lonnie Abelbeck
+// Copyright (C) 2014-2021 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -9,6 +9,7 @@
 // failover.php for AstLinux
 // 11-06-2014
 // 11-01-2015, Added DHCPv6 option
+// 10-07-2021, Added CAKE traffic shaping support
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -79,6 +80,24 @@ $secondary_delay_menu = array (
   '1200' => '20 minutes',
   '1800' => '30 minutes',
   '3600' => '60 minutes'
+);
+
+$cake_llt = array (
+  '' => 'disabled',
+  'ethernet' => 'Ethernet: ethernet',
+  'docsis' => 'Ethernet: docsis',
+  'pppoe-ptm' => 'VDSL2: pppoe-ptm',
+  'bridged-ptm' => 'VDSL2: bridged-ptm',
+  'pppoe-vcmux' => 'ADSL: pppoe-vcmux',
+  'pppoe-llcsnap' => 'ADSL: pppoe-llcsnap',
+  'bridged-vcmux' => 'ADSL: bridged-vcmux',
+  'bridged-llcsnap' => 'ADSL: bridged-llcsnap',
+  'conservative' => 'High Overhead: conservative'
+);
+
+$cake_ack_filter = array (
+  '' => 'disabled',
+  'ack-filter' => 'enabled'
 );
 
 // Function: saveFAILOVERsettings
@@ -174,6 +193,14 @@ function saveFAILOVERsettings($conf_dir, $conf_file) {
 
   $value = 'EXT2ROUTESIPV6="'.tuq($_POST['routes_ipv6']).'"';
   fwrite($fp, "### IPv6 Destination Routes\n".$value."\n");
+
+  fwrite($fp, "### Traffic Shaping\n");
+  $value = 'EXT2SHAPE="'.$_POST['shape'].'"';
+  fwrite($fp, $value."\n");
+  $value = 'EXT2SHAPE_UP="'.tuq($_POST['shape_up']).'"';
+  fwrite($fp, $value."\n");
+  $value = 'EXT2SHAPE_TUNE_CAKE="'.trim($_POST['cake_llt'].' '.$_POST['cake_ack_filter']).'"';
+  fwrite($fp, $value."\n");
 
   fwrite($fp, "### gui.failover.conf - end ###\n");
   fclose($fp);
@@ -464,6 +491,56 @@ require_once '../common/header.php';
   putHtml('</td><td style="text-align: left;" colspan="4">');
   $value = getVARdef($db, 'EXT2ROUTESIPV6', $cur_db);
   putHtml('<input type="text" size="48" maxlength="256" value="'.$value.'" name="routes_ipv6" />');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow0"><td class="dialogText" style="text-align: left;" colspan="6">');
+  putHtml('<strong>External Failover Traffic Shaper:</strong>');
+  putHtml('<i>(egress)</i>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Traffic Shaping:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  putHtml('<select name="shape">');
+  $value = getVARdef($db, 'EXT2SHAPE', $cur_db);
+  putHtml('<option value="no">disabled</option>');
+  $sel = ($value === 'yes') ? ' selected="selected"' : '';
+  putHtml('<option value="yes"'.$sel.'>enabled</option>');
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Uplink Speed:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  if (($value = getVARdef($db, 'EXT2SHAPE_UP', $cur_db)) === '') {
+    $value = '10000';
+  }
+  putHtml('<input type="text" size="8" maxlength="7" value="'.$value.'" name="shape_up" />');
+  putHtml('K bits-per-second');
+  putHtml('</td></tr>');
+
+  $tune_cake = getVARdef($db, 'EXT2SHAPE_TUNE_CAKE', $cur_db);
+  $tune_cake_array = preg_split('/\s+/', $tune_cake, -1, PREG_SPLIT_NO_EMPTY);
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('Link Layer Tuning:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  putHtml('<select name="cake_llt">');
+  foreach ($cake_llt as $key => $value) {
+    $sel = (in_array($key, $tune_cake_array)) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
+  putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="2">');
+  putHtml('ACK Filter:');
+  putHtml('</td><td style="text-align: left;" colspan="4">');
+  putHtml('<select name="cake_ack_filter">');
+  foreach ($cake_ack_filter as $key => $value) {
+    $sel = (in_array($key, $tune_cake_array)) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$key.'"'.$sel.'>'.$value.'</option>');
+  }
+  putHtml('</select>');
   putHtml('</td></tr>');
 
   putHtml('</table>');
