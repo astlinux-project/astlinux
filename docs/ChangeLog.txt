@@ -77,6 +77,9 @@ Released @TBD@
 -- arnofw (AIF), traffic-shaper plugin, add CAKE support
    New rc.conf variable, EXTSHAPE_TUNE_CAKE to append CAKE tuning options
 
+-- network, add CAKE traffic shaper support for External Failover Interface
+   New rc.conf variables: EXT2SHAPE, EXT2SHAPE_UP, EXT2SHAPE_TUNE_CAKE
+
 -- iperf, version bump to 2.1.4
 
 -- keepalived, version bump to 2.2.4
@@ -111,8 +114,10 @@ Released @TBD@
 
 -- Network -> Firewall -> Traffic Shaping, add CAKE support
    CAKE Tuning Options
-   == Link Layer Adaption: Optimizes framing for link type.
+   == Link Layer Tuning: Optimizes framing for link type.
    == ACK Filter: Only enable if your raw down/up ratio is 15/1 or greater.
+
+-- Network -> WAN Failover -> External Failover Traffic Shaper, new feature for External Failover Interface.
 
 
 Additions for AstLinux 1.4.3:
