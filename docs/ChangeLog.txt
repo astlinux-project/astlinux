@@ -101,7 +101,7 @@ Released @TBD@
 -- Asterisk 13.38.3 ('13se' version bump)
    Latest Asterisk 13.x "Security Fixes Only" version, built --without-pjproject
 
--- Asterisk 13.38.3 (version bump) and 16.21.0 (version bump)
+-- Asterisk 13.38.3 (version bump) and 16.21.1 (version bump)
    New Asterisk 16 applications: WaitForCondition, Reload, StoreDTMF, SendMF
    New Asterisk 16 functions: FRAME_DROP, SAYFILES, SCRAMBLE
 
