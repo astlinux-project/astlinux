@@ -74,6 +74,10 @@ Released @TBD@
 
 -- LibreTLS, version bump to 3.3.4
 
+-- arnofw (AIF), reload-blocklist-netset script, add support for 'apiban'
+   Note: 'apiban' requires an API Key in /mnt/kd/apiban.conf via https://apiban.org/
+   More info: https://doc.astlinux-project.org/userdoc:tt_firewall_external_block_list#updating_netset_blocklists
+
 -- arnofw (AIF), traffic-shaper plugin, add CAKE support
    New rc.conf variable, EXTSHAPE_TUNE_CAKE to append CAKE tuning options
 
