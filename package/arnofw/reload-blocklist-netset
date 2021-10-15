@@ -42,6 +42,7 @@ Available IPv4 Blocklist Netsets:
  firehol_level2: Blacklist that track attacks, during about the last 48 hours.
  firehol_level3: Blacklist that track attacks, spyware, viruses, reported or detected in the last 30 days.
  firehol_webclient: Blacklist made from blocklists that a web client should never talk to. Use with firehol_level1.
+         apiban: REST API for sharing IP addresses sending unwanted SIP traffic. Requires API Key via https://apiban.org/
        asterisk: Aggregate multiple Asterisk/SIP/VoIP blacklists, including blocklist_de_sip.
          voipbl: VoIP Blacklist - no longer maintained, not recommended.
   spamhaus_drop: Spamhaus DROP (Don't Route Or Peer), consisting of netblocks that are "hijacked" by cyber-crime operations.
@@ -98,11 +99,14 @@ netset_url()
       ALT_URL="$FIREHOL/spamhaus_edrop.netset"
       AGE=43200
       ;;
+    apiban)
+      URL="apiban://"
+      AGE=600
+      ;;
     asterisk)
-      URL="$FIREHOL/blocklist_de_sip.ipset $FIREHOL/bi_asterisk_0_1d.ipset $FIREHOL/bi_asterisk_2_30d.ipset
-           $FIREHOL/bi_voip_0_1d.ipset $FIREHOL/bi_voip_1_7d.ipset"
+      URL="$FIREHOL/blocklist_de_sip.ipset"
       AGE=3600
-      FILTER=1
+      FILTER=0
       ;;
     custom)
       URL="$CUSTOM"
@@ -125,7 +129,22 @@ netset_url()
 
 download_file()
 {
-  local file="$1" url="$2"
+  local file="$1" url="$2" mesg rtn
+
+  if [ "${url%%:*}" = "apiban" ]; then
+    if [ ! -f /mnt/kd/apiban.conf ]; then
+      mesg="Missing API Key file: /mnt/kd/apiban.conf via https://apiban.org/"
+      logger -s -t reload-blocklist-netset -p kern.info "$mesg"
+      return 1
+    fi
+    apiban-netset > "$file"
+    rtn=$?
+    if [ $rtn -ne 0 ]; then
+      mesg="apiban-netset: Error code: $rtn"
+      logger -s -t reload-blocklist-netset -p kern.info "$mesg"
+    fi
+    return $rtn
+  fi
 
   curl -sSfL --globoff --retry 1 --connect-timeout 15 --max-time 1800 -o "$file" "$url" >/dev/null
 }

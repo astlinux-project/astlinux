@@ -1,0 +1,107 @@
+#!/usr/bin/php -qC
+<?php
+
+//
+// apiban-netset
+//
+// Copyright (C) 2021 Lonnie Abelbeck
+//
+// This is free software, licensed under the GNU General Public License
+// version 3 as published by the Free Software Foundation; you can
+// redistribute it and/or modify it under the terms of the GNU
+// General Public License; and comes with ABSOLUTELY NO WARRANTY.
+//
+// REST API for sharing IP addresses sending unwanted SIP traffic
+// https://apiban.org/doc.html
+//
+
+// AstLinux specific locations
+//
+$apikey_file = '/mnt/kd/apiban.conf';
+$iprange_cmd = '/usr/bin/iprange';
+
+// API: https://apiban.org/api/[APIKEY]/banned/[ID]
+//
+$apiban_url = 'https://apiban.org/api';
+$apiban_apikey = '';
+$apiban_id = '100';
+
+if (is_file($apikey_file)) {
+  $apiban_apikey = trim(file_get_contents($apikey_file));
+} else {
+  echo "## apiban-netset: Missing API Key file: $apikey_file\n";
+  exit(1);
+}
+if (! is_executable($iprange_cmd)) {
+  echo "## apiban-netset: Missing command: $iprange_cmd\n";
+  exit(1);
+}
+if (($tmpfile = tempnam("/tmp", "apiban_netset_")) === FALSE) {
+  echo "## apiban-netset: Error creating tmpfile.\n";
+  exit(1);
+}
+if (($fh = @fopen($tmpfile, "wb")) === FALSE) {
+  @unlink($tmpfile);
+  echo "## apiban-netset: Error opening tmpfile.\n";
+  exit(1);
+}
+
+if (($curl_handle = curl_init()) === FALSE) {
+  fclose($fh);
+  @unlink($tmpfile);
+  echo "## apiban-netset: Error initializing curl module.\n";
+  exit(1);
+}
+
+$exit_err = 0;
+
+do {
+  curl_setopt_array($curl_handle,
+    array(
+      CURLOPT_URL            => $apiban_url.'/'.$apiban_apikey.'/banned/'.$apiban_id,
+      CURLOPT_HEADER         => FALSE,
+      CURLOPT_RETURNTRANSFER => TRUE
+    )
+  );
+  if (($data = curl_exec($curl_handle)) === FALSE) {
+    $exit_err = 2;
+    break;
+  }
+  if (($status = curl_getinfo($curl_handle,  CURLINFO_RESPONSE_CODE)) === FALSE) {
+    $exit_err = 3;
+    break;
+  }
+  if (($json = json_decode($data, TRUE)) === NULL) {
+    $exit_err = 4;
+    break;
+  }
+  if (isset($json['ipaddress'], $json['ID'])) {
+    if ($status == '200') {
+      fwrite($fh, implode("\n", $json['ipaddress'])."\n");
+      $apiban_id = $json['ID'];
+    } elseif ($status == '400') {  // no new bans
+      break;
+    } elseif ($status == '403') {  // unauthorized
+      $exit_err = 5;
+    } elseif ($status == '429') {  // rate limit exceeded
+      $exit_err = 6;
+    } else  {  // other error
+      $exit_err = 7;
+    }
+  } else {  // server error
+    $exit_err = 8;
+    break;
+  }
+} while ($status == '200');
+
+curl_close($curl_handle);
+
+fclose($fh);
+passthru($iprange_cmd.' '.$tmpfile, $result);
+if ($result != 0) {
+  $exit_err = 9;
+}
+@unlink($tmpfile);
+
+exit($exit_err);
+?>

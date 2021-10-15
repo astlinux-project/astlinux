@@ -36,6 +36,7 @@ define ARNOFW_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0444 package/arnofw/arnofw.wrapper $(TARGET_DIR)/$(ARNOFW_SCRIPT_DIR)/astlinux.shim
 	$(INSTALL) -D -m 0755 package/arnofw/reload-spamhaus-drop $(TARGET_DIR)/usr/sbin/reload-spamhaus-drop
 	$(INSTALL) -D -m 0755 package/arnofw/reload-blocklist-netset $(TARGET_DIR)/usr/sbin/reload-blocklist-netset
+	$(INSTALL) -D -m 0755 package/arnofw/apiban-netset $(TARGET_DIR)/usr/sbin/apiban-netset
 endef
 
 define ARNOFW_UNINSTALL_TARGET_CMDS
@@ -45,6 +46,7 @@ define ARNOFW_UNINSTALL_TARGET_CMDS
 	rm -rf $(TARGET_DIR)/stat/$(ARNOFW_CONFIG_DIR)
 	rm -f $(TARGET_DIR)/usr/sbin/reload-spamhaus-drop
 	rm -f $(TARGET_DIR)/usr/sbin/reload-blocklist-netset
+	rm -f $(TARGET_DIR)/usr/sbin/apiban-netset
 endef
 
 $(eval $(call GENTARGETS,package,arnofw))
