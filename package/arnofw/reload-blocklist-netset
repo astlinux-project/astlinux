@@ -102,6 +102,7 @@ netset_url()
     apiban)
       URL="apiban://"
       AGE=600
+      FILTER=1
       ;;
     asterisk)
       URL="$FIREHOL/blocklist_de_sip.ipset"
@@ -127,9 +128,32 @@ netset_url()
   esac
 }
 
+curl_exec()
+{
+  local file="$1" url="$2" curlopt_file rtn
+
+  ## Use a curlopt_file to prevent shell injection and hide user supplied data
+  ##
+  curlopt_file="$(mktemp "/tmp/reload_blocklist_curl_XXXXXX")"
+  cat <<EOF >"$curlopt_file"
+silent
+show-error
+fail
+globoff
+connect-timeout=15
+max-time=180
+output="${file}"
+url="${url}"
+EOF
+  curl --config "$curlopt_file" 2>&1 >/dev/null
+  rtn=$?
+  rm -f "$curlopt_file"
+  exit $rtn
+}
+
 download_file()
 {
-  local file="$1" url="$2" mesg rtn
+  local file="$1" url="$2" mesg rtn apikey err_str
 
   if [ "${url%%:*}" = "apiban" ]; then
     if [ ! -f /mnt/kd/apiban.conf ]; then
@@ -137,10 +161,12 @@ download_file()
       logger -s -t reload-blocklist-netset -p kern.info "$mesg"
       return 1
     fi
-    apiban-netset > "$file"
+    apikey="$(tr -d '[[:space:]]' < /mnt/kd/apiban.conf)"
+    url="https://apiban.org/ipset/${apikey}/list"
+    err_str="$(curl_exec "$file" "$url")"
     rtn=$?
     if [ $rtn -ne 0 ]; then
-      mesg="apiban-netset: Error code: $rtn"
+      mesg="apiban: $err_str"
       logger -s -t reload-blocklist-netset -p kern.info "$mesg"
     fi
     return $rtn
