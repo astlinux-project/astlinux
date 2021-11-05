@@ -10,6 +10,33 @@ Additions for AstLinux 1.4.5:
 
 Released @TBD@
 
+** System
+
+-- Linux Kernel 4.19.208
+
+-- ca-certificates, update trusted root certificates 2021-10-26
+
+-- Time Zone Database update, tzdata2021e and php-timezonedb-2021.5
+
+** Networking
+
+-- msmtp, version bump to 1.8.19, 'msmtpd' security fix
+
+** Asterisk
+
+-- Asterisk 13.38.3 ('13se' no change)
+   Last Asterisk 13.x "Legacy" version, built --without-pjproject
+
+-- Asterisk 13.38.3 (no change) and 16.22.0 (version bump)
+
+-- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
+
+-- pjsip 2.10 (no change)
+
+** Web Interface
+
+-- (no change)
+
 
 Additions for AstLinux 1.4.4:
 =============================
