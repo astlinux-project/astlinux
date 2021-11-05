@@ -26,7 +26,7 @@ start () {
     echo "Starting msmtpd..."
 
     # Start SMTP localhost server daemon
-    start-stop-daemon -S -x /usr/sbin/msmtpd -p $PIDFILE -m -b -- --command '/usr/sbin/sendmail -f %F'
+    start-stop-daemon -S -x /usr/sbin/msmtpd -p $PIDFILE -m -b -- --command '/usr/sbin/sendmail -f %F --'
   fi
 }
 
