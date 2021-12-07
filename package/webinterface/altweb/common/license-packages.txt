@@ -9,7 +9,7 @@ ex-vi~Copyright (c) 2001-2002 Caldera International Inc. All rights reserved.
 RUNNIX~Copyright (c) 2006-2021 AstLinux Project, Kristian Kielhofner.
 libSRTP~Copyright (c) 2001-2019 Cisco Systems, Inc. All rights reserved.
 iLBC CODEC~Copyright (c) 2011 The WebRTC project authors. All rights reserved.
-Web Interface~Copyright (c) 2008-2021 Lonnie Abelbeck.
+Web Interface~Copyright (c) 2008-2022 Lonnie Abelbeck.
 shellinabox~Copyright (c) 2008-2016 Markus Gutschke, Luka Krajger.
 Asterisk~Copyright (c) 1999-2021 Digium, Inc.
 DAHDI~Copyright (c) 2001-2019 Digium, Inc.
