@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LLDPD_VERSION = 1.0.12
+LLDPD_VERSION = 1.0.13
 LLDPD_SITE = https://media.luffy.cx/files/lldpd
 LLDPD_DEPENDENCIES = host-pkg-config $(if $(BR2_PACKAGE_LIBCAP),libcap)
 
