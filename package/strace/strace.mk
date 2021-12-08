@@ -4,7 +4,7 @@
 #
 #############################################################
 
-STRACE_VERSION = 5.14
+STRACE_VERSION = 5.15
 STRACE_SOURCE = strace-$(STRACE_VERSION).tar.xz
 STRACE_SITE = https://github.com/strace/strace/releases/download/v$(STRACE_VERSION)
 
