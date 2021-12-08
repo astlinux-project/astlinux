@@ -14,13 +14,33 @@ Released @TBD@
 
 -- Linux Kernel 4.19.208
 
+-- ethtool, version bump to 5.15
+
+-- kexec, version bump to 2.0.23
+
+-- rng-tools, version 6.5, jitterentropy version bump to 3.3.1
+
+-- strace, version bump to 5.15
+
 -- ca-certificates, update trusted root certificates 2021-10-26
 
 -- Time Zone Database update, tzdata2021e and php-timezonedb-2021.5
 
 ** Networking
 
+-- WireGuard VPN, module 1.0.20211208 (version bump), tools 1.0.20210914 (no change)
+
+-- chrony, version bump to 4.2-pre1
+
+-- iperf, version bump to 2.1.5
+
+-- libcurl (curl) version bump to 7.80.0
+
+-- LibreTLS, version bump to 3.4.2
+
 -- msmtp, version bump to 1.8.19, 'msmtpd' security fix
+
+-- sngrep, version bump to 1.4.10
 
 ** Asterisk
 
@@ -35,7 +55,7 @@ Released @TBD@
 
 ** Web Interface
 
--- (no change)
+-- Status tab, updated "Show Licenses" information.
 
 
 Additions for AstLinux 1.4.4:
