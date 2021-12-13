@@ -1,0 +1,78 @@
+From 1b2018e9219400735a340837659b3f4e201618e9 Mon Sep 17 00:00:00 2001
+From: Benno Schulenberg <bensberg@telfort.nl>
+Date: Sun, 12 May 2019 10:36:15 +0200
+Subject: [PATCH] files: check for writability by the access bits, not by
+ trying to append
+
+Trying to append does not work on a fifo, and we'd like to be able to
+open a fifo again.  Also, the append test causes a close event for the
+given file at the moment of opening it, which makes using 'inotify' for
+waiting for this file to be closed useless.
+
+Commit f8f90272 added the append test, but the original request
+(https://lists.gnu.org/archive/html/info-nano/2009-05/msg00000.html
+by Damien Joldersma) asked only for a warning when the user did not
+have enough privileges to write to the file.
+
+So, drop the append test and just check the access bits.
+
+This fixes https://bugs.debian.org/583196
+and fixes https://savannah.gnu.org/bugs/?29312.
+
+--- nano-2.7.5/src/files.c.orig	2021-12-13 14:57:55.280427197 -0600
++++ nano-2.7.5/src/files.c	2021-12-13 14:59:38.617239241 -0600
+@@ -647,45 +647,6 @@
+ }
+ #endif /* !DISABLE_MULTIBUFFER */
+ 
+-/* Do a quick permissions check by verifying whether the file is appendable.
+- * Err on the side of permissiveness (reporting TRUE when it might be wrong)
+- * to not fluster users editing on odd filesystems by printing incorrect
+- * warnings. */
+-int is_file_writable(const char *filename)
+-{
+-    struct stat fileinfo, fileinfo2;
+-    int fd;
+-    FILE *f;
+-    char *full_filename;
+-    bool result = TRUE;
+-
+-    if (ISSET(VIEW_MODE))
+-	return TRUE;
+-
+-    assert(filename != NULL);
+-
+-    /* Get the specified file's full path. */
+-    full_filename = get_full_path(filename);
+-
+-    /* Okay, if we can't stat the absolute path due to some component's
+-     * permissions, just try the relative one. */
+-    if (full_filename == NULL ||
+-		(stat(full_filename, &fileinfo) == -1 && stat(filename, &fileinfo2) != -1))
+-	full_filename = mallocstrcpy(NULL, filename);
+-
+-    if ((fd = open(full_filename, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR |
+-		S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)) == -1 ||
+-		(f = fdopen(fd, "a")) == NULL)
+-	result = FALSE;
+-    else
+-	fclose(f);
+-
+-    close(fd);
+-    free(full_filename);
+-
+-    return result;
+-}
+-
+ /* Make a new line of text from the given buf, which is of length buf_len.
+  * Then attach this line after prevnode. */
+ filestruct *read_line(char *buf, size_t buf_len, filestruct *prevnode)
+@@ -831,7 +792,7 @@
+     fclose(f);
+     if (fd > 0 && checkwritable) {
+ 	close(fd);
+-	writable = is_file_writable(filename);
++	writable = (ISSET(VIEW_MODE) || access(filename, W_OK) == 0);
+     }
+ 
+     /* Did we not get a newline and still have stuff to do? */
