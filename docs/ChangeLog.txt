@@ -18,6 +18,8 @@ Released @TBD@
 
 -- kexec, version bump to 2.0.23
 
+-- nano, version 2.7.5, fix issue where not saving a file could still copy the file to /mnt/asturw/
+
 -- rng-tools, version 6.5, jitterentropy version bump to 3.3.1
 
 -- strace, version bump to 5.15
@@ -41,6 +43,8 @@ Released @TBD@
 -- msmtp, version bump to 1.8.19, 'msmtpd' security fix
 
 -- sngrep, version bump to 1.4.10
+
+-- unbound, version bump to 1.14.0
 
 ** Asterisk
 
