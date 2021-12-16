@@ -30,11 +30,13 @@ Released @TBD@
 
 ** Networking
 
+-- OpenSSL, version bump to 1.1.1m, security fixes: none
+
 -- WireGuard VPN, module 1.0.20211208 (version bump), tools 1.0.20210914 (no change)
 
--- chrony, version bump to 4.2-pre1
+-- chrony, version bump to 4.2
 
--- iperf, version bump to 2.1.5
+-- iperf, version bump to 2.1.6
 
 -- libcurl (curl) version bump to 7.80.0
 
