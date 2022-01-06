@@ -12,7 +12,9 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.208
+-- Linux Kernel 4.19.224 (version bump), security and bug fixes.
+
+-- e2fsprogs, version bump to 1.46.5
 
 -- ethtool, version bump to 5.15
 
@@ -23,6 +25,8 @@ Released @TBD@
 -- nano, version 2.7.5, fix issue where not saving a file could still copy the file to /mnt/asturw/
 
 -- rng-tools, version 6.5, jitterentropy version bump to 3.3.1
+
+-- sqlite, version bump to 3.37.2
 
 -- strace, version bump to 5.15
 
@@ -53,6 +57,8 @@ Released @TBD@
 -- sngrep, version bump to 1.4.10
 
 -- unbound, version bump to 1.14.0
+
+-- whois, version bump to 5.5.11
 
 ** Asterisk
 
