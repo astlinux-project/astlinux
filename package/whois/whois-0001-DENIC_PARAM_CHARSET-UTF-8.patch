@@ -1,6 +1,6 @@
 --- whois-5.2.13/whois.c.orig	2016-11-08 07:17:26.381230844 -0600
 +++ whois-5.2.13/whois.c	2016-11-08 07:46:05.563327605 -0600
-@@ -670,7 +670,7 @@
+@@ -678,7 +678,7 @@
  #ifdef HAVE_ICONV
  # define DENIC_PARAM_CHARSET ""
  #else
