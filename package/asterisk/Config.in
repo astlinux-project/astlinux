@@ -13,7 +13,7 @@ config BR2_PACKAGE_ASTERISK
 choice
 	prompt "Asterisk Version"
 	depends on BR2_PACKAGE_ASTERISK
-	default BR2_PACKAGE_ASTERISK_v13
+	default BR2_PACKAGE_ASTERISK_v16
 	help
 		Select which version of Asterisk to compile and install.
 
@@ -22,13 +22,13 @@ choice
 		help
 			Asterisk LTS Series, Stable Edition
 
-	config BR2_PACKAGE_ASTERISK_v13
-		bool "Asterisk v13.x"
+	config BR2_PACKAGE_ASTERISK_v16
+		bool "Asterisk v16.x"
 		help
 			Asterisk LTS Series, Latest Version
 
-	config BR2_PACKAGE_ASTERISK_v16
-		bool "Asterisk v16.x"
+	config BR2_PACKAGE_ASTERISK_v18
+		bool "Asterisk v18.x"
 		help
 			Asterisk LTS Series, Latest Version
 endchoice

@@ -4,12 +4,12 @@
 #
 ##############################################################
 
-ifeq ($(BR2_PACKAGE_ASTERISK_v13),y)
-ASTERISK_VERSION := 13.38.3
+ifeq ($(BR2_PACKAGE_ASTERISK_v16),y)
+ASTERISK_VERSION := 16.23.0
 ASTERISK_LABEL :=
 else
- ifeq ($(BR2_PACKAGE_ASTERISK_v16),y)
-ASTERISK_VERSION := 16.23.0
+ ifeq ($(BR2_PACKAGE_ASTERISK_v18),y)
+ASTERISK_VERSION := 18.9.0
 ASTERISK_LABEL :=
  else
 ASTERISK_VERSION := 13.38.3
@@ -300,7 +300,7 @@ $(TARGET_DIR)/$(ASTERISK_TARGET_BINARY): $(ASTERISK_DIR)/$(ASTERISK_BINARY)
 		USER_MAKEOPTS=menuselect.makeopts \
 		ASTVARRUNDIR=/var/run/asterisk \
 		SOUNDS_CACHE_DIR=$(DL_DIR) \
-		DESTDIR=$(TARGET_DIR) install samples
+		DESTDIR=$(TARGET_DIR) install samples install-headers
 
 	mv $(TARGET_DIR)/usr/include/asterisk.h \
 	   $(TARGET_DIR)/usr/include/asterisk \
