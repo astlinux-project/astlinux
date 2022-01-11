@@ -83,21 +83,21 @@ set_asterisk_version()
   case $1 in
     ast13se)
       CONFIG="astlinux-ast13se.config"
-      ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *13./) {print $2} }' package/asterisk/asterisk.mk | tail -n1)"
+      ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *13./) {print $2; exit} }' package/asterisk/asterisk.mk)"
       ASTERISK_VERSION="asterisk-${ASTERISK_VERSION// /}se"
       FIRMWARE="ast13se-firmware-1.x"
-      ;;
-    ast13)
-      CONFIG="astlinux-ast13.config"
-      ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *13./) {print $2; exit} }' package/asterisk/asterisk.mk)"
-      ASTERISK_VERSION="asterisk-${ASTERISK_VERSION// /}"
-      FIRMWARE="ast13-firmware-1.x"
       ;;
     ast16)
       CONFIG="astlinux-ast16.config"
       ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *16./) {print $2; exit} }' package/asterisk/asterisk.mk)"
       ASTERISK_VERSION="asterisk-${ASTERISK_VERSION// /}"
       FIRMWARE="ast16-firmware-1.x"
+      ;;
+    ast18)
+      CONFIG="astlinux-ast18.config"
+      ASTERISK_VERSION="$(awk -F'=' '/^ASTERISK_VERSION/ { if ($2 ~ /^ *18./) {print $2; exit} }' package/asterisk/asterisk.mk)"
+      ASTERISK_VERSION="asterisk-${ASTERISK_VERSION// /}"
+      FIRMWARE="ast18-firmware-1.x"
       ;;
     *)
       echo "master-build: Unknown Asterisk Version."
@@ -164,10 +164,10 @@ echo "Regenerate the initrd"
 rm -f initrd.img
 
 #
-# Build Asterisk 13se, 13 and 16 versions of AstLinux
+# Build Asterisk 13se, 16 and 18 versions of AstLinux
 #
 
-for asterisk in ast13se ast13 ast16; do
+for asterisk in ast13se ast16 ast18; do
 
   set_asterisk_version $asterisk
 

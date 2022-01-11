@@ -119,12 +119,12 @@ set_asterisk_version()
       FIRMWARE="ast13se-firmware-1.x"
       MIRROR_FIRMWARE="$FIRMWARE"
       ;;
-    ast13)
-      FIRMWARE="ast13-firmware-1.x"
-      MIRROR_FIRMWARE="$FIRMWARE"
-      ;;
     ast16)
       FIRMWARE="ast16-firmware-1.x"
+      MIRROR_FIRMWARE="$FIRMWARE"
+      ;;
+    ast18)
+      FIRMWARE="ast18-firmware-1.x"
       MIRROR_FIRMWARE="$FIRMWARE"
       ;;
     *)
@@ -173,7 +173,7 @@ delete_dir "$CHANGELOG_DIR"
 # Remove pre-existing iso(s)
 delete_dir "$ISO_DIR"
 
-for asterisk in ast13se ast13 ast16; do
+for asterisk in ast13se ast16 ast18; do
 
   set_asterisk_version $asterisk
 
