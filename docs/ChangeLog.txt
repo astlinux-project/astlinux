@@ -36,6 +36,8 @@ Released @TBD@
 
 -- udev (eudev), version bump to 3.2.11, new "eudev-project" Alpine, Devuan and Gentoo maintainers.
 
+-- Default HTTPS certificate, use 2048 key length
+
 -- ca-certificates, update trusted root certificates 2021-10-26
 
 -- Time Zone Database update, tzdata2021e and php-timezonedb-2021.5
@@ -78,6 +80,8 @@ Released @TBD@
 ** Web Interface
 
 -- Status tab, updated "Show Licenses" information.
+
+-- Network tab, Non-ACME Self-Signed HTTPS Certificate, use 2048 key length.
 
 
 Additions for AstLinux 1.4.4:
