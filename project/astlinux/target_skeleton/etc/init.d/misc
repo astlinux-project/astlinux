@@ -12,7 +12,7 @@ gen_https_cert()
   openssl req \
     -new -batch \
     -sha256 \
-    -newkey rsa:1024 \
+    -newkey rsa:2048 \
     -days 36500 \
     -nodes \
     -x509 \
