@@ -24,6 +24,8 @@ Released @TBD@
 
 -- liburiparser, version 0.9.1, backport security fixes: CVE-2021-46141, CVE-2021-46142
 
+-- logrotate, version bump to 3.19.0
+
 -- nano, version 2.7.5, fix issue where not saving a file could still copy the file to /mnt/asturw/
 
 -- rng-tools, version 6.5, jitterentropy version bump to 3.3.1
@@ -48,7 +50,7 @@ Released @TBD@
 
 -- iperf, version bump to 2.1.6
 
--- libcurl (curl) version bump to 7.80.0
+-- libcurl (curl) version bump to 7.81.0
 
 -- LibreTLS, version bump to 3.4.2
 
@@ -67,7 +69,7 @@ Released @TBD@
 -- Asterisk 13.38.3 ('13se' no change)
    Last Asterisk 13.x "Legacy" version, built --without-pjproject
 
--- Asterisk 13.38.3 (no change) and 16.22.0 (version bump)
+-- Asterisk 16.23.0 (version bump) and 18.9.0 (new version)
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
 
