@@ -1,6 +1,6 @@
 --- monit-5.10/src/http/cervlet.c.orig	2014-12-18 15:56:05.000000000 -0600
 +++ monit-5.10/src/http/cervlet.c	2014-12-18 15:57:08.000000000 -0600
-@@ -782,10 +782,10 @@
+@@ -787,10 +787,10 @@
                              " a:hover {text-decoration: none;} "\
                              " a {text-decoration: underline;color:#222} "\
                              " table {border-collapse:collapse; border:0;} "\
@@ -15,7 +15,7 @@
                              " .gray-text {color:#999999;} "\
                              " .blue-text {color:#0000ff;} "\
                              " .yellow-text {color:#ffff00;} "\
-@@ -800,16 +800,16 @@
+@@ -805,16 +805,16 @@
                              " /*Opera Fix*/body:before {content:\"\";height:100%%;float:left;width:0;margin-top:-32767px;} "\
                              " #footer {position: relative;margin-top: -50px; height: 50px; clear:both; font-size:11px;color:#777;text-align:center;} "\
                              " #footer a {color:#333;} #footer a:hover {text-decoration: none;} "\
