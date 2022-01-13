@@ -1,6 +1,6 @@
 --- darkstat-3.0.717/html.c.orig	2013-11-14 13:36:46.000000000 -0600
 +++ darkstat-3.0.717/html.c	2013-11-14 13:39:51.000000000 -0600
-@@ -51,12 +51,13 @@
+@@ -53,12 +53,13 @@
           "<li class=\"label\">" PACKAGE_STRING "</li>"
           "<li><a href=\"%s/\">graphs</a></li>"
           "<li><a href=\"%s/hosts/\">hosts</a></li>"

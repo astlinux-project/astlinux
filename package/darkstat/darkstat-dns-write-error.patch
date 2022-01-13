@@ -8,7 +8,7 @@
  
  struct dns_reply {
     struct addr addr;
-@@ -143,9 +144,12 @@
+@@ -142,9 +143,12 @@
     num_w = write(dns_sock[PARENT], ipaddr, sizeof(*ipaddr)); /* won't block */
     if (num_w == 0)
        warnx("dns_queue: write: ignoring end of file");

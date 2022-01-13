@@ -7,5 +7,5 @@ config BR2_PACKAGE_DARKSTAT
 	  Captures network traffic, calculates statistics about usage,
 	  and serves reports over HTTP.
 	  	  
-	  http://unix4lyfe.org/darkstat/
+	  https://github.com/emikulic/darkstat
 

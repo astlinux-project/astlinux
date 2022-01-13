@@ -3,11 +3,15 @@
 # darkstat
 #
 #############################################################
-DARKSTAT_VERSION = 3.0.719
-DARKSTAT_SITE = https://www.unix4lyfe.org/darkstat
-DARKSTAT_SOURCE = darkstat-$(DARKSTAT_VERSION).tar.bz2
+
+DARKSTAT_VERSION = 3.0.721
+DARKSTAT_SOURCE = darkstat-$(DARKSTAT_VERSION).tar.gz
+DARKSTAT_SITE = https://github.com/emikulic/darkstat/archive/$(DARKSTAT_VERSION)
 
 DARKSTAT_DEPENDENCIES = zlib libpcap
+
+# no configure built
+DARKSTAT_AUTORECONF = YES
 
 DARKSTAT_UNINSTALL_STAGING_OPT = --version
 
