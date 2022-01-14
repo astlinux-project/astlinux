@@ -26,13 +26,15 @@ Released @TBD@
 
 -- logrotate, version bump to 3.19.0
 
+-- Monit, version bump to 5.30.0
+
 -- nano, version 2.7.5, fix issue where not saving a file could still copy the file to /mnt/asturw/
 
 -- rng-tools, version 6.5, jitterentropy version bump to 3.3.1
 
 -- sqlite, version bump to 3.37.2
 
--- strace, version bump to 5.15
+-- strace, version bump to 5.16
 
 -- udev (eudev), version bump to 3.2.11, new "eudev-project" Alpine, Devuan and Gentoo maintainers.
 
@@ -50,6 +52,8 @@ Released @TBD@
 
 -- chrony, version bump to 4.2
 
+-- darkstat, version bump to 3.0.721
+
 -- iperf, version bump to 2.1.6
 
 -- libcurl (curl) version bump to 7.81.0
@@ -58,7 +62,7 @@ Released @TBD@
 
 -- msmtp, version bump to 1.8.19, 'msmtpd' security fix
 
--- prosody, version bump to 0.11.11
+-- prosody, version bump to 0.11.12
 
 -- sngrep, version bump to 1.4.10
 
@@ -76,6 +80,12 @@ Released @TBD@
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
 
 -- pjsip 2.10 (no change)
+
+-- neon, version bump to 0.32.2, used for Asterisk Calendar Support
+
+-- FOP2, available version bump to 2.31.31
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
