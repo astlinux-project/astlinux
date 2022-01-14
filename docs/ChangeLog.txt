@@ -54,6 +54,8 @@ Released @TBD@
 
 -- darkstat, version bump to 3.0.721
 
+-- dnsmasq, version 2.84, patch: Minimum safe packet size is recommended to be 1232
+
 -- iperf, version bump to 2.1.6
 
 -- libcurl (curl) version bump to 7.81.0
