@@ -21,3 +21,14 @@
          HttpRequest req = NULL;
          NEW(req);
          req->S = S;
+--- monit-5.30.0/src/http/cervlet.c.orig	2022-01-14 09:26:35.131324753 -0600
++++ monit-5.30.0/src/http/cervlet.c	2022-01-14 09:27:35.575267016 -0600
+@@ -699,7 +699,7 @@
+         if (STR_DEF(req->url)) {
+                 // #1009: Redirect back to the same url so a reload in the browser does not perform a POST again
+                 set_status(res, SC_MOVED_TEMPORARILY);
+-                set_header(res, "Location", "%s", req->url);
++                set_header(res, "Location", "/admin/monit%s", req->url);
+         }
+ }
+ 
