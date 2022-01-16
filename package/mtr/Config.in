@@ -8,5 +8,5 @@ config BR2_PACKAGE_MTR
 	  mtr combines the functionality of the 'traceroute' and 'ping'
 	  programs in a single network diagnostic tool.
 	  	  
-	  http://www.bitwizard.nl/mtr/
+	  https://github.com/traviscross/mtr
 
