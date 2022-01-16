@@ -38,6 +38,8 @@ Released @TBD@
 
 -- udev (eudev), version bump to 3.2.11, new "eudev-project" Alpine, Devuan and Gentoo maintainers.
 
+-- zabbix, version bump to 4.0.37
+
 -- Default HTTPS certificate, use 2048 key length
 
 -- ca-certificates, update trusted root certificates 2021-10-26
@@ -63,6 +65,8 @@ Released @TBD@
 -- LibreTLS, version bump to 3.4.2
 
 -- msmtp, version bump to 1.8.19, 'msmtpd' security fix
+
+-- mtr, version bump to 0.95
 
 -- prosody, version bump to 0.11.12
 
