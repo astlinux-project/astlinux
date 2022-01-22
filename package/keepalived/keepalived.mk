@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-KEEPALIVED_VERSION = 2.2.4
+KEEPALIVED_VERSION = 2.2.7
 KEEPALIVED_SOURCE = keepalived-$(KEEPALIVED_VERSION).tar.gz
 KEEPALIVED_SITE = http://www.keepalived.org/software
 KEEPALIVED_DEPENDENCIES = host-pkg-config linux openssl
@@ -17,7 +17,7 @@ KEEPALIVED_CONF_OPT = \
 	--disable-nftables \
 	--disable-track-process \
 	--disable-linkbeat \
-	--with-run-dir=/var \
+	--runstatedir=/var/run \
 	--with-init=SYSV
 
 ifeq ($(BR2_PACKAGE_IPTABLES),y)
