@@ -4,9 +4,8 @@
 #
 #############################################################
 
-JPEG_VERSION = 9d
+JPEG_VERSION = 9e
 JPEG_SITE = https://www.ijg.org/files
-#JPEG_SITE = https://s3.amazonaws.com/files.astlinux-project
 JPEG_SOURCE = jpegsrc.v$(JPEG_VERSION).tar.gz
 JPEG_INSTALL_STAGING = YES
 
