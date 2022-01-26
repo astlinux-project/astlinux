@@ -1,8 +1,8 @@
 #!/bin/bash
 # getter_better script from gumstix
 # what a great idea...
-#SITE="http://files.astlinux-project.org"
-SITE="https://s3.amazonaws.com/files.astlinux-project"
+#
+SITE="https://astlinux-project.org/files"
 
 WGET_ARGS="--passive-ftp --timeout=30 -c -t 2"
 
