@@ -86,7 +86,7 @@ asterisk-moh-opsound-ulaw
 asterisk-moh-opsound-wav
 "
 
-S3_BUCKET="mirror.astlinux-project"
+S3_BUCKET="mirror-astlinux-project"
 
 SOUNDS_URL="http://downloads.asterisk.org/pub/telephony/sounds"
 

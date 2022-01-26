@@ -90,7 +90,7 @@ uk_UA
 vi_VN
 "
 
-S3_BUCKET="mirror.astlinux-project"
+S3_BUCKET="mirror-astlinux-project"
 
 TMP_LIST_FILE="/tmp/master-locale-list"
 LOCALE_FILE="$(pwd)/locale-archive"

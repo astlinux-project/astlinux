@@ -7,7 +7,7 @@ input_path="$1"
 
 auth_file="$HOME/.s3cfg"
 
-S3_BUCKET="beta.astlinux-project"
+S3_BUCKET="beta-astlinux-project"
 
 CHANGELOG="docs/ChangeLog.txt"
 

@@ -14,6 +14,6 @@ fi
 sha1sum ${1} > ${1}.sha1
 
 for file in ${1} ${1}.sha1; do
-  s3cmd put --acl-public "$file" "s3://files.astlinux-project/${file##*/}"
+  s3cmd put --acl-public "$file" "s3://files-astlinux-project/${file##*/}"
 done
 

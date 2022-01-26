@@ -14,7 +14,7 @@ upload_file()
   local remote_dir="$1" files="$2" count="$3" IFS=' ' file
 
   for file in $files; do
-    s3cmd put --acl-public "$file" "s3://mirror.astlinux-project/$remote_dir/${file##*/}"
+    s3cmd put --acl-public "$file" "s3://mirror-astlinux-project/$remote_dir/${file##*/}"
   done
 
   if [ $? -eq 0 ]; then
