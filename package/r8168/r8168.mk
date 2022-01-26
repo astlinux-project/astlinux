@@ -6,7 +6,7 @@
 
 R8168_VERSION = 8.044.02
 R8168_SOURCE:=r8168-$(R8168_VERSION).tar.bz2
-R8168_SITE = https://s3.amazonaws.com/files.astlinux-project
+R8168_SITE = https://astlinux-project.org/files
 R8168_DEPENDENCIES = linux
 
 R8168_UNINSTALL_STAGING_OPT = --version

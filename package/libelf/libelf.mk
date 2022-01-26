@@ -6,7 +6,7 @@
 LIBELF_VERSION=0.8.12
 LIBELF_SOURCE=libelf-$(LIBELF_VERSION).tar.gz
 #LIBELF_SITE=http://www.mr511.de/software/
-LIBELF_SITE = https://s3.amazonaws.com/files.astlinux-project
+LIBELF_SITE = https://astlinux-project.org/files
 LIBELF_INSTALL_STAGING = YES
 LIBELF_INSTALL_STAGING_OPT = instroot=$(STAGING_DIR) install
 LIBELF_INSTALL_TARGET_OPT = instroot=$(TARGET_DIR) install

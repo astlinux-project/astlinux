@@ -6,7 +6,7 @@
 
 INADYN_VERSION = 1.96.2
 INADYN_SOURCE:=inadyn-$(INADYN_VERSION).tar.gz
-INADYN_SITE = https://s3.amazonaws.com/files.astlinux-project
+INADYN_SITE = https://astlinux-project.org/files
 
 define INADYN_DDCLIENT_EXTRACT
 	$(INSTALL) -m 0755 -D package/inadyn/ddclient/ddclient.pl $(@D)/ddclient/ddclient

@@ -7,7 +7,7 @@
 # Manual snapshots generated from:
 # git clone git://git.freeswitch.org/freeswitch.git
 #
-FREESWITCH_SITE := https://s3.amazonaws.com/files.astlinux-project
+FREESWITCH_SITE := https://astlinux-project.org/files
 FREESWITCH_VERSION := 2011-10-18
 FREESWITCH_SOURCE := freeswitch-$(FREESWITCH_VERSION).tar.gz
 FREESWITCH_DIR := $(BUILD_DIR)/freeswitch-$(FREESWITCH_VERSION)

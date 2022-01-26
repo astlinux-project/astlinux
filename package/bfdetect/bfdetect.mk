@@ -4,7 +4,7 @@
 #
 ##############################################################
 BFDETECT_SOURCE:=bfdetect_src.tar.gz
-BFDETECT_SITE:=https://s3.amazonaws.com/files.astlinux-project
+BFDETECT_SITE:=https://astlinux-project.org/files
 #BFDETECT_SITE:=http://www.beronet.com/wp-content/uploads/downloads/berofix/tools
 BFDETECT_DIR := $(BUILD_DIR)/bfdetect
 BFDETECT_CAT:=zcat

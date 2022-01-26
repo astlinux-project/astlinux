@@ -5,7 +5,7 @@
 #############################################################
 CLIX_VERSION = 2013-03-30
 CLIX_SOURCE = clix-$(CLIX_VERSION).tar.gz
-CLIX_SITE = https://s3.amazonaws.com/files.astlinux-project
+CLIX_SITE = https://astlinux-project.org/files
 
 define CLIX_INSTALL_TARGET_CMDS
 	install -D -m 755 $(@D)/clix.bin $(TARGET_DIR)/usr/bin/clix

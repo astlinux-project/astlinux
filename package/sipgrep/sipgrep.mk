@@ -6,7 +6,7 @@
 
 SIPGREP_VERSION = 2.1.0
 SIPGREP_SOURCE = sipgrep-$(SIPGREP_VERSION).tar.gz
-SIPGREP_SITE = https://s3.amazonaws.com/files.astlinux-project
+SIPGREP_SITE = https://astlinux-project.org/files
 #SIPGREP_SITE = https://github.com/adubovikov/sipgrep/releases
 SIPGREP_DEPENDENCIES = libpcap pcre
 

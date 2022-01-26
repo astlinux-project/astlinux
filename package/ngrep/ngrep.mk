@@ -6,7 +6,7 @@
 
 NGREP_VERSION = 1.47
 NGREP_SOURCE = ngrep-$(NGREP_VERSION).tar.gz
-NGREP_SITE = https://s3.amazonaws.com/files.astlinux-project
+NGREP_SITE = https://astlinux-project.org/files
 NGREP_DEPENDENCIES = libpcap pcre
 NGREP_AUTORECONF = YES
 

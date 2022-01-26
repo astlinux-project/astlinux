@@ -6,7 +6,7 @@
 
 R8125_VERSION = 9.006.04
 R8125_SOURCE:=r8125-$(R8125_VERSION).tar.bz2
-R8125_SITE = https://s3.amazonaws.com/files.astlinux-project
+R8125_SITE = https://astlinux-project.org/files
 R8125_DEPENDENCIES = linux
 
 R8125_UNINSTALL_STAGING_OPT = --version

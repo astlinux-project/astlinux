@@ -6,7 +6,7 @@
 
 MAC2VENDOR_VERSION = 2021-09-29
 MAC2VENDOR_SOURCE = oui-$(MAC2VENDOR_VERSION).txt
-MAC2VENDOR_SITE = https://s3.amazonaws.com/files.astlinux-project
+MAC2VENDOR_SITE = https://astlinux-project.org/files
 
 ##
 ## curl -L -o dl/oui-2021-09-29.txt http://standards-oui.ieee.org/oui.txt

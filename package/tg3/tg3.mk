@@ -6,7 +6,7 @@
 
 TG3_VERSION = 3.137k
 TG3_SOURCE:=tg3-$(TG3_VERSION).tar.gz
-TG3_SITE = https://s3.amazonaws.com/files.astlinux-project
+TG3_SITE = https://astlinux-project.org/files
 TG3_DEPENDENCIES = linux
 
 TG3_UNINSTALL_STAGING_OPT = --version

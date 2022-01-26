@@ -5,7 +5,7 @@
 #############################################################
 
 RTPPROXY_VERSION = 2.0.0
-RTPPROXY_SITE = https://s3.amazonaws.com/files.astlinux-project
+RTPPROXY_SITE = https://astlinux-project.org/files
 #RTPPROXY_SITE = https://github.com/sippy/rtpproxy
 RTPPROXY_SOURCE = rtpproxy-$(RTPPROXY_VERSION).tar.gz
 
