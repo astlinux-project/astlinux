@@ -5,7 +5,7 @@
  
  ${ac_cv_path_EGREP} 'CURSES|GTK2|OSARCH|NEWT' makeopts > makeopts.acbak2
 +if test "${cross_compiling}" = "no"; then
- if test "${ac_cv_path_CMP}" = ":"; then
+ if test "x${ac_cv_path_CMP}" = "x:"; then
  	( cd "`pwd`/menuselect" && ./configure )
  elif ${ac_cv_path_CMP} -s makeopts.acbak makeopts.acbak2; then : ; else
  	( cd "`pwd`/menuselect" && ./configure )
