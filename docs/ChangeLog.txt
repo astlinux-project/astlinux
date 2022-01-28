@@ -72,7 +72,7 @@ Released @TBD@
 
 -- mtr, version bump to 0.95
 
--- prosody, version bump to 0.11.12
+-- prosody, version bump to 0.11.13
 
 -- sngrep, version bump to 1.4.10
 
@@ -87,7 +87,7 @@ Released @TBD@
 -- Asterisk 13.38.3 ('13se' no change)
    Last Asterisk 13.x "Legacy" version, built --without-pjproject
 
--- Asterisk 16.23.0 (version bump) and 18.9.0 (new version)
+-- Asterisk 16.21.1 (version reverted) and 18.9.0 (new version)
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
 
