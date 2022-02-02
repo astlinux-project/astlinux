@@ -21,6 +21,7 @@ gen_vnstat_conf()
   fi
   echo "DatabaseDir \"$DB_DIR\""
   echo "UnitMode 2"
+  echo "InterfaceMatchMethod 0"
   echo "PollInterval 10"
   echo "UpdateInterval 20"
   echo "SaveInterval 60"
