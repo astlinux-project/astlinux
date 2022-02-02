@@ -18,13 +18,16 @@ Released @TBD@
 
 -- ethtool, version bump to 5.16
 
--- expat, version bump to 2.4.3, security fixes: CVE-2021-45960, CVE-2021-46143, CVE-2022-22822 to CVE-2022-22827
+-- expat, version bump to 2.4.4, security fixes: CVE-2021-45960, CVE-2021-46143, CVE-2022-23852, CVE-2022-23990
+                                                 CVE-2022-22822 to CVE-2022-22827
 
 -- kexec, version bump to 2.0.23
 
 -- libjpeg, version bump to 9e, security fix
 
 -- liburiparser, version 0.9.1, backport security fixes: CVE-2021-46141, CVE-2021-46142
+
+-- libusb, version bump to 1.0.25
 
 -- logrotate, version bump to 3.19.0
 
@@ -34,17 +37,19 @@ Released @TBD@
 
 -- rng-tools, version 6.5, jitterentropy version bump to 3.3.1
 
+-- screen, version 4.9.0
+
 -- sqlite, version bump to 3.37.2
 
 -- strace, version bump to 5.16
 
 -- udev (eudev), version bump to 3.2.11, new "eudev-project" Alpine, Devuan and Gentoo maintainers.
 
--- zabbix, version bump to 4.0.37
+-- zabbix, version bump to 4.0.38
 
 -- Default HTTPS certificate, use 2048 key length
 
--- ca-certificates, update trusted root certificates 2021-10-26
+-- ca-certificates, update trusted root certificates 2022-02-01
 
 -- Time Zone Database update, tzdata2021e and php-timezonedb-2021.5
 
@@ -79,6 +84,8 @@ Released @TBD@
 -- stunnel, version bump to 5.62
 
 -- unbound, version bump to 1.14.0
+
+-- vnStat, version bump to 2.9
 
 -- whois, version bump to 5.5.11
 
