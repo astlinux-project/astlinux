@@ -4,11 +4,9 @@
 #
 #############################################################
 
-FPING_VERSION = 4.2
+FPING_VERSION = 5.1
 FPING_SITE = https://fping.org/dist
 FPING_SOURCE = fping-$(FPING_VERSION).tar.gz
-# Fix configure warning
-FPING_AUTORECONF = YES
 
 define FPING_INSTALL_TARGET_CMDS
 	# Must set SUID for zabbix user
