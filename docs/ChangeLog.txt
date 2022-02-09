@@ -65,7 +65,11 @@ Released @TBD@
 
 -- dnsmasq, version 2.84, patch: Minimum safe packet size is recommended to be 1232
 
+-- fping, version bump to 5.1
+
 -- iperf, version bump to 2.1.6
+
+-- iperf3, version bump to 3.11
 
 -- keepalived, version bump to 2.2.7
 
