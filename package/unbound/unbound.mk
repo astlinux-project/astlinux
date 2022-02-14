@@ -4,7 +4,7 @@
 #
 #############################################################
 
-UNBOUND_VERSION = 1.14.0
+UNBOUND_VERSION = 1.15.0
 UNBOUND_SITE = https://www.unbound.net/downloads
 UNBOUND_SOURCE = unbound-$(UNBOUND_VERSION).tar.gz
 UNBOUND_INSTALL_STAGING = YES
