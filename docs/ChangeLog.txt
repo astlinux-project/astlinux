@@ -31,7 +31,7 @@ Released @TBD@
 
 -- logrotate, version bump to 3.19.0
 
--- Monit, version bump to 5.30.0
+-- Monit, version bump to 5.31.0
 
 -- nano, version 2.7.5, fix issue where not saving a file could still copy the file to /mnt/asturw/
 
@@ -58,6 +58,8 @@ Released @TBD@
 -- OpenSSL, version bump to 1.1.1m, security fixes: none
 
 -- WireGuard VPN, module 1.0.20211208 (version bump), tools 1.0.20210914 (no change)
+
+-- strongSwan, version 5.5.3, security fix: CVE-2021-45079
 
 -- chrony, version bump to 4.2
 
@@ -87,7 +89,7 @@ Released @TBD@
 
 -- stunnel, version bump to 5.62
 
--- unbound, version bump to 1.14.0
+-- unbound, version bump to 1.15.0
 
 -- vnStat, version bump to 2.9
 
@@ -98,7 +100,7 @@ Released @TBD@
 -- Asterisk 13.38.3 ('13se' no change)
    Last Asterisk 13.x "Legacy" version, built --without-pjproject
 
--- Asterisk 16.21.1 (version reverted) and 18.9.0 (new version)
+-- Asterisk 16.21.1 (no change) and 18.10.0 (new version)
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
 
@@ -106,7 +108,7 @@ Released @TBD@
 
 -- neon, version bump to 0.32.2, used for Asterisk Calendar Support
 
--- FOP2, available version bump to 2.31.31
+-- FOP2, available version bump to 2.31.32
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
    More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
