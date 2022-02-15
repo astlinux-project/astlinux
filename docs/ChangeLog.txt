@@ -89,6 +89,8 @@ Released @TBD@
 
 -- stunnel, version bump to 5.62
 
+-- tarsnap, version bump to 1.0.40, "Trust No One" encrypted backups using the Tarsnap Backup service.
+
 -- unbound, version bump to 1.15.0
 
 -- vnStat, version bump to 2.9
