@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.224 (version bump), security and bug fixes.
+-- Linux Kernel 4.19.230 (version bump), security and bug fixes.
 
 -- e2fsprogs, version bump to 1.46.5
 
@@ -50,6 +50,8 @@ Released @TBD@
 -- Default HTTPS certificate, use 2048 key length
 
 -- ca-certificates, update trusted root certificates 2022-02-01
+
+-- mac2vendor, oui.txt database snapshot 2022-02-16
 
 -- Time Zone Database update, tzdata2021e and php-timezonedb-2021.5
 
