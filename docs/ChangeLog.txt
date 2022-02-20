@@ -14,12 +14,15 @@ Released @TBD@
 
 -- Linux Kernel 4.19.230 (version bump), security and bug fixes.
 
+-- RUNNIX, version bump to runnix-0.6.6, with Linux Kernel 4.19.230, e2fsprogs 1.46.5, kexec 2.0.23
+
 -- e2fsprogs, version bump to 1.46.5
 
 -- ethtool, version bump to 5.16
 
--- expat, version bump to 2.4.4, security fixes: CVE-2021-45960, CVE-2021-46143, CVE-2022-23852, CVE-2022-23990
-                                                 CVE-2022-22822 to CVE-2022-22827
+-- expat, version bump to 2.4.5, security fixes: CVE-2021-45960, CVE-2021-46143, CVE-2022-23852, CVE-2022-23990
+                                                 CVE-2022-22822 to CVE-2022-22827, CVE-2022-25235, CVE-2022-25236
+                                                 CVE-2022-25313, CVE-2022-25314, CVE-2022-25315
 
 -- kexec, version bump to 2.0.23
 
@@ -28,6 +31,8 @@ Released @TBD@
 -- liburiparser, version 0.9.1, backport security fixes: CVE-2021-46141, CVE-2021-46142
 
 -- libusb, version bump to 1.0.25
+
+-- libxml2, version bump to 2.9.13, security fix: CVE-2022-23308, (and others)
 
 -- logrotate, version bump to 3.19.0
 
