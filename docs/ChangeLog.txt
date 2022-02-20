@@ -20,7 +20,7 @@ Released @TBD@
 
 -- ethtool, version bump to 5.16
 
--- expat, version bump to 2.4.5, security fixes: CVE-2021-45960, CVE-2021-46143, CVE-2022-23852, CVE-2022-23990
+-- expat, version bump to 2.4.6, security fixes: CVE-2021-45960, CVE-2021-46143, CVE-2022-23852, CVE-2022-23990
                                                  CVE-2022-22822 to CVE-2022-22827, CVE-2022-25235, CVE-2022-25236
                                                  CVE-2022-25313, CVE-2022-25314, CVE-2022-25315
 
