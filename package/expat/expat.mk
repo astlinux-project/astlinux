@@ -4,7 +4,7 @@
 #
 #############################################################
 
-EXPAT_VERSION = 2.4.5
+EXPAT_VERSION = 2.4.6
 EXPAT_SITE = https://github.com/libexpat/libexpat/releases/download/R_$(subst .,_,$(EXPAT_VERSION))
 EXPAT_SOURCE = expat-$(EXPAT_VERSION).tar.bz2
 EXPAT_INSTALL_STAGING = YES
