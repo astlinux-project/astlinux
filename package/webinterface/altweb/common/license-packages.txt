@@ -6,12 +6,12 @@
 ## 3) Lines beginning with a '#' are treated as comments
 ##
 ex-vi~Copyright (c) 2001-2002 Caldera International Inc. All rights reserved.
-RUNNIX~Copyright (c) 2006-2021 AstLinux Project, Kristian Kielhofner.
+RUNNIX~Copyright (c) 2006-2022 AstLinux Project, Kristian Kielhofner.
 libSRTP~Copyright (c) 2001-2019 Cisco Systems, Inc. All rights reserved.
 iLBC CODEC~Copyright (c) 2011 The WebRTC project authors. All rights reserved.
 Web Interface~Copyright (c) 2008-2022 Lonnie Abelbeck.
 shellinabox~Copyright (c) 2008-2016 Markus Gutschke, Luka Krajger.
-Asterisk~Copyright (c) 1999-2021 Digium, Inc.
+Asterisk~Copyright (c) 1999-2022 Digium, Inc.
 DAHDI~Copyright (c) 2001-2019 Digium, Inc.
 libPRI~Copyright (c) 2001-2015 Digium, Inc.
 Arno's Firewall~Copyright (c) 2001-2021 Arno van Amersfoort.
@@ -20,56 +20,56 @@ OpenSSL~Copyright (c) 1998-2021 The OpenSSL Project. All rights reserved.
 OpenSSH~Copyright (c) 1995-2019 Tatu Ylonen, Espoo, Finland. All rights reserved.
 OpenVPN~Copyright (c) 2002-2021 OpenVPN Technologies, Inc.
 PHP~Copyright (c) 1999-2021 The PHP Group. All rights reserved.
-vsftpd~Copyright (c) 2001-2015 Daniel Jacobowitz.
+vsftpd~Copyright (c) 2001-2021 Daniel Jacobowitz.
 lighttpd~Copyright (c) 2004-2018 Jan Kneschke.
 msmtp~Copyright (c) 2000-2021 Martin Lambers.
-libxml2~Copyright (c) 1998-2021 Daniel Veillard. All Rights Reserved.
+libxml2~Copyright (c) 1998-2022 Daniel Veillard. All Rights Reserved.
 libtiff~Copyright (c) 1988-2021 Sam Leffler, Copyright (c) 1991-1997 Silicon Graphics, Inc.
-libjpeg~Copyright (c) 1991-2020 Thomas G. Lane, Guido Vollbeding.
+libjpeg~Copyright (c) 1991-2022 Thomas G. Lane, Guido Vollbeding.
 iptables~Copyright (c) 2000-2019 the netfilter coreteam.
 ipset~Copyright (c) 2003-2018 Jozsef Kadlecsik.
-curl~Copyright (c) 1996-2021 Daniel Stenberg.
-zabbix~Copyright (c) 2000-2021 SIA Zabbix.
+curl~Copyright (c) 1996-2022 Daniel Stenberg.
+zabbix~Copyright (c) 2000-2022 SIA Zabbix.
 zlib~Copyright (c) 1995-2017 Jean-loup Gailly.
 SILK CODEC~Copyright (c) 2010-2016 Skype and/or Microsoft. All rights reserved. Licensed via Digium, Inc.
 SpanDSP~Copyright (c) 2003-2015 Steve Underwood. All rights reserved.
-Prosody~Copyright (c) 2008-2021 Matthew Wild and Waqas Hussain.
+Prosody~Copyright (c) 2008-2022 Matthew Wild and Waqas Hussain.
 Lua~Copyright (c) 1994-2012 Lua.org, PUC-Rio.  All rights reserved.
 perl~Copyright (c) 1987-2018 Larry Wall, et al.
 perl-cross~Copyright (c) 2009-2020 Alex Suykov.
 phpLiteAdmin~Copyright (c) 2011-2015 phpLiteAdmin (https://bitbucket.org/phpliteadmin/public)
-FOP2~Copyright (c) 2009-2021 House Internet S.R.L. (http://www.fop2.com)
+FOP2~Copyright (c) 2009-2022 House Internet S.R.L. (http://www.fop2.com)
 ddclient-curl~Copyright (c) 1999-2020 David Kerr, Paul Burry, wimpunk, et al.
 vCard converter~Copyright (c) 2006-2013 Thomas Bruederli.
 OpenLDAP~Copyright (c) 1998-2021 The OpenLDAP Foundation. All rights reserved.
-darkstat~Copyright (c) 2001-2015 Emil Mikulic, et al.
+darkstat~Copyright (c) 2001-2022 Emil Mikulic, et al.
 NUT~Copyright (c) 1999-2016  Russell Kroll, Arnaud Quette, et al.
 iftop~Copyright (c) 2002-2018 Paul Warren, Chris Lightfoot, et al.
 dnscrypt-proxy~Copyright (c) 2011-2017 Frank Denis.
 libsodium~Copyright (c) 2013-2019 Frank Denis.
 phoneprov-tools~Copyright (c) 2015-2021 Lonnie Abelbeck and Michael Keuter.
 smartmontools~Copyright (c) 2002-2020 Bruce Allen, Christian Franke, et al.
-Monit~Copyright (c) 2001-2021 Tildeslash. All rights reserved.
-sqlite~Copyright (c) 1995-2021 SQLite Consortium.
+Monit~Copyright (c) 2001-2022 Tildeslash. All rights reserved.
+sqlite~Copyright (c) 1995-2022 SQLite Consortium.
 sqliteodbc~Copyright (c) 2001-2020 Christian Werner.
 Fossil~Copyright (c) 2007-2019 D. Richard Hipp. All rights reserved.
 BusyBox~Copyright (c) 1998-2019 Erik Andersen, Rob Landley, Denys Vlasenko, et al.
 dhcp6c~Copyright (c) 1998-2008 WIDE Project with 2018 Debian patches.
 htop~Copyright (c) 2020-2021 htop dev team, Copyright (c) 2004-2019 Hisham Muhammad.
-stunnel~Copyright (c) 1998-2021 Michal Trojnara.
+stunnel~Copyright (c) 1998-2022 Michal Trojnara.
 avahi~Copyright (c) 2004-2019 Lennart Poettering, Trent Lloyd, Avahi developers.
-Linux Kernel~Copyright (c) 1997-2021 The Linux Kernel Organization, Inc.; Linux is a Registered Trademark of Linus Torvalds.
-whois~Copyright (c) 1999-2021 Marco d'Itri.
+Linux Kernel~Copyright (c) 1997-2022 The Linux Kernel Organization, Inc.; Linux is a Registered Trademark of Linus Torvalds.
+whois~Copyright (c) 1999-2022 Marco d'Itri.
 strongSwan~Copyright (c) 2006-2017 Andreas Steffen, Tobias Brunner, et al.
 chrony~Copyright (c) 1997-2021 Richard P. Curnow, Miroslav Lichvar.
 gntp-send~Copyright (c) 2009-2016 Yasuhiro Matsumoto.
 netcalc~Copyright (c) 2003-2020 Simon Ekstrand, Joachim Nilsson.
-acme.sh~Copyright (c) 2016-2020 Neilpang.
-Tarsnap~Copyright (c) 2006-2017 Tarsnap Backup Inc. All rights reserved.
+acme.sh~Copyright (c) 2016-2021 Neilpang.
+Tarsnap~Copyright (c) 2006-2022 Tarsnap Backup Inc. All rights reserved.
 empty~Copyright (c) 2005-2015 Mikhail E. Zakharov.
 WireGuard~Copyright (c) 2015-2021 Jason A. Donenfeld. All rights reserved.
-unbound~Copyright (c) 2007-2021 NLnet Labs. All rights reserved.
-keepalived~Copyright (c) 2001-2021 Alexandre Cassen.
+unbound~Copyright (c) 2007-2022 NLnet Labs. All rights reserved.
+keepalived~Copyright (c) 2001-2022 Alexandre Cassen.
 rng-tools~Copyright (c) 2001-2018 Philipp Rumpf, Neil Horman, et al.
 jitterentropy~Copyright (c) 2014-2021 Stephan Mueller.
 libpng~Copyright (c) 1998-2019 Glenn Randers-Pehrson, et al.
@@ -78,4 +78,4 @@ ne~Copyright (c) 1993-2021 Sebastiano Vigna, Todd M. Lewis.
 CodeMirror~Copyright (c) 2017-2019 Marijn Haverbeke <marijnh@gmail.com>, et al.
 iprange~Copyright (c) 2003-2015 Gabriel L. Somlo, Costa Tsaousis, et al.
 lxc~Copyright (c) 2012-2019 Canonical Ltd., et al.
-vnStat~Copyright (c) 2014-2021 Teemu Toivola.
+vnStat~Copyright (c) 2014-2022 Teemu Toivola.
