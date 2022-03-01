@@ -8,7 +8,7 @@
 Additions for AstLinux 1.4.5:
 =============================
 
-Released @TBD@
+Released 2022-03-01
 
 ** System
 
