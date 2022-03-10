@@ -37,9 +37,9 @@ index b91153df6ee8db..3075290063f660 100644
  obj-$(CONFIG_IXGBEVF) += ixgbevf/
 
 
-diff -Naur empty/drivers/net/ethernet/intel/igc/igc_base.c linux-5.4.148/drivers/net/ethernet/intel/igc/igc_base.c
+diff -Naur empty/drivers/net/ethernet/intel/igc/igc_base.c linux-5.4.183/drivers/net/ethernet/intel/igc/igc_base.c
 --- empty/drivers/net/ethernet/intel/igc/igc_base.c	1969-12-31 18:00:00.000000000 -0600
-+++ linux-5.4.148/drivers/net/ethernet/intel/igc/igc_base.c	2021-09-22 05:26:46.000000000 -0500
++++ linux-5.4.183/drivers/net/ethernet/intel/igc/igc_base.c	2022-03-08 12:07:51.000000000 -0600
 @@ -0,0 +1,423 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/* Copyright (c)  2018 Intel Corporation */
@@ -464,9 +464,9 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc_base.c linux-5.4.148/drivers
 +	.mac_ops		= &igc_mac_ops_base,
 +	.phy_ops		= &igc_phy_ops_base,
 +};
-diff -Naur empty/drivers/net/ethernet/intel/igc/igc_base.h linux-5.4.148/drivers/net/ethernet/intel/igc/igc_base.h
+diff -Naur empty/drivers/net/ethernet/intel/igc/igc_base.h linux-5.4.183/drivers/net/ethernet/intel/igc/igc_base.h
 --- empty/drivers/net/ethernet/intel/igc/igc_base.h	1969-12-31 18:00:00.000000000 -0600
-+++ linux-5.4.148/drivers/net/ethernet/intel/igc/igc_base.h	2021-09-22 05:26:46.000000000 -0500
++++ linux-5.4.183/drivers/net/ethernet/intel/igc/igc_base.h	2022-03-08 12:07:51.000000000 -0600
 @@ -0,0 +1,90 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/* Copyright (c)  2018 Intel Corporation */
@@ -558,9 +558,9 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc_base.h linux-5.4.148/drivers
 +#define IGC_SRRCTL_DESCTYPE_ADV_ONEBUF	0x02000000
 +
 +#endif /* _IGC_BASE_H */
-diff -Naur empty/drivers/net/ethernet/intel/igc/igc_defines.h linux-5.4.148/drivers/net/ethernet/intel/igc/igc_defines.h
+diff -Naur empty/drivers/net/ethernet/intel/igc/igc_defines.h linux-5.4.183/drivers/net/ethernet/intel/igc/igc_defines.h
 --- empty/drivers/net/ethernet/intel/igc/igc_defines.h	1969-12-31 18:00:00.000000000 -0600
-+++ linux-5.4.148/drivers/net/ethernet/intel/igc/igc_defines.h	2021-09-22 05:26:46.000000000 -0500
++++ linux-5.4.183/drivers/net/ethernet/intel/igc/igc_defines.h	2022-03-08 12:07:51.000000000 -0600
 @@ -0,0 +1,405 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/* Copyright (c)  2018 Intel Corporation */
@@ -967,9 +967,9 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc_defines.h linux-5.4.148/driv
 +#define IGC_ADVTXD_TUCMD_L4T_SCTP	0x00001000 /* L4 packet TYPE of SCTP */
 +
 +#endif /* _IGC_DEFINES_H_ */
-diff -Naur empty/drivers/net/ethernet/intel/igc/igc_ethtool.c linux-5.4.148/drivers/net/ethernet/intel/igc/igc_ethtool.c
+diff -Naur empty/drivers/net/ethernet/intel/igc/igc_ethtool.c linux-5.4.183/drivers/net/ethernet/intel/igc/igc_ethtool.c
 --- empty/drivers/net/ethernet/intel/igc/igc_ethtool.c	1969-12-31 18:00:00.000000000 -0600
-+++ linux-5.4.148/drivers/net/ethernet/intel/igc/igc_ethtool.c	2021-09-22 05:26:46.000000000 -0500
++++ linux-5.4.183/drivers/net/ethernet/intel/igc/igc_ethtool.c	2022-03-08 12:07:51.000000000 -0600
 @@ -0,0 +1,1877 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/* Copyright (c)  2018 Intel Corporation */
@@ -2848,9 +2848,9 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc_ethtool.c linux-5.4.148/driv
 +{
 +	netdev->ethtool_ops = &igc_ethtool_ops;
 +}
-diff -Naur empty/drivers/net/ethernet/intel/igc/igc.h linux-5.4.148/drivers/net/ethernet/intel/igc/igc.h
+diff -Naur empty/drivers/net/ethernet/intel/igc/igc.h linux-5.4.183/drivers/net/ethernet/intel/igc/igc.h
 --- empty/drivers/net/ethernet/intel/igc/igc.h	1969-12-31 18:00:00.000000000 -0600
-+++ linux-5.4.148/drivers/net/ethernet/intel/igc/igc.h	2021-09-22 05:26:46.000000000 -0500
++++ linux-5.4.183/drivers/net/ethernet/intel/igc/igc.h	2022-03-08 12:07:51.000000000 -0600
 @@ -0,0 +1,528 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/* Copyright (c)  2018 Intel Corporation */
@@ -3380,9 +3380,9 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc.h linux-5.4.148/drivers/net/
 +	(&(((struct igc_adv_tx_context_desc *)((R)->desc))[i]))
 +
 +#endif /* _IGC_H_ */
-diff -Naur empty/drivers/net/ethernet/intel/igc/igc_hw.h linux-5.4.148/drivers/net/ethernet/intel/igc/igc_hw.h
+diff -Naur empty/drivers/net/ethernet/intel/igc/igc_hw.h linux-5.4.183/drivers/net/ethernet/intel/igc/igc_hw.h
 --- empty/drivers/net/ethernet/intel/igc/igc_hw.h	1969-12-31 18:00:00.000000000 -0600
-+++ linux-5.4.148/drivers/net/ethernet/intel/igc/igc_hw.h	2021-09-22 05:26:46.000000000 -0500
++++ linux-5.4.183/drivers/net/ethernet/intel/igc/igc_hw.h	2022-03-08 12:07:51.000000000 -0600
 @@ -0,0 +1,311 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/* Copyright (c)  2018 Intel Corporation */
@@ -3695,9 +3695,9 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc_hw.h linux-5.4.148/drivers/n
 +void igc_write_pci_cfg(struct igc_hw *hw, u32 reg, u16 *value);
 +
 +#endif /* _IGC_HW_H_ */
-diff -Naur empty/drivers/net/ethernet/intel/igc/igc_i225.c linux-5.4.148/drivers/net/ethernet/intel/igc/igc_i225.c
+diff -Naur empty/drivers/net/ethernet/intel/igc/igc_i225.c linux-5.4.183/drivers/net/ethernet/intel/igc/igc_i225.c
 --- empty/drivers/net/ethernet/intel/igc/igc_i225.c	1969-12-31 18:00:00.000000000 -0600
-+++ linux-5.4.148/drivers/net/ethernet/intel/igc/igc_i225.c	2021-09-22 05:26:46.000000000 -0500
++++ linux-5.4.183/drivers/net/ethernet/intel/igc/igc_i225.c	2022-03-08 12:07:51.000000000 -0600
 @@ -0,0 +1,489 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/* Copyright (c)  2018 Intel Corporation */
@@ -4188,9 +4188,9 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc_i225.c linux-5.4.148/drivers
 +	}
 +	return 0;
 +}
-diff -Naur empty/drivers/net/ethernet/intel/igc/igc_i225.h linux-5.4.148/drivers/net/ethernet/intel/igc/igc_i225.h
+diff -Naur empty/drivers/net/ethernet/intel/igc/igc_i225.h linux-5.4.183/drivers/net/ethernet/intel/igc/igc_i225.h
 --- empty/drivers/net/ethernet/intel/igc/igc_i225.h	1969-12-31 18:00:00.000000000 -0600
-+++ linux-5.4.148/drivers/net/ethernet/intel/igc/igc_i225.h	2021-09-22 05:26:46.000000000 -0500
++++ linux-5.4.183/drivers/net/ethernet/intel/igc/igc_i225.h	2022-03-08 12:07:51.000000000 -0600
 @@ -0,0 +1,13 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/* Copyright (c)  2018 Intel Corporation */
@@ -4205,9 +4205,9 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc_i225.h linux-5.4.148/drivers
 +bool igc_get_flash_presence_i225(struct igc_hw *hw);
 +
 +#endif
-diff -Naur empty/drivers/net/ethernet/intel/igc/igc_mac.c linux-5.4.148/drivers/net/ethernet/intel/igc/igc_mac.c
+diff -Naur empty/drivers/net/ethernet/intel/igc/igc_mac.c linux-5.4.183/drivers/net/ethernet/intel/igc/igc_mac.c
 --- empty/drivers/net/ethernet/intel/igc/igc_mac.c	1969-12-31 18:00:00.000000000 -0600
-+++ linux-5.4.148/drivers/net/ethernet/intel/igc/igc_mac.c	2021-09-22 05:26:46.000000000 -0500
++++ linux-5.4.183/drivers/net/ethernet/intel/igc/igc_mac.c	2022-03-08 12:07:51.000000000 -0600
 @@ -0,0 +1,786 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/* Copyright (c)  2018 Intel Corporation */
@@ -4995,9 +4995,9 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc_mac.c linux-5.4.148/drivers/
 +out:
 +	return ret_val;
 +}
-diff -Naur empty/drivers/net/ethernet/intel/igc/igc_mac.h linux-5.4.148/drivers/net/ethernet/intel/igc/igc_mac.h
+diff -Naur empty/drivers/net/ethernet/intel/igc/igc_mac.h linux-5.4.183/drivers/net/ethernet/intel/igc/igc_mac.h
 --- empty/drivers/net/ethernet/intel/igc/igc_mac.h	1969-12-31 18:00:00.000000000 -0600
-+++ linux-5.4.148/drivers/net/ethernet/intel/igc/igc_mac.h	2021-09-22 05:26:46.000000000 -0500
++++ linux-5.4.183/drivers/net/ethernet/intel/igc/igc_mac.h	2022-03-08 12:07:51.000000000 -0600
 @@ -0,0 +1,41 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/* Copyright (c)  2018 Intel Corporation */
@@ -5040,9 +5040,9 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc_mac.h linux-5.4.148/drivers/
 +};
 +
 +#endif
-diff -Naur empty/drivers/net/ethernet/intel/igc/igc_main.c linux-5.4.148/drivers/net/ethernet/intel/igc/igc_main.c
+diff -Naur empty/drivers/net/ethernet/intel/igc/igc_main.c linux-5.4.183/drivers/net/ethernet/intel/igc/igc_main.c
 --- empty/drivers/net/ethernet/intel/igc/igc_main.c	1969-12-31 18:00:00.000000000 -0600
-+++ linux-5.4.148/drivers/net/ethernet/intel/igc/igc_main.c	2021-09-22 05:26:46.000000000 -0500
++++ linux-5.4.183/drivers/net/ethernet/intel/igc/igc_main.c	2022-03-08 12:07:51.000000000 -0600
 @@ -0,0 +1,4542 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/* Copyright (c)  2018 Intel Corporation */
@@ -9586,9 +9586,9 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc_main.c linux-5.4.148/drivers
 +
 +module_exit(igc_exit_module);
 +/* igc_main.c */
-diff -Naur empty/drivers/net/ethernet/intel/igc/igc_nvm.c linux-5.4.148/drivers/net/ethernet/intel/igc/igc_nvm.c
+diff -Naur empty/drivers/net/ethernet/intel/igc/igc_nvm.c linux-5.4.183/drivers/net/ethernet/intel/igc/igc_nvm.c
 --- empty/drivers/net/ethernet/intel/igc/igc_nvm.c	1969-12-31 18:00:00.000000000 -0600
-+++ linux-5.4.148/drivers/net/ethernet/intel/igc/igc_nvm.c	2021-09-22 05:26:46.000000000 -0500
++++ linux-5.4.183/drivers/net/ethernet/intel/igc/igc_nvm.c	2022-03-08 12:07:51.000000000 -0600
 @@ -0,0 +1,215 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/* Copyright (c)  2018 Intel Corporation */
@@ -9805,9 +9805,9 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc_nvm.c linux-5.4.148/drivers/
 +out:
 +	return ret_val;
 +}
-diff -Naur empty/drivers/net/ethernet/intel/igc/igc_nvm.h linux-5.4.148/drivers/net/ethernet/intel/igc/igc_nvm.h
+diff -Naur empty/drivers/net/ethernet/intel/igc/igc_nvm.h linux-5.4.183/drivers/net/ethernet/intel/igc/igc_nvm.h
 --- empty/drivers/net/ethernet/intel/igc/igc_nvm.h	1969-12-31 18:00:00.000000000 -0600
-+++ linux-5.4.148/drivers/net/ethernet/intel/igc/igc_nvm.h	2021-09-22 05:26:46.000000000 -0500
++++ linux-5.4.183/drivers/net/ethernet/intel/igc/igc_nvm.h	2022-03-08 12:07:51.000000000 -0600
 @@ -0,0 +1,14 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/* Copyright (c)  2018 Intel Corporation */
@@ -9823,10 +9823,10 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc_nvm.h linux-5.4.148/drivers/
 +s32 igc_update_nvm_checksum(struct igc_hw *hw);
 +
 +#endif
-diff -Naur empty/drivers/net/ethernet/intel/igc/igc_phy.c linux-5.4.148/drivers/net/ethernet/intel/igc/igc_phy.c
+diff -Naur empty/drivers/net/ethernet/intel/igc/igc_phy.c linux-5.4.183/drivers/net/ethernet/intel/igc/igc_phy.c
 --- empty/drivers/net/ethernet/intel/igc/igc_phy.c	1969-12-31 18:00:00.000000000 -0600
-+++ linux-5.4.148/drivers/net/ethernet/intel/igc/igc_phy.c	2021-09-22 05:26:46.000000000 -0500
-@@ -0,0 +1,779 @@
++++ linux-5.4.183/drivers/net/ethernet/intel/igc/igc_phy.c	2022-03-08 12:07:51.000000000 -0600
+@@ -0,0 +1,775 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/* Copyright (c)  2018 Intel Corporation */
 +
@@ -10563,8 +10563,6 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc_phy.c linux-5.4.148/drivers/
 +		if (ret_val)
 +			return ret_val;
 +		ret_val = igc_write_phy_reg_mdic(hw, offset, data);
-+		if (ret_val)
-+			return ret_val;
 +		hw->phy.ops.release(hw);
 +	} else {
 +		ret_val = igc_write_xmdio_reg(hw, (u16)offset, dev_addr,
@@ -10596,8 +10594,6 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc_phy.c linux-5.4.148/drivers/
 +		if (ret_val)
 +			return ret_val;
 +		ret_val = igc_read_phy_reg_mdic(hw, offset, data);
-+		if (ret_val)
-+			return ret_val;
 +		hw->phy.ops.release(hw);
 +	} else {
 +		ret_val = igc_read_xmdio_reg(hw, (u16)offset, dev_addr,
@@ -10606,9 +10602,9 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc_phy.c linux-5.4.148/drivers/
 +
 +	return ret_val;
 +}
-diff -Naur empty/drivers/net/ethernet/intel/igc/igc_phy.h linux-5.4.148/drivers/net/ethernet/intel/igc/igc_phy.h
+diff -Naur empty/drivers/net/ethernet/intel/igc/igc_phy.h linux-5.4.183/drivers/net/ethernet/intel/igc/igc_phy.h
 --- empty/drivers/net/ethernet/intel/igc/igc_phy.h	1969-12-31 18:00:00.000000000 -0600
-+++ linux-5.4.148/drivers/net/ethernet/intel/igc/igc_phy.h	2021-09-22 05:26:46.000000000 -0500
++++ linux-5.4.183/drivers/net/ethernet/intel/igc/igc_phy.h	2022-03-08 12:07:51.000000000 -0600
 @@ -0,0 +1,21 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/* Copyright (c)  2018 Intel Corporation */
@@ -10631,9 +10627,9 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc_phy.h linux-5.4.148/drivers/
 +s32 igc_read_phy_reg_gpy(struct igc_hw *hw, u32 offset, u16 *data);
 +
 +#endif
-diff -Naur empty/drivers/net/ethernet/intel/igc/igc_regs.h linux-5.4.148/drivers/net/ethernet/intel/igc/igc_regs.h
+diff -Naur empty/drivers/net/ethernet/intel/igc/igc_regs.h linux-5.4.183/drivers/net/ethernet/intel/igc/igc_regs.h
 --- empty/drivers/net/ethernet/intel/igc/igc_regs.h	1969-12-31 18:00:00.000000000 -0600
-+++ linux-5.4.148/drivers/net/ethernet/intel/igc/igc_regs.h	2021-09-22 05:26:46.000000000 -0500
++++ linux-5.4.183/drivers/net/ethernet/intel/igc/igc_regs.h	2022-03-08 12:07:51.000000000 -0600
 @@ -0,0 +1,239 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/* Copyright (c)  2018 Intel Corporation */
@@ -10874,9 +10870,9 @@ diff -Naur empty/drivers/net/ethernet/intel/igc/igc_regs.h linux-5.4.148/drivers
 +#define array_rd32(reg, offset) (igc_rd32(hw, (reg) + ((offset) << 2)))
 +
 +#endif
-diff -Naur empty/drivers/net/ethernet/intel/igc/Makefile linux-5.4.148/drivers/net/ethernet/intel/igc/Makefile
+diff -Naur empty/drivers/net/ethernet/intel/igc/Makefile linux-5.4.183/drivers/net/ethernet/intel/igc/Makefile
 --- empty/drivers/net/ethernet/intel/igc/Makefile	1969-12-31 18:00:00.000000000 -0600
-+++ linux-5.4.148/drivers/net/ethernet/intel/igc/Makefile	2021-09-22 05:26:46.000000000 -0500
++++ linux-5.4.183/drivers/net/ethernet/intel/igc/Makefile	2022-03-08 12:07:51.000000000 -0600
 @@ -0,0 +1,11 @@
 +# SPDX-License-Identifier: GPL-2.0
 +# Copyright (c)  2018 Intel Corporation
