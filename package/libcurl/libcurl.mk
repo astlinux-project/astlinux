@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LIBCURL_VERSION = 7.81.0
+LIBCURL_VERSION = 7.82.0
 LIBCURL_SOURCE = curl-$(LIBCURL_VERSION).tar.gz
 LIBCURL_SITE = https://curl.haxx.se/download
 LIBCURL_INSTALL_STAGING = YES
@@ -21,9 +21,9 @@ LIBCURL_CONF_OPT = \
 	--disable-mqtt \
 	--disable-gopher \
 	--disable-alt-svc \
-	--enable-hidden-symbols \
+	--disable-libcurl-option \
+	--enable-symbol-hiding \
 	--with-random=/dev/urandom \
-	--without-libidn \
 	--without-libidn2 \
 	--enable-ipv6
 
