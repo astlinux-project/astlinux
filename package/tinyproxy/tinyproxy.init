@@ -14,7 +14,7 @@ start () {
   if [ "$TINYPROXY_START" = "yes" ] && [ -f /mnt/kd/tinyproxy.conf ]; then
     echo "Starting tinyproxy..."
 
-    /usr/bin/tinyproxy
+    /usr/bin/tinyproxy -c /etc/tinyproxy.conf
   fi
 }
 
