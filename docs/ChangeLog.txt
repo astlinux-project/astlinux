@@ -20,9 +20,16 @@ Released @TBD@
 
 ** Networking
 
+-- OpenSSL, version bump to 1.1.1n, security fix: CVE-2022-0778
+
 -- libcurl (curl) version bump to 7.82.0
 
+-- stunnel, version bump to 5.63
+
 -- whois, version bump to 5.5.12
+
+-- (Custom Build Only) tinyproxy, version 1.11.0, tinyproxy.init fix
+                       Note: PidFile "/var/run/tinyproxy.pid" must be included in the tinyproxy.conf
 
 ** Asterisk
 
