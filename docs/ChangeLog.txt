@@ -18,9 +18,17 @@ Released @TBD@
 
 -- expat, version bump to 2.4.7
 
+-- rng-tools, version 6.5, jitterentropy version bump to 3.4.0
+
+-- ca-certificates, update trusted root certificates 2022-03-18
+
+-- Time Zone Database update, tzdata2022a and php-timezonedb-2022.1
+
 ** Networking
 
 -- OpenSSL, version bump to 1.1.1n, security fix: CVE-2022-0778
+
+-- OpenVPN, version bump to 2.4.12, security fix: CVE-2022-0547
 
 -- libcurl (curl) version bump to 7.82.0
 
