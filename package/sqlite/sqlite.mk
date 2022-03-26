@@ -4,7 +4,7 @@
 #
 #############################################################
 
-SQLITE_VERSION = 3370200
+SQLITE_VERSION = 3380200
 SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VERSION).tar.gz
 SQLITE_SITE = https://www.sqlite.org/2022
 SQLITE_INSTALL_STAGING = YES
@@ -21,7 +21,6 @@ SQLITE_CONF_ENV = CFLAGS="$(TARGET_CFLAGS) $(SQLITE_CFLAGS)"
 SQLITE_CONF_OPT = \
 	--disable-math \
 	--disable-fts5 \
-	--disable-json1 \
 	--disable-static-shell \
 	--enable-threadsafe \
 	--localstatedir=/var
