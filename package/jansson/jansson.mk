@@ -4,10 +4,9 @@
 #
 ################################################################################
 
-JANSSON_VERSION = 2.12
+JANSSON_VERSION = 2.14
 JANSSON_SOURCE = jansson-$(JANSSON_VERSION).tar.bz2
-JANSSON_SITE = https://raw.githubusercontent.com/asterisk/third-party/master/jansson/$(JANSSON_VERSION)
-#JANSSON_SITE = http://www.digip.org/jansson/releases
+JANSSON_SITE = https://github.com/akheron/jansson/releases/download/v$(JANSSON_VERSION)
 
 JANSSON_INSTALL_STAGING = YES
 
