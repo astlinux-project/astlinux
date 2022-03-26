@@ -12,13 +12,19 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.230 (no change), security and bug fixes.
+-- Linux Kernel 4.19.236 (version bump), security and bug fixes.
 
 -- igc, backport from linux-5.4.183, Intel i225 2.5-Gigabit Ethernet Network Driver
 
 -- expat, version bump to 2.4.7
 
+-- jansson, version bump to 2.14
+
+-- Monit, version bump to 5.32.0
+
 -- rng-tools, version 6.5, jitterentropy version bump to 3.4.0
+
+-- sqlite, version bump to 3.38.2, JSON support is now enabled
 
 -- ca-certificates, update trusted root certificates 2022-03-18
 
@@ -32,6 +38,8 @@ Released @TBD@
 
 -- libcurl (curl) version bump to 7.82.0
 
+-- msmtp, version bump to 1.8.20
+
 -- stunnel, version bump to 5.63
 
 -- whois, version bump to 5.5.12
@@ -44,11 +52,13 @@ Released @TBD@
 -- Asterisk 13.38.3 ('13se' no change)
    Last Asterisk 13.x "Legacy" version, built --without-pjproject
 
--- Asterisk 16.21.1 (no change) and 18.10.0 (no change)
+-- Asterisk 16.25.0 (version bump) and 18.11.0 (version bump)
+   New applications: SendSF, ReceiveSF
+   New functions: JSON_DECODE
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
 
--- pjsip 2.10 (no change)
+-- pjsip 2.10, security fixes: CVE-2022-21723, CVE-2022-23608, CVE-2021-37706
 
 ** Web Interface
 
