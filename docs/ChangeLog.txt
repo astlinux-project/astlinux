@@ -30,6 +30,9 @@ Released @TBD@
 
 -- Time Zone Database update, tzdata2022a and php-timezonedb-2022.1
 
+-- Update build system tools:
+   == squashfs (squashfs-tools), version bump to 4.5.1
+
 ** Networking
 
 -- OpenSSL, version bump to 1.1.1n, security fix: CVE-2022-0778
