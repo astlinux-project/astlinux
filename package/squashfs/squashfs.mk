@@ -4,9 +4,9 @@
 #
 ################################################################################
 
-SQUASHFS_VERSION = 4.4
-SQUASHFS_SOURCE = squashfs$(SQUASHFS_VERSION).tar.gz
-SQUASHFS_SITE = http://downloads.sourceforge.net/project/squashfs/squashfs/squashfs$(SQUASHFS_VERSION)
+SQUASHFS_VERSION = 4.5.1
+SQUASHFS_SOURCE = squashfs-tools-$(SQUASHFS_VERSION).tar.gz
+SQUASHFS_SITE = https://downloads.sourceforge.net/project/squashfs/squashfs/squashfs$(SQUASHFS_VERSION)
 
 SQUASHFS_MAKE_ARGS = XATTR_SUPPORT=0
 
@@ -44,6 +44,7 @@ endif
 HOST_SQUASHFS_DEPENDENCIES = host-zlib
 
 HOST_SQUASHFS_MAKE_ARGS = \
+	INSTALL_MANPAGES_DIR="" \
 	XATTR_SUPPORT=0 \
 	XZ_SUPPORT=0 \
 	GZIP_SUPPORT=1 COMP_DEFAULT=gzip \
