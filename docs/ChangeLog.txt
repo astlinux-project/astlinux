@@ -16,6 +16,8 @@ Released @TBD@
 
 -- igc, backport from linux-5.4.183, Intel i225 2.5-Gigabit Ethernet Network Driver
 
+-- r8125, version 9.008.00, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
+
 -- expat, version bump to 2.4.7
 
 -- jansson, version bump to 2.14
