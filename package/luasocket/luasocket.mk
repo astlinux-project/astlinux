@@ -4,10 +4,9 @@
 #
 #############################################################
 
-LUASOCKET_VERSION = 3.0-rc1
+LUASOCKET_VERSION = 3.0.0
 LUASOCKET_SOURCE = luasocket-$(LUASOCKET_VERSION).tar.gz
-LUASOCKET_SITE = https://astlinux-project.org/files
-#LUASOCKET_SITE = http://github.com/diegonehab/luasocket/archive
+LUASOCKET_SITE = https://github.com/lunarmodules/luasocket/archive/v$(LUASOCKET_VERSION)
 LUASOCKET_DEPENDENCIES = lua
 
 define LUASOCKET_BUILD_CMDS

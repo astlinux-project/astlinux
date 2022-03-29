@@ -1,0 +1,65 @@
+From 1d61853ab84f0724502205f45849c2347d6a49ac Mon Sep 17 00:00:00 2001
+From: Robert Scheck <robert-scheck@users.noreply.github.com>
+Date: Mon, 28 Mar 2022 13:53:32 +0200
+Subject: [PATCH] chore: Update internal version references to match release
+ (#370)
+
+---
+ docs/installation.html | 2 +-
+ makefile.dist          | 2 +-
+ src/luasocket.h        | 2 +-
+ src/makefile           | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/docs/installation.html b/docs/installation.html
+index 28a9fbb5..dcf9d36f 100644
+--- a/docs/installation.html
++++ b/docs/installation.html
+@@ -89,7 +89,7 @@ <h3>Using LuaSocket</h3>
+ Lua 5.2.2  Copyright (C) 1994-2013 Lua.org, PUC-Rio
+ &gt; socket = require("socket")
+ &gt; print(socket._VERSION)
+---&gt; LuaSocket 3.0-rc1
++--&gt; LuaSocket 3.0.0
+ </pre>
+ 
+ <p> Each module loads their dependencies automatically, so you only need to
+diff --git a/makefile.dist b/makefile.dist
+index 3a2e100a..a27ba577 100644
+--- a/makefile.dist
++++ b/makefile.dist
+@@ -1,7 +1,7 @@
+ #--------------------------------------------------------------------------
+ # Distribution makefile
+ #--------------------------------------------------------------------------
+-DIST = luasocket-3.0-rc1
++DIST = luasocket-3.0.0
+ 
+ TEST = \
+ 	test/README \
+diff --git a/src/luasocket.h b/src/luasocket.h
+index d22b1bea..1017fbaa 100644
+--- a/src/luasocket.h
++++ b/src/luasocket.h
+@@ -10,7 +10,7 @@
+ /*-------------------------------------------------------------------------* \
+ * Current socket library version
+ \*-------------------------------------------------------------------------*/
+-#define LUASOCKET_VERSION    "LuaSocket 3.0-rc1"
++#define LUASOCKET_VERSION    "LuaSocket 3.0.0"
+ #define LUASOCKET_COPYRIGHT  "Copyright (C) 1999-2013 Diego Nehab"
+ 
+ /*-------------------------------------------------------------------------*\
+diff --git a/src/makefile b/src/makefile
+index f95498ae..06f4d192 100755
+--- a/src/makefile
++++ b/src/makefile
+@@ -272,7 +272,7 @@ SOCKET_win64=wsocket.obj
+ #
+ SO=$(SO_$(PLAT))
+ O=$(O_$(PLAT))
+-SOCKET_V=3.0-rc1
++SOCKET_V=3.0.0
+ MIME_V=1.0.3
+ SOCKET_SO=socket-$(SOCKET_V).$(SO)
+ MIME_SO=mime-$(MIME_V).$(SO)
