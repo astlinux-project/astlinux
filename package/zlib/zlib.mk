@@ -3,9 +3,10 @@
 # zlib
 #
 #############################################################
-ZLIB_VERSION = 1.2.11
+
+ZLIB_VERSION = 1.2.12
 ZLIB_SOURCE = zlib-$(ZLIB_VERSION).tar.gz
-ZLIB_SITE = http://downloads.sourceforge.net/project/libpng/zlib/$(ZLIB_VERSION)
+ZLIB_SITE = https://zlib.net
 ZLIB_INSTALL_STAGING = YES
 
 ifeq ($(BR2_PREFER_STATIC_LIB),y)
@@ -31,6 +32,7 @@ define HOST_ZLIB_CONFIGURE_CMDS
 	(cd $(@D); rm -rf config.cache; \
 		$(HOST_CONFIGURE_ARGS) \
 		$(HOST_CONFIGURE_OPTS) \
+		CFLAGS="$(HOST_CFLAGS) $(ZLIB_PIC)" \
 		./configure \
 		--prefix="$(HOST_DIR)/usr" \
 		--sysconfdir="$(HOST_DIR)/etc" \
