@@ -18,9 +18,11 @@ Released @TBD@
 
 -- r8125, version 9.008.00, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
 
--- expat, version bump to 2.4.7
+-- expat, version bump to 2.4.8
 
 -- jansson, version bump to 2.14
+
+-- zlib, version bump to 1.2.12, security fix: CVE-2018-25032
 
 -- Monit, version bump to 5.32.0
 
@@ -28,7 +30,9 @@ Released @TBD@
 
 -- sqlite, version bump to 3.38.2, JSON support is now enabled
 
--- ca-certificates, update trusted root certificates 2022-03-18
+-- strace, version bump to 5.17
+
+-- ca-certificates, update trusted root certificates 2022-03-29
 
 -- Time Zone Database update, tzdata2022a and php-timezonedb-2022.1
 
