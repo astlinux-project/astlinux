@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-CA_CERTIFICATES_VERSION = 2022-03-18
+CA_CERTIFICATES_VERSION = 2022-03-29
 CA_CERTIFICATES_SOURCE = cacert-$(CA_CERTIFICATES_VERSION).pem
 CA_CERTIFICATES_SITE = https://curl.haxx.se/ca
 
