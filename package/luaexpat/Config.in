@@ -4,4 +4,5 @@ config BR2_PACKAGE_LUAEXPAT
 	help
 	  LuaExpat is a SAX XML parser based on the Expat library.
 
-	  http://matthewwild.co.uk/projects/luaexpat/
+	  https://lunarmodules.github.io/luaexpat
+

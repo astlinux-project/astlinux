@@ -4,17 +4,15 @@
 #
 #############################################################
 
-LUAEXPAT_VERSION      = 1.3.0
-LUAEXPAT_SITE         = http://matthewwild.co.uk/projects/luaexpat
+LUAEXPAT_VERSION = 1.4.1
+LUAEXPAT_SITE = https://github.com/lunarmodules/luaexpat/archive/$(LUAEXPAT_VERSION)
 LUAEXPAT_DEPENDENCIES = lua expat
-
 
 LUAEXPAT_MFLAGS += LUA_LDIR=$(TARGET_DIR)/usr/share/lua
 LUAEXPAT_MFLAGS += LUA_CDIR=$(TARGET_DIR)/usr/lib/lua
 LUAEXPAT_MFLAGS += LUA_INC=-I$(STAGING_DIR)/usr/include
 LUAEXPAT_MFLAGS += EXPAT_INC=-I$(STAGING_DIR)/usr/include
 LUAEXPAT_MFLAGS += CC="$(TARGET_CC) -fPIC $(TARGET_CFLAGS)"
-
 
 define LUAEXPAT_BUILD_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) $(LUAEXPAT_MFLAGS)
