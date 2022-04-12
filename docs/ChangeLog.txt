@@ -18,6 +18,8 @@ Released @TBD@
 
 -- r8125, version 9.008.00, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
 
+-- ethtool, version bump to 5.17
+
 -- expat, version bump to 2.4.8
 
 -- luaexpat, version bump to 1.4.1
@@ -51,6 +53,8 @@ Released @TBD@
    Note: We only use 'ra-only' for IPv6 networks, so this security fix is for completeness only.
 
 -- libcurl (curl) version bump to 7.82.0
+
+-- libmnl, version bump to 1.0.5
 
 -- luasocket, version bump to 3.0.0
 
