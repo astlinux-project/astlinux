@@ -56,6 +56,8 @@ Released @TBD@
 
 -- libmnl, version bump to 1.0.5
 
+-- lighttpd/php, anonymize header version information
+
 -- luasocket, version bump to 3.0.0
 
 -- msmtp, version bump to 1.8.20
