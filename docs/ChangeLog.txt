@@ -30,6 +30,8 @@ Released @TBD@
 
 -- Monit, version bump to 5.32.0
 
+-- php, version 7.2.34, add security fix: CVE-2021-21707
+
 -- rng-tools, version 6.5, jitterentropy version bump to 3.4.0
 
 -- sqlite, version bump to 3.38.2, JSON support is now enabled
