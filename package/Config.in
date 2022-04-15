@@ -355,6 +355,7 @@ source "package/webkit/Config.in"
 endmenu
 
 menu "Hardware handling"
+source "package/gnu-efi/Config.in"
 source "package/libaio/Config.in"
 source "package/libraw1394/Config.in"
 source "package/tslib/Config.in"

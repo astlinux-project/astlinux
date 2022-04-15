@@ -14,9 +14,23 @@ SYSLINUX_INSTALL_IMAGES = YES
 # host-util-linux needed to provide libuuid when building host tools
 SYSLINUX_DEPENDENCIES = host-nasm host-util-linux util-linux
 
-SYSLINUX_TARGET = bios
-
+ifeq ($(BR2_TARGET_SYSLINUX_LEGACY_BIOS),y)
+SYSLINUX_TARGET += bios
 SYSLINUX_EFI_ARGS =
+endif # BIOS
+
+# The syslinux build system must be forced to use Buildroot's gnu-efi
+# package by setting EFIINC, LIBDIR and LIBEFI. Otherwise, it uses its
+# own copy of gnu-efi included in syslinux's sources since 6.03
+# release.
+ifeq ($(BR2_TARGET_SYSLINUX_EFI),y)
+SYSLINUX_DEPENDENCIES += gnu-efi
+SYSLINUX_TARGET += efi64
+SYSLINUX_EFI_ARGS = \
+	EFIINC=$(STAGING_DIR)/usr/include/efi \
+	LIBDIR=$(STAGING_DIR)/usr/lib \
+	LIBEFI=$(STAGING_DIR)/usr/lib/libefi.a
+endif # EFI
 
 # The syslinux tarball comes with pre-compiled binaries.
 # Since timestamps might not be in the correct order, a rebuild is
@@ -35,6 +49,8 @@ define SYSLINUX_BUILD_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE1) \
 		CC="$(TARGET_CC)" \
 		LD="$(TARGET_LD)" \
+		OBJCOPY="$(TARGET_OBJCOPY)" \
+		AS="$(TARGET_AS)" \
 		NASM="$(HOST_DIR)/usr/bin/nasm" \
 		CC_FOR_BUILD="$(HOSTCC)" \
 		CFLAGS_FOR_BUILD="$(HOST_CFLAGS)" \

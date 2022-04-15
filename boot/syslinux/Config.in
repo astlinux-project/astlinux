@@ -1,18 +1,37 @@
 config BR2_TARGET_SYSLINUX
 	bool "syslinux"
 	depends on BR2_i386 || BR2_x86_64
+	select BR2_PACKAGE_UTIL_LINUX
+	select BR2_PACKAGE_UTIL_LINUX_LIBUUID
 	help
 	  The syslinux bootloader for x86 systems.
 	  This includes: syslinux, pxelinux, extlinux.
 
 	  http://syslinux.org
 
+if BR2_TARGET_SYSLINUX
+
+config BR2_TARGET_SYSLINUX_LEGACY_BIOS
+	bool "generate bios"
+	help
+	  Build the 'bios' target, to boot from a Legacy BIOS environment.
+
+config BR2_TARGET_SYSLINUX_EFI
+	bool "generate efi64"
+	select BR2_PACKAGE_GNU_EFI
+	help
+	  Build the 'efi64' target, to boot from an EFI environment.
+
 config BR2_TARGET_SYSLINUX_ISOLINUX
-	bool "Install isolinux"
-	depends on BR2_TARGET_SYSLINUX
-	default y
+	bool "install isolinux"
+	help
+	  Install the legacy-BIOS 'isolinux' image, to boot off
+	  optical media (CDROM, DVD.)
 
 config BR2_TARGET_SYSLINUX_PXELINUX
-	bool "Install pxelinux"
-	depends on BR2_TARGET_SYSLINUX
-	default y
+	bool "install pxelinux"
+	help
+	  Install the legacy-BIOS 'pxelinux' image, to boot off
+	  the network using PXE.
+
+endif
