@@ -52,6 +52,22 @@ unmount_tmpfs_runup() {
   rmdir /tmp/runup
 }
 
+match_serial_speed_tty()
+{
+  local syslinux="$1" console ttyno speed
+
+  # Match the serial speed/tty of unionfs /etc/inittab if appropriate
+  if [ -f /mnt/asturw/etc/inittab ] && grep -q '^.* console=' "$syslinux"; then
+    console="$(/usr/sbin/setconsole-speed-tty show 2>/dev/null)"
+    if [ $? -eq 0 ]; then
+      ttyno="$(echo "$console" | sed -n -r -e 's/^ttyS([0-9]),[0-9]+.*$/\1/p')"
+      speed="$(echo "$console" | sed -n -r -e 's/^ttyS[0-9],([0-9]+).*$/\1/p')"
+      sed -i -e "s/^serial .*$/serial ${ttyno} ${speed}/" "$syslinux"
+      sed -i -r -e "s/ console=[^ ]+/ console=${console}/" "$syslinux"
+    fi
+  fi
+}
+
 check() {
 
   ARCH=""
@@ -198,19 +214,36 @@ upgrade() {
       syslinux="$BASE/rtmp/$VER/configs/default${slver}${IS_SERIAL}.cfg"
     fi
     if [ -n "$syslinux" ]; then
-      # Match the serial speed/tty of unionfs /etc/inittab if appropriate
-      if [ -f /mnt/asturw/etc/inittab ] && grep -q '^.* console=' "$syslinux"; then
-        console="$(/usr/sbin/setconsole-speed-tty show 2>/dev/null)"
-        if [ $? -eq 0 ]; then
-          ttyno="$(echo "$console" | sed -n -r -e 's/^ttyS([0-9]),[0-9]+.*$/\1/p')"
-          speed="$(echo "$console" | sed -n -r -e 's/^ttyS[0-9],([0-9]+).*$/\1/p')"
-          sed -i -e "s/^serial .*$/serial ${ttyno} ${speed}/" "$syslinux"
-          sed -i -r -e "s/ console=[^ ]+/ console=${console}/" "$syslinux"
-        fi
-      fi
+      match_serial_speed_tty "$syslinux"
 
       rm -f "$BASE/syslinux.cfg"
       mv "$syslinux" "$BASE/syslinux.cfg"
+    fi
+
+    # Install EFI
+    if [ -d "$BASE/EFI/BOOT" -a -f "$BASE/rtmp/$VER/rootfs_vfat/EFI/BOOT/bootx64.efi" ]; then
+      # Install EFI/BOOT files
+      for install in bootx64.efi ldlinux.e64 menu.c32 libutil.c32 boot.msg; do
+        if [ -f "$BASE/rtmp/$VER/rootfs_vfat/EFI/BOOT/$install" ]; then
+          if [ -f "$BASE/EFI/BOOT/$install" ]; then
+            rm -f "$BASE/EFI/BOOT/$install"
+          fi
+          mv "$BASE/rtmp/$VER/rootfs_vfat/EFI/BOOT/$install" "$BASE/EFI/BOOT/$install"
+        fi
+      done
+
+      # Install EFI syslinux.cfg
+      syslinux=""
+      slver="EFI"
+      if [ -f "$BASE/rtmp/$VER/configs/default${slver}${IS_SERIAL}.cfg" ]; then
+        syslinux="$BASE/rtmp/$VER/configs/default${slver}${IS_SERIAL}.cfg"
+      fi
+      if [ -n "$syslinux" ]; then
+        match_serial_speed_tty "$syslinux"
+
+        rm -f "$BASE/EFI/BOOT/syslinux.cfg"
+        mv "$syslinux" "$BASE/EFI/BOOT/syslinux.cfg"
+      fi
     fi
 
     echo "$VER" > $BASE/ver
