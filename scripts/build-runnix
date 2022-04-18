@@ -35,6 +35,11 @@ make_release()
   cp -p ${MEMTEST_DIR}/memtest.bin ${RUNVER}/rootfs_vfat/memtest
   cp -p ${SYSLINUX_DIR}/bios/com32/menu/menu.c32 ${RUNVER}/rootfs_vfat/menu.c32
   cp -p ${SYSLINUX_DIR}/bios/com32/libutil/libutil.c32 ${RUNVER}/rootfs_vfat/libutil.c32
+  # EFI
+  cp -p ${SYSLINUX_DIR}/efi64/efi/syslinux.efi ${RUNVER}/rootfs_vfat/EFI/BOOT/bootx64.efi
+  cp -p ${SYSLINUX_DIR}/efi64/com32/elflink/ldlinux/ldlinux.e64 ${RUNVER}/rootfs_vfat/EFI/BOOT/ldlinux.e64
+  cp -p ${SYSLINUX_DIR}/efi64/com32/menu/menu.c32 ${RUNVER}/rootfs_vfat/EFI/BOOT/menu.c32
+  cp -p ${SYSLINUX_DIR}/efi64/com32/libutil/libutil.c32 ${RUNVER}/rootfs_vfat/EFI/BOOT/libutil.c32
   echo "${RUNVER}" > ${RUNVER}/rootfs_vfat/ver
 
   tar -cvzf ${RUNVER}.tar.gz ${RUNVER}
