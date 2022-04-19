@@ -79,14 +79,15 @@ set_kernel_console()
     fi
   done
 
-  # Edit RUNNIX syslinux.cfg file
-  file="$BASE/syslinux.cfg"
-  if grep -q '^.* console=' "$file"; then
-    ttyno="$(echo "$console" | sed -n -r -e 's/^ttyS([0-9]),[0-9]+.*$/\1/p')"
-    speed="$(echo "$console" | sed -n -r -e 's/^ttyS[0-9],([0-9]+).*$/\1/p')"
-    sed -i -e "s/^serial .*$/serial ${ttyno} ${speed}/" "$file"
-    sed -i -r -e "s/ console=[^ ]+/ console=${console}/" "$file"
-  fi
+  # Edit RUNNIX syslinux.cfg file(s)
+  for file in "$BASE/syslinux.cfg" "$BASE/EFI/BOOT/syslinux.cfg"; do
+    if [ -f "$file" ] && grep -q '^.* console=' "$file"; then
+      ttyno="$(echo "$console" | sed -n -r -e 's/^ttyS([0-9]),[0-9]+.*$/\1/p')"
+      speed="$(echo "$console" | sed -n -r -e 's/^ttyS[0-9],([0-9]+).*$/\1/p')"
+      sed -i -e "s/^serial .*$/serial ${ttyno} ${speed}/" "$file"
+      sed -i -r -e "s/ console=[^ ]+/ console=${console}/" "$file"
+    fi
+  done
 
   mount -o ro,remount /oldroot/cdrom >/dev/null
 }
