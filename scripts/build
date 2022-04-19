@@ -60,6 +60,12 @@ make_runfs()
   else
     cp -p ${RUNNIX_DIR}/configs/default6.cfg ${RUNFS_DIR}/syslinux.cfg
   fi
+  # Install EFI/BOOT syslinux.cfg
+  if [ -n "${RUNNIX_KCMD_CONSOLE}" ]; then
+    cp -p ${RUNNIX_DIR}/configs/defaultEFI-serial.cfg ${RUNFS_DIR}/EFI/BOOT/syslinux.cfg
+  else
+    cp -p ${RUNNIX_DIR}/configs/defaultEFI.cfg ${RUNFS_DIR}/EFI/BOOT/syslinux.cfg
+  fi
 
   rm -f ${RUNFS_DIR}/os/astlinux-*
 
