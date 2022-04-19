@@ -220,9 +220,8 @@ upgrade() {
       mv "$syslinux" "$BASE/syslinux.cfg"
     fi
 
-    # Install EFI
+    # Install EFI/BOOT files (when EFI/BOOT/ directory exists)
     if [ -d "$BASE/EFI/BOOT" -a -f "$BASE/rtmp/$VER/rootfs_vfat/EFI/BOOT/bootx64.efi" ]; then
-      # Install EFI/BOOT files
       for install in bootx64.efi ldlinux.e64 menu.c32 libutil.c32 boot.msg; do
         if [ -f "$BASE/rtmp/$VER/rootfs_vfat/EFI/BOOT/$install" ]; then
           if [ -f "$BASE/EFI/BOOT/$install" ]; then
@@ -232,7 +231,7 @@ upgrade() {
         fi
       done
 
-      # Install EFI syslinux.cfg
+      # Install EFI/BOOT syslinux.cfg
       syslinux=""
       slver="EFI"
       if [ -f "$BASE/rtmp/$VER/configs/default${slver}${IS_SERIAL}.cfg" ]; then
