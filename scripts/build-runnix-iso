@@ -3,7 +3,11 @@
 # build-runnix-iso install_image.img.gz|install_image_dir [serial]
 #
 
-REQUIRED_CMDS="which sudo genisoimage sha1sum"
+REQUIRED_CMDS="which sudo sha1sum"
+
+HOST_BIN="./output/host/usr/bin"
+
+REQUIRED_HOST_CMDS="xorriso"
 
 CONFIG="runnix-iso.config"
 
@@ -51,6 +55,12 @@ make_release()
   cp -p ${SYSLINUX_DIR}/bios/com32/elflink/ldlinux/ldlinux.c32 ${RUNDIR}/isolinux/ldlinux.c32
   cp -p ${KERNEL} ${RUNDIR}/runnix/runnix
   cp -p ${ROOTFS_EXT2_GZ} ${RUNDIR}/runnix/runnix.img
+  # EFI
+  if [ "$SERIAL" = "serial" ]; then
+    cp -p project/runnix-iso/files/configs/syslinuxEFI-serial.cfg ${RUNDIR}/EFI/BOOT/syslinux.cfg
+  fi
+  cp -p ${SYSLINUX_DIR}/efi64/efi/syslinux.efi ${RUNDIR}/EFI/BOOT/bootx64.efi
+  cp -p ${SYSLINUX_DIR}/efi64/com32/elflink/ldlinux/ldlinux.e64 ${RUNDIR}/EFI/BOOT/ldlinux.e64
 
   if [ -n "$ISO_DIR" ]; then
     cp "$ISO_DIR"/*.img.gz ${RUNDIR}/os/
@@ -64,24 +74,18 @@ make_release()
   rm -f "${ISO_NAME}"
 
   echo "Generating ISO '${ISO_NAME}' ..."
-  sudo genisoimage \
+  sudo $HOST_BIN/xorriso -as mkisofs \
+    -isohybrid-mbr ${SYSLINUX_DIR}/bios/mbr/isohdpfx.bin \
     -o "${ISO_NAME}" \
     -b isolinux/isolinux.bin \
     -c isolinux/boot.cat \
-    -V 'AstLinux ISO' \
+    -V ASTLINUX_ISO \
     -J -R \
     -no-emul-boot \
     -boot-load-size 4 \
     -boot-info-table \
     -input-charset utf-8 \
     ${RUNDIR}
-
-  if [ -x "${SYSLINUX_DIR}/bios/utils/isohybrid" ]; then
-    echo "Blessing as Hybrid ISO..."
-    sudo "${SYSLINUX_DIR}/bios/utils/isohybrid" "${ISO_NAME}"
-  else
-    echo "Error: No Hybrid ISO support."
-  fi
 }
 
 save_state()
@@ -147,7 +151,19 @@ if [ -n "$ISO_DIR" ] && ! ls "$ISO_DIR"/*.img.gz >/dev/null 2>&1; then
   exit 1
 fi
 
+for i in $REQUIRED_HOST_CMDS; do
+  if [ ! -x "$HOST_BIN/$i" ]; then
+    make host-$i
+  fi
+done
+
 error=0
+for i in $REQUIRED_HOST_CMDS; do
+  if [ ! -x "$HOST_BIN/$i" ]; then
+    error=1
+    echo "build-runnix-iso: Required HOST command \"$i\" is missing." >&2
+  fi
+done
 for i in $REQUIRED_CMDS; do
   if ! which $i >/dev/null 2>&1; then
     error=1
