@@ -15,5 +15,5 @@ igb
 #r8125
 r8169
 tg3
-#igc
+igc
 #ixgbe
