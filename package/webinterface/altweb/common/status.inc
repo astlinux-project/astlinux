@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2021 Lonnie Abelbeck
+// Copyright (C) 2008-2022 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -50,6 +50,7 @@
 // 07-08-2020, Added Firewall status indicator
 // 01-05-2021, pppoe-status, accept return values of 0 and 1
 // 02-04-2021, Remove IPsec (racoon) VPN support
+// 04-22-2022, Added UEFI indicator
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -885,7 +886,7 @@ if (is_file('/etc/system-vendor')) {
   // hardware
   echo '<tr ', ($i++ % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
   echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', 'Hardware:', '</td>';
-  echo '<td style="text-align: left;">', htmlspecialchars(trim(@file_get_contents('/etc/system-vendor'))), '</td>';
+  echo '<td style="text-align: left;">', htmlspecialchars(trim(@file_get_contents('/etc/system-vendor'))).(is_dir('/sys/firmware/efi') ? ' - UEFI' : ''), '</td>';
   // gui version - license
   echo '<td class="dialogText" style="text-align: right; font-weight: bold;">', 'GUI Version:', '</td>';
   echo '<td style="text-align: left;">', $GUI_VERSION, '&nbsp;&nbsp;&ndash;&nbsp;&nbsp;';

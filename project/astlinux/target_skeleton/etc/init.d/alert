@@ -50,6 +50,12 @@ welcome_msg()
     vendor=""
   fi
 
+  if [ -d /sys/firmware/efi ]; then
+    uefi=" - UEFI"
+  else
+    uefi=""
+  fi
+
   release="$(cat /etc/astlinux-release)"
 
   echo -e "\n\n\033[40m\033[1;32m  Welcome to AstLinux, Release: ${release}${asterisk:+ - $asterisk}  \033[0m"
@@ -61,7 +67,7 @@ welcome_msg()
             CPU: $cpu
             RAM: $memtotal MB, Available $memavail MB
      Board Type: $board${vendor:+
-       Hardware: $vendor}
+       Hardware: $vendor$uefi}
 
       Interface: $EXTIF (External)   IPv4 Address: $(dev_to_ipv4_addresses $EXTIF)${INTIF:+
       Interface: $INTIF (1st LAN)    IPv4 Network: $(dev_to_ipv4_networks $INTIF)}${INT2IF:+
@@ -82,7 +88,7 @@ ${H}| L |${N}       ${L}Linux:${N} $(uname -r -m)
 ${H}| i |${N}         ${L}CPU:${N} $cpu
 ${H}| n |${N}         ${L}RAM:${N} $memtotal MB
 ${H}| u |${N}  ${L}Board Type:${N} $board
-${H}| x |${N}    ${L}Hardware:${N} ${vendor:-Generic $(uname -m)}
+${H}| x |${N}    ${L}Hardware:${N} ${vendor:-Generic $(uname -m)}${uefi}
 ${H}|||||${N}" >/tmp/etc/motd
   fi
 
