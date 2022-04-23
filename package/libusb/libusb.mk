@@ -4,11 +4,14 @@
 #
 #############################################################
 
-LIBUSB_VERSION = 1.0.25
+LIBUSB_VERSION = 1.0.26
 LIBUSB_SOURCE = libusb-$(LIBUSB_VERSION).tar.bz2
 LIBUSB_SITE = https://github.com/libusb/libusb/releases/download/v$(LIBUSB_VERSION)
 LIBUSB_DEPENDENCIES = host-pkg-config
 LIBUSB_INSTALL_STAGING = YES
+
+# patch configure.ac
+LIBUSB_AUTORECONF = YES
 
 ifeq ($(BR2_ROOTFS_DEVICE_CREATION_DYNAMIC_UDEV),y)
 LIBUSB_DEPENDENCIES += udev
