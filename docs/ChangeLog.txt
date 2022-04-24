@@ -13,6 +13,12 @@ Released @TBD@
 ** System
 
 -- Linux Kernel 4.19.236 (version bump), security and bug fixes.
+   Kernel config: Enable EFI, EFI_STUB, RELOCATABLE, FB_EFI, FRAMEBUFFER_CONSOLE (short list) for EFI support.
+
+-- RUNNIX, version bump to runnix-0.6.10, with Linux Kernel 4.19.236, add UEFI boot support as well as Legacy BIOS boot.
+   == syslinux, version 6.03, enable EFI (64-bit) support
+   == gnu-efi, new package, version 3.0.10
+   More info: https://doc.astlinux-project.org/userdoc:boot-bios-uefi
 
 -- igc, backport from linux-5.4.183, Intel i225 2.5-Gigabit Ethernet Network Driver
 
@@ -22,6 +28,8 @@ Released @TBD@
 
 -- expat, version bump to 2.4.8
 
+-- libusb, version bump to 1.0.26
+
 -- luaexpat, version bump to 1.4.1
 
 -- jansson, version bump to 2.14
@@ -30,6 +38,8 @@ Released @TBD@
 
 -- Monit, version bump to 5.32.0
 
+-- pciutils, version bump to 3.8.0, lspci moved from /usr/sbin/lspci to /usr/bin/lspci
+
 -- php, version 7.2.34, add security fix: CVE-2021-21707
 
 -- rng-tools, version 6.5, jitterentropy version bump to 3.4.0
@@ -37,6 +47,8 @@ Released @TBD@
 -- sqlite, version bump to 3.38.2, JSON support is now enabled
 
 -- strace, version bump to 5.17
+
+-- system-vendor, update system-vendor.ids
 
 -- ca-certificates, update trusted root certificates 2022-03-29
 
@@ -54,11 +66,15 @@ Released @TBD@
 -- dnsmasq, version 2.84, security fix: CVE-2022-0934
    Note: We only use 'ra-only' for IPv6 networks, so this security fix is for completeness only.
 
+-- iperf, version bump to 2.1.7
+
 -- libcurl (curl) version bump to 7.82.0
 
 -- libmnl, version bump to 1.0.5
 
 -- lighttpd/php, anonymize header version information
+
+-- luasec, version bump to 1.1.0
 
 -- luasocket, version bump to 3.0.0
 
@@ -66,7 +82,7 @@ Released @TBD@
 
 -- stunnel, version bump to 5.63
 
--- whois, version bump to 5.5.12
+-- whois, version bump to 5.5.13
 
 -- (Custom Build Only) tinyproxy, version 1.11.0, tinyproxy.init fix
                        Note: PidFile "/var/run/tinyproxy.pid" must be included in the tinyproxy.conf
@@ -76,7 +92,8 @@ Released @TBD@
 -- Asterisk 13.38.3 ('13se' no change)
    Last Asterisk 13.x "Legacy" version, built --without-pjproject
 
--- Asterisk 16.25.0 (version bump) and 18.11.0 (version bump)
+-- Asterisk 16.25.2 (version bump) and 18.11.2 (version bump)
+   Security fixes: (res_stir_shaken) CVE-2022-26498, CVE-2022-26499
    New applications: SendSF, ReceiveSF
    New functions: JSON_DECODE
 
@@ -86,7 +103,7 @@ Released @TBD@
 
 ** Web Interface
 
--- (no change)
+-- Status tab, add UEFI indicator to Hardware:
 
 
 Additions for AstLinux 1.4.5:
