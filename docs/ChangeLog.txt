@@ -50,6 +50,8 @@ Released @TBD@
 
 -- system-vendor, update system-vendor.ids
 
+-- zabbix, version bump to 4.0.39
+
 -- ca-certificates, update trusted root certificates 2022-03-29
 
 -- Time Zone Database update, tzdata2022a and php-timezonedb-2022.1
