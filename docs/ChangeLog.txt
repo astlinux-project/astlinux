@@ -20,7 +20,7 @@ Released @TBD@
    == gnu-efi, new package, version 3.0.10
    More info: https://doc.astlinux-project.org/userdoc:boot-bios-uefi
 
--- igc, backport from linux-5.4.183, Intel i225 2.5-Gigabit Ethernet Network Driver
+-- igc, backport from linux-5.4.191, Intel i225 2.5-Gigabit Ethernet Network Driver
 
 -- r8125, version 9.008.00, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
 
@@ -94,7 +94,7 @@ Released @TBD@
 -- Asterisk 13.38.3 ('13se' no change)
    Last Asterisk 13.x "Legacy" version, built --without-pjproject
 
--- Asterisk 16.25.2 (version bump) and 18.11.2 (version bump)
+-- Asterisk 16.25.3 (version bump) and 18.11.3 (version bump)
    Security fixes: (res_stir_shaken) CVE-2022-26498, CVE-2022-26499
    New applications: SendSF, ReceiveSF
    New functions: JSON_DECODE
