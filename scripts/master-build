@@ -9,7 +9,7 @@ force="$2"
 
 FAT_SIZE=256
 
-REQUIRED_CMDS="which sudo genisoimage sha1sum sha256sum"
+REQUIRED_CMDS="which sudo sha1sum sha256sum"
 
 BOARDS_SMP64="genx86_64 genx86_64-serial"
 
