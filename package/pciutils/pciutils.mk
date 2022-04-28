@@ -12,12 +12,11 @@ PCIUTILS_INSTALL_STAGING = YES
 PCIUTILS_DEPENDENCIES = linux
 
 PCIUTILS_MAKE_OPTS = \
-	CC="$(TARGET_CC)" \
+	CROSS_COMPILE="$(TARGET_CROSS)" \
 	HOST="$(KERNEL_ARCH)-linux" \
 	OPT="$(TARGET_CFLAGS)" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
-	RANLIB=$(TARGET_RANLIB) \
-	AR=$(TARGET_AR)
+	STRIP=
 
 PCIUTILS_MAKE_OPTS += HWDB=no
 PCIUTILS_MAKE_OPTS += ZLIB=no
@@ -32,10 +31,6 @@ endif
 
 define PCIUTILS_CONFIGURE_CMDS
 	$(SED) 's/wget --no-timestamping/wget/' $(PCIUTILS_DIR)/update-pciids.sh
-	$(SED) 's/uname -s/echo Linux/' \
-		-e 's/uname -r/echo $(LINUX_VERSION_PROBED)/' \
-		$(PCIUTILS_DIR)/lib/configure
-	$(SED) 's/^STRIP/#STRIP/' $(PCIUTILS_DIR)/Makefile
 endef
 
 define PCIUTILS_BUILD_CMDS
