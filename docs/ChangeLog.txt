@@ -44,7 +44,7 @@ Released @TBD@
 
 -- rng-tools, version 6.5, jitterentropy version bump to 3.4.0
 
--- sqlite, version bump to 3.38.2, JSON support is now enabled
+-- sqlite, version bump to 3.38.3, JSON support is now enabled
 
 -- strace, version bump to 5.17
 
