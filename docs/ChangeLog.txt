@@ -52,7 +52,7 @@ Released @TBD@
 
 -- zabbix, version bump to 4.0.39
 
--- ca-certificates, update trusted root certificates 2022-03-29
+-- ca-certificates, update trusted root certificates 2022-04-26
 
 -- Time Zone Database update, tzdata2022a and php-timezonedb-2022.1
 
@@ -70,7 +70,7 @@ Released @TBD@
 
 -- iperf, version bump to 2.1.7
 
--- libcurl (curl) version bump to 7.82.0
+-- libcurl (curl) version bump to 7.83.0, security fixes: CVE-2022-22576, CVE-2022-27774, CVE-2022-27775, CVE-2022-27776
 
 -- libmnl, version bump to 1.0.5
 
@@ -81,6 +81,8 @@ Released @TBD@
 -- luasocket, version bump to 3.0.0
 
 -- msmtp, version bump to 1.8.20
+
+-- sngrep, version bump to 1.5.0
 
 -- stunnel, version bump to 5.63
 
