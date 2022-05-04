@@ -65,7 +65,7 @@ Released @TBD@
 
 ** Networking
 
--- OpenSSL, version bump to 1.1.1n, security fix: CVE-2022-0778
+-- OpenSSL, version bump to 1.1.1o, security fixes: CVE-2022-0778, CVE-2022-1292
 
 -- OpenVPN, version bump to 2.4.12, security fix: CVE-2022-0547
 
