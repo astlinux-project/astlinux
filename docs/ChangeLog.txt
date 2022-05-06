@@ -52,7 +52,7 @@ Released @TBD@
 
 -- system-vendor, update system-vendor.ids
 
--- unixodbc, version bump to 2.3.10
+-- unixodbc, version bump to 2.3.11
 
 -- zabbix, version bump to 4.0.40
 
