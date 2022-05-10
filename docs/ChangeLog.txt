@@ -24,6 +24,8 @@ Released @TBD@
 
 -- r8125, version 9.009.00, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
 
+-- e2fsprogs, version 1.46.5, add patch for security fix: CVE-2022-1304
+
 -- ethtool, version bump to 5.17
 
 -- expat, version bump to 2.4.8
