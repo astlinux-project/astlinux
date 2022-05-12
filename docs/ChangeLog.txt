@@ -12,10 +12,10 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.236 (version bump), security and bug fixes.
+-- Linux Kernel 4.19.242 (version bump), security and bug fixes.
    Kernel config: Enable EFI, EFI_STUB, RELOCATABLE, FB_EFI, FRAMEBUFFER_CONSOLE (short list) for EFI support.
 
--- RUNNIX, version bump to runnix-0.6.10, with Linux Kernel 4.19.236, add UEFI boot support as well as Legacy BIOS boot.
+-- RUNNIX, version bump to runnix-0.6.11, with Linux Kernel 4.19.242, add UEFI boot support as well as Legacy BIOS boot.
    == syslinux, version 6.03, enable EFI (64-bit) support
    == gnu-efi, new package, version 3.0.10
    More info: https://doc.astlinux-project.org/userdoc:boot-bios-uefi
@@ -76,7 +76,8 @@ Released @TBD@
 
 -- iperf, version bump to 2.1.7
 
--- libcurl (curl) version bump to 7.83.0, security fixes: CVE-2022-22576, CVE-2022-27774, CVE-2022-27775, CVE-2022-27776
+-- libcurl (curl) version bump to 7.83.1, security fixes: CVE-2022-22576, CVE-2022-27774, CVE-2022-27775, CVE-2022-27776
+                          CVE-2022-27778, CVE-2022-27779, CVE-2022-27780, CVE-2022-27781, CVE-2022-27782, CVE-2022-30115
 
 -- libmnl, version bump to 1.0.5
 
