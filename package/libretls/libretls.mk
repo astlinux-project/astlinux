@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LIBRETLS_VERSION = 3.5.1
+LIBRETLS_VERSION = 3.5.2
 LIBRETLS_SITE = https://causal.agency/libretls
 LIBRETLS_INSTALL_STAGING = YES
 
