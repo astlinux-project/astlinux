@@ -85,7 +85,7 @@ Released @TBD@
 
 -- libmnl, version bump to 1.0.5
 
--- LibreTLS, version bump to 3.5.1
+-- LibreTLS, version bump to 3.5.2
 
 -- lighttpd/php, anonymize header version information
 
