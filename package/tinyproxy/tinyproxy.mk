@@ -4,9 +4,9 @@
 #
 #############################################################
 
-TINYPROXY_VERSION = 1.11.0
+TINYPROXY_VERSION = 1.11.1
 TINYPROXY_SITE = https://github.com/tinyproxy/tinyproxy/releases/download/$(TINYPROXY_VERSION)
-TINYPROXY_SOURCE = tinyproxy-$(TINYPROXY_VERSION).tar.bz2
+TINYPROXY_SOURCE = tinyproxy-$(TINYPROXY_VERSION).tar.xz
 
 TINYPROXY_CONF_OPT = \
         --enable-filter \
