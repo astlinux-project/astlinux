@@ -10,6 +10,38 @@ Additions for AstLinux 1.4.7:
 
 Released @TBD@
 
+** System
+
+-- Linux Kernel 4.19.242 (no version bump), security and bug fixes.
+
+-- htop, version bump to 3.2.1
+
+-- logrotate, version bump to 3.20.1, security fix: CVE-2022-1348
+
+-- tiff, version bump to 4.4.0
+
+** Networking
+
+-- unbound, version bump to 1.16.0
+
+-- (Custom Build Only) tinyproxy, version bump to 1.11.1
+
+** Asterisk
+
+-- Asterisk 13.38.3 ('13se' no change)
+   Last Asterisk 13.x "Legacy" version, built --without-pjproject
+
+-- Asterisk 16.26.1 (version bump) and 18.12.1 (version bump)
+   New functions: EVAL_EXTEN
+
+-- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
+
+-- pjsip 2.12 (version bump)
+
+** Web Interface
+
+-- (no change)
+
 
 Additions for AstLinux 1.4.6:
 =============================
