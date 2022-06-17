@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.242 (no version bump), security and bug fixes.
+-- Linux Kernel 4.19.248 (version bump), security and bug fixes.
 
 -- htop, version bump to 3.2.1
 
