@@ -5,11 +5,11 @@
 ##############################################################
 
 ifeq ($(BR2_PACKAGE_ASTERISK_v16),y)
-ASTERISK_VERSION := 16.26.1
+ASTERISK_VERSION := 16.27.0
 ASTERISK_LABEL :=
 else
  ifeq ($(BR2_PACKAGE_ASTERISK_v18),y)
-ASTERISK_VERSION := 18.12.1
+ASTERISK_VERSION := 18.13.0
 ASTERISK_LABEL :=
  else
 ASTERISK_VERSION := 13.38.3
@@ -248,7 +248,7 @@ $(ASTERISK_DIR)/.configured: $(ASTERISK_DIR)/.patched | host-automake host-pkg-c
 		LIBS='$(ASTERISK_LIBS)' \
 	)
 	(cd $(ASTERISK_DIR)/menuselect; \
-		$(HOST_CONFIGURE_OPTS) SED=sed \
+		$(HOST_CONFIGURE_OPTS) \
 		./configure \
 	)
 	$(HOST_MAKE_ENV) LD_RUN_PATH="$(HOST_DIR)/usr/lib" \
