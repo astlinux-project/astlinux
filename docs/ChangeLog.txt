@@ -14,13 +14,19 @@ Released @TBD@
 
 -- Linux Kernel 4.19.248 (version bump), security and bug fixes.
 
+-- ethtool, version bump to 5.18
+
 -- htop, version bump to 3.2.1
 
 -- logrotate, version bump to 3.20.1, security fix: CVE-2022-1348
 
+-- strace, version bump to 5.18
+
 -- tiff, version bump to 4.4.0
 
 ** Networking
+
+-- OpenSSL, version bump to 1.1.1p, security fix: CVE-2022-2068
 
 -- unbound, version bump to 1.16.0
 
@@ -31,7 +37,7 @@ Released @TBD@
 -- Asterisk 13.38.3 ('13se' no change)
    Last Asterisk 13.x "Legacy" version, built --without-pjproject
 
--- Asterisk 16.26.1 (version bump) and 18.12.1 (version bump)
+-- Asterisk 16.27.0 (version bump) and 18.13.0 (version bump)
    New functions: EVAL_EXTEN
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
