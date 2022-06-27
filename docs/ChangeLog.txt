@@ -28,6 +28,8 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.1.1p, security fix: CVE-2022-2068
 
+-- WireGuard VPN, module 1.0.20220627 (version bump), tools 1.0.20210914 (no change)
+
 -- unbound, version bump to 1.16.0
 
 -- (Custom Build Only) tinyproxy, version bump to 1.11.1
