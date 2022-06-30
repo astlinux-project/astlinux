@@ -182,7 +182,21 @@ start () {
 stop () {
   if [ -f /var/run/sshd.pid ]; then
     echo "Stopping sshd..."
-    kill `cat /var/run/sshd.pid`
+    kill $(cat /var/run/sshd.pid)
+  fi
+}
+
+close () {
+  local pid ssh_pids cnt=0
+
+  ssh_pids="$(pgrep -f '^sshd:.*@')"
+  for pid in $ssh_pids; do
+    if kill $pid; then
+      cnt=$((cnt + 1))
+    fi
+  done
+  if [ $cnt -gt 0 ]; then
+    echo "Closed $cnt SSH connection(s)..."
   fi
 }
 
@@ -207,8 +221,12 @@ restart)
   start
   ;;
 
+close)
+  close
+  ;;
+
 *)
-  echo "Usage: start|stop|restart"
+  echo "Usage: start|stop|restart|close"
   ;;
 
 esac

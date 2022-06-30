@@ -434,6 +434,15 @@ shutdown() {
     ASTRLEVEL=default
   fi
 
+  ## Close
+  SCRIPTS="`ls /etc/runlevels/$ASTRLEVEL/K[0-9][0-9]sshd 2>/dev/null`"
+  for i in $SCRIPTS; do
+    if [ -x $i ]; then
+      $i close
+    fi
+  done
+
+  ## Stop
   SCRIPTS="`ls /etc/runlevels/$ASTRLEVEL/K* 2>/dev/null`"
   for i in $SCRIPTS; do
     if [ -x $i ]; then
