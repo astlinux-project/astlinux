@@ -30,6 +30,8 @@ Released @TBD@
 
 -- WireGuard VPN, module 1.0.20220627 (version bump), tools 1.0.20210914 (no change)
 
+-- OpenSSH, version 8.1p1, close SSH connections on shutdown, poweroff, reboot and kernel-reboot
+
 -- unbound, version bump to 1.16.0
 
 -- (Custom Build Only) tinyproxy, version bump to 1.11.1
