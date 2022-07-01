@@ -195,9 +195,8 @@ close () {
       cnt=$((cnt + 1))
     fi
   done
-  if [ $cnt -gt 0 ]; then
-    echo "Closed $cnt SSH connection(s)..."
-  fi
+
+  echo "Closed $cnt SSH connection(s)..."
 }
 
 case $1 in
@@ -222,7 +221,11 @@ restart)
   ;;
 
 close)
-  close
+  if tty -s; then
+    close >/dev/null 2>&1 &
+  else
+    close
+  fi
   ;;
 
 *)
