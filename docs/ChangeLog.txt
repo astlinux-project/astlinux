@@ -20,9 +20,13 @@ Released @TBD@
 
 -- logrotate, version bump to 3.20.1, security fix: CVE-2022-1348
 
+-- sqlite, version bump to 3.39.0
+
 -- strace, version bump to 5.18
 
 -- tiff, version bump to 4.4.0
+
+-- (Custom Build Only) dmidecode, version bump to 3.4
 
 ** Networking
 
@@ -31,6 +35,8 @@ Released @TBD@
 -- WireGuard VPN, module 1.0.20220627 (version bump), tools 1.0.20210914 (no change)
 
 -- OpenSSH, version 8.1p1, close SSH connections on shutdown, poweroff, reboot and kernel-reboot
+
+-- libcurl (curl) version bump to 7.84.0, security fixes: CVE-2022-32205, CVE-2022-32206, CVE-2022-32207, CVE-2022-32208
 
 -- unbound, version bump to 1.16.0
 
