@@ -56,7 +56,7 @@ Released @TBD@
 
 ** Web Interface
 
--- (no change)
+-- WAN Failover Configuration sub-tab, add 'Restart' wait so 'statusPROCESS' is accurate.
 
 
 Additions for AstLinux 1.4.6:
