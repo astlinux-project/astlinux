@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2014-2021 Lonnie Abelbeck
+// Copyright (C) 2014-2022 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -218,6 +218,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = 99;
     if (isset($_POST['confirm_restart'])) {
       $result = restartPROCESS('failover', 10, $result, 'init');
+      // PID may not be immediately created for statusPROCESS() test below, so wait 1 second.
+      // This wait could be moved to /etc/init.d/failover looking for PID, but only matters here.
+      sleep(1);
     } else {
       $result = 2;
     }
