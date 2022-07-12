@@ -38,7 +38,7 @@ Released @TBD@
 
 -- libcurl (curl) version bump to 7.84.0, security fixes: CVE-2022-32205, CVE-2022-32206, CVE-2022-32207, CVE-2022-32208
 
--- unbound, version bump to 1.16.0
+-- unbound, version bump to 1.16.1
 
 -- (Custom Build Only) tinyproxy, version bump to 1.11.1
 
