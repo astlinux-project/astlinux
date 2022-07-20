@@ -40,6 +40,8 @@ Released @TBD@
 
 -- unbound, version bump to 1.16.1
 
+-- ca-certificates, update trusted root certificates 2022-07-19
+
 -- (Custom Build Only) tinyproxy, version bump to 1.11.1
 
 ** Asterisk
