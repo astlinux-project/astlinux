@@ -12,7 +12,9 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.248 (version bump), security and bug fixes.
+-- Linux Kernel 4.19.254 (version bump), security and bug fixes.
+
+-- igc, backport from linux-5.4.208, Intel i225 2.5-Gigabit Ethernet Network Driver
 
 -- ethtool, version bump to 5.18
 
