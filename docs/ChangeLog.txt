@@ -16,6 +16,10 @@ Released @TBD@
 
 -- igc, backport from linux-5.4.208, Intel i225 2.5-Gigabit Ethernet Network Driver
 
+-- r8125, version 9.009.02, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
+
+-- igb, version bump to 5.11.4, Intel 1.0-Gigabit Ethernet Network Driver
+
 -- ethtool, version bump to 5.18
 
 -- htop, version bump to 3.2.1
@@ -27,6 +31,10 @@ Released @TBD@
 -- strace, version bump to 5.18
 
 -- tiff, version bump to 4.4.0
+
+-- zabbix, version bump to 4.0.43
+
+-- ca-certificates, update trusted root certificates 2022-07-19
 
 -- (Custom Build Only) dmidecode, version bump to 3.4
 
@@ -40,9 +48,9 @@ Released @TBD@
 
 -- libcurl (curl) version bump to 7.84.0, security fixes: CVE-2022-32205, CVE-2022-32206, CVE-2022-32207, CVE-2022-32208
 
--- unbound, version bump to 1.16.1
+-- luasec, version bump to 1.2.0
 
--- ca-certificates, update trusted root certificates 2022-07-19
+-- unbound, version bump to 1.16.1
 
 -- (Custom Build Only) tinyproxy, version bump to 1.11.1
 
