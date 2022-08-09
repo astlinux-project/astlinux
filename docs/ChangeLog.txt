@@ -67,7 +67,7 @@ Released @TBD@
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
 
--- pjsip 2.12 (version bump)
+-- pjsip 2.12.1 (version bump), security fixes: many
 
 ** Web Interface
 
