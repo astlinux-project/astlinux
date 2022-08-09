@@ -43,7 +43,7 @@ diff --git a/pjsip/src/pjsip/sip_auth_client.c b/pjsip/src/pjsip/sip_auth_client
 index 35460d01e..ab1a0cd87 100644
 --- a/pjsip/src/pjsip/sip_auth_client.c
 +++ b/pjsip/src/pjsip/sip_auth_client.c
-@@ -1348,7 +1348,7 @@ PJ_DEF(pj_status_t) pjsip_auth_clt_reinit_req(	pjsip_auth_clt_sess *sess,
+@@ -1367,7 +1367,7 @@ PJ_DEF(pj_status_t) pjsip_auth_clt_reinit_req(	pjsip_auth_clt_sess *sess,
      chal_cnt = 0;
      auth_cnt = 0;
      last_auth_err = PJSIP_EAUTHNOAUTH;
@@ -52,7 +52,7 @@ index 35460d01e..ab1a0cd87 100644
  	pjsip_cached_auth *cached_auth;
  	const pjsip_www_authenticate_hdr *hchal;
  	pjsip_authorization_hdr *hauth;
-@@ -1412,6 +1412,11 @@ PJ_DEF(pj_status_t) pjsip_auth_clt_reinit_req(	pjsip_auth_clt_sess *sess,
+@@ -1431,6 +1431,11 @@ PJ_DEF(pj_status_t) pjsip_auth_clt_reinit_req(	pjsip_auth_clt_sess *sess,
  	/* Process next header. */
  	hdr = hdr->next;
  	auth_cnt++;
@@ -278,7 +278,7 @@ diff --git a/pjsip/src/pjsua-lib/pjsua_core.c b/pjsip/src/pjsua-lib/pjsua_core.c
 index c437011b5..343316b56 100644
 --- a/pjsip/src/pjsua-lib/pjsua_core.c
 +++ b/pjsip/src/pjsua-lib/pjsua_core.c
-@@ -3442,8 +3442,10 @@ PJ_DEF(void) pjsua_dump(pj_bool_t detail)
+@@ -3443,8 +3443,10 @@ PJ_DEF(void) pjsua_dump(pj_bool_t detail)
      old_decor = pj_log_get_decor();
      pj_log_set_decor(old_decor & (PJ_LOG_HAS_NEWLINE | PJ_LOG_HAS_CR));
  
