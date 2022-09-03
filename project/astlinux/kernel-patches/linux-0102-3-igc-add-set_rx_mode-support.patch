@@ -374,7 +374,7 @@ index 69e70b297e85d..7d2f479b57cfd 100644
  }
  
  /**
-@@ -3993,6 +4173,7 @@ static const struct net_device_ops igc_netdev_ops = {
+@@ -3992,6 +4172,7 @@ static const struct net_device_ops igc_netdev_ops = {
  	.ndo_open		= igc_open,
  	.ndo_stop		= igc_close,
  	.ndo_start_xmit		= igc_xmit_frame,

@@ -92,7 +92,7 @@ index 7d2f479b57cfd..a16c657a1506d 100644
  	skb_record_rx_queue(skb, rx_ring->queue_index);
  
  	skb->protocol = eth_type_trans(skb, rx_ring->netdev);
-@@ -4403,6 +4445,7 @@ static int igc_probe(struct pci_dev *pdev,
+@@ -4402,6 +4444,7 @@ static int igc_probe(struct pci_dev *pdev,
  		goto err_sw_init;
  
  	/* Add supported features to the features list*/

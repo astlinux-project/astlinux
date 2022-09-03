@@ -1,0 +1,94 @@
+From bfa5e98c9de466bfe25a9b4bf6ef9122aee2d06a Mon Sep 17 00:00:00 2001
+From: Sasha Neftin <sasha.neftin@intel.com>
+Date: Thu, 10 Dec 2020 11:08:12 -0800
+Subject: igc: Add new device ID
+
+Add new device ID for the next step of the silicon and
+reflect the I226_K part.
+
+Signed-off-by: Sasha Neftin <sasha.neftin@intel.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+---
+ drivers/net/ethernet/intel/igc/igc_base.c | 1 +
+ drivers/net/ethernet/intel/igc/igc_hw.h   | 1 +
+ drivers/net/ethernet/intel/igc/igc_main.c | 1 +
+ 3 files changed, 3 insertions(+)
+
+(limited to 'drivers/net/ethernet/intel/igc')
+
+diff --git a/drivers/net/ethernet/intel/igc/igc_base.c b/drivers/net/ethernet/intel/igc/igc_base.c
+index fd37d2c203af7..d0700d48ecf9b 100644
+--- a/drivers/net/ethernet/intel/igc/igc_base.c
++++ b/drivers/net/ethernet/intel/igc/igc_base.c
+@@ -205,6 +205,7 @@ static s32 igc_get_invariants_base(struct igc_hw *hw)
+ 	case IGC_DEV_ID_I220_V:
+ 	case IGC_DEV_ID_I225_K:
+ 	case IGC_DEV_ID_I225_K2:
++	case IGC_DEV_ID_I226_K:
+ 	case IGC_DEV_ID_I225_LMVP:
+ 	case IGC_DEV_ID_I225_IT:
+ 	case IGC_DEV_ID_I226_LM:
+diff --git a/drivers/net/ethernet/intel/igc/igc_hw.h b/drivers/net/ethernet/intel/igc/igc_hw.h
+index 55dae7c4703f8..9da5f83ce4566 100644
+--- a/drivers/net/ethernet/intel/igc/igc_hw.h
++++ b/drivers/net/ethernet/intel/igc/igc_hw.h
+@@ -23,6 +23,7 @@
+ #define IGC_DEV_ID_I225_K			0x3100
+ #define IGC_DEV_ID_I225_K2			0x3101
+ #define IGC_DEV_ID_I225_LMVP			0x5502
++#define IGC_DEV_ID_I226_K			0x5504
+ #define IGC_DEV_ID_I225_IT			0x0D9F
+ #define IGC_DEV_ID_I226_LM			0x125B
+ #define IGC_DEV_ID_I226_V			0x125C
+diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
+index b673ac1199bbc..afd6a62da29dd 100644
+--- a/drivers/net/ethernet/intel/igc/igc_main.c
++++ b/drivers/net/ethernet/intel/igc/igc_main.c
+@@ -45,6 +45,7 @@ static const struct pci_device_id igc_pci_tbl[] = {
+ 	{ PCI_VDEVICE(INTEL, IGC_DEV_ID_I220_V), board_base },
+ 	{ PCI_VDEVICE(INTEL, IGC_DEV_ID_I225_K), board_base },
+ 	{ PCI_VDEVICE(INTEL, IGC_DEV_ID_I225_K2), board_base },
++	{ PCI_VDEVICE(INTEL, IGC_DEV_ID_I226_K), board_base },
+ 	{ PCI_VDEVICE(INTEL, IGC_DEV_ID_I225_LMVP), board_base },
+ 	{ PCI_VDEVICE(INTEL, IGC_DEV_ID_I225_IT), board_base },
+ 	{ PCI_VDEVICE(INTEL, IGC_DEV_ID_I226_LM), board_base },
+-- 
+cgit 
+
+From 79cc8322b6d82747cb63ea464146c0bf5b5a6bc1 Mon Sep 17 00:00:00 2001
+From: Sasha Neftin <sasha.neftin@intel.com>
+Date: Thu, 9 Sep 2021 20:49:04 +0300
+Subject: igc: Update I226_K device ID
+
+The device ID for I226_K was incorrectly assigned, update the device
+ID to the correct one.
+
+Fixes: bfa5e98c9de4 ("igc: Add new device ID")
+Signed-off-by: Sasha Neftin <sasha.neftin@intel.com>
+Tested-by: Nechama Kraus <nechamax.kraus@linux.intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+---
+ drivers/net/ethernet/intel/igc/igc_hw.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+(limited to 'drivers/net/ethernet/intel/igc')
+
+diff --git a/drivers/net/ethernet/intel/igc/igc_hw.h b/drivers/net/ethernet/intel/igc/igc_hw.h
+index 4461f8b9a864b..4e0203336c6bf 100644
+--- a/drivers/net/ethernet/intel/igc/igc_hw.h
++++ b/drivers/net/ethernet/intel/igc/igc_hw.h
+@@ -22,8 +22,8 @@
+ #define IGC_DEV_ID_I220_V			0x15F7
+ #define IGC_DEV_ID_I225_K			0x3100
+ #define IGC_DEV_ID_I225_K2			0x3101
++#define IGC_DEV_ID_I226_K			0x3102
+ #define IGC_DEV_ID_I225_LMVP			0x5502
+-#define IGC_DEV_ID_I226_K			0x5504
+ #define IGC_DEV_ID_I225_IT			0x0D9F
+ #define IGC_DEV_ID_I226_LM			0x125B
+ #define IGC_DEV_ID_I226_V			0x125C
+-- 
+cgit 
+

@@ -18,7 +18,7 @@ diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/in
 index 63b62d74f9610..69e70b297e85d 100644
 --- a/drivers/net/ethernet/intel/igc/igc_main.c
 +++ b/drivers/net/ethernet/intel/igc/igc_main.c
-@@ -4223,6 +4223,7 @@ static int igc_probe(struct pci_dev *pdev,
+@@ -4222,6 +4222,7 @@ static int igc_probe(struct pci_dev *pdev,
  
  	/* Add supported features to the features list*/
  	netdev->features |= NETIF_F_HW_CSUM;
