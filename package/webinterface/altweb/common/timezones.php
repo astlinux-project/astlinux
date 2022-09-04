@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2009 Lonnie Abelbeck
+// Copyright (C) 2008-2022 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -8,6 +8,7 @@
 
 // timezones.php for AstLinux
 // 03-29-2009
+// 09-04-2022, tzdata renames Europe/Kiev to Europe/Kyiv
 
 // Function: getTimezoneList()
 //
@@ -66,7 +67,7 @@ function getTimezoneList() {
     'Europe/Dublin',
     'Europe/Helsinki',
     'Europe/Istanbul',
-    'Europe/Kiev',
+    'Europe/Kyiv',
     'Europe/Lisbon',
     'Europe/London',
     'Europe/Madrid',

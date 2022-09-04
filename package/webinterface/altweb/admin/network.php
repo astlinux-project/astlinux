@@ -1810,7 +1810,7 @@ require_once '../common/header.php';
   }
   putHtml('<tr class="dtrow1"><td style="text-align: left;" colspan="6">');
   putHtml('Timezone:');
-  $timezones = getTimeZoneList();
+  $timezones = getTimezoneList();
   if (($t_value = getVARdef($db, 'TIMEZONE', $cur_db)) === '') {
     $t_value = 'UTC';
   }
