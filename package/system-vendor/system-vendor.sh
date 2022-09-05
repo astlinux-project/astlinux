@@ -62,11 +62,19 @@ if [ -f "$CACHE_FILE" -a -z "$vendor_test" ]; then
 fi
 
 ## Test for guest VM
-vm_guest="$(lscpu | sed -n -r 's/^Hypervisor vendor: *([^ ].*)$/\1/p')"
+if [ -f /var/run/dmesg.boot ]; then
+  vm_guest="$(sed -n -r 's/^.*Hypervisor detected: *([^ ].*)$/\1/p' /var/run/dmesg.boot)"
+else
+  vm_guest=""
+fi
+
+if [ -z "$vm_guest" ]; then
+  vm_guest="$(lscpu | sed -n -r 's/^Hypervisor vendor: *([^ ].*)$/\1/p')"
+fi
 
 if [ -n "$vm_guest" ]; then
-  echo "$vm_guest Guest VM" > "$CACHE_FILE"
-  echo "$vm_guest Guest VM"
+  echo "$vm_guest Hypervisor Guest VM" > "$CACHE_FILE"
+  echo "$vm_guest Hypervisor Guest VM"
   exit 0
 fi
 
