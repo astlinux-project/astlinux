@@ -10,6 +10,39 @@ Additions for AstLinux 1.4.8:
 
 Released @TBD@
 
+** System
+
+-- Linux Kernel 4.19.254
+
+-- igc, backport from linux-5.4.211, Intel i225/i226 2.5-Gigabit Ethernet Network Driver
+
+-- libxml2, version bump to 2.10.2
+
+-- zlib, version 1.2.12, backport security fix: CVE-2022-37434
+
+-- system-vendor, improved hypervisor check, look at dmesg.boot for 'Hypervisor detected:'
+
+-- Time Zone Database update, tzdata2022c and php-timezonedb-2022.3
+
+** Networking
+
+-- chrony, version bump to 4.3
+
+** Asterisk
+
+-- Asterisk 13.38.3 ('13se' no change)
+   Last Asterisk 13.x "Legacy" version, built --without-pjproject
+
+-- Asterisk 16.28.0 (version bump) and 18.14.0 (version bump)
+
+-- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
+
+-- pjsip 2.12.1 (no change)
+
+** Web Interface
+
+-- Network tab, tzdata renames Europe/Kiev to Europe/Kyiv Timezone.
+
 
 Additions for AstLinux 1.4.7:
 =============================
