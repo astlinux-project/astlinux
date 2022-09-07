@@ -16,7 +16,13 @@ Released @TBD@
 
 -- igc, backport from linux-5.4.211, Intel i225/i226 2.5-Gigabit Ethernet Network Driver
 
+-- ethtool, version bump to 5.19
+
 -- libxml2, version bump to 2.10.2
+
+-- sqlite, version bump to 3.39.3
+
+-- strace, version bump to 5.19
 
 -- zlib, version 1.2.12, backport security fix: CVE-2022-37434
 
@@ -27,6 +33,12 @@ Released @TBD@
 ** Networking
 
 -- chrony, version bump to 4.3
+
+-- iperf, version bump to 2.1.8
+
+-- msmtp, version bump to 1.8.22
+
+-- stunnel, version bump to 5.65
 
 ** Asterisk
 
