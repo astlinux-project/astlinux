@@ -4,7 +4,7 @@
 #
 #############################################################
 
-MSMTP_VERSION = 1.8.20
+MSMTP_VERSION = 1.8.22
 MSMTP_SOURCE = msmtp-$(MSMTP_VERSION).tar.xz
 MSMTP_SITE = https://marlam.de/msmtp/releases
 MSMTP_DEPENDENCIES = libretls
