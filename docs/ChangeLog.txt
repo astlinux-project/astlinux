@@ -32,11 +32,15 @@ Released @TBD@
 
 ** Networking
 
+-- libcurl (curl) version bump to 7.85.0, security fixes: CVE-2022-35252
+
 -- chrony, version bump to 4.3
 
 -- iperf, version bump to 2.1.8
 
 -- msmtp, version bump to 1.8.22
+
+-- sngrep, version bump to 1.6.0
 
 -- stunnel, version bump to 5.65
 
@@ -50,6 +54,8 @@ Released @TBD@
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
 
 -- pjsip 2.12.1 (no change)
+
+-- neon, version bump to 0.32.4, used for Asterisk Calendar Support
 
 ** Web Interface
 
