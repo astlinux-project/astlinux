@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2021 Lonnie Abelbeck
+// Copyright (C) 2008-2022 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -29,6 +29,7 @@
 // 02-21-2020, Remove PPTP VPN support
 // 05-10-2020, Added Linux Containers (LXC)
 // 02-05-2021, Added Show vnStat Tab
+// 09-13-2022, Changed "Voicemail User", "DAHDI" and "Jabber" to custom Asterisk Name/Command status
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -200,9 +201,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $value = 'status_active_chan_cmdstr = "'.tuqp($_POST['active_cmd']).'"';
     fwrite($fp, $value."\n");
+
+    $value = 'status_voicemail_users_name_cmdstr = "'.tuqp($_POST['voicemail_name']).'"';
+    fwrite($fp, $value."\n");
     $value = 'status_voicemail_users_cmdstr = "'.tuqp($_POST['voicemail_cmd']).'"';
     fwrite($fp, $value."\n");
+    $value = 'status_dahdi_status_name_cmdstr = "'.tuqp($_POST['dahdi_name']).'"';
+    fwrite($fp, $value."\n");
     $value = 'status_dahdi_status_cmdstr = "'.tuqp($_POST['dahdi_cmd']).'"';
+    fwrite($fp, $value."\n");
+    $value = 'status_jabber_status_name_cmdstr = "'.tuqp($_POST['jabber_name']).'"';
     fwrite($fp, $value."\n");
     $value = 'status_jabber_status_cmdstr = "'.tuqp($_POST['jabber_cmd']).'"';
     fwrite($fp, $value."\n");
@@ -686,8 +694,12 @@ require_once '../common/header.php';
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_voicemail_show_users') === 'yes') ? ' checked="checked"' : '';
-  putHtml('<input type="checkbox" value="voicemail_users" name="voicemail_users"'.$sel.' /></td><td colspan="5">Show Voicemail User Status</td></tr>');
-  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="3">Voicemail Users Command:</td><td colspan="3">');
+  putHtml('<input type="checkbox" value="voicemail_users" name="voicemail_users"'.$sel.' /></td><td colspan="5">Custom Asterisk Name:');
+  if (($value = getPREFdef($global_prefs, 'status_voicemail_users_name_cmdstr')) === '') {
+    $value = 'Voicemail User Status';
+  }
+  putHtml('<input type="text" size="28" maxlength="64" value="'.$value.'" name="voicemail_name" /></td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="3">Custom Asterisk Command:</td><td colspan="3">');
   if (($value = getPREFdef($global_prefs, 'status_voicemail_users_cmdstr')) === '') {
     $value = 'voicemail show users';
   }
@@ -695,8 +707,12 @@ require_once '../common/header.php';
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_dahdi_show_status') === 'yes') ? ' checked="checked"' : '';
-  putHtml('<input type="checkbox" value="dahdi_status" name="dahdi_status"'.$sel.' /></td><td colspan="5">Show DAHDI Status</td></tr>');
-  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="3">DAHDI Status Command:</td><td colspan="3">');
+  putHtml('<input type="checkbox" value="dahdi_status" name="dahdi_status"'.$sel.' /></td><td colspan="5">Custom Asterisk Name:');
+  if (($value = getPREFdef($global_prefs, 'status_dahdi_status_name_cmdstr')) === '') {
+    $value = 'DAHDI Status';
+  }
+  putHtml('<input type="text" size="28" maxlength="64" value="'.$value.'" name="dahdi_name" /></td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="3">Custom Asterisk Command:</td><td colspan="3">');
   if (($value = getPREFdef($global_prefs, 'status_dahdi_status_cmdstr')) === '') {
     $value = 'dahdi show status';
   }
@@ -704,8 +720,12 @@ require_once '../common/header.php';
 
   putHtml('<tr class="dtrow1"><td style="text-align: right;">');
   $sel = (getPREFdef($global_prefs, 'status_jabber_show_status') === 'yes') ? ' checked="checked"' : '';
-  putHtml('<input type="checkbox" value="jabber_status" name="jabber_status"'.$sel.' /></td><td colspan="5">Show Jabber Status</td></tr>');
-  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="3">Jabber Status Command:</td><td colspan="3">');
+  putHtml('<input type="checkbox" value="jabber_status" name="jabber_status"'.$sel.' /></td><td colspan="5">Custom Asterisk Name:');
+  if (($value = getPREFdef($global_prefs, 'status_jabber_status_name_cmdstr')) === '') {
+    $value = 'Jabber Status';
+  }
+  putHtml('<input type="text" size="28" maxlength="64" value="'.$value.'" name="jabber_name" /></td></tr>');
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="3">Custom Asterisk Command:</td><td colspan="3">');
   if (($value = getPREFdef($global_prefs, 'status_jabber_status_cmdstr')) === '') {
     $value = 'jabber show connections';
   }
