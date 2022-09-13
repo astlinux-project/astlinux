@@ -61,6 +61,9 @@ Released @TBD@
 
 -- Network tab, tzdata renames Europe/Kiev to Europe/Kyiv Timezone.
 
+-- Status and Prefs tab, change "Voicemail User Status", "DAHDI Status" and "Jabber Status" to custom Asterisk
+   Name/Command status. Defaults to previous standard Asterisk Name/Command values for backward compatibility.
+
 
 Additions for AstLinux 1.4.7:
 =============================
