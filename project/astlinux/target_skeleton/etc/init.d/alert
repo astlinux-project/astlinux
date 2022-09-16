@@ -27,7 +27,10 @@ welcome_msg()
   cpu="$(sed -n -r 's/^model name[[:space:]]*:[[:space:]]*([^@]+).*$/\1/p' /proc/cpuinfo | head -n1)"
   cpu="$(echo $cpu | sed -e 's/([^)]*)//g' -e 's/ CPU//g')"
   cpu_cores="$(grep -c "^processor" /proc/cpuinfo)"
-  cpu_speed="$(sed -n -r 's/^cpu MHz[[:space:]]*:[[:space:]]*([0-9]+).*$/\1/p' /proc/cpuinfo | head -n1)"
+  cpu_speed="$(lscpu | sed -n -r 's/^CPU max MHz:[[:space:]]*([0-9]+).*$/\1/p')"
+  if [ -z "$cpu_speed" ]; then
+    cpu_speed="$(sed -n -r 's/^cpu MHz[[:space:]]*:[[:space:]]*([0-9]+).*$/\1/p' /proc/cpuinfo | head -n1)"
+  fi
   case $((cpu_speed % 10)) in
     9) cpu_speed=$((cpu_speed+1)) ;;
     8) cpu_speed=$((cpu_speed+2)) ;;
