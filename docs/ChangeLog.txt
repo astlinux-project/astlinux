@@ -18,6 +18,8 @@ Released @TBD@
 
 -- ethtool, version bump to 5.19
 
+-- expat, version 2.4.8, security fix: CVE-2022-40674
+
 -- libxml2, version bump to 2.10.2
 
 -- sqlite, version bump to 3.39.3
@@ -27,6 +29,8 @@ Released @TBD@
 -- zlib, version 1.2.12, backport security fix: CVE-2022-37434
 
 -- system-vendor, improved hypervisor check, look at dmesg.boot for 'Hypervisor detected:'
+
+-- system-vendor, update system-vendor.ids
 
 -- Time Zone Database update, tzdata2022c and php-timezonedb-2022.3
 
