@@ -16,9 +16,11 @@ Released @TBD@
 
 -- igc, backport from linux-5.4.211, Intel i225/i226 2.5-Gigabit Ethernet Network Driver
 
+-- acpid, version bump to 2.0.34
+
 -- ethtool, version bump to 5.19
 
--- expat, version 2.4.8, security fix: CVE-2022-40674
+-- expat, version bump to 2.4.9, security fix: CVE-2022-40674
 
 -- libxml2, version bump to 2.10.2
 
@@ -32,7 +34,9 @@ Released @TBD@
 
 -- system-vendor, update system-vendor.ids
 
--- Time Zone Database update, tzdata2022c and php-timezonedb-2022.3
+-- zabbix, version bump to 4.0.44
+
+-- Time Zone Database update, tzdata2022d and php-timezonedb-2022.4
 
 ** Networking
 
@@ -48,6 +52,8 @@ Released @TBD@
 
 -- stunnel, version bump to 5.65
 
+-- unbound, version bump to 1.16.3, security fix: CVE-2022-3204
+
 ** Asterisk
 
 -- Asterisk 13.38.3 ('13se' no change)
@@ -60,6 +66,10 @@ Released @TBD@
 -- pjsip 2.12.1 (no change)
 
 -- neon, version bump to 0.32.4, used for Asterisk Calendar Support
+
+-- FOP2, available version bump to 2.31.33
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
