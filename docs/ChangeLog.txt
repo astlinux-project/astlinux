@@ -54,6 +54,8 @@ Released @TBD@
 
 -- unbound, version bump to 1.16.3, security fix: CVE-2022-3204
 
+-- (Custom Build Only) tinyproxy, version 1.11.1, security fix: CVE-2022-40468
+
 ** Asterisk
 
 -- Asterisk 13.38.3 ('13se' no change)
