@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.254
+-- Linux Kernel 4.19.260 (version bump), security and bug fixes.
 
 -- igc, backport from linux-5.4.211, Intel i225/i226 2.5-Gigabit Ethernet Network Driver
 
