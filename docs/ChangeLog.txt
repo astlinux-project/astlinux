@@ -24,7 +24,9 @@ Released @TBD@
 
 -- libxml2, version bump to 2.10.2
 
--- sqlite, version bump to 3.39.3
+-- ne, version bump to 3.3.2
+
+-- sqlite, version bump to 3.39.4
 
 -- strace, version bump to 5.19
 
