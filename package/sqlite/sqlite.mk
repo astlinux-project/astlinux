@@ -4,7 +4,7 @@
 #
 #############################################################
 
-SQLITE_VERSION = 3390300
+SQLITE_VERSION = 3390400
 SQLITE_SOURCE = sqlite-autoconf-$(SQLITE_VERSION).tar.gz
 SQLITE_SITE = https://www.sqlite.org/2022
 SQLITE_INSTALL_STAGING = YES
