@@ -42,11 +42,15 @@ Released @TBD@
 
 ** Networking
 
+-- strongSwan, version 5.5.3, security fix: CVE-2022-40617
+
 -- libcurl (curl) version bump to 7.85.0, security fixes: CVE-2022-35252
 
 -- chrony, version bump to 4.3
 
 -- iperf, version bump to 2.1.8
+
+-- iperf3, version bump to 3.12
 
 -- msmtp, version bump to 1.8.22
 
