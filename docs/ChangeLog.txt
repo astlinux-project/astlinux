@@ -68,8 +68,10 @@ Released @TBD@
 
 -- Asterisk 13.38.3 ('13se' no change)
    Last Asterisk 13.x "Legacy" version, built --without-pjproject
+   New cdr.conf settings: ignorestatechanges and ignoredialchanges (more like Asterisk 11 behavior with both set to "yes")
 
 -- Asterisk 16.28.0 (version bump) and 18.14.0 (version bump)
+   New Asterisk 16 cdr.conf settings: ignorestatechanges and ignoredialchanges
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
 
