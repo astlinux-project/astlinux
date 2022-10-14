@@ -100,7 +100,7 @@ index 688d26c0cdb..8e80a533796 100644
 +					<synopsis>Whether CDR is updated or forked by bridging changes.</synopsis>
 +					<description><para>Define whether or not CDR should be updated by bridging changes.
 +					This includes entering and leaving bridges and call parking.</para>
-+					<para>If this is set to "no", bridging changes will be ignored for all CDRs.
++					<para>If this is set to "yes", bridging changes will be ignored for all CDRs.
 +					This should only be done if these events should not affect CDRs and are undesired,
 +					such as to use a single CDR for the lifetime of the channel.</para>
 +					<para>This setting cannot be changed on a reload.</para>
@@ -109,7 +109,7 @@ index 688d26c0cdb..8e80a533796 100644
 +				<configOption name="ignoredialchanges" default="no">
 +					<synopsis>Whether CDR is updated or forked by dial updates.</synopsis>
 +					<description><para>Define whether or not CDR should be updated by dial updates.</para>
-+					<para>If this is set to "no", a single CDR will be used for the channel, even if
++					<para>If this is set to "yes", a single CDR will be used for the channel, even if
 +					multiple endpoints or destinations are dialed sequentially. Note that you will also
 +					lose detailed nonanswer dial dispositions if this option is enabled, which may not be acceptable,
 +					e.g. instead of detailed no-answer dispositions like BUSY and CONGESTION, the disposition
