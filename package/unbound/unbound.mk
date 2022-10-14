@@ -4,7 +4,7 @@
 #
 #############################################################
 
-UNBOUND_VERSION = 1.16.3
+UNBOUND_VERSION = 1.17.0
 UNBOUND_SITE = https://nlnetlabs.nl/downloads/unbound
 UNBOUND_SOURCE = unbound-$(UNBOUND_VERSION).tar.gz
 UNBOUND_INSTALL_STAGING = YES
