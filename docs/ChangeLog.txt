@@ -22,6 +22,10 @@ Released @TBD@
 
 -- expat, version bump to 2.4.9, security fix: CVE-2022-40674
 
+-- libedit, version bump to 20221009-3.1
+
+-- libpng, version bump to 1.6.38
+
 -- libxml2, version bump to 2.10.2
 
 -- ne, version bump to 3.3.2
@@ -32,7 +36,7 @@ Released @TBD@
 
 -- strace, version bump to 5.19
 
--- zlib, version 1.2.12, backport security fix: CVE-2022-37434
+-- zlib, version 1.2.13, security fix: CVE-2022-37434
 
 -- system-vendor, improved hypervisor check, look at dmesg.boot for 'Hypervisor detected:'
 
@@ -40,13 +44,17 @@ Released @TBD@
 
 -- zabbix, version bump to 4.0.44
 
--- Time Zone Database update, tzdata2022d and php-timezonedb-2022.4
+-- ca-certificates, update trusted root certificates 2022-10-11
+
+-- Time Zone Database update, tzdata2022e and php-timezonedb-2022.5
 
 ** Networking
 
 -- strongSwan, version 5.5.3, security fix: CVE-2022-40617
 
 -- libcurl (curl) version bump to 7.85.0, security fixes: CVE-2022-35252
+
+-- arp-scan, version bump to 1.9.8
 
 -- chrony, version bump to 4.3
 
@@ -60,7 +68,7 @@ Released @TBD@
 
 -- stunnel, version bump to 5.65
 
--- unbound, version bump to 1.16.3, security fix: CVE-2022-3204
+-- unbound, version bump to 1.17.0, security fix: CVE-2022-3204
 
 -- (Custom Build Only) tinyproxy, version 1.11.1, security fix: CVE-2022-40468
 
