@@ -1,7 +1,7 @@
 --- arp-scan-1.9/arp-scan.c.orig	2016-02-12 16:06:08.000000000 -0600
 +++ arp-scan-1.9/arp-scan.c	2016-02-12 16:48:27.000000000 -0600
-@@ -339,32 +339,21 @@
-  * Create MAC/Vendor hash table if quiet if not in effect.
+@@ -342,32 +342,21 @@
+  * Create MAC/Vendor hash table if quiet is not in effect.
   */
     if (!quiet_flag) {
 -      char *fn;
@@ -43,7 +43,7 @@
     }
  /*
   *      Populate the list from the specified file if --file was specified, or
-@@ -2298,7 +2287,7 @@
+@@ -2434,7 +2423,7 @@
  add_mac_vendor(const char *map_filename) {
     static int first_call=1;
     FILE *fp;	/* MAC/Vendor file handle */
