@@ -26,7 +26,7 @@ Released @TBD@
 
 -- libpng, version bump to 1.6.38
 
--- libxml2, version bump to 2.10.2
+-- libxml2, version bump to 2.10.3, security fixes: CVE-2022-40303, CVE-2022-40304
 
 -- ne, version bump to 3.3.2
 
@@ -69,6 +69,8 @@ Released @TBD@
 -- stunnel, version bump to 5.65
 
 -- unbound, version bump to 1.17.0, security fix: CVE-2022-3204
+
+-- whois, version bump to 5.5.14
 
 -- (Custom Build Only) tinyproxy, version 1.11.1, security fix: CVE-2022-40468
 
