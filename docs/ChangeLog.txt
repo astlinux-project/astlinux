@@ -20,7 +20,7 @@ Released @TBD@
 
 -- ethtool, version bump to 5.19
 
--- expat, version bump to 2.4.9, security fix: CVE-2022-40674
+-- expat, version bump to 2.5.0, security fixes: CVE-2022-40674, CVE-2022-43680
 
 -- libedit, version bump to 20221009-3.1
 
@@ -52,7 +52,8 @@ Released @TBD@
 
 -- strongSwan, version 5.5.3, security fix: CVE-2022-40617
 
--- libcurl (curl) version bump to 7.85.0, security fixes: CVE-2022-35252
+-- libcurl (curl) version bump to 7.86.0, security fixes: CVE-2022-35252, CVE-2022-32221, CVE-2022-35260, CVE-2022-42915
+                                                          CVE-2022-42916
 
 -- arp-scan, version bump to 1.9.8
 
@@ -69,6 +70,8 @@ Released @TBD@
 -- stunnel, version bump to 5.65
 
 -- unbound, version bump to 1.17.0, security fix: CVE-2022-3204
+
+-- vnStat, version bump to 2.10
 
 -- whois, version bump to 5.5.14
 
