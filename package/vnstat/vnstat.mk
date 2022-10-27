@@ -4,7 +4,7 @@
 #
 #############################################################
 
-VNSTAT_VERSION = 2.9
+VNSTAT_VERSION = 2.10
 VNSTAT_SITE = https://humdi.net/vnstat
 VNSTAT_DEPENDENCIES = host-pkg-config sqlite
 VNSTAT_CONF_OPTS = \
