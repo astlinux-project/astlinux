@@ -16,13 +16,15 @@ Released @TBD@
 
 -- igc, backport from linux-5.4.211, Intel i225/i226 2.5-Gigabit Ethernet Network Driver
 
+-- genx86_64-vm board type, VMware Tools (open-vm-tools) version 10.3.10, security fix: CVE-2022-31676
+
 -- acpid, version bump to 2.0.34
 
--- ethtool, version bump to 5.19
+-- ethtool, version bump to 6.0
 
 -- expat, version bump to 2.5.0, security fixes: CVE-2022-40674, CVE-2022-43680
 
--- libedit, version bump to 20221009-3.1
+-- libedit, version bump to 20221030-3.1
 
 -- libpng, version bump to 1.6.38
 
@@ -34,7 +36,7 @@ Released @TBD@
 
 -- sqlite, version bump to 3.39.4
 
--- strace, version bump to 5.19
+-- strace, version bump to 6.0
 
 -- zlib, version 1.2.13, security fix: CVE-2022-37434
 
@@ -46,9 +48,11 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2022-10-11
 
--- Time Zone Database update, tzdata2022e and php-timezonedb-2022.5
+-- Time Zone Database update, tzdata2022f and php-timezonedb-2022.6
 
 ** Networking
+
+-- OpenSSL, version bump to 1.1.1s
 
 -- strongSwan, version 5.5.3, security fix: CVE-2022-40617
 
@@ -83,7 +87,7 @@ Released @TBD@
    Last Asterisk 13.x "Legacy" version, built --without-pjproject
    New cdr.conf settings: ignorestatechanges and ignoredialchanges (more like Asterisk 11 behavior with both set to "yes")
 
--- Asterisk 16.28.0 (version bump) and 18.14.0 (version bump)
+-- Asterisk 16.29.0 (version bump) and 18.15.0 (version bump)
    New Asterisk 16 cdr.conf settings: ignorestatechanges and ignoredialchanges
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
