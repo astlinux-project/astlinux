@@ -1,6 +1,6 @@
 --- asterisk-16/configure.ac.orig	2014-01-24 16:52:23.000000000 -0600
 +++ asterisk-16/configure.ac	2014-01-24 16:55:14.000000000 -0600
-@@ -2956,11 +2956,13 @@
+@@ -2968,11 +2968,13 @@
  AC_OUTPUT
  
  ${ac_cv_path_EGREP} 'CURSES|GTK2|OSARCH|NEWT' makeopts > makeopts.acbak2
