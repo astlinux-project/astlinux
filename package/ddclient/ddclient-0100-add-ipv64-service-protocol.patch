@@ -1,0 +1,147 @@
+--- ddclient/ddclient.orig
++++ ddclient/ddclient
+@@ -482,6 +482,10 @@
+         'server' => setv(T_FQDNP, 1, 0, 1, 'www.duckdns.org', undef),
+         'login'  => setv(T_LOGIN, 0, 0, 0, 'unused',          undef),
+     },
++    'ipv64-common-defaults' => {
++        'server' => setv(T_FQDNP, 1, 0, 1, 'ipv64.net', undef),
++        'login'  => setv(T_LOGIN, 0, 0, 0, 'unused',          undef),
++    },
+     'he-common-defaults' => {
+         'server' => setv(T_FQDNP, 1, 0, 1, 'dyn.dns.he.net', undef),
+     },
+@@ -668,6 +672,15 @@
+             $variables{'service-common-defaults'},
+         ),
+     },
++    'ipv64' => {
++        'updateable' => undef,
++        'update'     => \&nic_ipv64_update,
++        'examples'   => \&nic_ipv64_examples,
++        'variables'  => merge(
++            $variables{'ipv64-common-defaults'},
++            $variables{'service-common-defaults'},
++        ),
++    },
+     'he' => {
+         'updateable' => undef,
+         'update'     => \&nic_he_update,
+@@ -4611,6 +4624,117 @@
+                 my @reply = split /\n/, $reply;
+                 my $returned = pop(@reply);
+                 if ($returned =~ /OK/) {
++                    success("updating %s: IPv6 address set to %s", $host, $ipv6);
++                    $config{$host}{'ipv6'}        = $ipv6;
++                    $config{$host}{'mtime'}       = $now;
++                    $config{$host}{'status-ipv6'} = 'good';
++                } else {
++                    $config{$host}{'status-ipv6'} = 'failed';
++                    failed("updating %s: unexpected status (%s)", $host, $returned);
++                }
++            }
++        }
++    }
++}
++
++######################################################################
++## nic_ipv64_examples
++##
++## written by the AstLinux Project
++##
++######################################################################
++sub nic_ipv64_examples {
++    return <<EoEXAMPLE;
++o 'ipv64'
++
++The 'ipv64' protocol is used by the free
++Dynamic DNS service offered by https://ipv64.net/
++
++Configuration variables applicable to the 'ipv64' protocol are:
++  protocol=ipv64                 ##
++  server=fqdn.of.service         ## defaults to ipv64.net
++  password=service-token         ## password (key) registered with the service
++  fully.qualified.host           ## the host.ipv64.net registered with the service.
++
++Example ${program}.conf file entries:
++  ## single host update
++  protocol=ipv64,                           \\
++  password=aaaaaaaabbbbccccddddeeeeeeeeeeee \\
++  myhost.ipv64.net
++
++EoEXAMPLE
++}
++
++######################################################################
++## nic_ipv64_update
++## IPv64 DynDNS Updater: https://ipv64.net/dyndns_updater_api.php
++######################################################################
++sub nic_ipv64_update {
++    debug("\nnic_ipv64_update -------------------");
++
++    ## group hosts with identical attributes together
++    my %groups = group_hosts_by([@_], [qw(server password)]);
++
++    ## update each set of hosts that had similar configurations
++    foreach my $sig (keys %groups) {
++        my @hosts = @{$groups{$sig}};
++        my $key   = $hosts[0];
++
++        # FQDNs
++        for my $host (@hosts) {
++            my $ip    = delete $config{$host}{'wantip'};
++            my $ipv6  = delete $config{$host}{'wantipv6'};
++
++            if (defined($ip)) {
++                info("setting IPv4 address to %s for %s", $ip, $host);
++                verbose("UPDATE:", "updating %s", $host);
++
++                # Update the DNS 'A' record
++                my $url = "https://$config{$host}{'server'}/update";
++                $url .= "?key=$config{$host}{'password'}";
++                $url .= "&domain=$host";
++                $url .= "&ip=$ip";
++                $url .= "&output=min";
++
++                my $reply = geturl(opt('proxy'), $url);
++                if (!defined($reply) || !$reply) {
++                    failed("updating %s: Could not connect to %s.", $host, $config{$host}{'server'});
++                    last;
++                }
++
++                my @reply = split /\n/, $reply;
++                my $returned = pop(@reply);
++                if ($returned =~ /good|nochg/) {
++                    success("updating %s: IPv4 address set to %s", $host, $ip);
++                    $config{$host}{'ip'}     = $ip;
++                    $config{$host}{'mtime'}  = $now;
++                    $config{$host}{'status'} = 'good';
++                } else {
++                    $config{$host}{'status'} = 'failed';
++                    failed("updating %s: unexpected status (%s)", $host, $returned);
++                }
++            }
++
++            if (defined($ipv6)) {
++                info("setting IPv6 address to %s for %s", $ipv6, $host);
++                verbose("UPDATE:", "updating %s", $host);
++
++                # Update the DNS 'AAAA' record
++                my $url = "https://$config{$host}{'server'}/update";
++                $url .= "?key=$config{$host}{'password'}";
++                $url .= "&domain=$host";
++                $url .= "&ip6=$ipv6";
++                $url .= "&output=min";
++
++                my $reply = geturl(opt('proxy'), $url);
++                if (!defined($reply) || !$reply) {
++                    failed("updating %s: Could not connect to %s.", $host, $config{$host}{'server'});
++                    last;
++                }
++
++                my @reply = split /\n/, $reply;
++                my $returned = pop(@reply);
++                if ($returned =~ /good|nochg/) {
+                     success("updating %s: IPv6 address set to %s", $host, $ipv6);
+                     $config{$host}{'ipv6'}        = $ipv6;
+                     $config{$host}{'mtime'}       = $now;
