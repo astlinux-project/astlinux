@@ -38,6 +38,8 @@ Released @TBD@
 
 -- strace, version bump to 6.0
 
+-- sudo, version 1.8.32, add security fix: CVE-2022-43995
+
 -- zlib, version 1.2.13, security fix: CVE-2022-37434
 
 -- system-vendor, improved hypervisor check, look at dmesg.boot for 'Hypervisor detected:'
@@ -62,6 +64,8 @@ Released @TBD@
 -- arp-scan, version bump to 1.9.8
 
 -- chrony, version bump to 4.3
+
+-- ddclient, ddclient-curl version 3.8.3-07, add IPv64 (https://ipv64.net/) service type for both IPv4 and IPv6
 
 -- iperf, version bump to 2.1.8
 
@@ -106,6 +110,8 @@ Released @TBD@
 
 -- Status and Prefs tab, change "Voicemail User Status", "DAHDI Status" and "Jabber Status" to custom Asterisk
    Name/Command status. Defaults to previous standard Asterisk Name/Command values for backward compatibility.
+
+-- Network tab, Dynamic DNS Update, add "IPv64" service type. More Info: https://ipv64.net/
 
 
 Additions for AstLinux 1.4.7:
