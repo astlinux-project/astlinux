@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2021 Lonnie Abelbeck
+// Copyright (C) 2008-2022 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -113,6 +113,7 @@ $select_dyndns = array (
   'EasyDNS' => 'easydns',
   'FreeDNS' => 'default@freedns.afraid.org',
   'HE Free DNS' => 'he',
+  'IPv64' => 'ipv64',
   'NameCheap' => 'namecheap',
   'No-IP' => 'default@no-ip.com',
   'nsupdate.info' => 'default@nsupdate.info',
