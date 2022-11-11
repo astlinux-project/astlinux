@@ -16,6 +16,8 @@ Released @TBD@
 
 -- igc, backport from linux-5.4.211, Intel i225/i226 2.5-Gigabit Ethernet Network Driver
 
+-- r8125, version 9.010.01, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
+
 -- genx86_64-vm board type, VMware Tools (open-vm-tools) version 10.3.10, security fix: CVE-2022-31676
 
 -- acpid, version bump to 2.0.34
