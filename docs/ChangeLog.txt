@@ -28,7 +28,9 @@ Released @TBD@
 
 -- libedit, version bump to 20221030-3.1
 
--- libpng, version bump to 1.6.38
+-- libpng, version bump to 1.6.39
+
+-- libusb-compat, version bump 0.1.8
 
 -- libxml2, version bump to 2.10.3, security fixes: CVE-2022-40303, CVE-2022-40304
 
