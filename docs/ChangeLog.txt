@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 4.19.260 (version bump), security and bug fixes.
+-- Linux Kernel 4.19.266 (version bump), security and bug fixes.
 
 -- igc, backport from linux-5.4.211, Intel i225/i226 2.5-Gigabit Ethernet Network Driver
 
@@ -104,7 +104,7 @@ Released @TBD@
 
 -- neon, version bump to 0.32.4, used for Asterisk Calendar Support
 
--- FOP2, available version bump to 2.31.33
+-- FOP2, available version bump to 2.31.34
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
    More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
