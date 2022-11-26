@@ -4,7 +4,7 @@
 #
 #############################################################
 
-NETSNMP_VERSION = 5.9.1
+NETSNMP_VERSION = 5.9.3
 NETSNMP_SITE = http://downloads.sourceforge.net/project/net-snmp/net-snmp/$(NETSNMP_VERSION)
 NETSNMP_SOURCE = net-snmp-$(NETSNMP_VERSION).tar.gz
 NETSNMP_INSTALL_STAGING = YES
@@ -33,7 +33,6 @@ NETSNMP_CONF_OPT = \
 	--disable-manuals
 NETSNMP_MAKE = $(MAKE1)
 NETSNMP_BLOAT_MIBS = BRIDGE DISMAN-EVENT DISMAN-SCHEDULE DISMAN-SCRIPT EtherLike RFC-1215 RFC1155-SMI RFC1213 SCTP SMUX
-NETSNMP_AUTORECONF = YES
 
 ifeq ($(BR2_ENDIAN),"BIG")
 	NETSNMP_CONF_OPT += --with-endianness=big
