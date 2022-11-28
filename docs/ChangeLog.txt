@@ -36,6 +36,8 @@ Released @TBD@
 
 -- ne, version bump to 3.3.2
 
+-- pciutils, version bump to 3.9.0
+
 -- php, version 7.2.34, add security fixes: CVE-2022-31629, CVE-2022-37454
 
 -- sqlite, version bump to 3.39.4
@@ -49,6 +51,8 @@ Released @TBD@
 -- system-vendor, improved hypervisor check, look at dmesg.boot for 'Hypervisor detected:'
 
 -- system-vendor, update system-vendor.ids
+
+-- usbutils, version bump to 015
 
 -- zabbix, version bump to 4.0.44
 
