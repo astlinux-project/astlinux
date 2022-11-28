@@ -4,9 +4,9 @@
 #
 #############################################################
 
-PCIUTILS_VERSION = 3.8.0
-PCIUTILS_SITE = $(BR2_KERNEL_MIRROR)/software/utils/pciutils
-PCIUTILS_SOURCE = pciutils-$(PCIUTILS_VERSION).tar.xz
+PCIUTILS_VERSION = 3.9.0
+PCIUTILS_SITE = https://github.com/pciutils/pciutils/archive/v$(PCIUTILS_VERSION)
+PCIUTILS_SOURCE = pciutils-$(PCIUTILS_VERSION).tar.gz
 PCIUTILS_INSTALL_STAGING = YES
 # Depend on linux to define LINUX_VERSION_PROBED
 PCIUTILS_DEPENDENCIES = linux
