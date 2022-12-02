@@ -60,8 +60,8 @@
 +Configuration variables applicable to the 'ipv64' protocol are:
 +  protocol=ipv64                 ##
 +  server=fqdn.of.service         ## defaults to ipv64.net
-+  password=service-token         ## password (key) registered with the service
-+  fully.qualified.host           ## the host.ipv64.net registered with the service.
++  password=service-token         ## Domain Key or Account Key
++  fully.qualified.host           ## the host.domain registered with the service.
 +
 +Example ${program}.conf file entries:
 +  ## single host update
