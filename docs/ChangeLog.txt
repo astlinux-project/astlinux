@@ -58,7 +58,7 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2022-10-11
 
--- Time Zone Database update, tzdata2022f and php-timezonedb-2022.6
+-- Time Zone Database update, tzdata2022g and php-timezonedb-2022.7
 
 ** Networking
 
@@ -102,12 +102,12 @@ Released @TBD@
    Last Asterisk 13.x "Legacy" version, built --without-pjproject
    New cdr.conf settings: ignorestatechanges and ignoredialchanges (more like Asterisk 11 behavior with both set to "yes")
 
--- Asterisk 16.29.0 (version bump) and 18.15.0 (version bump)
+-- Asterisk 16.29.1 (version bump) and 18.15.1 (version bump)
    New Asterisk 16 cdr.conf settings: ignorestatechanges and ignoredialchanges
 
 -- DAHDI, dahdi-linux 3.1.0 (no change) and dahdi-tools 3.1.0 (no change)
 
--- pjsip 2.12.1 (no change)
+-- pjsip 2.12.1 (no change), backport two security fixes (c4d3498 and 450baca) from pjproject 2.13
 
 -- neon, version bump to 0.32.4, used for Asterisk Calendar Support
 
