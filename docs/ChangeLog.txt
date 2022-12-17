@@ -34,6 +34,8 @@ Released @TBD@
 
 -- libxml2, version bump to 2.10.3, security fixes: CVE-2022-40303, CVE-2022-40304
 
+-- logrotate, version bump to 3.21.0
+
 -- ne, version bump to 3.3.2
 
 -- pciutils, version bump to 3.9.0
@@ -42,7 +44,7 @@ Released @TBD@
 
 -- sqlite, version bump to 3.39.4
 
--- strace, version bump to 6.0
+-- strace, version bump to 6.1
 
 -- sudo, version 1.8.32, add security fix: CVE-2022-43995
 
@@ -57,6 +59,8 @@ Released @TBD@
 -- zabbix, version bump to 4.0.44
 
 -- ca-certificates, update trusted root certificates 2022-10-11
+
+-- mac2vendor, oui.txt database snapshot 2022-12-17
 
 -- Time Zone Database update, tzdata2022g and php-timezonedb-2022.7
 
