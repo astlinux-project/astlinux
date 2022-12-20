@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 4.19.266 (version bump), security and bug fixes.
 
+-- RUNNIX, version bump to runnix-0.6.13, with Linux Kernel 4.19.266
+
 -- igc, backport from linux-5.4.211, Intel i225/i226 2.5-Gigabit Ethernet Network Driver
 
 -- r8125, version 9.010.01, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
