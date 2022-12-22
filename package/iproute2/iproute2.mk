@@ -4,12 +4,14 @@
 #
 #############################################################
 
-IPROUTE2_VERSION = 4.20.0
+IPROUTE2_VERSION = 6.0.0
 IPROUTE2_SOURCE = iproute2-$(IPROUTE2_VERSION).tar.xz
 IPROUTE2_SITE = $(BR2_KERNEL_MIRROR)/linux/utils/net/iproute2
-IPROUTE2_TARGET_SBINS = ip tc bridge ss rtmon ifcfg rtpr routel routef nstat ifstat rtacct lnstat genl ctstat rtstat tipc devlink rdma
+IPROUTE2_TARGET_SBINS = ip tc bridge ss rtmon routel nstat ifstat rtacct lnstat genl ctstat rtstat tipc devlink rdma vdpa dcb
 
-IPROUTE2_DEPENDENCIES = host-bison host-flex host-pkg-config $(if $(BR2_PACKAGE_LIBMNL),libmnl)
+IPROUTE2_DEPENDENCIES = host-bison host-flex host-pkg-config \
+	$(if $(BR2_PACKAGE_LIBMNL),libmnl) \
+	$(if $(BR2_PACKAGE_LIBCAP),libcap)
 
 # If both iproute2 and busybox are selected, make certain we win
 # the fight over who gets to have their utils actually installed.
@@ -43,15 +45,13 @@ endef
 
 define IPROUTE2_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) DESTDIR="$(TARGET_DIR)" $(MAKE) -C $(@D) install
-	# Wants bash
-	rm -f $(TARGET_DIR)/sbin/ifcfg
+	# Requires python3
+	rm -f $(TARGET_DIR)/sbin/routel
 endef
 
 define IPROUTE2_UNINSTALL_TARGET_CMDS
-	rm -rf $(TARGET_DIR)/lib/tc
 	rm -rf $(TARGET_DIR)/usr/lib/tc
 	rm -rf $(TARGET_DIR)/etc/iproute2
-	rm -rf $(TARGET_DIR)/var/lib/arpd
 	rm -f $(addprefix $(TARGET_DIR)/sbin/, $(IPROUTE2_TARGET_SBINS))
 endef
 
