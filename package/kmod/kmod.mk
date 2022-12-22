@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-KMOD_VERSION = 27
+KMOD_VERSION = 30
 KMOD_SOURCE = kmod-$(KMOD_VERSION).tar.xz
 KMOD_SITE = $(BR2_KERNEL_MIRROR)/linux/utils/kernel/kmod
 KMOD_INSTALL_STAGING = YES
@@ -14,7 +14,9 @@ HOST_KMOD_DEPENDENCIES = host-pkg-config
 KMOD_CONF_OPT = \
 	--disable-static \
 	--enable-shared \
-	--disable-python
+	--disable-python \
+	--without-zstd \
+	--without-openssl
 
 KMOD_CONF_OPT += --disable-manpages
 HOST_KMOD_CONF_OPT = --disable-manpages
@@ -22,11 +24,15 @@ HOST_KMOD_CONF_OPT = --disable-manpages
 ifeq ($(BR2_PACKAGE_ZLIB),y)
 KMOD_DEPENDENCIES += zlib
 KMOD_CONF_OPT += --with-zlib
+else
+KMOD_CONF_OPT += --without-zlib
 endif
 
 ifeq ($(BR2_PACKAGE_XZ),y)
 KMOD_DEPENDENCIES += xz
 KMOD_CONF_OPT += --with-xz
+else
+KMOD_CONF_OPT += --without-xz
 endif
 
 ifeq ($(BR2_PACKAGE_KMOD_TOOLS),y)
