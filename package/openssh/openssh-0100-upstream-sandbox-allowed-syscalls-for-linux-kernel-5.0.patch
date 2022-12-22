@@ -1,0 +1,25 @@
+--- openssh-8.1p1/sandbox-seccomp-filter.c.orig	2022-12-19 09:23:31.132257670 -0600
++++ openssh-8.1p1/sandbox-seccomp-filter.c	2022-12-19 09:35:39.643194619 -0600
+@@ -185,6 +185,9 @@
+ #ifdef __NR_clock_gettime
+ 	SC_ALLOW(__NR_clock_gettime),
+ #endif
++#ifdef __NR_clock_gettime64
++	SC_ALLOW(__NR_clock_gettime64),
++#endif
+ #ifdef __NR_close
+ 	SC_ALLOW(__NR_close),
+ #endif
+@@ -242,6 +245,12 @@
+ #ifdef __NR_nanosleep
+ 	SC_ALLOW(__NR_nanosleep),
+ #endif
++#ifdef __NR_clock_nanosleep
++	SC_ALLOW(__NR_clock_nanosleep),
++#endif
++#ifdef __NR_clock_nanosleep_time64
++	SC_ALLOW(__NR_clock_nanosleep_time64),
++#endif
+ #ifdef __NR__newselect
+ 	SC_ALLOW(__NR__newselect),
+ #endif

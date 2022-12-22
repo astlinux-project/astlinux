@@ -1,6 +1,6 @@
 --- b/drivers/dahdi/wctdm24xxp/base.c
 +++ a/drivers/dahdi/wctdm24xxp/base.c
-@@ -6026,7 +6026,11 @@
+@@ -6034,7 +6034,11 @@
  
  static DEFINE_PCI_DEVICE_TABLE(wctdm_pci_tbl) = {
  	{ 0xd161, 0x2400, PCI_ANY_ID, PCI_ANY_ID, 0, 0, (unsigned long) &wctdm2400 },

@@ -1,5 +1,6 @@
 config BR2_PACKAGE_E1000E
 	bool "e1000e"
+	depends on BR2_DEPRECATED
 	depends on BR2_LINUX_KERNEL
 	default n
 	help

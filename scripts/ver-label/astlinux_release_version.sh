@@ -2,7 +2,7 @@
 
 astlinux_release_version()
 {
-  ASTBASE="1.4"
+  ASTBASE="1.5"
   if svn info >/dev/null 2>&1; then
     ASTREV="$(LANG=C svn info | awk -F': ' '/^Last Changed Rev:/ { print $2 }')"
     if [ -n "$ASTREV" ]; then

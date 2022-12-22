@@ -1,9 +1,9 @@
 #########################################################################
-## Crosstool-NG 1.24.0
+## Crosstool-NG 1.25.0
 ## https://crosstool-ng.github.io/
 ##
 ## Building the glibc toolchain for AstLinux 1.x using Buildroot
-## The resulting toolchain is output to $HOME/astlinux/x-tools-1.24.0-4.19-2.27
+## The resulting toolchain is output to $HOME/astlinux/x-tools-1.25.0-5.10-2.31
 ## Make sure you have a $HOME/astlinux/ directory.
 ##
 ## Install crosstool-ng ##
@@ -11,13 +11,13 @@
 cd ~/source-control
 # run shell script "crosstool-ng-src/get-crosstool-ng.sh" located in the Github repo
 sh ~/astlinux/trunk/crosstool-ng-src/get-crosstool-ng.sh
-cd crosstool-ng-1.24.0
+cd crosstool-ng-1.25.0
 ./configure --enable-local
 make
 ##
 ## Build x86_64 64-bit toolchain ##
-# copy the "crosstool-ng-src/ct-ng-1.24.0-4.19-2.27-x86_64.config" file from the Github repo to ".config" here
-cp ~/astlinux/trunk/crosstool-ng-src/ct-ng-1.24.0-4.19-2.27-x86_64.config .config
+# copy the "crosstool-ng-src/ct-ng-1.25.0-5.10-2.31-x86_64.config" file from the Github repo to ".config" here
+cp ~/astlinux/trunk/crosstool-ng-src/ct-ng-1.25.0-5.10-2.31-x86_64.config .config
 # Important: you must use "./ct-ng"
 # leave as configured, just look, don't make any changes
 ./ct-ng menuconfig

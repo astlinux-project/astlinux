@@ -1,7 +1,7 @@
 # shell script to download crosstool-ng
 
-CTNG_VERSION="1.24.0"
-CTNG_SHA1="db5cefc51d7870b26287fe76f058a0af2e60e657"
+CTNG_VERSION="1.25.0"
+CTNG_SHA1="e1de15e5862b26906237acf788964b923a8f11f2"
 CTNG_URL="http://crosstool-ng.org/download/crosstool-ng"
 CTNG_FILE="crosstool-ng-${CTNG_VERSION}.tar.bz2"
 

@@ -1,5 +1,6 @@
 config BR2_PACKAGE_WIREGUARD
 	bool "wireguard"
+	depends on BR2_DEPRECATED
 	depends on BR2_LINUX_KERNEL
 	help
 	  WireGuard is an extremely simple yet fast and modern VPN

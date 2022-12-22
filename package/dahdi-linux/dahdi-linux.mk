@@ -3,7 +3,7 @@
 # dahdi-linux
 #
 ##############################################################
-DAHDI_LINUX_VERSION := 3.1.0
+DAHDI_LINUX_VERSION := 3.2.0
 DAHDI_LINUX_SOURCE := dahdi-linux-$(DAHDI_LINUX_VERSION).tar.gz
 DAHDI_LINUX_SITE := https://downloads.asterisk.org/pub/telephony/dahdi-linux/releases
 DAHDI_LINUX_DIR := $(BUILD_DIR)/dahdi-linux-$(DAHDI_LINUX_VERSION)
