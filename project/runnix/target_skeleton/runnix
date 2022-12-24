@@ -251,7 +251,7 @@ else
 fi
 
 if [ -z "$FSTYPE" ]; then
-  FSTYPE="ext2"
+  FSTYPE="ext4"
 fi
 
 if ! mount -t $FSTYPE -o ro $DEVLOOP $ROOT; then

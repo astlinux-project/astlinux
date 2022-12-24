@@ -238,7 +238,7 @@ if [ $AST_SIZE -gt 0 -a -n "$ASTRW_FORMAT" ]; then
     exit 1
   fi
 
-  sudo mkfs -t ext2 -L ASTURW $LOOP2
+  sudo mkfs -t ext2 -O extra_isize -L ASTURW $LOOP2
 
   sudo losetup -d $LOOP2
 fi

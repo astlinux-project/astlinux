@@ -21,7 +21,7 @@ system()
 
 kd()
 {
-  if mount | grep -q "/$KD  *type  *ext2"; then
+  if mount | grep -q "/$KD  *type  *ext4"; then
     echo "/$KD is not on ASTURW. /$KD is a separate partition." >&2
   else
     find $ASTURW/$KD -type f

@@ -209,7 +209,7 @@ init() {
     mount -t tmpfs -o size=512k none /mnt/unionfs
     fstab_base="none    /mnt/unionfs    tmpfs   size=512k       0       0"
   elif [ -z "$ASTIMG" ]; then
-    fstab_base="$ROOTDEV /             ext2    ro              0       0"
+    fstab_base="$ROOTDEV /             ext4    ro              0       0"
   else
     fstab_base="##"
   fi
@@ -230,7 +230,7 @@ $fstab_shm
 
   ## Check and mount unionfs
   if [ -n "$ASTURW" ]; then
-    echo "$ASTURW /mnt/asturw ext2 noauto,noatime 0 0" >> /tmp/etc/fstab
+    echo "$ASTURW /mnt/asturw ext4 noauto,noatime 0 0" >> /tmp/etc/fstab
 
     ast_checkfs $ASTURW
 
@@ -306,7 +306,7 @@ $fstab_shm
   fi
 
   if [ -n "$KDDEV" ]; then
-    echo "$KDDEV /mnt/kd ext2 noauto,noatime 0 0" >> /tmp/etc/fstab
+    echo "$KDDEV /mnt/kd ext4 noauto,noatime 0 0" >> /tmp/etc/fstab
 
     ast_checkfs $KDDEV
 

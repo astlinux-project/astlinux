@@ -18,7 +18,7 @@ sync_inittab() {
 
   if [ -n "$ASTURW" ]; then
     mkdir -p /mnt/asturw
-    if mount -t ext2 -o ro $ASTURW /mnt/asturw >/dev/null 2>&1; then
+    if mount -t ext4 -o ro $ASTURW /mnt/asturw >/dev/null 2>&1; then
       if [ -f /mnt/asturw/etc/inittab ]; then
         cp -p /mnt/asturw/etc/inittab $mp/etc/inittab
       fi

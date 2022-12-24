@@ -96,7 +96,7 @@ genunion() {
     exit $RED
   fi
   # Create filesystem
-  if ! mke2fs -q -L ASTURW $1; then
+  if ! mke2fs -q -O extra_isize -L ASTURW $1; then
     echo "Creating ASTURW filesystem on $1 failed."
     exit $RED
   fi
@@ -112,12 +112,12 @@ genkd() {
     exit $RED
   fi
   # Create filesystem
-  if ! mke2fs -q -L ASTKD $1; then
+  if ! mke2fs -q -O extra_isize -L ASTKD $1; then
     echo "Creating ASTKD filesystem on $1 failed."
     exit $RED
   fi
 
-  if ! mount -t ext2 $1 /mnt/kd; then
+  if ! mount -t ext4 $1 /mnt/kd; then
     echo "Mounting ASTKD on $1 failed."
     exit $RED
   fi
