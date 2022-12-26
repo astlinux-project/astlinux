@@ -4,13 +4,15 @@
 #
 #############################################################
 
-TIFF_VERSION = 4.4.0
+TIFF_VERSION = 4.5.0
 TIFF_SITE = https://download.osgeo.org/libtiff
 TIFF_SOURCE = tiff-$(TIFF_VERSION).tar.gz
 TIFF_INSTALL_STAGING = YES
 TIFF_CONF_OPT = \
 	--disable-cxx \
 	--without-x \
+	--disable-tests \
+	--disable-docs \
 	--disable-libdeflate
 
 TIFF_DEPENDENCIES = host-pkg-config zlib jpeg
