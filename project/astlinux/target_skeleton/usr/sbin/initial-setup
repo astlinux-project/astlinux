@@ -95,7 +95,7 @@ genunion() {
     echo "Partition $1 is currently in use."
     exit $RED
   fi
-  # Create filesystem
+  # Create filesystem, ext2 defaults plus ext4 'extra_isize' feature. Without journal.
   if ! mke2fs -q -O extra_isize -L ASTURW $1; then
     echo "Creating ASTURW filesystem on $1 failed."
     exit $RED
@@ -111,7 +111,7 @@ genkd() {
     echo "Partition $1 is currently in use."
     exit $RED
   fi
-  # Create filesystem
+  # Create filesystem, ext2 defaults plus ext4 'extra_isize' feature. Without journal.
   if ! mke2fs -q -O extra_isize -L ASTKD $1; then
     echo "Creating ASTKD filesystem on $1 failed."
     exit $RED
