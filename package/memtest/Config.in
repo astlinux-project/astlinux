@@ -1,5 +1,6 @@
 config BR2_PACKAGE_MEMTEST
 	bool "memtest"
+	depends on BR2_DEPRECATED
 	depends on BR2_i386 || BR2_x86_64
 	default n
 	help

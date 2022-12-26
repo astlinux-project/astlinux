@@ -192,8 +192,8 @@ upgrade() {
       echo "$OVER" > $BASE/Xver
     fi
 
-    # Install runnix, runnix.img, memtest, and boot.msg from downloaded image
-    for install in runnix runnix.img memtest boot.msg; do
+    # Install runnix, runnix.img and boot.msg from downloaded image
+    for install in runnix runnix.img boot.msg; do
       if [ -f "$BASE/rtmp/$VER/rootfs_vfat/$install" ]; then
         if [ -f "$BASE/$install" ]; then
           rm -f "$BASE/$install"

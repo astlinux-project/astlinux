@@ -13,10 +13,6 @@ SYSLINUX_VERSION="$(awk -F'=' '/^SYSLINUX_VERSION/ { print $2; exit }' boot/sysl
 
 SYSLINUX_DIR="output/build/syslinux-${SYSLINUX_VERSION// /}"
 
-MEMTEST_VERSION="$(awk -F'=' '/^MEMTEST_VERSION/ { print $2; exit }' package/memtest/memtest.mk)"
-
-MEMTEST_DIR="output/build/memtest-${MEMTEST_VERSION// /}"
-
 make_release()
 {
   echo "
@@ -32,7 +28,6 @@ make_release()
   cp -p ${SYSLINUX_DIR}/bios/linux/syslinux ${RUNVER}/syslinux
   cp -p ${KERNEL} ${RUNVER}/rootfs_vfat/runnix
   cp -p ${ROOTFS_EXT2_GZ} ${RUNVER}/rootfs_vfat/runnix.img
-  cp -p ${MEMTEST_DIR}/memtest.bin ${RUNVER}/rootfs_vfat/memtest
   cp -p ${SYSLINUX_DIR}/bios/com32/menu/menu.c32 ${RUNVER}/rootfs_vfat/menu.c32
   cp -p ${SYSLINUX_DIR}/bios/com32/libutil/libutil.c32 ${RUNVER}/rootfs_vfat/libutil.c32
   # EFI
@@ -99,7 +94,7 @@ make oldconfig
 
 time make all
 
-if [ $? -eq 0 -a -f "$ROOTFS_EXT2_GZ" -a -f "$KERNEL" -a -d "$SYSLINUX_DIR" -a -d "$MEMTEST_DIR" ]; then
+if [ $? -eq 0 -a -f "$ROOTFS_EXT2_GZ" -a -f "$KERNEL" -a -d "$SYSLINUX_DIR" ]; then
   . ./scripts/ver-label/runnix_release_version.sh
   runnix_release_version
   make_release
