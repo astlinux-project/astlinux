@@ -13,6 +13,9 @@ TIFF_CONF_OPT = \
 	--without-x \
 	--disable-tests \
 	--disable-docs \
+	--disable-lzma \
+	--disable-webp \
+	--disable-zstd \
 	--disable-libdeflate
 
 TIFF_DEPENDENCIES = host-pkg-config zlib jpeg
