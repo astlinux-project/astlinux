@@ -14,7 +14,7 @@ Released @TBD@
 
 -- Linux Kernel 5.10.158 (major version bump), security and bug fixes.
 
--- RUNNIX, version bump to runnix-0.6.12b (test version), with Linux Kernel 5.10.158
+-- RUNNIX, version bump to runnix-0.6.13b (test version), with Linux Kernel 5.10.158
    == gnu-efi, version bump to 3.0.15
    == memtest, remove native support.  Boot via USB with Memtest86+ if needed.
 
@@ -28,6 +28,8 @@ Released @TBD@
 -- linux-firmware, version bump to 20210919, provide binary blobs for r8169 and tg3 NIC drivers
 
 -- rng-tools, version 6.5, jitterentropy version bump to 3.4.1
+
+-- sqlite, version bump to 3.40.1
 
 -- tiff, version bump to 4.5.0, security fixes: many
 
