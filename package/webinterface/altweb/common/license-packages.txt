@@ -6,10 +6,10 @@
 ## 3) Lines beginning with a '#' are treated as comments
 ##
 ex-vi~Copyright (c) 2001-2002 Caldera International Inc. All rights reserved.
-RUNNIX~Copyright (c) 2006-2022 AstLinux Project, Kristian Kielhofner.
+RUNNIX~Copyright (c) 2006-2023 AstLinux Project, Kristian Kielhofner.
 libSRTP~Copyright (c) 2001-2019 Cisco Systems, Inc. All rights reserved.
 iLBC CODEC~Copyright (c) 2011 The WebRTC project authors. All rights reserved.
-Web Interface~Copyright (c) 2008-2022 Lonnie Abelbeck.
+Web Interface~Copyright (c) 2008-2023 Lonnie Abelbeck.
 shellinabox~Copyright (c) 2008-2016 Markus Gutschke, Luka Krajger.
 Asterisk~Copyright (c) 1999-2022 Digium, Inc.
 DAHDI~Copyright (c) 2001-2019 Digium, Inc.
@@ -50,7 +50,7 @@ libsodium~Copyright (c) 2013-2019 Frank Denis.
 phoneprov-tools~Copyright (c) 2015-2021 Lonnie Abelbeck and Michael Keuter.
 smartmontools~Copyright (c) 2002-2020 Bruce Allen, Christian Franke, et al.
 Monit~Copyright (c) 2001-2022 Tildeslash. All rights reserved.
-sqlite~Copyright (c) 1995-2022 SQLite Consortium.
+sqlite~Copyright (c) 1995-2023 SQLite Consortium.
 sqliteodbc~Copyright (c) 2001-2020 Christian Werner.
 Fossil~Copyright (c) 2007-2019 D. Richard Hipp. All rights reserved.
 BusyBox~Copyright (c) 1998-2019 Erik Andersen, Rob Landley, Denys Vlasenko, et al.
@@ -58,7 +58,7 @@ dhcp6c~Copyright (c) 1998-2008 WIDE Project with 2018 Debian patches.
 htop~Copyright (c) 2020-2021 htop dev team, Copyright (c) 2004-2019 Hisham Muhammad.
 stunnel~Copyright (c) 1998-2022 Michal Trojnara.
 avahi~Copyright (c) 2004-2019 Lennart Poettering, Trent Lloyd, Avahi developers.
-Linux Kernel~Copyright (c) 1997-2022 The Linux Kernel Organization, Inc.; Linux is a Registered Trademark of Linus Torvalds.
+Linux Kernel~Copyright (c) 1997-2023 The Linux Kernel Organization, Inc.; Linux is a Registered Trademark of Linus Torvalds.
 whois~Copyright (c) 1999-2022 Marco d'Itri.
 strongSwan~Copyright (c) 2006-2017 Andreas Steffen, Tobias Brunner, et al.
 chrony~Copyright (c) 1997-2021 Richard P. Curnow, Miroslav Lichvar.
