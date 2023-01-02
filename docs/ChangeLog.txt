@@ -18,12 +18,12 @@ Released @TBD@
    == gnu-efi, version bump to 3.0.15
    == memtest, remove native support.  Boot via USB with Memtest86+ if needed.
 
--- filesystem, use ext4 driver instead of ext2, enable feature 'extra_isize' for new installs. Without journal.
-   Note: With 'extra_isize' added, disks must be mounted as ext4, but they can be mounted read-only using ext2.
+-- filesystem, use ext4 driver instead of ext2.  Enable feature 'extra_isize' for new installs, without journal.
+   Note: With 'extra_isize' added for new installs, disks must be mounted as ext4, but they can be mounted read-only using ext2.
 
 -- busybox, version 1.30.1, fixes with glibc 2.31 and security fix: CVE-2022-28391
 
--- ethtool, version 6.0, enable kernel netlink support
+-- ethtool, version 6.1, enable kernel netlink support
 
 -- kmod, version bump to 30
 
@@ -49,6 +49,8 @@ Released @TBD@
 
 -- LibreTLS, version bump to 3.7.0
 
+-- whois, version bump to 5.5.15
+
 ** Asterisk
 
 -- Asterisk 13.38.3 ('13se' no change)
@@ -62,7 +64,7 @@ Released @TBD@
 
 ** Web Interface
 
--- (no change)
+-- Update Copyright (c) 2004-2023
 
 
 Additions for AstLinux 1.4.8:
