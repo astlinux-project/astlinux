@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-WHOIS_VERSION = 5.5.14
+WHOIS_VERSION = 5.5.15
 WHOIS_SITE = https://github.com/rfc1036/whois/archive/v$(WHOIS_VERSION)
 WHOIS_SOURCE = whois-$(WHOIS_VERSION).tar.gz
 
