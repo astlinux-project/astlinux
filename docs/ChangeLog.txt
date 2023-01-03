@@ -35,6 +35,8 @@ Released @TBD@
 
 -- tiff, version bump to 4.5.0, security fixes: many
 
+-- util-linux, version 2.33.2, hwclock: make glibc 2.31 compatible
+
 -- Update build system tools:
    == New toolchain: glibc 2.31, binutils 2.35.1, gcc 9.4.0, using crosstool-ng-1.25.0
    == bison, version bump to 3.7.6
