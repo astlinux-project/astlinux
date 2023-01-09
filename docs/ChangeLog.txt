@@ -47,6 +47,8 @@ Released @TBD@
 
 -- wireguard, igb, and e1000e drivers are now native with the 5.10 kernel
 
+-- arnofw (AIF), tweak rule for allowing DHCPv6 requests, fix for Comcast/Xfinity users
+
 -- iproute2 (ip, tc, bridge, etc.) version bump to 6.0.0
 
 -- libcurl (curl) version bump to 7.87.0, security fixes: CVE-2022-43551, CVE-2022-43552
