@@ -39,6 +39,8 @@ Released @TBD@
 
 -- util-linux, version 2.33.2, hwclock: make glibc 2.31 compatible
 
+-- ca-certificates, update trusted root certificates 2023-01-10
+
 -- Update build system tools:
    == New toolchain: glibc 2.31, binutils 2.35.1, gcc 9.4.0, using crosstool-ng-1.25.0
    == bison, version bump to 3.7.6
@@ -56,6 +58,8 @@ Released @TBD@
 -- LibreTLS, version bump to 3.7.0
 
 -- tcpdump, version 4.99.2
+
+-- unbound, version bump to 1.17.1
 
 -- whois, version bump to 5.5.15
 
