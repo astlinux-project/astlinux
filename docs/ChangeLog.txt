@@ -35,6 +35,8 @@ Released @TBD@
 
 -- sqlite, version bump to 3.40.1
 
+-- sudo, version 1.8.32, add security fix: CVE-2023-22809
+
 -- tiff, version bump to 4.5.0, security fixes: many
 
 -- util-linux, version 2.33.2, hwclock: make glibc 2.31 compatible
