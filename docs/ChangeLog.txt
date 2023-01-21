@@ -43,6 +43,8 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2023-01-10
 
+-- (Custom Build Only) flashrom, version bump to 1.2.1
+
 -- Update build system tools:
    == New toolchain: glibc 2.31, binutils 2.35.1, gcc 9.4.0, using crosstool-ng-1.25.0
    == bison, version bump to 3.7.6
@@ -70,7 +72,7 @@ Released @TBD@
 -- Asterisk 13.38.3 ('13se' no change)
    Last Asterisk 13.x "Legacy" version, built --without-pjproject
 
--- Asterisk 16.29.1 (no change) and 18.15.1 (no change)
+-- Asterisk 16.30.0 (version bump) and 18.16.0 (version bump)
 
 -- DAHDI, dahdi-linux 3.2.0 (version bump) and dahdi-tools 3.2.0 (version bump)
 
