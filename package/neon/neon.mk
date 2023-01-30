@@ -4,7 +4,7 @@
 #
 #############################################################
 
-NEON_VERSION = 0.32.4
+NEON_VERSION = 0.32.5
 NEON_SITE = https://notroj.github.io/neon
 NEON_INSTALL_STAGING = YES
 NEON_CONF_OPT = --without-gssapi
