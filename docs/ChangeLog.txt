@@ -27,7 +27,7 @@ Released @TBD@
 
 -- kmod, version bump to 30
 
--- libpcap, version bump to 1.10.2
+-- libpcap, version bump to 1.10.3
 
 -- linux-firmware, version bump to 20210919, provide binary blobs for r8169 and tg3 NIC drivers
 
@@ -61,7 +61,7 @@ Released @TBD@
 
 -- LibreTLS, version bump to 3.7.0
 
--- tcpdump, version 4.99.2
+-- tcpdump, version 4.99.3
 
 -- unbound, version bump to 1.17.1
 
@@ -77,6 +77,8 @@ Released @TBD@
 -- DAHDI, dahdi-linux 3.2.0 (version bump) and dahdi-tools 3.2.0 (version bump)
 
 -- pjsip 2.12.1 (no change)
+
+-- neon, version bump to 0.32.5, used for Asterisk Calendar Support
 
 ** Web Interface
 
