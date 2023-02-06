@@ -4,5 +4,7 @@ config BR2_PACKAGE_EX_VI
 	help
 	  ex-vi Text editor
 
-	  http://ex-vi.sourceforge.net/
+	  https://ex-vi.sourceforge.net/
+
+	  https://github.com/n-t-roff/heirloom-ex-vi
 
