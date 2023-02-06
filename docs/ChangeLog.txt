@@ -61,6 +61,8 @@ Released @TBD@
 
 -- LibreTLS, version bump to 3.7.0
 
+-- msmtp, version bump to 1.8.23
+
 -- tcpdump, version 4.99.3
 
 -- unbound, version bump to 1.17.1
