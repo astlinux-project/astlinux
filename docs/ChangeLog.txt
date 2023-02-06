@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.158 (major version bump), security and bug fixes.
+-- Linux Kernel 5.10.162 (major version bump), security and bug fixes.
 
 -- RUNNIX, version bump to runnix-0.6.13b (test version), with Linux Kernel 5.10.158
    == gnu-efi, version bump to 3.0.15
