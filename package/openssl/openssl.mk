@@ -4,7 +4,7 @@
 #
 #############################################################
 
-OPENSSL_VERSION = 1.1.1s
+OPENSSL_VERSION = 1.1.1t
 OPENSSL_SITE = https://www.openssl.org/source
 OPENSSL_INSTALL_STAGING = YES
 OPENSSL_DEPENDENCIES = zlib
