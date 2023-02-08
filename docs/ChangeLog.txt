@@ -23,11 +23,17 @@ Released @TBD@
 
 -- busybox, version 1.30.1, fixes with glibc 2.31 and security fix: CVE-2022-28391
 
+-- e2fsprogs, version bump to 1.46.6
+
 -- ethtool, version 6.1, enable kernel netlink support
+
+-- htop, version bump to 3.2.2
 
 -- kmod, version bump to 30
 
 -- libpcap, version bump to 1.10.3
+
+-- libsrtp, version bump to 2.5.0
 
 -- linux-firmware, version bump to 20210919, provide binary blobs for r8169 and tg3 NIC drivers
 
@@ -51,6 +57,8 @@ Released @TBD@
 
 ** Networking
 
+-- OpenSSL, version bump to 1.1.1t, security fixes: CVE-2023-0286, CVE-2023-0215, CVE-2022-4450, CVE-2022-4304
+
 -- wireguard, igb, and e1000e drivers are now native with the 5.10 kernel
 
 -- arnofw (AIF), tweak rule for allowing DHCPv6 requests, fix for Comcast/Xfinity users
@@ -62,6 +70,8 @@ Released @TBD@
 -- LibreTLS, version bump to 3.7.0
 
 -- msmtp, version bump to 1.8.23
+
+-- stunnel, version bump to 5.68
 
 -- tcpdump, version 4.99.3
 
