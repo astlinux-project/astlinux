@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LIBSRTP_VERSION = 2.4.2
+LIBSRTP_VERSION = 2.5.0
 LIBSRTP_SITE = https://github.com/cisco/libsrtp/archive/v$(LIBSRTP_VERSION)
 LIBSRTP_SOURCE = libsrtp-$(LIBSRTP_VERSION).tar.gz
 LIBSRTP_INSTALL_STAGING = YES
