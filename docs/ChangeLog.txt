@@ -59,7 +59,7 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.1.1t, security fixes: CVE-2023-0286, CVE-2023-0215, CVE-2022-4450, CVE-2022-4304
 
--- wireguard, igb, and e1000e drivers are now native with the 5.10 kernel
+-- wireguard, igb, igc and e1000e drivers are now native with the 5.10 kernel
 
 -- arnofw (AIF), tweak rule for allowing DHCPv6 requests, fix for Comcast/Xfinity users
 
@@ -87,6 +87,9 @@ Released @TBD@
 -- Asterisk 16.30.0 (version bump) and 18.16.0 (version bump)
 
 -- DAHDI, dahdi-linux 3.2.0 (version bump) and dahdi-tools 3.2.0 (version bump)
+   Note: Retain patch to support (wctdm24xxp) TDM800P/AEX800 and TDM410P/AEX410 PCI cards.
+   Note: Retain patch to support (wctdm) TDM400P PCI cards.
+   Note: Retain patch to support (wcfxo) X100P PCI cards.
 
 -- pjsip 2.12.1 (no change)
 
