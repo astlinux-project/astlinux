@@ -1,6 +1,6 @@
 --- monit-5.25.2/configure.ac.orig	2018-12-18 10:16:49.636344222 -0600
 +++ monit-5.25.2/configure.ac	2018-12-18 10:21:10.916071261 -0600
-@@ -478,14 +478,7 @@
+@@ -477,14 +477,7 @@
  
  # Find the right directory to put the root-mode PID file in
  AC_MSG_CHECKING([pid file location])
