@@ -67,7 +67,7 @@ Released @TBD@
 
 -- iproute2 (ip, tc, bridge, etc.) version bump to 6.0.0
 
--- libcurl (curl) version bump to 7.87.0, security fixes: CVE-2022-43551, CVE-2022-43552
+-- libcurl (curl) version bump to 7.88.0, security fixes: CVE-2022-43551, CVE-2022-43552, CVE-2023-23914, CVE-2023-23915, CVE-2023-23916
 
 -- LibreTLS, version bump to 3.7.0
 
