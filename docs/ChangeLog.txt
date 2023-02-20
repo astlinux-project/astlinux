@@ -39,6 +39,8 @@ Released @TBD@
 
 -- Monit, version bump to 5.33.0
 
+-- php, version 7.2.34, add security fixes: CVE-2023-0567, CVE-2023-0568, CVE-2023-0662
+
 -- rng-tools, version 6.5, jitterentropy version bump to 3.4.1
 
 -- sqlite, version bump to 3.40.1
