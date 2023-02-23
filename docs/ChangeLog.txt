@@ -47,7 +47,11 @@ Released @TBD@
 
 -- sudo, version 1.8.32, add security fix: CVE-2023-22809
 
+-- system-vendor, update system-vendor.ids
+
 -- tiff, version bump to 4.5.0, security fixes: many
+
+-- upgrade-run-image, now propagates the processor.max_cstate=1 kernel option on upgrades.
 
 -- util-linux, version 2.33.2, hwclock: make glibc 2.31 compatible
 
@@ -69,7 +73,7 @@ Released @TBD@
 
 -- iproute2 (ip, tc, bridge, etc.) version bump to 6.0.0
 
--- libcurl (curl) version bump to 7.88.0, security fixes: CVE-2022-43551, CVE-2022-43552, CVE-2023-23914, CVE-2023-23915, CVE-2023-23916
+-- libcurl (curl) version bump to 7.88.1, security fixes: CVE-2022-43551, CVE-2022-43552, CVE-2023-23914, CVE-2023-23915, CVE-2023-23916
 
 -- LibreTLS, version bump to 3.7.0
 
