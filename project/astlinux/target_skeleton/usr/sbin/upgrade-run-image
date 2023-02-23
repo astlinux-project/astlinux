@@ -90,7 +90,7 @@ merge_kcmd()
   unset IFS
   for i in $old_kcmd; do
     case $i in
-      noram|rootdelay=*|reboot=*)
+      noram|rootdelay=*|reboot=*|processor.max_cstate=*)
         if ! echo " $new_kcmd " | grep -q " $i "; then
           merge="$merge${merge:+ }$i"
         fi
