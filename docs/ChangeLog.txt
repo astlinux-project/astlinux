@@ -43,6 +43,8 @@ Released @TBD@
 
 -- rng-tools, version 6.5, jitterentropy version bump to 3.4.1
 
+-- set-kcmd-cstate, new command to manage whether 'processor.max_cstate=1' is passed to the kernel or not (default).
+
 -- sqlite, version bump to 3.40.1
 
 -- sudo, version 1.8.32, add security fix: CVE-2023-22809
