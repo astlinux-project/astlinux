@@ -1,0 +1,151 @@
+#!/bin/bash
+
+action="$1"
+
+help()
+{
+  echo "
+|
+| set-kcmd-cstate disable
+|   Pass processor.max_cstate=1 to the kernel to disable deeper C-states.
+|
+| set-kcmd-cstate default
+|   Only the BIOS controls if C-states are used and how deep.
+|
+| set-kcmd-cstate show
+|   Display current settings
+|
+"
+}
+
+extra_help()
+{
+  echo "
+| C-states control the sleep levels that a CPU core may enter when it is inactive (idle).
+| C-states are numbered starting with C0 (the shallowest state where the core is totally awake
+| and executing instructions) and go to C6 (the deepest idle state where a core is powered off).
+|
+| You may want to control C-states to tune your system for latency versus performance.
+| Putting cores to sleep takes time, and although a sleeping core allows more headroom for another core
+| to boost to a higher frequency, it takes time for that sleeping core to wake back up and perform work.
+| For example, if a core that is assigned to handle network packet interrupts is asleep, there may be a delay
+| in servicing that interrupt. You can configure the system to not use deeper C-states, which reduces the
+| processor reaction latency, but that in turn also reduces the headroom available to other cores for Turbo Boost.
+"
+}
+
+usage()
+{
+  echo "Usage: set-kcmd-cstate show|default|disable|help"
+  exit 1
+}
+
+mount_oldroot_cdrom() {
+  if mount | grep -q "/oldroot/cdrom"; then
+    BASE=/oldroot/cdrom
+  else
+    if [ -x /sbin/findfs ]; then
+      LABEL=`/sbin/findfs LABEL=RUNNIX`
+      if [ -n "$LABEL" ]; then
+        mount -t vfat -o ro "$LABEL" /oldroot/cdrom
+      fi
+    fi
+    if mount | grep -q "/oldroot/cdrom"; then
+      BASE=/oldroot/cdrom
+    else
+      return 1
+    fi
+  fi
+  return 0
+}
+
+show()
+{
+  local file
+
+  if ! mount_oldroot_cdrom; then
+    echo "set-kcmd-cstate: unable to find Runnix partition." >&2
+    exit 1
+  fi
+
+  if [ -f $BASE/os/ver ]; then
+    VER="$(cat $BASE/os/ver)"
+  else
+    echo "set-kcmd-cstate: unable to find AstLinux version." >&2
+    exit 1
+  fi
+
+  # Read current .run.conf file
+  file="$BASE/os/$VER.run.conf"
+  if grep -q '^KCMD=.* processor.max_cstate=' "$file"; then
+    echo "C-states are at 'disable' state. Passing processor.max_cstate=1 to the kernel to disable deeper C-states."
+  else
+    echo "C-states are at 'default' state. The BIOS controls if C-states are used and how deep."
+  fi
+}
+
+set_cstate()
+{
+  local disable="$1" file
+
+  if ! mount_oldroot_cdrom; then
+    echo "set-kcmd-cstate: unable to find Runnix partition." >&2
+    exit 1
+  fi
+
+  if ! mount -o rw,remount /oldroot/cdrom >/dev/null; then
+    echo "set-kcmd-cstate: unable to remount 'rw'." >&2
+    exit 1
+  fi
+
+  # Edit any .run.conf files
+  for file in $(ls -1 $BASE/os/*.run.conf); do
+    if [ "$disable" = "disable" ]; then
+      if ! grep -q '^KCMD=.* processor.max_cstate=' "$file"; then
+        sed -i -r -e "/^KCMD=/ s/( astlive )/\1processor.max_cstate=1 /" "$file"
+      fi
+    else
+      if grep -q '^KCMD=.* processor.max_cstate=' "$file"; then
+        sed -i -r -e "/^KCMD=/ s/ +processor.max_cstate=[0-9]+( *)/\1/" "$file"
+      fi
+    fi
+  done
+
+  mount -o ro,remount /oldroot/cdrom >/dev/null
+}
+
+case $action in
+
+  show)
+    show
+    ;;
+
+  default)
+    set_cstate $action
+    show
+    ;;
+
+  disable)
+    set_cstate $action
+    show
+    ;;
+
+  help)
+    extra_help
+    help
+    usage
+    ;;
+
+  '')
+    extra_help
+    usage
+    ;;
+
+  *)
+    usage
+    ;;
+
+esac
+
+exit 0
+
