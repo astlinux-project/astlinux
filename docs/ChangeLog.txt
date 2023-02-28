@@ -51,7 +51,7 @@ Released @TBD@
 
 -- system-vendor, update system-vendor.ids
 
--- tiff, version bump to 4.5.0, security fixes: many
+-- tiff, version bump to 4.5.0, security fixes: many, add patch for CVE-2022-48281
 
 -- upgrade-run-image, now propagates the processor.max_cstate=1 kernel option on upgrades.
 
@@ -71,7 +71,7 @@ Released @TBD@
 
 -- wireguard, igb, igc and e1000e drivers are now native with the 5.10 kernel
 
--- arnofw (AIF), tweak rule for allowing DHCPv6 requests, fix for Comcast/Xfinity users
+-- arnofw (AIF), version bump to 2.0.2-08-astlinux, tweak rule for allowing DHCPv6 requests, fix for Comcast/Xfinity users
 
 -- iproute2 (ip, tc, bridge, etc.) version bump to 6.0.0
 
