@@ -1,0 +1,37 @@
+From 576b950f6c3b1f7d8d32d9e5c3e6ec053e393765 Mon Sep 17 00:00:00 2001
+From: Antonio Terceiro <terceiro@debian.org>
+Date: Sun, 18 Aug 2019 17:30:32 -0300
+Subject: [PATCH] lxc-attach: make sure exit status of command is returned
+
+Commit ae68cad763d5b39a6a9e51de2acd1ad128b720ca introduced a regression that
+makes lxc-attach ignore the exit status of the executed command. This was first
+identified in 3.0.4 LTS, while it worked on 3.0.3.
+
+  # lxc-attach --version
+  3.0.4
+  # lxc-attach -n test false; echo $?
+  0
+
+Signed-off-by: Antonio Terceiro <terceiro@debian.org>
+Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=934983
+---
+ src/lxc/tools/lxc_attach.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/src/lxc/tools/lxc_attach.c b/src/lxc/tools/lxc_attach.c
+index 917cca2821..c3e1e6182a 100644
+--- a/src/lxc/tools/lxc_attach.c
++++ b/src/lxc/tools/lxc_attach.c
+@@ -385,10 +385,9 @@ int main(int argc, char *argv[])
+ 		ret = lxc_wait_for_pid_status(pid);
+ 		if (ret < 0)
+ 			goto out;
+-
+-		if (WIFEXITED(ret))
+-			wexit = WEXITSTATUS(ret);
+ 	}
++	if (WIFEXITED(ret))
++		wexit = WEXITSTATUS(ret);
+ 
+ out:
+ 	lxc_container_put(c);
