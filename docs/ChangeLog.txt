@@ -10,11 +10,17 @@ Additions for AstLinux 1.5.0:
 
 Released @TBD@
 
+** IMPORTANT NOTICE
+
+-- Existing AstLinux installs created before 1.5.0 can be upgraded to 1.5.0 (and downgraded back) without issue.
+   New AstLinux installs created with 1.5.0 can not run versions before 1.5.0 since the newly created ext4 partitions
+   contain filesystem features not understood by the previous ext2 filesystem driver.
+
 ** System
 
 -- Linux Kernel 5.10.162 (major version bump), security and bug fixes.
 
--- RUNNIX, version bump to runnix-0.6.13b (test version), with Linux Kernel 5.10.158
+-- RUNNIX, version bump to runnix-0.6.14, with Linux Kernel 5.10.162, e2fsprogs 1.46.6
    == gnu-efi, version bump to 3.0.15
    == memtest, remove native support.  Boot via USB with Memtest86+ if needed.
 
