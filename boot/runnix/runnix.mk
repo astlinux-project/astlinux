@@ -4,10 +4,9 @@
 #
 #############################################################
 
-RUNNIX_VERSION = 0.6.13b
+RUNNIX_VERSION = 0.6.14
 RUNNIX_SOURCE = runnix-$(RUNNIX_VERSION).tar.gz
-#RUNNIX_SITE = https://astlinux-project.org/mirror/runnix6
-RUNNIX_SITE = https://lonnie.abelbeck.com/runnix-efi
+RUNNIX_SITE = https://astlinux-project.org/mirror/runnix6
 RUNNIX_DEPENDENCIES = host-fdisk
 
 RUNFS_DIR = $(BUILD_DIR)/runfs
