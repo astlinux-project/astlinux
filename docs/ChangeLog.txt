@@ -107,7 +107,7 @@ Released @TBD@
    Note: Retain patch to support (wctdm) TDM400P PCI cards.
    Note: Retain patch to support (wcfxo) X100P PCI cards.
 
--- pjsip 2.12.1 (no change)
+-- pjsip 2.12.1 (no change), patch security fixes: CVE-2022-23537, CVE-2022-23547
 
 -- neon, version bump to 0.32.5, used for Asterisk Calendar Support
 
