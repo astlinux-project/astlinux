@@ -113,6 +113,8 @@ Released @TBD@
 
 ** Web Interface
 
+-- Edit tab, shell syntax, support bash here-string
+
 -- Update Copyright (c) 2004-2023
 
 
