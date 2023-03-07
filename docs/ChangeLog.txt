@@ -12,9 +12,9 @@ Released @TBD@
 
 ** IMPORTANT NOTICE
 
--- Existing AstLinux installs created before 1.5.0 can be upgraded to 1.5.0 (and downgraded back) without issue.
-   New AstLinux installs created with 1.5.0 can not run versions before 1.5.0 since the newly created ext4 partitions
-   contain filesystem features not understood by the previous ext2 filesystem driver.
+-- Existing AstLinux installs created before 1.5.0 can be upgraded to 1.5.0 (or later) and downgraded back without issue.
+   New AstLinux installs created with 1.5.0 (or later) can not run versions before 1.5.0 since the newly created
+   ext4 partitions contain filesystem features not understood by the previous ext2 filesystem driver.
 
 ** System
 
