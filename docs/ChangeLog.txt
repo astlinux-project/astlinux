@@ -8,7 +8,7 @@
 Additions for AstLinux 1.5.0:
 =============================
 
-Released @TBD@
+Released 2023-03-08
 
 ** IMPORTANT NOTICE
 
