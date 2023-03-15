@@ -9,7 +9,7 @@ ASTERISK_VERSION := 16.30.0
 ASTERISK_LABEL :=
 else
  ifeq ($(BR2_PACKAGE_ASTERISK_v18),y)
-ASTERISK_VERSION := 18.16.0
+ASTERISK_VERSION := 18.17.0
 ASTERISK_LABEL :=
  else
 ASTERISK_VERSION := 13.38.3
@@ -188,6 +188,8 @@ ASTERISK_EXTRAS+=pjsip
 ASTERISK_CONFIGURE_ARGS+= \
                         --without-pjproject-bundled \
                         --with-pjproject="$(STAGING_DIR)/usr"
+ASTERISK_CONFIGURE_ENV+= \
+			PJSIP_SOURCE_DIR="$(BUILD_DIR)/pjsip-$(shell sed -n -r -e 's/^PJSIP_VERSION *= *([0-9.]+).*$$/\1/p' package/pjsip/pjsip.mk)"
 else
 ASTERISK_CONFIGURE_ARGS+= \
                         --without-pjproject-bundled \
