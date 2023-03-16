@@ -4,7 +4,7 @@
 #
 #############################################################
 
-ETHTOOL_VERSION = 6.1
+ETHTOOL_VERSION = 6.2
 ETHTOOL_SITE = $(BR2_KERNEL_MIRROR)/software/network/ethtool
 
 ETHTOOL_DEPENDENCIES = host-pkg-config
