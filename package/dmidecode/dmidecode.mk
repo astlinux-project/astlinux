@@ -4,8 +4,8 @@
 #
 #############################################################
 
-DMIDECODE_VERSION = 3.4
-DMIDECODE_SITE = https://download.savannah.gnu.org/releases/dmidecode
+DMIDECODE_VERSION = 3.5
+DMIDECODE_SITE = https://download-mirror.savannah.gnu.org/releases/dmidecode
 DMIDECODE_SOURCE = dmidecode-$(DMIDECODE_VERSION).tar.xz
 
 define DMIDECODE_BUILD_CMDS

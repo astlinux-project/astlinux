@@ -6,5 +6,5 @@ config BR2_PACKAGE_DMIDECODE
 	  as described in your system BIOS according to the SMBIOS/DMI
 	  standard.
 
-	  http://www.nongnu.org/dmidecode/
+	  https://www.nongnu.org/dmidecode/
 
