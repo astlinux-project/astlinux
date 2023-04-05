@@ -43,7 +43,8 @@ Released @TBD@
 -- Asterisk 13.38.3 ('13se' no change)
    Last Asterisk 13.x "Legacy" version, built --without-pjproject
 
--- Asterisk 16.30.0 (no change) and 18.17.0 (version bump)
+-- Asterisk 16.30.0 (no change) and 18.17.1 (version bump)
+   Add Asterisk 16.x pjsip_pubsub-fixes-for-pjsip-2.13 patch
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
 
