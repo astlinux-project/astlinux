@@ -16,11 +16,17 @@ Released @TBD@
 
 -- ethtool, version bump to 6.2
 
+-- libpcap, version bump to 1.10.4
+
 -- sqlite, version bump to 3.41.2
 
 -- strace, version bump to 6.2
 
 -- system-vendor, update system-vendor.ids
+
+-- zabbix, version bump to 4.0.45
+
+-- Time Zone Database update, tzdata2023c and php-timezonedb-2023.3
 
 -- (Custom Build Only) dmidecode, version bump to 3.5
 
@@ -35,6 +41,10 @@ Released @TBD@
 -- libcurl (curl) version bump to 8.0.1, security fixes: CVE-2023-27537, CVE-2023-27536, CVE-2023-27535, CVE-2023-27534, CVE-2023-27533
 
 -- luasec, version bump to 1.3.1
+
+-- sngrep, version bump to 1.7.0
+
+-- tcpdump, version 4.99.4
 
 -- whois, version bump to 5.5.16
 
