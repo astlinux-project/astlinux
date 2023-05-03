@@ -4,7 +4,7 @@
 #
 #############################################################
 
-PCIUTILS_VERSION = 3.9.0
+PCIUTILS_VERSION = 3.10.0
 PCIUTILS_SITE = https://github.com/pciutils/pciutils/archive/v$(PCIUTILS_VERSION)
 PCIUTILS_SOURCE = pciutils-$(PCIUTILS_VERSION).tar.gz
 PCIUTILS_INSTALL_STAGING = YES
