@@ -12,13 +12,15 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.162
+-- Linux Kernel 5.10.178 (version bump), security and bug fixes.
 
 -- ethtool, version bump to 6.2
 
 -- libpcap, version bump to 1.10.4
 
 -- libxml2, version bump to 2.10.4, security fixes: CVE-2023-29469, CVE-2023-28484
+
+-- pciutils, version bump to 3.10.0
 
 -- sqlite, version bump to 3.41.2
 
