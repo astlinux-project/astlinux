@@ -38,6 +38,8 @@ Released @TBD@
 
 ** Networking
 
+-- dnsmasq, version 2.84, security fix: CVE-2023-28450
+
 -- iperf, version bump to 2.1.9
 
 -- iperf3, version bump to 3.13
@@ -50,7 +52,7 @@ Released @TBD@
 
 -- tcpdump, version 4.99.4
 
--- whois, version bump to 5.5.16
+-- whois, version bump to 5.5.17
 
 ** Asterisk
 
