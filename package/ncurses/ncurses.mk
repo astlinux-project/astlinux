@@ -4,7 +4,7 @@
 #
 #############################################################
 
-NCURSES_VERSION = 6.2
+NCURSES_VERSION = 6.4
 NCURSES_SOURCE = ncurses-$(NCURSES_VERSION).tar.gz
 NCURSES_SITE = https://invisible-mirror.net/archives/ncurses
 NCURSES_INSTALL_STAGING = YES
@@ -35,6 +35,7 @@ NCURSES_CONF_OPT = \
 	--without-gpm \
 	--disable-widec \
 	--disable-ext-colors \
+	--disable-root-environ \
 	--disable-static
 
 # Install after busybox for the full-blown versions
@@ -98,16 +99,6 @@ define NCURSES_INSTALL_TARGET_CMDS
 		$(INSTALL) -D -m 0644 $(STAGING_DIR)/usr/share/terminfo/$(t) \
 			$(TARGET_DIR)/usr/share/terminfo/$(t)
 	)
-endef
-
-#
-# On systems with an older version of tic, the installation of ncurses hangs
-# forever. To resolve the problem, build a static version of tic on host
-# ourselves, and use that during installation.
-#
-define HOST_NCURSES_BUILD_CMDS
-	$(HOST_MAKE_ENV) $(MAKE1) -C $(@D) sources
-	$(HOST_MAKE_ENV) $(MAKE) -C $(@D)/progs tic
 endef
 
 HOST_NCURSES_CONF_ENV = \

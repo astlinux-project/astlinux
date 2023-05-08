@@ -1,11 +1,19 @@
---- ncurses-6.2/misc/terminfo.src.orig	2020-02-18 14:32:23.224139080 -0600
-+++ ncurses-6.2/misc/terminfo.src	2020-02-18 14:34:31.727594416 -0600
-@@ -4513,7 +4513,7 @@
- # This version reflects the current xterm features.
- xterm-new|modern xterm terminal emulator,
+--- ncurses-6.4/misc/terminfo.src.orig	2023-05-07 13:52:15.596610434 -0500
++++ ncurses-6.4/misc/terminfo.src	2023-05-07 13:54:36.869494900 -0500
+@@ -4985,14 +4985,14 @@
+ xterm+nofkeys|building block for xterm fkey-variants,
  	npc,
--	kcbt=\E[Z, kent=\EOM, use=ecma+index, use=ansi+rep,
-+	kcbt=\E[Z, kent=\EOM, use=ecma+index,
- 	use=ecma+strikeout, use=xterm+keypad, use=vt420+lrmm,
- 	use=xterm+sm+1006, use=xterm+pcfkeys, use=xterm+tmux,
- 	use=xterm-basic,
+ 	kcbt=\E[Z, kent=\EOM, nel=\EE, use=ecma+index,
+-	use=ansi+rep, use=ecma+strikeout, use=vt420+lrmm,
++	use=ecma+strikeout, use=vt420+lrmm,
+ 	use=xterm+sm+1006, use=xterm+tmux, use=ecma+italics,
+ 	use=xterm+keypad, use=xterm-basic,
+ 
+ xterm-p370|xterm patch #370,
+ 	npc,
+ 	kcbt=\E[Z, kent=\EOM, nel=\EE, use=ecma+index,
+-	use=ansi+rep, use=ecma+strikeout, use=xterm+pcfkeys,
++	use=ecma+strikeout, use=xterm+pcfkeys,
+ 	use=xterm+nofkeys, use=bracketed+paste,
+ 
+ xterm-p371|xterm patch #371,

@@ -1,0 +1,19 @@
+Author: Sven Joachim <svenjoac@gmx.de>
+Description: Change the --disable-root-environ configure option behavior
+ By default, the --disable-root-environ option forbids program run by
+ the superuser to load custom terminfo entries.  This patch changes
+ that to only restrict programs running with elevated privileges,
+ matching the behavior of the --disable-setuid-environ option
+ introduced in the 20230423 upstream patchlevel.
+
+--- ncurses-6.4/ncurses/tinfo/access.c.orig	2023-05-07 17:23:17.536076274 -0500
++++ ncurses-6.4/ncurses/tinfo/access.c	2023-05-07 17:25:21.539606337 -0500
+@@ -215,8 +215,6 @@
+ 
+     if (is_elevated()) {
+ 	result = FALSE;
+-    } else if ((getuid() == ROOT_UID) || (geteuid() == ROOT_UID)) {
+-	result = FALSE;
+     }
+     return result;
+ }
