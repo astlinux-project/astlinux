@@ -20,6 +20,8 @@ Released @TBD@
 
 -- libxml2, version bump to 2.10.4, security fixes: CVE-2023-29469, CVE-2023-28484
 
+-- ncurses, version bump to 6.4, security fix: CVE-2023-29491 using --disable-root-environ build
+
 -- pciutils, version bump to 3.10.0
 
 -- sqlite, version bump to 3.41.2
