@@ -30,7 +30,11 @@ Released @TBD@
 
 -- system-vendor, update system-vendor.ids
 
--- zabbix, version bump to 4.0.45
+-- udev (eudev), version bump to 3.2.12
+
+-- zabbix, version bump to 4.0.46
+
+-- ca-certificates, update trusted root certificates 2023-05-30
 
 -- Time Zone Database update, tzdata2023c and php-timezonedb-2023.3
 
@@ -47,6 +51,8 @@ Released @TBD@
 -- iperf, version bump to 2.1.9
 
 -- iperf3, version bump to 3.13
+
+-- keepalived, version bump to 2.2.8
 
 -- libcurl (curl) version bump to 8.1.2, security fixes: CVE-2023-27537, CVE-2023-27536, CVE-2023-27535, CVE-2023-27534, CVE-2023-27533
                                                          CVE-2023-28319, CVE-2023-28320, CVE-2023-28321, CVE-2023-28322
