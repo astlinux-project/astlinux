@@ -1,0 +1,13 @@
+--- udev-3.2.12/rules/50-udev-default.rules.orig	2023-06-01 10:22:53.550811536 -0500
++++ udev-3.2.12/rules/50-udev-default.rules	2023-06-01 10:23:28.188988922 -0500
+@@ -39,8 +39,8 @@
+ SUBSYSTEM=="drm", KERNEL=="renderD*", GROUP="video", MODE="0666"
+ SUBSYSTEM=="kfd", GROUP="video", MODE="0666"
+ 
+-SUBSYSTEM=="misc", KERNEL=="sgx_enclave", GROUP="sgx", MODE="0660"
+-SUBSYSTEM=="misc", KERNEL=="sgx_vepc", GROUP="sgx", MODE="0660"
++#SUBSYSTEM=="misc", KERNEL=="sgx_enclave", GROUP="sgx", MODE="0660"
++#SUBSYSTEM=="misc", KERNEL=="sgx_vepc", GROUP="sgx", MODE="0660"
+ 
+ # When using static_node= with non-default permissions, also update
+ # tmpfiles.d/static-nodes-permissions.conf.in to keep permissions synchronized.
