@@ -4,7 +4,7 @@
 #
 #############################################################
 
-ZABBIX_VERSION = 4.0.45
+ZABBIX_VERSION = 4.0.46
 ZABBIX_SOURCE = zabbix-$(ZABBIX_VERSION).tar.gz
 ZABBIX_SITE = https://cdn.zabbix.com/zabbix/sources/stable/4.0
 
