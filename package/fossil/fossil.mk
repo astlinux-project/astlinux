@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-FOSSIL_VERSION = 2.10.2
+FOSSIL_VERSION = 2.22
 FOSSIL_SOURCE = fossil-src-$(FOSSIL_VERSION).tar.gz
 #FOSSIL_SITE = https://www.fossil-scm.org/fossil/uv
 FOSSIL_SITE = https://astlinux-project.org/files

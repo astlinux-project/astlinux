@@ -58,6 +58,8 @@ start()
 
 stop()
 {
+  local pid fossil_pids
+
   # Close any open fossil checkouts
   if [ -f /mnt/kd/.fslckout ]; then
     echo "Closing fossil checkout..."
@@ -69,6 +71,13 @@ stop()
 
     start-stop-daemon -K -q -n fossil -p $PIDFILE -s TERM
     rm -f $PIDFILE
+
+    # Terminate any remaining subprocesses
+    sleep 1
+    fossil_pids="$(pgrep -f '^/usr/bin/fossil ')"
+    for pid in $fossil_pids; do
+      kill $pid
+    done
   fi
 }
 

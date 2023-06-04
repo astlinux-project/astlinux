@@ -1,6 +1,6 @@
---- fossil-1.33/src/cgi.c.orig	2015-08-16 14:43:49.000000000 -0500
-+++ fossil-1.33/src/cgi.c	2015-08-16 15:14:28.000000000 -0500
-@@ -1525,6 +1525,12 @@
+--- fossil-2.22/src/cgi.c.orig	2023-06-02 13:07:36.184673568 -0500
++++ fossil-2.22/src/cgi.c	2023-06-02 13:10:45.912932271 -0500
+@@ -1995,6 +1995,12 @@
    if( zToken==0 ){
      malformed_request("malformed URL in HTTP header");
    }
@@ -13,30 +13,30 @@
    cgi_setenv("REQUEST_URI", zToken);
    cgi_setenv("SCRIPT_NAME", "");
    for(i=0; zToken[i] && zToken[i]!='?'; i++){}
---- fossil-1.33/src/main.c.orig	2015-08-17 10:47:53.000000000 -0500
-+++ fossil-1.33/src/main.c	2015-08-17 11:19:43.000000000 -0500
-@@ -1261,8 +1261,8 @@
+--- fossil-2.22/src/main.c.orig	2023-06-02 13:11:11.306483891 -0500
++++ fossil-2.22/src/main.c	2023-06-02 13:16:02.106112709 -0500
+@@ -1417,8 +1417,8 @@
      zCur = PD("SCRIPT_NAME","/");
      i = strlen(zCur);
      while( i>0 && zCur[i-1]=='/' ) i--;
 -    if( fossil_stricmp(zMode,"on")==0 ){
--      g.zBaseURL = mprintf("https://%s%.*s", zHost, i, zCur);
+-      g.zBaseURL = mprintf("https://%s%.*s", z, i, zCur);
 +    if( 1 ){  /* AstLinux */
-+      g.zBaseURL = mprintf("https://%s/admin/fossil%.*s", zHost, i, zCur);
-       g.zTop = &g.zBaseURL[8+strlen(zHost)];
++      g.zBaseURL = mprintf("https://%s/admin/fossil%.*s", z, i, zCur);
+       g.zTop = &g.zBaseURL[8+strlen(z)];
        g.zHttpsURL = g.zBaseURL;
      }else{
---- fossil-1.33/src/login.c.orig	2015-08-17 23:35:08.000000000 -0500
-+++ fossil-1.33/src/login.c	2015-08-17 23:47:02.000000000 -0500
-@@ -1429,9 +1429,9 @@
-     Blob redir;
+--- fossil-2.22/src/login.c.orig	2023-06-02 13:16:15.157346386 -0500
++++ fossil-2.22/src/login.c	2023-06-02 13:19:23.168243120 -0500
+@@ -1769,9 +1769,9 @@
      blob_init(&redir, 0, 0);
+     if( zPathInfo[0]=='/' ) zPathInfo++; /* skip leading slash */
      if( fossil_wants_https(1) ){
--      blob_appendf(&redir, "%s/login?g=%T", g.zHttpsURL, zUrl);
-+      blob_appendf(&redir, "%s/login?g=/admin/fossil%T", g.zHttpsURL, zUrl);
+-      blob_appendf(&redir, "%s/login?g=%T", g.zHttpsURL, zPathInfo);
++      blob_appendf(&redir, "%s/login?g=/admin/fossil%T", g.zHttpsURL, zPathInfo);
      }else{
--      blob_appendf(&redir, "%R/login?g=%T", zUrl);
-+      blob_appendf(&redir, "%R/login?g=/admin/fossil%T", zUrl);
+-      blob_appendf(&redir, "%R/login?g=%T", zPathInfo);
++      blob_appendf(&redir, "%R/login?g=/admin/fossil%T", zPathInfo);
      }
      if( zQS && zQS[0] ){
        blob_appendf(&redir, "%%3f%T", zQS);
