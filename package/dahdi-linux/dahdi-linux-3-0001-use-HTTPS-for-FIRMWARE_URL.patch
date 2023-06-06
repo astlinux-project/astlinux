@@ -1,0 +1,11 @@
+--- dahdi-linux-3.2.0/drivers/dahdi/firmware/Makefile.orig	2023-06-06 08:25:58.844213145 -0500
++++ dahdi-linux-3.2.0/drivers/dahdi/firmware/Makefile	2023-06-06 08:27:13.900092466 -0500
+@@ -40,7 +40,7 @@
+ A4A_VERSION:=a0017
+ A4B_VERSION:=d001e
+ 
+-FIRMWARE_URL:=http://downloads.digium.com/pub/telephony/firmware/releases
++FIRMWARE_URL:=https://downloads.digium.com/pub/telephony/firmware/releases
+ 
+ ALL_FIRMWARE=FIRMWARE-OCT6114-032 FIRMWARE-OCT6114-064 FIRMWARE-OCT6114-128 FIRMWARE-OCT6114-256
+ ALL_FIRMWARE+=FIRMWARE-TC400M FIRMWARE-HX8 FIRMWARE-VPMOCT032 FIRMWARE-TE820 FIRMWARE-TE133 FIRMWARE-TE134
