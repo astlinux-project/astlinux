@@ -1,0 +1,116 @@
+--- acme-2.9.0/acme.sh.orig	2021-06-02 07:53:41.000000000 -0500
++++ acme-2.9.0/acme.sh	2023-06-09 09:27:30.191051004 -0500
+@@ -2737,22 +2737,6 @@
+ 
+ }
+ 
+-_exec() {
+-  if [ -z "$_EXEC_TEMP_ERR" ]; then
+-    _EXEC_TEMP_ERR="$(_mktemp)"
+-  fi
+-
+-  if [ "$_EXEC_TEMP_ERR" ]; then
+-    eval "$@ 2>>$_EXEC_TEMP_ERR"
+-  else
+-    eval "$@"
+-  fi
+-}
+-
+-_exec_err() {
+-  [ "$_EXEC_TEMP_ERR" ] && _err "$(cat "$_EXEC_TEMP_ERR")" && echo "" >"$_EXEC_TEMP_ERR"
+-}
+-
+ _apachePath() {
+   _APACHECTL="apachectl"
+   if ! _exists apachectl; then
+@@ -2765,8 +2749,7 @@
+     fi
+   fi
+ 
+-  if ! _exec $_APACHECTL -V >/dev/null; then
+-    _exec_err
++  if ! $_APACHECTL -V >/dev/null; then
+     return 1
+   fi
+ 
+@@ -2818,8 +2801,7 @@
+ 
+   cat "$APACHE_CONF_BACKUP_DIR/$httpdconfname" >"$httpdconf"
+   _debug "Restored: $httpdconf."
+-  if ! _exec $_APACHECTL -t; then
+-    _exec_err
++  if ! $_APACHECTL -t; then
+     _err "Sorry, restore apache config error, please contact me."
+     return 1
+   fi
+@@ -2837,8 +2819,7 @@
+   #test the conf first
+   _info "Checking if there is an error in the apache config file before starting."
+ 
+-  if ! _exec "$_APACHECTL" -t >/dev/null; then
+-    _exec_err
++  if ! $_APACHECTL -t >/dev/null; then
+     _err "The apache config file has error, please fix it first, then try again."
+     _err "Don't worry, there is nothing changed to your system."
+     return 1
+@@ -2899,8 +2880,7 @@
+     chmod 755 "$ACME_DIR"
+   fi
+ 
+-  if ! _exec "$_APACHECTL" graceful; then
+-    _exec_err
++  if ! $_APACHECTL graceful; then
+     _err "$_APACHECTL  graceful error, please contact me."
+     _restoreApache
+     return 1
+@@ -2985,8 +2965,7 @@
+     return 1
+   fi
+   _info "Check the nginx conf before setting up."
+-  if ! _exec "nginx -t" >/dev/null; then
+-    _exec_err
++  if ! nginx -t >/dev/null; then
+     return 1
+   fi
+ 
+@@ -3013,16 +2992,14 @@
+   fi
+   _debug3 "Modified config:$(cat $FOUND_REAL_NGINX_CONF)"
+   _info "nginx conf is done, let's check it again."
+-  if ! _exec "nginx -t" >/dev/null; then
+-    _exec_err
++  if ! nginx -t >/dev/null; then
+     _err "It seems that nginx conf was broken, let's restore."
+     cat "$_backup_conf" >"$FOUND_REAL_NGINX_CONF"
+     return 1
+   fi
+ 
+   _info "Reload nginx"
+-  if ! _exec "nginx -s reload" >/dev/null; then
+-    _exec_err
++  if ! nginx -s reload >/dev/null; then
+     _err "It seems that nginx reload error, let's restore."
+     cat "$_backup_conf" >"$FOUND_REAL_NGINX_CONF"
+     return 1
+@@ -3147,8 +3124,7 @@
+   done
+ 
+   _info "Reload nginx"
+-  if ! _exec "nginx -s reload" >/dev/null; then
+-    _exec_err
++  if ! nginx -s reload >/dev/null; then
+     _err "It seems that nginx reload error, please report bug."
+     return 1
+   fi
+@@ -4633,10 +4609,7 @@
+         if [ ! "$usingApache" ]; then
+           if webroot_owner=$(_stat "$_currentRoot"); then
+             _debug "Changing owner/group of .well-known to $webroot_owner"
+-            if ! _exec "chown -R \"$webroot_owner\" \"$_currentRoot/.well-known\""; then
+-              _debug "$(cat "$_EXEC_TEMP_ERR")"
+-              _exec_err >/dev/null 2>&1
+-            fi
++            chown -R $webroot_owner "$_currentRoot/.well-known"
+           else
+             _debug "not changing owner/group of webroot"
+           fi
