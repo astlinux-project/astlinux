@@ -40,6 +40,8 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2023-05-30
 
+-- mac2vendor, oui.txt database snapshot 2023-06-10
+
 -- Time Zone Database update, tzdata2023c and php-timezonedb-2023.3
 
 -- (Custom Build Only) dmidecode, version bump to 3.5
@@ -83,7 +85,7 @@ Released @TBD@
 
 ** Web Interface
 
--- no change
+-- Status tab, updated "Show Licenses" information.
 
 
 Additions for AstLinux 1.5.0:
