@@ -23,13 +23,13 @@ PHP~Copyright (c) 1999-2021 The PHP Group. All rights reserved.
 vsftpd~Copyright (c) 2001-2021 Daniel Jacobowitz.
 lighttpd~Copyright (c) 2004-2018 Jan Kneschke.
 msmtp~Copyright (c) 2000-2023 Martin Lambers.
-libxml2~Copyright (c) 1998-2022 Daniel Veillard. All Rights Reserved.
+libxml2~Copyright (c) 1998-2023 Daniel Veillard. All Rights Reserved.
 libtiff~Copyright (c) 1988-2022 Sam Leffler, Copyright (c) 1991-1997 Silicon Graphics, Inc.
 libjpeg~Copyright (c) 1991-2022 Thomas G. Lane, Guido Vollbeding.
 iptables~Copyright (c) 2000-2019 the netfilter coreteam.
 ipset~Copyright (c) 2003-2018 Jozsef Kadlecsik.
 curl~Copyright (c) 1996-2023 Daniel Stenberg.
-zabbix~Copyright (c) 2000-2022 SIA Zabbix.
+zabbix~Copyright (c) 2000-2023 SIA Zabbix.
 zlib~Copyright (c) 1995-2017 Jean-loup Gailly.
 SILK CODEC~Copyright (c) 2010-2016 Skype and/or Microsoft. All rights reserved. Licensed via Digium, Inc.
 SpanDSP~Copyright (c) 2003-2015 Steve Underwood. All rights reserved.
@@ -52,7 +52,7 @@ smartmontools~Copyright (c) 2002-2020 Bruce Allen, Christian Franke, et al.
 Monit~Copyright (c) 2001-2023 Tildeslash. All rights reserved.
 sqlite~Copyright (c) 1995-2023 SQLite Consortium.
 sqliteodbc~Copyright (c) 2001-2020 Christian Werner.
-Fossil~Copyright (c) 2007-2019 D. Richard Hipp. All rights reserved.
+Fossil~Copyright (c) 2007-2023 D. Richard Hipp. All rights reserved.
 BusyBox~Copyright (c) 1998-2019 Erik Andersen, Rob Landley, Denys Vlasenko, et al.
 dhcp6c~Copyright (c) 1998-2008 WIDE Project with 2018 Debian patches.
 htop~Copyright (c) 2020-2023 htop dev team, Copyright (c) 2004-2019 Hisham Muhammad.
@@ -61,7 +61,7 @@ avahi~Copyright (c) 2004-2019 Lennart Poettering, Trent Lloyd, Avahi developers.
 Linux Kernel~Copyright (c) 1997-2023 The Linux Kernel Organization, Inc.; Linux is a Registered Trademark of Linus Torvalds.
 whois~Copyright (c) 1999-2023 Marco d'Itri.
 strongSwan~Copyright (c) 2006-2017 Andreas Steffen, Tobias Brunner, et al.
-chrony~Copyright (c) 1997-2021 Richard P. Curnow, Miroslav Lichvar.
+chrony~Copyright (c) 1997-2022 Richard P. Curnow, Miroslav Lichvar.
 gntp-send~Copyright (c) 2009-2016 Yasuhiro Matsumoto.
 netcalc~Copyright (c) 2003-2020 Simon Ekstrand, Joachim Nilsson.
 acme.sh~Copyright (c) 2016-2021 Neilpang.
@@ -69,7 +69,7 @@ Tarsnap~Copyright (c) 2006-2022 Tarsnap Backup Inc. All rights reserved.
 empty~Copyright (c) 2005-2015 Mikhail E. Zakharov.
 WireGuard~Copyright (c) 2015-2021 Jason A. Donenfeld. All rights reserved.
 unbound~Copyright (c) 2007-2023 NLnet Labs. All rights reserved.
-keepalived~Copyright (c) 2001-2022 Alexandre Cassen.
+keepalived~Copyright (c) 2001-2023 Alexandre Cassen.
 rng-tools~Copyright (c) 2001-2018 Philipp Rumpf, Neil Horman, et al.
 jitterentropy~Copyright (c) 2014-2022 Stephan Mueller.
 libpng~Copyright (c) 1998-2019 Glenn Randers-Pehrson, et al.
