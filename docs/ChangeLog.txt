@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.178 (version bump), security and bug fixes.
+-- Linux Kernel 5.10.179 (version bump), security and bug fixes.
 
 -- acme-client, version 2.9.0, add upstream patch to fix remote exec CVE
 
