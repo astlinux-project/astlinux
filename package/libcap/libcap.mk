@@ -4,49 +4,53 @@
 #
 #############################################################
 
-LIBCAP_VERSION = 2.25
+LIBCAP_VERSION = 2.69
 LIBCAP_SITE = https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2
 LIBCAP_SOURCE = libcap-$(LIBCAP_VERSION).tar.xz
-LIBCAP_DEPENDENCIES = host-libcap
 
-LIBCAP_DEPENDENCIES = host-libcap host-gperf
+LIBCAP_DEPENDENCIES = host-gperf
 LIBCAP_INSTALL_STAGING = YES
 
 HOST_LIBCAP_DEPENDENCIES = host-gperf
 
-LIBCAP_MAKE_TARGET = all
-LIBCAP_MAKE_INSTALL_TARGET = install
-
 LIBCAP_MAKE_FLAGS = \
+	CROSS_COMPILE="$(TARGET_CROSS)" \
 	BUILD_CC="$(HOSTCC)" \
-	BUILD_CFLAGS="$(HOST_CFLAGS)"
-
+	BUILD_CFLAGS="$(HOST_CFLAGS)" \
+	lib=lib \
+	prefix=/usr \
+	SHARED=$(if $(BR2_PREFER_STATIC_LIB),,yes) \
+	PTHREADS=$(if $(BR2_TOOLCHAIN_HAS_THREADS),yes,)
 
 define LIBCAP_BUILD_CMDS
 	$(TARGET_MAKE_ENV) $(TARGET_CONFIGURE_OPTS) $(MAKE) -C $(@D)/libcap \
-		$(LIBCAP_MAKE_FLAGS) $(LIBCAP_MAKE_TARGET)
+		$(LIBCAP_MAKE_FLAGS) all
 endef
 
 define LIBCAP_INSTALL_STAGING_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D)/libcap $(LIBCAP_MAKE_FLAGS) \
-		DESTDIR=$(STAGING_DIR) prefix=/usr lib=lib $(LIBCAP_MAKE_INSTALL_TARGET)
+		DESTDIR=$(STAGING_DIR) install
 endef
 
 define LIBCAP_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D)/libcap $(LIBCAP_MAKE_FLAGS) \
-		DESTDIR=$(TARGET_DIR) prefix=/usr lib=lib $(LIBCAP_MAKE_INSTALL_TARGET)
-	## Make executable so it is stripped later (not needed or desired)
-	## chmod 755 $(TARGET_DIR)/usr/lib/libcap.so.$(LIBCAP_VERSION)
+		DESTDIR=$(TARGET_DIR) install
 endef
+
+HOST_LIBCAP_MAKE_FLAGS = \
+	DYNAMIC=yes \
+	GOLANG=no \
+	lib=lib \
+	prefix=$(HOST_DIR) \
+	RAISE_SETFCAP=no
 
 define HOST_LIBCAP_BUILD_CMDS
 	$(HOST_MAKE_ENV) $(HOST_CONFIGURE_OPTS) $(MAKE) -C $(@D)\
-		RAISE_SETFCAP=no
+		$(HOST_LIBCAP_MAKE_FLAGS)
 endef
 
 define HOST_LIBCAP_INSTALL_CMDS
-	$(HOST_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR=$(HOST_DIR) \
-		RAISE_SETFCAP=no prefix=/usr lib=lib install
+	$(HOST_MAKE_ENV) $(MAKE) -C $(@D) $(HOST_LIBCAP_MAKE_FLAGS) install
 endef
 
 $(eval $(call GENTARGETS,package,libcap))
