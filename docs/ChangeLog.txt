@@ -20,6 +20,8 @@ Released @TBD@
 
 -- Fossil, (major) version bump to 2.22
 
+-- libcap, version bump to 2.69, security fixes: CVE-2023-2602, CVE-2023-2603
+
 -- libpcap, version bump to 1.10.4
 
 -- libxml2, version bump to 2.10.4, security fixes: CVE-2023-29469, CVE-2023-28484
