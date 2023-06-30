@@ -42,7 +42,7 @@ Released @TBD@
 
 -- udev (eudev), version bump to 3.2.12
 
--- zabbix, version bump to 4.0.46
+-- zabbix, version bump to 4.0.47, security fix: CVE-2023-29456
 
 -- ca-certificates, update trusted root certificates 2023-05-30
 
