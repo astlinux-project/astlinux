@@ -6,8 +6,7 @@ This is the buildsystem for the AstLinux distribution.
 -------------------------------------------------------------------------------
 Linux Build System:
 
-Building AstLinux requires using some version of Debian/Ubuntu or RHEL/CentOS Linux.
-It is recommended using a version of these distros in a Virtual Machine (VM).
+Building AstLinux requires using some version of Debian Linux.
 A 64-bit, x86_64 build system is required.
 
 Using a Virtual Machine is suggested, minimal recommended configuration:
@@ -24,7 +23,7 @@ Use a “Minimal Install” of your Linux distro, dedicated to building AstLinux
 
 Prerequisites:
 
-To build Astlinux you first need to install some packages, depending on your Linux distribution:
+To build Astlinux you first need to install some packages:
 
 - Package List: https://doc.astlinux-project.org/devdoc:packages
 
