@@ -8,7 +8,7 @@
 Additions for AstLinux 1.5.1:
 =============================
 
-Released @TBD@
+Released 2023-07-04
 
 ** System
 
