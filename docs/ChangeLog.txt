@@ -10,6 +10,31 @@ Additions for AstLinux 1.5.2:
 
 Released @TBD@
 
+** System
+
+-- Linux Kernel 5.10.179
+
+-- libxml2, version bump to 2.11.4
+
+** Networking
+
+-- (no change)
+
+** Asterisk
+
+-- Asterisk 13.38.3 ('13se' no change)
+   Last Asterisk 13.x "Legacy" version, built --without-pjproject
+
+-- Asterisk 16.30.0 (no change) and 18.18.0 (no change)
+
+-- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
+
+-- pjsip 2.13.1 (version bump)
+
+** Web Interface
+
+-- (no change)
+
 
 Additions for AstLinux 1.5.1:
 =============================
