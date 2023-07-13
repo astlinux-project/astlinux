@@ -14,11 +14,19 @@ Released @TBD@
 
 -- Linux Kernel 5.10.179
 
+-- ethtool, version bump to 6.4
+
+-- libpng, version bump to 1.6.40
+
 -- libxml2, version bump to 2.11.4
+
+-- strace, version bump to 6.4
 
 ** Networking
 
--- (no change)
+-- chrony, version bump to 4.4-pre2
+
+-- msmtp, version bump to 1.8.24
 
 ** Asterisk
 
@@ -33,7 +41,7 @@ Released @TBD@
 
 ** Web Interface
 
--- (no change)
+-- Status tab, support Asterisk 18 output lines greater than 256 characters.
 
 
 Additions for AstLinux 1.5.1:
