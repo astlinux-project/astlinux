@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2021 Lonnie Abelbeck
+// Copyright (C) 2008-2023 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -712,7 +712,7 @@ function asteriskMGR($cmd, $fname) {
   if ($fname !== '') {
     if (($fp = @fopen($fname,"wb")) !== FALSE) {
       while (! feof($socket) && ! $info['timed_out']) {
-        $line = fgets($socket, 256);
+        $line = fgets($socket, 1024);
         $info = stream_get_meta_data($socket);
         if (strncasecmp($line, '--END COMMAND--', 15) == 0) {
           break;
