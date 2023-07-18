@@ -26,7 +26,11 @@ Released @TBD@
 
 -- chrony, version bump to 4.4-pre2
 
+-- iperf3, version bump to 3.14, security fix: CVE-2023-38403
+
 -- msmtp, version bump to 1.8.24
+
+-- stunnel, version bump to 5.70
 
 ** Asterisk
 
