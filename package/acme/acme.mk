@@ -17,7 +17,7 @@ ACME_DNSAPI_FILES = \
 	dns_dreamhost.sh dns_duckdns.sh dns_durabledns.sh dns_dyn.sh dns_dynu.sh \
 	dns_easydns.sh dns_euserv.sh dns_exoscale.sh dns_freedns.sh dns_gandi_livedns.sh \
 	dns_gd.sh dns_gdnsdk.sh dns_he.sh dns_hexonet.sh dns_hostingde.sh dns_infoblox.sh \
-	dns_internetbs.sh dns_jd.sh dns_kinghost.sh dns_leaseweb.sh dns_linode.sh \
+	dns_internetbs.sh dns_ipv64.sh dns_jd.sh dns_kinghost.sh dns_leaseweb.sh dns_linode.sh \
 	dns_linode_v4.sh dns_loopia.sh dns_lua.sh dns_me.sh dns_miab.sh \
 	dns_misaka.sh dns_mydnsjp.sh dns_namecheap.sh dns_namecom.sh dns_namesilo.sh \
 	dns_nederhost.sh dns_neodigit.sh dns_netcup.sh dns_nic.sh dns_nsd.sh \
