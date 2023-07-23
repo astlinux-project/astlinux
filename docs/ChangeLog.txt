@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 5.10.179
 
+-- acme-client, version 2.9.0, add 'dns_ipv64' support from upstream
+
 -- ethtool, version bump to 6.4
 
 -- libpng, version bump to 1.6.40
@@ -26,18 +28,24 @@ Released @TBD@
 
 -- chrony, version bump to 4.4-pre2
 
+-- ddclient, ddclient-curl version bump to 3.8.3-08
+
 -- iperf3, version bump to 3.14, security fix: CVE-2023-38403
+
+-- libcurl (curl) version bump to 8.2.0, security fixes: CVE-2023-32001
 
 -- msmtp, version bump to 1.8.24
 
 -- stunnel, version bump to 5.70
+
+-- whois, version bump to 5.5.18
 
 ** Asterisk
 
 -- Asterisk 13.38.3 ('13se' no change)
    Last Asterisk 13.x "Legacy" version, built --without-pjproject
 
--- Asterisk 16.30.0 (no change) and 18.18.0 (no change)
+-- Asterisk 16.30.0 (no change) and 18.19.0 (version bump)
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
 
