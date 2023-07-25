@@ -4,15 +4,15 @@
 #
 ##############################################################
 
-ifeq ($(BR2_PACKAGE_ASTERISK_v16),y)
-ASTERISK_VERSION := 16.30.0
-ASTERISK_LABEL :=
-else
- ifeq ($(BR2_PACKAGE_ASTERISK_v18),y)
+ifeq ($(BR2_PACKAGE_ASTERISK_v18),y)
 ASTERISK_VERSION := 18.19.0
 ASTERISK_LABEL :=
+else
+ ifeq ($(BR2_PACKAGE_ASTERISK_v20),y)
+ASTERISK_VERSION := 20.4.0
+ASTERISK_LABEL :=
  else
-ASTERISK_VERSION := 13.38.3
+ASTERISK_VERSION := 16.30.0
 ASTERISK_LABEL := se
  endif
 endif
@@ -174,13 +174,10 @@ ASTERISK_CONFIGURE_ENV+= \
  endif
 endif
 
-ifneq ($(ASTERISK_VERSION_SINGLE),13)
-## Asterisk 16.x
 ifeq ($(strip $(BR2_PACKAGE_UNBOUND)),y)
 ASTERISK_EXTRAS+=unbound
 ASTERISK_CONFIGURE_ARGS+= \
                         --with-unbound="$(STAGING_DIR)/usr"
-endif
 endif
 
 ifeq ($(strip $(BR2_PACKAGE_PJSIP)),y)
@@ -277,9 +274,20 @@ else
 		menuselect/menuselect --enable IMAP_STORAGE menuselect.makeopts; \
 	)
  endif
+ ifeq ($(ASTERISK_VERSION_SINGLE),20)
+	## Asterisk 20.x version
+	(cd $(ASTERISK_DIR); \
+		menuselect/menuselect --enable chan_sip menuselect.makeopts; \
+	)
+ else
+	## Asterisk 16.x and 18.x versions
+	(cd $(ASTERISK_DIR); \
+		menuselect/menuselect --enable res_pktccops menuselect.makeopts; \
+	)
+ endif
+	## All Asterisk versions
 	(cd $(ASTERISK_DIR); \
 		menuselect/menuselect --enable app_meetme --enable app_page --enable app_macro menuselect.makeopts; \
-		menuselect/menuselect --enable res_pktccops menuselect.makeopts; \
 		menuselect/menuselect --disable CORE-SOUNDS-EN-GSM --disable MOH-OPSOUND-WAV menuselect.makeopts; \
 		menuselect/menuselect --disable BUILD_NATIVE menuselect.makeopts; \
 	)

@@ -1,0 +1,33 @@
+--- asterisk-20/channels/chan_sip.c.orig	2020-06-27 09:35:11.041947296 -0500
++++ asterisk-20/channels/chan_sip.c	2020-06-27 09:49:06.816853992 -0500
+@@ -15294,8 +15294,30 @@
+ 		ast_str_append(tmp, 0, "<presentity uri=\"%s;method=SUBSCRIBE\" />\n", mfrom);
+ 		ast_str_append(tmp, 0, "<atom id=\"%s\">\n", exten);
+ 		ast_str_append(tmp, 0, "<address uri=\"%s;user=ip\" priority=\"0.800000\">\n", mto);
++	  if (strncmp(p->useragent, "NECSDT", 6) == 0) {  /* NEC IP Phones */
++		switch(data->state) {
++		case AST_EXTENSION_RINGING:
++			ast_str_append(tmp, 0, "<status status=\"%s\" />\n", "open");
++			ast_str_append(tmp, 0, "<msnsubstatus substatus=\"%s\" />\n", "offline");
++			break;
++		case AST_EXTENSION_BUSY:
++			ast_str_append(tmp, 0, "<status status=\"%s\" />\n", "inuse");
++			ast_str_append(tmp, 0, "<msnsubstatus substatus=\"%s\" />\n", "onthephone");
++			break;
++		case AST_EXTENSION_INUSE:
++			ast_str_append(tmp, 0, "<status status=\"%s\" />\n", "inuse");
++			ast_str_append(tmp, 0, "<msnsubstatus substatus=\"%s\" />\n", "onthephone");
++			break;
++		case AST_EXTENSION_UNAVAILABLE:
++		default:
++			ast_str_append(tmp, 0, "<status status=\"%s\" />\n", "open");
++			ast_str_append(tmp, 0, "<msnsubstatus substatus=\"%s\" />\n", "online");
++			break;
++		}
++	  } else {
+ 		ast_str_append(tmp, 0, "<status status=\"%s\" />\n", (local_state ==  NOTIFY_OPEN) ? "open" : (local_state == NOTIFY_INUSE) ? "inuse" : "closed");
+ 		ast_str_append(tmp, 0, "<msnsubstatus substatus=\"%s\" />\n", (local_state == NOTIFY_OPEN) ? "online" : (local_state == NOTIFY_INUSE) ? "onthephone" : "offline");
++	  }
+ 		ast_str_append(tmp, 0, "</address>\n</atom>\n</presence>\n");
+ 		break;
+ 	case PIDF_XML: /* Eyebeam supports this format */
