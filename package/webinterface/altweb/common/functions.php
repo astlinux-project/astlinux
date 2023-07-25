@@ -643,7 +643,7 @@ function asteriskURLrepo() {
     }
   }
   if ($ver == '') {
-    $ver = '16';
+    $ver = '18';
   }
   $str = 'https://mirror.astlinux-project.org/ast'.$ver.'-firmware-1.x';
 
