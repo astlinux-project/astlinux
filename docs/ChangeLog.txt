@@ -42,10 +42,13 @@ Released @TBD@
 
 ** Asterisk
 
--- Asterisk 13.38.3 ('13se' no change)
-   Last Asterisk 13.x "Legacy" version, built --without-pjproject
+-- Asterisk 16.30.0 ('16se' version bump)
+   Last Asterisk 16.x "Legacy" version, built --without-pjproject
 
--- Asterisk 16.30.0 (no change) and 18.19.0 (version bump)
+-- Asterisk 18.19.0 (version bump) and 20.4.0 (new version)
+
+-- dialplan, Remove: When a Dial() has a B() option 'Return(IgnoreNoAnswerCDR)' ignore unanswered events
+   Instead, use cdr.conf settings: ignorestatechanges and ignoredialchanges (more like Asterisk 11 behavior with both set to "yes")
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
 
