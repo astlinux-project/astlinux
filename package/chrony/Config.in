@@ -6,5 +6,5 @@ config BR2_PACKAGE_CHRONY
 	  of conditions. It can synchronize the system clock with NTP servers,
 	  reference clocks, and manual input using wristwatch and keyboard.
 
-	  http://chrony.tuxfamily.org/
+	  https://chrony-project.org/
 
