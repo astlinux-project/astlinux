@@ -32,7 +32,7 @@ Released @TBD@
 
 -- iperf3, version bump to 3.14, security fix: CVE-2023-38403
 
--- libcurl (curl) version bump to 8.2.0, security fixes: CVE-2023-32001
+-- libcurl (curl) version bump to 8.2.1, security fixes: CVE-2023-32001
 
 -- msmtp, version bump to 1.8.24
 
@@ -53,6 +53,10 @@ Released @TBD@
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
 
 -- pjsip 2.13.1 (version bump)
+
+-- FOP2, available version bump to 2.31.35
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
