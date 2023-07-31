@@ -2,8 +2,10 @@ config BR2_PACKAGE_TINYPROXY
 	bool "tinyproxy"
  	default n
 	help
-	  Experimental for AstLinux use!
-	  Tinyproxy is a light-weight HTTP/HTTPS proxy daemon. 
+	  Tinyproxy is a small, efficient HTTP/SSL proxy daemon released
+	  under the GNU General Public License. Tinyproxy is very
+	  useful in a small network setting, where a larger proxy would
+	  be too resource intensive.
 
-	  https://github.com/tinyproxy/tinyproxy/wiki
+	  https://tinyproxy.github.io
 

@@ -14,7 +14,7 @@ start () {
   if [ "$TINYPROXY_START" = "yes" ] && [ -f /mnt/kd/tinyproxy.conf ]; then
     echo "Starting tinyproxy..."
 
-    /usr/bin/tinyproxy -c /etc/tinyproxy.conf
+    tinyproxy -c /etc/tinyproxy.conf
   fi
 }
 
@@ -23,13 +23,10 @@ stop () {
   if [ -f /var/run/tinyproxy.pid ]; then
     echo "Stopping tinyproxy..."
 
-    kill $(cat /var/run/tinyproxy.pid)
+    kill $(cat /var/run/tinyproxy.pid) >/dev/null 2>&1
+    rm -f /var/run/tinyproxy.pid
   fi
 }
-
-if [ ! -x /usr/bin/tinyproxy ]; then
-  exit
-fi
 
 case $1 in
 
