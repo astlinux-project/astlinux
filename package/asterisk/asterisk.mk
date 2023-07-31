@@ -339,16 +339,9 @@ $(TARGET_DIR)/$(ASTERISK_TARGET_BINARY): $(ASTERISK_DIR)/$(ASTERISK_BINARY)
 # Remove unwanted MOH sound files to save space
 	rm -f $(TARGET_DIR)/stat/var/lib/asterisk/moh/macroform-robot_dity.*
 	rm -f $(TARGET_DIR)/stat/var/lib/asterisk/moh/macroform-cold_day.*
-ifneq ($(wildcard package/asterisk/config/extensions.conf),)
-	mkdir -p $(TARGET_DIR)/stat/etc/asterisk
-	rsync -a --exclude=".svn" package/asterisk/config/* $(TARGET_DIR)/stat/etc/asterisk/
-else
 	mv $(TARGET_DIR)/etc/asterisk $(TARGET_DIR)/stat/etc/
-endif
-	$(INSTALL) -D -m 0755 package/asterisk/logger.conf $(TARGET_DIR)/stat/etc/asterisk/logger.conf
+	$(INSTALL) -D -m 0644 package/asterisk/logger.conf $(TARGET_DIR)/stat/etc/asterisk/logger.conf
 
-	chmod -R 750 $(TARGET_DIR)/stat/etc/asterisk
-	rm -rf $(TARGET_DIR)/etc/asterisk
 	ln -sf /tmp/etc/asterisk $(TARGET_DIR)/etc/asterisk
 	ln -sf /var/tmp/asterisk/sounds/custom-sounds $(TARGET_DIR)/stat/var/lib/asterisk/sounds/custom-sounds
 	ln -sf /var/tmp/asterisk/agi-bin/custom-agi $(TARGET_DIR)/stat/var/lib/asterisk/agi-bin/custom-agi
