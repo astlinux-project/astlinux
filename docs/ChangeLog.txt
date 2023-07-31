@@ -38,6 +38,8 @@ Released @TBD@
 
 -- stunnel, version bump to 5.70
 
+-- tinyproxy, version 1.11.1, enable for standard builds
+
 -- whois, version bump to 5.5.18
 
 ** Asterisk
