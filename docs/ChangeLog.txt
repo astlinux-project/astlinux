@@ -38,7 +38,8 @@ Released @TBD@
 
 -- stunnel, version bump to 5.70
 
--- tinyproxy, version 1.11.1, enable for standard builds
+-- tinyproxy, version 1.11.1, now included in the standard builds, but disabled by default
+   Note: The tinyproxy daemon starts if TINYPROXY_START="yes" and /mnt/kd/tinyproxy.conf exists. See /stat/etc/rc.conf for docs.
 
 -- whois, version bump to 5.5.18
 
