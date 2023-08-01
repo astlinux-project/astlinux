@@ -115,16 +115,16 @@ upload_version()
 set_asterisk_version()
 {
   case $1 in
-    ast13se)
-      FIRMWARE="ast13se-firmware-1.x"
-      MIRROR_FIRMWARE="$FIRMWARE"
-      ;;
-    ast16)
-      FIRMWARE="ast16-firmware-1.x"
+    ast16se)
+      FIRMWARE="ast16se-firmware-1.x"
       MIRROR_FIRMWARE="$FIRMWARE"
       ;;
     ast18)
       FIRMWARE="ast18-firmware-1.x"
+      MIRROR_FIRMWARE="$FIRMWARE"
+      ;;
+    ast20)
+      FIRMWARE="ast20-firmware-1.x"
       MIRROR_FIRMWARE="$FIRMWARE"
       ;;
     *)
@@ -173,7 +173,7 @@ delete_dir "$CHANGELOG_DIR"
 # Remove pre-existing iso(s)
 delete_dir "$ISO_DIR"
 
-for asterisk in ast13se ast16 ast18; do
+for asterisk in ast16se ast18 ast20; do
 
   set_asterisk_version $asterisk
 
