@@ -28,7 +28,7 @@ Released @TBD@
 
 -- OpenSSL, version bump to 1.1.1v, security fixes: CVE-2023-3446, CVE-2023-3817
 
--- chrony, version bump to 4.4-pre2
+-- chrony, version bump to 4.4
 
 -- ddclient, ddclient-curl version bump to 3.8.3-08
 
