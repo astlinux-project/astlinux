@@ -197,6 +197,14 @@ check() {
     echo "You are running the newest available version: ${VER}${AFTER_REBOOT}"
     exit $ORANGE
   fi
+
+  ## Limit "noram" loop mount from being removed during upgrade, reboot required
+  if mount | grep -q '^/dev/loop[0-9] on / type squashfs'; then
+    if [ "$XVER" = "$RUN_VER" ]; then
+      echo "Current version is: ${OVER}${AFTER_REBOOT},  REBOOT REQUIRED before upgrade to version: ${VER}"
+      exit $RED
+    fi
+  fi
 }
 
 upgrade() {
