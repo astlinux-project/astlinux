@@ -43,7 +43,7 @@ stop () {
   done
 }
 
-if [ "$ASTERISK_DAHDI_DISABLE" = "yes" ]; then
+if [ "$ASTERISK_DAHDI_DISABLE" = "yes" -o "$DAHDI_DISABLE" = "yes" ]; then
   echo "Disabled: DAHDI"
   exit
 fi
