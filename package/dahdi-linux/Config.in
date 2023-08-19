@@ -3,6 +3,7 @@ config BR2_PACKAGE_DAHDI_LINUX
 	default n
 	depends on BR2_LINUX_KERNEL
 	select BR2_PACKAGE_LIBUSB
+	select BR2_PACKAGE_LIBUSB_COMPAT
 	help
 		Dahdi - Linux drivers and utilities for Digium cards
 		for use with Asterisk:

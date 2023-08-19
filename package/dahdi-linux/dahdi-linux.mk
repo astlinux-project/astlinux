@@ -11,7 +11,7 @@ DAHDI_LINUX_DRIVERS_DIR := $(DAHDI_LINUX_DIR)/drivers/dahdi
 DAHDI_LINUX_BINARY := dahdi.ko
 DAHDI_LINUX_TARGET_BINARY := usr/share/dahdi/XppConfig.pm
 PERLLIBDIR := /usr/local/share/perl
-DAHDI_LINUX_PREREQS := linux libusb udev
+DAHDI_LINUX_PREREQS := linux libusb libusb-compat udev
 DAHDI_LINUX_CONFIGURE_ARGS :=
 DEPMOD := $(HOST_DIR)/usr/sbin/depmod
 

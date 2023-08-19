@@ -7,7 +7,7 @@
 DAHDI_TOOLS_VERSION = 3.2.0
 DAHDI_TOOLS_SITE = http://downloads.asterisk.org/pub/telephony/dahdi-tools/releases
 
-DAHDI_TOOLS_DEPENDENCIES = libusb newt dahdi-linux
+DAHDI_TOOLS_DEPENDENCIES = libusb libusb-compat newt dahdi-linux
 
 DAHDI_TOOLS_INSTALL_STAGING = YES
 DAHDI_TOOLS_AUTORECONF = YES

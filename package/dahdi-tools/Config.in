@@ -3,6 +3,8 @@ config BR2_PACKAGE_DAHDI_TOOLS
 	default n
 	depends on BR2_LINUX_KERNEL
 	select BR2_PACKAGE_DAHDI_LINUX
+	select BR2_PACKAGE_LIBUSB
+	select BR2_PACKAGE_LIBUSB_COMPAT
 	select BR2_PACKAGE_NEWT
 	help
 		Dahdi - Linux utilities for Digium cards
