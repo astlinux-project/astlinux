@@ -144,6 +144,10 @@ ASTERISK_EXTRAS+=dahdi-tools
 ASTERISK_CONFIGURE_ARGS+= \
 			--with-dahdi="$(STAGING_DIR)/usr" \
 			--with-tonezone="$(STAGING_DIR)/usr"
+else
+ASTERISK_CONFIGURE_ARGS+= \
+			--without-dahdi \
+			--without-tonezone
 endif
 
 ifeq ($(strip $(BR2_PACKAGE_SQLITE)),y)
@@ -282,7 +286,7 @@ else
  else
 	## Asterisk 16.x and 18.x versions
 	(cd $(ASTERISK_DIR); \
-		menuselect/menuselect --enable res_pktccops menuselect.makeopts; \
+		menuselect/menuselect --enable res_pktccops --disable app_dahdiras menuselect.makeopts; \
 	)
  endif
 	## All Asterisk versions
@@ -291,6 +295,13 @@ else
 		menuselect/menuselect --disable CORE-SOUNDS-EN-GSM --disable MOH-OPSOUND-WAV menuselect.makeopts; \
 		menuselect/menuselect --disable BUILD_NATIVE menuselect.makeopts; \
 	)
+ ifneq ($(strip $(BR2_PACKAGE_DAHDI_LINUX)),y)
+	## Disable DAHDI related modules
+	(cd $(ASTERISK_DIR); \
+		menuselect/menuselect --disable chan_dahdi --disable codec_dahdi --disable app_meetme menuselect.makeopts; \
+		menuselect/menuselect --disable res_timing_dahdi --disable app_flash menuselect.makeopts; \
+	)
+ endif
 endif
 	# Don't force a "clean", create .lastclean
 	cp -f $(ASTERISK_DIR)/.cleancount $(ASTERISK_DIR)/.lastclean
