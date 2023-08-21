@@ -4,7 +4,7 @@
 #
 #############################################################
 
-SCREEN_VERSION = 4.9.0
+SCREEN_VERSION = 4.9.1
 SCREEN_SITE = $(BR2_GNU_MIRROR)/screen
 SCREEN_DEPENDENCIES = ncurses
 SCREEN_AUTORECONF = YES
