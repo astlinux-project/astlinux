@@ -10,6 +10,14 @@ Additions for AstLinux 1.5.2:
 
 Released @TBD@
 
+** IMPORTANT NOTICE
+
+-- Changes to supported firmware builds:
+   == Previous 'ast13se' and 'ast16' firmware branches are no longer updated.
+   == New 'ast16se' firmware branch, Asterisk 16.x built --without-pjproject and --without-dahdi
+   == Previous 'ast18' firmware branch, Asterisk 18.x built --with-pjproject and --with-dahdi
+   == New 'ast20' firmware branch, Asterisk 20.x built --with-pjproject and --with-dahdi
+
 ** System
 
 -- Linux Kernel 5.10.191 (version bump), security and bug fixes.
@@ -20,9 +28,13 @@ Released @TBD@
 
 -- libpng, version bump to 1.6.40
 
--- libxml2, version bump to 2.11.4
+-- libxml2, version bump to 2.11.5
+
+-- screen, version 4.9.1, security fix: CVE-2023-24626
 
 -- strace, version bump to 6.4
+
+-- unixodbc, version bump to 2.3.12
 
 -- upgrade-run-image, limit "noram" loop mount from being removed during upgrade.
 
@@ -42,6 +54,8 @@ Released @TBD@
 
 -- msmtp, version bump to 1.8.24
 
+-- netsnmp, version bump to 5.9.4
+
 -- stunnel, version bump to 5.70
 
 -- tinyproxy, version 1.11.1, now included in the standard builds, but disabled by default
@@ -54,9 +68,10 @@ Released @TBD@
 ** Asterisk
 
 -- Asterisk 16.30.0 ('16se' version bump)
-   Last Asterisk 16.x "Legacy" version, built --without-pjproject
+   Last Asterisk 16.x "Legacy" version, built --without-pjproject and --without-dahdi
 
 -- Asterisk 18.19.0 (version bump) and 20.4.0 (new version)
+   Built --with-pjproject and --with-dahdi
 
 -- dialplan, Remove: When a Dial() has a B() option 'Return(IgnoreNoAnswerCDR)' ignore unanswered events
    Instead, use cdr.conf settings: ignorestatechanges and ignoredialchanges (more like Asterisk 11 behavior with both set to "yes")
@@ -70,7 +85,7 @@ Released @TBD@
 
 -- libpri, version bump to 1.6.1
 
--- FOP2, available version bump to 2.31.35
+-- FOP2, available version bump to 2.31.36
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
    More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
