@@ -6,5 +6,5 @@ config BR2_PACKAGE_UNIXODBC
 
 	  Connect to ODBC resources from Linux systems
 
-	  http://www.unixodbc.org
+	  https://www.unixodbc.org
 
