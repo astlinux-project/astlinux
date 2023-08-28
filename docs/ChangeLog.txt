@@ -38,7 +38,11 @@ Released @TBD@
 
 -- upgrade-run-image, limit "noram" loop mount from being removed during upgrade.
 
+-- zabbix, version bump to 4.0.48
+
 -- zlib, version bump to 1.3
+
+-- ca-certificates, update trusted root certificates 2023-08-22
 
 ** Networking
 
