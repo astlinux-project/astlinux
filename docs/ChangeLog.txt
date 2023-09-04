@@ -32,6 +32,8 @@ Released @TBD@
 
 -- screen, version 4.9.1, security fix: CVE-2023-24626
 
+-- smartctl (smartmontools), version bump to 7.4, drivedb.h snapshot 2023-08-19
+
 -- strace, version bump to 6.4
 
 -- unixodbc, version bump to 2.3.12
@@ -64,6 +66,8 @@ Released @TBD@
 
 -- tinyproxy, version 1.11.1, now included in the standard builds, but disabled by default
    Note: The tinyproxy daemon starts if TINYPROXY_START="yes" and /mnt/kd/tinyproxy.conf exists. See /stat/etc/rc.conf for docs.
+
+-- unbound, version bump to 1.18.0
 
 -- vnStat, version bump to 2.11
 
