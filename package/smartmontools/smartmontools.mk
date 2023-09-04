@@ -4,8 +4,8 @@
 #
 #############################################################
 
-SMARTMONTOOLS_VERSION = 7.3
-SMARTMONTOOLS_SITE = http://downloads.sourceforge.net/project/smartmontools/smartmontools/$(SMARTMONTOOLS_VERSION)
+SMARTMONTOOLS_VERSION = 7.4
+SMARTMONTOOLS_SITE = https://downloads.sourceforge.net/project/smartmontools/smartmontools/$(SMARTMONTOOLS_VERSION)
 
 define SMARTMONTOOLS_LATEST_DRIVEDB
 	# Upstream Drive DB:
