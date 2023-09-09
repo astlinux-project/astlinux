@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LUASEC_VERSION = 1.3.1
+LUASEC_VERSION = 1.3.2
 LUASEC_SOURCE = luasec-$(LUASEC_VERSION).tar.gz
 LUASEC_SITE = https://github.com/brunoos/luasec/archive/v$(LUASEC_VERSION)
 LUASEC_DEPENDENCIES = lua openssl luasocket
