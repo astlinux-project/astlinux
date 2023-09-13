@@ -50,7 +50,7 @@ Released @TBD@
 
 ** Networking
 
--- OpenSSL, version bump to 1.1.1v, security fixes: CVE-2023-3446, CVE-2023-3817
+-- OpenSSL, version bump to 1.1.1w, security fixes: CVE-2023-3446, CVE-2023-3817
 
 -- chrony, version bump to 4.4
 
