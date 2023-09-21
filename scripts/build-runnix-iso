@@ -46,7 +46,6 @@ make_release()
   rm -rf ${RUNDIR}
   mkdir ${RUNDIR}
   cp -a project/runnix-iso/files/rootfs_vfat/* ${RUNDIR}/
-  find ${RUNDIR} -type d -name '.svn' | xargs rm -rf
   if [ "$SERIAL" = "serial" ]; then
     cp -p project/runnix-iso/files/configs/isolinux-serial.cfg ${RUNDIR}/isolinux/isolinux.cfg
     touch ${RUNDIR}/os/serialflag
@@ -180,6 +179,11 @@ fi
 
 if [ ! -f "$CONFIG" ]; then
   echo "The $CONFIG file does not exist, exiting."  >&2
+  exit 1
+fi
+
+if ! git status >/dev/null 2>&1; then
+  echo "Requires a git repository, exiting." >&2
   exit 1
 fi
 

@@ -2,8 +2,6 @@
 
 TVER="1.5"
 
-BRANCH="trunk"
-
 if [ "${1:0:4}" != "${TVER}." ]; then
   echo "Usage: master-tag ${TVER}.x"
   exit 1
@@ -22,11 +20,11 @@ mark_release()
   sed -i "s/^Released @TBD@/Released $(date +%Y-%m-%d)/" "$ASTLINUX_CHANGELOG"
 }
 
-mark_svn()
+mark_git()
 {
   local error="$1"
 
-  echo "svn" > "$ASTLINUX_RELEASE"
+  echo "git" > "$ASTLINUX_RELEASE"
 
   if [ "$error" = "error" ]; then
     sed -i "s/^Released $(date +%Y-%m-%d)/Released @TBD@/" "$ASTLINUX_CHANGELOG"
@@ -41,43 +39,40 @@ Released @TBD@\
   fi
 }
 
-if ! svn info >/dev/null 2>&1; then
-  echo "Tagging astlinux requires a svn checkout, exiting."
+if ! git status >/dev/null 2>&1; then
+  echo "Tagging astlinux requires a git checkout, exiting."
   exit 1
 fi
 
-REPO_ROOT="$(LANG=C svn info | awk -F': ' '/^Repository Root:/ { print $2 }')"
+GIT="$(cat $ASTLINUX_RELEASE)"
 
-if [ -z "$REPO_ROOT" ]; then
+if [ "git" != "$GIT" ]; then
+  echo "master-tag: Current directory is not in git branch"
   exit 1
 fi
 
-SVN="$(cat $ASTLINUX_RELEASE)"
-
-if [ "svn" != "$SVN" ]; then
-  echo "master-tag: Current directory is not in SVN branch"
-  exit 1
-fi
-
-if ! svn up; then
+if ! git pull; then
   exit 1
 fi
 
 mark_release
 
-svn ci -m "mark release '$RELEASE'"
+git commit -a -m "mark release '$RELEASE'"
+git push
 
 if [ $? -ne 0 ]; then
-  mark_svn error
+  mark_git error
   exit 1
 fi
 
-svn copy ${REPO_ROOT}/${BRANCH} ${REPO_ROOT}/tags/${1} -m "create ${1} tag"
+git tag -a "${1}"
+git push origin "${1}"
 
-mark_svn
+mark_git
 
-svn ci -m "return to release 'svn'"
+git commit -a -m "return to release 'git'"
+git push
 
-svn up
+git pull
 
 exit 0

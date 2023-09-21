@@ -106,6 +106,10 @@ if [ "$(uname -m)" != "x86_64" ]; then
   exit_error "Build system must be x86_64."
 fi
 
+if ! git status >/dev/null 2>&1; then
+  exit_error "Requires a git repository."
+fi
+
 x_tools_dir="$(awk -F'"' '/^BR2_TOOLCHAIN_EXTERNAL_PATH=/ { print $2; nextfile }' .config | sed 's:^[^/]*::')"
 if [ -z "$x_tools_dir" ]; then
   exit_error "BR2_TOOLCHAIN_EXTERNAL_PATH not found in .config file."
