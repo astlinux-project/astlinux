@@ -182,11 +182,6 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
-if ! git status >/dev/null 2>&1; then
-  echo "Requires a git repository, exiting." >&2
-  exit 1
-fi
-
 # Save and Restore state if AstLinux is currently in output/
 #
 save_restore=0
