@@ -24,7 +24,12 @@ Released @TBD@
 
 -- acme-client, version 2.9.0, add 'dns_ipv64' support from upstream
 
+-- cron (busybox), add logging methods other than syslog, still defaults to "syslog"
+   New rc.conf variable: CRON_LOG_METHOD defined as "syslog", "file" (/var/log/cron.log), or "none".
+
 -- ethtool, version bump to 6.4
+
+-- kmod, version bump to 31
 
 -- libedit, version bump to 20230828-3.1
 
