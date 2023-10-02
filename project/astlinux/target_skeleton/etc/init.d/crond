@@ -33,9 +33,17 @@ init () {
 }
 
 start () {
+  local log_file
 
   echo "Starting crond..."
-  crond
+
+  ## Log Methods: "syslog", "file", or "none". Default is "syslog"
+  case "$CRON_LOG_METHOD" in
+    file) log_file="/var/log/cron.log" ;;
+    none) log_file="/dev/null" ;;
+       *) log_file="" ;;
+  esac
+  crond ${log_file:+-L "$log_file"}
 }
 
 stop () {

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2021 Lonnie Abelbeck
+// Copyright (C) 2008-2023 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -23,6 +23,7 @@
 // 07-11-2019, Added Backup Exclude Suffixes support
 // 10-20-2020, Added view syslog messages.0 or messages.1
 // 02-11-2021, Added backup "Linux Containers (lxc)" menu
+// 10-02-2023, Added view "Cron Daemon log" menu
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -637,6 +638,9 @@ require_once '../common/header.php';
   }
   if (is_file($file = '/var/log/zabbix_proxy.log')) {
     putHtml('<option value="'.$file.'">Zabbix Proxy log</option>');
+  }
+  if (is_file($file = '/var/log/cron.log')) {
+    putHtml('<option value="'.$file.'">Cron Daemon log</option>');
   }
   if (is_file($file = '/stat/etc/rc.conf')) {
     putHtml('<option value="'.$file.'">Default System Variables</option>');
