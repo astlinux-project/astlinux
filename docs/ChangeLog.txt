@@ -24,8 +24,9 @@ Released @TBD@
 
 -- acme-client, version 2.9.0, add 'dns_ipv64' support from upstream
 
--- cron (busybox), add logging methods other than syslog, still defaults to "syslog"
-   New rc.conf variable: CRON_LOG_METHOD defined as "syslog", "file" (/var/log/cron.log), or "none".
+-- cron (busybox), add logging methods and levels.  The defaults remain the same as previous.
+   New rc.conf variable: CRON_LOG_METHOD defined as "syslog", "file" (/var/log/cron.log) or "none". Default is "syslog".
+   New rc.conf variable: CRON_LOG_LEVEL defined as "info" or "error". Default is "info".
 
 -- ethtool, version bump to 6.4
 
@@ -40,6 +41,10 @@ Released @TBD@
 -- screen, version 4.9.1, security fix: CVE-2023-24626
 
 -- smartctl (smartmontools), version bump to 7.4, drivedb.h snapshot 2023-08-19
+
+-- sqlite, version bump to 3.43.1
+
+-- sqliteodbc, version bump to 0.9999
 
 -- strace, version bump to 6.5
 
@@ -109,6 +114,8 @@ Released @TBD@
 ** Web Interface
 
 -- Status tab, support Asterisk 18 output lines greater than 256 characters.
+
+-- System tab, add view "Cron Daemon log" menu.
 
 
 Additions for AstLinux 1.5.1:
