@@ -1,0 +1,24 @@
+--- busybox-1.30.1/miscutils/crond.c.orig	2023-10-05 09:38:53.923965327 -0500
++++ busybox-1.30.1/miscutils/crond.c	2023-10-05 09:54:21.400061158 -0500
+@@ -950,8 +950,19 @@
+ 				continue;
+ 
+ 			pid = start_one_job(file->cf_username, line);
+-			log8("USER %s pid %3d cmd %s",
+-				file->cf_username, (int)pid, line->cl_cmd);
++			if (G.log_filename) {
++				char *timestamp;
++				time_t now;
++
++				time(&now);
++				timestamp = ctime(&now) + 4; /* skip day of week */
++				timestamp[15] = '\0';
++				log8("%s USER %s pid %3d cmd %s",
++					timestamp, file->cf_username, (int)pid, line->cl_cmd);
++			} else {
++				log8("USER %s pid %3d cmd %s",
++					file->cf_username, (int)pid, line->cl_cmd);
++			}
+ 			if (pid < 0) {
+ 				file->cf_wants_starting = 1;
+ 			}
