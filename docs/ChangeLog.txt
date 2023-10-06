@@ -46,6 +46,8 @@ Released @TBD@
 
 -- sqliteodbc, version bump to 0.9999
 
+-- system-vendor, update system-vendor.ids
+
 -- strace, version bump to 6.5
 
 -- unixodbc, version bump to 2.3.12
@@ -94,6 +96,7 @@ Released @TBD@
 
 -- Asterisk 18.19.0 (version bump) and 20.4.0 (new version)
    Built --with-pjproject and --with-dahdi
+   Disable: STIR/SHAKEN support (res_stir_shaken.so, res_pjsip_stir_shaken.so)
 
 -- dialplan, Remove: When a Dial() has a B() option 'Return(IgnoreNoAnswerCDR)' ignore unanswered events
    Instead, use cdr.conf settings: ignorestatechanges and ignoredialchanges (more like Asterisk 11 behavior with both set to "yes")
