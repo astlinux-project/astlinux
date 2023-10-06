@@ -292,6 +292,7 @@ else
 	## All Asterisk versions
 	(cd $(ASTERISK_DIR); \
 		menuselect/menuselect --enable app_meetme --enable app_page --enable app_macro menuselect.makeopts; \
+		menuselect/menuselect --disable res_stir_shaken menuselect.makeopts; \
 		menuselect/menuselect --disable CORE-SOUNDS-EN-GSM --disable MOH-OPSOUND-WAV menuselect.makeopts; \
 		menuselect/menuselect --disable BUILD_NATIVE menuselect.makeopts; \
 	)
