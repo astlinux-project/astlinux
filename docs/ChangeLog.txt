@@ -20,7 +20,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.191 (version bump), security and bug fixes.
+-- Linux Kernel 5.10.197 (version bump), security and bug fixes.
 
 -- acme-client, version 2.9.0, add 'dns_ipv64' support from upstream
 
