@@ -70,7 +70,7 @@ Released @TBD@
 
 -- iperf3, version bump to 3.14, security fix: CVE-2023-38403
 
--- libcurl (curl) version bump to 8.3.0, security fix: CVE-2023-38039
+-- libcurl (curl) version bump to 8.4.0, security fixes: CVE-2023-38039, CVE-2023-38545, CVE-2023-38546
 
 -- luasec, version bump to 1.3.2
 
