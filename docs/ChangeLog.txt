@@ -42,7 +42,7 @@ Released @TBD@
 
 -- smartctl (smartmontools), version bump to 7.4, drivedb.h snapshot 2023-08-19
 
--- sqlite, version bump to 3.43.1
+-- sqlite, version bump to 3.43.2
 
 -- sqliteodbc, version bump to 0.9999
 
