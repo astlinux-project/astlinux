@@ -94,7 +94,7 @@ Released @TBD@
 -- Asterisk 16.30.0 ('16se' version bump)
    Last Asterisk 16.x "Legacy" version, built --without-pjproject and --without-dahdi
 
--- Asterisk 18.19.0 (version bump) and 20.4.0 (new version)
+-- Asterisk 18.20.0 (version bump) and 20.5.0 (new version)
    Built --with-pjproject and --with-dahdi
    Disable: STIR/SHAKEN support (res_stir_shaken.so, res_pjsip_stir_shaken.so)
 
