@@ -4,9 +4,9 @@
 #
 #############################################################
 
-LIBSODIUM_VERSION = 1.0.18
+LIBSODIUM_VERSION = 1.0.19
 LIBSODIUM_SOURCE = libsodium-$(LIBSODIUM_VERSION).tar.gz
-LIBSODIUM_SITE = https://download.libsodium.org/libsodium/releases
+LIBSODIUM_SITE = https://github.com/jedisct1/libsodium/releases/download/$(LIBSODIUM_VERSION)-RELEASE
 
 LIBSODIUM_INSTALL_STAGING = YES
 
