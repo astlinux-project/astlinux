@@ -1,0 +1,20 @@
+--- usbutils-016/names.c.orig	2023-10-29 10:54:35.410937611 -0500
++++ usbutils-016/names.c	2023-10-29 10:55:49.123797360 -0500
+@@ -192,7 +192,7 @@
+                 return 0;
+         *buf = 0;
+         if (!(cp = names_vendor(vid)))
+-		return snprintf(buf, size, "[unknown]");
++		return 0;
+         return snprintf(buf, size, "%s", cp);
+ }
+ 
+@@ -204,7 +204,7 @@
+                 return 0;
+         *buf = 0;
+         if (!(cp = names_product(vid, pid)))
+-		return snprintf(buf, size, "[unknown]");
++		return 0;
+         return snprintf(buf, size, "%s", cp);
+ }
+ 
