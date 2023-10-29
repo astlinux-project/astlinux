@@ -4,7 +4,7 @@
 #
 ############################################################
 
-NE_VERSION = 3.3.2
+NE_VERSION = 3.3.3
 NE_SOURCE = ne-$(NE_VERSION).tar.gz
 NE_SITE = http://ne.di.unimi.it
 
