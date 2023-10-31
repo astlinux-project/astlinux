@@ -4,7 +4,7 @@
 #
 #############################################################
 
-USBUTILS_VERSION = 016
+USBUTILS_VERSION = 017
 USBUTILS_SITE = https://github.com/gregkh/usbutils/archive/v$(USBUTILS_VERSION)
 USBUTILS_SOURCE = usbutils-$(USBUTILS_VERSION).tar.gz
 USBUTILS_DEPENDENCIES = host-pkg-config libusb udev
