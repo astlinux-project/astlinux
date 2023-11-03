@@ -22,6 +22,8 @@ Released @TBD@
 
 -- Linux Kernel 5.10.197 (version bump), security and bug fixes.
 
+-- RUNNIX, version bump to runnix-0.6.16, with Linux Kernel 5.10.197
+
 -- acme-client, version 2.9.0, add 'dns_ipv64' support from upstream
 
 -- cron (busybox), add logging methods and levels.  The defaults remain the same as previous.
@@ -52,7 +54,7 @@ Released @TBD@
 
 -- system-vendor, update system-vendor.ids
 
--- strace, version bump to 6.5
+-- strace, version bump to 6.6
 
 -- tiff, version bump to 4.6.0
 
