@@ -1,0 +1,25 @@
+From ea702d8481832ec5deaf5803b12c3ee86ea7f2c7 Mon Sep 17 00:00:00 2001
+From: Sevan Janiyan <venture37@geeklan.co.uk>
+Date: Thu, 23 Nov 2023 18:49:18 +0000
+Subject: [PATCH] Only use attribute with GCC 11 & up
+
+__attribute__((malloc(free))) was introduced in GCC 11.
+Build breaks with older toolchains.
+With this change, it is possible to compile whois with GCC 4.0.
+---
+ utils.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/utils.h b/utils.h
+index 1147ebb..ee2880f 100644
+--- a/utils.h
++++ b/utils.h
+@@ -24,7 +24,7 @@
+ # define NONNULL
+ # define UNUSED
+ #endif
+-#if defined __GNUC__ && !defined __clang__
++#if (defined __GNUC__ && __GNUC__ >= 11) && !defined __clang__
+ # define MALLOC_FREE __attribute__((malloc(free)))
+ #else
+ # define MALLOC_FREE
