@@ -10,6 +10,36 @@ Additions for AstLinux 1.5.3:
 
 Released @TBD@
 
+** System
+
+-- Linux Kernel 5.10.197 (no change), security and bug fixes.
+
+-- ethtool, version bump to 6.6
+
+-- libxml2, version bump to 2.11.6
+
+** Networking
+
+-- unbound, version bump to 1.19.0
+
+-- whois, version bump to 5.5.20
+
+** Asterisk
+
+-- Asterisk 16.30.0 ('16se' no change)
+   Last Asterisk 16.x "Legacy" version, built --without-pjproject and --without-dahdi
+
+-- Asterisk 18.20.0 (no change) and 20.5.0 (no change)
+   Built --with-pjproject and --with-dahdi
+
+-- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
+
+-- pjsip 2.13.1 (no change)
+
+** Web Interface
+
+-- no change
+
 
 Additions for AstLinux 1.5.2:
 =============================
