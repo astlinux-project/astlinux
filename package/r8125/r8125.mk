@@ -4,7 +4,7 @@
 #
 #############################################################
 
-R8125_VERSION = 9.010.01
+R8125_VERSION = 9.012.03
 R8125_SOURCE:=r8125-$(R8125_VERSION).tar.bz2
 R8125_SITE = https://astlinux-project.org/files
 R8125_DEPENDENCIES = linux
