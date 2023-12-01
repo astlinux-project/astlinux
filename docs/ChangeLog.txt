@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 5.10.197 (no change), security and bug fixes.
 
+-- r8125, version 9.012.03, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
+
 -- ethtool, version bump to 6.6
 
 -- libxml2, version bump to 2.11.6
