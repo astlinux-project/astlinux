@@ -20,6 +20,8 @@ Released @TBD@
 
 -- libxml2, version bump to 2.11.6
 
+-- udev (eudev), version bump to 3.2.14
+
 ** Networking
 
 -- unbound, version bump to 1.19.0
