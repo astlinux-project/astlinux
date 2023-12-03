@@ -4,7 +4,7 @@
 #
 #############################################################
 
-UDEV_VERSION = 3.2.12
+UDEV_VERSION = 3.2.14
 UDEV_SOURCE = eudev-$(UDEV_VERSION).tar.gz
 UDEV_SITE = https://github.com/eudev-project/eudev/releases/download/v$(UDEV_VERSION)
 UDEV_INSTALL_STAGING = YES
