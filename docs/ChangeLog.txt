@@ -26,6 +26,8 @@ Released @TBD@
 
 ** Networking
 
+-- chrony, version bump to 4.5
+
 -- unbound, version bump to 1.19.0
 
 -- whois, version bump to 5.5.20
