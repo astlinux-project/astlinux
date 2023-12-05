@@ -20,6 +20,8 @@ Released @TBD@
 
 -- libxml2, version bump to 2.11.6
 
+-- php, version 7.2.34, add security fix: CVE-2023-3823
+
 -- udev (eudev), version bump to 3.2.14
 
 ** Networking
