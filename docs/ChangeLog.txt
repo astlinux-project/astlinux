@@ -22,11 +22,15 @@ Released @TBD@
 
 -- php, version 7.2.34, add security fix: CVE-2023-3823
 
+-- sqlite, version bump to 3.44.2
+
 -- udev (eudev), version bump to 3.2.14
 
 ** Networking
 
 -- chrony, version bump to 4.5
+
+-- libcurl (curl) version bump to 8.5.0, security fixes: CVE-2023-46218, CVE-2023-46219
 
 -- unbound, version bump to 1.19.0
 
