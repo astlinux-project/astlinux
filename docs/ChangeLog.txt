@@ -26,6 +26,8 @@ Released @TBD@
 
 -- udev (eudev), version bump to 3.2.14
 
+-- ca-certificates, update trusted root certificates 2023-12-12
+
 ** Networking
 
 -- chrony, version bump to 4.5
@@ -47,6 +49,10 @@ Released @TBD@
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
 
 -- pjsip 2.13.1 (no change)
+
+-- FOP2, available version bump to 2.31.38
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
