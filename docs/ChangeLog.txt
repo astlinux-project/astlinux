@@ -43,7 +43,7 @@ Released @TBD@
 -- Asterisk 16.30.0 ('16se' no change)
    Last Asterisk 16.x "Legacy" version, built --without-pjproject and --without-dahdi
 
--- Asterisk 18.20.0 (no change) and 20.5.0 (no change)
+-- Asterisk 18.20.1 (version bump) and 20.5.1 (version bump)
    Built --with-pjproject and --with-dahdi
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
