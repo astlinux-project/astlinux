@@ -1,0 +1,26 @@
+From 421db3656dcafbe810226463bf27a18a0b1c3186 Mon Sep 17 00:00:00 2001
+From: Colin Watson <cjwatson@debian.org>
+Date: Sat, 13 Mar 2021 09:35:05 +0000
+Subject: Double free in ssh-agent(1)
+
+Origin: upstream, https://ftp.openbsd.org/pub/OpenBSD/patches/6.8/common/015_sshagent.patch.sig
+Bug-Debian: https://bugs.debian.org/984940
+Last-Update: 2021-03-13
+
+Patch-Name: ssh-agent-double-free.patch
+---
+ ssh-agent.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ssh-agent.c b/ssh-agent.c
+index e1fd1f3f6..48155c96e 100644
+--- a/ssh-agent.c
++++ b/ssh-agent.c
+@@ -581,6 +581,7 @@ process_add_identity(SocketEntry *e)
+ 				goto err;
+ 			}
+ 			free(ext_name);
++			ext_name = NULL;
+ 			break;
+ 		default:
+ 			error("%s: Unknown constraint %d", __func__, ctype);

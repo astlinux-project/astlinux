@@ -4,8 +4,8 @@
 #
 #############################################################
 
-OPENSSH_VERSION = 8.1p1
-OPENSSH_SITE = http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable
+OPENSSH_VERSION = 8.4p1
+OPENSSH_SITE = https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable
 OPENSSH_CONF_ENV = LD="$(TARGET_CC)" LDFLAGS="$(TARGET_CFLAGS)"
 
 OPENSSH_DEPENDENCIES = zlib openssl
@@ -14,6 +14,7 @@ OPENSSH_CONF_OPT = \
 	--libexecdir=/usr/libexec \
 	--sysconfdir=/etc/ssh \
 	--with-sandbox=seccomp_filter \
+	--disable-security-key \
 	--disable-lastlog \
 	--disable-utmp \
 	--disable-utmpx \
