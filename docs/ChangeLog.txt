@@ -30,6 +30,8 @@ Released @TBD@
 
 ** Networking
 
+-- OpenSSH, version bump to 8.4p1, security fixes: CVE-2021-28041, CVE-2021-41617, CVE-2023-48795, CVE-2023-51385
+
 -- chrony, version bump to 4.5
 
 -- libcurl (curl) version bump to 8.5.0, security fixes: CVE-2023-46218, CVE-2023-46219
