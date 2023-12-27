@@ -28,6 +28,8 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2023-12-12
 
+-- Time Zone Database update, tzdata2023d and php-timezonedb-2023.4
+
 ** Networking
 
 -- OpenSSH, version bump to 8.4p1, security fixes: CVE-2021-28041, CVE-2021-41617, CVE-2023-48795, CVE-2023-51385
@@ -35,6 +37,10 @@ Released @TBD@
 -- chrony, version bump to 4.5
 
 -- libcurl (curl) version bump to 8.5.0, security fixes: CVE-2023-46218, CVE-2023-46219
+
+-- iperf3, version bump to 3.16
+
+-- sngrep, version bump to 1.8.0
 
 -- unbound, version bump to 1.19.0
 
@@ -58,7 +64,7 @@ Released @TBD@
 
 ** Web Interface
 
--- no change
+-- Status tab, updated "Show Licenses" information.
 
 
 Additions for AstLinux 1.5.2:
