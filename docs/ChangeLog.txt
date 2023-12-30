@@ -24,6 +24,8 @@ Released @TBD@
 
 -- sqlite, version bump to 3.44.2
 
+-- system-vendor, update system-vendor.ids
+
 -- udev (eudev), version bump to 3.2.14
 
 -- ca-certificates, update trusted root certificates 2023-12-12
