@@ -16,10 +16,10 @@ Released @TBD@
 
 -- r8125, version 9.012.03, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
 
--- ethtool, version bump to 6.6
-
 -- empty, version bump to 0.6.23c
    Note: Minor tweaks to any scripts using 'empty' may be needed. Example: empty -w "$expect" -> empty -w "$expect" ''
+
+-- ethtool, version bump to 6.6
 
 -- libxml2, version bump to 2.11.6
 
