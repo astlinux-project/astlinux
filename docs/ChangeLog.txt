@@ -18,6 +18,9 @@ Released @TBD@
 
 -- ethtool, version bump to 6.6
 
+-- empty, version bump to 0.6.23c
+   Note: Minor tweaks to any scripts using 'empty' may be needed. Example: empty -w "$expect" -> empty -w "$expect" ''
+
 -- libxml2, version bump to 2.11.6
 
 -- php, version 7.2.34, add security fix: CVE-2023-3823
