@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 5.10.205 (version bump), security and bug fixes.
 
+-- i40e, enable the Intel 10-Gigabit Ethernet Network Driver (Intel X710/XL710/XXV710/X722 support)
+
 -- r8125, version 9.012.03, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
 
 -- empty, version bump to 0.6.23c
