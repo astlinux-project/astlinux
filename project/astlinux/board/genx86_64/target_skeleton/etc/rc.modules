@@ -17,3 +17,4 @@ r8169
 tg3
 igc
 #ixgbe
+#i40e
