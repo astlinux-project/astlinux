@@ -25,7 +25,13 @@ $(ZONEINFO_DIR)/.source: $(DL_DIR)/$(ZONEINFO_SOURCE) $(DL_DIR)/$(ZONEINFO_DATA)
 
 $(TARGET_DIR)/$(ZONEINFO_BINARY): $(ZONEINFO_DIR)/.source
 	(cd $(ZONEINFO_DIR); \
-	  $(MAKE1) TZDIR=$(TARGET_DIR)/usr/share/zoneinfo ZFLAGS="-b fat" posix_only \
+	  $(HOST_MAKE_ENV) $(MAKE1) \
+		CC="$(HOSTCC)" \
+		CFLAGS="$(HOST_CFLAGS)" \
+		LDFLAGS="$(HOST_LDFLAGS)" \
+		TZDIR="$(TARGET_DIR)/usr/share/zoneinfo" \
+		ZFLAGS="-b fat" \
+		posix_only \
 	)
 	$(INSTALL) -D -m 0644 $(ZONEINFO_DIR)/zone.tab $(TARGET_DIR)/usr/share/zoneinfo/zone.tab
 	$(INSTALL) -D -m 0644 $(ZONEINFO_DIR)/iso3166.tab $(TARGET_DIR)/usr/share/zoneinfo/iso3166.tab
