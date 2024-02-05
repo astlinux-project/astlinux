@@ -4,7 +4,7 @@
 #
 #############################################################
 
-JPEG_VERSION = 9e
+JPEG_VERSION = 9f
 JPEG_SITE = https://www.ijg.org/files
 JPEG_SOURCE = jpegsrc.v$(JPEG_VERSION).tar.gz
 JPEG_INSTALL_STAGING = YES
