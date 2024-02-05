@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LIBPNG_VERSION = 1.6.40
+LIBPNG_VERSION = 1.6.42
 LIBPNG_SERIES = 16
 LIBPNG_SOURCE = libpng-$(LIBPNG_VERSION).tar.xz
 LIBPNG_SITE = http://downloads.sourceforge.net/project/libpng/libpng$(LIBPNG_SERIES)/$(LIBPNG_VERSION)
@@ -14,6 +14,8 @@ LIBPNG_DEPENDENCIES = host-pkg-config zlib
 HOST_LIBPNG_DEPENDENCIES = host-pkg-config host-zlib
 
 LIBPNG_CONF_OPT = \
+	--disable-tests \
+	--disable-tools \
 	--disable-hardware-optimizations
 
 define LIBPNG_STAGING_LIBPNG_SERIES_CONFIG_FIXUP
