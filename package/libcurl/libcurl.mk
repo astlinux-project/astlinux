@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LIBCURL_VERSION = 8.5.0
+LIBCURL_VERSION = 8.6.0
 LIBCURL_SOURCE = curl-$(LIBCURL_VERSION).tar.gz
 LIBCURL_SITE = https://curl.haxx.se/download
 LIBCURL_INSTALL_STAGING = YES
@@ -25,6 +25,7 @@ LIBCURL_CONF_OPT = \
 	--enable-symbol-hiding \
 	--with-random=/dev/urandom \
 	--without-libidn2 \
+	--without-libpsl \
 	--enable-ipv6
 
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
