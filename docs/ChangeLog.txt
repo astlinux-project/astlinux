@@ -26,7 +26,11 @@ Released @TBD@
 
 -- zlib, version bump to 1.3.1
 
+-- Time Zone Database update, tzdata2024a and php-timezonedb-2024.1
+
 ** Networking
+
+-- libcurl (curl) version bump to 8.6.0, security fix: CVE-2024-0853
 
 -- vnStat, version bump to 2.12
 
