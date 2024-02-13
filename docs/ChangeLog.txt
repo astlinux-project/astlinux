@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 5.10.209 (version bump), security and bug fixes.
 
+-- ethtool, version bump to 6.7
+
 -- expat, version bump to 2.6.0, security fixes: CVE-2023-52425, CVE-2023-52426
 
 -- htop, version bump to 3.3.0
@@ -24,6 +26,8 @@ Released @TBD@
 
 -- sqlite, version bump to 3.45.1
 
+-- strace, version bump to 6.7
+
 -- zlib, version bump to 1.3.1
 
 -- Time Zone Database update, tzdata2024a and php-timezonedb-2024.1
@@ -31,6 +35,8 @@ Released @TBD@
 ** Networking
 
 -- libcurl (curl) version bump to 8.6.0, security fix: CVE-2024-0853
+
+-- stunnel, version bump to 5.72
 
 -- vnStat, version bump to 2.12
 
@@ -45,6 +51,10 @@ Released @TBD@
 -- pjsip 2.14 (version bump)
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
+
+-- FOP2, available version bump to 2.31.39
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
