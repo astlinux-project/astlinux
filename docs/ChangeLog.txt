@@ -36,6 +36,10 @@ Released @TBD@
 
 -- Time Zone Database update, tzdata2024a and php-timezonedb-2024.1
 
+-- Update build system tools:
+   == fakeroot, version bump to 1.32.1
+   == m4, version bump to 1.4.19
+
 ** Networking
 
 -- libcurl (curl) version bump to 8.6.0, security fix: CVE-2024-0853
