@@ -17,7 +17,8 @@ Using a Virtual Machine is suggested, minimal recommended configuration:
 
 Linux Build Systems known to work (must be x86_64):
 
-- Debian 11 - (recommended)
+- Debian 11
+- Debian 12 - (recommended)
 
 Use a “Minimal Install” of your Linux distro, dedicated to building AstLinux.
 
