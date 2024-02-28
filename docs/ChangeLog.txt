@@ -50,6 +50,8 @@ Released @TBD@
 
 -- vnStat, version bump to 2.12
 
+-- whois, version bump to 5.5.21
+
 ** Asterisk
 
 -- Asterisk 16.30.0 ('16se' no change)
