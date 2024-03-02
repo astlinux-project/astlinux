@@ -18,7 +18,7 @@ diff --git a/Make.defaults b/Make.defaults
 index 47ed361..7420344 100755
 --- a/Make.defaults
 +++ b/Make.defaults
-@@ -67,7 +67,7 @@ ARCH         ?= $(shell $(HOSTCC) -dumpmachine | cut -f1 -d- | sed -e s,i[345678
+@@ -81,7 +81,7 @@ ARCH         ?= $(shell $(HOSTCC) -dumpmachine | cut -f1 -d- | sed -e s,i[345678
  
  # Get ARCH from the compiler if cross compiling 
  ifneq ($(CROSS_COMPILE),)
