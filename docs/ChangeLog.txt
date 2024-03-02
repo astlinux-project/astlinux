@@ -18,13 +18,15 @@ Released @TBD@
 
 -- ethtool, version bump to 6.7
 
--- expat, version bump to 2.6.0, security fixes: CVE-2023-52425, CVE-2023-52426
+-- expat, version bump to 2.6.1, security fixes: CVE-2023-52425, CVE-2023-52426
 
 -- htop, version bump to 3.3.0
 
 -- libjpeg, version bump to 9f, security fix
 
 -- libpng, version bump to 1.6.42
+
+-- libxml2, version bump to 2.11.7, security fix: CVE-2024-25062
 
 -- sqlite, version bump to 3.45.1
 
