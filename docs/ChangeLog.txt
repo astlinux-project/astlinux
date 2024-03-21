@@ -69,10 +69,10 @@ Released @TBD@
 -- Asterisk 16.30.0 ('16se' no change)
    Last Asterisk 16.x "Legacy" version, built --without-pjproject and --without-dahdi
 
--- Asterisk 18.21.0 (version bump) and 20.6.0 (version bump)
+-- Asterisk 18.22.0 (version bump) and 20.7.0 (version bump)
    Built --with-pjproject and --with-dahdi
 
--- pjsip 2.14 (version bump)
+-- pjsip 2.14.1 (version bump)
 
 -- neon, version bump to 0.33.0, used for Asterisk Calendar Support
 
