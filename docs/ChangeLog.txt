@@ -16,6 +16,8 @@ Released @TBD@
 
 -- linux, genx86_64/genx86_64-serial set CONFIG_NR_CPUS=64, genx86_64-vm set CONFIG_NR_CPUS=16
 
+-- atlantic, enable the Marvell (Aquantia) 10-Gigabit Ethernet Network Driver (Aquantia AQC107/AQC113/etc. support)
+
 -- ethtool, version bump to 6.7
 
 -- expat, version bump to 2.6.2, security fixes: CVE-2023-52425, CVE-2023-52426, CVE-2024-28757
