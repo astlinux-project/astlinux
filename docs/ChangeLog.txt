@@ -56,7 +56,7 @@ Released @TBD@
 
 ** Networking
 
--- libcurl (curl) version bump to 8.6.0, security fix: CVE-2024-0853
+-- libcurl (curl) version bump to 8.7.1, security fixes: CVE-2024-0853, CVE-2024-2004, CVE-2024-2379, CVE-2024-2398, CVE-2024-2466
 
 -- stunnel, version bump to 5.72
 
