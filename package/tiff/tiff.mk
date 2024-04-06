@@ -9,9 +9,11 @@ TIFF_SITE = https://download.osgeo.org/libtiff
 TIFF_SOURCE = tiff-$(TIFF_VERSION).tar.gz
 TIFF_INSTALL_STAGING = YES
 TIFF_CONF_OPT = \
+	--disable-contrib \
 	--disable-cxx \
-	--without-x \
 	--enable-tools-unsupported \
+	--disable-lerc \
+	--disable-jbig \
 	--disable-tests \
 	--disable-docs \
 	--disable-lzma \
