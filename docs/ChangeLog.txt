@@ -66,6 +66,8 @@ Released @TBD@
 
 -- whois, version bump to 5.5.21
 
+-- (Custom Build Only) mosquitto, version bump to 1.6.15
+
 ** Asterisk
 
 -- Asterisk 16.30.0 ('16se' no change)
