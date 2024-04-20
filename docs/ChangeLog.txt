@@ -38,7 +38,7 @@ Released @TBD@
 
 -- pciutils, version bump to 3.11.1
 
--- sqlite, version bump to 3.45.2
+-- sqlite, version bump to 3.45.3
 
 -- strace, version bump to 6.7
 
