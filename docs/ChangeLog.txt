@@ -38,6 +38,8 @@ Released @TBD@
 
 -- pciutils, version bump to 3.11.1
 
+-- php, version 7.2.34, add security fixes: CVE-2024-2756, CVE-2024-3096
+
 -- sqlite, version bump to 3.45.3
 
 -- strace, version bump to 6.7
