@@ -12,11 +12,13 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.209 (version bump), security and bug fixes.
+-- Linux Kernel 5.10.216 (version bump), security and bug fixes.
 
 -- linux, genx86_64/genx86_64-serial set CONFIG_NR_CPUS=64, genx86_64-vm set CONFIG_NR_CPUS=16
 
 -- atlantic, enable the Marvell (Aquantia) 10-Gigabit Ethernet Network Driver (Aquantia AQC107/AQC113/etc. support)
+
+-- r8125, version 9.013.02, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
 
 -- ethtool, version bump to 6.7
 
