@@ -44,7 +44,7 @@ Released @TBD@
 
 -- sqlite, version bump to 3.45.3
 
--- strace, version bump to 6.7
+-- strace, version bump to 6.8
 
 -- system-vendor, update system-vendor.ids
 
@@ -54,6 +54,8 @@ Released @TBD@
 
 -- Time Zone Database update, tzdata2024a and php-timezonedb-2024.1
 
+-- (Custom Build Only) dmidecode, version bump to 3.6
+
 -- Update build system tools:
    == fakeroot, version bump to 1.32.1
    == m4, version bump to 1.4.19
@@ -61,6 +63,14 @@ Released @TBD@
 ** Networking
 
 -- libcurl (curl) version bump to 8.7.1, security fixes: CVE-2024-0853, CVE-2024-2004, CVE-2024-2379, CVE-2024-2398, CVE-2024-2466
+
+-- fping, version bump to 5.2
+
+-- iperf, version bump to 2.2.0
+
+-- msmtp, version bump to 1.8.26
+
+-- sngrep, version bump to 1.8.1, security fix
 
 -- stunnel, version bump to 5.72
 
@@ -86,7 +96,7 @@ Released @TBD@
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
 
--- FOP2, available version bump to 2.31.39
+-- FOP2, available version bump to 2.31.40
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
    More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
