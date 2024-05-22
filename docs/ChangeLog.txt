@@ -79,6 +79,9 @@ Released @TBD@
 
 -- stunnel, version bump to 5.72
 
+-- tinyproxy, version bump to 1.11.2, security fix: CVE-2023-49606 (Critical)
+   Note: The tinyproxy daemon starts only if TINYPROXY_START="yes" and /mnt/kd/tinyproxy.conf exists.
+
 -- unbound, version bump to 1.19.3, security fixes: CVE-2023-50387, CVE-2023-50868, CVE-2024-1931
 
 -- vnStat, version bump to 2.12
