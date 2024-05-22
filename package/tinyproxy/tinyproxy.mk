@@ -4,7 +4,7 @@
 #
 #############################################################
 
-TINYPROXY_VERSION = 1.11.1
+TINYPROXY_VERSION = 1.11.2
 TINYPROXY_SITE = https://github.com/tinyproxy/tinyproxy/releases/download/$(TINYPROXY_VERSION)
 TINYPROXY_SOURCE = tinyproxy-$(TINYPROXY_VERSION).tar.xz
 
