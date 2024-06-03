@@ -1,0 +1,92 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+PIDFILE="/var/run/jitterentropy-rngd.pid"
+
+LOGFILE="/var/log/jitterentropy-rngd.log"
+
+init () {
+
+  if [ "$JITTERENTROPY_RNGD" = "no" ]; then
+    exit
+  fi
+
+  touch $LOGFILE
+}
+
+start () {
+
+  if [ "$JITTERENTROPY_RNGD" != "no" ]; then
+    echo "Starting jitterentropy-rngd..."
+
+    if [ -f /proc/sys/kernel/random/write_wakeup_threshold ]; then
+      entropy_thresh="$(cat /proc/sys/kernel/random/write_wakeup_threshold)"
+    else
+      entropy_thresh=256
+    fi
+    if [ -f /proc/sys/kernel/random/entropy_avail ]; then
+        entropy_avail="$(cat /proc/sys/kernel/random/entropy_avail)"
+        echo "Initial System entropy: available=$entropy_avail, threshold=$entropy_thresh" >> $LOGFILE
+    fi
+
+    /usr/sbin/jitterentropy-rngd -p $PIDFILE
+
+    ## Wait until we have acceptable entropy
+    if [ -f /proc/sys/kernel/random/entropy_avail ]; then
+      cnt=10
+      while [ $cnt -gt 0 ]; do
+        entropy_avail="$(cat /proc/sys/kernel/random/entropy_avail)"
+        echo "System entropy: available=$entropy_avail, threshold=$entropy_thresh" >> $LOGFILE
+        if [ $entropy_avail -ge $entropy_thresh ]; then
+          break
+        fi
+        cnt=$((cnt - 1))
+        sleep 1
+      done
+      entropy_avail="$(cat /proc/sys/kernel/random/entropy_avail)"
+      if [ $cnt -eq 0 -a $entropy_avail -lt $entropy_thresh ]; then
+        echo "System entropy is low: available=$entropy_avail, threshold=$entropy_thresh" >> $LOGFILE
+        echo "jitterentropy-rngd: System available entropy is low: $entropy_avail" >&2
+      fi
+    fi
+  fi
+}
+
+stop () {
+
+  if [ -f $PIDFILE ]; then
+    echo "Stopping jitterentropy-rngd..."
+
+    kill $(cat $PIDFILE) >/dev/null 2>&1
+    rm -f $PIDFILE
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  start
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+

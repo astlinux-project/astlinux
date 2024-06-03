@@ -1,0 +1,11 @@
+config BR2_PACKAGE_JITTERENTROPY_RNGD
+	bool "jitterentropy-rngd"
+	depends on BR2_USE_MMU # uses fork()
+	help
+	  Using the Jitter RNG core, the rngd provides an entropy source that
+	  feeds into the Linux /dev/random device if its entropy runs low.
+	  It updates the /dev/random entropy estimator.
+
+	  https://github.com/smuellerDD/jitterentropy-rngd
+
+	  https://github.com/smuellerDD/jitterentropy-rngd/issues/27
