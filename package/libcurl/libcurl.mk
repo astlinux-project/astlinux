@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LIBCURL_VERSION = 8.7.1
+LIBCURL_VERSION = 8.8.0
 LIBCURL_SOURCE = curl-$(LIBCURL_VERSION).tar.gz
 LIBCURL_SITE = https://curl.haxx.se/download
 LIBCURL_INSTALL_STAGING = YES
@@ -16,7 +16,6 @@ LIBCURL_DEPENDENCIES = host-pkg-config \
 LIBCURL_CONF_OPT = \
 	--disable-verbose \
 	--disable-manual \
-	--disable-ntlm-wb \
 	--disable-curldebug \
 	--disable-mqtt \
 	--disable-gopher \
