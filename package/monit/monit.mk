@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-MONIT_VERSION = 5.33.0
+MONIT_VERSION = 5.34.0
 MONIT_SITE = https://mmonit.com/monit/dist
 MONIT_DEPENDENCIES = host-bison host-flex
 #
@@ -25,6 +25,7 @@ MONIT_CONF_ENV = \
 
 MONIT_CONF_OPT += \
 	--sysconfdir=/etc/monit \
+	--with-piddir=/var/run \
 	--without-pam
 
 ifeq ($(BR2_PACKAGE_OPENSSL),y)

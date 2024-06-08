@@ -9,7 +9,7 @@
  #ifdef HAVE_STDIO_H
  #include <stdio.h>
  #endif
-@@ -554,6 +556,11 @@
+@@ -558,6 +560,11 @@
                  internal_error(S, SC_BAD_REQUEST, "[error] URL too long");
                  return NULL;
          }
@@ -23,7 +23,7 @@
          req->S = S;
 --- monit-5.31.0/src/http/cervlet.c.orig	2022-02-14 09:59:39.974142875 -0600
 +++ monit-5.31.0/src/http/cervlet.c	2022-02-14 10:01:29.479145363 -0600
-@@ -701,7 +701,7 @@
+@@ -729,7 +729,7 @@
              if (res->status <= 300) {
                  // #1009: Redirect back to the same url so a reload in the browser does not perform a POST again
                  set_status(res, SC_MOVED_TEMPORARILY);
