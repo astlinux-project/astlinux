@@ -6,6 +6,21 @@ PIDFILE="/var/run/jitterentropy-rngd.pid"
 
 LOGFILE="/var/log/jitterentropy-rngd.log"
 
+gen_jitterentropy_log()
+{
+  local msg="$1" available="$2" threshold="$3" uptime entropy
+
+  uptime="$(cut -d' ' -f1 /proc/uptime)"
+
+  if [ -n "$available" -a -n "$threshold" ]; then
+    entropy=" (available=$available, threshold=$threshold)"
+  else
+    entropy=""
+  fi
+
+  echo "[$uptime] ${msg}${entropy}" >> $LOGFILE
+}
+
 init () {
 
   if [ "$JITTERENTROPY_RNGD" = "no" ]; then
@@ -27,9 +42,10 @@ start () {
     fi
     if [ -f /proc/sys/kernel/random/entropy_avail ]; then
         entropy_avail="$(cat /proc/sys/kernel/random/entropy_avail)"
-        echo "Initial System entropy: available=$entropy_avail, threshold=$entropy_thresh" >> $LOGFILE
+        gen_jitterentropy_log "Initial System entropy" "$entropy_avail" "$entropy_thresh"
     fi
 
+    gen_jitterentropy_log "Starting jitterentropy-rngd"
     /usr/sbin/jitterentropy-rngd -p $PIDFILE
 
     ## Wait until we have acceptable entropy
@@ -37,7 +53,7 @@ start () {
       cnt=10
       while [ $cnt -gt 0 ]; do
         entropy_avail="$(cat /proc/sys/kernel/random/entropy_avail)"
-        echo "System entropy: available=$entropy_avail, threshold=$entropy_thresh" >> $LOGFILE
+        gen_jitterentropy_log "System entropy" "$entropy_avail" "$entropy_thresh"
         if [ $entropy_avail -ge $entropy_thresh ]; then
           break
         fi
@@ -46,7 +62,7 @@ start () {
       done
       entropy_avail="$(cat /proc/sys/kernel/random/entropy_avail)"
       if [ $cnt -eq 0 -a $entropy_avail -lt $entropy_thresh ]; then
-        echo "System entropy is low: available=$entropy_avail, threshold=$entropy_thresh" >> $LOGFILE
+        gen_jitterentropy_log "System entropy is low" "$entropy_avail" "$entropy_thresh"
         echo "jitterentropy-rngd: System available entropy is low: $entropy_avail" >&2
       fi
     fi
