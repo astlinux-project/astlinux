@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 5.10.218 (version bump), security and bug fixes.
 
+-- ethtool, version bump to 6.9
+
 -- jitterentropy-rngd, new package, version 1.2.8, Random Number Generator (RNG) daemon
    Enabled by default to increase the available entropy for the kernel's "random" sources.
    New rc.conf variable JITTERENTROPY_RNGD can be set to "no" to disable.
@@ -22,6 +24,8 @@ Released @TBD@
 -- libcap, version bump to 2.70
 
 -- libedit, version bump to 20240517-3.1
+
+-- logrotate, version bump to 3.22.0
 
 -- Monit, version bump to 5.34.0
 
