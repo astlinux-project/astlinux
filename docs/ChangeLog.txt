@@ -25,6 +25,8 @@ Released @TBD@
 
 -- libedit, version bump to 20240517-3.1
 
+-- libsodium, version bump to 1.0.20
+
 -- logrotate, version bump to 3.22.0
 
 -- Monit, version bump to 5.34.0
@@ -39,6 +41,8 @@ Released @TBD@
 
 -- iperf3, version bump to 3.17.1, security fix: CVE-2024-26306
    Note: Breaking change to authentication features, is not backwards compatible with older versions of iperf3 (before 3.17).
+
+-- keepalived, version bump to 2.3.1
 
 -- unbound, version bump to 1.20.0, security fix: CVE-2024-33655
 
