@@ -1,0 +1,97 @@
+#!/bin/sh
+
+. /etc/rc.conf
+
+MOUNTPOINT="/var/s3fs/mnt"
+
+PASSWD_FILE="/mnt/kd/s3fs/passwd-s3fs"
+
+TMP_DIR="/mnt/kd/s3fs/tmp"
+
+init () {
+
+  if [ "$S3FS_START" = "yes" ]; then
+    start
+  fi
+}
+
+start () {
+  local x ARGS IFS
+
+  if [ ! -d "$MOUNTPOINT" ]; then
+    mkdir -m 0700 -p "$MOUNTPOINT"
+  fi
+
+  if [ ! -d "$TMP_DIR" ]; then
+    mkdir -m 0700 -p "$TMP_DIR"
+  fi
+
+  if [ ! -f "$PASSWD_FILE" ]; then
+    echo "s3fs: The '$PASSWD_FILE' file must exist (ACCESS_KEY_ID:SECRET_ACCESS_KEY), skip start" >&2
+    exit
+  fi
+  chmod 600 "$PASSWD_FILE"
+
+  if [ -z "$S3FS_BUCKET" ]; then
+    echo "s3fs: The S3FS_BUCKET variable must be defined, skip start" >&2
+    exit
+  fi
+
+  if mount | grep -q "$MOUNTPOINT"; then
+    echo "s3fs: currently mounted, skip start" >&2
+    exit
+  fi
+
+  echo "Starting s3fs..."
+
+  if [ -n "$S3FS_URL" ]; then
+    ARGS="-o url=$S3FS_URL"
+  else
+    ARGS=""
+  fi
+  ARGS="$ARGS -o passwd_file=$PASSWD_FILE"
+  ARGS="$ARGS -o tmpdir=$TMP_DIR"
+
+  unset IFS
+  for x in $S3FS_OPTIONS; do
+    ARGS="$ARGS -o $x"
+  done
+
+  s3fs "$S3FS_BUCKET" "$MOUNTPOINT" $ARGS
+}
+
+stop () {
+
+  if mount | grep -q "$MOUNTPOINT"; then
+    echo "Stopping s3fs..."
+
+    umount "$MOUNTPOINT"
+  fi
+}
+
+case $1 in
+
+start)
+  start
+  ;;
+
+stop)
+  stop
+  ;;
+
+init)
+  init
+  ;;
+
+restart)
+  stop
+  sleep 2
+  start
+  ;;
+
+*)
+  echo "Usage: start|stop|restart"
+  ;;
+
+esac
+

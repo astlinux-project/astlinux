@@ -1,0 +1,15 @@
+config BR2_PACKAGE_S3FS
+	bool "s3fs (FUSE)"
+	depends on BR2_PACKAGE_LIBFUSE
+	select BR2_PACKAGE_LIBCURL
+	select BR2_PACKAGE_LIBXML2
+	select BR2_PACKAGE_OPENSSL
+	help
+	  s3fs allows a user to mount an S3 bucket via FUSE (Filesystem in Userspace).
+	  s3fs makes you operate files and directories in S3 bucket like a local file system.
+	  s3fs preserves the native object format for files.
+
+	  s3fs is stable and is being used in a number of production environments, e.g., rsync backup to s3.
+
+	  https://github.com/s3fs-fuse/s3fs-fuse
+
