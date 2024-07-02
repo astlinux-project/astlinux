@@ -4,7 +4,7 @@
 
 MOUNTPOINT="/var/s3fs/mnt"
 
-PASSWD_FILE="/mnt/kd/s3fs/passwd-s3fs"
+PASSWD_FILE="/mnt/kd/s3fs/passwd/${S3FS_PASSWD:-passwd-s3fs}"
 
 TMP_DIR="/mnt/kd/s3fs/tmp"
 
@@ -24,6 +24,10 @@ start () {
 
   if [ ! -d "$TMP_DIR" ]; then
     mkdir -m 0700 -p "$TMP_DIR"
+  fi
+
+  if [ ! -d "${PASSWD_FILE%/*}" ]; then
+    mkdir -m 0700 -p "${PASSWD_FILE%/*}"
   fi
 
   if [ ! -f "$PASSWD_FILE" ]; then
