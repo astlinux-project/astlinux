@@ -51,6 +51,9 @@ start () {
   fi
   ARGS="$ARGS -o passwd_file=$PASSWD_FILE"
   ARGS="$ARGS -o tmpdir=$TMP_DIR"
+  if [ "$S3FS_READONLY" = "yes" ]; then
+    ARGS="$ARGS -o ro"
+  fi
 
   unset IFS
   for x in $S3FS_OPTIONS; do
