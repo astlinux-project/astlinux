@@ -44,6 +44,11 @@ Released @TBD@
 
 -- keepalived, version bump to 2.3.1
 
+-- s3fs, new package, version 1.94, allows a user to mount an S3 bucket via FUSE filesystem
+   The s3fs service does not start by default.
+   New rc.conf variables: S3FS_START, S3FS_URL, S3FS_BUCKET, S3FS_PASSWD, S3FS_READONLY, S3FS_OPTIONS
+   More info: https://doc.astlinux-project.org/userdoc:tt_s3_object_storage_client
+
 -- unbound, version bump to 1.20.0, security fix: CVE-2024-33655
 
 ** Asterisk
