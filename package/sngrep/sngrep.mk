@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-SNGREP_VERSION = 1.8.1
+SNGREP_VERSION = 1.8.2
 SNGREP_SOURCE = sngrep-$(SNGREP_VERSION).tar.gz
 SNGREP_SITE = https://github.com/irontec/sngrep/releases/download/v$(SNGREP_VERSION)
 SNGREP_AUTORECONF = YES
