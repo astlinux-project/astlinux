@@ -35,6 +35,8 @@ Released @TBD@
 
 -- strace, version bump to 6.9
 
+-- ca-certificates, update trusted root certificates 2024-07-02
+
 ** Networking
 
 -- libcurl (curl) version bump to 8.8.0
@@ -48,6 +50,8 @@ Released @TBD@
    The s3fs service does not start by default.
    New rc.conf variables: S3FS_START, S3FS_URL, S3FS_BUCKET, S3FS_PASSWD, S3FS_READONLY, S3FS_OPTIONS
    More info: https://doc.astlinux-project.org/userdoc:tt_s3_object_storage_client
+
+-- sngrep, version bump to 1.8.2, security fix
 
 -- unbound, version bump to 1.20.0, security fix: CVE-2024-33655
 
