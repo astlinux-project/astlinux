@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.218 (version bump), security and bug fixes.
+-- Linux Kernel 5.10.221 (version bump), security and bug fixes.
 
 -- ethtool, version bump to 6.9
 
