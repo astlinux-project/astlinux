@@ -44,6 +44,7 @@ PJSIP_CONF_OPT = \
 	--disable-ffmpeg \
 	--disable-openh264 \
 	--disable-ipp \
+	--disable-upnp \
 	--without-external-pa \
 	--without-external-srtp
 
