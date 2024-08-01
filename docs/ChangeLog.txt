@@ -31,6 +31,8 @@ Released @TBD@
 
 -- Monit, version bump to 5.34.0
 
+-- netcalc, version bump to 2.1.7
+
 -- pciutils, version bump to 3.13.0
 
 -- strace, version bump to 6.9
