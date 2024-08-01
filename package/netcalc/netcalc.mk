@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-NETCALC_VERSION = 2.1.6
+NETCALC_VERSION = 2.1.7
 NETCALC_SOURCE = netcalc-$(NETCALC_VERSION).tar.gz
 NETCALC_SITE = https://github.com/troglobit/netcalc/releases/download/v$(NETCALC_VERSION)
 

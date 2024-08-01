@@ -1,0 +1,23 @@
+From 7dfe865ba6c834190e4470f040d537a06fcc52b3 Mon Sep 17 00:00:00 2001
+From: Lonnie Abelbeck <lonnie@abelbeck.com>
+Date: Sun, 26 Mar 2017 16:24:27 -0500
+Subject: [PATCH] Auto-disable color if not a terminal
+
+---
+ src/netcalc.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/netcalc.c b/netcalc.c
+index 4220254..f1406ec 100644
+--- a/src/netcalc.c
++++ b/src/netcalc.c
+@@ -617,6 +617,9 @@ int main(int argc, char *argv[])
+ 	if (!abox_start)
+ 		err(1, "Fatal error");
+ 
++	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
++		colorize = 0;
++
+ 	if (split_errv4 || split_errv6 || range_err) {
+  nothing:
+ 		warnx("No (valid) commands received, nothing to do.");
