@@ -35,13 +35,13 @@ Released @TBD@
 
 -- pciutils, version bump to 3.13.0
 
--- strace, version bump to 6.9
+-- strace, version bump to 6.10
 
 -- ca-certificates, update trusted root certificates 2024-07-02
 
 ** Networking
 
--- libcurl (curl) version bump to 8.8.0
+-- libcurl (curl) version bump to 8.9.1, security fix: CVE-2024-6874
 
 -- iperf3, version bump to 3.17.1, security fix: CVE-2024-26306
    Note: Breaking change to authentication features, is not backwards compatible with older versions of iperf3 (before 3.17).
