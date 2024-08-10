@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.221 (version bump), security and bug fixes.
+-- Linux Kernel 5.10.223 (version bump), security and bug fixes.
 
 -- ethtool, version bump to 6.9
 
@@ -62,7 +62,7 @@ Released @TBD@
 -- Asterisk 16.30.0 ('16se' no change)
    Last Asterisk 16.x "Legacy" version, built --without-pjproject and --without-dahdi
 
--- Asterisk 18.24.1 (version bump) and 20.9.1 (version bump)
+-- Asterisk 18.24.2 (version bump) and 20.9.2 (version bump)
    Built --with-pjproject and --with-dahdi
 
 -- pjsip 2.14.1 (no change)
