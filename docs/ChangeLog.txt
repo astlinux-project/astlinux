@@ -35,6 +35,8 @@ Released @TBD@
 
 -- pciutils, version bump to 3.13.0
 
+-- sqlite, version bump to 3.46.1
+
 -- strace, version bump to 6.10
 
 -- ca-certificates, update trusted root certificates 2024-07-02
