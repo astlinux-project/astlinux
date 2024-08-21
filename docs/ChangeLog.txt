@@ -14,18 +14,22 @@ Released @TBD@
 
 -- Linux Kernel 5.10.223 (version bump), security and bug fixes.
 
--- ethtool, version bump to 6.9
+-- ethtool, version bump to 6.10
 
 -- jitterentropy-rngd, new package, version 1.2.8, Random Number Generator (RNG) daemon
    Enabled by default to increase the available entropy for the kernel's "random" sources.
    New rc.conf variable JITTERENTROPY_RNGD can be set to "no" to disable.
    Note: Previous rng-tools 'rngd' daemon is no longer used.
 
+-- kmod, version bump to 33
+
 -- libcap, version bump to 2.70
 
--- libedit, version bump to 20240517-3.1
+-- libedit, version bump to 20240808-3.1
 
 -- libsodium, version bump to 1.0.20
+
+-- libxml2, version bump to 2.11.9, security fix: CVE-2024-40896
 
 -- logrotate, version bump to 3.22.0
 
@@ -57,7 +61,7 @@ Released @TBD@
 
 -- sngrep, version bump to 1.8.2, security fix
 
--- unbound, version bump to 1.20.0, security fix: CVE-2024-33655
+-- unbound, version bump to 1.21.0, security fix: CVE-2024-33655
 
 ** Asterisk
 
