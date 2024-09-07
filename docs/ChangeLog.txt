@@ -69,8 +69,9 @@ Released @TBD@
 
 -- Asterisk 16.30.0 ('16se' no change)
    Last Asterisk 16.x "Legacy" version, built --without-pjproject and --without-dahdi
+   Backport patch for security fix CVE-2024-42491
 
--- Asterisk 18.24.2 (version bump) and 20.9.2 (version bump)
+-- Asterisk 18.24.3 (version bump) and 20.9.3 (version bump)
    Built --with-pjproject and --with-dahdi
 
 -- pjsip 2.14.1 (no change)
