@@ -78,7 +78,7 @@ Released @TBD@
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
 
--- FOP2, available version bump to 2.31.43
+-- FOP2, available version bump to 2.31.45
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
    More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
