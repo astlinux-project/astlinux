@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 5.10.223 (version bump), security and bug fixes.
 
+-- RUNNIX, version bump to runnix-0.6.19, with Linux Kernel 5.10.223
+
 -- ethtool, version bump to 6.10
 
 -- jitterentropy-rngd, new package, version 1.2.8, Random Number Generator (RNG) daemon
@@ -44,6 +46,8 @@ Released @TBD@
 -- strace, version bump to 6.10
 
 -- ca-certificates, update trusted root certificates 2024-07-02
+
+-- mac2vendor, oui.txt database snapshot 2024-09-14
 
 ** Networking
 
