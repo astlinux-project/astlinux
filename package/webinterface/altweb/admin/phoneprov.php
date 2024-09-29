@@ -49,6 +49,7 @@ $gw_if_menu = array (
 $sip_notify_reload = array (
   'aastra' => 'aastra-check-cfg',
   'cisco' => 'cisco-check-cfg',
+  'grandstream' => 'snom-check-cfg',
   'linksys' => 'linksys-warm-restart',
   'mitel' => 'snom-check-cfg',
   'polycom' => 'polycom-check-cfg',
@@ -59,6 +60,7 @@ $sip_notify_reload = array (
 
 $sip_notify_reboot = array (
   'cisco' => 'linksys-cold-restart',
+  'grandstream' => 'snom-reboot',
   'linksys' => 'linksys-cold-restart',
   'mitel' => 'snom-reboot',
   'snom' => 'snom-reboot',
