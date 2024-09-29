@@ -10,6 +10,30 @@ Additions for AstLinux 1.5.6:
 
 Released @TBD@
 
+** System
+
+-- Linux Kernel 5.10.223 (no change), security and bug fixes.
+
+** Networking
+
+-- no change
+
+** Asterisk
+
+-- Asterisk 16.30.0 ('16se' no change)
+   Last Asterisk 16.x "Legacy" version, built --without-pjproject and --without-dahdi
+
+-- Asterisk 18.24.3 (no change) and 20.9.3 (no change)
+   Built --with-pjproject and --with-dahdi
+
+-- pjsip 2.14.1 (no change)
+
+-- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
+
+** Web Interface
+
+-- Phoneprov tab, add "grandstream" reload/reboot matches.
+
 
 Additions for AstLinux 1.5.5:
 =============================
