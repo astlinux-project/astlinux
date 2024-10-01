@@ -14,6 +14,10 @@ Released @TBD@
 
 -- Linux Kernel 5.10.223 (no change), security and bug fixes.
 
+-- php, version 7.2.34, add security fixes: CVE-2024-8925, CVE-2024-8927
+
+-- Time Zone Database update, tzdata2024b and php-timezonedb-2024.2
+
 ** Networking
 
 -- no change
