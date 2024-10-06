@@ -1,0 +1,9 @@
+--------------------
+Linux Kernel Patches
+--------------------
+
+Format:
+linux-NNNN-description.patch
+
+Note: Patches are also referenced by runnix and runnix-iso kernel builds.
+
