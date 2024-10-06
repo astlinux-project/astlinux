@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.223 (no change), security and bug fixes.
+-- Linux Kernel 5.10.226 (version bump), security and bug fixes.
 
 -- expat, version bump to 2.6.3, security fixes: CVE-2024-45490, CVE-2024-45491, CVE-2024-45492
 
