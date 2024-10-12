@@ -16,11 +16,15 @@ Released @TBD@
 
 -- expat, version bump to 2.6.3, security fixes: CVE-2024-45490, CVE-2024-45491, CVE-2024-45492
 
+-- libpcap, version bump to 1.10.5
+
 -- libpng, version bump to 1.6.44
 
 -- Monit, version bump to 5.34.1
 
 -- php, version 7.2.34, add security fixes: CVE-2024-8925, CVE-2024-8927
+
+-- strace, version bump to 6.11
 
 -- tiff, version bump to 4.7.0
 
@@ -31,6 +35,14 @@ Released @TBD@
 ** Networking
 
 -- libcurl (curl) version bump to 8.10.1
+
+-- chrony, version bump to 4.6.1
+
+-- msmtp, version bump to 1.8.27
+
+-- stunnel, version bump to 5.73
+
+-- tcpdump, version 4.99.5
 
 ** Asterisk
 
