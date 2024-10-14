@@ -20,7 +20,7 @@ Released @TBD@
 
 -- libpng, version bump to 1.6.44
 
--- Monit, version bump to 5.34.1
+-- Monit, version bump to 5.34.2
 
 -- php, version 7.2.34, add security fixes: CVE-2024-8925, CVE-2024-8927
 
