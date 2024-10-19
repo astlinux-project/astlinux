@@ -1,6 +1,6 @@
 --- unbound-1.5.8/smallapp/unbound-host.c.orig	2016-03-22 09:29:02.000000000 -0500
 +++ unbound-1.5.8/smallapp/unbound-host.c	2016-03-22 09:31:10.000000000 -0500
-@@ -438,6 +438,9 @@
+@@ -440,6 +440,9 @@
  	/* no need to fetch additional targets, we only do few lookups */
  	check_ub_res(ub_ctx_set_option(ctx, "target-fetch-policy:", "0 0 0 0 0"));
  
