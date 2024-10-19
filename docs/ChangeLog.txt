@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 5.10.226 (version bump), security and bug fixes.
 
+-- ethtool, version bump to 6.11
+
 -- expat, version bump to 2.6.3, security fixes: CVE-2024-45490, CVE-2024-45491, CVE-2024-45492
 
 -- libpcap, version bump to 1.10.5
@@ -44,12 +46,14 @@ Released @TBD@
 
 -- tcpdump, version 4.99.5
 
+-- unbound, version bump to 1.22.0, security fix: CVE-2024-8508
+
 ** Asterisk
 
 -- Asterisk 16.30.0 ('16se' no change)
    Last Asterisk 16.x "Legacy" version, built --without-pjproject and --without-dahdi
 
--- Asterisk 18.24.3 (no change) and 20.9.3 (no change)
+-- Asterisk 18.25.0 (version bump) and 20.10.0 (version bump)
    Built --with-pjproject and --with-dahdi
 
 -- pjsip 2.14.1 (no change)
