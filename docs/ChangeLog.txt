@@ -26,6 +26,10 @@ Released @TBD@
 
 -- php, version 7.2.34, add security fixes: CVE-2024-8925, CVE-2024-8927
 
+-- screen, version 5.0.0
+
+-- sqlite, version bump to 3.47.0
+
 -- strace, version bump to 6.11
 
 -- tiff, version bump to 4.7.0
@@ -34,6 +38,10 @@ Released @TBD@
 
 -- Time Zone Database update, tzdata2024b and php-timezonedb-2024.2
 
+-- Update build system tools:
+   == autoconf, version bump to 2.71
+   == automake, version bump to 1.16.5
+
 ** Networking
 
 -- libcurl (curl) version bump to 8.10.1
@@ -41,6 +49,8 @@ Released @TBD@
 -- chrony, version bump to 4.6.1
 
 -- msmtp, version bump to 1.8.27
+
+-- s3fs, version bump to 1.95
 
 -- stunnel, version bump to 5.73
 
