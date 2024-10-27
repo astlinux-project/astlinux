@@ -7,7 +7,7 @@
 VNSTAT_VERSION = 2.12
 VNSTAT_SITE = https://humdi.net/vnstat
 VNSTAT_DEPENDENCIES = host-pkg-config sqlite
-VNSTAT_CONF_OPTS = \
+VNSTAT_CONF_OPT = \
 	--disable-extra-paths \
 	--disable-image-output
 
