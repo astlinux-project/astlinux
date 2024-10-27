@@ -1,6 +1,7 @@
+From 50041d75d59e7343f1fd45bec5bd0c92b47e0a8e Mon Sep 17 00:00:00 2001
 From: Maarten ter Huurne <maarten@treewalker.org>
 Date: Mon, 15 Sep 2014 00:24:41 +0200
-Subject: Renamed sched.h to eventqueue.h
+Subject: [PATCH] Renamed sched.h to eventqueue.h
 
 There is a <sched.h> system header that got shadowed by "sched.h".
 While Screen itself doesn't include <sched.h>, other system headers
@@ -8,135 +9,243 @@ might include it indirectly. This broke the build when using uClibc
 with pthread support.
 
 Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
+[Julien: rebase on top of 4.9.1]
+[Julien: rebase on top of 5.0.0, renamed all occurences of sched.h]
+Signed-off-by: Julien Olivain <ju.o@free.fr>
 ---
- eventqueue.h | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
- sched.h      | 48 ------------------------------------------------
- screen.h     |  2 +-
- 3 files changed, 49 insertions(+), 49 deletions(-)
- create mode 100644 eventqueue.h
- delete mode 100644 sched.h
+ Makefile.in             | 66 ++++++++++++++++++++---------------------
+ canvas.h                |  2 +-
+ sched.h => eventqueue.h |  0
+ sched.c                 |  2 +-
+ screen.h                |  2 +-
+ window.h                |  2 +-
+ winmsg.c                |  2 +-
+ 7 files changed, 38 insertions(+), 38 deletions(-)
+ rename sched.h => eventqueue.h (100%)
 
-diff --git a/eventqueue.h b/eventqueue.h
-new file mode 100644
-index 0000000..fdc3fc4
---- /dev/null
-+++ b/eventqueue.h
-@@ -0,0 +1,48 @@
-+/* Copyright (c) 2008, 2009
-+ *      Juergen Weigert (jnweiger@immd4.informatik.uni-erlangen.de)
-+ *      Michael Schroeder (mlschroe@immd4.informatik.uni-erlangen.de)
-+ *      Micah Cowan (micah@cowan.name)
-+ *      Sadrul Habib Chowdhury (sadrul@users.sourceforge.net)
-+ * Copyright (c) 1993-2002, 2003, 2005, 2006, 2007
-+ *      Juergen Weigert (jnweiger@immd4.informatik.uni-erlangen.de)
-+ *      Michael Schroeder (mlschroe@immd4.informatik.uni-erlangen.de)
-+ * Copyright (c) 1987 Oliver Laumann
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 3, or (at your option)
-+ * any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program (see the file COPYING); if not, see
-+ * https://www.gnu.org/licenses/, or contact Free Software Foundation, Inc.,
-+ * 51 Franklin Street, Fifth Floor, Boston, MA  02111-1301  USA
-+ *
-+ ****************************************************************
-+ * $Id$ GNU
-+ */
-+
-+struct event
-+{
-+  struct event *next;
-+  void (*handler) __P((struct event *, char *));
-+  char *data;
-+  int fd;
-+  int type;
-+  int pri;
-+  struct timeval timeout;
-+  int queued;		/* in evs queue */
-+  int active;		/* in fdset */
-+  int *condpos;		/* only active if condpos - condneg > 0 */
-+  int *condneg;
-+};
-+
-+#define EV_TIMEOUT	0
-+#define EV_READ		1
-+#define EV_WRITE	2
-+#define EV_ALWAYS	3
-diff --git a/sched.h b/sched.h
-deleted file mode 100644
-index fdc3fc4..0000000
---- a/sched.h
-+++ /dev/null
-@@ -1,48 +0,0 @@
--/* Copyright (c) 2008, 2009
-- *      Juergen Weigert (jnweiger@immd4.informatik.uni-erlangen.de)
-- *      Michael Schroeder (mlschroe@immd4.informatik.uni-erlangen.de)
-- *      Micah Cowan (micah@cowan.name)
-- *      Sadrul Habib Chowdhury (sadrul@users.sourceforge.net)
-- * Copyright (c) 1993-2002, 2003, 2005, 2006, 2007
-- *      Juergen Weigert (jnweiger@immd4.informatik.uni-erlangen.de)
-- *      Michael Schroeder (mlschroe@immd4.informatik.uni-erlangen.de)
-- * Copyright (c) 1987 Oliver Laumann
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 3, or (at your option)
-- * any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program (see the file COPYING); if not, see
-- * https://www.gnu.org/licenses/, or contact Free Software Foundation, Inc.,
-- * 51 Franklin Street, Fifth Floor, Boston, MA  02111-1301  USA
-- *
-- ****************************************************************
-- * $Id$ GNU
-- */
--
--struct event
--{
--  struct event *next;
--  void (*handler) __P((struct event *, char *));
--  char *data;
--  int fd;
--  int type;
--  int pri;
--  struct timeval timeout;
--  int queued;		/* in evs queue */
--  int active;		/* in fdset */
--  int *condpos;		/* only active if condpos - condneg > 0 */
--  int *condneg;
--};
--
--#define EV_TIMEOUT	0
--#define EV_READ		1
--#define EV_WRITE	2
--#define EV_ALWAYS	3
-diff --git a/screen.h b/screen.h
-index 603ca3f..34238c8 100644
---- a/screen.h
-+++ b/screen.h
-@@ -43,7 +43,7 @@
- #include "osdef.h"
+diff --git a/Makefile.in b/Makefile.in
+index d03129e..69ffe60 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -165,116 +165,116 @@ depend.in: $(CFILES) term.h
+ ###############################################################################
  
- #include "ansi.h"
+ ### Dependencies:
+-screen.o: screen.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++screen.o: screen.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h winmsg.h winmsgbuf.h winmsgcond.h backtick.h \
+  fileio.h mark.h attacher.h encoding.h help.h misc.h process.h socket.h \
+  termcap.h tty.h utmp.h
+-ansi.o: ansi.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++ansi.o: ansi.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h winmsg.h winmsgbuf.h winmsgcond.h backtick.h encoding.h \
+  fileio.h help.h mark.h misc.h process.h resize.h
+-fileio.o: fileio.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++fileio.o: fileio.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h fileio.h misc.h process.h winmsgbuf.h termcap.h encoding.h
+-mark.o: mark.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++mark.o: mark.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h encoding.h fileio.h mark.h process.h winmsgbuf.h search.h
+-misc.o: misc.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++misc.o: misc.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h
+-resize.o: resize.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++resize.o: resize.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h process.h winmsgbuf.h resize.h telnet.h
+-socket.o: socket.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++socket.o: socket.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h encoding.h fileio.h list_generic.h misc.h process.h \
+  winmsgbuf.h resize.h socket.h termcap.h tty.h utmp.h
+-search.o: search.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++search.o: search.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h mark.h input.h
+-tty.o: tty.c config.h screen.h os.h ansi.h sched.h acls.h comm.h layer.h \
++tty.o: tty.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h layer.h \
+  term.h image.h canvas.h display.h layout.h viewport.h window.h logfile.h \
+  fileio.h misc.h pty.h telnet.h tty.h
+ term.o: term.c term.h
+-window.o: window.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++window.o: window.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h winmsg.h winmsgbuf.h winmsgcond.h backtick.h fileio.h help.h \
+  input.h mark.h misc.h process.h pty.h resize.h telnet.h termcap.h tty.h \
+  utmp.h
+-utmp.o: utmp.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++utmp.o: utmp.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h misc.h tty.h utmp.h
+-help.o: help.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++help.o: help.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h misc.h list_generic.h process.h winmsgbuf.h
+-termcap.o: termcap.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++termcap.o: termcap.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h encoding.h misc.h process.h winmsgbuf.h resize.h termcap.h
+-input.o: input.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++input.o: input.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h misc.h
+-attacher.o: attacher.c config.h screen.h os.h ansi.h sched.h acls.h \
++attacher.o: attacher.c config.h screen.h os.h ansi.h eventqueue.h acls.h \
+  comm.h layer.h term.h image.h canvas.h display.h layout.h viewport.h \
+  window.h logfile.h misc.h socket.h tty.h
+-pty.o: pty.c config.h screen.h os.h ansi.h sched.h acls.h comm.h layer.h \
++pty.o: pty.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h layer.h \
+  term.h image.h canvas.h display.h layout.h viewport.h window.h logfile.h
+-process.o: process.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++process.o: process.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h winmsg.h winmsgbuf.h winmsgcond.h backtick.h encoding.h \
+  fileio.h help.h input.h kmapdef.h list_generic.h mark.h misc.h process.h \
+  resize.h search.h socket.h telnet.h termcap.h tty.h utmp.h
+-display.o: display.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++display.o: display.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h winmsg.h winmsgbuf.h winmsgcond.h backtick.h encoding.h mark.h \
+  misc.h process.h pty.h resize.h termcap.h tty.h
+-comm.o: comm.c config.h os.h screen.h ansi.h sched.h acls.h comm.h \
++comm.o: comm.c config.h os.h screen.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h
+ kmapdef.o: kmapdef.c config.h
+-acls.o: acls.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++acls.o: acls.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h mark.h misc.h process.h winmsgbuf.h
+-logfile.o: logfile.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++logfile.o: logfile.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h misc.h
+-layer.o: layer.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++layer.o: layer.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h encoding.h mark.h tty.h
+-winmsg.o: winmsg.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++winmsg.o: winmsg.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h winmsg.h winmsgbuf.h winmsgcond.h backtick.h fileio.h \
+  process.h mark.h
+-winmsgbuf.o: winmsgbuf.c winmsgbuf.h screen.h os.h ansi.h sched.h acls.h \
++winmsgbuf.o: winmsgbuf.c winmsgbuf.h screen.h os.h ansi.h eventqueue.h acls.h \
+  comm.h layer.h term.h image.h canvas.h display.h layout.h viewport.h \
+  window.h logfile.h
+ winmsgcond.o: winmsgcond.c winmsgcond.h
+-backtick.o: backtick.c backtick.h screen.h os.h ansi.h sched.h acls.h \
++backtick.o: backtick.c backtick.h screen.h os.h ansi.h eventqueue.h acls.h \
+  comm.h layer.h term.h image.h canvas.h display.h layout.h viewport.h \
+  window.h logfile.h fileio.h
+-sched.o: sched.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++sched.o: sched.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h
+ telnet.o: telnet.c config.h comm.h
+-encoding.o: encoding.c config.h screen.h os.h ansi.h sched.h acls.h \
++encoding.o: encoding.c config.h screen.h os.h ansi.h eventqueue.h acls.h \
+  comm.h layer.h term.h image.h canvas.h display.h layout.h viewport.h \
+  window.h logfile.h encoding.h fileio.h
+-canvas.o: canvas.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++canvas.o: canvas.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h help.h list_generic.h resize.h
+-layout.o: layout.c config.h screen.h os.h ansi.h sched.h acls.h comm.h \
++layout.o: layout.c config.h screen.h os.h ansi.h eventqueue.h acls.h comm.h \
+  layer.h term.h image.h canvas.h display.h layout.h viewport.h window.h \
+  logfile.h fileio.h misc.h process.h winmsgbuf.h resize.h
+-viewport.o: viewport.c config.h screen.h os.h ansi.h sched.h acls.h \
++viewport.o: viewport.c config.h screen.h os.h ansi.h eventqueue.h acls.h \
+  comm.h layer.h term.h image.h canvas.h display.h layout.h viewport.h \
+  window.h logfile.h
+-list_display.o: list_display.c config.h screen.h os.h ansi.h sched.h \
++list_display.o: list_display.c config.h screen.h os.h ansi.h eventqueue.h \
+  acls.h comm.h layer.h term.h image.h canvas.h display.h layout.h \
+  viewport.h window.h logfile.h list_generic.h misc.h
+-list_generic.o: list_generic.c config.h screen.h os.h ansi.h sched.h \
++list_generic.o: list_generic.c config.h screen.h os.h ansi.h eventqueue.h \
+  acls.h comm.h layer.h term.h image.h canvas.h display.h layout.h \
+  viewport.h window.h logfile.h input.h list_generic.h misc.h
+-list_window.o: list_window.c config.h screen.h os.h ansi.h sched.h acls.h \
++list_window.o: list_window.c config.h screen.h os.h ansi.h eventqueue.h acls.h \
+  comm.h layer.h term.h image.h canvas.h display.h layout.h viewport.h \
+  window.h logfile.h winmsg.h winmsgbuf.h winmsgcond.h backtick.h input.h \
+  list_generic.h misc.h process.h
+diff --git a/canvas.h b/canvas.h
+index 8460d9a..ec5fdaa 100644
+--- a/canvas.h
++++ b/canvas.h
+@@ -31,7 +31,7 @@
+ #define SCREEN_CANVAS_H
+ 
+ #include "layer.h"
 -#include "sched.h"
 +#include "eventqueue.h"
- #include "acls.h"
- #include "comm.h"
+ 
+ #define SLICE_UNKN 0
+ #define SLICE_VERT (1 << 0)
+diff --git a/sched.h b/eventqueue.h
+similarity index 100%
+rename from sched.h
+rename to eventqueue.h
+diff --git a/sched.c b/sched.c
+index 3618f11..dc59b11 100644
+--- a/sched.c
++++ b/sched.c
+@@ -28,7 +28,7 @@
+ 
+ #include "config.h"
+ 
+-#include "sched.h"
++#include "eventqueue.h"
+ 
+ #include <poll.h>
+ #include <stdint.h>
+diff --git a/screen.h b/screen.h
+index 308c365..e39c2b1 100644
+--- a/screen.h
++++ b/screen.h
+@@ -67,7 +67,7 @@ struct mode {
+ #include "ansi.h"
+ #include "image.h"
  #include "layer.h"
+-#include "sched.h"
++#include "eventqueue.h"
+ #include "term.h"
+ #include "window.h"
+ 
+diff --git a/window.h b/window.h
+index bc08c6c..294aa64 100644
+--- a/window.h
++++ b/window.h
+@@ -35,7 +35,7 @@
+ 
+ #include "config.h"
+ 
+-#include "sched.h"
++#include "eventqueue.h"
+ #include "logfile.h"
+ #include "screen.h"
+ #include "layer.h"
+diff --git a/winmsg.c b/winmsg.c
+index 2418439..891a20a 100644
+--- a/winmsg.c
++++ b/winmsg.c
+@@ -44,7 +44,7 @@
+ #include "logfile.h"
+ #include "mark.h"
+ #include "process.h"
+-#include "sched.h"
++#include "eventqueue.h"
+ 
+ /* TODO: rid global variable (has been renamed to point this out; see commit
+  * history) */
 -- 
-1.8.4.5
+2.46.2
 
