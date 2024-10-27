@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-S3FS_VERSION = 1.94
+S3FS_VERSION = 1.95
 S3FS_SOURCE = s3fs-fuse-$(S3FS_VERSION).tar.gz
 S3FS_SITE = https://github.com/s3fs-fuse/s3fs-fuse/archive/v$(S3FS_VERSION)
 S3FS_AUTORECONF = YES
