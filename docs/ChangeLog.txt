@@ -41,6 +41,7 @@ Released @TBD@
 -- Update build system tools:
    == autoconf, version bump to 2.71
    == automake, version bump to 1.16.5
+   == libtool, version bump to 2.4.6
 
 ** Networking
 
