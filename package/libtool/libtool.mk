@@ -3,13 +3,17 @@
 # libtool
 #
 #############################################################
-LIBTOOL_VERSION = 2.4.4
+
+LIBTOOL_VERSION = 2.4.6
 LIBTOOL_SOURCE = libtool-$(LIBTOOL_VERSION).tar.xz
 LIBTOOL_SITE = $(BR2_GNU_MIRROR)/libtool
 LIBTOOL_INSTALL_STAGING = YES
 LIBTOOL_CONF_ENV = HELP2MAN=true
-LIBTOOL_DEPENDENCIES = host-m4
 
+LIBTOOL_DEPENDENCIES = host-m4
+HOST_LIBTOOL_DEPENDENCIES = host-m4
+
+HOST_LIBTOOL_CONF_ENV = MAKEINFO=true
 HOST_LIBTOOL_LIBTOOL_PATCH = NO
 
 # We have a patch that affects libtool.m4, which triggers an autoreconf
