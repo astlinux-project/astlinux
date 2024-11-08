@@ -18,6 +18,8 @@ Released @TBD@
 
 -- expat, version bump to 2.6.3, security fixes: CVE-2024-45490, CVE-2024-45491, CVE-2024-45492
 
+-- libcap, version bump to 2.71
+
 -- libpcap, version bump to 1.10.5
 
 -- libpng, version bump to 1.6.44
@@ -38,6 +40,8 @@ Released @TBD@
 
 -- Time Zone Database update, tzdata2024b and php-timezonedb-2024.2
 
+-- (Custom Build Only) flashrom, version bump to 1.4.0
+
 -- Update build system tools:
    == autoconf, version bump to 2.71
    == automake, version bump to 1.16.5
@@ -45,9 +49,13 @@ Released @TBD@
 
 ** Networking
 
+-- OpenSSL, version 1.1.1w, security fixes: CVE-2023-5678, CVE-2024-0727, CVE-2024-2511, CVE-2024-4741, CVE-2024-5535, CVE-2024-9143
+
 -- libcurl (curl) version bump to 8.10.1
 
 -- chrony, version bump to 4.6.1
+
+-- keepalived, version bump to 2.3.2
 
 -- msmtp, version bump to 1.8.27
 
