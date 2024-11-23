@@ -39,11 +39,12 @@ PJSIP_CONF_OPT = \
 	--disable-ext-sound \
 	--disable-sdl \
 	--disable-libyuv \
-	--disable-libwebrtc \
 	--disable-resample \
 	--disable-ffmpeg \
 	--disable-openh264 \
 	--disable-ipp \
+	--disable-libwebrtc \
+	--disable-libsrtp \
 	--disable-upnp \
 	--without-external-pa \
 	--without-external-srtp
