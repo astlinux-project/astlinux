@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LIBCAP_VERSION = 2.71
+LIBCAP_VERSION = 2.72
 LIBCAP_SITE = https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2
 LIBCAP_SOURCE = libcap-$(LIBCAP_VERSION).tar.xz
 
