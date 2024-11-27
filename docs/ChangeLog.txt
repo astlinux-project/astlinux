@@ -14,11 +14,13 @@ Released @TBD@
 
 -- Linux Kernel 5.10.226 (version bump), security and bug fixes.
 
+-- r8125, version 9.014.01, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
+
 -- ethtool, version bump to 6.11
 
 -- expat, version bump to 2.6.4, security fixes: CVE-2024-45490, CVE-2024-45491, CVE-2024-45492, CVE-2024-50602
 
--- libcap, version bump to 2.71
+-- libcap, version bump to 2.72
 
 -- libpcap, version bump to 1.10.5
 
@@ -30,9 +32,9 @@ Released @TBD@
 
 -- screen, version 5.0.0
 
--- sqlite, version bump to 3.47.0
+-- sqlite, version bump to 3.47.1
 
--- strace, version bump to 6.11
+-- strace, version bump to 6.12
 
 -- tiff, version bump to 4.7.0
 
@@ -160,6 +162,8 @@ Released 2024-09-28
    Built --with-pjproject and --with-dahdi
 
 -- pjsip 2.14.1 (no change)
+
+-- neon, version bump to 0.34.0, used for Asterisk Calendar Support
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
 
