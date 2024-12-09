@@ -20,7 +20,7 @@ Released @TBD@
 
 -- expat, version bump to 2.6.4, security fixes: CVE-2024-45490, CVE-2024-45491, CVE-2024-45492, CVE-2024-50602
 
--- libcap, version bump to 2.72
+-- libcap, version bump to 2.73
 
 -- libpcap, version bump to 1.10.5
 
@@ -32,13 +32,13 @@ Released @TBD@
 
 -- screen, version 5.0.0
 
--- sqlite, version bump to 3.47.1
+-- sqlite, version bump to 3.47.2
 
 -- strace, version bump to 6.12
 
 -- tiff, version bump to 4.7.0
 
--- ca-certificates, update trusted root certificates 2024-09-24
+-- ca-certificates, update trusted root certificates 2024-11-26
 
 -- Time Zone Database update, tzdata2024b and php-timezonedb-2024.2
 
