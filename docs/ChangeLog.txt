@@ -53,7 +53,7 @@ Released @TBD@
 
 -- OpenSSL, version 1.1.1w, security fixes: CVE-2023-5678, CVE-2024-0727, CVE-2024-2511, CVE-2024-4741, CVE-2024-5535, CVE-2024-9143
 
--- libcurl (curl) version bump to 8.11.0, security fix: CVE-2024-9681
+-- libcurl (curl) version bump to 8.11.1, security fix: CVE-2024-9681, CVE-2024-11053
 
 -- chrony, version bump to 4.6.1
 
