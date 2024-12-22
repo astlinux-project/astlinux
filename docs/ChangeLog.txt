@@ -59,13 +59,15 @@ Released @TBD@
 
 -- iperf, version bump to 2.2.1
 
+-- iperf3, version bump to 3.18, security fix: CVE-2024-53580
+
 -- keepalived, version bump to 2.3.2
 
 -- msmtp, version bump to 1.8.27
 
 -- s3fs, version bump to 1.95
 
--- stunnel, version bump to 5.73
+-- stunnel, version bump to 5.74
 
 -- tcpdump, version 4.99.5
 
