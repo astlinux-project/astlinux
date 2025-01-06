@@ -1754,7 +1754,7 @@ Released 2020-07-25
 
 -- lxc, new package, add support for guest Linux Containers.  Running Pi-hole for example.
    New rc.conf variables: LXC_BRIDGE0, LXC_STOP_TIMEOUT
-   More info: http://doc.astlinux-project.org/userdoc:guest_lxc_container_main
+   More info: https://doc.astlinux-project.org/userdoc:guest_lxc_container_main
 
 -- initial-setup, remove 'combined' partition format option, always use 'format separate'
 
@@ -1863,7 +1863,7 @@ Released 2020-07-25
    Adds support for TLS v1.2
    Note: The /tmp/par-* directory almost doubled in size, from 18MB to 34MB, as such a reboot may be needed after upgrade.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
-   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
@@ -2010,7 +2010,7 @@ Released 2020-04-02
 -- FOP2, available version bump to 2.31.27
    Note: FOP2 HTTPS support only uses TLSv1, Firefox 74+ requires: about:config -> security.tls.version.min=1
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
-   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
@@ -2162,16 +2162,16 @@ Released 2019-11-05
    asterisk: Aggregate multiple Asterisk/SIP/VoIP blacklists, including blocklist_de_sip.
    custom: Use variable BLOCKLIST_CUSTOM_URLS containing one or more (space/newline separated) URLs.
    customv6: Use variable BLOCKLIST_CUSTOMV6_URLS containing one or more (space/newline separated) URLs.
-   More info: http://doc.astlinux-project.org/userdoc:tt_firewall_external_block_list#updating_netset_blocklists
+   More info: https://doc.astlinux-project.org/userdoc:tt_firewall_external_block_list#updating_netset_blocklists
 
 -- arnofw (AIF), wireguard-vpn plugin, add support for WG->Local TCP/UDP INPUT policy firewall rules.
    New rc.conf variables: WIREGUARD_HOST_OPEN_TCP, WIREGUARD_HOST_OPEN_UDP,
                           WIREGUARD_HOST_DENY_TCP, WIREGUARD_HOST_DENY_UDP
-   More info: http://doc.astlinux-project.org/userdoc:tt_wireguard_vpn#wireguard_configuration_options
+   More info: https://doc.astlinux-project.org/userdoc:tt_wireguard_vpn#wireguard_configuration_options
 
 -- WAN Failover, add optional support for a script called before any Secondary -> Primary WAN link change.
    The exit value of the optional /mnt/kd/wan-failover-exit.script determines when the failover exits to primary.
-   More info: http://doc.astlinux-project.org/userdoc:tt_wan_failover#exit_action_script_optional
+   More info: https://doc.astlinux-project.org/userdoc:tt_wan_failover#exit_action_script_optional
 
 -- (Custom Build Only) autossh, auto-restart ssh connections - typically reverse proxies, version 1.4g
    Warning: No public repository for development, only private.
@@ -2194,7 +2194,7 @@ Released 2019-11-05
 
 -- FOP2, available version bump to 2.31.26
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
-   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
@@ -2214,7 +2214,7 @@ Released 2019-11-05
    Cmd-. -> Toggle Comment
    Tab   -> Toggle between "fullscreen" (full-window) mode and normal
    Esc   -> Return to normal, "fullscreen" (full-window) mode off
-   More info: http://doc.astlinux-project.org/userdoc:tt_web_interface_edit_codemirror_key_map
+   More info: https://doc.astlinux-project.org/userdoc:tt_web_interface_edit_codemirror_key_map
 
 -- Prefs tab -> Edit Tab Options:
    _x_ CodeMirror Editor
@@ -2233,13 +2233,13 @@ Released 2019-11-05
 -- All tabs, add a 'Goto Top' button on the upper-right when scrolled down such that tabs are not shown.
 
 -- WireGuard sub-tab, add WG->Local TCP/UDP firewall rules support.
-   More info: http://doc.astlinux-project.org/userdoc:tt_wireguard_vpn#wireguard_configuration_options
+   More info: https://doc.astlinux-project.org/userdoc:tt_wireguard_vpn#wireguard_configuration_options
 
 -- Prefs tab, add "Show Wiki Tab" and "External Wiki Link" options.
    The Wiki Link may be an external site or access the local Wiki using /mnt/kd/wiki/ with:
      External Wiki Link: https://localhost/admin/wiki/
    Note: Only 'staff' or 'admin' web users are allowed to access the local Wiki.
-   More info: http://doc.astlinux-project.org/userdoc:tt_web_interface_wiki
+   More info: https://doc.astlinux-project.org/userdoc:tt_web_interface_wiki
 
 
 Additions for AstLinux 1.3.6:
@@ -2353,7 +2353,7 @@ Released 2019-07-02
 
 -- FOP2, available version bump to 2.31.23.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
-   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
@@ -2501,7 +2501,7 @@ Released 2019-02-19
 
 -- FOP2, available version bump to 2.31.21.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
-   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
@@ -2615,7 +2615,7 @@ Released 2018-10-04
 -- libpcap, version bump to 1.9.0
 
 -- keepalived, new package, version 2.0.7, VRRP High Availability daemon
-   More info: http://doc.astlinux-project.org/userdoc:tt_high_availability
+   More info: https://doc.astlinux-project.org/userdoc:tt_high_availability
 
 -- stunnel, version bump to 5.49
 
@@ -2783,7 +2783,7 @@ Released 2018-05-16
 
 -- FOP2, available version bump to 2.31.17.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
-   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
@@ -2791,10 +2791,10 @@ Released 2018-05-16
 
 -- Network tab, DNSCrypt sub-tab, add support for Import sdns:// Stamp
    Public Resolvers: https://download.dnscrypt.info/dnscrypt-resolvers/v2/public-resolvers.md
-   More Info: http://doc.astlinux-project.org/userdoc:tt_dnscrypt_proxy
+   More Info: https://doc.astlinux-project.org/userdoc:tt_dnscrypt_proxy
 
 -- Network -> "DNS-TLS Proxy Server Configuration" sub-tab, add support for DNS over TLS (stubby).
-   More info: http://doc.astlinux-project.org/userdoc:tt_dns_tls_proxy
+   More info: https://doc.astlinux-project.org/userdoc:tt_dns_tls_proxy
 
 -- Status tab, performance improvement using asynchronous system calls.
 
@@ -2877,7 +2877,7 @@ Released 2018-01-12
    New rc.conf variables: WIREGUARD_IP, WIREGUARD_NM, WIREGUARD_IPV6, WIREGUARD_ROUTES, WIREGUARD_AUTO_ROUTES
                           WIREGUARD_IF, WIREGUARD_MTU, WIREGUARD_LISTEN_PORT, WIREGUARD_ALLOWLAN, WIREGUARD_TUNNEL_HOSTS
                           WIREGUARD_DNS_UPDATE
-   More info: http://doc.astlinux-project.org/userdoc:tt_wireguard_vpn
+   More info: https://doc.astlinux-project.org/userdoc:tt_wireguard_vpn
 
 -- ipset, version bump to 6.34
 
@@ -2901,7 +2901,7 @@ Released 2018-01-12
 
 -- FOP2, available version bump to 2.31.16.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
-   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
@@ -2953,7 +2953,7 @@ Released 2017-09-23
    New rc.conf variables: BACKUP_KD_DEFAULTS, BACKUP_KD_INCLUDE_DIRS, BACKUP_KD_INCLUDE_FILES
                           BACKUP_ASTURW_DEFAULTS, BACKUP_ASTURW_INCLUDE_DIRS, BACKUP_ASTURW_INCLUDE_FILES
                           BACKUP_PRUNE_AGE_DAYS, BACKUP_NOTIFY, BACKUP_NOTIFY_FROM
-   More info: http://doc.astlinux-project.org/userdoc:tt_tarsnap_online_backup
+   More info: https://doc.astlinux-project.org/userdoc:tt_tarsnap_online_backup
 
 -- libcurl (curl) version bump to 7.55.1
 
@@ -2984,7 +2984,7 @@ Released 2017-09-23
 
 -- FOP2, available version bump to 2.31.14.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
-   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
@@ -3025,7 +3025,7 @@ Released 2017-08-11
 
 -- genx86_64-vm board type, add support for vmw_pvscsi as a bootable disk driver, also added to RUNNIX.
    ESXi Config: SCSI Controller [ VMware Paravirtual ]
-   More info: http://doc.astlinux-project.org/userdoc:guest_vm_vmware_vsphere
+   More info: https://doc.astlinux-project.org/userdoc:guest_vm_vmware_vsphere
 
 -- linux, add kernel patch 'x86: HPET force enable for e6xx based systems', for Soekris net6501
    and other e6xx based non-ACPI systems, HPET will now get enabled resulting in a usable clocksource.
@@ -3065,7 +3065,7 @@ Released 2017-08-11
 -- acme-client, new command to generate Let's Encrypt certificates using the ACME protocol.
    The acme-client command is a front-end to the core acme.sh script, version 2.7.2.
    New rc.conf variables: ACME_SERVICE and ACME_ACCOUNT_EMAIL
-   More info: http://doc.astlinux-project.org/userdoc:tt_acme_certificates
+   More info: https://doc.astlinux-project.org/userdoc:tt_acme_certificates
 
 -- ca-certificates, update trusted root certificates 2017-06-07
 
@@ -3102,14 +3102,14 @@ Released 2017-08-11
    for the interface to receive a Prefix Delegation via the DHCPv6 client.  This is a change.
    "Assign GUA Prefix" only applies if Network tab -> Connection Type: includes DHCPv6.
    New rc.conf variable: IPV6_PREFIX_DELEGATION
-   More info: http://doc.astlinux-project.org/userdoc:tt-dhcpv6-prefix-delegation
+   More info: https://doc.astlinux-project.org/userdoc:tt-dhcpv6-prefix-delegation
 
 -- arnofw (AIF), version bump to 2.0.2, added support for properly attaching nf_conntrack helpers.
    As such net.netfilter.nf_conntrack_helper=0 and the the needed CT targets are created.
    New Parasitic Network plugin, allows "clients" on the same subnet to use this device as a gateway upstream.
 
 -- arnofw (AIF), added "net-prefix-translation" plugin.  Provides NPTv6 (Network Prefix Translation) for IPv6
-   More info: http://doc.astlinux-project.org/userdoc:tt_ipv6_ula_nptv6_config
+   More info: https://doc.astlinux-project.org/userdoc:tt_ipv6_ula_nptv6_config
 
 -- arnofw (AIF), "traffic-shaper" plugin, use fq_codel (Fair Queueing CoDel) for both 'htb' and 'hfsc' types.
 
@@ -3128,7 +3128,7 @@ Released 2017-08-11
 
 -- FOP2, available version bump to 2.31.12.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
-   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 -- rhino, version bump to 0.99.7
 
@@ -3138,10 +3138,10 @@ Released 2017-08-11
 
 -- Network tab, IPv6 Autoconfig, add selectable interfaces for Prefix Delegation by selecting "Assign GUA Prefix"
    Note: "Assign GUA Prefix" only applies if Network tab -> Connection Type: includes DHCPv6.
-   More info: http://doc.astlinux-project.org/userdoc:tt-dhcpv6-prefix-delegation
+   More info: https://doc.astlinux-project.org/userdoc:tt-dhcpv6-prefix-delegation
 
 -- Network tab, add "ACME (Let's Encrypt) Certificate" section with topic help info.
-   More info: http://doc.astlinux-project.org/userdoc:tt_acme_certificates
+   More info: https://doc.astlinux-project.org/userdoc:tt_acme_certificates
 
 -- Status tab, add optional "ACME Certificates" section, show via Prefs tab.
 
@@ -3158,17 +3158,17 @@ Released 2017-05-20
 -- Linux Kernel 3.2.88 (minor bump)
 
 -- genx86_64-vm board type, add support for Hyper-V VM's with hv_netvsc and hv_utils kernel drivers.
-   More info: http://doc.astlinux-project.org/userdoc:guest_vm_hyperv
+   More info: https://doc.astlinux-project.org/userdoc:guest_vm_hyperv
 
 -- rbash, new command (part of bash package), a restricted login shell /bin/rbash for non-root users.
-   More info: http://doc.astlinux-project.org/userdoc:tt_restricted_user_login
+   More info: https://doc.astlinux-project.org/userdoc:tt_restricted_user_login
 
 -- netcalc, version 2.1.2, new command, IPv4 and IPv6 network calculator.  Also used by dnsmasq init.d script.
 
 -- core system, usbtty, automatically spawn getty for selected usb tty serial devices.
    Supported USB-serial adapters include FTDI and PL2303 and must register as /dev/ttyUSB0, ttyUSB1, etc.
    New rc.conf variables: USBTTY, USBTTY_BAUD_RATE and USBTTY_TERM_TYPE
-   More info: http://doc.astlinux-project.org/userdoc:usbtty_serial_login
+   More info: https://doc.astlinux-project.org/userdoc:usbtty_serial_login
 
 -- unique-local-ipv6, new command to generate a pseudo-random IPv6 ULA (Unique Local Address) /48 Prefix for
    local, VPN, etc. use.  These prefixes are not globally routable without some Network Prefix Translation (NPTv6).
@@ -3218,7 +3218,7 @@ Released 2017-05-20
 -- lighttpd, add runtime configuration 'server.stream-response-body = 2' to prevent buffering in /var/tmp/ .
 
 -- gntp-send, version 0.3.4, new package, CLI tool for sending Growl (GNTP) notifications.
-   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk_call_notify
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk_call_notify
 
 -- sngrep, version 1.4.3, new package, tool for displaying SIP call message flows from a terminal.
 
@@ -3226,7 +3226,7 @@ Released 2017-05-20
    Cloudflare, FreeDNS, and HE Free DNS (Hurricane Electric) now support mixed IPv4/IPv6 DNS updates.
    Added script get-ipv6-from-ipv4 to retrieve a neighboring IPv6 address to be published as an AAAA record.
    New rc.conf variable: DDGETIPV6, DDGETIPV6="" or DDGETIPV6="no" -> IPv6 dynamic DNS is disabled
-   More info: http://doc.astlinux-project.org/userdoc:tt_dynamic_dns_client
+   More info: https://doc.astlinux-project.org/userdoc:tt_dynamic_dns_client
 
 -- tcpdump, version bump to 4.9.0
    Fixes many CVE vulnerabilities that might of resulted in denial of service or the execution of arbitrary code.
@@ -3241,7 +3241,7 @@ Released 2017-05-20
    disabled by default. Example: PHYETH_DISABLE_OFFLOAD="tso gso gro"
 
 -- wide-dhcpv6, add support for optional script '/mnt/kd/dhcp6c.script', enabled if it exists and is executable.
-   More info: http://doc.astlinux-project.org/userdoc:tt-dhcpv6-prefix-delegation#dhcpv6_client_action_script
+   More info: https://doc.astlinux-project.org/userdoc:tt-dhcpv6-prefix-delegation#dhcpv6_client_action_script
 
 -- chrony, version bump to 3.1
 
@@ -3283,7 +3283,7 @@ Released 2017-05-20
 
 -- FOP2, available version bump to 2.31.08.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
-   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 -- (Custom Build Only) wanpipe, version 7.0.20 (no change)
 
@@ -3293,7 +3293,7 @@ Released 2017-05-20
    == Add "HE Free DNS" Dynamic DNS Service Type and "checkip.dns.he.net" DNS Get IP selection.
    == Add support for "DNS Get IPv6 Address:" using DDGETIPV6 rc.conf variable.
    == Add button to edit "/mnt/kd/ddclient.conf" if it exists.
-   More info: http://doc.astlinux-project.org/userdoc:tt_dynamic_dns_client
+   More info: https://doc.astlinux-project.org/userdoc:tt_dynamic_dns_client
 
 -- Network and Edit tab, FTP Server:
    == Add Restart FTP Server menu item.
@@ -3375,12 +3375,12 @@ Released 2017-01-26
 
 -- strongSwan, version 5.5.1, new package, a more feature rich alternative for IPsec VPN support.
    New rc.conf variables are: IPSEC_ALLOWED_ENDPOINTS and IPSEC_ALLOWED_VPN_NETS
-   More info: http://doc.astlinux-project.org/userdoc:tt_ipsec_vpn_strongswan
+   More info: https://doc.astlinux-project.org/userdoc:tt_ipsec_vpn_strongswan
 
 -- chrony, version 3.0, new package to replace 'ntpd' as the NTP daemon, NTPv4 client and server.
    Note: No configuration change for most users, though if you had a custom /mnt/kd/ntpd.conf file
          you will have to generate a new /mnt/kd/chrony.conf file with similar but different syntax.
-   More info: http://doc.astlinux-project.org/userdoc:tt_ntp_client_server
+   More info: https://doc.astlinux-project.org/userdoc:tt_ntp_client_server
 
 -- OpenVPN, major version bump to 2.4.0, new features include AEAD (GCM) cipher and Elliptic Curve DH key exchange support.
 
@@ -3433,13 +3433,13 @@ Released 2017-01-26
 
 -- FOP2, available version bump to 2.31.07.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
-   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
 -- Network and Edit tab, add support for strongSwan IPsec VPN.
    Note: "IPsec strongSwan" can only be enabled when "IPsec Peers" and "IPsec Mobile" are both disabled.
-   More info: http://doc.astlinux-project.org/userdoc:tt_ipsec_vpn_strongswan
+   More info: https://doc.astlinux-project.org/userdoc:tt_ipsec_vpn_strongswan
 
 -- Status tab, display "ipsec status" output in IPsec Associations (strongSwan).
 
@@ -3500,7 +3500,7 @@ Released 2016-11-01
 -- libsodium, version bump to 1.0.11
 
 -- reload-blocklist-netset (optional CRON script), new command added to generate .netset files for the firewall blocklist.
-   More Info: http://doc.astlinux-project.org/userdoc:tt_firewall_external_block_list
+   More Info: https://doc.astlinux-project.org/userdoc:tt_firewall_external_block_list
 
 -- ca-certificates, update trusted root certificates 2016-09-14
 
@@ -3540,12 +3540,12 @@ Released 2016-11-01
 
 -- msmtp, add a functional "/bin/mail" script to emulate mail/mailx for sending email via sendmail.
    Particularly useful for sending file attachment(s) via email.  Issue "mail --help" for details.
-   Example (end of iOS section): http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-ssl
+   Example (end of iOS section): https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-ssl
 
 -- msmtp, an undefined SMTP_CA rc.conf variable will now default to the system ca-bundle.crt
 
 -- wide-dhcpv6, add upstream Debian patches 0011, 0012 and 0015, build fixes and handle OPTION_RECONF_ACCEPT(20)
-   More Info: http://doc.astlinux-project.org/userdoc:tt-dhcpv6-prefix-delegation
+   More Info: https://doc.astlinux-project.org/userdoc:tt-dhcpv6-prefix-delegation
 
 -- tcpdump, version bump to 4.8.0
 
@@ -3565,7 +3565,7 @@ Released 2016-11-01
 
 -- FOP2, available version bump to 2.31.04.
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
-   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
@@ -3574,7 +3574,7 @@ Released 2016-11-01
 -- Network -> Firewall sub-tab, add "Deny LAN to DMZ" option for specified LAN Interfaces.
 
 -- Network -> Firewall sub-tab, add Block Host/CIDR using *.netset file(s) in the directory /mnt/kd/blocklists .
-   More Info: http://doc.astlinux-project.org/userdoc:tt_firewall_external_block_list
+   More Info: https://doc.astlinux-project.org/userdoc:tt_firewall_external_block_list
 
 -- Network tab, SMTP Mail Relay, allow an empty "SMTP Cert File" which will default to the system ca-bundle.crt .
 
@@ -3671,7 +3671,7 @@ Released 2016-07-06
 
 -- avahi, new package adding mDNS/DNS-SD Service Discovery (Bonjour). Replaces the old mdnsresponder package.
    Enable mDNS/DNS-SD by setting AVAHI_ENABLE="yes", manual configuration stored in /mnt/kd/avahi/ symlinked from /etc/avahi/ .
-   More Info: http://doc.astlinux-project.org/userdoc:tt_avahi_mdns
+   More Info: https://doc.astlinux-project.org/userdoc:tt_avahi_mdns
 
 -- ntpd/sntp, version bump to 4.2.8p8, security fixes: 15 low/medium-severity vulnerabilities
    Now only include the "LOCAL" Reference Clock driver, which reduces the ntpd binary size buy 30% .
@@ -3683,7 +3683,7 @@ Released 2016-07-06
 -- miniupnpd, version bump to 2.0, also make the UPnP leases file survive a reboot using '/mnt/kd/upnp.leases'.
 
 -- arnofw (AIF), add NAT_FOREIGN_NETWORK rc.conf variable to support a downstream router with NAT disabled.
-   More Info: http://doc.astlinux-project.org/userdoc:tt-internal-downstream-router
+   More Info: https://doc.astlinux-project.org/userdoc:tt-internal-downstream-router
 
 -- arnofw (AIF), add support for LAN_LAN_HOST_OPEN_xxx firewall rules.
 
@@ -3707,7 +3707,7 @@ Released 2016-07-06
 -- Automatically don't use kernel-reboot with 'genx86_64-vm' builds, use reboot instead.
 
 -- Network and Edit tab, add support for Avahi mDNS/DNS-SD Service Discovery.
-   More Info: http://doc.astlinux-project.org/userdoc:tt_avahi_mdns
+   More Info: https://doc.astlinux-project.org/userdoc:tt_avahi_mdns
 
 -- Network -> Firewall sub-tab, add support for "Pass LAN->LAN" action
    Example: Allow any LAN subnet access to a LAN printer at 192.168.101.8 serving LPD, IPP and JetDirect
@@ -3869,7 +3869,7 @@ Released 2016-02-10
 -- wide-dhcpv6, new package, added support for DHCPv6 using dhcp6c for External and WAN Failover interfaces.
    New rc.conf variables are: DHCPV6_CLIENT_ENABLE, DHCPV6_CLIENT_REQUEST_ADDRESS, DHCPV6_CLIENT_REQUEST_PREFIX,
                               DHCPV6_CLIENT_PREFIX_LEN, DHCPV6_CLIENT_PREFIX_HINT, EXT2DHCPV6_CLIENT_ENABLE
-   More Info: http://doc.astlinux-project.org/userdoc:tt-dhcpv6-prefix-delegation
+   More Info: https://doc.astlinux-project.org/userdoc:tt-dhcpv6-prefix-delegation
 
 -- dnsmasq, added optional DHCP_LEASETIME rc.conf variable, defaults to "24" hours as before. Applies to both DHCP and IPv6 Autoconfig.
 
@@ -3965,7 +3965,7 @@ Released 2015-10-28
 
 -- Fossil, version 1.33, new package, a simple, high-reliability, distributed software configuration management system.
    New rc.conf variables are: FOSSIL_SERVER, FOSSIL_DEFAULT_DIRS, FOSSIL_DEFAULT_FILES, FOSSIL_INCLUDE_DIRS, FOSSIL_INCLUDE_FILES
-   More Info: http://doc.astlinux-project.org/userdoc:tt_fossil
+   More Info: https://doc.astlinux-project.org/userdoc:tt_fossil
 
 -- expat, add security patch for CVE-2015-1283
 
@@ -4034,7 +4034,7 @@ Released 2015-10-28
    New rc.conf variables are: DNSCRYPT_EPHEMERAL_KEYS, DNSCRYPT_2SERVER_ADDRESS, DNSCRYPT_2PROVIDER_NAME, DNSCRYPT_2PROVIDER_KEY
 
 -- links, command-line text-only web browser is removed, a better approach is to use SSH as a local Web Browser Proxy via AstLinux.
-   More Info: http://doc.astlinux-project.org/userdoc:tt-web-browser-proxy
+   More Info: https://doc.astlinux-project.org/userdoc:tt-web-browser-proxy
 
 ** Asterisk
 
@@ -4055,13 +4055,13 @@ Released 2015-10-28
    == Network and Edit tabs allow Fossil to be Restarted
    == Prefs tab, "Show Fossil Tab" - unchecked by default
    == Edit tab -> "Fossil Commands" button when Fossil tab is shown
-   More Info: http://doc.astlinux-project.org/userdoc:tt_fossil
+   More Info: https://doc.astlinux-project.org/userdoc:tt_fossil
 
 -- System and Staff tabs, Configuration/File Backup: exclude /stat/var/www/cache/ files from unionfs backup.
 
 -- Network -> "DNSCrypt Proxy Server Configuration" sub-tab, add support for "Ephemeral Keys"
    and optional "Secondary Server" configuration.
-   More Info: http://doc.astlinux-project.org/userdoc:tt_dnscrypt_proxy
+   More Info: https://doc.astlinux-project.org/userdoc:tt_dnscrypt_proxy
 
 -- PhoneProv tab, add real-time links for "Status", "Reload" and "Reboot"
    == Status retrieves "sip show peer <account>" and displays a few useful lines.
@@ -4223,7 +4223,7 @@ Released 2015-02-12
 -- igb, version 5.2.15, Intel Gigabit Ethernet Network Driver
 
 -- Monit, version 5.11, new package, easily configured monitoring system with web status interface
-   More Info: http://doc.astlinux-project.org/userdoc:tt_monit_monitoring
+   More Info: https://doc.astlinux-project.org/userdoc:tt_monit_monitoring
 
 -- jansson, new package for Asterisk 13, version 2.7
 
@@ -4286,7 +4286,7 @@ Released 2015-02-12
 
 -- phoneprov-tools, add support for pjsip_file and pjsip_path for new [pjsip] context.
    Add support for optional '/mnt/kd/phoneprov-reload.script' action script when 'Reload Dialplan/SIP' is checked.
-   More Info: http://doc.astlinux-project.org/userdoc:tt_ip_phone_provisioning#reload_action_script_optional
+   More Info: https://doc.astlinux-project.org/userdoc:tt_ip_phone_provisioning#reload_action_script_optional
 
 -- Asterisk 'agi-bin' now includes the 'custom-agi' sub-directory path which is automatically symlinked
    to the /mnt/kd/custom-agi directory if it exists.  The dialplan must use "AGI(custom-agi/foobar.agi,...)"
@@ -4300,7 +4300,7 @@ Released 2015-02-12
    == Monit tab -> Monit Service Management
    == Network, Edit and Monit Config tabs allow Monit to be Restarted
    == Prefs tab, "Show Monit Tab" - unchecked by default
-   More Info: http://doc.astlinux-project.org/userdoc:tt_monit_monitoring
+   More Info: https://doc.astlinux-project.org/userdoc:tt_monit_monitoring
 
 -- ConfBridge tab, added Asterisk 13 support
 
@@ -4346,7 +4346,7 @@ Released 2014-12-26
 -- WAN Failover, new feature allowing a network failover method via an interface or specified gateway address.
    A background script monitors selected hosts and triggers a failover when criterion is met.
    The optional /mnt/kd/wan-failover.script executable script will be called to allow for service adjustments.
-   More info: http://doc.astlinux-project.org/userdoc:tt_wan_failover
+   More info: https://doc.astlinux-project.org/userdoc:tt_wan_failover
 
 -- External interface DHCP client enhancements to better handle 'primary' and 'secondary' external DHCP interfaces.
    A DHCP client 'renew' no longer flushes and rebuilds the IPv4 interface settings if no change is requested.
@@ -4377,7 +4377,7 @@ Released 2014-12-26
 
 -- FOP2, available version bump to 2.28.  New CLI command option: "service fop2 test"
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
-   More info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
@@ -4390,7 +4390,7 @@ Released 2014-12-26
 
 -- Network tab, added "External Failover Interface:" section with new sub-tab { WAN Failover Configuration }
    Note: EXT2* rc.conf variables can now be defined via the web interface.
-   More info: http://doc.astlinux-project.org/userdoc:tt_wan_failover
+   More info: https://doc.astlinux-project.org/userdoc:tt_wan_failover
 
 -- Network -> OpenVPN Server -> Server Hostname(s): may now contain a space separated list
    of hosts which will add multiple "remote" entries to the .ovpn profile for failover.
@@ -4461,18 +4461,18 @@ Released 2014-10-02
 
 -- (Custom Build Only) kamailio, version 4.1.6, new package to support a very powerful, full featured SIP server.
    Includes rtpproxy for use when WITH_NAT is defined in the kamailio configuration.
-   More info: http://doc.astlinux-project.org/userdoc:tt_kamailio
+   More info: https://doc.astlinux-project.org/userdoc:tt_kamailio
 
 -- sipgrep, version 2.0.0, new package very similar to 'ngrep' but tweaked for viewing SIP packets.
 
 -- libcurl (curl) version bump to 7.38.0, bug and security fixes: CVE-2014-3613, CVE-2014-3620
 
 -- msmtp, added configuration support for "aliases" when the file /mnt/kd/msmtp-aliases.conf exists.
-   More Info: http://doc.astlinux-project.org/userdoc:tt_smtp_aliases
+   More Info: https://doc.astlinux-project.org/userdoc:tt_smtp_aliases
 
 -- AIF, add new "sip-user-agent" plugin. This plugin monitors inbound (EXT->Local) SIP sessions on specified ports,
    and can either 'whitelist' or 'blacklist' SIP session packets by inspecting the User-Agent: field.
-   More Info: http://doc.astlinux-project.org/userdoc:tt_firewall_plugins#sip-user-agent
+   More Info: https://doc.astlinux-project.org/userdoc:tt_firewall_plugins#sip-user-agent
 
 -- AIF, "adaptive-ban" plugin, added 'kamailio' analysis type.
    Note: Requires 'WITH_ANTIFLOOD' enabled in kamailio for the logs to be generated
@@ -4507,7 +4507,7 @@ Released 2014-10-02
 
 -- Network -> Outbound SMTP Mail Relay: SMTP Local Aliases: { Edit Local Aliases }
    is shown if the file /mnt/kd/msmtp-aliases.conf exists.
-   More Info: http://doc.astlinux-project.org/userdoc:tt_smtp_aliases
+   More Info: https://doc.astlinux-project.org/userdoc:tt_smtp_aliases
 
 -- Users tab, add support for multiple email entries separated by |'s, longer email entries
    and sanitize input more strictly.
@@ -4599,7 +4599,7 @@ Released 2014-07-19
 
 -- phoneprov-tools, new "sql_enable=yes" (default) template option, automatically creates a 'phoneprov' SQLite3 table
    in the file "/mnt/kd/asterisk-odbc.sqlite3" which can be used for func_odbc dialplan functions.
-   More Info: http://doc.astlinux-project.org/userdoc:tt_asterisk-odbc
+   More Info: https://doc.astlinux-project.org/userdoc:tt_asterisk-odbc
 
 ** Web Interface
 
@@ -4674,7 +4674,7 @@ Released 2014-04-24
    providing an encrypted tunnel for upstream DNS. Useful with OpenDNS and others supporting DNSCrypt (dnscrypt-wrapper).
    New rc.conf variables: DNSCRYPT_PROXY, DNSCRYPT_VERBOSITY, DNSCRYPT_SERVER_ADDRESS,
                           DNSCRYPT_PROVIDER_NAME, DNSCRYPT_PROVIDER_KEY
-   More Info: http://doc.astlinux-project.org/userdoc:tt_dnscrypt_proxy
+   More Info: https://doc.astlinux-project.org/userdoc:tt_dnscrypt_proxy
 
 -- netsnmp, version bump to 5.7.2.1, (security fix: CVE-2014-2284) and bug fixes.
 
@@ -4714,7 +4714,7 @@ Released 2014-04-24
 -- phoneprov-tools, new package. A set of scripts and configuration templates designed to generate IP Phone provisioning
    files as well as Asterisk sip.conf and extensions.conf includes files. Special thanks to Michael Keuter.
    New rc.conf variables: PHONEPROV_BASE_DIR, PHONEPROV_GW_IF
-   More Info: http://doc.astlinux-project.org/userdoc:tt_ip_phone_provisioning
+   More Info: https://doc.astlinux-project.org/userdoc:tt_ip_phone_provisioning
 
 ** Web Interface
 
@@ -4722,10 +4722,10 @@ Released 2014-04-24
    to not log denied packets (IPv4 broadcasts for example) in the DMZ.
 
 -- Network tab, added Network Services: DNSCrypt Proxy Server: { Configure DNSCrypt }, to support dnscrypt-proxy.
-   More Info: http://doc.astlinux-project.org/userdoc:tt_dnscrypt_proxy
+   More Info: https://doc.astlinux-project.org/userdoc:tt_dnscrypt_proxy
 
 -- Added "PhoneProv Tab" using phoneprov-tools, Show/Hide and number of Extensions Displayed in Prefs tab.
-   More Info: http://doc.astlinux-project.org/userdoc:tt_ip_phoneprov_howto
+   More Info: https://doc.astlinux-project.org/userdoc:tt_ip_phoneprov_howto
 
 -- Edit tab, support to edit /mnt/kd/phoneprov/templates/*.conf files.
 
@@ -4774,10 +4774,10 @@ Released 2014-01-22
 -- nut, version 2.7.1, new package to monitor uninterruptible power supplies.  This package replaces the previous apcupsd package.
    New rc.conf variables: UPS_DRIVER, UPS_DRIVER_PORT, UPS_LISTEN_ALL, UPS_LISTEN_PORT,
                           UPS_MONITOR_HOST, UPS_MONITOR_USER, UPS_MONITOR_PASS
-   More Info: http://doc.astlinux-project.org/userdoc:tt_ups_monitoring
+   More Info: https://doc.astlinux-project.org/userdoc:tt_ups_monitoring
 
 -- Added rc.conf variable DIALING_PREFIX_NUMBERS referenced by dialproxy.php for International E.164 numbering.
-   More Info: http://doc.astlinux-project.org/userdoc:tt_dialproxy
+   More Info: https://doc.astlinux-project.org/userdoc:tt_dialproxy
 
 -- Update /etc/services entries.
 
@@ -4793,11 +4793,11 @@ Released 2014-01-22
 -- slapd, added LDAP server, automatic configuration for ou=addressbook to be used by IP Phones and various LDAP clients.
    Note: Admin user is cn=admin, Staff read/write user is cn=staff,ou=users and Directory read-only user is cn=directory,ou=users
          Be certain you understand the default password settings for the various users before deployment.
-   More Info: http://doc.astlinux-project.org/userdoc:tt-ldap-server
+   More Info: https://doc.astlinux-project.org/userdoc:tt-ldap-server
 
 -- openldap, added scripts ldap-phone-name-lookup and ldap-phone-num-lookup to easily enable LDAP lookups via Asterisk and shell scripts.
    Note: the "LDAP Client System Defaults" -> LDAP Server URI(s) must be defined for these scripts to be enabled.
-   More Info: http://doc.astlinux-project.org/userdoc:tt_ldap_client
+   More Info: https://doc.astlinux-project.org/userdoc:tt_ldap_client
 
 -- darkstat, new addition to provide Network Statistics via a web browser using "https://pbx/admin/netstat/"
    and a new NetStat tab in the web interface.  This feature is disabled by default.
@@ -4845,7 +4845,7 @@ Released 2014-01-22
 -- LDAP-AB tab, new addition for managing the LDAP Address Book, export LDIF files and import LDIF and vCard files.
 
 -- dialproxy.php, add support for POST method and number filtering using DIALING_PREFIX_NUMBERS user.conf variable.
-   More Info: http://doc.astlinux-project.org/userdoc:tt_dialproxy
+   More Info: https://doc.astlinux-project.org/userdoc:tt_dialproxy
 
 -- Added "NetStat Tab" using darkstat, Show/Hide in Prefs tab.  Requires 'admin' or 'staff' permissions.  The new
    Network tab option "NetStat Server" must be enabled for the NetStat tab to function, restart via "Restart NetStat Server".
@@ -4857,7 +4857,7 @@ Released 2014-01-22
 
 -- Network tab, UPS Monitoring now uses NUT instead of apcupsd.  New added options support APC plus many other manufacturers.
    Note: UPS Monitoring must be re-enabled if it was previously enabled.
-   More Info: http://doc.astlinux-project.org/userdoc:tt_ups_monitoring
+   More Info: https://doc.astlinux-project.org/userdoc:tt_ups_monitoring
 
 
 Additions for AstLinux 1.1.3:
@@ -4925,7 +4925,7 @@ Released 2013-09-27
 -- New package 'asterisk-fop2', adds the framework for supporting the 'Flash Operator Panel 2'
    (free for 15 buttons, reasonable for unlimited).  The actual 'fop2' code is downloaded on ASTURW
    as a 'package' using the new CLI command 'upgrade-package'.
-   More Info: http://doc.astlinux-project.org/userdoc:tt_asterisk-fop2
+   More Info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2
 
 ** Web Interface
 
@@ -5026,7 +5026,7 @@ Released 2013-07-01
 
 -- Enable Asterisk res_snmp.so module when netsnmp is enabled (standard) used together with the snmpd service.
    Includes ASTERISK-MIB.txt and DIGIUM-MIB.txt mib files.
-   More Info: http://doc.astlinux-project.org/userdoc:tt_asterisk_snmp_monitoring
+   More Info: https://doc.astlinux-project.org/userdoc:tt_asterisk_snmp_monitoring
 
 -- Asterisk 11, fixed an issue when res_xmpp is active and unwanted debug log /tmp/refs grows without limit.
    More Info: https://issues.asterisk.org/jira/browse/ASTERISK-21785
@@ -5058,7 +5058,7 @@ Released 2013-07-01
    the "LDAP Client System Defaults" settings to query the data.  Only 'anonymous' queries are
    supported by the standard cgi script.
    Note: The Network tab "LDAP Server URI(s):" entry must be defined for this cgi script to be enabled.
-   More Info: http://doc.astlinux-project.org/userdoc:tt_ldap_client
+   More Info: https://doc.astlinux-project.org/userdoc:tt_ldap_client
 
 
 Additions for AstLinux 1.1.1:
@@ -5099,7 +5099,7 @@ Released 2013-04-17
 -- sendxmpp, an XMPP Client command line tool to send Jabber/XMPP messages has been added.
    (based on the "clix" Lua tool by Matthew Wild, uses the same Lua runtime environment as Prosody)
    This allows Asterisk 1.8 users to use Jabber/XMPP from the dialplan with the Prosody XMPP server.
-   More Info: http://doc.astlinux-project.org/userdoc:tt-xmpp-server#xmpp_command_line_client
+   More Info: https://doc.astlinux-project.org/userdoc:tt-xmpp-server#xmpp_command_line_client
    More Info: sendxmpp --help
 
 -- OpenVPN, version bump to 2.3.1,  Remove easy-rsa scripts.
@@ -5108,7 +5108,7 @@ Released 2013-04-17
 
 -- dnsmasq, for very special situations such as in a VM, added an rc.conf variable EXTDHCP="yes" to allow a single,
    static, non-PPPoE external interface to act as a DHCP server.  Obviously EXTDHCP="no" by default.
-   More Info: http://doc.astlinux-project.org/userdoc:tt-ext-dhcp-server
+   More Info: https://doc.astlinux-project.org/userdoc:tt-ext-dhcp-server
 
 -- reload-spamhaus-drop (optional CRON script), add support for the new 'edrop' list, used along with AIF
    More Info: http://www.spamhaus.org/drop/
@@ -5127,7 +5127,7 @@ Released 2013-04-17
    New CDR logging options are available, most interesting is the "cdr_adaptive_odbc" module, use with DSN=asterisk-cdr .
    Note: The Asterisk database is located at "/mnt/kd/asterisk-odbc.sqlite3" with DSN=asterisk
          The CDR ODBC database is located at "/mnt/kd/cdr-sqlite3/cdr-odbc.sqlite3" with DSN=asterisk-cdr
-   More Info: http://doc.astlinux-project.org/userdoc:tt_asterisk-odbc
+   More Info: https://doc.astlinux-project.org/userdoc:tt_asterisk-odbc
 
 ** Web Interface
 
@@ -5137,8 +5137,8 @@ Released 2013-04-17
    ==  Added Auth HMAC selections of SHA1 and SHA256
    ==  Added Topology selections
    ==  Downloaded credentials now contain client.ovpn configurations for the OpenVPN Client App
-   More info: http://doc.astlinux-project.org/userdoc:tt_openvpn_server
-   More info: http://doc.astlinux-project.org/userdoc:tt_openvpn_client_networks
+   More info: https://doc.astlinux-project.org/userdoc:tt_openvpn_server
+   More info: https://doc.astlinux-project.org/userdoc:tt_openvpn_client_networks
 
 -- OpenVPN Client sub-tab
    ==  Added User/Pass authentication support
@@ -5292,13 +5292,13 @@ Released 2013-02-07
 
 -- app_notify, previously marked as deprecated, not provided in Asterisk 11
    Example Dialplan Code to replace Notify() application:
-     http://doc.astlinux-project.org/userdoc:tt_asterisk_call_notify
+     https://doc.astlinux-project.org/userdoc:tt_asterisk_call_notify
 
 ** Web Interface
 
 -- XMPP Server (Prosody) is supported as a sub-tab from the Network tab:
    Network tab -> Network Services: XMPP Server, Messaging and Presence { Configure XMPP }
-   More Info: http://doc.astlinux-project.org/userdoc:tt-xmpp-server
+   More Info: https://doc.astlinux-project.org/userdoc:tt-xmpp-server
 
 -- Network and Edit tabs allow the XMPP Server to be Restarted.
 
@@ -5407,7 +5407,7 @@ Released 2012-12-14
 
      HTTP & HTTPS /phoneprov/ Allowed IP's: __________ (10.1.2.* 2001:db8:1:*)
 
-   More info: http://doc.astlinux-project.org/userdoc:tt_ip_phone_provisioning
+   More info: https://doc.astlinux-project.org/userdoc:tt_ip_phone_provisioning
 
 -- Network tab, add new, Network Services: Asterisk SIP-TLS Server Certificate { SIP-TLS Certificate }
    This new sub-tab creates TLS certificates similar to what the Asterisk "ast_tls_cert" script does.
@@ -5554,7 +5554,7 @@ Released 2012-08-04
    automatically after upgrades.
    Usage: setconsole-speed-tty [ show|reset|help ] 9600|19200|38400|57600|115200 [ ttySn ]
 
-   More info: http://doc.astlinux-project.org/userdoc:tt_serial_console_speed_tty
+   More info: https://doc.astlinux-project.org/userdoc:tt_serial_console_speed_tty
 
 ** Networking
 
@@ -5571,7 +5571,7 @@ Released 2012-08-04
    Much thanks to David Kerr for performing the majority of the work required to implement miniupnpd.
 
    WARNING: Enabling either NAT-PMP or UPnP has security implications!
-   More info: http://doc.astlinux-project.org/userdoc:tt_universal_plug_play
+   More info: https://doc.astlinux-project.org/userdoc:tt_universal_plug_play
 
 -- IPsec XAuth, new rc.conf variable IPSECM_XAUTH_LOCAL_GW which defines a client local gateway for
    IPsec XAuth clients, defaults to INTIP. Remote IPsec XAuth clients then use INTIP (or IPSECM_XAUTH_LOCAL_GW)
@@ -5602,7 +5602,7 @@ Released 2012-08-04
 
    Much thanks to Michael Keuter for performing the majority of the work required to implement fonulator.
 
-   More info: http://doc.astlinux-project.org/userdoc:fonebridge
+   More info: https://doc.astlinux-project.org/userdoc:fonebridge
 
 -- safe_asterisk script, add restart limits so endless restarts/emails won't be generated
 
@@ -5653,7 +5653,7 @@ Released 2012-05-25
    Special thanks to Ingmar Schraub for demonstrating how this could be done.
 
    Example IPsec VPN for Apple iOS: (AstLinux 1.0.3 and later)
-     http://doc.astlinux-project.org/userdoc:tt_ipsec_vpn_apple_ios
+     https://doc.astlinux-project.org/userdoc:tt_ipsec_vpn_apple_ios
 
 -- OpenVPN Server, added optional support for User/Pass authentication in addition to the certificate.
 
@@ -5662,7 +5662,7 @@ Released 2012-05-25
    directory path begins with /phoneprov/ . Independent from the general HTTP/HTTPS root directory(s).
 
    Example IP Phone provisioning: (AstLinux 1.0.3 and later)
-     http://doc.astlinux-project.org/userdoc:tt_ip_phone_provisioning
+     https://doc.astlinux-project.org/userdoc:tt_ip_phone_provisioning
 
 -- AIF, version bump to 2.0.1b
 
@@ -5824,7 +5824,7 @@ Released 2012-02-27
 -- app_notify, mark as deprecated, offer replacement code, to be removed in AstLinux 1.1.x or so
 
    Example Dialplan Code to replace Notify() application: (AstLinux 1.0.2 and later)
-     http://doc.astlinux-project.org/userdoc:tt_asterisk_call_notify
+     https://doc.astlinux-project.org/userdoc:tt_asterisk_call_notify
 
 ** Web Interface
 
@@ -6219,7 +6219,7 @@ Released 2011-05-18
 -- unionfs, version bump to 2.5.9
 
 -- RUNNIX, version bump to 0.3.3, including a new "CF + USB Combo Booting" feature.
-   More info: http://doc.astlinux-project.org/userdoc:tt_cf_usb_combo_booting
+   More info: https://doc.astlinux-project.org/userdoc:tt_cf_usb_combo_booting
 
 -- Upgrades performed with either the upgrade-run-image CLI command or via the web interface
    adds a new feature of automatically propagating certain KCMD options.  In particular,
@@ -6393,7 +6393,7 @@ Released 2011-01-05
 
 -- Added support for alternate console keyboard mappings. If the file os/console.kmap exists on the
    vFAT boot partition and a non-serial console is used, both RUNNIX and AstLinux will use the
-   keyboard map.  For more info: http://doc.astlinux-project.org/userdoc:tt_console-kmap
+   keyboard map.  For more info: https://doc.astlinux-project.org/userdoc:tt_console-kmap
 
 -- dosfstools, version bump to 3.0.10
 
