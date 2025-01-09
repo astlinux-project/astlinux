@@ -12,13 +12,15 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.226 (version bump), security and bug fixes.
+-- Linux Kernel 5.10.233 (version bump), security and bug fixes.
 
 -- r8125, version 9.014.01, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
 
 -- ethtool, version bump to 6.11
 
 -- expat, version bump to 2.6.4, security fixes: CVE-2024-45490, CVE-2024-45491, CVE-2024-45492, CVE-2024-50602
+
+-- kexec, version bump to 2.0.30
 
 -- libcap, version bump to 2.73
 
@@ -56,6 +58,8 @@ Released @TBD@
 -- libcurl (curl) version bump to 8.11.1, security fix: CVE-2024-9681, CVE-2024-11053
 
 -- chrony, version bump to 4.6.1
+
+-- fping, version bump to 5.3
 
 -- iperf, version bump to 2.2.1
 
