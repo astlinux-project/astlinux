@@ -1,0 +1,104 @@
+From aecc554e7ba8bd449dceaf3eeecacc09b9b77fc4 Mon Sep 17 00:00:00 2001
+From: Jeremy Linton <jeremy.linton@arm.com>
+Date: Tue, 10 Dec 2024 20:58:46 -0600
+Subject: Correct string specifiers
+
+Recent GCC's on fedora complain about the use of
+%lld for uint64_t because its unsigned. Convert a number
+of these and similar calls.
+
+Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+Signed-off-by: Simon Horman <horms@kernel.org>
+---
+ kexec/arch/arm64/crashdump-arm64.c | 4 ++--
+ kexec/arch/i386/crashdump-x86.c    | 2 +-
+ kexec/arch/i386/kexec-x86-common.c | 2 +-
+ kexec/arch/i386/x86-linux-setup.c  | 2 +-
+ util_lib/elf_info.c                | 4 ++--
+ 5 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
+index f23b2bfc..73cb6119 100644
+--- a/kexec/arch/arm64/crashdump-arm64.c
++++ b/kexec/arch/arm64/crashdump-arm64.c
+@@ -1,6 +1,6 @@
+ /*
+  * ARM64 crashdump.
+- *     partly derived from arm implementation
++ *     partly derived from                                    arm implementation
+  *
+  * Copyright (c) 2014-2017 Linaro Limited
+  * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
+@@ -71,7 +71,7 @@ static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
+ 		 */
+ 		for (i = 0; i < usablemem_rgns.max_size; i++) {
+ 			if (usablemem_rgns.ranges[i].start == base) {
+-				fprintf(stderr, "Warning, the range already exists in usablemem_rgns, base=%lx, length=%lx\n",
++				fprintf(stderr, "Warning, the range already exists in usablemem_rgns, base=%llx, length=%llx\n",
+ 						base, length);
+ 				return 0;
+ 			}
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 800ae2c2..770e3f14 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -784,7 +784,7 @@ static void cmdline_add_efi(char *cmdline)
+ 	if (!acpi_rsdp)
+ 		return;
+ 
+-	sprintf(acpi_rsdp_buf, " acpi_rsdp=0x%llx", acpi_rsdp);
++	sprintf(acpi_rsdp_buf, " acpi_rsdp=0x%lux", acpi_rsdp);
+ 	if (strlen(cmdline) + strlen(acpi_rsdp_buf) > (COMMAND_LINE_SIZE - 1))
+ 		die("Command line overflow\n");
+ 
+diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
+index 67da043f..acacb45f 100644
+--- a/kexec/arch/i386/kexec-x86-common.c
++++ b/kexec/arch/i386/kexec-x86-common.c
+@@ -422,7 +422,7 @@ static uint64_t efi_get_acpi_rsdp(void) {
+ 		/* ACPI20= always goes before ACPI= */
+ 		if ((strstr(line, "ACPI20=")) || (strstr(line, "ACPI="))) {
+ 			s = strchr(line, '=') + 1;
+-			sscanf(s, "0x%llx", &acpi_rsdp);
++			sscanf(s, "0x%lux", &acpi_rsdp);
+ 			break;
+ 		}
+ 	}
+diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+index 1f96372c..70656e35 100644
+--- a/kexec/arch/i386/x86-linux-setup.c
++++ b/kexec/arch/i386/x86-linux-setup.c
+@@ -760,7 +760,7 @@ static void add_e820_map_from_mr(struct x86_linux_param_header *real_mode,
+ 				e820[i].type = E820_RESERVED;
+ 				break;
+ 		}
+-		dbgprintf("%016llx-%016llx (%d)\n",
++		dbgprintf("%016lux-%016lux (%d)\n",
+ 				e820[i].addr,
+ 				e820[i].addr + e820[i].size - 1,
+ 				e820[i].type);
+diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
+index 8f84f525..5cf438c0 100644
+--- a/util_lib/elf_info.c
++++ b/util_lib/elf_info.c
+@@ -890,7 +890,7 @@ static void dump_dmesg_structured(int fd, void (*handler)(char*, unsigned int))
+ 					handler(out_buf, len);
+ 				fprintf(stderr, "Cycle when parsing dmesg detected.\n");
+ 				fprintf(stderr, "The prink log_buf is most likely corrupted.\n");
+-				fprintf(stderr, "log_buf = 0x%llx, idx = 0x%x\n",
++				fprintf(stderr, "log_buf = 0x%lux, idx = 0x%x\n",
+ 					log_buf, current_idx);
+ 				exit(68);
+ 			}
+@@ -904,7 +904,7 @@ static void dump_dmesg_structured(int fd, void (*handler)(char*, unsigned int))
+ 					handler(out_buf, len);
+ 				fprintf(stderr, "Index outside log_buf detected.\n");
+ 				fprintf(stderr, "The prink log_buf is most likely corrupted.\n");
+-				fprintf(stderr, "log_buf = 0x%llx, idx = 0x%x\n",
++				fprintf(stderr, "log_buf = 0x%lux, idx = 0x%x\n",
+ 					log_buf, current_idx);
+ 				exit(69);
+ 			}
+-- 
+cgit 1.2.3-korg
+
