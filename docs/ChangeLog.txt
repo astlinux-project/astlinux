@@ -42,6 +42,8 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2024-11-26
 
+-- mac2vendor, oui.txt database snapshot 2025-01-10
+
 -- Time Zone Database update, tzdata2024b and php-timezonedb-2024.2
 
 -- (Custom Build Only) flashrom, version bump to 1.4.0
@@ -81,8 +83,9 @@ Released @TBD@
 
 -- Asterisk 16.30.0 ('16se' no change)
    Last Asterisk 16.x "Legacy" version, built --without-pjproject and --without-dahdi
+   Backport patch for security fix GHSA-33x6-fj46-6rfh
 
--- Asterisk 18.26.0 (version bump) and 20.11.0 (version bump)
+-- Asterisk 18.26.1 (version bump) and 20.11.1 (version bump)
    Built --with-pjproject and --with-dahdi
 
 -- pjsip 2.14.1 (no change)
