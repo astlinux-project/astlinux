@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-UNIONFS_VERSION = 2.2
+UNIONFS_VERSION = 3.6
 UNIONFS_SOURCE = unionfs-fuse-$(UNIONFS_VERSION).tar.gz
 UNIONFS_SITE = https://github.com/rpodgorny/unionfs-fuse/archive/v$(UNIONFS_VERSION)
 
