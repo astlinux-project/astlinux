@@ -24,11 +24,13 @@ Released @TBD@
 
 -- libcap, version bump to 2.73
 
+-- libedit, version bump to 20250104-3.1
+
 -- libpcap, version bump to 1.10.5
 
--- libpng, version bump to 1.6.44
+-- libpng, version bump to 1.6.45
 
--- Monit, version bump to 5.34.3
+-- Monit, version bump to 5.34.4
 
 -- php, version 7.2.34, add security fixes: CVE-2024-8925, CVE-2024-8927, CVE-2024-8932, CVE-2024-11234, CVE-2024-11236
 
@@ -40,7 +42,9 @@ Released @TBD@
 
 -- tiff, version bump to 4.7.0
 
--- ca-certificates, update trusted root certificates 2024-11-26
+-- unionfs (fuse), version bump to 3.6
+
+-- ca-certificates, update trusted root certificates 2024-12-31
 
 -- mac2vendor, oui.txt database snapshot 2025-01-10
 
