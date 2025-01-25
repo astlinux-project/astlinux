@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 5.10.233 (version bump), security and bug fixes.
 
+-- RUNNIX, version bump to runnix-0.6.20, with Linux Kernel 5.10.233, kexec 2.0.30
+
 -- r8125, version 9.014.01, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
 
 -- ethtool, version bump to 6.11
@@ -48,7 +50,7 @@ Released @TBD@
 
 -- mac2vendor, oui.txt database snapshot 2025-01-10
 
--- Time Zone Database update, tzdata2024b and php-timezonedb-2024.2
+-- Time Zone Database update, tzdata2025a and php-timezonedb-2025.1
 
 -- (Custom Build Only) flashrom, version bump to 1.4.0
 
