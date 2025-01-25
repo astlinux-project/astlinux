@@ -1653,7 +1653,7 @@ if (isset($status_show_system_logs)) {
     putHtml("</pre>");
   }
 }
-putHtml('<p style="color: orange;">Asterisk&reg; is a registered trademark of Digium, Inc. - A Sangoma Company</p>');
+putHtml('<p style="color: orange;">Asterisk&reg; is a registered trademark of Sangoma US Inc.</p>');
 
 } // End of HTTP GET
 require_once $COMMON.'footer.php';

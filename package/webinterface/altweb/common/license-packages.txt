@@ -11,9 +11,9 @@ libSRTP~Copyright (c) 2001-2023 Cisco Systems, Inc. All rights reserved.
 iLBC CODEC~Copyright (c) 2011 The WebRTC project authors. All rights reserved.
 Web Interface~Copyright (c) 2008-2025 Lonnie Abelbeck.
 shellinabox~Copyright (c) 2008-2016 Markus Gutschke, Luka Krajger.
-Asterisk~Copyright (c) 1999-2023 Digium, Inc.
-DAHDI~Copyright (c) 2001-2022 Digium, Inc.
-libPRI~Copyright (c) 2001-2015 Digium, Inc.
+Asterisk~Copyright (c) 1999-2023 Sangoma US Inc.
+DAHDI~Copyright (c) 2001-2022 Sangoma US Inc.
+libPRI~Copyright (c) 2001-2015 Sangoma US Inc.
 Arno's Firewall~Copyright (c) 2001-2021 Arno van Amersfoort.
 dnsmasq~Copyright (c) 2000-2021 Simon Kelley.
 OpenSSL~Copyright (c) 1998-2023 The OpenSSL Project. All rights reserved.
@@ -31,7 +31,7 @@ ipset~Copyright (c) 2003-2018 Jozsef Kadlecsik.
 curl~Copyright (c) 1996-2023 Daniel Stenberg.
 zabbix~Copyright (c) 2000-2023 SIA Zabbix.
 zlib~Copyright (c) 1995-2023 Jean-loup Gailly.
-SILK CODEC~Copyright (c) 2010-2016 Skype and/or Microsoft. All rights reserved. Licensed via Digium, Inc.
+SILK CODEC~Copyright (c) 2010-2016 Skype and/or Microsoft. All rights reserved. Licensed via Sangoma US Inc.
 SpanDSP~Copyright (c) 2003-2015 Steve Underwood. All rights reserved.
 Prosody~Copyright (c) 2008-2022 Matthew Wild and Waqas Hussain.
 Lua~Copyright (c) 1994-2012 Lua.org, PUC-Rio.  All rights reserved.
