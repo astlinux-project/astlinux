@@ -1,10 +1,10 @@
-config BR2_PACKAGE_PJSIP
-	bool "pjsip"
+config BR2_PACKAGE_PJSIP_AST20
+	bool "pjsip-ast20"
 	help
 	  PJSIP is a free and open source multimedia communication library
 	  written in C language implementing standard based protocols such as:
 	    SIP, SDP, RTP, STUN, TURN, and ICE.
-	  (For Asterisk 18.x and older)
+	  (For Asterisk 20.x)
 
 	  https://www.pjsip.org
 	  https://github.com/pjsip/pjproject

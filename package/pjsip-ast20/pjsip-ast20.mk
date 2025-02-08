@@ -1,26 +1,26 @@
 ################################################################################
 #
-# pjsip
+# pjsip-ast20
 #
 ################################################################################
 
-PJSIP_VERSION = 2.14.1
-PJSIP_SOURCE = pjproject-$(PJSIP_VERSION).tar.gz
-PJSIP_SITE = https://github.com/pjsip/pjproject/archive/$(PJSIP_VERSION)
+PJSIP_AST20_VERSION = 2.15.1
+PJSIP_AST20_SOURCE = pjproject-$(PJSIP_AST20_VERSION).tar.gz
+PJSIP_AST20_SITE = https://github.com/pjsip/pjproject/archive/$(PJSIP_AST20_VERSION)
 
-PJSIP_INSTALL_STAGING = YES
+PJSIP_AST20_INSTALL_STAGING = YES
 
-define PJSIP_CUSTOM_CONFIG
-	cp package/pjsip/asterisk-config_site.h $(@D)/pjlib/include/pj/config_site.h
+define PJSIP_AST20_CUSTOM_CONFIG
+	cp package/pjsip-ast20/asterisk-config_site.h $(@D)/pjlib/include/pj/config_site.h
 endef
-PJSIP_POST_PATCH_HOOKS += PJSIP_CUSTOM_CONFIG
+PJSIP_AST20_POST_PATCH_HOOKS += PJSIP_AST20_CUSTOM_CONFIG
 
-PJSIP_CONF_ENV = \
+PJSIP_AST20_CONF_ENV = \
 	CFLAGS="$(TARGET_CFLAGS) -O2 -Wno-unused-but-set-variable -Wno-unused-variable -Wno-unused-label -Wno-unused-function -Wno-strict-aliasing" \
 	LDFLAGS="-L$(STAGING_DIR)/usr/lib" \
 	LD="$(TARGET_CC)"
 
-PJSIP_CONF_OPT = \
+PJSIP_AST20_CONF_OPT = \
 	--enable-epoll \
 	--disable-speex-codec \
 	--disable-speex-aec \
@@ -51,17 +51,17 @@ PJSIP_CONF_OPT = \
 	--without-external-srtp
 
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
-PJSIP_CONF_OPT += --with-ssl=$(STAGING_DIR)/usr
-PJSIP_DEPENDENCIES += openssl
+PJSIP_AST20_CONF_OPT += --with-ssl=$(STAGING_DIR)/usr
+PJSIP_AST20_DEPENDENCIES += openssl
 else
-PJSIP_CONF_OPT += --disable-ssl
+PJSIP_AST20_CONF_OPT += --disable-ssl
 endif
 
 ifeq ($(BR2_PACKAGE_UTIL_LINUX_LIBUUID),y)
-PJSIP_DEPENDENCIES += util-linux
+PJSIP_AST20_DEPENDENCIES += util-linux
 endif
 
 # disable build of test binaries
-PJSIP_MAKE_OPT = lib
+PJSIP_AST20_MAKE_OPT = lib
 
-$(eval $(call AUTOTARGETS,package,pjsip))
+$(eval $(call AUTOTARGETS,package,pjsip-ast20))
