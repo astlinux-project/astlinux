@@ -14,9 +14,17 @@ Released @TBD@
 
 -- Linux Kernel 5.10.233, security and bug fixes.
 
+-- libpng, version bump to 1.6.46
+
+-- strace, version bump to 6.13
+
 ** Networking
 
--- no change
+-- libcurl (curl) version bump to 8.12.1, security fixes: CVE-2025-0167, CVE-2025-0665, CVE-2025-0725
+
+-- msmtp, version bump to 1.8.28
+
+-- vnStat, version bump to 2.13
 
 ** Asterisk
 
