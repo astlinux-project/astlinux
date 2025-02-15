@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LLDPD_VERSION = 1.0.18
+LLDPD_VERSION = 1.0.19
 LLDPD_SITE = https://github.com/lldpd/lldpd/releases/download/$(LLDPD_VERSION)
 LLDPD_DEPENDENCIES = host-pkg-config $(if $(BR2_PACKAGE_LIBCAP),libcap)
 
@@ -18,17 +18,19 @@ LLDPD_CONF_OPT = \
 	--without-xml \
 	--without-seccomp \
 	--without-libbsd \
+	--without-readline \
 	--disable-doxygen-doc
 
-ifeq ($(BR2_PACKAGE_READLINE),y)
-LLDPD_DEPENDENCIES += readline
-LLDPD_CONF_OPT += --with-readline
-else ifeq ($(BR2_PACKAGE_LIBEDIT),y)
-LLDPD_DEPENDENCIES += libedit
-LLDPD_CONF_OPT += --with-readline
-else
-LLDPD_CONF_OPT += --without-readline
-endif
+## Building with libedit is broken with 1.0.19
+#ifeq ($(BR2_PACKAGE_READLINE),y)
+#LLDPD_DEPENDENCIES += readline
+#LLDPD_CONF_OPT += --with-readline
+#else ifeq ($(BR2_PACKAGE_LIBEDIT),y)
+#LLDPD_DEPENDENCIES += libedit
+#LLDPD_CONF_OPT += --with-readline
+#else
+#LLDPD_CONF_OPT += --without-readline
+#endif
 
 define LLDPD_POST_INSTALL
 	$(INSTALL) -m 0755 -D package/lldpd/lldpd.init $(TARGET_DIR)/etc/init.d/lldpd
