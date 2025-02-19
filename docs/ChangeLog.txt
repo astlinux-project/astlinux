@@ -12,7 +12,9 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.233, security and bug fixes.
+-- Linux Kernel 5.10.234-cip57, security and bug fixes.
+   Switch to using the "Civil Infrastructure Platform" SLTS v5.10 kernel
+   More info: https://wiki.linuxfoundation.org/civilinfrastructureplatform/start
 
 -- libpng, version bump to 1.6.46
 
@@ -76,7 +78,7 @@ Released 2025-01-30
 
 -- screen, version 5.0.0
 
--- sqlite, version bump to 3.47.2
+-- sqlite, version bump to 3.49.1
 
 -- strace, version bump to 6.12
 
