@@ -5,8 +5,8 @@ BASE_VER="5.10."
 if [ -z "$1" -o -z "$2" ]; then
   echo "
 Usage: $0 FROM_minor_version TO_minor_version
-Example: $0 140 141
-Base Version: ${BASE_VER}xx
+Example: $0 233-cip56 234-cip57
+Base Version: ${BASE_VER}xxx-cipxx
 
 Note: Can be run multiple times as needed.
 "
@@ -14,17 +14,12 @@ Note: Can be run multiple times as needed.
 fi
 
 if [ "${1//./}" != "${1}" ]; then
-  echo "$0: '$1' is not a single number"
+  echo "$0: '$1' is not a single minor version"
   exit 1
 fi
 
 if [ "${2//./}" != "${2}" ]; then
-  echo "$0: '$2' is not a single number"
-  exit 1
-fi
-
-if [ $2 -le $1 ]; then
-  echo "$0: 'to_ver' must be greater than 'from_ver'"
+  echo "$0: '$2' is not a single minor version"
   exit 1
 fi
 
@@ -50,9 +45,9 @@ LINUX64_CONFIGS="$LINUX64_CONFIGS $(ls -1 project/runnix-iso/genx86_64/linux*[.]
 
 unset IFS
 for config in $CONFIGS; do
-  if grep -q "linux-${BASE_VER//./[.]}${1}" "$config"; then
-    echo "Command: sed -i \"s:linux-${BASE_VER//./[.]}${1}:linux-${BASE_VER}${2}:\" \"$config\""
-    sed -i "s:linux-${BASE_VER//./[.]}${1}:linux-${BASE_VER}${2}:" "$config"
+  if grep -q "linux-cip-${BASE_VER//./[.]}${1}" "$config"; then
+    echo "Command: sed -i \"s:linux-cip-${BASE_VER//./[.]}${1}:linux-cip-${BASE_VER}${2}:\" \"$config\""
+    sed -i "s:linux-cip-${BASE_VER//./[.]}${1}:linux-cip-${BASE_VER}${2}:" "$config"
   fi
 done
 
