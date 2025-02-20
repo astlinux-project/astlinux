@@ -24,6 +24,8 @@ Released @TBD@
 
 ** Networking
 
+-- OpenSSH, version 8.4p1, security fix: CVE-2025-26465
+
 -- libcurl (curl) version bump to 8.12.1, security fixes: CVE-2025-0167, CVE-2025-0665, CVE-2025-0725
 
 -- msmtp, version bump to 1.8.28
