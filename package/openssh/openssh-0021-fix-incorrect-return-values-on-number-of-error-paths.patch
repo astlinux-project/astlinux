@@ -1,0 +1,91 @@
+From df652eae9e552fa9c21c95f5f9f8b7b493d8d205 Mon Sep 17 00:00:00 2001
+From: Colin Watson <cjwatson@debian.org>
+Date: Fri, 14 Feb 2025 00:24:52 +0000
+Subject: Fix incorrect return values on a number of error paths
+
+At present, these have either no or minor known security consequences.
+
+Reported by Qualys.  Patch from the OpenSSH team.
+
+Last-Update: 2025-02-14
+
+Patch-Name: incorrect-return-values.patch
+---
+ krl.c           | 2 ++
+ ssh-sk-client.c | 1 +
+ sshconnect2.c   | 3 +++
+ sshsig.c        | 1 +
+ 4 files changed, 7 insertions(+)
+
+diff --git a/krl.c b/krl.c
+index 3a69b636a..ddca1f49f 100644
+--- a/krl.c
++++ b/krl.c
+@@ -678,6 +678,7 @@ revoked_certs_generate(struct revoked_certs *rc, struct sshbuf *buf)
+ 			break;
+ 		case KRL_SECTION_CERT_SERIAL_BITMAP:
+ 			if (rs->lo - bitmap_start > INT_MAX) {
++				r = SSH_ERR_INVALID_FORMAT;
+ 				error("%s: insane bitmap gap", __func__);
+ 				goto out;
+ 			}
+@@ -1014,6 +1015,7 @@ ssh_krl_from_blob(struct sshbuf *buf, struct ssh_krl **krlp,
+ 		goto out;
+ 
+ 	if ((krl = ssh_krl_init()) == NULL) {
++		r = SSH_ERR_ALLOC_FAIL;
+ 		error("%s: alloc failed", __func__);
+ 		goto out;
+ 	}
+diff --git a/ssh-sk-client.c b/ssh-sk-client.c
+index 8d7e6c305..bc5e189c3 100644
+--- a/ssh-sk-client.c
++++ b/ssh-sk-client.c
+@@ -420,6 +420,7 @@ sshsk_load_resident(const char *provider_path, const char *device,
+ 		if ((tmp = recallocarray(keys, nkeys, nkeys + 1,
+ 		    sizeof(*keys))) == NULL) {
+ 			error("%s: recallocarray keys failed", __func__);
++			r = SSH_ERR_ALLOC_FAIL;
+ 			goto out;
+ 		}
+ 		debug("%s: keys[%zu]: %s %s", __func__,
+diff --git a/sshconnect2.c b/sshconnect2.c
+index ef42510d7..ea4db5253 100644
+--- a/sshconnect2.c
++++ b/sshconnect2.c
+@@ -700,6 +700,7 @@ input_userauth_pk_ok(int type, u_int32_t seq, struct ssh *ssh)
+ 
+ 	if ((pktype = sshkey_type_from_name(pkalg)) == KEY_UNSPEC) {
+ 		debug("%s: server sent unknown pkalg %s", __func__, pkalg);
++		r = SSH_ERR_INVALID_FORMAT;
+ 		goto done;
+ 	}
+ 	if ((r = sshkey_from_blob(pkblob, blen, &key)) != 0) {
+@@ -710,6 +711,7 @@ input_userauth_pk_ok(int type, u_int32_t seq, struct ssh *ssh)
+ 		error("input_userauth_pk_ok: type mismatch "
+ 		    "for decoded key (received %d, expected %d)",
+ 		    key->type, pktype);
++		r = SSH_ERR_INVALID_FORMAT;
+ 		goto done;
+ 	}
+ 
+@@ -729,6 +731,7 @@ input_userauth_pk_ok(int type, u_int32_t seq, struct ssh *ssh)
+ 		    SSH_FP_DEFAULT);
+ 		error("%s: server replied with unknown key: %s %s", __func__,
+ 		    sshkey_type(key), fp == NULL ? "<ERROR>" : fp);
++		r = SSH_ERR_INVALID_FORMAT;
+ 		goto done;
+ 	}
+ 	ident = format_identity(id);
+diff --git a/sshsig.c b/sshsig.c
+index 0bd7e5cb7..fb859f035 100644
+--- a/sshsig.c
++++ b/sshsig.c
+@@ -915,6 +915,7 @@ cert_filter_principals(const char *path, u_long linenum,
+ 	}
+ 	if ((principals = sshbuf_dup_string(nprincipals)) == NULL) {
+ 		error("%s: buffer error", __func__);
++		r = SSH_ERR_ALLOC_FAIL;
+ 		goto out;
+ 	}
+ 	/* success */
