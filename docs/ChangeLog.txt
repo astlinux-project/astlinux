@@ -18,6 +18,8 @@ Released @TBD@
 
 -- libpng, version bump to 1.6.46
 
+-- sqlite, version bump to 3.49.1
+
 -- strace, version bump to 6.13
 
 ** Networking
@@ -78,7 +80,7 @@ Released 2025-01-30
 
 -- screen, version 5.0.0
 
--- sqlite, version bump to 3.49.1
+-- sqlite, version bump to 3.47.2
 
 -- strace, version bump to 6.12
 
