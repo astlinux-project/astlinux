@@ -59,7 +59,7 @@ menu_disk()
 
   IFS=$NL
   for disk in $DISKS; do
-    label="$(echo "$disk" | sed -n -r -e 's|^.* (/dev/[sv]d[a-h]).*$|\1|p')"
+    label="$(echo "$disk" | sed -n -r -e 's#^.* (/dev/[sv]d[a-h]|/dev/nvme[0-9]n[0-9]).*$#\1#p')"
     text="$(echo "$disk" | sed -n -r -e 's|^.*: *([^,]*).*$|\1|p' | sed 's: :_:g')"
     echo "$label $text"
   done
@@ -174,7 +174,7 @@ do_install()
     return 1
   fi
 
-  DISKS="$(fdisk -l 2>/dev/null | grep '^Disk */dev/[sv]d[a-h]:' | grep -v "^Disk */dev/${boot_disk}:")"
+  DISKS="$(fdisk -l 2>/dev/null | grep -E '^Disk *(/dev/[sv]d[a-h]|/dev/nvme[0-9]n[0-9]):' | grep -v "^Disk */dev/${boot_disk}:")"
 
   if [ -z "$DISKS" ]; then
     display_msg "No suitable disk found.\nExiting, no action performed."

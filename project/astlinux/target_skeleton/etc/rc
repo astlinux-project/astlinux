@@ -176,13 +176,7 @@ init() {
     fi
     fstab_dev=""
   else
-    echo "Warning: devtmpfs not available, falling back to tmpfs for /dev" >&2
-    mount -t tmpfs -o size=512k none /dev
-    fstab_dev="none    /dev            tmpfs   size=512k       0       0"
-
-    if [ -d /stat/dev ]; then
-      cp -a /stat/dev/. /dev/
-    fi
+    echo "Warning: devtmpfs not available" >&2
   fi
 
   set_asturw

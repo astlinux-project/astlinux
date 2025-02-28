@@ -10,6 +10,21 @@ CDROM_DRIVES="sr0 sr1 sr2 sr3"
 
 DRIVES="sda sdb sdc sdd sde sdf sdg sdh vda vdb vdc vdd"
 
+list_nvme() {
+  local form="$1" dev sub_dev
+
+  for dev in $(ls -1 /dev/nvme[0-9]n* 2>/dev/null); do
+    sub_dev="${dev##*/}"
+    if [ "${sub_dev%%p*}" = "${sub_dev}" ];then
+      if [ "$form" = "part" ]; then
+        echo "${sub_dev}p"
+      else
+        echo "${sub_dev}"
+      fi
+    fi
+  done
+}
+
 setup_network () {
 
   if [ -z "$NDEV" -a -n "$1" ]; then
@@ -59,6 +74,7 @@ setup_ssh () {
   fi
 
   if [ -n "$SSHPORT" ]; then
+    mkdir -p /dev/pts
     mount -t devpts devpts /dev/pts
 
     mkdir /tmp/etc/dropbear
@@ -142,7 +158,7 @@ for x in $CDROM_DRIVES; do
 done
 
 if [ -z "$DEVICE" ]; then
-  for x in $DRIVES; do
+  for x in $(list_nvme part) $DRIVES; do
     if mount -t iso9660 -o ro /dev/${x}1 $BASE 2>/dev/null; then
       if [ -f $BASE/os/isoflag ]; then
         DEVICE="${x}"
@@ -155,7 +171,7 @@ if [ -z "$DEVICE" ]; then
 fi
 
 if [ -z "$DEVICE" ]; then
-  for x in $DRIVES; do
+  for x in $(list_nvme part) $DRIVES; do
     if mount -t vfat -o ro /dev/${x}1 $BASE 2>/dev/null; then
       if [ -f $BASE/os/isoflag ]; then
         DEVICE="${x}"

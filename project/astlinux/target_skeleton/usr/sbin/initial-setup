@@ -72,6 +72,9 @@ find_runnix_drive() {
   if [ -z "$DRIVE" ]; then
     DRIVE="$(mount | awk '/\/oldroot\/cdrom/ { print substr($1,1,length($1)-1); }')"
   fi
+  case $DRIVE in
+    /dev/nvme[0-9]n*) DRIVE="${DRIVE%p}" ;;
+  esac
   if [ -z "$DRIVE" ]; then
     echo "Runnix Drive could not be found."
     exit $RED
@@ -199,8 +202,16 @@ configure() {
       echo "Drive $1 does not require configuration."
       exit $RED
     fi
-    genunion "${1}${part_union}"
-    genkd "${1}${part_kd}"
+    case $1 in
+      /dev/nvme[0-9]n*)
+        genunion "${1}p${part_union}"
+        genkd "${1}p${part_kd}"
+        ;;
+      *)
+        genunion "${1}${part_union}"
+        genkd "${1}${part_kd}"
+        ;;
+    esac
     ;;
 
   *)
