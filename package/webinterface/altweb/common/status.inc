@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2022 Lonnie Abelbeck
+// Copyright (C) 2008-2025 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -52,6 +52,7 @@
 // 02-04-2021, Remove IPsec (racoon) VPN support
 // 04-22-2022, Added UEFI indicator
 // 09-13-2022, Changed "Voicemail User", "DAHDI" and "Jabber" to custom Asterisk Name/Command status
+// 03-01-2025, Added NVMe support
 //
 // System location of OpenVPN Client logfile
 $OVPNCLOGFILE = '/var/log/openvpnclient-status.log';
@@ -684,7 +685,7 @@ if (is_file('/var/lock/lxc.lock')) {
 }
 if (getPREFdef($global_prefs, 'status_disk_usage') !== 'no') {
     $cmd = 'df -h /tmp | grep "^ *[A-Z][a-z]"';
-    $cmd .= '; df -h | grep "^/dev/[sv]d[a-h][0-9]" | sort -k 1,1';
+    $cmd .= '; df -h | grep -E "^(/dev/[sv]d[a-h][0-9]|/dev/nvme[0-9]n[0-9]p[0-9])" | sort -k 1,1';
     $status_disk_usage = @popen($cmd, 'r');
 }
 if (is_dir('/mnt/kd/acme')) {
