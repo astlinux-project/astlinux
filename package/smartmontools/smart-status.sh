@@ -5,7 +5,10 @@
 ##
 
 DRIVE="$(/sbin/findfs LABEL=RUNNIX)"
-DRIVE="${DRIVE%[1-9]}"
+case $DRIVE in
+  /dev/nvme[0-9]n*) DRIVE="${DRIVE%p[1-9]}" ;;
+                 *) DRIVE="${DRIVE%[1-9]}" ;;
+esac
 
 if [ -z "$DRIVE" ]; then
   echo "smart-status: Drive not Found"
