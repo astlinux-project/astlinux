@@ -5,7 +5,7 @@
 === docs/ChangeLog.txt
 =========================================================
 
-Additions for AstLinux 1.5.7:
+Additions for AstLinux 1.5.10:
 =============================
 
 Released @TBD@
@@ -16,11 +16,16 @@ Released @TBD@
    Switch to using the "Civil Infrastructure Platform" SLTS v5.10 kernel
    More info: https://wiki.linuxfoundation.org/civilinfrastructureplatform/start
 
+-- Add NVMe block device system support as a bootable disk.
+   Note: Requires runnix-0.6.21 or later to boot via an NVMe drive.
+
 -- libpng, version bump to 1.6.46
 
 -- sqlite, version bump to 3.49.1
 
 -- strace, version bump to 6.13
+
+-- system-vendor, update system-vendor.ids
 
 ** Networking
 
@@ -46,7 +51,7 @@ Released @TBD@
 
 ** Web Interface
 
--- no change
+-- Status tab, add NVMe support.
 
 
 Additions for AstLinux 1.5.6:
