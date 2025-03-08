@@ -1,0 +1,50 @@
+From 9df1bd0cc1580fe3d2dd2c0fd21050e528d178c5 Mon Sep 17 00:00:00 2001
+From: Simon Kelley <simon@thekelleys.org.uk>
+Date: Sat, 1 Mar 2025 22:43:23 +0000
+Subject: [PATCH] Revert 368ceff6e09941412ca58effb57e30ed78410a3e and fix
+ correct problem.
+
+The next() function is broken for any TFTP packet with padding
+which doesn't end with a zero.
+
+Rewrite to handle such packets.
+
+Thanks to Helge Deller <deller@gmx.de> for persisting in finding the
+actual problem and proposing a solution. This patch is modelled on his,
+but rewritten for personal preference by Simon Kelley, who is
+responsible for all bugs.
+---
+ src/tftp.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/src/tftp.c b/src/tftp.c
+index 637a566..62a365a 100644
+--- a/src/tftp.c
++++ b/src/tftp.c
+@@ -703,15 +703,16 @@ static void free_transfer(struct tftp_transfer *transfer)
+ 
+ static char *next(char **p, char *end)
+ {
+-  char *ret = *p;
+-  size_t len;
++  char *n, *ret = *p;
++  
++  /* Look for end of string, without running off the end of the packet. */
++  for (n = *p; n < end && *n != 0; n++);
+ 
+-  if (*(end-1) != 0 || 
+-      *p == end ||
+-      (len = strlen(ret)) == 0)
++  /* ran off the end or zero length string - failed */
++  if (n == end || n == ret)
+     return NULL;
+-
+-  *p += len + 1;
++  
++  *p = n + 1;
+   return ret;
+ }
+ 
+-- 
+2.20.1
+
