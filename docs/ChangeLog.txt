@@ -19,6 +19,10 @@ Released @TBD@
 -- Add NVMe block device system support as a bootable disk.
    Note: Requires runnix-0.6.21 or later to boot via an NVMe drive.
 
+-- RUNNIX, version bump to runnix-0.6.21, with Linux Kernel 5.10.234-cip57
+   Note, for testing purposes runnix-0.6.21 is available here:
+   upgrade-RUNNIX-image check https://lonnie.abelbeck.com/runnix-efi
+
 -- libpng, version bump to 1.6.46
 
 -- sqlite, version bump to 3.49.1
@@ -32,6 +36,8 @@ Released @TBD@
 -- OpenSSH, version 8.4p1, security fix: CVE-2025-26465
 
 -- libcurl (curl) version bump to 8.12.1, security fixes: CVE-2025-0167, CVE-2025-0665, CVE-2025-0725
+
+-- dnsmasq, version 2.84, add patch to fix any TFTP packet with padding which doesn't end with a zero.
 
 -- msmtp, version bump to 1.8.28
 
