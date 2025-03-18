@@ -23,6 +23,8 @@ Released @TBD@
    Note, for testing purposes runnix-0.6.21 is available here:
    upgrade-RUNNIX-image check https://lonnie.abelbeck.com/runnix-efi
 
+-- expat, version bump to 2.7.0, security fix: CVE-2024-8176
+
 -- libpng, version bump to 1.6.46
 
 -- sqlite, version bump to 3.49.1
