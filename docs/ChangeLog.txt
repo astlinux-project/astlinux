@@ -27,11 +27,17 @@ Released @TBD@
 
 -- libpng, version bump to 1.6.46
 
+-- ne, version bump to 3.3.4
+
 -- sqlite, version bump to 3.49.1
 
 -- strace, version bump to 6.13
 
 -- system-vendor, update system-vendor.ids
+
+-- ca-certificates, update trusted root certificates 2025-02-25
+
+-- Time Zone Database update, tzdata2025b and php-timezonedb-2025.2
 
 ** Networking
 
@@ -42,6 +48,8 @@ Released @TBD@
 -- dnsmasq, version 2.84, add patch to fix any TFTP packet with padding which doesn't end with a zero.
 
 -- msmtp, version bump to 1.8.28
+
+-- tarsnap, version bump to 1.0.41, "Trust No One" encrypted backups using the Tarsnap Backup service.
 
 -- vnStat, version bump to 2.13
 
