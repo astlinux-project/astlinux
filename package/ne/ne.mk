@@ -4,9 +4,9 @@
 #
 ############################################################
 
-NE_VERSION = 3.3.3
+NE_VERSION = 3.3.4
 NE_SOURCE = ne-$(NE_VERSION).tar.gz
-NE_SITE = http://ne.di.unimi.it
+NE_SITE = https://ne.di.unimi.it
 
 NE_DEPENDENCIES = ncurses
 
