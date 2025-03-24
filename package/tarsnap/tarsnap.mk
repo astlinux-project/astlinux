@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-TARSNAP_VERSION = 1.0.40
+TARSNAP_VERSION = 1.0.41
 TARSNAP_SOURCE = tarsnap-autoconf-$(TARSNAP_VERSION).tgz
 TARSNAP_SITE = https://www.tarsnap.com/download
 
