@@ -25,7 +25,17 @@ Released @TBD@
 
 -- expat, version bump to 2.7.0, security fix: CVE-2024-8176
 
--- libpng, version bump to 1.6.46
+-- htop, version bump to 3.4.0
+
+-- kmod, version bump to 34.2
+
+-- libcap, version bump to 2.75
+
+-- libpng, version bump to 1.6.47
+
+-- libsrtp, version bump to 2.7.0
+
+-- libusb, version bump to 1.0.28
 
 -- ne, version bump to 3.3.4
 
@@ -58,10 +68,14 @@ Released @TBD@
 -- Asterisk 16.30.0 ('16se' no change)
    Last Asterisk 16.x "Legacy" version, built --without-pjproject and --without-dahdi
 
--- Asterisk 18.26.1 (no change) and 20.12.0 (version bump)
+-- Asterisk 18.26.1 (no change)
    Built --with-pjproject and --with-dahdi
+   w/pjsip 2.14.1 (no change)
 
--- pjsip 2.14.1 (no change for 18.x) and pjsip 2.15.1 (version bump for 20.x)
+-- Asterisk 20.13.0 (version bump)
+   Built --with-pjproject and --with-dahdi
+   w/pjsip 2.15.1 (version bump)
+   New module: func_uuid.so
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
 
