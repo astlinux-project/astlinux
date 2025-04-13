@@ -8,6 +8,8 @@ METHOD="virtio-serial"
 
 DEVPATH="/dev/virtio-ports/org.qemu.guest_agent.0"
 
+MOUNTPOINT="/var/virtiofs/mnt"
+
 test_if_qemu_guest_agent()
 {
   if ! lscpu | grep -q -i '^hypervisor vendor: *kvm'; then
@@ -30,15 +32,38 @@ init () {
 }
 
 start () {
+  local ARGS
 
   if [ "$QEMU_GUEST_AGENT" = "yes" ] && test_if_qemu_guest_agent; then
     echo "Starting QEMU Guest Agent (qemu-ga) daemon..."
 
     qemu-ga -d -f $PIDFILE -m "$METHOD" -p "$DEVPATH"
   fi
+
+  if [ -n "$QEMU_VIRTIOFS_SHARE" ]; then
+    echo "Starting virtiofs mount..."
+    if [ ! -d "$MOUNTPOINT" ]; then
+      mkdir -m 0777 -p "$MOUNTPOINT"
+    fi
+    if mount | grep -q "$MOUNTPOINT"; then
+      umount "$MOUNTPOINT"
+      sleep 1
+    fi
+    if [ "$QEMU_VIRTIOFS_READONLY" = "yes" ]; then
+      ARGS="-o ro"
+    else
+      ARGS=""
+    fi
+    mount -t virtiofs $ARGS "$QEMU_VIRTIOFS_SHARE" "$MOUNTPOINT"
+  fi
 }
 
 stop () {
+
+  if mount | grep -q "$MOUNTPOINT"; then
+    echo "Stopping virtiofs mount..."
+    umount "$MOUNTPOINT"
+  fi
 
   if [ -f $PIDFILE ]; then
     echo "Stopping QEMU Guest Agent (qemu-ga) daemon..."
