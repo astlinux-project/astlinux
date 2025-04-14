@@ -23,7 +23,7 @@ Released @TBD@
    Note, for testing purposes runnix-0.6.21 is available here:
    upgrade-RUNNIX-image check https://lonnie.abelbeck.com/runnix-efi
 
--- expat, version bump to 2.7.0, security fix: CVE-2024-8176
+-- expat, version bump to 2.7.1, security fix: CVE-2024-8176
 
 -- htop, version bump to 3.4.0
 
@@ -53,13 +53,17 @@ Released @TBD@
 
 -- OpenSSH, version 8.4p1, security fix: CVE-2025-26465
 
--- libcurl (curl) version bump to 8.12.1, security fixes: CVE-2025-0167, CVE-2025-0665, CVE-2025-0725
+-- libcurl (curl) version bump to 8.13.0, security fixes: CVE-2025-0167, CVE-2025-0665, CVE-2025-0725
 
 -- dnsmasq, version 2.84, add patch to fix any TFTP packet with padding which doesn't end with a zero.
 
 -- msmtp, version bump to 1.8.28
 
 -- tarsnap, version bump to 1.0.41, "Trust No One" encrypted backups using the Tarsnap Backup service.
+
+-- virtiofs, for genx86_64-vm builds, Proxmox 8.4 and later supports this feature via QEMU on the host.
+   Disabled by default, define QEMU_VIRTIOFS_SHARE to enable.
+   New rc.conf variables: QEMU_VIRTIOFS_SHARE, QEMU_VIRTIOFS_READONLY
 
 -- vnStat, version bump to 2.13
 
