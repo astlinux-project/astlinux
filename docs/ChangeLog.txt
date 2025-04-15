@@ -23,6 +23,10 @@ Released @TBD@
    Note, for testing purposes runnix-0.6.21 is available here:
    upgrade-RUNNIX-image check https://lonnie.abelbeck.com/runnix-efi
 
+-- r8125, version 9.015.00, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
+
+-- ethtool, version bump to 6.14
+
 -- expat, version bump to 2.7.1, security fix: CVE-2024-8176
 
 -- htop, version bump to 3.4.0
@@ -37,11 +41,13 @@ Released @TBD@
 
 -- libusb, version bump to 1.0.28
 
+-- Monit, version bump to 5.35.0
+
 -- ne, version bump to 3.3.4
 
 -- sqlite, version bump to 3.49.1
 
--- strace, version bump to 6.13
+-- strace, version bump to 6.14
 
 -- system-vendor, update system-vendor.ids
 
@@ -56,6 +62,8 @@ Released @TBD@
 -- libcurl (curl) version bump to 8.13.0, security fixes: CVE-2025-0167, CVE-2025-0665, CVE-2025-0725
 
 -- dnsmasq, version 2.84, add patch to fix any TFTP packet with padding which doesn't end with a zero.
+
+-- keepalived, version bump to 2.3.3
 
 -- msmtp, version bump to 1.8.28
 
@@ -82,6 +90,10 @@ Released @TBD@
    New module: func_uuid.so
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
+
+-- FOP2, available version bump to 2.31.46
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
