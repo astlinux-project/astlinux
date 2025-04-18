@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.234-cip57, security and bug fixes.
+-- Linux Kernel 5.10.236-cip59, security and bug fixes.
    Switch to using the "Civil Infrastructure Platform" SLTS v5.10 kernel
    More info: https://wiki.linuxfoundation.org/civilinfrastructureplatform/start
 
@@ -29,11 +29,11 @@ Released @TBD@
 
 -- expat, version bump to 2.7.1, security fix: CVE-2024-8176
 
--- htop, version bump to 3.4.0
+-- htop, version bump to 3.4.1
 
 -- kmod, version bump to 34.2
 
--- libcap, version bump to 2.75
+-- libcap, version bump to 2.76
 
 -- libpng, version bump to 1.6.47
 
@@ -88,6 +88,8 @@ Released @TBD@
    Built --with-pjproject and --with-dahdi
    w/pjsip 2.15.1 (version bump)
    New module: func_uuid.so
+
+-- neon, version bump to 0.34.2, used for Asterisk Calendar Support
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
 
