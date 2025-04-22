@@ -19,9 +19,7 @@ Released @TBD@
 -- Add NVMe block device system support as a bootable disk.
    Note: Requires runnix-0.6.21 or later to boot via an NVMe drive.
 
--- RUNNIX, version bump to runnix-0.6.21, with Linux Kernel 5.10.234-cip57
-   Note, for testing purposes runnix-0.6.21 is available here:
-   upgrade-RUNNIX-image check https://lonnie.abelbeck.com/runnix-efi
+-- RUNNIX, version bump to runnix-0.6.22, with Linux Kernel 5.10.236-cip59
 
 -- r8125, version 9.015.00, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
 
