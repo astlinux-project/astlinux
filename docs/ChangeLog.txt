@@ -39,7 +39,7 @@ Released @TBD@
 
 -- libusb, version bump to 1.0.28
 
--- Monit, version bump to 5.35.0
+-- Monit, version bump to 5.35.1
 
 -- ne, version bump to 3.3.4
 
