@@ -10,6 +10,37 @@ Additions for AstLinux 1.5.11:
 
 Released @TBD@
 
+** System
+
+-- Linux Kernel 5.10.236-cip59, security and bug fixes.
+
+** Networking
+
+-- (no change)
+
+** Asterisk
+
+-- Asterisk 16.30.0 ('16se' no change)
+   Last Asterisk 16.x "Legacy" version, built --without-pjproject and --without-dahdi
+
+-- Asterisk 18.26.1 (no change)
+   Built --with-pjproject and --with-dahdi
+   w/pjsip 2.14.1 (no change)
+
+-- Asterisk 20.13.0 (no change)
+   Built --with-pjproject and --with-dahdi
+   w/pjsip 2.15.1 (no change)
+
+-- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
+
+-- FOP2, available version bump to 2.31.46
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
+
+** Web Interface
+
+-- Phoneprov and Prefs tab, add Phoneprov Status Admin Link HTTPS option.
+
 
 Additions for AstLinux 1.5.10:
 =============================
