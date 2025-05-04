@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2015-2021 Lonnie Abelbeck
+// Copyright (C) 2015-2025 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -12,6 +12,7 @@
 // 08-04-2015, Add pjsip support
 // 07-30-2018, Display PHONEPROV_GW_IP from user.conf
 // 01-19-2021, Add a lockfile for "Generate Files"
+// 05-04-2025, Add Status Admin Link HTTPS option
 //
 // System location of /mnt/kd/rc.conf.d directory
 $PHONEPROVCONFDIR = '/mnt/kd/rc.conf.d';
@@ -144,12 +145,18 @@ function isMACinfo($mac, $sql) {
 
 // Function: addSpecialInfo
 //
-function addSpecialInfo($label, $field) {
+function addSpecialInfo($g_prefs, $label, $field) {
   $str = '';
+
+  if (getPREFdef($g_prefs, 'phoneprov_status_admin_https') === 'yes') {
+    $href = 'https://';
+  } else {
+    $href = 'http://';
+  }
 
   if (strtolower($label) === 'addr->ip') {
     if (preg_match('/^([0-9]+[.][0-9]+[.][0-9]+[.][0-9]+).*$/', $field, $ips)) {
-      $str = '&nbsp;&nbsp;<a href="http://'.$ips[1].'/" class="headerText" title="Phone Web Admin" target="_blank">Admin</a>';
+      $str = '&nbsp;&nbsp;<a href="'.$href.$ips[1].'/" class="headerText" title="Phone Web Admin" target="_blank">Admin</a>';
     }
   }
   return($str);
@@ -879,7 +886,7 @@ if (($templates = getPHONEPROVtemplates("$phoneprov_base_dir/templates")) !== FA
             echo '<tr ', ($i % 2 == 0) ? 'class="dtrow0"' : 'class="dtrow1"', '>';
             echo '<td style="text-align: right;">'.htmlspecialchars($info_label).':</td>';
             echo '<td colspan="6">';
-            echo htmlspecialchars($info_field).addSpecialInfo($info_label, $info_field);
+            echo htmlspecialchars($info_field).addSpecialInfo($global_prefs, $info_label, $info_field);
             echo '</td>';
           }
         }

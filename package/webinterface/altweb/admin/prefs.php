@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2022 Lonnie Abelbeck
+// Copyright (C) 2008-2025 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -30,6 +30,7 @@
 // 05-10-2020, Added Linux Containers (LXC)
 // 02-05-2021, Added Show vnStat Tab
 // 09-13-2022, Changed "Voicemail User", "DAHDI" and "Jabber" to custom Asterisk Name/Command status
+// 05-04-2025, Added Phoneprov Status Admin Link HTTPS option
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -313,6 +314,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $value = 'phoneprov_extensions_displayed = "'.$_POST['phoneprov_maxnum'].'"';
     fwrite($fp, $value."\n");
+
+    if (isset($_POST['phoneprov_status_admin_https'])) {
+      $value = 'phoneprov_status_admin_https = yes';
+      fwrite($fp, $value."\n");
+    }
 
     if (isset($_POST['users_hide_pass'])) {
       $value = 'users_voicemail_hide_pass = yes';
@@ -1031,6 +1037,10 @@ require_once '../common/header.php';
   }
   putHtml('</select>');
   putHtml('</td></tr>');
+
+  putHtml('<tr class="dtrow1"><td style="text-align: right;" colspan="3">Status &rarr; Admin Link:</td><td colspan="3">');
+  $sel = (getPREFdef($global_prefs, 'phoneprov_status_admin_https') === 'yes') ? ' checked="checked"' : '';
+  putHtml('<input type="checkbox" value="phoneprov_status_admin_https" name="phoneprov_status_admin_https"'.$sel.' />&nbsp;Use HTTPS</td></tr>');
 
   putHtml('<tr class="dtrow0"><td colspan="6">&nbsp;</td></tr>');
 
