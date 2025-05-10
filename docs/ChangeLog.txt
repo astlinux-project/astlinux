@@ -16,7 +16,7 @@ Released @TBD@
 
 ** Networking
 
--- (no change)
+-- unbound, version bump to 1.23.0
 
 ** Asterisk
 
@@ -27,7 +27,7 @@ Released @TBD@
    Built --with-pjproject and --with-dahdi
    w/pjsip 2.14.1 (no change)
 
--- Asterisk 20.13.0 (no change)
+-- Asterisk 20.14.0 (version bump)
    Built --with-pjproject and --with-dahdi
    w/pjsip 2.15.1 (no change)
 
