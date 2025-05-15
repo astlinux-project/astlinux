@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.236-cip59, security and bug fixes.
+-- Linux Kernel 5.10.237-cip60, security and bug fixes.
 
 ** Networking
 
