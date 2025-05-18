@@ -4,7 +4,7 @@
 #
 #############################################################
 
-SMARTMONTOOLS_VERSION = 7.4
+SMARTMONTOOLS_VERSION = 7.5
 SMARTMONTOOLS_SITE = https://downloads.sourceforge.net/project/smartmontools/smartmontools/$(SMARTMONTOOLS_VERSION)
 
 define SMARTMONTOOLS_LATEST_DRIVEDB
@@ -17,8 +17,7 @@ SMARTMONTOOLS_POST_EXTRACT_HOOKS += SMARTMONTOOLS_LATEST_DRIVEDB
 
 SMARTMONTOOLS_CONF_OPT = \
 	--without-gnupg \
-	--without-libcap-ng \
-	--without-nvme-devicescan
+	--without-libcap-ng
 
 define SMARTMONTOOLS_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/smartctl $(TARGET_DIR)/usr/sbin/smartctl

@@ -1,6 +1,6 @@
 --- smartmontools-6.5/drivedb.h.orig	2016-05-07 17:33:02.820674826 -0500
 +++ smartmontools-6.5/drivedb.h	2016-05-07 17:46:54.208759606 -0500
-@@ -876,6 +876,21 @@
+@@ -1035,6 +1035,21 @@
      "-v 245,raw48,Max_Erase_Count "
      "-v 246,raw48,Total_Erase_Count "
    },
