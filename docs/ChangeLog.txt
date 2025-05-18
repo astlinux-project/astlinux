@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 5.10.237-cip60, security and bug fixes.
 
+-- smartctl (smartmontools), version bump to 7.5, drivedb.h snapshot 2025-04-27
+
 ** Networking
 
 -- unbound, version bump to 1.23.0
