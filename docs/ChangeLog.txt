@@ -18,6 +18,8 @@ Released @TBD@
 
 ** Networking
 
+-- iperf3, version bump to 3.19
+
 -- unbound, version bump to 1.23.0
 
 ** Asterisk
