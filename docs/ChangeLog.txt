@@ -14,7 +14,13 @@ Released @TBD@
 
 -- Linux Kernel 5.10.237-cip60, security and bug fixes.
 
+-- Monit, version bump to 5.35.2
+
+-- screen, version 5.0.1, security fixes: CVE-2025-46805, CVE-2025-46804, CVE-2025-46803, CVE-2025-46802, CVE-2025-23395
+
 -- smartctl (smartmontools), version bump to 7.5, drivedb.h snapshot 2025-04-27
+
+-- ca-certificates, update trusted root certificates 2025-05-20
 
 ** Networking
 
