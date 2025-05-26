@@ -32,14 +32,17 @@ Released @TBD@
 
 -- Asterisk 16.30.0 ('16se' no change)
    Last Asterisk 16.x "Legacy" version, built --without-pjproject and --without-dahdi
+   Backport patch for security fix CVE-2025-47780, asterisk.conf option 'disable_remote_console_shell'
 
--- Asterisk 18.26.1 (no change)
+-- Asterisk 18.26.2 (version bump)
    Built --with-pjproject and --with-dahdi
    w/pjsip 2.14.1 (no change)
+   Note: A new asterisk.conf option 'disable_remote_console_shell' has been added.
 
--- Asterisk 20.14.0 (version bump)
+-- Asterisk 20.14.1 (version bump)
    Built --with-pjproject and --with-dahdi
    w/pjsip 2.15.1 (no change)
+   Note: A new asterisk.conf option 'disable_remote_console_shell' has been added.
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
 
