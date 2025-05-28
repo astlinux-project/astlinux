@@ -14,19 +14,29 @@ Released @TBD@
 
 -- Linux Kernel 5.10.237-cip60, security and bug fixes.
 
+-- libpng, version bump to 1.6.48
+
 -- Monit, version bump to 5.35.2
 
 -- screen, version 5.0.1, security fixes: CVE-2025-46805, CVE-2025-46804, CVE-2025-46803, CVE-2025-46802, CVE-2025-23395
 
 -- smartctl (smartmontools), version bump to 7.5, drivedb.h snapshot 2025-04-27
 
+-- strace, version bump to 6.15
+
 -- ca-certificates, update trusted root certificates 2025-05-20
 
 ** Networking
 
+-- libcurl (curl) version bump to 8.14.0
+
 -- iperf3, version bump to 3.19
 
+-- stunnel, version bump to 5.75
+
 -- unbound, version bump to 1.23.0
+
+-- whois, version bump to 5.6.1
 
 ** Asterisk
 
