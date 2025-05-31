@@ -22,7 +22,11 @@ Released @TBD@
 
 -- smartctl (smartmontools), version bump to 7.5, drivedb.h snapshot 2025-04-27
 
+-- sqlite, version bump to 3.50.0
+
 -- strace, version bump to 6.15
+
+-- system-vendor, update system-vendor.ids
 
 -- ca-certificates, update trusted root certificates 2025-05-20
 
