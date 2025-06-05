@@ -38,7 +38,7 @@ Released @TBD@
 
 -- OpenSSH, version 8.4p1, security fix: CVE-2025-32728
 
--- libcurl (curl) version bump to 8.14.0
+-- libcurl (curl) version bump to 8.14.1
 
 -- iperf3, version bump to 3.19
 
