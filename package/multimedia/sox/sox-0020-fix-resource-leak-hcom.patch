@@ -1,0 +1,51 @@
+From: Helmut Grohne <helmut@subdivi.de>
+Date: Sat, 11 Nov 2023 18:18:40 +0100
+Subject: hcom: fix dictionary resource leaks
+
+startread and stopread should release p->dictionary in all failure modes.
+---
+ src/hcom.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/src/hcom.c b/src/hcom.c
+index be17d9d..75a2820 100644
+--- a/src/hcom.c
++++ b/src/hcom.c
+@@ -160,13 +160,18 @@ static int startread(sox_format_t * ft)
+                        p->dictionary[i].dict_rightson);
+                 if (!dictvalid(i, dictsize, p->dictionary[i].dict_leftson,
+                                p->dictionary[i].dict_rightson)) {
++                        free(p->dictionary);
++                        p->dictionary = NULL;
+                         lsx_fail_errno(ft, SOX_EHDR, "Invalid dictionary");
+                         return SOX_EOF;
+                 }
+         }
+         rc = lsx_skipbytes(ft, (size_t) 1); /* skip pad byte */
+-        if (rc)
++        if (rc) {
++            free(p->dictionary);
++            p->dictionary = NULL;
+             return rc;
++	}
+ 
+         /* Initialized the decompression engine */
+         p->checksum = checksum;
+@@ -248,6 +253,8 @@ static int stopread(sox_format_t * ft)
+ {
+         register priv_t *p = (priv_t *) ft->priv;
+ 
++        free(p->dictionary);
++        p->dictionary = NULL;
+         if (p->huffcount != 0)
+         {
+                 lsx_fail_errno(ft,SOX_EFMT,"not all HCOM data read");
+@@ -258,8 +265,6 @@ static int stopread(sox_format_t * ft)
+                 lsx_fail_errno(ft,SOX_EFMT,"checksum error in HCOM data");
+                 return (SOX_EOF);
+         }
+-        free(p->dictionary);
+-        p->dictionary = NULL;
+         return (SOX_SUCCESS);
+ }
+ 

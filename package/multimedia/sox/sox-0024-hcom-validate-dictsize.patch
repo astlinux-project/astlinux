@@ -1,0 +1,30 @@
+From: Helmut Grohne <helmut@subdivi.de>
+Date: Sat, 11 Nov 2023 18:18:40 +0100
+Subject: hcom: validate dictsize
+
+Bug: https://sourceforge.net/p/sox/bugs/350/
+Bug: https://sourceforge.net/p/sox/bugs/352/
+Bug-Debian: https://bugs.debian.org/1021133
+Bug-Debian: https://bugs.debian.org/1021134
+
+This patch fixes both CVE-2021-23159 and CVE-2021-23172.
+---
+ src/hcom.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/hcom.c b/src/hcom.c
+index 84643a2..7e3bd1a 100644
+--- a/src/hcom.c
++++ b/src/hcom.c
+@@ -141,6 +141,11 @@ static int startread(sox_format_t * ft)
+                 return (SOX_EOF);
+         }
+         lsx_readw(ft, &dictsize);
++        if (dictsize == 0 || dictsize > 511)
++        {
++                lsx_fail_errno(ft, SOX_EHDR, "Implausible dictionary size in HCOM header");
++                return SOX_EOF;
++        }
+ 
+         /* Translate to sox parameters */
+         ft->encoding.encoding = SOX_ENCODING_HCOM;

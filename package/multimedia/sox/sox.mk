@@ -8,6 +8,8 @@ SOX_VERSION = 14.4.2
 SOX_SITE = http://downloads.sourceforge.net/project/sox/sox/$(SOX_VERSION)
 SOX_SOURCE = sox-$(SOX_VERSION).tar.bz2
 SOX_INSTALL_STAGING = YES
+# patching Makefile.am
+SOX_AUTORECONF = YES
 
 SOX_DEPENDENCIES = host-pkg-config
 
@@ -101,4 +103,4 @@ define SOX_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/lib/libsox.so*
 endef
 
-$(eval $(call AUTOTARGETS,package,sox))
+$(eval $(call AUTOTARGETS,package/multimedia,sox))

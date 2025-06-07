@@ -1,0 +1,35 @@
+From a23816e06a6433d1d553668bb8bd784d5f11d37e Mon Sep 17 00:00:00 2001
+From: Asher Gordon <AsDaGo@posteo.net>
+Date: Sun, 29 Jan 2023 13:08:12 -0500
+Subject: [PATCH] vorbis: fix memory leaks
+Forwarded: https://sourceforge.net/p/sox/patches/130/
+
+Data was allocated in startread() and startwrite() that was not freed
+in stopread() and stopwrite(). Fix it.
+---
+ src/vorbis.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/vorbis.c b/src/vorbis.c
+index 9fa234ce..ab15301a 100644
+--- a/src/vorbis.c
++++ b/src/vorbis.c
+@@ -229,6 +229,7 @@ static int stopread(sox_format_t * ft)
+ 
+   free(vb->buf);
+   ov_clear(vb->vf);
++  free(vb->vf);
+ 
+   return (SOX_SUCCESS);
+ }
+@@ -405,6 +406,7 @@ static int stopwrite(sox_format_t * ft)
+   vorbis_block_clear(&ve->vb);
+   vorbis_dsp_clear(&ve->vd);
+   vorbis_info_clear(&ve->vi);
++  free(ve);
+ 
+   return (SOX_SUCCESS);
+ }
+-- 
+2.39.0
+
