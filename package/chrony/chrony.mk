@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-CHRONY_VERSION = 4.6.1
+CHRONY_VERSION = 4.7
 CHRONY_SITE = https://chrony-project.org/releases
 CHRONY_DEPENDENCIES = host-pkg-config libcap
 
