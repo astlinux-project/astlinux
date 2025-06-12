@@ -18,6 +18,8 @@ Released @TBD@
 
 -- libpng, version bump to 1.6.48
 
+-- libusb, version bump to 1.0.29
+
 -- Monit, version bump to 5.35.2
 
 -- php, version 7.2.34, add security fix: GHSA-wg4p-4hqh-c3g9
@@ -45,17 +47,21 @@ Released @TBD@
 
 -- OpenSSH, version 8.4p1, security fix: CVE-2025-32728
 
+-- WireGuard, wireguard-tools, version bump to 1.0.20250521
+
 -- libcurl (curl) version bump to 8.14.1
 
 -- chrony, version bump to 4.7
 
 -- iperf3, version bump to 3.19
 
+-- msmtp, version bump to 1.8.30
+
 -- stunnel, version bump to 5.75
 
 -- unbound, version bump to 1.23.0
 
--- whois, version bump to 5.6.1
+-- whois, version bump to 5.6.2
 
 ** Asterisk
 
