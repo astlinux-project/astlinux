@@ -89,6 +89,8 @@ Released @TBD@
 
 -- Phoneprov and Prefs tab, add Phoneprov Status Admin Link HTTPS option.
 
+-- Edit tab, add editing /var/db/dnsmasq-lease.db and dnsmasq-lease6.db
+
 
 Additions for AstLinux 1.5.10:
 =============================
