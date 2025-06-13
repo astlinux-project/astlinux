@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2021 Lonnie Abelbeck
+// Copyright (C) 2008-2025 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -24,6 +24,7 @@
 // 02-21-2020, Remove PPTP VPN support
 // 05-10-2020, Added Linux Containers (LXC)
 // 02-04-2021, Remove IPsec (racoon) VPN support
+// 06-13-2025, Added editing /var/db/dnsmasq-lease.db and dnsmasq-lease6.db
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -167,6 +168,8 @@ function menuSelectHint($file) {
     // Note: the leading file / sets hints[0] to ''
     if ($hints[1] === 'mnt' && $hints[2] === 'kd') {
       $hint = isset($hints[3]) ? $hints[3] : '';
+    } elseif ($hints[1] === 'var' && $hints[2] === 'db') {
+      $hint = isset($hints[3]) ? $hints[3] : '';
     } elseif ($hints[1] === 'etc') {
       $hint = isset($hints[2]) ? $hints[2] : '';
     } else {
@@ -177,6 +180,8 @@ function menuSelectHint($file) {
         'ddclient.conf' => 'dynamicdns',
         'dnsmasq.static' => 'dnsmasq',
         'dnsmasq.leases' => 'dnsmasq',
+        'dnsmasq-lease.db' => 'dnsmasq',
+        'dnsmasq-lease6.db' => 'dnsmasq',
         'chrony.conf' => 'ntpd',
         'msmtp-aliases.conf' => 'msmtp',
         'ldap.conf' => 'ldap',
@@ -415,6 +420,8 @@ require_once '../common/header.php';
       $openfile === '/etc/rc.modules' ||
       $openfile === '/etc/modprobe.d/options.conf' ||
       $openfile === '/etc/udev/rules.d/70-persistent-net.rules' ||
+      $openfile === '/var/db/dnsmasq-lease.db' ||
+      $openfile === '/var/db/dnsmasq-lease6.db' ||
       $openfile === '/stat/var/packages/fop2/html/js/presence.js') {
     if (! is_writable($openfile)) {
       $openfile = '';
@@ -693,6 +700,14 @@ require_once '../common/header.php';
   if (is_writable($file = '/mnt/kd/dnsmasq.leases')) {
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
     putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - Active DNSmasq Leases</option>');
+  }
+  if (is_writable($file = '/var/db/dnsmasq-lease.db')) {
+    $sel = ($file === $openfile) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - Active DNSmasq IPv4 Leases</option>');
+  }
+  if (is_writable($file = '/var/db/dnsmasq-lease6.db')) {
+    $sel = ($file === $openfile) ? ' selected="selected"' : '';
+    putHtml('<option value="'.$file.'"'.$sel.'>'.basename($file).' - Active DNSmasq IPv6 Leases</option>');
   }
   if (is_writable($file = '/mnt/kd/blocked-hosts')) {
     $sel = ($file === $openfile) ? ' selected="selected"' : '';
