@@ -6,7 +6,7 @@
 
 NE_VERSION = 3.3.4
 NE_SOURCE = ne-$(NE_VERSION).tar.gz
-NE_SITE = https://ne.di.unimi.it
+NE_SITE = https://astlinux-project.org/files
 
 NE_DEPENDENCIES = ncurses
 
