@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.237-cip60, security and bug fixes.
+-- Linux Kernel 5.10.238-cip61, security and bug fixes.
 
 -- libmad, version 0.15.1b, security fixes: CVE-2017-8372, CVE-2017-8373, CVE-2017-8374
 
