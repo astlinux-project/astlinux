@@ -20,6 +20,8 @@ Released @TBD@
 
 -- libusb, version bump to 1.0.29
 
+-- libxml2, version 2.11.9, security fixes: CVE-2024-56171, CVE-2025-24928, CVE-2025-27113, CVE-2025-32415
+
 -- Monit, version bump to 5.35.2
 
 -- php, version 7.2.34, add security fix: GHSA-wg4p-4hqh-c3g9
