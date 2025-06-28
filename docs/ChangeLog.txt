@@ -39,7 +39,7 @@ Released @TBD@
                                         CVE-2021-3643, CVE-2021-23210, CVE-2021-23159, CVE-2021-23172, CVE-2023-34318, CVE-2021-33844, CVE-2021-40426,
                                         CVE-2022-31650, CVE-2023-26590, CVE-2022-31651, CVE-2023-32627
 
--- sqlite, version bump to 3.50.1
+-- sqlite, version bump to 3.50.2
 
 -- strace, version bump to 6.15
 
