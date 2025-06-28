@@ -14,15 +14,19 @@ Released @TBD@
 
 -- Linux Kernel 5.10.238-cip61, security and bug fixes.
 
+-- ethtool, version bump to 6.15
+
 -- libmad, version 0.15.1b, security fixes: CVE-2017-8372, CVE-2017-8373, CVE-2017-8374
 
--- libpng, version bump to 1.6.48
+-- libpng, version bump to 1.6.49
 
 -- libusb, version bump to 1.0.29
 
 -- libxml2, version 2.11.9, security fixes: CVE-2024-56171, CVE-2025-24928, CVE-2025-27113, CVE-2025-32415
 
 -- Monit, version bump to 5.35.2
+
+-- pciutils, version bump to 3.14.0
 
 -- php, version 7.2.34, add security fix: GHSA-wg4p-4hqh-c3g9
 
@@ -50,6 +54,8 @@ Released @TBD@
 -- OpenSSH, version 8.4p1, security fix: CVE-2025-32728
 
 -- WireGuard, wireguard-tools, version bump to 1.0.20250521
+
+-- keepalived, version bump to 2.3.4
 
 -- libcurl (curl) version bump to 8.14.1
 
