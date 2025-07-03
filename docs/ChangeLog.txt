@@ -43,6 +43,8 @@ Released @TBD@
 
 -- strace, version bump to 6.15
 
+-- sudo, version 1.8.32, backport security fix: CVE-2025-32462
+
 -- system-vendor, update system-vendor.ids
 
 -- ca-certificates, update trusted root certificates 2025-05-20
