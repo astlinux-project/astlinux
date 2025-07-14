@@ -1,6 +1,6 @@
 --- mtr-0.92/packet/probe_unix.c.orig	2017-06-28 08:01:59.513999000 -0500
 +++ mtr-0.92/packet/probe_unix.c	2017-06-28 08:24:20.325732684 -0500
-@@ -203,7 +203,7 @@
+@@ -209,7 +209,7 @@
  void check_sctp_support(
      struct net_state_t *net_state)
  {

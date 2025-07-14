@@ -4,7 +4,7 @@
 #
 #############################################################
 
-MTR_VERSION = 0.95
+MTR_VERSION = 0.96
 MTR_SITE = https://github.com/traviscross/mtr/archive/v$(MTR_VERSION)
 MTR_SOURCE = mtr-$(MTR_VERSION).tar.gz
 
@@ -14,6 +14,7 @@ MTR_DEPENDENCIES = host-pkg-config ncurses libcap
 MTR_AUTORECONF = YES
 
 MTR_CONF_OPT = \
+	--disable-braille \
 	--without-gtk
 
 ifeq ($(BR2_PACKAGE_JANSSON),y)
