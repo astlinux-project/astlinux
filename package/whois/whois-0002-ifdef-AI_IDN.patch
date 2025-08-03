@@ -1,6 +1,6 @@
 --- whois-5.2.15/whois.c.orig	2017-03-02 07:46:01.316070356 -0600
 +++ whois-5.2.15/whois.c	2017-03-02 07:47:25.420525150 -0600
-@@ -1100,7 +1100,9 @@
+@@ -1080,7 +1080,9 @@
      hints.ai_family = AF_UNSPEC;
      hints.ai_socktype = SOCK_STREAM;
      hints.ai_flags = AI_ADDRCONFIG;
