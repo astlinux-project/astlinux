@@ -16,11 +16,19 @@ Released @TBD@
 
 -- jansson, version bump to 2.14.1
 
+-- libpng, version bump to 1.6.50
+
 -- sqlite, version bump to 3.50.4
+
+-- ca-certificates, update trusted root certificates 2025-07-15
 
 ** Networking
 
--- (no change)
+-- libcurl (curl) version bump to 8.15.0
+
+-- unbound, version bump to 1.23.1
+
+-- whois, version bump to 5.6.4
 
 ** Asterisk
 
@@ -36,6 +44,10 @@ Released @TBD@
    w/pjsip 2.15.1 (no change)
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
+
+-- FOP2, available version bump to 2.31.48
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
