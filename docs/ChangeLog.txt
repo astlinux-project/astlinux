@@ -18,6 +18,8 @@ Released @TBD@
 
 -- libpng, version bump to 1.6.50
 
+-- libxml2, version 2.11.9, security fixes: CVE-2025-6021, CVE-2025-6170
+
 -- sqlite, version bump to 3.50.4
 
 -- ca-certificates, update trusted root certificates 2025-07-15
