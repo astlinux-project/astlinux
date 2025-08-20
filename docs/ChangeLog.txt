@@ -22,11 +22,17 @@ Released @TBD@
 
 -- sqlite, version bump to 3.50.4
 
--- ca-certificates, update trusted root certificates 2025-07-15
+-- strace, version bump to 6.16
+
+-- ca-certificates, update trusted root certificates 2025-08-12
 
 ** Networking
 
 -- libcurl (curl) version bump to 8.15.0
+
+-- fping, version bump to 5.4
+
+-- iperf3, version bump to 3.19.1
 
 -- unbound, version bump to 1.23.1
 
