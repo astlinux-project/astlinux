@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-IPERF3_VERSION = 3.19
+IPERF3_VERSION = 3.19.1
 IPERF3_SOURCE = iperf-$(IPERF3_VERSION).tar.gz
 IPERF3_SITE = https://downloads.es.net/pub/iperf
 
