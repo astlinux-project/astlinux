@@ -59,7 +59,7 @@ Released @TBD@
 
 ** Web Interface
 
--- (no change)
+-- Status tab, UPS Monitoring, do not display undefined fields.
 
 
 Additions for AstLinux 1.5.11:
