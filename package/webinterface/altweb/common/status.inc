@@ -151,7 +151,6 @@ function outputASTERISKcommand($filename) {
 //
 function parseUPSstatus($log) {
 
-  $cid = 0;
   if (($ph = @fopen($log, "r")) !== FALSE) {
     while (! feof($ph)) {
       if (($line = rtrim(fgets($ph, 1024))) !== '') {
@@ -163,7 +162,7 @@ function parseUPSstatus($log) {
           case 'ups.load':
           case 'battery.charge':
           case 'battery.runtime':
-            $status['status'][$cid]["$ips[1]"] = $ips[2];
+            $status['status']["$ips[1]"] = $ips[2];
             break;
           }
         }
@@ -1570,23 +1569,19 @@ if ($daemon['upsmon'] > 0) {
     } else {
       putHtml('<table class="statusdatatable">');
       putHtml("<tr>");
-      if (($n = arrayCount($upsmon['status'])) > 0) {
-        echo "<td>", "Model", "</td>";
-        echo "<td>", "Status", "</td>";
-        echo "<td>", "Utility", "</td>";
-        echo "<td>", "UPS Load", "</td>";
-        echo "<td>", "Battery Chg.", "</td>";
-        echo "<td>", "Batt. Runtime", "</td>";
-        for ($i = 0; $i < $n; $i++) {
-          putHtml("</tr><tr>");
-          echo "<td>", $upsmon['status'][$i]['ups.model'], "</td>";
-          echo "<td>", $upsmon['status'][$i]['ups.status'], "</td>";
-          echo "<td>", $upsmon['status'][$i]['input.voltage'].' Volts', "</td>";
-          echo "<td>", $upsmon['status'][$i]['ups.load'].' %', "</td>";
-          echo "<td>", $upsmon['status'][$i]['battery.charge'].' %', "</td>";
-          echo "<td>", (int)(((int)$upsmon['status'][$i]['battery.runtime'] + 30) / 60).' Minutes', "</td>";
-        }
-      }
+      echo "<td>", "Model", "</td>";
+      echo "<td>", "Status", "</td>";
+      if (isset($upsmon['status']['input.voltage'])) echo "<td>", "Utility", "</td>";
+      if (isset($upsmon['status']['ups.load'])) echo "<td>", "UPS Load", "</td>";
+      if (isset($upsmon['status']['battery.charge'])) echo "<td>", "Battery Chg.", "</td>";
+      if (isset($upsmon['status']['battery.runtime'])) echo "<td>", "Batt. Runtime", "</td>";
+      putHtml("</tr><tr>");
+      echo "<td>", $upsmon['status']['ups.model'], "</td>";
+      echo "<td>", $upsmon['status']['ups.status'], "</td>";
+      if (isset($upsmon['status']['input.voltage'])) echo "<td>", $upsmon['status']['input.voltage'].' Volts', "</td>";
+      if (isset($upsmon['status']['ups.load'])) echo "<td>", $upsmon['status']['ups.load'].' %', "</td>";
+      if (isset($upsmon['status']['battery.charge'])) echo "<td>", $upsmon['status']['battery.charge'].' %', "</td>";
+      if (isset($upsmon['status']['battery.runtime'])) echo "<td>", (int)(((int)$upsmon['status']['battery.runtime'] + 30) / 60).' Minutes', "</td>";
       putHtml("</tr>");
       putHtml("</table>");
     }
