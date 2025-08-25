@@ -12,7 +12,9 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.238-cip61, security and bug fixes.
+-- Linux Kernel 5.10.240-cip63, security and bug fixes.
+
+-- r8125, version 9.016.01, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
 
 -- jansson, version bump to 2.14.1
 
