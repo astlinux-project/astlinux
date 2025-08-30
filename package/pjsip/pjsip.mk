@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PJSIP_VERSION = 2.14.1
+PJSIP_VERSION = 2.15.1
 PJSIP_SOURCE = pjproject-$(PJSIP_VERSION).tar.gz
 PJSIP_SITE = https://github.com/pjsip/pjproject/archive/$(PJSIP_VERSION)
 
