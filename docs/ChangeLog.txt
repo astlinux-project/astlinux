@@ -47,11 +47,11 @@ Released @TBD@
 -- Asterisk 16.30.0 ('16se' no change)
    Last Asterisk 16.x "Legacy" version, built --without-pjproject and --without-dahdi
 
--- Asterisk 18.26.3 (version bump)
+-- Asterisk 18.26.4 (version bump)
    Built --with-pjproject and --with-dahdi
-   w/pjsip 2.14.1 (no change)
+   w/pjsip 2.15.1 (version bump)
 
--- Asterisk 20.15.1 (version bump)
+-- Asterisk 20.15.2 (version bump)
    Built --with-pjproject and --with-dahdi
    w/pjsip 2.15.1 (no change)
 
