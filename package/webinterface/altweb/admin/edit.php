@@ -25,6 +25,7 @@
 // 05-10-2020, Added Linux Containers (LXC)
 // 02-04-2021, Remove IPsec (racoon) VPN support
 // 06-13-2025, Added editing /var/db/dnsmasq-lease.db and dnsmasq-lease6.db
+// 09-04-2025, Added editing /etc/asterisk/customer/*.conf
 //
 
 $myself = $_SERVER['PHP_SELF'];
@@ -416,6 +417,7 @@ require_once '../common/header.php';
       $dir === '/mnt/kd/keepalived' ||
       $dir === '/etc/asterisk' ||
       $dir === '/etc/asterisk/includes' ||
+      $dir === '/etc/asterisk/customer' ||
       $dir_up === '/mnt/kd/lxc/container' ||
       $openfile === '/etc/rc.modules' ||
       $openfile === '/etc/modprobe.d/options.conf' ||
@@ -966,6 +968,12 @@ require_once '../common/header.php';
       if (is_writable($globfile)) {
         $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
         putHtml('<option value="'.$globfile.'"'.$sel.'>includes/'.basename($globfile).' - Asterisk Include File</option>');
+      }
+    }
+    foreach (glob('/etc/asterisk/customer/*.conf') as $globfile) {
+      if (is_writable($globfile)) {
+        $sel = ($globfile === $openfile) ? ' selected="selected"' : '';
+        putHtml('<option value="'.$globfile.'"'.$sel.'>customer/'.basename($globfile).' - Asterisk Customer File</option>');
       }
     }
     if (is_writable($file = '/etc/asterisk/extensions.lua')) {
