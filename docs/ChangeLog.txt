@@ -65,6 +65,8 @@ Released @TBD@
 
 -- Status tab, UPS Monitoring, do not display undefined fields.
 
+-- Edit tab, add editing /etc/asterisk/customer/*.conf
+
 
 Additions for AstLinux 1.5.11:
 =============================
