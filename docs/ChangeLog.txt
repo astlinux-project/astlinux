@@ -22,6 +22,9 @@ Released @TBD@
 
 -- libxml2, version 2.11.9, security fixes: CVE-2025-6021, CVE-2025-6170
 
+-- nut, major version bump to 2.8.4
+   Note: Change to only supporting usbhid-ups, netxml-ups drivers.
+
 -- sqlite, version bump to 3.50.4
 
 -- strace, version bump to 6.16
@@ -66,6 +69,8 @@ Released @TBD@
 -- Status tab, UPS Monitoring, do not display undefined fields.
 
 -- Edit tab, add editing /etc/asterisk/customer/*.conf
+
+-- Network tab, UPS Monitoring, only support usbhid-ups, netxml-ups drivers.
 
 
 Additions for AstLinux 1.5.11:
