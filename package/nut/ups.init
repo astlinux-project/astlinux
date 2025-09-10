@@ -13,15 +13,6 @@ gen_ups_conf()
 
   case $UPS_DRIVER in
 
-    snmp-ups) echo "[ups]
-driver = ${UPS_DRIVER}
-port = ${UPS_DRIVER_PORT}
-community = public
-snmp_version = v2c
-pollfreq = 15
-"
-    ;;
-
     netxml-ups) echo "[ups]
 driver = ${UPS_DRIVER}
 port = ${UPS_DRIVER_PORT}
