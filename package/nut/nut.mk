@@ -4,31 +4,40 @@
 #
 ################################################################################
 
-NUT_VERSION_MAJOR = 2.7
-NUT_VERSION = $(NUT_VERSION_MAJOR).4
-NUT_SITE = http://www.networkupstools.org/source/$(NUT_VERSION_MAJOR)/
+NUT_VERSION = 2.8.4
+NUT_SOURCE = nut-$(NUT_VERSION).tar.gz
+NUT_SITE = https://github.com/networkupstools/nut/releases/download/v$(NUT_VERSION)
+
+NUT_INSTALL_STAGING = YES
 NUT_DEPENDENCIES = host-pkg-config
 
-# Our patch changes m4 macros, so we need to autoreconf
-NUT_AUTORECONF = YES
-
 NUT_CONF_OPT = \
-	--with-drvpath=/usr/lib/ups \
+	--with-pidpath=/var/run \
 	--with-altpidpath=/var/run/ups \
+	--with-dev \
+	--without-nutconf \
+	--without-doc \
+	--without-python \
+	--without-python2 \
+	--without-python3 \
+	--without-pynut \
 	--with-user=nobody \
 	--with-group=nobody \
+	--with-all=auto \
+	--with-drivers=usbhid-ups,netxml-ups \
+	--with-drvpath=/usr/lib/ups \
 	--datadir=/usr/share/ups \
 	--with-udev-dir=/etc/udev \
 	--sysconfdir=/etc/ups
 
 NUT_CONF_ENV = \
-	GDLIB_CONFIG=$(STAGING_DIR)/usr/bin/gdlib-config \
-	NET_SNMP_CONFIG=$(STAGING_DIR)/usr/bin/net-snmp-config
-
-# For uClibc-based toolchains, nut forgets to link with -lm
-ifeq ($(BR2_TOOLCHAIN_USES_UCLIBC),y)
-NUT_CONF_ENV += LDFLAGS="$(TARGET_LDFLAGS) -lm"
-endif
+	PKG_CONFIG_LIBDIR=$(STAGING_DIR)/usr/lib/pkgconfig:$(STAGING_DIR)/usr/share/pkgconfig \
+	ax_cv_check_cflags__Werror__Wno_unknown_warning_option=no \
+	ax_cv_check_cxxflags__Werror__Wno_unknown_warning_option=no \
+	ac_cv_func_strcasecmp=yes \
+	ac_cv_func_strdup=yes \
+	ac_cv_func_strncasecmp=yes \
+	ax_cv__printf_string_null=yes
 
 # serial driver optional support
 ifeq ($(BR2_PACKAGE_NUT_SERIAL_DRIVERS),y)
@@ -37,15 +46,14 @@ else
 NUT_CONF_OPT += --without-serial
 endif
 
-# Build all applicable drivers
-NUT_CONF_OPT += --with-drivers=all
-
 ifeq ($(BR2_PACKAGE_AVAHI)$(BR2_PACKAGE_DBUS),yy)
 NUT_DEPENDENCIES += avahi dbus
 NUT_CONF_OPT += --with-avahi
 else
 NUT_CONF_OPT += --without-avahi
 endif
+
+NUT_CONF_OPT += --without-freeipmi
 
 # gd with support for png is required for the CGI
 ifeq ($(BR2_PACKAGE_GD)$(BR2_PACKAGE_LIBPNG),yy)
@@ -63,7 +71,10 @@ else
 NUT_CONF_OPT += --without-libltdl
 endif
 
-ifeq ($(BR2_PACKAGE_LIBUSB_COMPAT),y)
+ifeq ($(BR2_PACKAGE_LIBUSB),y)
+NUT_DEPENDENCIES += libusb
+NUT_CONF_OPT += --with-usb
+else ifeq ($(BR2_PACKAGE_LIBUSB_COMPAT),y)
 NUT_DEPENDENCIES += libusb-compat
 NUT_CONF_OPT += --with-usb
 else
@@ -77,12 +88,15 @@ else
 NUT_CONF_OPT += --without-neon
 endif
 
-ifeq ($(BR2_PACKAGE_NETSNMP),y)
-NUT_DEPENDENCIES += netsnmp
-NUT_CONF_OPT += --with-snmp
-else
+## Disable SNMP support
+#ifeq ($(BR2_PACKAGE_NETSNMP),y)
+#NUT_DEPENDENCIES += netsnmp
+#NUT_CONF_OPT += \
+#	--with-snmp \
+#	--with-net-snmp-config=$(STAGING_DIR)/usr/bin/net-snmp-config
+#else
 NUT_CONF_OPT += --without-snmp
-endif
+#endif
 
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
 NUT_DEPENDENCIES += openssl

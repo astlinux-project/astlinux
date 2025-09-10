@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2022 Lonnie Abelbeck
+// Copyright (C) 2008-2025 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -56,6 +56,7 @@
 // 05-10-2020, Added Linux Containers (LXC)
 // 12-13-2020, Replace getdns/stubby with unbound for DNS-over-TLS
 // 02-04-2021, Remove IPsec (racoon) VPN support
+// 09-10-2025, Change NUT UPS Monitoring, only support usbhid-ups, netxml-ups drivers
 //
 // System location of rc.conf file
 $CONFFILE = '/etc/rc.conf';
@@ -153,12 +154,6 @@ $select_ldap_tls_reqcert = array (
 $select_ups_driver = array (
   'No direct connected "master" UPS' => '',
   '[usbhid-ups] Generic USB HID' => 'usbhid-ups',
-  '[bcmxcp_usb] BCM/XCP protocol over USB' => 'bcmxcp_usb',
-  '[blazer_usb] Megatec/Q1 protocol USB' => 'blazer_usb',
-  '[richcomm_usb] Richcomm contact to USB' => 'richcomm_usb',
-  '[riello_usb] Riello USB' => 'riello_usb',
-  '[tripplite_usb] Tripp Lite OMNIVS/SMARTPRO' => 'tripplite_usb',
-  '[snmp-ups] Generic SNMP' => 'snmp-ups',
   '[netxml-ups] Network XML' => 'netxml-ups'
 );
 
@@ -743,7 +738,7 @@ function saveNETWORKsettings($conf_dir, $conf_file) {
   if (isset($_POST['ups_driver'], $_POST['ups_driver_port'])) {
     $value = 'UPS_DRIVER="'.$_POST['ups_driver'].'"';
     fwrite($fp, $value."\n");
-    if ($_POST['ups_driver'] === 'snmp-ups' || $_POST['ups_driver'] === 'netxml-ups' || $_POST['ups_driver'] === '') {
+    if ($_POST['ups_driver'] === 'netxml-ups' || $_POST['ups_driver'] === '') {
       $value = 'UPS_DRIVER_PORT="'.tuq($_POST['ups_driver_port']).'"';
     } else {
       $value = 'UPS_DRIVER_PORT=""';
