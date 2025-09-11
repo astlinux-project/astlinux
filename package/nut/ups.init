@@ -211,6 +211,8 @@ init ()
 
 start ()
 {
+  ## Disable startup "failed to notify about ... will not spam more about it" syslogs
+  export NUT_QUIET_INIT_UPSNOTIFY=true
 
   if [ -f /etc/ups/ups.conf -o -f /etc/ups/upsmon.conf ]; then
     echo "$(date "+%Y-%m-%d %H:%M:%S") - started" > $LOGFILE
