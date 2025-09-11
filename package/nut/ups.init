@@ -52,13 +52,13 @@ gen_upsd_users()
   if [ -n "$master_pass" ]; then
     echo "[master]
 password = ${master_pass}
-upsmon master
+upsmon primary
 "
   fi
 
   echo "[${UPS_MONITOR_USER:-monuser}]
 password = ${UPS_MONITOR_PASS:-astlinux}
-upsmon slave
+upsmon secondary
 "
 }
 
@@ -70,13 +70,13 @@ gen_upsmon_conf()
     host="$UPS_MONITOR_HOST"
     user="$UPS_MONITOR_USER"
     pass="$UPS_MONITOR_PASS"
-    type="slave"
+    type="secondary"
     pollfreq=10
   elif [ -n "$master_pass" ]; then
     host="ups@localhost"
     user="master"
     pass="$master_pass"
-    type="master"
+    type="primary"
     pollfreq=5
   else
     return
