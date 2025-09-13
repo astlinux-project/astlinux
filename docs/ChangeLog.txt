@@ -29,7 +29,7 @@ Released @TBD@
 
 -- strace, version bump to 6.16
 
--- ca-certificates, update trusted root certificates 2025-08-12
+-- ca-certificates, update trusted root certificates 2025-09-09
 
 ** Networking
 
