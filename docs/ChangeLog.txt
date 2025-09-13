@@ -33,7 +33,7 @@ Released @TBD@
 
 ** Networking
 
--- libcurl (curl) version bump to 8.15.0
+-- libcurl (curl) version bump to 8.16.0, security fix: CVE-2025-9086
 
 -- chrony, version bump to 4.8
 
