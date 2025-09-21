@@ -16,6 +16,8 @@ Released @TBD@
 
 -- r8125, version 9.016.01, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
 
+-- expat, version bump to 2.7.2, security fix: CVE-2025-59375
+
 -- jansson, version bump to 2.14.1
 
 -- libpng, version bump to 1.6.50
@@ -29,6 +31,8 @@ Released @TBD@
 
 -- strace, version bump to 6.16
 
+-- unionfs (fuse), version bump to 3.7
+
 -- ca-certificates, update trusted root certificates 2025-09-09
 
 ** Networking
@@ -41,7 +45,9 @@ Released @TBD@
 
 -- iperf3, version bump to 3.19.1
 
--- unbound, version bump to 1.23.1
+-- msmtp, version bump to 1.8.31
+
+-- unbound, version bump to 1.24.0
 
 -- whois, version bump to 5.6.4
 
