@@ -31,6 +31,8 @@ Released @TBD@
 
 -- strace, version bump to 6.16
 
+-- tiff, version bump to 4.7.1, security fix: CVE-2024-13978
+
 -- unionfs (fuse), version bump to 3.7
 
 -- ca-certificates, update trusted root certificates 2025-09-09
