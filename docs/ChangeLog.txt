@@ -16,6 +16,9 @@ Released @TBD@
 
 -- r8125, version 9.016.01, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
 
+-- empty, version bump to 0.6.23d
+   Note: Previous 0.6.23c workaround [empty -w "$expect" ''] no longer works, now use [empty -w "$expect"] as documented.
+
 -- expat, version bump to 2.7.2, security fix: CVE-2025-59375
 
 -- jansson, version bump to 2.14.1
