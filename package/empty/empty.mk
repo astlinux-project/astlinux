@@ -4,9 +4,9 @@
 #
 ################################################################################
 
-EMPTY_VERSION = 0.6.23c
+EMPTY_VERSION = 0.6.23d
 EMPTY_SOURCE = empty-$(EMPTY_VERSION).tgz
-EMPTY_SITE = http://downloads.sourceforge.net/project/empty/empty/empty-$(EMPTY_VERSION)
+EMPTY_SITE = https://downloads.sourceforge.net/project/empty/empty/empty-$(EMPTY_VERSION)
 
 define EMPTY_BUILD_CMDS
 	$(MAKE) $(TARGET_CONFIGURE_OPTS) -C $(@D) all
