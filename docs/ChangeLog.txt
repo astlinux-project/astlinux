@@ -32,7 +32,7 @@ Released @TBD@
 
 -- sqlite, version bump to 3.50.4
 
--- strace, version bump to 6.16
+-- strace, version bump to 6.17
 
 -- tiff, version bump to 4.7.1, security fix: CVE-2024-13978
 
