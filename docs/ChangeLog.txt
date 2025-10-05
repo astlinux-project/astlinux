@@ -85,6 +85,8 @@ Released @TBD@
 
 -- Network tab, UPS Monitoring, only support usbhid-ups, netxml-ups drivers.
 
+-- Custom Tabs, add 'only-staff' display scope in custom_tab_list_cmdstr for 'staff' user.
+
 
 Additions for AstLinux 1.5.11:
 =============================
