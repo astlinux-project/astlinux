@@ -12,6 +12,7 @@
 // 03-04-2011, Add custom tab support
 // 07-29-2013, Use charset 'utf-8' instead of 'iso-8859-1'
 // 10-29-2019, Add Wiki tab and link
+// 10-05-2025, Add 'only-staff' display scope in custom_tab_list_cmdstr for 'staff' user using a custom tab
 
 // Function: getCUSTOMtabs
 //
@@ -281,6 +282,7 @@ header('Content-Type: text/html; charset=utf-8');
       if (! is_null($custom_tabs = getCUSTOMtabs($global_prefs))) {
         foreach ($custom_tabs as $tab) {
           if ($tab['access'] === 'all' || ($global_staff && $tab['access'] === 'staff')
+                                       || ($global_user === 'staff' && $tab['access'] === 'only-staff')
                                        || ($global_admin && $tab['access'] === 'admin')) {
             putHtml('<li><a href="'.$tab['href'].'"><span>'.$tab['title'].'</span></a></li>');
           }
