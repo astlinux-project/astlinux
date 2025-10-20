@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 5.10.241-cip64, security and bug fixes.
 
+-- RUNNIX, version bump to runnix-0.6.24, with Linux Kernel 5.10.241-cip64
+
 -- r8125, version 9.016.01, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
 
 -- empty, version bump to 0.6.23d
