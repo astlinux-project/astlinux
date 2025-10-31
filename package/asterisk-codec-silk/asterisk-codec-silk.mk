@@ -3,11 +3,7 @@
 # asterisk-codec-silk
 #
 ##############################################################
-ifeq ($(BR2_PACKAGE_ASTERISK_v16se),y)
-ASTERISK_CODEC_SILK_VERSION := 16.0_1.0.3-x86_64
-ASTERISK_CODEC_SILK_SITE := https://downloads.digium.com/pub/telephony/codec_silk/asterisk-16.0/x86-64
-endif
-ifeq ($(BR2_PACKAGE_ASTERISK_v18),y)
+ifeq ($(BR2_PACKAGE_ASTERISK_v18se),y)
 ASTERISK_CODEC_SILK_VERSION := 18.0_1.0.3-x86_64
 ASTERISK_CODEC_SILK_SITE := https://downloads.digium.com/pub/telephony/codec_silk/asterisk-18.0/x86-64
 endif

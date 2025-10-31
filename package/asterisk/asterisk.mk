@@ -4,17 +4,12 @@
 #
 ##############################################################
 
-ifeq ($(BR2_PACKAGE_ASTERISK_v18),y)
-ASTERISK_VERSION := 18.26.4
-ASTERISK_LABEL :=
-else
- ifeq ($(BR2_PACKAGE_ASTERISK_v20),y)
+ifeq ($(BR2_PACKAGE_ASTERISK_v20),y)
 ASTERISK_VERSION := 20.15.2
 ASTERISK_LABEL :=
- else
-ASTERISK_VERSION := 16.30.0
+else
+ASTERISK_VERSION := 18.26.4
 ASTERISK_LABEL := se
- endif
 endif
 ASTERISK_SOURCE := asterisk-$(ASTERISK_VERSION).tar.gz
 ASTERISK_SITE := https://downloads.asterisk.org/pub/telephony/asterisk/releases
@@ -289,7 +284,7 @@ else
 		menuselect/menuselect --enable chan_sip menuselect.makeopts; \
 	)
  else
-	## Asterisk 16.x and 18.x versions
+	## Asterisk 18.x version
 	(cd $(ASTERISK_DIR); \
 		menuselect/menuselect --enable res_pktccops --disable app_dahdiras menuselect.makeopts; \
 	)
