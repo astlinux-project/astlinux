@@ -10,6 +10,36 @@ Additions for AstLinux 1.5.13:
 
 Released @TBD@
 
+** IMPORTANT NOTICE
+
+-- Changes to supported firmware builds:
+   == Previous 'ast16se' and 'ast18' firmware branches are no longer updated.
+   == New 'ast18se' firmware branch, Asterisk 18.x built --without-pjproject and --without-dahdi
+   == Previous 'ast20' firmware branch, Asterisk 20.x built --with-pjproject and --with-dahdi
+
+** System
+
+-- Linux Kernel 5.10.245-cip65, security and bug fixes.
+
+** Networking
+
+-- (no change)
+
+** Asterisk
+
+-- Asterisk 18.26.4 ('18se' version bump)
+   Last Asterisk 18.x "Legacy" version, built --without-pjproject and --without-dahdi
+
+-- Asterisk 20.15.2 (no change)
+   Built --with-pjproject and --with-dahdi
+   w/pjsip 2.15.1 (no change)
+
+-- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
+
+** Web Interface
+
+-- (no change)
+
 
 Additions for AstLinux 1.5.12:
 =============================
