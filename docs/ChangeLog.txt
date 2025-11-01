@@ -21,9 +21,13 @@ Released @TBD@
 
 -- Linux Kernel 5.10.245-cip65, security and bug fixes.
 
+-- unixodbc, version bump to 2.3.14
+
 ** Networking
 
--- (no change)
+-- stunnel, version bump to 5.76
+
+-- whois, version bump to 5.6.5
 
 ** Asterisk
 
