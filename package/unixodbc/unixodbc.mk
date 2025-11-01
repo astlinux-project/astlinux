@@ -4,7 +4,7 @@
 #
 #############################################################
 
-UNIXODBC_VERSION = 2.3.12
+UNIXODBC_VERSION = 2.3.14
 UNIXODBC_SOURCE = unixODBC-$(UNIXODBC_VERSION).tar.gz
 UNIXODBC_SITE = https://www.unixodbc.org
 UNIXODBC_DEPENDENCIES = host-bison host-flex libtool $(if $(BR2_PACKAGE_FLEX),flex)
