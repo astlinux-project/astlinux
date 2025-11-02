@@ -5,7 +5,7 @@
 ##############################################################
 
 ifeq ($(BR2_PACKAGE_ASTERISK_v20),y)
-ASTERISK_VERSION := 20.15.2
+ASTERISK_VERSION := 20.16.0
 ASTERISK_LABEL :=
 else
 ASTERISK_VERSION := 18.26.4
@@ -30,7 +30,7 @@ ndots = $(subst $(space),$(dot),$(wordlist $(1),$(2),$(subst $(dot),$(space),$3)
 ASTERISK_VERSION_SINGLE := $(call ndots,1,1,$(ASTERISK_VERSION))
 ASTERISK_VERSION_TUPLE := $(call ndots,1,2,$(ASTERISK_VERSION))
 
-ASTERISK_GLOBAL_MAKEOPTS := $(BASE_DIR)/../project/astlinux/asterisk.makeopts-$(ASTERISK_VERSION_SINGLE)
+ASTERISK_GLOBAL_MAKEOPTS :=
 
 ASTERISK_CONFIGURE_ENV += \
 			USE_GETIFADDRS=yes
@@ -282,6 +282,7 @@ else
 	## Asterisk 20.x version
 	(cd $(ASTERISK_DIR); \
 		menuselect/menuselect --enable chan_sip menuselect.makeopts; \
+		menuselect/menuselect --enable ENABLE_SRTP_AES_192 --enable ENABLE_SRTP_AES_256 --enable ENABLE_SRTP_AES_GCM menuselect.makeopts; \
 	)
  else
 	## Asterisk 18.x version
