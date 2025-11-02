@@ -34,9 +34,11 @@ Released @TBD@
 -- Asterisk 18.26.4 ('18se' version bump)
    Last Asterisk 18.x "Legacy" version, built --without-pjproject and --without-dahdi
 
--- Asterisk 20.15.2 (no change)
+-- Asterisk 20.16.0 (version bump)
    Built --with-pjproject and --with-dahdi
    w/pjsip 2.15.1 (no change)
+   Note: Now built with SRTP AES_192, AES_256, AES_GCM support
+   New module: chan_websocket.so
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
 
