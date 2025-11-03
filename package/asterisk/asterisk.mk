@@ -282,7 +282,6 @@ else
 	## Asterisk 20.x version
 	(cd $(ASTERISK_DIR); \
 		menuselect/menuselect --enable chan_sip menuselect.makeopts; \
-		menuselect/menuselect --enable ENABLE_SRTP_AES_192 --enable ENABLE_SRTP_AES_256 --enable ENABLE_SRTP_AES_GCM menuselect.makeopts; \
 	)
  else
 	## Asterisk 18.x version
@@ -292,6 +291,7 @@ else
  endif
 	## All Asterisk versions
 	(cd $(ASTERISK_DIR); \
+		menuselect/menuselect --enable ENABLE_SRTP_AES_192 --enable ENABLE_SRTP_AES_256 --enable ENABLE_SRTP_AES_GCM menuselect.makeopts; \
 		menuselect/menuselect --enable app_meetme --enable app_page --enable app_macro menuselect.makeopts; \
 		menuselect/menuselect --disable res_stir_shaken menuselect.makeopts; \
 		menuselect/menuselect --disable CORE-SOUNDS-EN-GSM --disable MOH-OPSOUND-WAV menuselect.makeopts; \

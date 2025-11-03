@@ -1,0 +1,29 @@
+From 183df135dd32e293b0945dcb6ebd8a6930f37598 Mon Sep 17 00:00:00 2001
+From: George Joseph <gjoseph@sangoma.com>
+Date: Fri, 1 Nov 2024 08:22:14 -0600
+Subject: [PATCH] res_srtp: Change Unsupported crypto suite msg from verbose to
+ debug
+
+There's really no point in spamming logs with a verbose message
+for every unsupported crypto suite an older client may send
+in an SDP.  If none are supported, there will be an error or
+warning.
+
+(cherry picked from commit 39ed13940bffa6a05e2880f8fa9fb45694e75589)
+---
+ res/res_srtp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/res/res_srtp.c b/res/res_srtp.c
+index 33786d020ab..09f33ac496a 100644
+--- a/res/res_srtp.c
++++ b/res/res_srtp.c
+@@ -957,7 +957,7 @@ static int res_sdp_crypto_parse_offer(struct ast_rtp_instance *rtp, struct ast_s
+ 		key_len_expected = AES_256_GCM_KEYSIZE_WSALT;
+ #endif
+ 	} else {
+-		ast_verb(1, "Unsupported crypto suite: %s\n", suite);
++		ast_debug(3, "Unsupported crypto suite: %s\n", suite);
+ 		return -1;
+ 	}
+ 

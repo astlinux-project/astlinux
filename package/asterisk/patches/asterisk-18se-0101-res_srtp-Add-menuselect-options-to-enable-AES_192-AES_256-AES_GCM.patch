@@ -1,0 +1,94 @@
+From 0149449d0ffdd4ce34baa5f58f5d183e9fca55a1 Mon Sep 17 00:00:00 2001
+From: George Joseph <gjoseph@sangoma.com>
+Date: Tue, 5 Aug 2025 08:10:29 -0600
+Subject: [PATCH] res_srtp: Add menuselect options to enable AES_192, AES_256
+ and AES_GCM
+
+UserNote: Options are now available in the menuselect "Resource Modules"
+category that allow you to enable the AES_192, AES_256 and AES_GCM
+cipher suites in res_srtp. Of course, libsrtp and OpenSSL must support
+them but modern versions do.  Previously, the only way to enable them was
+to set the CFLAGS environment variable when running ./configure.
+The default setting is to disable them preserving existing behavior.
+
+(cherry picked from commit 581e4a23a815fb27fba7238f4465c055b3c58621)
+---
+ build_tools/menuselect-deps.in |  3 +++
+ res/Makefile                   | 15 +++++++++++++++
+ res/res_srtp.c                 | 26 ++++++++++++++++++++++++++
+ 3 files changed, 44 insertions(+)
+
+diff --git a/build_tools/menuselect-deps.in b/build_tools/menuselect-deps.in
+index c336b75d1b5..d7977a7c557 100644
+--- a/build_tools/menuselect-deps.in
++++ b/build_tools/menuselect-deps.in
+@@ -85,3 +85,6 @@ HAVE_LEAK_SANITIZER=@AST_LEAK_SANITIZER@
+ HAVE_THREAD_SANITIZER=@AST_THREAD_SANITIZER@
+ HAVE_UNDEFINED_SANITIZER=@AST_UNDEFINED_SANITIZER@
+ NO_BINARY_MODULES=@PBX_NO_BINARY_MODULES@
++HAVE_SRTP_192=@PBX_SRTP_192@
++HAVE_SRTP_256=@PBX_SRTP_256@
++HAVE_SRTP_GCM=@PBX_SRTP_GCM@
+diff --git a/res/Makefile b/res/Makefile
+index 1915ff35d31..79a1d80a56a 100644
+--- a/res/Makefile
++++ b/res/Makefile
+@@ -76,6 +76,21 @@ res_parking.o: _ASTCFLAGS+=$(AST_NO_FORMAT_TRUNCATION)
+ snmp/agent.o: _ASTCFLAGS+=-fPIC
+ res_snmp.o: _ASTCFLAGS+=-fPIC
+ 
++MODULE_EXCLUDE=ENABLE_SRTP_AES_192 ENABLE_SRTP_AES_256 ENABLE_SRTP_AES_GCM
++
++ifeq ($(findstring ENABLE_SRTP_AES_192,$(MENUSELECT_RES)),)
++res_srtp.o: _ASTCFLAGS+=-DENABLE_SRTP_AES_192
++endif
++
++ifeq ($(findstring ENABLE_SRTP_AES_256,$(MENUSELECT_RES)),)
++res_srtp.o: _ASTCFLAGS+=-DENABLE_SRTP_AES_256
++endif
++
++ifeq ($(findstring ENABLE_SRTP_AES_GCM,$(MENUSELECT_RES)),)
++res_srtp.o: _ASTCFLAGS+=-DENABLE_SRTP_AES_GCM
++endif
++
++
+ # Dependencies for res_ari_*.so are generated, so they're in this file
+ include ari.make
+ 
+diff --git a/res/res_srtp.c b/res/res_srtp.c
+index 09f33ac496a..39454c6122a 100644
+--- a/res/res_srtp.c
++++ b/res/res_srtp.c
+@@ -35,6 +35,32 @@
+ 	<support_level>core</support_level>
+ ***/
+ 
++/*** MAKEOPTS
++<category name="MENUSELECT_RES" displayname="Resource Modules">
++	<member name="ENABLE_SRTP_AES_192" displayname="Enable AES 192 cipher suite in res_srtp" touch_on_change="res/res_srtp.c">
++		<defaultenabled>no</defaultenabled>
++		<support_level>option</support_level>
++		<depend>srtp</depend>
++		<depend>res_srtp</depend>
++		<depend>HAVE_SRTP_192</depend>
++	</member>
++	<member name="ENABLE_SRTP_AES_256" displayname="Enable AES 256 cipher suite in res_srtp" touch_on_change="res/res_srtp.c">
++		<defaultenabled>no</defaultenabled>
++		<support_level>option</support_level>
++		<depend>srtp</depend>
++		<depend>res_srtp</depend>
++		<depend>HAVE_SRTP_256</depend>
++	</member>
++	<member name="ENABLE_SRTP_AES_GCM" displayname="Enable AES GCM cipher suite in res_srtp" touch_on_change="res/res_srtp.c">
++		<defaultenabled>no</defaultenabled>
++		<support_level>option</support_level>
++		<depend>srtp</depend>
++		<depend>res_srtp</depend>
++		<depend>HAVE_SRTP_GCM</depend>
++	</member>
++</category>
++***/
++
+ /* See https://docs.asterisk.org/Deployment/Secure-Calling/ */
+ 
+ #include "asterisk.h"                   /* for NULL, size_t, memcpy, etc */
