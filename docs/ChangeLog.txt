@@ -33,6 +33,7 @@ Released @TBD@
 
 -- Asterisk 18.26.4 ('18se' version bump)
    Last Asterisk 18.x "Legacy" version, built --without-pjproject and --without-dahdi
+   Note: Now built with SRTP AES_192, AES_256, AES_GCM support
 
 -- Asterisk 20.16.0 (version bump)
    Built --with-pjproject and --with-dahdi
