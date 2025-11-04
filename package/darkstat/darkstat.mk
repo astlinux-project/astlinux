@@ -4,7 +4,7 @@
 #
 #############################################################
 
-DARKSTAT_VERSION = 3.0.721
+DARKSTAT_VERSION = 3.0.722
 DARKSTAT_SOURCE = darkstat-$(DARKSTAT_VERSION).tar.gz
 DARKSTAT_SITE = https://github.com/emikulic/darkstat/archive/$(DARKSTAT_VERSION)
 
