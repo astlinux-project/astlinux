@@ -4,25 +4,24 @@
 #
 #############################################################
 
-NGREP_VERSION = 1.47
+NGREP_VERSION = 1.48.1
 NGREP_SOURCE = ngrep-$(NGREP_VERSION).tar.gz
-NGREP_SITE = https://astlinux-project.org/files
-NGREP_DEPENDENCIES = libpcap pcre
+NGREP_SITE = https://github.com/jpr5/ngrep/archive/v$(NGREP_VERSION)
+NGREP_DEPENDENCIES = libpcap pcre2
+## patching configure.ac
 NGREP_AUTORECONF = YES
 
-##
-## curl -L -o dl/ngrep-1.47.tar.gz https://github.com/jpr5/ngrep/archive/V1_47.tar.gz
-## ./scripts/upload-dl-pair dl/ngrep-1.47.tar.gz
-##
-
 NGREP_UNINSTALL_STAGING_OPT = --version
+
+NGREP_CONF_ENV = \
+	NGREP_PCRE2_CONFIG_SCRIPT="$(STAGING_DIR)/usr/bin/pcre2-config"
 
 NGREP_CONF_OPT = \
 	--disable-pcap-restart \
 	--disable-tcpkill \
 	--with-dropprivs-user=nobody \
-	--with-pcap-includes=$(STAGING_DIR)/usr/include/pcap \
-	--enable-pcre \
+	--with-pcap-includes=$(STAGING_DIR)/usr/include \
+	--enable-pcre2 \
 	--enable-ipv6
 
 define NGREP_INSTALL_TARGET_CMDS

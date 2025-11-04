@@ -2,7 +2,7 @@ config BR2_PACKAGE_NGREP
 	bool "ngrep"
 	default n
 	select BR2_PACKAGE_LIBPCAP
-	select BR2_PACKAGE_PCRE
+	select BR2_PACKAGE_PCRE2
 	help
 	  Network grep.
 
