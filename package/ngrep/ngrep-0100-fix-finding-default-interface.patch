@@ -1,0 +1,17 @@
+--- ngrep-1.48.1/ngrep.c.orig	2025-11-05 08:21:56.531441236 -0600
++++ ngrep-1.48.1/ngrep.c	2025-11-05 08:23:22.364788885 -0600
+@@ -1811,9 +1811,12 @@
+         clean_exit(2);
+     }
+ 
+-    for (pcap_if_t *d = alldevs; d != NULL; d = d->next)
+-        if ((d->addresses) && (d->addresses->addr))
++    for (pcap_if_t *d = alldevs; d != NULL; d = d->next) {
++        if ((d->addresses) && (d->addresses->addr)) {
+             strncpy(dev, d->name, sizeof(dev)-1);
++            break;
++        }
++    }
+ 
+     pcap_freealldevs(alldevs);
+ #else
