@@ -21,11 +21,29 @@ Released @TBD@
 
 -- Linux Kernel 5.10.245-cip65, security and bug fixes.
 
+-- libcap, version bump to 2.77
+
+-- libedit, version bump to 20251016-3.1
+
+-- sqlite, version bump to 3.51.0
+
 -- unixodbc, version bump to 2.3.14
 
 ** Networking
 
+-- strongSwan, version 5.5.3, security fix: CVE-2025-62291
+
+-- darkstat, version bump to 3.0.722
+
+-- ngrep, version bump to 1.48.1
+
+-- shellinabox, version 2.21, minor changes
+
+-- sngrep, version bump to 1.8.3
+
 -- stunnel, version bump to 5.76
+
+-- unbound, version bump to 1.24.1, security fix: CVE-2025-11411
 
 -- whois, version bump to 5.6.5
 
