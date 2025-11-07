@@ -4,12 +4,10 @@
 #
 #############################################################
 
-NGREP_VERSION = 1.48.1
+NGREP_VERSION = 1.48.3
 NGREP_SOURCE = ngrep-$(NGREP_VERSION).tar.gz
 NGREP_SITE = https://github.com/jpr5/ngrep/archive/v$(NGREP_VERSION)
 NGREP_DEPENDENCIES = libpcap pcre2
-## patching configure.ac
-NGREP_AUTORECONF = YES
 
 NGREP_UNINSTALL_STAGING_OPT = --version
 
