@@ -31,13 +31,17 @@ Released @TBD@
 
 -- unixodbc, version bump to 2.3.14
 
+-- ca-certificates, update trusted root certificates 2025-11-04
+
 ** Networking
+
+-- libcurl (curl) version bump to 8.17.0
 
 -- strongSwan, version 5.5.3, security fix: CVE-2025-62291
 
 -- darkstat, version bump to 3.0.722
 
--- ngrep, version bump to 1.48.1
+-- ngrep, version bump to 1.48.3
 
 -- shellinabox, version 2.21, minor changes
 
