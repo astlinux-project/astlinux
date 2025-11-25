@@ -1,0 +1,92 @@
+From b821026c73588e927ae882f904642c2103781395 Mon Sep 17 00:00:00 2001
+From: InterLinked1 <24227567+InterLinked1@users.noreply.github.com>
+Date: Sun, 22 Sep 2024 16:34:05 -0400
+Subject: [PATCH] drivers: Rename MAX definition to avoid macro naming
+ conflict.
+
+MAX can already be defined by the kernel headers and cause
+compilation failure due to the redefinition, so use
+MAX_ATTEMPTS to a more descriptive and non-conflicting name.
+
+Resolves: #61
+---
+ drivers/dahdi/wcaxx-base.c      | 6 +++---
+ drivers/dahdi/wctdm.c           | 6 +++---
+ drivers/dahdi/wctdm24xxp/base.c | 6 +++---
+ 4 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/dahdi/wcaxx-base.c b/drivers/dahdi/wcaxx-base.c
+index 5d768093..e7d50144 100644
+--- a/drivers/dahdi/wcaxx-base.c
++++ b/drivers/dahdi/wcaxx-base.c
+@@ -1061,16 +1061,16 @@ static int wait_access(struct wcaxx *wc, struct wcaxx_module *const mod)
+ 	unsigned char data = 0;
+ 	int count = 0;
+ 
+-	#define MAX 10 /* attempts */
++	#define MAX_ATTEMPTS 10 /* attempts */
+ 
+ 	/* Wait for indirect access */
+-	while (count++ < MAX) {
++	while (count++ < MAX_ATTEMPTS) {
+ 		data = wcaxx_getreg(wc, mod, I_STATUS);
+ 		if (!data)
+ 			return 0;
+ 	}
+ 
+-	if (count > (MAX-1)) {
++	if (count > (MAX_ATTEMPTS-1)) {
+ 		dev_notice(&wc->xb.pdev->dev,
+ 			   " ##### Loop error (%02x) #####\n", data);
+ 	}
+diff --git a/drivers/dahdi/wctdm.c b/drivers/dahdi/wctdm.c
+index 6bc0e787..e635a8d2 100644
+--- a/drivers/dahdi/wctdm.c
++++ b/drivers/dahdi/wctdm.c
+@@ -623,11 +623,11 @@ static int __wait_access(struct wctdm *wc, int card)
+     unsigned char data = 0;
+     int count = 0;
+ 
+-    #define MAX 6000 /* attempts */
++    #define MAX_ATTEMPTS 6000 /* attempts */
+ 
+ 
+     /* Wait for indirect access */
+-    while (count++ < MAX)
++    while (count++ < MAX_ATTEMPTS)
+ 	 {
+ 		data = __wctdm_getreg(wc, card, I_STATUS);
+ 
+@@ -636,7 +636,7 @@ static int __wait_access(struct wctdm *wc, int card)
+ 
+ 	 }
+ 
+-    if(count > (MAX-1)) printk(KERN_NOTICE " ##### Loop error (%02x) #####\n", data);
++    if(count > (MAX_ATTEMPTS-1)) printk(KERN_NOTICE " ##### Loop error (%02x) #####\n", data);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/dahdi/wctdm24xxp/base.c b/drivers/dahdi/wctdm24xxp/base.c
+index 5e845e26..3b76b331 100644
+--- a/drivers/dahdi/wctdm24xxp/base.c
++++ b/drivers/dahdi/wctdm24xxp/base.c
+@@ -1507,16 +1507,16 @@ static int wait_access(struct wctdm *wc, struct wctdm_module *const mod)
+ 	unsigned char data = 0;
+ 	int count = 0;
+ 
+-	#define MAX 10 /* attempts */
++	#define MAX_ATTEMPTS 10 /* attempts */
+ 
+ 	/* Wait for indirect access */
+-	while (count++ < MAX) {
++	while (count++ < MAX_ATTEMPTS) {
+ 		data = wctdm_getreg(wc, mod, I_STATUS);
+ 		if (!data)
+ 			return 0;
+ 	}
+ 
+-	if (count > (MAX-1)) {
++	if (count > (MAX_ATTEMPTS-1)) {
+ 		dev_notice(&wc->vb.pdev->dev,
+ 			   " ##### Loop error (%02x) #####\n", data);
+ 	}

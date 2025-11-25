@@ -5,7 +5,7 @@
 ##############################################################
 
 ifeq ($(BR2_PACKAGE_ASTERISK_v20),y)
-ASTERISK_VERSION := 20.16.0
+ASTERISK_VERSION := 20.17.0
 ASTERISK_LABEL :=
 else
 ASTERISK_VERSION := 18.26.4
