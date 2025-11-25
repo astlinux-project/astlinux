@@ -25,6 +25,8 @@ Released @TBD@
 
 -- libedit, version bump to 20251016-3.1
 
+-- libpng, version bump to 1.6.51, security fixes: CVE-2025-64505, CVE-2025-64506, CVE-2025-64720, CVE-2025-65018
+
 -- pcre2, new package, version 10.47, newer though incompatible API from older pcre
 
 -- sqlite, version bump to 3.51.0
@@ -59,13 +61,17 @@ Released @TBD@
    Last Asterisk 18.x "Legacy" version, built --without-pjproject and --without-dahdi
    Note: Now built with SRTP AES_192, AES_256, AES_GCM support
 
--- Asterisk 20.16.0 (version bump)
+-- Asterisk 20.17.0 (version bump)
    Built --with-pjproject and --with-dahdi
    w/pjsip 2.15.1 (no change)
    Note: Now built with SRTP AES_192, AES_256, AES_GCM support
    New module: chan_websocket.so
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
+
+-- FOP2, available version bump to 2.31.49
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
