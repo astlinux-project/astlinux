@@ -51,7 +51,7 @@ Released @TBD@
 
 -- stunnel, version bump to 5.76
 
--- unbound, version bump to 1.24.1, security fix: CVE-2025-11411
+-- unbound, version bump to 1.24.2, security fix: CVE-2025-11411
 
 -- whois, version bump to 5.6.5
 
