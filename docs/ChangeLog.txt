@@ -25,11 +25,13 @@ Released @TBD@
 
 -- libedit, version bump to 20251016-3.1
 
--- libpng, version bump to 1.6.51, security fixes: CVE-2025-64505, CVE-2025-64506, CVE-2025-64720, CVE-2025-65018
+-- libpng, version bump to 1.6.53, security fixes: CVE-2025-64505, CVE-2025-64506, CVE-2025-64720, CVE-2025-65018, CVE-2025-66293
 
 -- pcre2, new package, version 10.47, newer though incompatible API from older pcre
 
 -- sqlite, version bump to 3.51.1
+
+-- strace, version bump to 6.18
 
 -- unixodbc, version bump to 2.3.14
 
