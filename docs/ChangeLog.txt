@@ -19,7 +19,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.246-cip66, security and bug fixes.
+-- Linux Kernel 5.10.247-cip67, security and bug fixes.
 
 -- libcap, version bump to 2.77
 
