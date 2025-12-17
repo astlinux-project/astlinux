@@ -37,6 +37,8 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2025-11-04
 
+-- Time Zone Database update, tzdata2025c and php-timezonedb-2025.3
+
 ** Networking
 
 -- libcurl (curl) version bump to 8.17.0
