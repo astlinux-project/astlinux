@@ -29,6 +29,8 @@ Released @TBD@
 
 -- pcre2, new package, version 10.47, newer though incompatible API from older pcre
 
+-- php, version 7.2.34, add security fixes: CVE-2025-14177, CVE-2025-14178, GHSA-www2-q4fc-65wf
+
 -- sqlite, version bump to 3.51.1
 
 -- strace, version bump to 6.18
