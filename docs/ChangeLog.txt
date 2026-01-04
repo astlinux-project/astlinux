@@ -81,7 +81,7 @@ Released @TBD@
 
 ** Web Interface
 
--- (no change)
+-- Update Copyright (c) 2004-2026
 
 
 Additions for AstLinux 1.5.12:
