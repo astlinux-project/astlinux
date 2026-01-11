@@ -37,7 +37,7 @@ Released @TBD@
 
 -- unixodbc, version bump to 2.3.14
 
--- ca-certificates, update trusted root certificates 2025-11-04
+-- ca-certificates, update trusted root certificates 2025-12-02
 
 -- Time Zone Database update, tzdata2025c and php-timezonedb-2025.3
 
