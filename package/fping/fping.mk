@@ -4,7 +4,7 @@
 #
 #############################################################
 
-FPING_VERSION = 5.4
+FPING_VERSION = 5.5
 FPING_SITE = https://fping.org/dist
 FPING_SOURCE = fping-$(FPING_VERSION).tar.gz
 
