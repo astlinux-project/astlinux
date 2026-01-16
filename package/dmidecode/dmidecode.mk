@@ -4,7 +4,7 @@
 #
 #############################################################
 
-DMIDECODE_VERSION = 3.6
+DMIDECODE_VERSION = 3.7
 DMIDECODE_SITE = https://download-mirror.savannah.gnu.org/releases/dmidecode
 DMIDECODE_SOURCE = dmidecode-$(DMIDECODE_VERSION).tar.xz
 
