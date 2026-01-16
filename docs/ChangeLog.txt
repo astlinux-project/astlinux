@@ -25,13 +25,18 @@ Released @TBD@
 
 -- libedit, version bump to 20251016-3.1
 
--- libpng, version bump to 1.6.53, security fixes: CVE-2025-64505, CVE-2025-64506, CVE-2025-64720, CVE-2025-65018, CVE-2025-66293
+-- libpcap, version bump to 1.10.6
+
+-- libpng, version bump to 1.6.54, security fixes: CVE-2025-64505, CVE-2025-64506, CVE-2025-64720, CVE-2025-65018, CVE-2025-66293
+                                                   CVE-2026-22695, CVE-2026-22801
+
+-- libsodium, version bump to 1.0.21, security fix
 
 -- pcre2, new package, version 10.47, newer though incompatible API from older pcre
 
 -- php, version 7.2.34, add security fixes: CVE-2025-14177, CVE-2025-14178, GHSA-www2-q4fc-65wf
 
--- sqlite, version bump to 3.51.1
+-- sqlite, version bump to 3.51.2
 
 -- strace, version bump to 6.18
 
@@ -39,7 +44,11 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2025-12-02
 
+-- mac2vendor, oui.txt database snapshot 2026-01-16
+
 -- Time Zone Database update, tzdata2025c and php-timezonedb-2025.3
+
+-- (Custom Build Only) dmidecode, version bump to 3.7
 
 ** Networking
 
@@ -49,6 +58,10 @@ Released @TBD@
 
 -- darkstat, version bump to 3.0.722
 
+-- fping, version bump to 5.5
+
+-- iperf3, version bump to 3.20
+
 -- ngrep, version bump to 1.48.3
 
 -- shellinabox, version 2.21, minor changes
@@ -56,6 +69,8 @@ Released @TBD@
 -- sngrep, version bump to 1.8.3
 
 -- stunnel, version bump to 5.76
+
+-- tcpdump, version 4.99.6
 
 -- unbound, version bump to 1.24.2, security fix: CVE-2025-11411
 
@@ -75,7 +90,7 @@ Released @TBD@
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
 
--- FOP2, available version bump to 2.31.49
+-- FOP2, available version bump to 2.31.50
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
    More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
