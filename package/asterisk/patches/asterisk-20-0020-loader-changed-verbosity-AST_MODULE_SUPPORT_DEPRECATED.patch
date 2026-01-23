@@ -18,7 +18,7 @@
  	}
 --- asterisk-20/channels/chan_sip.c.orig	2022-01-10 12:39:58.043215949 +0100
 +++ asterisk-20/channels/chan_sip.c	2022-01-10 12:42:31.761072628 +0100
-@@ -35511,10 +35511,10 @@
+@@ -35512,10 +35512,10 @@
  
  static void deprecation_notice(void)
  {
