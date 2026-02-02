@@ -21,6 +21,8 @@ Released @TBD@
 
 -- Linux Kernel 5.10.247-cip67, security and bug fixes.
 
+-- expat, version bump to 2.7.4, security fixes: CVE-2026-24515, CVE-2026-25210
+
 -- libcap, version bump to 2.77
 
 -- libedit, version bump to 20251016-3.1
