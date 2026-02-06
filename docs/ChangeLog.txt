@@ -84,7 +84,7 @@ Released @TBD@
    Last Asterisk 18.x "Legacy" version, built --without-pjproject and --without-dahdi
    Note: Now built with SRTP AES_192, AES_256, AES_GCM support
 
--- Asterisk 20.18.1 (version bump)
+-- Asterisk 20.18.2 (version bump)
    Built --with-pjproject and --with-dahdi
    w/pjsip 2.15.1 (no change)
    Note: Now built with SRTP AES_192, AES_256, AES_GCM support
