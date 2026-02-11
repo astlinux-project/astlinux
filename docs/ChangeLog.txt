@@ -29,8 +29,8 @@ Released @TBD@
 
 -- libpcap, version bump to 1.10.6
 
--- libpng, version bump to 1.6.54, security fixes: CVE-2025-64505, CVE-2025-64506, CVE-2025-64720, CVE-2025-65018, CVE-2025-66293
-                                                   CVE-2026-22695, CVE-2026-22801
+-- libpng, version bump to 1.6.55, security fixes: CVE-2025-64505, CVE-2025-64506, CVE-2025-64720, CVE-2025-65018, CVE-2025-66293
+                                                   CVE-2026-22695, CVE-2026-22801, CVE-2026-25646
 
 -- libsodium, version bump to 1.0.21, security fix
 
