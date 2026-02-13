@@ -19,7 +19,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.247-cip67, security and bug fixes.
+-- Linux Kernel 5.10.249-cip69, security and bug fixes.
 
 -- expat, version bump to 2.7.4, security fixes: CVE-2026-24515, CVE-2026-25210
 
