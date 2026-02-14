@@ -58,6 +58,9 @@ Released @TBD@
 
 -- strongSwan, version 5.5.3, security fix: CVE-2025-62291
 
+-- avahi, version 0.6.32, security fixes: CVE-2021-3468, CVE-2023-38469, CVE-2023-38470, CVE-2023-38471, CVE-2023-38472, CVE-2023-38473
+                                          CVE-2024-52616, CVE-2024-52615, CVE-2025-68276, CVE-2025-68468, CVE-2025-68471, CVE-2026-24401
+
 -- darkstat, version bump to 3.0.722
 
 -- fping, version bump to 5.5
