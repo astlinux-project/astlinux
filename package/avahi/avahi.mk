@@ -6,7 +6,7 @@
 
 AVAHI_VERSION = 0.6.32
 AVAHI_SOURCE = avahi-$(AVAHI_VERSION).tar.gz
-AVAHI_SITE = https://github.com/lathiat/avahi/releases/download/v$(AVAHI_VERSION)
+AVAHI_SITE = https://github.com/avahi/avahi/releases/download/v$(AVAHI_VERSION)
 AVAHI_INSTALL_STAGING = YES
 
 AVAHI_CONF_ENV = \
