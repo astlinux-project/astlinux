@@ -21,6 +21,8 @@ Released @TBD@
 
 -- Linux Kernel 5.10.249-cip69, security and bug fixes.
 
+-- RUNNIX, version bump to runnix-0.6.25, with Linux Kernel 5.10.249-cip69
+
 -- expat, version bump to 2.7.4, security fixes: CVE-2026-24515, CVE-2026-25210
 
 -- libcap, version bump to 2.77
