@@ -56,6 +56,9 @@ Released @TBD@
 
 ** Networking
 
+-- OpenSSL, version 1.1.1w, security fixes: CVE-2025-68160, CVE-2025-69418, CVE-2025-69419, CVE-2025-69420
+                                            CVE-2025-69421, CVE-2026-22795, CVE-2026-22796
+
 -- libcurl (curl) version bump to 8.17.0
 
 -- strongSwan, version 5.5.3, security fix: CVE-2025-62291
@@ -68,6 +71,8 @@ Released @TBD@
 -- fping, version bump to 5.5
 
 -- iperf3, version bump to 3.20
+
+-- netsnmp, version 5.9.4, security fix: CVE-2025-68615
 
 -- ngrep, version bump to 1.48.3
 
