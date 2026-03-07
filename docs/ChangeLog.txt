@@ -16,6 +16,8 @@ Released @TBD@
 
 -- ethtool, version bump to 6.19
 
+-- sqlite, version bump to 3.52.0, fixes the rare WAL-reset database corruption bug
+
 -- strace, version bump to 6.19
 
 -- zlib, version bump to 1.3.2
