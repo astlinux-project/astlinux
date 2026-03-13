@@ -20,6 +20,7 @@ LIBCURL_CONF_OPT = \
 	--disable-mqtt \
 	--disable-gopher \
 	--disable-ldap \
+	--disable-smb \
 	--disable-alt-svc \
 	--disable-libcurl-option \
 	--enable-symbol-hiding \
