@@ -16,6 +16,8 @@ Released @TBD@
 
 -- ethtool, version bump to 6.19
 
+-- expat, version bump to 2.7.5, security fixes: CVE-2026-32776, CVE-2026-32777, CVE-2026-32778
+
 -- sqlite, version bump to 3.51.3, fixes the rare WAL-reset database corruption bug
 
 -- strace, version bump to 6.19
