@@ -12,11 +12,13 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.249-cip69, security and bug fixes.
+-- Linux Kernel 5.10.251-cip70, security and bug fixes.
 
 -- ethtool, version bump to 6.19
 
 -- expat, version bump to 2.7.5, security fixes: CVE-2026-32776, CVE-2026-32777, CVE-2026-32778
+
+-- libpng, version bump to 1.6.56, security fixes: CVE-2026-33416, CVE-2026-33636
 
 -- sqlite, version bump to 3.51.3, fixes the rare WAL-reset database corruption bug
 
