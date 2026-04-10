@@ -20,6 +20,8 @@ Released @TBD@
 
 -- iprange, version bump to 2.0.0, adds IPv6 support
 
+-- libcap, version bump to 2.78, security fix: CVE-2026-4878
+
 -- libpng, version bump to 1.6.57, security fixes: CVE-2026-33416, CVE-2026-33636, CVE-2026-34757
 
 -- pciutils, version bump to 3.15.0
