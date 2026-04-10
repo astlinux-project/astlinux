@@ -20,9 +20,11 @@ Released @TBD@
 
 -- iprange, version bump to 2.0.0, adds IPv6 support
 
--- libpng, version bump to 1.6.56, security fixes: CVE-2026-33416, CVE-2026-33636
+-- libpng, version bump to 1.6.57, security fixes: CVE-2026-33416, CVE-2026-33636, CVE-2026-34757
 
--- sqlite, version bump to 3.51.3, fixes the rare WAL-reset database corruption bug
+-- pciutils, version bump to 3.15.0
+
+-- sqlite, version bump to 3.53.0, fixes the rare WAL-reset database corruption bug
 
 -- strace, version bump to 6.19
 
@@ -47,9 +49,10 @@ Released @TBD@
 -- Asterisk 18.26.4 ('18se' no change)
    Last Asterisk 18.x "Legacy" version, built --without-pjproject and --without-dahdi
 
--- Asterisk 20.18.2 (no change)
+-- Asterisk 20.19.0 (version bump)
    Built --with-pjproject and --with-dahdi
-   w/pjsip 2.15.1 (no change)
+   w/pjsip 2.16 (version bump)
+   New module: res_cdrel_custom.so
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
 
