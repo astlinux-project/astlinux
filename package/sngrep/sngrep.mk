@@ -11,6 +11,7 @@ SNGREP_AUTORECONF = YES
 SNGREP_DEPENDENCIES = libpcap ncurses
 
 SNGREP_CONF_OPT = \
+	--without-pcre \
 	--disable-unicode \
 	--enable-ipv6 \
 	--enable-eep
@@ -27,11 +28,11 @@ else
 SNGREP_CONF_OPT += --without-gnutls --without-openssl
 endif
 
-ifeq ($(BR2_PACKAGE_PCRE),y)
-SNGREP_DEPENDENCIES += pcre
-SNGREP_CONF_OPT += --with-pcre
+ifeq ($(BR2_PACKAGE_PCRE2),y)
+SNGREP_DEPENDENCIES += pcre2
+SNGREP_CONF_OPT += --with-pcre2
 else
-SNGREP_CONF_OPT += --without-pcre
+SNGREP_CONF_OPT += --without-pcre2
 endif
 
 $(eval $(call AUTOTARGETS,package,sngrep))
