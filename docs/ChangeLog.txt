@@ -40,6 +40,8 @@ Released @TBD@
 
 -- WireGuard, wireguard-tools, version bump to 1.0.20260223
 
+-- strongSwan, version 5.5.3, security fix: CVE-2026-25075
+
 -- libcurl (curl) version 8.17.0, disable smb/smbs support, security fix: CVE-2025-11563 (wcurl)
 
 -- ngrep, version bump to 1.49.0
