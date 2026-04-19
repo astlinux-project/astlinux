@@ -191,6 +191,6 @@ define PHP_UNINSTALL_TARGET_CMDS
 	rm -f $(TARGET_DIR)/usr/bin/php*
 endef
 
-PHP_CONF_ENV += CFLAGS="$(PHP_CFLAGS)" CXXFLAGS="$(PHP_CXXFLAGS)"
+PHP_CONF_ENV += CFLAGS="$(PHP_CFLAGS) -Wno-deprecated-declarations" CXXFLAGS="$(PHP_CXXFLAGS)"
 
 $(eval $(call AUTOTARGETS,package,php))

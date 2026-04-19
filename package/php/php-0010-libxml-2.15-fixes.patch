@@ -1,0 +1,80 @@
+--- php-7.2.34/ext/libxml/libxml.c.orig	2026-04-19 14:36:58.575593432 -0500
++++ php-7.2.34/ext/libxml/libxml.c	2026-04-19 14:52:10.857345104 -0500
+@@ -428,8 +428,10 @@
+ static xmlOutputBufferPtr
+ php_libxml_output_buffer_create_filename(const char *URI,
+                               xmlCharEncodingHandlerPtr encoder,
+-                              int compression ATTRIBUTE_UNUSED)
++                              int compression)
+ {
++	ZEND_IGNORE_VALUE(compression);
++
+ 	xmlOutputBufferPtr ret;
+ 	xmlURIPtr puri;
+ 	void *context = NULL;
+@@ -477,7 +798,7 @@
+ 	return 1;
+ }
+ 
+-static void _php_list_set_error_structure(xmlErrorPtr error, const char *msg)
++static void _php_list_set_error_structure(const xmlError *error, const char *msg)
+ {
+ 	xmlError error_copy;
+ 	int ret;
+@@ -728,7 +730,7 @@
+ 	va_end(args);
+ }
+ 
+-PHP_LIBXML_API void php_libxml_structured_error_handler(void *userData, xmlErrorPtr error)
++PHP_LIBXML_API void php_libxml_structured_error_handler(void *userData, const xmlError *error)
+ {
+ 	_php_list_set_error_structure(error, NULL);
+ 
+@@ -1009,9 +1011,7 @@
+    Retrieve last error from libxml */
+ static PHP_FUNCTION(libxml_get_last_error)
+ {
+-	xmlErrorPtr error;
+-
+-	error = xmlGetLastError();
++	const xmlError *error = xmlGetLastError();
+ 
+ 	if (error) {
+ 		object_init_ex(return_value, libxmlerror_class_entry);
+--- php-7.2.34/ext/xml/compat.c.orig	2026-04-19 15:39:27.318905606 -0500
++++ php-7.2.34/ext/xml/compat.c	2026-04-19 15:41:59.280804983 -0500
+@@ -750,8 +750,7 @@
+ {
+ 	/* WARNING: this is identical to ByteIndex; it should probably
+ 	 * be different */
+-	return parser->parser->input->consumed +
+-			(parser->parser->input->cur - parser->parser->input->base);
++	return XML_GetCurrentByteIndex(parser);
+ }
+ 
+ PHP_XML_API const XML_Char *XML_ExpatVersion(void)
+--- php-7.2.34/ext/dom/document.c.orig	2026-04-19 15:49:22.702037296 -0500
++++ php-7.2.34/ext/dom/document.c	2026-04-19 15:52:31.024175219 -0500
+@@ -1437,10 +1437,12 @@
+ 	if (keep_blanks == 0 && ! (options & XML_PARSE_NOBLANKS)) {
+ 		options |= XML_PARSE_NOBLANKS;
+ 	}
++	if (recover) {
++		options |= XML_PARSE_RECOVER;
++	}
+ 
+ 	xmlCtxtUseOptions(ctxt, options);
+ 
+-	ctxt->recovery = recover;
+ 	if (recover) {
+ 		old_error_reporting = EG(error_reporting);
+ 		EG(error_reporting) = old_error_reporting | E_WARNING;
+@@ -1450,7 +1452,7 @@
+ 
+ 	if (ctxt->wellFormed || recover) {
+ 		ret = ctxt->myDoc;
+-		if (ctxt->recovery) {
++		if (recover) {
+ 			EG(error_reporting) = old_error_reporting;
+ 		}
+ 		/* If loading from memory, set the base reference uri for the document */

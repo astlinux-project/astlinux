@@ -4,8 +4,8 @@
 #
 #############################################################
 
-LIBXML2_VERSION = 2.11.9
-LIBXML2_SITE = https://download.gnome.org/sources/libxml2/2.11
+LIBXML2_VERSION = 2.15.3
+LIBXML2_SITE = https://download.gnome.org/sources/libxml2/2.15
 LIBXML2_SOURCE = libxml2-$(LIBXML2_VERSION).tar.xz
 LIBXML2_INSTALL_STAGING = YES
 
@@ -13,7 +13,7 @@ ifneq ($(BR2_LARGEFILE),y)
 LIBXML2_CONF_ENV = CC="$(TARGET_CC) $(TARGET_CFLAGS) -DNO_LARGEFILE_SOURCE"
 endif
 
-LIBXML2_CONF_OPT = --with-gnu-ld --without-python --without-debug --without-lzma
+LIBXML2_CONF_OPT = --with-gnu-ld --without-python --without-debug
 
 define LIBXML2_STAGING_LIBXML2_CONFIG_FIXUP
 	$(SED) "s,^prefix=.*,prefix=\'$(STAGING_DIR)/usr\',g" $(STAGING_DIR)/usr/bin/xml2-config
@@ -24,7 +24,7 @@ LIBXML2_POST_INSTALL_STAGING_HOOKS += LIBXML2_STAGING_LIBXML2_CONFIG_FIXUP
 HOST_LIBXML2_DEPENDENCIES = host-pkg-config
 LIBXML2_DEPENDENCIES = host-pkg-config
 
-HOST_LIBXML2_CONF_OPT = --without-zlib --without-lzma --without-debug --without-python
+HOST_LIBXML2_CONF_OPT = --without-zlib --without-debug --without-python
 
 ifneq ($(BR2_HAVE_DEVFILES),y)
 define LIBXML2_REMOVE_CONFIG_SCRIPTS
