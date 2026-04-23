@@ -33,6 +33,8 @@ Released @TBD@
 
 -- strace, version bump to 6.19
 
+-- unionfs (fuse), version 3.7, compile with -DDISABLE_AT to fix chmod issue
+
 -- zlib, version bump to 1.3.2
 
 -- ca-certificates, update trusted root certificates 2026-03-19
