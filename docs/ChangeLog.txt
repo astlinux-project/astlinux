@@ -53,7 +53,7 @@ Released @TBD@
 
 -- ngrep, version bump to 1.49.0
 
--- stunnel, version bump to 5.77
+-- stunnel, version bump to 5.78
 
 ** Asterisk
 
