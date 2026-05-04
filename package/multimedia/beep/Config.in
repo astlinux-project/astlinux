@@ -5,4 +5,5 @@ config BR2_PACKAGE_BEEP
 	  beep allows the user to control the pc-speaker with precision, allowing
 	  different sounds to indicate different events.
 
+	  https://github.com/johnath/beep
 	  http://www.johnath.com/beep/

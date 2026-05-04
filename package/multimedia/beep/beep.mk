@@ -6,7 +6,8 @@
 
 BEEP_VERSION = 1.3
 BEEP_SOURCE:=beep-$(BEEP_VERSION).tar.gz
-BEEP_SITE = http://www.johnath.com/beep
+BEEP_SITE = https://astlinux-project.org/files
+#BEEP_SITE = http://www.johnath.com/beep
 
 define BEEP_CONFIGURE_CMDS
         @echo "No configure"
