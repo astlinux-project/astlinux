@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-JITTERENTROPY_RNGD_VERSION = 1.2.8
+JITTERENTROPY_RNGD_VERSION = 1.3.0
 JITTERENTROPY_RNGD_SOURCE = jitterentropy-rngd-$(JITTERENTROPY_RNGD_VERSION).tar.gz
 JITTERENTROPY_RNGD_SITE = https://github.com/smuellerDD/jitterentropy-rngd/archive/v$(JITTERENTROPY_RNGD_VERSION)
 
