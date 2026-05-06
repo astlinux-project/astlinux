@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 5.10.254-cip72, security and bug fixes.
 
+-- beep, version bump to 1.4.12, supports /dev/input/by-path/platform-pcspkr-event-spkr
+
 -- ethtool, version bump to 6.19
 
 -- expat, version bump to 2.8.0, security fixes: CVE-2026-32776, CVE-2026-32777, CVE-2026-32778, CVE-2026-41080
