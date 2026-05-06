@@ -240,6 +240,10 @@ $fstab_shm
   # Trigger udev USB subsystem in case USB events occured before udev was started.
   /sbin/udevadm trigger --action=add --subsystem-match=usb
 
+  # Generate /dev/input/by-path/ symlinks for /dev/input/event* entries
+  # Example: /dev/input/by-path/platform-pcspkr-event-spkr
+  /sbin/udevadm trigger --subsystem-match=input --sysname-match='event*'
+
   case $ASTLINUX in
 
   genx86_64-vm)

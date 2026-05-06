@@ -4,16 +4,15 @@
 #
 #############################################################
 
-BEEP_VERSION = 1.3
+BEEP_VERSION = 1.4.12
 BEEP_SOURCE:=beep-$(BEEP_VERSION).tar.gz
-BEEP_SITE = https://astlinux-project.org/files
-#BEEP_SITE = http://www.johnath.com/beep
+BEEP_SITE = https://github.com/spkr-beep/beep/archive/v$(BEEP_VERSION)
 
 define BEEP_CONFIGURE_CMDS
         @echo "No configure"
 endef
 
-BEEP_MAKE_OPT = CC='$(TARGET_CC)' LD='$(TARGET_LD)' -C $(@D) beep
+BEEP_MAKE_OPT = CC='$(TARGET_CC)' LD='$(TARGET_LD)' CFLAGS='$(TARGET_CFLAGS)'
 
 define BEEP_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 -D $(@D)/beep $(TARGET_DIR)/usr/bin/beep

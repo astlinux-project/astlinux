@@ -2,8 +2,7 @@ config BR2_PACKAGE_BEEP
 	bool "beep"
 	default n
 	help
-	  beep allows the user to control the pc-speaker with precision, allowing
-	  different sounds to indicate different events.
+	  beep allows the user to have the PC speaker issue beeps and beep patterns
+	  with given frequencies, durations, and spacing on Linux systems.
 
-	  https://github.com/johnath/beep
-	  http://www.johnath.com/beep/
+	  https://github.com/spkr-beep/beep
