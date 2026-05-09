@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LM_SENSORS_VERSION = 3-6-0
+LM_SENSORS_VERSION = 3-6-2
 LM_SENSORS_SOURCE = lm-sensors-$(LM_SENSORS_VERSION).tar.gz
 LM_SENSORS_SITE = https://github.com/lm-sensors/lm-sensors/archive/V$(LM_SENSORS_VERSION)
 LM_SENSORS_INSTALL_STAGING = YES
