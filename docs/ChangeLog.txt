@@ -18,7 +18,7 @@ Released @TBD@
 
 -- ethtool, version bump to 6.19
 
--- expat, version bump to 2.8.0, security fixes: CVE-2026-32776, CVE-2026-32777, CVE-2026-32778, CVE-2026-41080
+-- expat, version bump to 2.8.1, security fixes: CVE-2026-32776, CVE-2026-32777, CVE-2026-32778, CVE-2026-41080, CVE-2026-45186
 
 -- htop, version bump to 3.5.1
 
@@ -63,6 +63,8 @@ Released @TBD@
 
 -- strongSwan, version 5.5.3, security fixes: CVE-2026-25075, CVE-2026-35330, CVE-2026-35333, CVE-2026-35332, CVE-2026-35329
                                               CVE-2026-35331, CVE-2026-35334
+
+-- dnsmasq, version bump to 2.92rel2, security fixes: CVE-2026-2291, CVE-2026-4890, CVE-2026-4891, CVE-2026-4892, CVE-2026-4893, CVE-2026-5172
 
 -- libcurl (curl) version 8.17.0, disable smb/smbs support, security fix: CVE-2025-11563 (wcurl)
 
