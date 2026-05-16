@@ -40,6 +40,9 @@ elif grep -q "^$FILE" "toolchain/file_exclude"; then
 else
   echo "$FILE failed verification - exiting"
   echo "##"
+  echo "## Hash: SHA256"
+  shasum -a 256 "dl/$FILE"
+  echo "##"
   echo "## Maintainer upload command: ./scripts/upload-dl-pair dl/$FILE"
   echo "##"
   exit 1
