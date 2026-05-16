@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.254-cip72, security and bug fixes.
+-- Linux Kernel 5.10.256-cip73, security and bug fixes.
 
 -- beep, version bump to 1.4.12, supports /dev/input/by-path/platform-pcspkr-event-spkr
 
