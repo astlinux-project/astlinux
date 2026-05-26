@@ -76,7 +76,8 @@ Released @TBD@
 
 -- tinyproxy, version bump to 1.11.3
 
--- unbound, version bump to 1.25.0
+-- unbound, version bump to 1.25.1, security fixes: CVE-2026-33278, CVE-2026-42944, CVE-2026-42959, CVE-2026-32792, CVE-2026-40622, CVE-2026-41292
+                                                    CVE-2026-42534, CVE-2026-42923, CVE-2026-42960, CVE-2026-44390, CVE-2026-44608
 
 -- whois, version bump to 5.6.6
 
