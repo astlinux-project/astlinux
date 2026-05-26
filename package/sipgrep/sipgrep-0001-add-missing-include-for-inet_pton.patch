@@ -1,0 +1,21 @@
+From: Victor Seva <linuxmaniac@torreviejawireless.org>
+Date: Mon, 25 Mar 2024 16:17:00 +0100
+Subject: add missing include for inet_pton()
+
+---
+ src/transport_hep.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/transport_hep.c b/src/transport_hep.c
+index 91c8c5e..57122d4 100644
+--- a/src/transport_hep.c
++++ b/src/transport_hep.c
+@@ -19,7 +19,7 @@
+  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  *
+  */
+-
++#include <arpa/inet.h>
+ #include <sys/socket.h>
+ #include <stdlib.h>       
+ #include <stdio.h>       
