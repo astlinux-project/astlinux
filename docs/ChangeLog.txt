@@ -28,7 +28,7 @@ Released @TBD@
 
 -- libcap, version bump to 2.78, security fix: CVE-2026-4878
 
--- libedit, version bump to 20260508-3.1
+-- libedit, version bump to 20260512-3.1
 
 -- libjpeg, version bump to 10
 
@@ -71,6 +71,8 @@ Released @TBD@
 -- iperf3, version bump to 3.21
 
 -- ngrep, version bump to 1.49.0
+
+-- sipgrep, version bump to 2.2.0
 
 -- stunnel, version bump to 5.78
 
