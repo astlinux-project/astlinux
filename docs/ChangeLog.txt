@@ -24,6 +24,8 @@ Released @TBD@
 
 -- iprange, version bump to 2.0.0, adds IPv6 support
 
+-- jansson, version bump to 2.15.0
+
 -- jitterentropy-rngd, version bump to 1.3.1
 
 -- libcap, version bump to 2.78, security fix: CVE-2026-4878
