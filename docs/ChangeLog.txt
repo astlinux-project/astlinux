@@ -40,6 +40,8 @@ Released @TBD@
 
 -- libsrtp, version bump to 2.8.0
 
+-- libusb, version bump to 1.0.30, security fixes: CVE-2026-23679, CVE-2026-47104
+
 -- libxml2, major version bump to 2.15.3, security fixes: CVE-2025-27113, CVE-2025-32414, CVE-2025-32415, CVE-2025-49794, CVE-2025-49795
                                                           CVE-2025-49796, CVE-2026-1757, CVE-2026-0989, CVE-2026-0990, CVE-2026-0992
 
@@ -56,6 +58,8 @@ Released @TBD@
 -- zlib, version bump to 1.3.2
 
 -- ca-certificates, update trusted root certificates 2026-05-14
+
+-- mac2vendor, oui.txt database snapshot 2026-06-06
 
 -- Time Zone Database update, tzdata2026a and php-timezonedb-2026.1
 
@@ -90,9 +94,9 @@ Released @TBD@
 -- Asterisk 18.26.4 ('18se' no change)
    Last Asterisk 18.x "Legacy" version, built --without-pjproject and --without-dahdi
 
--- Asterisk 20.19.0 (version bump)
+-- Asterisk 20.20.0-rc1 (version bump)
    Built --with-pjproject and --with-dahdi
-   w/pjsip 2.16 (version bump)
+   w/pjsip 2.17 (version bump)
    New module: res_cdrel_custom.so
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
