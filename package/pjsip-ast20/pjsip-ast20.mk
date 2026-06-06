@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PJSIP_AST20_VERSION = 2.16
+PJSIP_AST20_VERSION = 2.17
 PJSIP_AST20_SOURCE = pjproject-$(PJSIP_AST20_VERSION).tar.gz
 PJSIP_AST20_SITE = https://github.com/pjsip/pjproject/archive/$(PJSIP_AST20_VERSION)
 

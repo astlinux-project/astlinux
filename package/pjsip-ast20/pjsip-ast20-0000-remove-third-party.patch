@@ -16,7 +16,7 @@ index 4bc464f8c..80681d961 100644
 -APP_THIRD_PARTY_LIBS += -lsrtp-$(TARGET_NAME)
 -else
 -APP_THIRD_PARTY_LIBS += -lsrtp
--APP_THIRD_PARTY_LIB_FILES += $(PJ_DIR)/third_party/lib/libsrtp.$(SHLIB_SUFFIX).$(PJ_VERSION_MAJOR) $(PJ_DIR)/third_party/lib/libsrtp.$(SHLIB_SUFFIX)
+-APP_THIRD_PARTY_LIB_FILES += $(PJ_DIR)/third_party/lib/libsrtp.$(SHLIB_SUFFIX).$(PJ_SONAME_VERSION) $(PJ_DIR)/third_party/lib/libsrtp.$(SHLIB_SUFFIX)
 -endif
 -endif
 -endif
@@ -38,7 +38,7 @@ index 4bc464f8c..80681d961 100644
 -APP_THIRD_PARTY_LIBS += -lgsmcodec-$(TARGET_NAME)
 -else
 -APP_THIRD_PARTY_LIBS += -lgsmcodec
--APP_THIRD_PARTY_LIB_FILES += $(PJ_DIR)/third_party/lib/libgsmcodec.$(SHLIB_SUFFIX).$(PJ_VERSION_MAJOR) $(PJ_DIR)/third_party/lib/libgsmcodec.$(SHLIB_SUFFIX)
+-APP_THIRD_PARTY_LIB_FILES += $(PJ_DIR)/third_party/lib/libgsmcodec.$(SHLIB_SUFFIX).$(PJ_SONAME_VERSION) $(PJ_DIR)/third_party/lib/libgsmcodec.$(SHLIB_SUFFIX)
 -endif
 -endif
 -endif
@@ -52,7 +52,7 @@ index 4bc464f8c..80681d961 100644
 -APP_THIRD_PARTY_LIBS += -lspeex-$(TARGET_NAME)
 -else
 -APP_THIRD_PARTY_LIBS += -lspeex
--APP_THIRD_PARTY_LIB_FILES += $(PJ_DIR)/third_party/lib/libspeex.$(SHLIB_SUFFIX).$(PJ_VERSION_MAJOR) $(PJ_DIR)/third_party/lib/libspeex.$(SHLIB_SUFFIX)
+-APP_THIRD_PARTY_LIB_FILES += $(PJ_DIR)/third_party/lib/libspeex.$(SHLIB_SUFFIX).$(PJ_SONAME_VERSION) $(PJ_DIR)/third_party/lib/libspeex.$(SHLIB_SUFFIX)
 -endif
 -endif
 -endif
@@ -63,7 +63,7 @@ index 4bc464f8c..80681d961 100644
 -APP_THIRD_PARTY_LIBS += -lilbccodec-$(TARGET_NAME)
 -else
 -APP_THIRD_PARTY_LIBS += -lilbccodec
--APP_THIRD_PARTY_LIB_FILES += $(PJ_DIR)/third_party/lib/libilbccodec.$(SHLIB_SUFFIX).$(PJ_VERSION_MAJOR) $(PJ_DIR)/third_party/lib/libilbccodec.$(SHLIB_SUFFIX)
+-APP_THIRD_PARTY_LIB_FILES += $(PJ_DIR)/third_party/lib/libilbccodec.$(SHLIB_SUFFIX).$(PJ_SONAME_VERSION) $(PJ_DIR)/third_party/lib/libilbccodec.$(SHLIB_SUFFIX)
 -endif
 -endif
 -
@@ -73,7 +73,7 @@ index 4bc464f8c..80681d961 100644
 -APP_THIRD_PARTY_LIBS += -lg7221codec-$(TARGET_NAME)
 -else
 -APP_THIRD_PARTY_LIBS += -lg7221codec
--APP_THIRD_PARTY_LIB_FILES += $(PJ_DIR)/third_party/lib/libg7221codec.$(SHLIB_SUFFIX).$(PJ_VERSION_MAJOR) $(PJ_DIR)/third_party/lib/libg7221codec.$(SHLIB_SUFFIX)
+-APP_THIRD_PARTY_LIB_FILES += $(PJ_DIR)/third_party/lib/libg7221codec.$(SHLIB_SUFFIX).$(PJ_SONAME_VERSION) $(PJ_DIR)/third_party/lib/libg7221codec.$(SHLIB_SUFFIX)
 -endif
 -endif
 -
@@ -91,7 +91,7 @@ index 4bc464f8c..80681d961 100644
 -APP_THIRD_PARTY_LIBS += -lyuv-$(TARGET_NAME)
 -else
 -APP_THIRD_PARTY_LIBS += -lyuv
--APP_THIRD_PARTY_LIB_FILES += $(PJ_DIR)/third_party/lib/libyuv.$(SHLIB_SUFFIX).$(PJ_VERSION_MAJOR) $(PJ_DIR)/third_party/lib/libyuv.$(SHLIB_SUFFIX)
+-APP_THIRD_PARTY_LIB_FILES += $(PJ_DIR)/third_party/lib/libyuv.$(SHLIB_SUFFIX).$(PJ_SONAME_VERSION) $(PJ_DIR)/third_party/lib/libyuv.$(SHLIB_SUFFIX)
 -endif
 -endif
 -endif
@@ -105,7 +105,7 @@ index 4bc464f8c..80681d961 100644
 -APP_THIRD_PARTY_LIBS += -lwebrtc-$(TARGET_NAME)
 -else
 -APP_THIRD_PARTY_LIBS += -lwebrtc
--APP_THIRD_PARTY_LIB_FILES += $(PJ_DIR)/third_party/lib/libwebrtc.$(SHLIB_SUFFIX).$(PJ_VERSION_MAJOR) $(PJ_DIR)/third_party/lib/libwebrtc.$(SHLIB_SUFFIX)
+-APP_THIRD_PARTY_LIB_FILES += $(PJ_DIR)/third_party/lib/libwebrtc.$(SHLIB_SUFFIX).$(PJ_SONAME_VERSION) $(PJ_DIR)/third_party/lib/libwebrtc.$(SHLIB_SUFFIX)
 -endif
 -endif
 -endif
@@ -119,7 +119,7 @@ index 4bc464f8c..80681d961 100644
 -APP_THIRD_PARTY_LIBS += -lwebrtc-aec3-$(TARGET_NAME)
 -else
 -APP_THIRD_PARTY_LIBS += -lwebrtc-aec3
--APP_THIRD_PARTY_LIB_FILES += $(PJ_DIR)/third_party/lib/libwebrtc-aec3.$(SHLIB_SUFFIX).$(PJ_VERSION_MAJOR) $(PJ_DIR)/third_party/lib/libwebrtc.$(SHLIB_SUFFIX)
+-APP_THIRD_PARTY_LIB_FILES += $(PJ_DIR)/third_party/lib/libwebrtc-aec3.$(SHLIB_SUFFIX).$(PJ_SONAME_VERSION) $(PJ_DIR)/third_party/lib/libwebrtc.$(SHLIB_SUFFIX)
 -endif
 -endif
 -endif
