@@ -65,6 +65,8 @@ Released @TBD@
 
 ** Networking
 
+-- OpenSSL, version 1.1.1w, security fixes: CVE-2026-28387, CVE-2026-28388, CVE-2026-28389, CVE-2026-28390
+
 -- WireGuard, wireguard-tools, version bump to 1.0.20260223
 
 -- strongSwan, version 5.5.3, security fixes: CVE-2026-25075, CVE-2026-35330, CVE-2026-35333, CVE-2026-35332, CVE-2026-35329
@@ -94,7 +96,7 @@ Released @TBD@
 -- Asterisk 18.26.4 ('18se' no change)
    Last Asterisk 18.x "Legacy" version, built --without-pjproject and --without-dahdi
 
--- Asterisk 20.20.0-rc1 (version bump)
+-- Asterisk 20.20.0 (version bump)
    Built --with-pjproject and --with-dahdi
    w/pjsip 2.17 (version bump)
    New module: res_cdrel_custom.so
