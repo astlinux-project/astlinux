@@ -42,6 +42,8 @@ Released @TBD@
 
 -- libusb, version bump to 1.0.30, security fixes: CVE-2026-23679, CVE-2026-47104
 
+-- libusb-compat, version bump 0.1.9
+
 -- libxml2, major version bump to 2.15.3, security fixes: CVE-2025-27113, CVE-2025-32414, CVE-2025-32415, CVE-2025-49794, CVE-2025-49795
                                                           CVE-2025-49796, CVE-2026-1757, CVE-2026-0989, CVE-2026-0990, CVE-2026-0992
 
@@ -70,7 +72,7 @@ Released @TBD@
 -- WireGuard, wireguard-tools, version bump to 1.0.20260223
 
 -- strongSwan, version 5.5.3, security fixes: CVE-2026-25075, CVE-2026-35330, CVE-2026-35333, CVE-2026-35332, CVE-2026-35329
-                                              CVE-2026-35331, CVE-2026-35334
+                                              CVE-2026-35331, CVE-2026-35334, CVE-2026-47895
 
 -- dnsmasq, version bump to 2.92rel2, security fixes: CVE-2026-2291, CVE-2026-4890, CVE-2026-4891, CVE-2026-4892, CVE-2026-4893, CVE-2026-5172
 
