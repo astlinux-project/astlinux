@@ -68,6 +68,7 @@ Released @TBD@
 ** Networking
 
 -- OpenSSL, version 1.1.1w, security fixes: CVE-2026-28387, CVE-2026-28388, CVE-2026-28389, CVE-2026-28390
+                                            CVE-2026-7383, CVE-2026-9076, CVE-2026-34180, CVE-2026-42766, CVE-2026-45447
 
 -- WireGuard, wireguard-tools, version bump to 1.0.20260223
 
