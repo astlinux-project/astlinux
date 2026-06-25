@@ -100,8 +100,9 @@ Released @TBD@
 
 -- Asterisk 18.26.4 ('18se' no change)
    Last Asterisk 18.x "Legacy" version, built --without-pjproject and --without-dahdi
+   Backport patches for security fixes: CVE-2026-57188, CVE-2026-57189, CVE-2026-57198
 
--- Asterisk 20.20.0 (version bump)
+-- Asterisk 20.20.1 (version bump)
    Built --with-pjproject and --with-dahdi
    w/pjsip 2.17 (version bump)
    New module: res_cdrel_custom.so
