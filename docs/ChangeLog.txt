@@ -20,7 +20,8 @@ Released @TBD@
 
 -- ethtool, version bump to 6.19
 
--- expat, version bump to 2.8.1, security fixes: CVE-2026-32776, CVE-2026-32777, CVE-2026-32778, CVE-2026-41080, CVE-2026-45186
+-- expat, version bump to 2.8.2, security fixes: CVE-2026-32776, CVE-2026-32777, CVE-2026-32778, CVE-2026-41080, CVE-2026-45186
+                                                 CVE-2026-50219, CVE-2026-56131, CVE-2026-56132, CVE-2026-564[03-12]
 
 -- htop, version bump to 3.5.1
 
@@ -100,7 +101,7 @@ Released @TBD@
 
 -- Asterisk 18.26.4 ('18se' no change)
    Last Asterisk 18.x "Legacy" version, built --without-pjproject and --without-dahdi
-   Backport patches for security fixes: CVE-2026-57188, CVE-2026-57189, CVE-2026-57198
+   Backport patches for security fixes: CVE-2026-57188, CVE-2026-57189, CVE-2026-57198, CVE-2026-57194, CVE-2026-57195, CVE-2026-57199
 
 -- Asterisk 20.20.1 (version bump)
    Built --with-pjproject and --with-dahdi
