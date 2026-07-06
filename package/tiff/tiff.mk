@@ -4,7 +4,7 @@
 #
 #############################################################
 
-TIFF_VERSION = 4.7.1
+TIFF_VERSION = 4.7.2
 TIFF_SITE = https://download.osgeo.org/libtiff
 TIFF_SOURCE = tiff-$(TIFF_VERSION).tar.gz
 TIFF_INSTALL_STAGING = YES
