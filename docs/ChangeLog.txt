@@ -10,6 +10,36 @@ Additions for AstLinux 1.5.15:
 
 Released @TBD@
 
+** System
+
+-- Linux Kernel 5.10.258-cip74, security and bug fixes.
+
+-- Monit, version bump to 6.0.0
+
+-- sqlite, version bump to 3.53.3
+
+-- tiff, version bump to 4.7.2
+
+** Networking
+
+-- (no change)
+
+** Asterisk
+
+-- Asterisk 18.26.4 ('18se' no change)
+   Last Asterisk 18.x "Legacy" version, built --without-pjproject and --without-dahdi
+   Backport patches for security fixes
+
+-- Asterisk 20.20.1 (no change)
+   Built --with-pjproject and --with-dahdi
+   w/pjsip 2.17 (no change)
+
+-- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
+
+** Web Interface
+
+-- (no change)
+
 
 Additions for AstLinux 1.5.14:
 =============================
