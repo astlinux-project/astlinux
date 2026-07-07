@@ -16,13 +16,15 @@ Released @TBD@
 
 -- Monit, version bump to 6.0.0
 
+-- php, version 7.2.34, add security fixes: CVE-2026-7568, CVE-2026-14355
+
 -- sqlite, version bump to 3.53.3
 
 -- tiff, version bump to 4.7.2
 
 ** Networking
 
--- (no change)
+-- OpenSSH, version 8.4p1, security fixes: CVE-2025-61984, CVE-2025-61985, CVE-2026-35388, CVE-2026-35385, CVE-2026-35387, CVE-2026-35414, CVE-2026-35386
 
 ** Asterisk
 
