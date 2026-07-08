@@ -1,0 +1,11 @@
+--- monit-6.0.0/src/monit.c.orig	2026-07-08 06:36:28.144040669 -0500
++++ monit-6.0.0/src/monit.c	2026-07-08 06:37:51.365572855 -0500
+@@ -667,7 +667,7 @@
+ 
+                         if (Run.flags & Run_DoWakeup) {
+                                 Run.flags &= ~Run_DoWakeup;
+-                                Log_info("Awakened by User defined signal 1\n");
++                                DEBUG("Awakened by User defined signal 1\n");
+                         }
+ 
+                         if (Run.flags & Run_Stopped) {
