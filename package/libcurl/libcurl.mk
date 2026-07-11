@@ -21,6 +21,13 @@ LIBCURL_CONF_OPT = \
 	--disable-gopher \
 	--disable-ldap \
 	--disable-smb \
+	--disable-dict \
+	--disable-ipfs \
+	--disable-rtsp \
+	--disable-imap \
+	--disable-pop3 \
+	--disable-smtp \
+	--disable-telnet \
 	--disable-alt-svc \
 	--disable-libcurl-option \
 	--enable-symbol-hiding \
