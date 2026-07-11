@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.258-cip74, security and bug fixes.
+-- Linux Kernel 5.10.260-cip75, security and bug fixes.
 
 -- Monit, version bump to 6.0.0
 
