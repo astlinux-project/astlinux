@@ -27,7 +27,7 @@ diff --git a/Makefile.in b/Makefile.in
 index d03129e..69ffe60 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -165,116 +165,116 @@ depend.in: $(CFILES) term.h
+@@ -173,116 +173,116 @@ depend.in: $(CFILES) term.h
  ###############################################################################
  
  ### Dependencies:
