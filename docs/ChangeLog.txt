@@ -18,6 +18,8 @@ Released @TBD@
 
 -- php, version 7.2.34, add security fixes: CVE-2026-7568, CVE-2026-14355
 
+-- screen, version 5.0.2, security fixes
+
 -- sqlite, version bump to 3.53.3
 
 -- tiff, version bump to 4.7.2
