@@ -30,7 +30,8 @@ Released @TBD@
 
 -- OpenVPN, version 2.4.12, security fixes: CVE-2026-35058, CVE-2026-40215
 
--- libcurl (curl) version 8.17.0, security fixes: CVE-2026-5545, CVE-2026-6253, CVE-2026-6429
+-- libcurl (curl) version 8.17.0, security fixes: CVE-2025-14524, CVE-2025-14819, CVE-2026-1965, CVE-2026-3783, CVE-2026-3784, CVE-2026-4873
+                                                  CVE-2026-5545, CVE-2026-6253, CVE-2026-6429
    Note: Disable unneeded protocols to lower security footprint. Resulting in, Protocols: file ftp ftps http https tftp
 
 ** Asterisk
