@@ -1,6 +1,6 @@
 --- iprange-2.0.0/configure.ac.orig	2026-04-08 08:41:36.208995849 -0500
 +++ iprange-2.0.0/configure.ac	2026-04-08 08:43:08.994178973 -0500
-@@ -88,20 +88,6 @@
+@@ -107,20 +107,6 @@
  	AC_DEFINE_UNQUOTED([unlikely(x)], [(x)], [gcc branch optimization])
  fi
  
