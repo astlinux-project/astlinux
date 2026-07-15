@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 5.10.260-cip75, security and bug fixes.
 
+-- iprange, version bump to 2.1.1, IPv6 fixes
+
 -- Monit, version bump to 6.0.0
 
 -- php, version 7.2.34, add security fixes: CVE-2026-7568, CVE-2026-14355
