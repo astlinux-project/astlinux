@@ -1,0 +1,11 @@
+--- acme-2.9.0/acme.sh.orig	2026-07-17 08:44:47.314909797 -0500
++++ acme-2.9.0/acme.sh	2026-07-17 08:45:06.131104187 -0500
+@@ -55,7 +55,7 @@
+ 
+ LOCAL_ANY_ADDRESS="0.0.0.0"
+ 
+-DEFAULT_RENEW=60
++DEFAULT_RENEW=35
+ 
+ NO_VALUE="no"
+ 
