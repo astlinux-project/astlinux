@@ -26,6 +26,8 @@ Released @TBD@
 
 -- tiff, version bump to 4.7.2
 
+-- ca-certificates, update trusted root certificates 2026-07-16
+
 ** Networking
 
 -- OpenSSH, version 8.4p1, security fixes: CVE-2025-61984, CVE-2025-61985, CVE-2026-35388, CVE-2026-35385, CVE-2026-35387, CVE-2026-35414, CVE-2026-35386
