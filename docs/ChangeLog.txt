@@ -49,7 +49,7 @@ Released @TBD@
 
 -- keepalived, version bump to 2.4.3
 
--- msmtp, version bump to 1.8.33
+-- msmtp, version bump to 1.8.34
 
 -- sngrep, version bump to 1.8.4
 
