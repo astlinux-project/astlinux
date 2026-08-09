@@ -53,7 +53,7 @@ Released @TBD@
 
 -- sngrep, version bump to 1.8.4
 
--- stunnel, version bump to 5.80
+-- stunnel, version bump to 5.80, security fixes: CVE-2026-70367, CVE-2026-70368
 
 -- unbound, version bump to 1.25.2, security fixes: 24 CVE-2026-nnnnn
 
