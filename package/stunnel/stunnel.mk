@@ -4,7 +4,7 @@
 #
 #############################################################
 
-STUNNEL_VERSION = 5.79
+STUNNEL_VERSION = 5.80
 STUNNEL_SITE = https://www.stunnel.org/archive/5.x
 STUNNEL_DEPENDENCIES = openssl
 
