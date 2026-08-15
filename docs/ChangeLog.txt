@@ -51,6 +51,8 @@ Released @TBD@
 
 -- msmtp, version bump to 1.8.34
 
+-- rsync, version bump to 3.5.0, security fixes: 33 CVE-2026-nnnnn
+
 -- sngrep, version bump to 1.8.4
 
 -- stunnel, version bump to 5.80, security fixes: CVE-2026-70367, CVE-2026-70368
