@@ -19,6 +19,8 @@ Released @TBD@
 -- acme-client, version 2.9.0, add patch to change default renew to 35 days
    More info: https://letsencrypt.org/2025/12/02/from-90-to-45
 
+-- expat, version bump to 2.8.3, security fix: CVE-2026-72522
+
 -- htop, version bump to 3.5.2
 
 -- iprange, version bump to 2.1.1, IPv6 fixes
