@@ -1,0 +1,33 @@
+From 046d1b551fb52a230da5269bd8aec31a62c71c9a Mon Sep 17 00:00:00 2001
+From: tildeslash <info@tildeslash.com>
+Date: Wed, 15 Jul 2026 20:20:49 +0200
+Subject: [PATCH] Fixed: Issue #1154: (6.0.0 regression): When the test rule
+ required multiple cycles to fail before the state transition, as soft-failure
+ followed by recovery resulted in "Succeeded" email without a previous failure
+ notification. Thanks to Christos Chatzaras and Lutz Mader for report and
+ patches.
+
+---
+ src/event.c | 7 +++++--
+
+diff --git a/src/event.c b/src/event.c
+index 3e15a9ef..cfde3531 100644
+--- a/src/event.c
++++ b/src/event.c
+@@ -147,8 +147,11 @@ static bool _checkState(Event_T E, State_Type S) {
+         /* Translate the posted state to a 0/1 (succeeded/failed) class */
+         State_Type currentState = (S == State_Succeeded || S == State_ChangedNot) ? State_Succeeded : State_Failed;
+ 
+-        /* Only failed/changed state condition can change the initial state */
+-        if (currentState == State_Succeeded && E->state == State_Init && ! (E->source->error & E->id))
++        /* Only failed/changed state condition can change the initial state. While the event is still in the State_Init
++         * phase (the error didn't accumulate enough cycles to pass the "for X cycles" watermark), a success just clears
++         * the pending soft error and must not be reported as a state change. No failure was reported yet, so there is
++         * nothing to recover from */
++        if (currentState == State_Succeeded && E->state == State_Init)
+                 return false;
+ 
+         /* Internal instance and action events are reported on every occurrence */
+-- 
+2.51.0
+
