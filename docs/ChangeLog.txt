@@ -21,7 +21,7 @@ Released @TBD@
 
 -- expat, version bump to 2.8.3, security fix: CVE-2026-72522
 
--- htop, version bump to 3.5.2
+-- htop, version bump to 3.5.3, security fix: CVE-2024-37676
 
 -- iprange, version bump to 2.1.1, IPv6 fixes
 
@@ -37,7 +37,7 @@ Released @TBD@
 
 -- tiff, version bump to 4.7.2
 
--- ca-certificates, update trusted root certificates 2026-07-16
+-- ca-certificates, update trusted root certificates 2026-08-13
 
 ** Networking
 
