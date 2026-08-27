@@ -5,6 +5,14 @@
 #include <sys/select.h>
 
 /*
+ * Since both pjproject and asterisk source files will include config_site.h,
+ * we need to make sure that only pjproject source files include asterisk_malloc_debug.h.
+#if !defined(_ASTERISK_ASTMM_H)
+#include "asterisk_malloc_debug.h"
+#endif
+ */
+
+/*
  * Defining PJMEDIA_HAS_SRTP to 0 does NOT disable Asterisk's ability to use srtp.
  * It only disables the pjmedia srtp transport which Asterisk doesn't use.
  * The reason for the disable is that while Asterisk works fine with older libsrtp
@@ -14,13 +22,23 @@
 
 #define PJ_HAS_IPV6 1
 #define NDEBUG 1
+
+#ifndef PJ_MAX_HOSTNAME
 #define PJ_MAX_HOSTNAME (256)
+#endif
+
+#ifndef PJSIP_MAX_URL_SIZE
 #define PJSIP_MAX_URL_SIZE (512)
+#endif
+
+#ifndef PJ_IOQUEUE_MAX_HANDLES
 #ifdef PJ_HAS_LINUX_EPOLL
 #define PJ_IOQUEUE_MAX_HANDLES	(5000)
 #else
 #define PJ_IOQUEUE_MAX_HANDLES	(FD_SETSIZE)
 #endif
+#endif
+
 #define PJ_IOQUEUE_HAS_SAFE_UNREG 1
 #define PJ_IOQUEUE_MAX_EVENTS_IN_SINGLE_POLL (16)
 
