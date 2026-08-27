@@ -49,6 +49,8 @@ Released @TBD@
                                                   CVE-2026-5545, CVE-2026-6253, CVE-2026-6429
    Note: Disable unneeded protocols to lower security footprint. Resulting in, Protocols: file ftp ftps http https tftp
 
+-- chrony, version bump to 4.9
+
 -- keepalived, version bump to 2.4.3
 
 -- msmtp, version bump to 1.8.34
