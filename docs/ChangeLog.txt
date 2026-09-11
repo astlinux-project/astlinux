@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.263-cip76, security and bug fixes. (add 5.10.264 fix)
+-- Linux Kernel 5.10.268-cip77, security and bug fixes.
 
 -- r8125, version 9.018.00, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
 
