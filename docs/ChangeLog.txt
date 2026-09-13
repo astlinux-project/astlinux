@@ -47,6 +47,8 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2026-08-13
 
+-- Time Zone Database update, tzdata2026d and php-timezonedb-2026.4
+
 ** Networking
 
 -- OpenSSH, version 8.4p1, security fixes: CVE-2025-61984, CVE-2025-61985, CVE-2026-35388, CVE-2026-35385, CVE-2026-35387, CVE-2026-35414, CVE-2026-35386
