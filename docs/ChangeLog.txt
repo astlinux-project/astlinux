@@ -14,6 +14,8 @@ Released @TBD@
 
 -- Linux Kernel 5.10.268-cip77, security and bug fixes.
 
+-- RUNNIX, version bump to runnix-0.6.27, with Linux Kernel 5.10.268-cip77
+
 -- r8125, version 9.018.00, Realtek RTL8125 2.5-Gigabit Ethernet Network Driver
 
 -- acme-client, version 2.9.0, add patch to change default renew to 35 days
@@ -47,6 +49,8 @@ Released @TBD@
 
 -- ca-certificates, update trusted root certificates 2026-08-13
 
+-- mac2vendor, oui.txt database snapshot 2026-09-16
+
 -- Time Zone Database update, tzdata2026d and php-timezonedb-2026.4
 
 ** Networking
@@ -74,7 +78,7 @@ Released @TBD@
 
 -- stunnel, version bump to 5.80, security fixes: CVE-2026-70367, CVE-2026-70368
 
--- unbound, version bump to 1.26.0, security fixes: 24 CVE-2026-nnnnn
+-- unbound, version bump to 1.26.1, security fixes: 33 CVE-2026-nnnnn
 
 ** Asterisk
 
