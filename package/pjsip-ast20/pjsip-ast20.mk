@@ -16,7 +16,7 @@ endef
 PJSIP_AST20_POST_PATCH_HOOKS += PJSIP_AST20_CUSTOM_CONFIG
 
 PJSIP_AST20_CONF_ENV = \
-	CFLAGS="$(TARGET_CFLAGS) -O2 -Wno-unused-but-set-variable -Wno-unused-variable -Wno-unused-label -Wno-unused-function -Wno-strict-aliasing" \
+	CFLAGS="$(TARGET_CFLAGS) -O2 -DPJ_HAS_LINUX_EPOLL=1" \
 	LDFLAGS="-L$(STAGING_DIR)/usr/lib" \
 	LD="$(TARGET_CC)"
 
