@@ -4,7 +4,7 @@
 #
 #############################################################
 
-RSYNC_VERSION = 3.5.0
+RSYNC_VERSION = 3.5.1
 RSYNC_SOURCE = rsync-$(RSYNC_VERSION).tar.gz
 RSYNC_SITE = https://rsync.samba.org/ftp/rsync/src
 RSYNC_DEPENDENCIES = host-pkg-config zlib popt
@@ -20,6 +20,7 @@ RSYNC_CONF_OPT = \
 	--with-nobody-group=nobody \
 	--with-included-zlib=no \
 	--with-included-popt=no \
+	--disable-idn \
 	--disable-roll-simd \
 	--disable-md5-asm \
 	--disable-lz4 \
