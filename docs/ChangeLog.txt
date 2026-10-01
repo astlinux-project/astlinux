@@ -14,9 +14,23 @@ Released @TBD@
 
 -- Linux Kernel 5.10.268-cip77, security and bug fixes.
 
+-- expat, version bump to 2.8.5, security fix: CVE-2026-93990
+
+-- libpcap, version bump to 1.11.0
+
+-- libsrtp, version bump to 2.8.1
+
+-- pcre2, version bump to 10.49, security fix: GHSA-r9hj-j2rw-4q3m
+
+-- ca-certificates, update trusted root certificates 2026-09-25
+
 ** Networking
 
 -- arnofw (AIF), version bump to 2.0.2-09-astlinux, fixed: Missing colon causing unpriv udp multicast/broadcast logging to be broken
+
+-- rsync, version bump to 3.5.1
+
+-- tcpdump, version bump to 4.99.7
 
 ** Asterisk
 
