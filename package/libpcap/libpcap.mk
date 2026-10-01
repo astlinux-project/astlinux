@@ -4,7 +4,7 @@
 #
 #############################################################
 
-LIBPCAP_VERSION = 1.10.7
+LIBPCAP_VERSION = 1.11.0
 LIBPCAP_SITE = https://www.tcpdump.org/release
 LIBPCAP_SOURCE = libpcap-$(LIBPCAP_VERSION).tar.gz
 LIBPCAP_INSTALL_STAGING = YES
@@ -20,7 +20,6 @@ LIBPCAP_CONF_OPT = \
 	--disable-yydebug \
 	--with-pcap=linux \
 	--without-dag \
-	--without-dpdk \
 	--disable-dbus \
 	--disable-bluetooth
 
