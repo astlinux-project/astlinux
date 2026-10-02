@@ -4,7 +4,7 @@
 #
 #############################################################
 
-SIPGREP_VERSION = 2.2.0
+SIPGREP_VERSION = 2.2.4
 SIPGREP_SOURCE = sipgrep-$(SIPGREP_VERSION).tar.gz
 SIPGREP_SITE = https://github.com/sipcapture/sipgrep/archive/$(SIPGREP_VERSION)
 SIPGREP_DEPENDENCIES = libpcap pcre2
