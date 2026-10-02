@@ -30,6 +30,8 @@ Released @TBD@
 
 -- rsync, version bump to 3.5.1
 
+-- sipgrep, version bump to 2.2.4, security fix
+
 -- tcpdump, version bump to 4.99.7
 
 ** Asterisk
@@ -43,6 +45,10 @@ Released @TBD@
    w/pjsip 2.17 (no change)
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
+
+-- FOP2, available version bump to 2.31.52
+   Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
+   More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
 ** Web Interface
 
