@@ -14,9 +14,11 @@ Released @TBD@
 
 -- Linux Kernel 5.10.268-cip77, security and bug fixes.
 
--- expat, version bump to 2.8.5, security fix: CVE-2026-93990
+-- expat, version bump to 2.9.0, security fixes: CVE-2026-93990, CVE-2026-77214, CVE-2026-102633
 
 -- libpcap, version bump to 1.11.0
+
+-- libpng, version bump to 1.6.59, security fix: CVE-2026-46675
 
 -- libsrtp, version bump to 2.8.1
 
@@ -28,9 +30,13 @@ Released @TBD@
 
 -- arnofw (AIF), version bump to 2.0.2-09-astlinux, fixed: Missing colon causing unpriv udp multicast/broadcast logging to be broken
 
+-- iperf3, version bump to 3.22, security fixes: CVE-2026-101283, CVE-2026-101276, CVE-2026-102253, CVE-2026-71217, CVE-2026-71218
+
 -- rsync, version bump to 3.5.1
 
 -- sipgrep, version bump to 2.2.4, security fix
+
+-- sngrep, version bump to 1.9.0
 
 -- tcpdump, version bump to 4.99.7
 
