@@ -24,6 +24,8 @@ Released @TBD@
 
 -- pcre2, version bump to 10.49, security fix: GHSA-r9hj-j2rw-4q3m
 
+-- sqlite, version bump to 3.54.0
+
 -- ca-certificates, update trusted root certificates 2026-09-25
 
 ** Networking
