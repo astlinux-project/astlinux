@@ -12,7 +12,7 @@ Released @TBD@
 
 ** System
 
--- Linux Kernel 5.10.271-cip78, security and bug fixes.
+-- Linux Kernel 5.10.271-cip78, security and bug fixes. (add patches for 5.10.272 fixes)
 
 -- expat, version bump to 2.9.0, security fixes: CVE-2026-93990, CVE-2026-77214, CVE-2026-102633
 
