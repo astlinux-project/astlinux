@@ -26,7 +26,7 @@ jobs:
           #  * smtp://user:password@server:port
           #  * smtps://user:password@server:port (TLS, default port 465)
           #  * smtp+starttls://user:password@server:port (STARTTLS required, default port 587)
-          connection_url: ${{secrets.MAIL_CONNECTION}}
+          connection_url: ${{ secrets.MAIL_CONNECTION }}
           subject: [${{ github.repository }}] ${{ steps.get.outputs.title }}
           body: |
             Commit: ${{ github.sha }}
