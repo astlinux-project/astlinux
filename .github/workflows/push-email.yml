@@ -25,7 +25,7 @@ jobs:
           server_port: 465
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "[${{ github.repository }}] ${{ TITLE }}"
+          subject: "[${{ github.repository }}] ${TITLE}"
           body: |
             Commit URL: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
             Commit: ${{ github.sha }}
