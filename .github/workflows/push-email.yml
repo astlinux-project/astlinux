@@ -23,6 +23,8 @@ jobs:
             Commit URL: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
             Commit: ${{ github.sha }}
             Author: ${{ github.actor }}
+            Log Message:
+            -----------
             Message: ${{ github.event.head_commit.message }}
           #to: astlinux-notify@astlinux-project.com
           to: lonnie@abelbeck.com
