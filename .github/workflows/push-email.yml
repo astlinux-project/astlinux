@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: get
-        run: echo "title=$(git log -1 --pretty=format:'%s')" >> "$GITHUB_OUTPUT"   
+        run: echo "title=$(git log -1 --pretty=format:'%s')" >> "$GITHUB_OUTPUT"
 
   send-email:
     runs-on: ubuntu-latest
@@ -27,7 +27,7 @@ jobs:
           #  * smtps://user:password@server:port (TLS, default port 465)
           #  * smtp+starttls://user:password@server:port (STARTTLS required, default port 587)
           connection_url: ${{ secrets.MAIL_CONNECTION }}
-          subject: [${{ github.repository }}] ${{ steps.get.outputs.title }}
+          subject: ${{ github.repository }} ${{ steps.get.outputs.title }}
           body: |
             Commit: ${{ github.sha }}
             Author: ${{ github.actor }}
@@ -35,4 +35,3 @@ jobs:
           #to: astlinux-notify@astlinux-project.com
           to: lonnie@abelbeck.com
           from: noreply@astlinux-project.com
-
