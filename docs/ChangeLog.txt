@@ -64,7 +64,7 @@ Released @TBD@
 
 ** Web Interface
 
--- (no change)
+-- Status tab, updated "Show Licenses" information.
 
 
 Additions for AstLinux 1.5.15:
