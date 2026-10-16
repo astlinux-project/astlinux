@@ -1,0 +1,38 @@
+name: Send Email on Push
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  get-commit-title:
+    runs-on: ubuntu-latest
+    outputs:
+      title: ${{ steps.get.outputs.title }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: get
+        run: echo "title=$(git log -1 --pretty=format:'%s')" >> "$GITHUB_OUTPUT"   
+
+  send-email:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send mail
+        uses: dawidd6/action-send-mail@v22
+        with:
+          # Specify connection via URL
+          # (replaces server_address, server_port, username and password)
+          # Format:
+          #  * smtp://user:password@server:port
+          #  * smtps://user:password@server:port (TLS, default port 465)
+          #  * smtp+starttls://user:password@server:port (STARTTLS required, default port 587)
+          connection_url: ${{secrets.MAIL_CONNECTION}}
+          subject: [${{ github.repository }}] ${{ steps.get.outputs.title }}
+          body: |
+            Commit: ${{ github.sha }}
+            Author: ${{ github.actor }}
+            Message: ${{ github.event.head_commit.message }}
+          #to: astlinux-notify@astlinux-project.com
+          to: lonnie@abelbeck.com
+          from: noreply@astlinux-project.com
+
