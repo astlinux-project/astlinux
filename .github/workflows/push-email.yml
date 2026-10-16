@@ -21,8 +21,10 @@ jobs:
           subject: "[${{ github.repository }}] ${{ env.SHORT_SHA }}: ${{ env.TITLE }}"
           body: |
             Home: ${{ github.server_url }}/${{ github.repository }}
+
             Commit URL: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
             Commit SHA: ${{ github.sha }}
+
             Author: ${{ github.actor }}
 
             Log Message:
