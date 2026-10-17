@@ -11,8 +11,8 @@ jobs:
   send-email:
     runs-on: ubuntu-latest
     steps:
+      - uses: taiki-e/checkout-action@v1
       - name: Checkout
-        uses: taiki-e/checkout-action@v1
         run: |
           echo "CHANGED_PATHS=$(git show --name-status --pretty='format:' '${{ github.sha }}')" >> $GITHUB_ENV
       - name: Set variables
