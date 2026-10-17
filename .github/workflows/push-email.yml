@@ -11,14 +11,13 @@ jobs:
   send-email:
     runs-on: ubuntu-latest
     steps:
-      - uses: taiki-e/checkout-action@v1
       - name: Checkout
-        run: |
-          echo "CHANGED_PATHS=$(git diff-tree --no-commit-id --name-status --pretty='format:' -r '${{ github.sha }}')" >> $GITHUB_ENV
+        uses: taiki-e/checkout-action@v1
       - name: Set variables
         run: |
           echo "TITLE=$(echo '${{ github.event.head_commit.message }}' | head -n 1)" >> $GITHUB_ENV
           echo "SHORT_SHA=$(echo '${{ github.sha }}' | cut -c1-6)" >> $GITHUB_ENV
+          echo "CHANGED_PATHS=$(git diff-tree --no-commit-id --name-status --pretty='format:' -r '${{ github.sha }}')" >> $GITHUB_ENV
       - name: Send mail
         uses: dawidd6/action-send-mail@v22
         with:
