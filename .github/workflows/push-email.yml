@@ -11,8 +11,9 @@ jobs:
   send-email:
     runs-on: ubuntu-latest
     steps:
-      - name: Set variables
+      - name: Checkout
         uses: taiki-e/checkout-action@v1
+      - name: Set variables
         run: |
           echo "TITLE=$(echo '${{ github.event.head_commit.message }}' | head -n 1)" >> $GITHUB_ENV
           echo "SHORT_SHA=$(echo '${{ github.sha }}' | cut -c1-6)" >> $GITHUB_ENV
