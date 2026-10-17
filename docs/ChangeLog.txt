@@ -24,7 +24,7 @@ Released @TBD@
 
 -- pcre2, version bump to 10.49, security fix: GHSA-r9hj-j2rw-4q3m
 
--- sqlite, version bump to 3.54.0, now includes editline support that existed before version 3.49
+-- sqlite, version bump to 3.54.1, now includes editline support that existed before version 3.49
 
 -- zlib, version 1.3.2, add security patch for CVE-2026-85091
 
