@@ -66,6 +66,8 @@ Released @TBD@
 
 -- Status tab, updated "Show Licenses" information.
 
+-- OpenVPN Server sub-tab, fix generated .ovpn 'remote ...' protocol entry
+
 
 Additions for AstLinux 1.5.15:
 =============================
