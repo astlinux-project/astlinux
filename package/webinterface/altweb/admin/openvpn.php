@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2008-2018 Lonnie Abelbeck
+// Copyright (C) 2008-2026 Lonnie Abelbeck
 // This is free software, licensed under the GNU General Public License
 // version 3 as published by the Free Software Foundation; you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -16,6 +16,7 @@
 // 12-14-2015, Added Signature Algorithm support
 // 10-08-2018, Replace .ovpn ns-cert-type with remote-cert-tls
 // 10-09-2018, Disable Compression by default
+// 10-19-2026, Fix generated .ovpn "remote ..." protocol entry
 //
 // System location of /mnt/kd/rc.conf.d directory
 $OVPNCONFDIR = '/mnt/kd/rc.conf.d';
@@ -121,6 +122,13 @@ $protocol_menu = array (
   'tcp-server' => 'TCP v4',
   'udp6' => 'UDP v4/v6',
   'tcp6-server' => 'TCP v4/v6'
+);
+
+$protocol_client_config = array (
+  'udp' => 'udp4',
+  'tcp-server' => 'tcp4-client',
+  'udp6' => 'udp',
+  'tcp6-server' => 'tcp-client'
 );
 
 $key_size_menu = array (
@@ -314,6 +322,7 @@ function isClientDisabled($vars, $client) {
 // Function: ovpnProfile
 //
 function ovpnProfile($db, $ssl, $client, &$ta_file) {
+  global $protocol_client_config;
 
   $default = array (
     'client',
@@ -338,8 +347,13 @@ function ovpnProfile($db, $ssl, $client, &$ta_file) {
   if (($port = getVARdef($db, 'OVPN_PORT')) === '') {
     return(FALSE);
   }
-  if (($protocol = substr(getVARdef($db, 'OVPN_PROTOCOL'), 0 , 3)) === '') {
+  if (($protocol = getVARdef($db, 'OVPN_PROTOCOL')) === '') {
     return(FALSE);
+  }
+
+  // Map protocol value from server to client, default to udp4
+  if (($protocol = $protocol_client_config["$protocol"]) === NULL) {
+    $protocol = 'udp4';
   }
 
   $str = '';
