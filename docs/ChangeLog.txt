@@ -24,6 +24,8 @@ Released @TBD@
 
 -- pcre2, version bump to 10.49, security fix: GHSA-r9hj-j2rw-4q3m
 
+-- php, version 7.2.34, add security fixes: CVE-2026-109618, CVE-2026-109619 (php2shell)
+
 -- sqlite, version bump to 3.54.1, now includes editline support that existed before version 3.49
 
 -- zlib, version 1.3.2, add security patch for CVE-2026-85091
