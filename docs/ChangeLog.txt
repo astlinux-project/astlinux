@@ -48,6 +48,8 @@ Released @TBD@
 
 -- tcpdump, version bump to 4.99.7
 
+-- unbound, version bump to 1.26.2, security fixes: CVE-2026-97206, CVE-2026-50106, CVE-2026-96405, CVE-2026-109125, CVE-2026-35501
+
 ** Asterisk
 
 -- Asterisk 18.26.4 ('18se' no change)
@@ -60,7 +62,7 @@ Released @TBD@
 
 -- DAHDI, dahdi-linux 3.2.0 (no change) and dahdi-tools 3.2.0 (no change)
 
--- FOP2, available version bump to 2.31.52
+-- FOP2, available version bump to 2.31.53
    Note: If you have a license, you may need to purchase an "Annual Software Maintenance" license if you upgrade.
    More info: https://doc.astlinux-project.org/userdoc:tt_asterisk-fop2-upgrade
 
