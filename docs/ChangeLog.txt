@@ -17,6 +17,8 @@ Released @TBD@
 -- expat, version bump to 2.10.0, security fixes: CVE-2026-93990, CVE-2026-77214, CVE-2026-102633
                                                   CVE-2026-113351, CVE-2026-115506, CVE-2026-117610, CVE-2026-118370
 
+-- kmod, version bump to 34.3
+
 -- libpcap, version bump to 1.11.0
 
 -- libpng, version bump to 1.6.59, security fix: CVE-2026-46675
@@ -29,7 +31,7 @@ Released @TBD@
 
 -- sqlite, version bump to 3.54.1, now includes editline support that existed before version 3.49
 
--- zlib, version 1.3.2, add security patch for CVE-2026-85091
+-- zlib, version bump to 1.4, security fixes: CVE-2026-85091, CVE-2026-4738
 
 -- ca-certificates, update trusted root certificates 2026-10-20, security fix
 
@@ -41,7 +43,7 @@ Released @TBD@
 
 -- iperf3, version bump to 3.22, security fixes: CVE-2026-101283, CVE-2026-101276, CVE-2026-102253, CVE-2026-71217, CVE-2026-71218
 
--- rsync, version bump to 3.5.1
+-- rsync, version bump to 3.5.2, security fix: CVE-2026-119741
 
 -- sipgrep, version bump to 2.2.4, security fix
 
@@ -59,7 +61,7 @@ Released @TBD@
    Last Asterisk 18.x "Legacy" version, built --without-pjproject and --without-dahdi
    Backport patches for security fixes
 
--- Asterisk 20.21.0 (no change)
+-- Asterisk 20.22.0 (version bump)
    Built --with-pjproject and --with-dahdi
    w/pjsip 2.17 (no change)
 
