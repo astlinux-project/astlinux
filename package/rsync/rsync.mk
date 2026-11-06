@@ -4,7 +4,7 @@
 #
 #############################################################
 
-RSYNC_VERSION = 3.5.1
+RSYNC_VERSION = 3.5.2
 RSYNC_SOURCE = rsync-$(RSYNC_VERSION).tar.gz
 RSYNC_SITE = https://rsync.samba.org/ftp/rsync/src
 RSYNC_DEPENDENCIES = host-pkg-config zlib popt
