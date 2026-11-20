@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LLDPD_VERSION = 1.0.22
+LLDPD_VERSION = 1.0.23
 LLDPD_SITE = https://github.com/lldpd/lldpd/releases/download/$(LLDPD_VERSION)
 LLDPD_DEPENDENCIES = host-pkg-config $(if $(BR2_PACKAGE_LIBCAP),libcap)
 
