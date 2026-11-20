@@ -31,6 +31,8 @@ Released @TBD@
 
 -- sqlite, version bump to 3.54.1, now includes editline support that existed before version 3.49
 
+-- unionfs (fuse), version bump to 3.8
+
 -- zlib, version bump to 1.4, security fixes: CVE-2026-85091, CVE-2026-4738
 
 -- ca-certificates, update trusted root certificates 2026-10-20, security fix
@@ -41,11 +43,13 @@ Released @TBD@
 
 -- arnofw (AIF), version bump to 2.0.2-09-astlinux, fixed: Missing colon causing unpriv udp multicast/broadcast logging to be broken
 
+-- iperf, version bump to 2.2.2
+
 -- iperf3, version bump to 3.22, security fixes: CVE-2026-101283, CVE-2026-101276, CVE-2026-102253, CVE-2026-71217, CVE-2026-71218
 
 -- rsync, version bump to 3.5.2, security fix: CVE-2026-119741
 
--- sipgrep, version bump to 2.2.4, security fix
+-- sipgrep, version bump to 2.2.5, security fix
 
 -- sngrep, version bump to 1.9.0
 
