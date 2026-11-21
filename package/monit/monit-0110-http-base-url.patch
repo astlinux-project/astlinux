@@ -15,15 +15,15 @@
          }
 +#ifdef HTTP_BASE_URL
 +        if (Str_startsWith(url, HTTP_BASE_URL)) {
-+                Str_copy(url, url + strlen(HTTP_BASE_URL), strlen(url) - strlen(HTTP_BASE_URL));
++                Str_copy(url, url + strlen(HTTP_BASE_URL), strlen(url) + 1 - strlen(HTTP_BASE_URL));
 +        }
 +#endif
-         HttpRequest req = NULL;
-         NEW(req);
-         req->S = S;
+         Util_urlDecode(url);
+         // Reject control characters (CR, LF, etc.) in the decoded URL
+         for (const unsigned char *p = (const unsigned char *)url; *p; p++) {
 --- monit-5.31.0/src/http/cervlet.c.orig	2022-02-14 09:59:39.974142875 -0600
 +++ monit-5.31.0/src/http/cervlet.c	2022-02-14 10:01:29.479145363 -0600
-@@ -744,7 +744,7 @@
+@@ -768,7 +768,7 @@
              if (res->status <= 300) {
                  // #1009: Redirect back to the same url so a reload in the browser does not perform a POST again
                  set_status(res, SC_MOVED_TEMPORARILY);
