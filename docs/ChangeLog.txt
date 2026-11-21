@@ -25,6 +25,8 @@ Released @TBD@
 
 -- libsrtp, version bump to 2.8.1
 
+-- Monit, version bump to 6.1.0
+
 -- pcre2, version bump to 10.49, security fix: GHSA-r9hj-j2rw-4q3m
 
 -- php, version 7.2.34, add security fixes: CVE-2026-109618, CVE-2026-109619 (php2shell)
